@@ -18,7 +18,7 @@ export class ScrollTopService {
       this.router.events.subscribe((event: NavigationEnd) => {
         if (event instanceof ActivationStart) { this.isInitial = false; }
 
-        if (event instanceof NavigationEnd && event.url.match(/#addon/)) {
+        if (event instanceof NavigationEnd) {
           if (event.url.match(/#addon/)) {
             const timer = this.isInitial ? 1000 : 400;
             setTimeout(() => {

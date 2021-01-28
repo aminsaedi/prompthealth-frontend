@@ -35,8 +35,8 @@
   <div class="max-w-1200">
     <h2 class="text-blue-gradient font-weight-normal">Expert Finder</h2>
     <ul class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
-      <li class='mr-3' *ngFor="let f of filters; let i = index;">
-        <button class="btn border-darkblue text-darkblue text-nowrap py-2 px-4 rounded-pill" 
+      <li *ngFor="let f of filters; let i = index;">
+        <button *ngIf="!(isVirtual && f._id == 'distance')" class="btn border-darkblue text-darkblue text-nowrap py-2 px-4 rounded-pill mr-3" 
           [ngClass]="{focus: (filterTarget && filterTarget._id == f._id), active: f.active}"
           (click)="setFilterTarget(i)"
         >{{f.item_text}}</button>
