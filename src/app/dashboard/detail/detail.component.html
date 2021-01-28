@@ -134,7 +134,7 @@
           <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.serviceDelivery">{{item}}</li>
           </ul>
-          <p class="font-small" *ngIf="userInfo?.provideVirtual">**Virtual/Online services may not be available to all locations. Please inquire the service provider for confirmation.</p>
+          <p class="font-small col-12 col-lg-8 mb-0 " *ngIf="userInfo?.provideVirtual">**Virtual/Online services may not be available to all locations. Please inquire the service provider for confirmation.</p>
         </div>
         <div class="row bg-lightblue pt-5 pb-0" *ngIf="userInfo?.amenity && userInfo?.amenity.length>0">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Amenities: </div>

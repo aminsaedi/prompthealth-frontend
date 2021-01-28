@@ -116,7 +116,7 @@ export class Professional implements IProfessional {
   private _endosements: any[]; // todo: impliment correctly. currently, this property not used;
 
   private _mapIconUrl: string;
-  private _isMapIconReady = false;
+  private _isMapIconReady = true;
 
   get id() { return this._id; }
   get name() { return this._name; }
