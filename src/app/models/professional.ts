@@ -252,7 +252,7 @@ export class Professional implements IProfessional {
     this._ageRangeId = p.age_range || [];
     this._ageRange = p.age_range || [];
     this._serviceDeliveryId = p.serviceOfferIds || [];
-    this._location = p.location || null;
+    this._location = p.location || [null, null];
     this._distance = p.calcDistance || null;
     this._provideVirtual = p.provideVirtual || false;
 
@@ -298,7 +298,9 @@ export class Professional implements IProfessional {
   }
 
   async setMapIcon() {
+    console.log('start create map icon');
     const img = new Image;
+    console.log(img);
     const c = document.createElement('canvas');
     const ctx = c.getContext('2d');
     const needLabel = !!this.mapLabel;
@@ -380,6 +382,7 @@ export class Professional implements IProfessional {
     // }
 
     img.onload = () => {
+      console.log('image loaded. create canvas');
 
       ctx.beginPath();
       ctx.arc(padding + radCircle, padding + radCircle, radCircle, 0 * Math.PI / 180, 360 * Math.PI / 180);
@@ -401,10 +404,33 @@ export class Professional implements IProfessional {
       this._mapIconUrl = c.toDataURL();
       this._isMapIconReady = true;
 
-      img.addEventListener('error', () => { img.src = '/assets/img/logo-sm.png'; });
-      img.crossOrigin = '';
-      img.src = this._image ? this.image : '/assets/img/logo-sm.png';
+      //     const w = img.width;
+      //     const h = img.height;
+      //     const rect = (w > h)? h : w;
+
+      //     const x = (w > h)? (w - h) / 2 : 0;
+      //     const y = (w > h)? 0 : (h - w) / 2;
+
+      //     ctx.beginPath();
+      //     ctx.arc( c.width / 2, radCircle, radCircle, 0 * Math.PI / 180, 360 * Math.PI / 180);
+      //     ctx.fillStyle = 'white';
+      //     ctx.strokeStyle="grey";
+      //     ctx.lineWidth = 1;
+      //     ctx.fill();
+      //     ctx.stroke();
+      //     ctx.clip();
+
+      //     ctx.drawImage(img, x, y, rect, rect, c.width / 2 - radCircle, 0, radCircle * 2, radCircle * 2);
+      //     this._mapIconUrl = c.toDataURL();
+      //  this._isMapIconReady = true;
     };
+
+    img.addEventListener('error', () => {
+      console.log('cannot load image. set default img');
+      img.src = '/assets/img/logo-sm.png';
+    });
+    img.crossOrigin = '';
+    img.src = this._image ? this.image : '/assets/img/logo-sm.png';
   }
 }
 interface ServiceCategory {
