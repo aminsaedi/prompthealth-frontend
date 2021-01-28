@@ -162,6 +162,7 @@
 
         <!-- <agm-marker [longitude]="mapdata.lng" [latitude]="mapdata.lat"></agm-marker> -->
         <agm-circle [radius]="searchCenter.radius" 
+        *ngIf="searchCenter.lng && searchCenter.lat"
         [longitude]="searchCenter.lng" 
         [latitude]="searchCenter.lat"
         [fillColor]="'#3377C5'"
