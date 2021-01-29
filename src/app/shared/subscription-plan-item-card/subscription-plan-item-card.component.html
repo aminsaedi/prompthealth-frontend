@@ -50,14 +50,6 @@
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             All the Provider benefits
         </li>
-        <li *ngIf="type == 'centre'">
-            <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            List special amenities
-        </li>
-        <li *ngIf="type == 'centre'">
-            <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            List of providers
-        </li>
 
         <!-- except centre and depend on data-->
         <li *ngIf="type != 'centre' && data?.professionalProfile">
@@ -92,7 +84,7 @@
         </li>
         <li *ngIf="data?.ListOfProviders">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            List Of Providers
+            List of Providers
         </li>
     </ul>
             
