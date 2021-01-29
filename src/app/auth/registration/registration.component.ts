@@ -18,12 +18,12 @@ import { MustMatch } from '../../_helpers/must-match.validator';
   styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent implements OnInit {
-  registerForm: FormGroup;
-  user: SocialUser;
-  submitted = false;
-  professionalSignup = false
-  userType = 'U';
-  returnUrl = '';
+  public registerForm: FormGroup;
+  private user: SocialUser;
+  public submitted = false;
+  public professionalSignup = false
+  private userType = 'U';
+  private returnUrl = '';
 
   constructor(
     private authService: SocialAuthService,
@@ -41,38 +41,22 @@ export class RegistrationComponent implements OnInit {
     this.authService.authState.subscribe((user) => {
       this.user = user;
     });
+
+    this.route.params.subscribe(param=>{
+      const type = param.type;
+      this.professionalSignup = (type.toLowerCase() == 'u')? false : true;
+      switch(type.toLowerCase()){
+        case 'u':  this.userType = 'U';  break;
+        case 'sp': this.userType = 'SP'; break;
+        case 'c':  this.userType = 'C';  break;
+      }
+    });
+
     this.route.queryParamMap
       .subscribe(params => { 
         const routeParams = +params.get('previousPath');
     });
-    switch(this._router.url) {
-      case "/auth/registration/sp": 
-        this.professionalSignup = true;
-        this.userType = 'SP'
-        break;
-      case "/auth/registration/c": ;
-        this.userType = 'C'
-        break;
-      case "/auth/registration/u":
-        this.professionalSignup = false;
-        this.userType = 'U'
-        break;
-        case "/auth/registration/SP": 
-        this.professionalSignup = true;
-        this.userType = 'SP'
-        break;
-      case "/auth/registration/C": ;
-        this.userType = 'C'
-        break;
-      case "/auth/registration/U":
-        this.professionalSignup = false;
-        this.userType = 'U'
-        break;
 
-      default:
-        break;
-
-    }
     const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.pattern(re)]],

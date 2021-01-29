@@ -43,7 +43,7 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
       case 'provider':
       case 'centre':
         if (this.data) {
-          name = `$${this.isPriceMonthly ? (this.data.price + '/Monthly') : (this.data.yearlyPrice + '/Annualy')}`;
+          name = `$${this.isPriceMonthly ? (this.data.price + '/Monthly') : (this.data.yearlyPrice + '/Annually')}`;
         }
     }
     return name;

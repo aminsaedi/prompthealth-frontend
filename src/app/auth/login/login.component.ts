@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
     private authService: SocialAuthService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private _route: ActivatedRoute,
     private _sharedService: SharedService,
     private _bs: BehaviorService,
     private toastr: ToastrService,
@@ -43,38 +44,16 @@ export class LoginComponent implements OnInit {
 
     this.loginUserType = localStorage.getItem('userType');
 
-    switch(this.router.url) {
-      case "/auth/login/sp": 
-        //some logic
-        this.professionalLogin = true;
-        this.userType = 'SP'
-        break;
-      case "/auth/login/c": 
-        //some logic
-        this.professionalLogin = true;
-        this.userType = 'C'
-        break;
-        case "/auth/login/C": 
-          //some logic
-          this.professionalLogin = true;
-          this.userType = 'C'
-          break;
+    this._route.params.subscribe(param=>{
+      const type = param.type;
+      this.professionalLogin = (type.toLowerCase() == 'u')? false : true;
+      switch(type.toLowerCase()){
+        case 'u':  this.userType = 'U';  break;
+        case 'sp': this.userType = 'SP'; break;
+        case 'c':  this.userType = 'C';  break;
+      }
+    });
 
-        case "/auth/login/u": 
-        //some logic
-        this.professionalLogin = false;
-        this.userType = 'U'
-        break;
-      case "/auth/login/u": 
-        //some logic
-        this.professionalLogin = false;
-        this.userType = 'U'
-        break;
-
-      default:
-        break;
-
-    }
     const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.pattern(re)]],

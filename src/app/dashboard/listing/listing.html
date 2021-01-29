@@ -14,7 +14,8 @@
 
       <div>
         <div class="banner d-flex flex-column flex-md-row flex-md-nowrap align-items-md-center" [ngClass]="{sticked: isFinderSticked}">
-          <span class="text-light font-mg-big pr-3 pr-lg-5">We provide online/virtual services</span>
+          <span *ngIf="!isVirtual" class="text-light font-mg-big pr-3 pr-lg-5">We provide online/virtual services</span>
+          <span *ngIf="isVirtual"  class="text-light font-mg-big pr-3 pr-lg-5">Showing services with virtual options only</span>
           <span class="bg-orange px-3 py-2 mt-2 mt-md-0 rounded font-italic">
             Look for
             <i class="fas fa-video px-1"></i>

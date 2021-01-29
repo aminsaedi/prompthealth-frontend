@@ -4,30 +4,23 @@
   </p>
 </ngx-spinner>
 <section
-  class="heightHF-100 pt-4 pb-4 bg-secondary d-flex justify-content-center align-items-center"
+  class="heightHF-100 pt-4 pb-4 d-flex justify-content-center align-items-center bg-blue"
 >
-  <div class="container">
-    <div
-      class="row m-0 justify-content-between bg-white rounded-lg overflow-hidden"
-    >
-      <div class="col-md-4 p-0">
-        <div class="card-body p-5">
-          <h5 class="mb-3">
-            Create An Account
-          </h5>
-          <a class="btn btn-google w-100 mb-2 font-weight-bold" (click)="signInWithGoogle()">
-            <i class="fab fa-google"></i> Sign up with Google</a
-          >
+<div class="container-fluid w-max-1200">
+  <div class="row m-0 justify-content-between bg-white rounded-lg overflow-hidden">
+    <div class="p-5 col-md-4 order-md-2 py-md-5 pr-md-5 pl-md-0">
+      <h5 class="mb-3">
+        Create An Account
+      </h5>
+          <a class="btn btn-google w-100 mb-2 font-weight-bold" (click)="signInWithGoogle()"
+            ><i class="fab fa-google"></i> Sign up with Google</a>
           <a class="btn btn-facebook w-100 mb-2 font-weight-bold" (click)="signInWithFB()"
-            ><i class="fab fa-facebook-square"></i> Sign up with Facebook</a
-          >
+            ><i class="fab fa-facebook-square"></i> Sign up with Facebook</a>
           <hr />
           <div class="form-row">
-            <form
-              class="form-row"
-              (ngSubmit)="registerUser()"
-              [formGroup]="registerForm"
-            >
+            <form class="form-row"
+            [formGroup]="registerForm"
+            (ngSubmit)="registerUser()">
               <div class="col-md-12 mb-2">
                 <label>Email Address <span class="text-danger">*</span></label>
                 <div class="input-group">
@@ -156,30 +149,37 @@
             </form>
           </div>
         </div>
-      </div>
-      <div class="col-md-8 p-0">
-        <div
-          class="bg-cover bg-overlay h-100 d-flex align-items-end register-user"
-          [ngClass]="{ 'professional': professionalSignup }"
+        <div class="col-md-8 order-md-1 pt-5 pb-0 px-5 bg"
+        [ngClass]="{ 'bg-professional': professionalSignup, 'bg-user': !professionalSignup }"
         >
-          <div class="w-100 p-4 text-light" *ngIf="professionalSignup">
-            <h3>Join Our Canadian Network </h3>
-            <p>Get listed with us to attract more clients and generate more bookings
-            </p>
-          </div>
-          <div class="w-100 p-4 text-light" *ngIf="!professionalSignup">
-            <h3>Find The Right Care For You </h3>
-            <p>See what your options are based on your need and decide what’s right for you 
-            </p>
+          <div class="h-100">
+            <div class="w-100" *ngIf="professionalSignup">
+              <h3>Join Our Canadian Network </h3>
+              <p class="p-sd-for-image pb-md-0">
+                Join the growing network of Canadian health and wellness professionals.
+                Together, we will change the health and wellness experience.<br><br>
+
+                Prompt Health for every practice:
+                Medical / Dental / Allied Health / Holistic / Wellness / Nutrition / Fitness
+              </p>
+            </div>
+            <div class="w-100" *ngIf="!professionalSignup">
+              <h3>Find The Right Care For You </h3>
+              <p class="p-sd-for-image pb-md-0">
+                Prompt Health empowers you with the convenience and accessibility you need to better manage
+                your health and the health of your family.<br><br>
+                No more guesswork. We’ve got you! 
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="text-center text-light pt-3">
-      <!-- <span class="mr-2">Forget your password?</span>
+     
+    <!-- <div class="text-center text-light pt-3">
+      <span class="mr-2">Forget your password?</span>
       <a href="" [routerLink]="['/auth/forgot-password']" class="text-light"
         >Get a new password</a
-      > -->
-    </div>
+      >
+    </div> -->
   </div>
 </section>

@@ -9,6 +9,7 @@
     &.bg-user{ 
         background-image: url(/assets/img/login-client-s.png); 
         @media screen and (min-width: 768px){
+            background-size: 95%;
             background-image: url(/assets/img/login-client.png);
         }
     }
@@ -16,7 +17,9 @@
         background-image: url(/assets/img/login-professional-s.png); 
         @media screen and (min-width: 768px){ 
             background-image: url(/assets/img/login-professional.png); 
+            background-size: 110%;
         }
+        @media screen and (min-width: 992px){ background-size: 100%; }
     }
 }
 

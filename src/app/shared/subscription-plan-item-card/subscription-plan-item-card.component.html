@@ -14,8 +14,8 @@
         <span *ngIf="type == 'basic'">Get listed with us for free so that the clients can find you.</span>
         <span *ngIf="type == 'provider'">This is for a solo health and wellness professional looking to boost their online presence and acquire and retain more clients.</span>
         <span *ngIf="type == 'centre'">This is for a centre in any area of health and wellness with multiple professionals or products
-            looking to showcase their facility and offerings. There is no limit to how many you can list, but
-            you must have at least one professional.</span>
+          looking to showcase their facility and offerings. There is no limit to how many you can list, but
+          you must have at least one professional.</span>
         <span *ngIf="type == 'partner'">This is for an enterprise in any area of health and wellness looking to
             showcase their product or service to clients and get exposure and endorsement by heath
             professionals.</span>
@@ -48,11 +48,15 @@
         <!-- only for centre -->
         <li *ngIf="type == 'centre'">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            all the Provider benefits plus
+            All the Provider benefits
         </li>
         <li *ngIf="type == 'centre'">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Advertise your saleable products
+            List special amenities
+        </li>
+        <li *ngIf="type == 'centre'">
+            <span class="fa-li"><i class="far fa-check-circle"></i></span>
+            List of providers
         </li>
 
         <!-- except centre and depend on data-->
@@ -66,7 +70,7 @@
         </li>
         <li *ngIf="type != 'centre' && data?.videoUpload">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Showcase yourself with video introduction
+            Showcase yourself with a video introduction
         </li>
         <li *ngIf="type != 'centre' && data?.reviewsAndFeedback">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>

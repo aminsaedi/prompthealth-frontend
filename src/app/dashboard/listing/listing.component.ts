@@ -139,6 +139,7 @@ export class ListingComponent implements OnInit, OnDestroy {
 
     this.searchCenter = (lat & lng) ? { lat, lng, radius: 100 * 1000 } : { lat: null, lng: null, radius: 0 };
     this.setMapdata((lat && lng) ? { lat, lng, zoom: 10 } : { lat: latDefault, lng: lngDefault, zoom: 3 });
+    this.listingPayload.latLong = `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
 
     const personalMatch = this._sharedService.getPersonalMatch();
     if (personalMatch) {

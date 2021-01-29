@@ -34,11 +34,11 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
     let name = '';
     switch (this.type) {
       case 'social': name = 'Ask us for a quote'; break;
-      default: name = `$${this.isPriceMonthly ? ('xx/Monthly') : ('xx/Annualy')}`;
+      default: name = `$${this.isPriceMonthly ? ('xx/Monthly') : ('xx/Annually')}`;
     }
 
     if (this.data) {
-      name = `$${this.isPriceMonthly ? (this.data.price + '/Monthly') : (this.data.yearlyPrice + '/Annualy')}`;
+      name = `$${this.isPriceMonthly ? (this.data.price + '/Monthly') : (this.data.yearlyPrice + '/Annually')}`;
     }
     return name;
   }

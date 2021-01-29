@@ -400,25 +400,25 @@ export class Professional implements IProfessional {
       ctx.drawImage(img, x, y, rect, rect, padding, padding, padding + radCircle * 2, padding + radCircle * 2);
       this._mapIconUrl = c.toDataURL();
       this._isMapIconReady = true;
+  
+  //     const w = img.width;
+  //     const h = img.height;
+  //     const rect = (w > h)? h : w;
 
-      //     const w = img.width;
-      //     const h = img.height;
-      //     const rect = (w > h)? h : w;
+  //     const x = (w > h)? (w - h) / 2 : 0;
+  //     const y = (w > h)? 0 : (h - w) / 2;
 
-      //     const x = (w > h)? (w - h) / 2 : 0;
-      //     const y = (w > h)? 0 : (h - w) / 2;
+  //     ctx.beginPath();
+  //     ctx.arc( c.width / 2, radCircle, radCircle, 0 * Math.PI / 180, 360 * Math.PI / 180);
+  //     ctx.fillStyle = 'white';
+  //     ctx.strokeStyle="grey";
+  //     ctx.lineWidth = 1;
+  //     ctx.fill();
+  //     ctx.stroke();
+  //     ctx.clip();
 
-      //     ctx.beginPath();
-      //     ctx.arc( c.width / 2, radCircle, radCircle, 0 * Math.PI / 180, 360 * Math.PI / 180);
-      //     ctx.fillStyle = 'white';
-      //     ctx.strokeStyle="grey";
-      //     ctx.lineWidth = 1;
-      //     ctx.fill();
-      //     ctx.stroke();
-      //     ctx.clip();
-
-      //     ctx.drawImage(img, x, y, rect, rect, c.width / 2 - radCircle, 0, radCircle * 2, radCircle * 2);
-      //     this._mapIconUrl = c.toDataURL();
+  //     ctx.drawImage(img, x, y, rect, rect, c.width / 2 - radCircle, 0, radCircle * 2, radCircle * 2);
+  //     this._mapIconUrl = c.toDataURL();
       //  this._isMapIconReady = true;
     };
 
@@ -432,7 +432,7 @@ export class Professional implements IProfessional {
     });
 
     img.crossOrigin = '';
-    img.src = this._image ? this.image : '/assets/img/logo-sm.png';
+    img.src = this._image? this.image : '/assets/img/logo-sm.png';
   }
 }
 interface ServiceCategory {

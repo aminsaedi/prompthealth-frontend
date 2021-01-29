@@ -1,6 +1,39 @@
-.register-user {
-    background-image: url(../../../assets/img/bg.jpg);
+.w-max-1200{ max-width: 1200px; }
+.bg-blue{ background: #EBF3FA; }
+
+.bg{
+    background-position: center bottom;
+    background-size: contain;
+    background-repeat: no-repeat;
+ 
+    &.bg-user{ 
+        background-image: url(/assets/img/login-client-s.png); 
+        @media screen and (min-width: 768px){
+            background-size: 95%;
+            background-image: url(/assets/img/login-client.png);
+        }
+    }
+    &.bg-professional { 
+        background-image: url(/assets/img/login-professional-s.png); 
+        @media screen and (min-width: 768px){ 
+            background-image: url(/assets/img/login-professional.png); 
+            background-size: 110%;
+        }
+        @media screen and (min-width: 992px){ background-size: 100%; }
+    }
 }
-.professional {
-    background-image: url(../../../assets/img/professional.jpg);
+
+.p-sd-for-image::after{
+    content: '';
+    display: block;
+    padding-top: 45%;
+    @media screen and (min-width: 768px){ content: none; }
 }
+
+
+// .register-user {
+//     background-image: url(../../../assets/img/bg.jpg);
+// }
+// .professional {
+//     background-image: url(../../../assets/img/professional.jpg);
+// }
