@@ -42,16 +42,6 @@ export class RegistrationComponent implements OnInit {
       this.user = user;
     });
 
-    this.route.params.subscribe(param=>{
-      const type = param.type;
-      this.professionalSignup = (type.toLowerCase() == 'u')? false : true;
-      switch(type.toLowerCase()){
-        case 'u':  this.userType = 'U';  break;
-        case 'sp': this.userType = 'SP'; break;
-        case 'c':  this.userType = 'C';  break;
-      }
-    });
-
     this.route.queryParamMap
       .subscribe(params => { 
         const routeParams = +params.get('previousPath');
@@ -68,6 +58,18 @@ export class RegistrationComponent implements OnInit {
     },
     {
       validator: MustMatch('password', 'confirm_password')
+    });
+
+    this.route.params.subscribe(param=>{
+      const type = param.type;
+      this.professionalSignup = (type.toLowerCase() == 'u')? false : true;
+      switch(type.toLowerCase()){
+        case 'u':  this.userType = 'U';  break;
+        case 'sp': this.userType = 'SP'; break;
+        case 'c':  this.userType = 'C';  break;
+      }
+
+      this.registerForm.controls.roles.setValue(this.userType);
     });
   }
 

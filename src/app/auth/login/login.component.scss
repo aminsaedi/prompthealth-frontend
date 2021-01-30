@@ -26,6 +26,6 @@
 .p-sd-for-image::after{
     content: '';
     display: block;
-    padding-top: 45%;
+    padding-top: 55%;
     @media screen and (min-width: 768px){ content: none; }
 }

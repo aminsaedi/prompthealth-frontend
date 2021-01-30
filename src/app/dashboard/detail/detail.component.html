@@ -10,7 +10,7 @@
       <div class="d-flex align-items-start title-wrapper">
         <i class="fas fa-clinic-medical pr-2" *ngIf="userInfo?.isCentre"></i>
         <h3 class='mb-0 font-bigger font-md-biggest overflow-hidden ' [@expandTitle]="(isTabSticked? 'shrink' : 'expand')">
-          {{userInfo?.name}}
+          {{userInfo?.name | titlecase}}
         <i class="fas fa-video px-1" *ngIf="userInfo && userInfo.provideVirtual"></i>
       </h3>  
       </div>
@@ -136,7 +136,7 @@
           <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.serviceDelivery">{{item}}</li>
           </ul>
-          <p class="font-small col-12 col-lg-8 mb-0 " *ngIf="userInfo?.provideVirtual">**Virtual/Online services may not be available to all locations. Please inquire the service provider for confirmation.</p>
+          <p class="font-small col-12 mb-0 " *ngIf="userInfo?.provideVirtual">**Virtual/Online services may not be available to all locations. Please inquire the service provider for confirmation.</p>
         </div>
 
         <div class="row bg-lightblue pt-5 pb-0" *ngIf="userInfo?.amenity && userInfo?.amenity.length>0">

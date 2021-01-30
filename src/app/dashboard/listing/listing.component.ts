@@ -298,6 +298,7 @@ export class ListingComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** #listing */
   listing(filter, showLoader: boolean = true) {
     if (filter.latLong === 'null, null') {
       filter.latLong = '';
@@ -378,14 +379,14 @@ export class ListingComponent implements OnInit, OnDestroy {
       case 'ids':
       case 'age_range':
       case 'typical_hours':
-        val = [];
+      case 'serviceOfferIds':
+          val = [];
         break;
 
       case 'zipcode':
       case 'languageId':
       case 'typicalHoursId':
       case 'name':
-      case 'serviceOfferId':
       case 'gender':
       case 'price_per_hours':
         val = '';
@@ -698,7 +699,7 @@ const filtersPreset = [
   },
   { _id: 'language', item_text: 'Language', type: 'radio', payloadName: 'languageId', active: false, options: [/** use server data */] },
   { _id: 'availability', item_text: 'Availability', type: 'checkbox', payloadName: 'typical_hours', active: false, options: [/** use server data */] },
-  { _id: 'service', item_text: 'Service type', type: 'radio', payloadName: 'serviceOfferId', active: false, options: [/** use server data */] },
+  { _id: 'service', item_text: 'Service type', type: 'checkbox', payloadName: 'serviceOfferIds', active: false, options: [/** use server data */] },
   {
     _id: 'pricing', item_text: 'Pricing', type: 'radio', payloadName: 'price_per_hours', active: false, options: [
       { _id: '< $50', item_text: '$ < 50', active: false, subans: false },
@@ -731,7 +732,7 @@ const payloadInitial = {
   age_range: [],
   name: '',
   type: 'service',
-  serviceOfferId: '',
+  serviceOfferIds: [],
   price_per_hours: '',
   gender: '',
   typical_hours: [],
