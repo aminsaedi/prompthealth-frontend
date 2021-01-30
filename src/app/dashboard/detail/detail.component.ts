@@ -92,12 +92,15 @@ export class DetailComponent implements OnInit {
     private _toastr: ToastrService,
     private _fb: FormBuilder,
     private _embedService: EmbedVideoService,
-    private _headerStatusService: HeaderStatusService,
+    private _headerService: HeaderStatusService,
     el: ElementRef,
   ) {  this.host = el.nativeElement; }
 
   get f() { return this.bookingForm.controls; }
 
+  ngOnDestroy() {
+    this._headerService.showHeader();
+  }
   ngOnInit(): void {
     this.bookingForm = this._fb.group({
       name: new FormControl('', [Validators.required]),
@@ -352,8 +355,8 @@ export class DetailComponent implements OnInit {
   }
 
   changeStickyStatusTabbar(isSticked: boolean){
-    if(isSticked){ this._headerStatusService.hideHeader(); }
-    else{ this._headerStatusService.showHeader(); }
+    if(isSticked){ this._headerService.hideHeader(); }
+    else{ this._headerService.showHeader(); }
     this.isTabSticked = isSticked;
   }
 

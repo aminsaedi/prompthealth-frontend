@@ -223,6 +223,8 @@ export class SharedService {
   getPersonalMatch() {
     return this.personalMatch;
   }
+  clearPersonalMatch(){ this.personalMatch = null; }
+  
   /*This function is use to get access token from cookie. */
   getAccessToken(): string {
     const token = localStorage.getItem('token');
