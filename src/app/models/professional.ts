@@ -213,7 +213,7 @@ export class Professional implements IProfessional {
     this._name = name.trim();
     this._firstname = first;
 
-    this._image = p.profileImage || p.image || null;
+    this._image = (p.profileImage && p.profileImage.length > 0)? p.profileImage : null;
     this._banner = null;
 
     this._roles = !p.roles ? ['SP'] : (typeof p.roles === 'string') ? [p.roles] : p.roles;

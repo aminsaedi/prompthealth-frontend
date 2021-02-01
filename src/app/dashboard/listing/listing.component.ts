@@ -44,6 +44,7 @@ export class ListingComponent implements OnInit, OnDestroy {
 
   public mapdata: { lat: number, lng: number, zoom: number } = { lat: 53.89, lng: -111.25, zoom: 3 };
   public searchCenter: { lat: number, lng: number, radius: number } = { lat: 53.89, lng: -111.25, radius: 0 };
+  public mapInfoWindowPrevious: any = null;
   public isGettingCurrentLocation = false;
   public isGetLocationButtonShown = true;
 
@@ -217,6 +218,13 @@ export class ListingComponent implements OnInit, OnDestroy {
   onChangeMapZoom(e: number) {
     if (this.timerMapZoomChange) { clearTimeout(this.timerMapZoomChange); }
     this.timerMapZoomChange = setTimeout(() => { this.setMapdata({ zoom: e }, false); }, 500);
+  }
+
+  onClickMapMarker(infoWindow: any){
+    if(this.mapInfoWindowPrevious && this.mapInfoWindowPrevious.content.isConnected){ 
+      this.mapInfoWindowPrevious.close();
+    }
+    this.mapInfoWindowPrevious = infoWindow;
   }
 
   setMapdata(data: { lat?: number, lng?: number, zoom?: number }, updateListing: boolean = false) {
