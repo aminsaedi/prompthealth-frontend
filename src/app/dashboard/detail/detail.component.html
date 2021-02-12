@@ -18,7 +18,7 @@
     </div>
 
     <div class="profile-image rounded-circle">
-      <img *ngIf="userInfo" [src]="userInfo?.image" [alt]="userInfo?.name">
+      <img *ngIf="userInfo" [src]="userInfo?.image" [alt]="userInfo?.name" crossorigin="anonymous">
     </div>
     <ul class="p-0 mb-0 ml-for-avoid-image list-unstyled d-inline-flex align-items-center position-relative">
       <li class='text-blue text-center tab-item flex-grow-0 flex-shrink-0 py-3' 
@@ -97,7 +97,7 @@
         </div>
         <div class="row mb-5">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Specialty Age Group</div>
-          <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.ageRange}}</p>
+          <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.ageRange.join(', ')}}</p>
         </div>
         <div class="row mb-5" *ngIf="!userInfo?.isCentre">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Professional organization</div>
@@ -109,7 +109,7 @@
         </div>
         <div class="row mb-5">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Language</div>
-          <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.languages}}</p>
+          <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.languages.join(', ')}}</p>
         </div>
         <div class="row mb-5">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Years Of Experience</div>
@@ -149,7 +149,12 @@
         <div class="row bg-lightblue pt-5 pb-0">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Services:</div>
           <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
-            <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.service">{{item}}</li>
+            <li class="mb-2 mb-md-3 pr-3 table-item full font-weight-500" *ngFor="let item of userInfo?.service">
+              {{item[0]}}
+              <ul *ngIf="item[1] && item[1].length>0" class="list-unstyled d-flex flex-wrap mb-3 font-weight-300">
+                <li *ngFor="let sub of item[1]" class="table-item mt-3">{{sub}}</li>
+              </ul>
+            </li>
           </ul>
         </div>
 
@@ -176,6 +181,7 @@
               <img class="professional-image rounded-circle overflow-hidden" 
               [src]="pro.image" 
               [alt]="pro.name"
+              crossorigin="anonymous"
               >
 
               <h6 class="font-smallest mb-3 professional-name">{{pro.name}}</h6>
@@ -207,13 +213,19 @@
           <div class="card-title">Contact Information</div>
           <table class="table table-borderless table-hover px-2">
             <tbody>
-              <tr>
+              <tr *ngIf="userInfo?.address">
                 <td class="pr-0"><i class="fas fa-map-marker-alt color-card-icon"></i></td>
-                <td class="text-left">{{userInfo?.address}}</td>
+                <td class="text-left">{{userInfo.address}}</td>
               </tr>
-              <tr>
+              <tr *ngIf="userInfo?.phone">
                 <td class="pr-0"><i class="fas fa-phone color-card-icon"></i></td>
-                <td class="text-left">{{userInfo?.phone}}</td>
+                <td class="text-left">{{userInfo.phone}}</td>
+              </tr>
+              <tr *ngIf="userInfo?.website">
+                <td class="pr-0"><i class="fas fa-compass color-card-icon"></i></td>
+                <td class="text-left">
+                  <a class="url" [href]="userInfo.website" target="_blank">{{userInfo.websiteLabel}}</a>
+                </td>
               </tr>
               <tr>
                 <td class="pr-0"><i class="fas fa-dollar-sign color-card-icon"></i></td>
@@ -262,7 +274,7 @@
       
         <!-- endosements -->
         <div class="rounded shadow overflow-hidden mb-5">
-          <div class="card-title font-big font-md-regular text-center m-0">Endosement</div>
+          <div class="card-title font-big font-md-regular text-center m-0">Endorsement</div>
           <div class="px-3 py-5 font-italic coming-soon-gradient font-bigger font-weight-bold">Coming soon...</div>
 
           <!-- <post-dummy *ngIf="!userInfo ||!userInfo.endosements"></post-dummy>
@@ -428,10 +440,8 @@
                 </small>
               </div>
             </div>
-            <div class="col-md-12 mb-3">
-              <label>Timing <span class="text-danger">*</span></label>
+            <!-- <div class="col-md-12 mb-3">
               <div class="row">
-<!--
                 <div  class="col-md-6" *ngFor="let item of timingList; let i = index"> 
                   <label for="{{item.id}}">
                       <input class="radio" type="checkbox" value="{{item.name}}" required id="{{item.id}}" (change)="timingSelected($event)"
@@ -440,24 +450,18 @@
                       
                   </label>
                 </div>
--->
-                <div class="col-sm-12">
-                  <div *ngIf="submitted" class="error-msg">
-                    <small *ngIf="f.timing.errors"  class="text-danger">
-                        Booking timing is required
-                    </small>
-                  </div>
-                </div>
+               
               </div>
-            </div>
+            </div> -->
             <div class="col-md-12 mb-3">
+              <label>Date & Time<span class="text-danger">*</span></label>
               <input 
               class="form-control" [owlDateTime]="dt1" [min]="minDate" [owlDateTimeTrigger]="dt1" placeholder="Date Time"
               formControlName="bookingDateTime">
               <owl-date-time #dt1 [startAt]="startDate"></owl-date-time>
               <div *ngIf="submitted" class="error-msg">
                 <small *ngIf="f.bookingDateTime.errors"  class="text-danger">
-                  Booking Date is required
+                  Booking Date&time is required
                 </small>
               </div>
             </div>

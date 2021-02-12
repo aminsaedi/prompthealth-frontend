@@ -35,20 +35,41 @@
 <section class="container-fluid mt-5 pt-2 sticky-top blur" id="expertFinder">
   <div class="max-w-1200">
     <h2 class="text-blue-gradient font-weight-normal">Expert Finder</h2>
+    <ul
+    *ngIf="isMainFilterOn"
+    class="filters m-0 d-flex flex-nowrap list-unstyled pt-2 pb-3"
+    >
+      <li *ngIf="keyword && keyword.length > 0" class="main text-nowrap rounded mr-3">
+        <span class="px-3">{{keyword}}</span>
+        <button class="btn" (click)="removeKeyword()"><i class="fas fa-times"></i></button>
+      </li>
+
+      <li *ngFor="let id of listingPayload?.services; let i = index;" class="main text-nowrap rounded mr-3">
+        <span class="px-2">{{getServiceName(id)}}</span>
+        <button class="btn" (click)="removeService(i)"><i class="fas fa-times"></i></button>
+      </li>
+      
+      <li *ngIf="isCustomerHealthOn" class="text-nowrap mx-3 main-group">Health status:</li>
+      <li *ngFor="let id of listingPayload?.customer_health; let i = index;" class="main text-nowrap rounded mr-3">
+        <span class="px-3">{{getCustomerHealthName(id)}}</span>
+        <button class="btn" (click)="removeCustomerHealth(i)"><i class="fas fa-times"></i></button>
+      </li>
+    </ul>
     <ul class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
       <li *ngFor="let f of filters; let i = index;">
-        <button *ngIf="!(isVirtual && f._id == 'distance') && f._id != 'service'" class="btn border-darkblue text-darkblue text-nowrap py-2 px-4 rounded-pill mr-3" 
+        <button [id]="'filter-' + f._id" *ngIf="!(isVirtual && f._id == 'distance')" class="btn border-darkblue text-darkblue text-nowrap py-1 px-4 rounded-pill mr-3" 
           [ngClass]="{focus: (filterTarget && filterTarget._id == f._id), active: f.active}"
           (click)="setFilterTarget(i)"
         >{{f.item_text}}</button>
       </li>
+      <li><button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button></li>
     </ul>
 
     <div class="overflow-hidden" [@expandVertical] *ngIf="compareList && compareList.length > 0">
       <div class="compare d-flex">
         <ul class="pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
           <li class="position-relative mr-3" *ngFor="let p of compareList">
-            <img class="rounded" [src]="p.image" [alt]="p.name">
+            <img class="rounded" [src]="p.image" [alt]="p.name" crossorigin="anonymous">
             <button class="btn position-absolute" (click)="removeProfessionalFromCompare(p.id)"><i class="fas fa-times font-bigger"></i></button>
           </li>
         </ul>
@@ -110,7 +131,7 @@
             <!-- todo: create component to reuse this card in google map -->
             <div class="card p-3 text-center border-blue rounded-15p font-small">
               <div class="img-wrapper mb-3">
-                <img [src]="p.image" [alt]="p.name" [ngClass]="{full: p.isCentre,'rounded-circle': (!p.isCentre)}">
+                <img [src]="p.image" [alt]="p.name" [ngClass]="{full: p.isCentre,'rounded-circle': (!p.isCentre)}" crossorigin="anonymous">
                 <i class="icon-video fas fa-video font-biggest" *ngIf="p.provideVirtual"></i>
               </div>
               <div class="price-tag bg-tagblue font-weight-bold" *ngIf="p.price">{{p.price}}</div>
@@ -159,7 +180,8 @@
         [zoomControl]="false"
         (centerChange)="onChangeMapCenter($event)"
         (zoomChange)="onChangeMapZoom($event)"
-      >
+        (click)="onClickMap()"
+    >
 
         <!-- <agm-marker [longitude]="mapdata.lng" [latitude]="mapdata.lat"></agm-marker> -->
         <agm-circle [radius]="searchCenter.radius" 
@@ -186,7 +208,7 @@
             <div class="agm-info-window">
               <div class="p-3 text-center">
                 <div class="img-wrapper mb-3">
-                  <img [src]="p.image" [alt]="p.name" [ngClass]="{full: p.isCentre,'rounded-circle': (!p.isCentre)}">
+                  <img [src]="p.image" [alt]="p.name" [ngClass]="{full: p.isCentre,'rounded-circle': (!p.isCentre)}" crossorigin="anonymous">
                 </div>
                 <div class="price-tag bg-tagblue font-weight-bold" *ngIf="p.price">{{p.price}}</div>
   
@@ -236,6 +258,3 @@
   <i *ngIf="!isMapView" class="fas fa-map-marked-alt"></i>
   <i *ngIf="isMapView" class="fas fa-list"></i>
 </button>
-
-
-

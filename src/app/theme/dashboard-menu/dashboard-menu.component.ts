@@ -33,11 +33,11 @@ export class DashboardMenuComponent {
 
   getName() {
     const noname = 'Anonymous';
-    if (this.user) { return noname; }
+    if (!this.user) { return noname; }
 
     const name = [];
-    if (this.user.firstName && this.user.firstName.length > 0) { name.push(this.user.firstName); }
-    if (this.user.lastName && this.user.lastName.length > 0) { name.push(this.user.lastName); }
+    if (this.user.firstName && this.user.firstName.length > 0) { name.push(this.user.firstName.trim()); }
+    if (this.user.lastName && this.user.lastName.length > 0) { name.push(this.user.lastName.trim()); }
     return (name.length > 0) ? name.join(' ') : noname;
   }
   getImage() {

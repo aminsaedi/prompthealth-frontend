@@ -8,11 +8,12 @@ import { environment } from 'src/environments/environment';
 
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { _FEATURE_CONFIGS } from '@ngrx/store/src/tokens';
-import { Questionnaire, QuestionnaireAnswer } from '../questionnaire.service';
+import { QuestionnaireService, Questionnaire, QuestionnaireAnswer } from '../questionnaire.service';
 // import { rootEffectsInit } from '@ngrx/effects';
 // import { FitBoundsService } from '@agm/core/services/fit-bounds';
 import { Professional } from '../../models/professional';
 import { slideVerticalAnimation, expandVerticalAnimation } from '../../_helpers/animations';
+import { CategoryService, Category } from '../../shared/services/category.service';
 
 
 @Component({
@@ -20,7 +21,6 @@ import { slideVerticalAnimation, expandVerticalAnimation } from '../../_helpers/
   templateUrl: './listing.html',
   styleUrls: ['./listing.scss'],
   animations: [expandVerticalAnimation, slideVerticalAnimation],
-
 })
 export class ListingComponent implements OnInit, OnDestroy {
 
@@ -31,6 +31,8 @@ export class ListingComponent implements OnInit, OnDestroy {
     private _sharedService: SharedService,
     private toastr: ToastrService,
     private _headerService: HeaderStatusService,
+    private _catService: CategoryService,
+    private _qService: QuestionnaireService,
     _el: ElementRef,
   ) {
     this.host = _el.nativeElement;
@@ -41,10 +43,13 @@ export class ListingComponent implements OnInit, OnDestroy {
   public AWS_S3 = '';
 
   public isVirtual = false;
+  public serviceSet: Category[];
+  public customerHealthSet: QuestionnaireAnswer[];
 
   public mapdata: { lat: number, lng: number, zoom: number } = { lat: 53.89, lng: -111.25, zoom: 3 };
   public searchCenter: { lat: number, lng: number, radius: number } = { lat: 53.89, lng: -111.25, radius: 0 };
   public mapInfoWindowPrevious: any = null;
+  private isMapInfoWindowReady: boolean = false;
   public isGettingCurrentLocation = false;
   public isGetLocationButtonShown = true;
 
@@ -61,8 +66,8 @@ export class ListingComponent implements OnInit, OnDestroy {
   };
   public compareList = [];
 
-  private geoCoder;
-  keyword = '';
+  // private geoCoder;
+  public keyword = '';
   currentAddress = '';
   loggedInUser;
   loggedInRole;
@@ -71,14 +76,14 @@ export class ListingComponent implements OnInit, OnDestroy {
   private sub: any;
   allDoctorList = []; /**todo: can be deleted because new ui doesn't have feature to search by doctor name */
   typical_hours = [];
-  type = 'Goal';
+  // type = 'Goal';
 
-  queryLatLong;
-  serviceData;
-  treatmentModalities;
-  serviceType;
-  serviceOffering;
-  categoryList;
+  // queryLatLong;
+  // serviceData;
+  // treatmentModalities;
+  // serviceType;
+  // serviceOffering;
+  // categoryList;
 
   public listingPayload = payloadInitial;
   public filters: Filter[] = filtersPreset;
@@ -101,6 +106,41 @@ export class ListingComponent implements OnInit, OnDestroy {
     return c;
   }
 
+  get isMainFilterOn(){
+    return (
+      this.keyword && this.keyword.length > 0 ||
+      (this.listingPayload.services && this.listingPayload.services.length > 0) ||
+      this.isCustomerHealthOn
+    )
+  }
+  get isCustomerHealthOn(){
+    return (this.listingPayload.customer_health && this.listingPayload.customer_health.length > 0)
+  }
+
+  getServiceName(id: string){
+    let name = '';
+    if(this.serviceSet){
+      for(let s of this.serviceSet){
+        if(s._id == id){ name = s.item_text; break; }
+        for(let sSub of s.subCategory){
+          if(sSub._id == id){ name = sSub.item_text; break; }
+        }
+        if(name && name.length > 0){ break; }
+      }  
+    }
+    return name;
+  }
+
+  getCustomerHealthName(id: string){
+    let name = '';
+    if(this.customerHealthSet){
+      for(let c of this.customerHealthSet){
+        if(c._id == id){ name = c.item_text; break; }
+      }
+    }
+    return name;
+  }
+
   ngOnDestroy() {
     localStorage.removeItem('typical_hours');
     this._headerService.showHeader();
@@ -108,6 +148,8 @@ export class ListingComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.AWS_S3 = environment.config.AWS_S3;
+    this.serviceSet = await this._catService.getCategoryAsync();
+    
     //if options which has to be fetched from server is not set correctly, fetch.
     if(this.filters[3].options.length == 0 || this.filters[4].options.length  == 0 || this.filters[4].options.length == 0){
       this.getProfileQuestion();
@@ -130,19 +172,26 @@ export class ListingComponent implements OnInit, OnDestroy {
     /** if personal match exists, reset all filter menu and payload. then set filter menu and payload using personalMatch */
     const personalMatch = this._sharedService.getPersonalMatch();
     if (personalMatch) {
+        this.customerHealthSet = this._qService.getQuestionnaire('background').answers;
         this.filters.forEach(f=>{
         f.active = false;
         if(f.options){ f.options.forEach(o=>{ o.active = false; }); }
         if(f.range){ f.range.current = f.range.default; }
         this.updateFilter(f._id, false);
       });
-      this.listingPayload.ids = personalMatch.ids ? personalMatch.ids : [];
+      if(personalMatch.customer_health && personalMatch.customer_health.length > 0){
+        this.listingPayload.customer_health = personalMatch.customer_health;
+      }
+      if(personalMatch.services && personalMatch.services.length > 0){
+        this.listingPayload.services = personalMatch.services;
+      }
+//      this.listingPayload.ids = personalMatch.ids ? personalMatch.ids : [];
       this.listingPayload.age_range = personalMatch.age_range;
       this.listingPayload.typicalHoursId = personalMatch.typical_hours.length > 1 ? '' : personalMatch.typical_hours[0];
       this.listingPayload.typical_hours = personalMatch.typical_hours.length > 0 ? personalMatch.typical_hours : [];
-      this.listingPayload.type = personalMatch.type;
+      // this.listingPayload.type = personalMatch.type;
 
-      if(this.filters[3].options.length > 0 && this.filters[4].options.length  > 0 && this.filters[4].options.length > 0){
+      if(this.filters[3].options.length > 0 && this.filters[4].options.length  > 0 && this.filters[5].options.length > 0){
         this.setFilterByPersonalMatch();
       }else{
       /** update filter menu when filter data is fetched from server (it will be done in getProfileQuestion function) */
@@ -154,7 +203,7 @@ export class ListingComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(queryParams => {
       this.isVirtual = (queryParams.virtual == 'true') ? true : false;
       this.id = queryParams.id;
-      this.type = queryParams.type;
+      // this.type = queryParams.type;
       this.keyword = queryParams.keyword;
 
       this.listingPayload.keyword = this.keyword || '';
@@ -167,14 +216,16 @@ export class ListingComponent implements OnInit, OnDestroy {
         this.typical_hours = localStorage.getItem('typical_hours').split(',');
       }
 
-      if (this.id && this.type) {
-        this.listingPayload.ids = [this.id];
-        this.listingPayload.type = this.type;
-      } else if(this.id) {
-        this.listingPayload.ids = [this.id];
-      } else if(this.type){
-        this.listingPayload.type = this.type;
+      // if (this.id && this.type) {
+      //   this.listingPayload.ids = [this.id];
+      //   this.listingPayload.type = this.type;
+      // }
+      if(this.id) {
+        this.listingPayload.services = [this.id];
       }
+      // else if(this.type){
+      //   this.listingPayload.type = this.type;
+      // }
 
       this.listing(this.listingPayload);
     });
@@ -220,11 +271,26 @@ export class ListingComponent implements OnInit, OnDestroy {
     this.timerMapZoomChange = setTimeout(() => { this.setMapdata({ zoom: e }, false); }, 500);
   }
 
+  onClickMap(){
+    if(this.mapInfoWindowPrevious && this.mapInfoWindowPrevious.content.isConnected && this.isMapInfoWindowReady){ 
+      this.closeMapInfoWindow();
+    }  
+  }
+
   onClickMapMarker(infoWindow: any){
     if(this.mapInfoWindowPrevious && this.mapInfoWindowPrevious.content.isConnected){ 
-      this.mapInfoWindowPrevious.close();
+      this.closeMapInfoWindow();
     }
-    this.mapInfoWindowPrevious = infoWindow;
+    setTimeout(()=>{ 
+      this.isMapInfoWindowReady = true
+      this.mapInfoWindowPrevious = infoWindow;
+    }, 1000);
+  }
+
+  closeMapInfoWindow(){
+    this.mapInfoWindowPrevious.close();
+    this.mapInfoWindowPrevious = null;
+    this.isMapInfoWindowReady = false;
   }
 
   setMapdata(data: { lat?: number, lng?: number, zoom?: number }, updateListing: boolean = false) {
@@ -280,7 +346,7 @@ export class ListingComponent implements OnInit, OnDestroy {
       if (res.statusCode === 200) {
         res.data.forEach((element: Questionnaire) => {
           if (element.question_type === 'service' && element.slug === 'offer-your-services') {
-            this.setFilterOptions('service', element);
+            this.setFilterOptions('serviceOffer', element);
           }
           if (element.question_type === 'service' && element.slug === 'languages-you-offer') {
             this.setFilterOptions('language', element);
@@ -311,9 +377,19 @@ export class ListingComponent implements OnInit, OnDestroy {
     if (filter.latLong === 'null, null') {
       filter.latLong = '';
     }
+
+    /** copy filter so that the original payload does not effect any change here */
+    const filterCopy = JSON.parse(JSON.stringify(filter));
+
+    /** put customerHealth into services if exist */
+    if(filterCopy.customer_health && filterCopy.customer_health.length > 0){
+      filterCopy.services = filterCopy.services.concat(filterCopy.customer_health)
+    }
+    delete filterCopy.customer_health;
+
     if (showLoader) { this._sharedService.loader('show'); }
     const path = 'user/filter';
-    this._sharedService.postNoAuth(filter, path).subscribe((res: any) => {
+    this._sharedService.postNoAuth(filterCopy, path).subscribe((res: any) => {
       if (res.statusCode === 200) {
         const professionals = [];
         const languageSet = this.getFilter('language').options;
@@ -342,39 +418,6 @@ export class ListingComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**todo: delete if not needed. currently it's not used */
-  // removeFilter() {
-  //   this._sharedService.loader('show');
-  //   this.lat = null;
-  //   this.long = null;
-  //   this.currentAddress = '';
-  //   this.listingPayload = {
-  //     ids: [],
-  //     zipcode: '',
-  //     languageId: '',
-  //     typicalHoursId: '',
-  //     rating: 0,
-  //     miles: 100,
-  //     latLong: `${localStorage.getItem('ipLong')}, ${localStorage.getItem('ipLat')}`,
-  //     age_range: [],
-  //     name: '',
-  //     type: this.type,
-  //     serviceOfferId: '',
-  //     gender: '',
-  //     price_per_hours: '',
-  //     typical_hours: [],
-  //     keyword: '',
-  //     virtual: this.isVirtual
-  //   };
-
-  //   this.listing({
-  //     ids: this.id ? [this.id] : [],
-  //     miles: this.listingPayload.miles,
-  //     latLong: `${localStorage.getItem('ipLong')}, ${localStorage.getItem('ipLat')}`,
-  //     type: this.type,
-  //   });
-  //   this._sharedService.loader('hide');
-  // }
 
   /** set default value to selected listingPayload property */
   removeFilterOne(payloadName: string) {
@@ -383,7 +426,7 @@ export class ListingComponent implements OnInit, OnDestroy {
       case 'rating': val = 0; break;
       case 'miles': val = 100; break;
       case 'latLong': val = `${localStorage.getItem('ipLong')}, ${localStorage.getItem('ipLat')}`; break;
-      case 'type': val = this.type; break;
+      // case 'type': val = this.type; break;
       case 'ids':
       case 'age_range':
       case 'typical_hours':
@@ -400,6 +443,8 @@ export class ListingComponent implements OnInit, OnDestroy {
         val = '';
         break;
     }
+
+    if(payloadName == 'typical_hours'){ this.listingPayload.typicalHoursId = ''; }
     this.listingPayload[payloadName] = val;
   }
 
@@ -408,13 +453,27 @@ export class ListingComponent implements OnInit, OnDestroy {
     if (payloadName === 'rating') {
       this.listingPayload[payloadName] = (typeof val === 'string') ? Number(val) : (typeof val === 'number') ? val : 0;
     }
-    if (payloadName === 'miles') {
+    else if (payloadName === 'miles') {
       this.listingPayload[payloadName] = (typeof val === 'string') ? Number(val) : (typeof val === 'number') ? val : 100;
       this.searchCenter.radius = this.listingPayload.miles * 1000;
     }
-    if (typeof val === 'string') {
-      if (payloadName === 'rating') { this.listingPayload[payloadName] = Number(val); } else { this.listingPayload[payloadName] = val; }
-    } else { this.listingPayload[payloadName] = val; }
+
+    else if (payloadName === 'typical_hours' && typeof val === 'object') {
+      if(val.length > 1){ 
+        this.listingPayload.typicalHoursId = "";
+        this.listingPayload.typical_hours = val;
+      }
+      else{
+        this.listingPayload.typicalHoursId = val[0]
+        this.listingPayload.typical_hours = [];
+      } 
+    }
+
+    else { this.listingPayload[payloadName] = val; }
+
+    // if (typeof val === 'string') {
+    //   // if (payloadName === 'rating') { this.listingPayload[payloadName] = Number(val); } else { this.listingPayload[payloadName] = val; }
+    // } else { this.listingPayload[payloadName] = val; }
   }
 
   /**todo: can be deleted because new ui doesn't have feature to search by doctor name */
@@ -555,13 +614,9 @@ export class ListingComponent implements OnInit, OnDestroy {
 
   /** calculate filter menu position */
   getFilterDropdownPosition() {
-    let idxCurrentFilter: number;
+
     const dropdownWidth = 350;
-    for (let i = 0; i < this.filters.length; i++) {
-      if (this.filters[i]._id == this.filterTarget._id) { idxCurrentFilter = i; break; }
-    }
-    const filters = this.host.querySelectorAll('.filters li button');
-    const filter = (filters) ? filters[idxCurrentFilter] : null;
+    const filter = this.host.querySelector('#filter-' + this.filterTarget._id);
     if (!filter) { return; }
 
     const rectF = filter.getBoundingClientRect();
@@ -616,7 +671,7 @@ export class ListingComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** trigger when click save / clear in filter menu and start listing */
+  /** trigger when click save / clear in filter menu and update listingPayload. then start listing (optional) */
   updateFilter(id: string, listing: boolean = true) {
     const f = this.getFilter(id);
 
@@ -646,6 +701,53 @@ export class ListingComponent implements OnInit, OnDestroy {
       this.listing(this.listingPayload);
       this.setFilterTarget(null);  
     }
+  }
+
+  removeFilterAll(){
+    const o = this.listingPayload;
+//    o.ids = [];
+//    o.type = 'service';
+//    o.keyword = '';
+
+    this.filters.forEach(f=>{
+      if(f.range){ f.range.current = f.range.default; }
+      if(f.options){
+        f.options.forEach(o=>{ o.active = false; });
+      }
+      this.updateFilter(f._id, false);
+    });
+    this.listing(this.listingPayload);
+  }
+
+  removeService(i: number){
+    const id = this.listingPayload.services[i];
+    this.listingPayload.services.splice(i,1);
+
+    if(id == this.id){
+      this.id = null;
+      this.setQueryParams();
+    }else{
+      this.listing(this.listingPayload);
+    }
+  }
+  removeKeyword(){ 
+    this.keyword = '';
+    this.setQueryParams();
+  }
+  removeCustomerHealth(i: number){
+    this.listingPayload.customer_health.splice(i, 1);
+    this.listing(this.listingPayload);
+  }
+
+  setQueryParams(){
+    const params: {id?: string, keyword?: string} = {};
+    if(this.keyword && this.keyword.length > 0){ params.keyword = this.keyword; }
+    if(this.id && this.id.length > 0){ params.id = this.id; }
+
+    this.router.navigate(['./'], {
+      queryParams: params,
+      relativeTo: this.route
+    });
   }
 
   changePage(i: number) {
@@ -707,7 +809,7 @@ const filtersPreset = [
   },
   { _id: 'language', item_text: 'Language', type: 'radio', payloadName: 'languageId', active: false, options: [/** use server data */] },
   { _id: 'availability', item_text: 'Availability', type: 'checkbox', payloadName: 'typical_hours', active: false, options: [/** use server data */] },
-  { _id: 'service', item_text: 'Service type', type: 'checkbox', payloadName: 'serviceOfferIds', active: false, options: [/** use server data */] },
+  { _id: 'serviceOffer', item_text: 'Service type', type: 'checkbox', payloadName: 'serviceOfferIds', active: false, options: [/** use server data */] },
   {
     _id: 'pricing', item_text: 'Pricing', type: 'radio', payloadName: 'price_per_hours', active: false, options: [
       { _id: '< $50', item_text: '$ < 50', active: false, subans: false },
@@ -720,7 +822,7 @@ const filtersPreset = [
   },
   {
     _id: 'age', item_text: 'Age Group', type: 'checkbox', payloadName: 'age_range', active: false, options: [
-      { _id: '5eb1a4e199957471610e6cd7', item_text: 'Not Critical', active: false, subans: false },
+      // { _id: '5eb1a4e199957471610e6cd7', item_text: 'Not Critical', active: false, subans: false },
       { _id: '5eb1a4e199957471610e6cd8', item_text: 'Child (<12)', active: false, subans: false },
       { _id: '5eb1a4e199957471610e6cd9', item_text: 'Adolescent (12-18)', active: false, subans: false },
       { _id: '5eb1a4e199957471610e6cda', item_text: 'Adult (18+)', active: false, subans: false },
@@ -731,6 +833,9 @@ const filtersPreset = [
 
 const payloadInitial = {
   ids: [],
+  services: [],
+  serviceOfferIds: [],
+  customer_health: [],
   zipcode: '',
   languageId: '',
   typicalHoursId: '',
@@ -739,8 +844,7 @@ const payloadInitial = {
   latLong: '',
   age_range: [],
   name: '',
-  type: 'service',
-  serviceOfferIds: [],
+  // type: 'service',
   price_per_hours: '',
   gender: '',
   typical_hours: [],

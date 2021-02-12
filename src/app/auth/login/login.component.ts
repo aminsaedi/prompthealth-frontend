@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   public professionalLogin = false;
   userType = 'U';
   public submitted = false;
-  public loginUserType: any; 
+  public loginUserType: any;
 
   constructor(
     private authService: SocialAuthService,
@@ -44,13 +44,13 @@ export class LoginComponent implements OnInit {
 
     this.loginUserType = localStorage.getItem('userType');
 
-    this._route.params.subscribe(param=>{
+    this._route.params.subscribe(param => {
       const type = param.type;
-      this.professionalLogin = (type.toLowerCase() == 'u')? false : true;
-      switch(type.toLowerCase()){
-        case 'u':  this.userType = 'U';  break;
+      this.professionalLogin = (type.toLowerCase() == 'u') ? false : true;
+      switch (type.toLowerCase()) {
+        case 'u': this.userType = 'U'; break;
         case 'sp': this.userType = 'SP'; break;
-        case 'c':  this.userType = 'C';  break;
+        case 'c': this.userType = 'C'; break;
       }
     });
 
@@ -70,8 +70,13 @@ export class LoginComponent implements OnInit {
         email: x.email,
         roles: this.userType,
         loginType: x.provider.toLowerCase(),
-  
-      }
+        social_id: x.id,
+        profileImage: x.photoUrl,
+        firstName: x.firstName,
+        lastName: x.lastName
+
+      };
+      console.log(x);
       this._sharedService.socialRegister(payload).subscribe((res: any) => {
         this._sharedService.loader('hide');
         if (res.statusCode === 200) {
@@ -86,7 +91,7 @@ export class LoginComponent implements OnInit {
           this.toastr.error(res.message);
         }
       }, (error) => {
-        this.toastr.error("There are some error please try after some time.")
+        this.toastr.error('There are some error please try after some time.');
         this._sharedService.loader('hide');
       });
     });
@@ -99,9 +104,12 @@ export class LoginComponent implements OnInit {
         email: x.email,
         roles: this.userType,
         loginType: x.provider.toLowerCase(),
-        termsCondition: true
-  
-      }
+        termsCondition: true,
+        social_id: x.id,
+        profileImage: x.photoUrl,
+        firstName: x.firstName,
+        lastName: x.lastName
+      };
 
       this._sharedService.socialRegister(payload).subscribe((res: any) => {
         this._sharedService.loader('hide');
@@ -117,7 +125,7 @@ export class LoginComponent implements OnInit {
           this.toastr.error(res.message);
         }
       }, (error) => {
-        this.toastr.error("There are some error please try after some time.")
+        this.toastr.error(error.message);
         this._sharedService.loader('hide');
       });
     });
@@ -128,11 +136,10 @@ export class LoginComponent implements OnInit {
 
     if (this.loginForm.invalid) {
       return;
-    }
-    else {
+    } else {
       this.submitted = true;
       this.loginForm.controls.loginType.setValue(this.loginUserType);
-      let data = JSON.stringify(this.loginForm.value);
+      const data = JSON.stringify(this.loginForm.value);
       this._sharedService.loader('show');
       this._sharedService.login(data).subscribe((res: any) => {
         this._sharedService.loader('hide');
@@ -142,13 +149,12 @@ export class LoginComponent implements OnInit {
             timeOut: 2000
           });
 
-        }
-        else {
+        } else {
           this.toastr.error(res.message);
         }
 
       }, (error) => {
-        this.toastr.error(error)
+        this.toastr.error(error);
         this._sharedService.loader('hide');
       });
     }

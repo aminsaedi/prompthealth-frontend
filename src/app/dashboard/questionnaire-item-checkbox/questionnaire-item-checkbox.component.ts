@@ -82,35 +82,35 @@ export class QuestionnaireItemCheckboxComponent implements OnInit {
     this.isInvalid = false;
 
     target.active = this.getFormArray(formArrayName).controls[i].value;
-    if(target.subans && !target.subansData){ this.getChildCategories(target); }
+    // if(target.subans && !target.subansData){ this.getChildCategories(target); }
   }
 
-  getChildCategories(parent: QuestionnaireAnswer){
-    const path = `questionare/get-answer/${parent._id}`;
-      this._sharedService.get(path).subscribe((res: any) => {
-        if (res.statusCode === 200) {
-          var subansData: QuestionnaireAnswer[] = [];
+  // getChildCategories(parent: QuestionnaireAnswer){
+  //   const path = `questionare/get-answer/${parent._id}`;
+  //     this._sharedService.get(path).subscribe((res: any) => {
+  //       if (res.statusCode === 200) {
+  //         var subansData: QuestionnaireAnswer[] = [];
 
-          res.data.forEach((a: any)=>{
-            subansData.push({
-              _id: a._id,
-              item_text: a.item_text,
-              active: false,
-              subans: a.subans,
-            });
-          });
+  //         res.data.forEach((a: any)=>{
+  //           subansData.push({
+  //             _id: a._id,
+  //             item_text: a.item_text,
+  //             active: false,
+  //             subans: a.subans,
+  //           });
+  //         });
 
-          parent.subansData = subansData;
-          this.addChildForm(parent._id, subansData);
+  //         parent.subansData = subansData;
+  //         this.addChildForm(parent._id, subansData);
 
-        } else {
-          this._sharedService.checkAccessToken(res.message);
-        }
-      }, err => {
+  //       } else {
+  //         this._sharedService.checkAccessToken(res.message);
+  //       }
+  //     }, err => {
 
-        this._sharedService.checkAccessToken(err);
-      });
-  }
+  //       this._sharedService.checkAccessToken(err);
+  //     });
+  // }
 
   cancel(){
     this.isInvalid = false;

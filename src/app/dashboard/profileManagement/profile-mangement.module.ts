@@ -26,6 +26,7 @@ import { RatingsComponent } from '../../shared/ratings/ratings.component';
 import { MyAffiliateComponent } from './my-affiliate/my-affiliate.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MyPasswordComponent } from './my-password/my-password.component';
+import { MyServiceComponent } from './my-service/my-service.component';
 @NgModule({
   declarations: [
     WrapperComponent,
@@ -43,6 +44,7 @@ import { MyPasswordComponent } from './my-password/my-password.component';
     MyProductComponent,
     RatingsComponent,
     MyPasswordComponent,
+    MyServiceComponent,
     
   ],
   schemas: [

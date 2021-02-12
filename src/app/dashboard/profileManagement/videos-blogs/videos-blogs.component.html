@@ -56,13 +56,13 @@
         </div>
         <div class="form-group col-sm-5">
           <label>URL</label>
-          <input formControlName="url" class="form-control" placeholder="Enter YouTube URL">
+          <input formControlName="url" class="form-control" placeholder="Enter YouTube/Vimeo URL">
           <div class="error-block" *ngIf="formArr.controls[i].get('url').touched">
             <small  *ngIf="formArr.controls[i].get('url').errors?.required"  class="text-danger">
                 Video URL is required.
             </small>
             <small *ngIf="formArr.controls[i].get('url').errors?.pattern"  class="text-danger">
-                YouTube URL is invalid.
+                YouTube / Vimeo URL is invalid.
             </small>
           </div>
         </div>

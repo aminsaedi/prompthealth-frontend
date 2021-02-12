@@ -10,8 +10,8 @@ import {
   FacebookLoginProvider,
   AmazonLoginProvider,
 } from 'angularx-social-login';
-import { TooltipModule } from "ngx-bootstrap/tooltip";
-import { ModalModule } from "ngx-bootstrap/modal";
+// import { TooltipModule } from 'ngx-bootstrap/tooltip';
+// import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 import { AuthRoutingModule } from './auth-routing.module';
@@ -22,6 +22,8 @@ import { ContactUspageComponent } from './contact-uspage/contact-uspage.componen
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from '../auth/login/login.component';
 import { EnterpriseContactComponent } from './enterprise-contact/enterprise-contact.component';
+// import { AppleLoginProvider } from './apple.provider';
+// import { environment } from 'src/environments/environment';
 
 
 
@@ -34,7 +36,6 @@ import { EnterpriseContactComponent } from './enterprise-contact/enterprise-cont
     NgxSpinnerModule,
     // NgxIntlTelInputModule,
     ReactiveFormsModule,
-
     SocialLoginModule,
   ],
   declarations: [
@@ -59,7 +60,13 @@ import { EnterpriseContactComponent } from './enterprise-contact/enterprise-cont
           id: FacebookLoginProvider.PROVIDER_ID,
           // provider: new FacebookLoginProvider('561602290896109'),
           provider: new FacebookLoginProvider('2053494228293760'),
-        },
+        }
+        // {
+        //   id: AppleLoginProvider.PROVIDER_ID,
+        //   provider: new AppleLoginProvider(
+        //     environment.config.APPLE_CLIENT_ID
+        //   ),
+        // },
       ],
     } as SocialAuthServiceConfig,
   }]

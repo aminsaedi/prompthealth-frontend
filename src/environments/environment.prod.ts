@@ -13,8 +13,10 @@ export const environment = {
 
     BASE_URL: 'https://prompthealth.ca/',
     API_URL: 'https://api.prompthealth.ca/api/v1/',
-    stripeKey: 'pk_live_51HMSVQHzvKsIv7FclCIgEYNrD4tlvjzZRTDx43Y54pVY3vjQ8MhFuOntQMY094MZ49bDzOdFf2A2tkYdTwSag9ij00xDUu4xnU'
+    stripeKey: 'pk_live_51HMSVQHzvKsIv7FclCIgEYNrD4tlvjzZRTDx43Y54pVY3vjQ8MhFuOntQMY094MZ49bDzOdFf2A2tkYdTwSag9ij00xDUu4xnU',
 
+    APPLE_TEAM_ID: '8JS3W47P32',
+    APPLE_CLIENT_ID: 'com.prompthealth'
   },
   api_routes: {
     LOGIN: 'login',

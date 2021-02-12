@@ -74,12 +74,14 @@ export class MyProfileComponent implements OnInit {
     email: '',
     phone: '',
     address: '',
+    hideAddress: false,
     state: '',
     city: '',
     zipcode: '',
     booking: '',
     bookingURL: '',
-    profileImage: {},
+    website: '',
+    profileImage: null,
     latitude: 0,
     longitude: 0,
     languages: [],
@@ -283,7 +285,6 @@ export class MyProfileComponent implements OnInit {
           this.hoursSelected = this.profile.typical_hours;
           this.age_rangeSelected = this.profile.age_range;
         }
-        console.log(this.profile);
       } else {
         this._sharedService.checkAccessToken(res.message);
       }
@@ -405,15 +406,19 @@ export class MyProfileComponent implements OnInit {
     const payload = this.profile;
     payload._id = localStorage.getItem('loginID');
     if (payload.phone) { payload.phone.toString(); }
-    const data = JSON.parse(JSON.stringify(this.profile));
 
     this._sharedService.loader('show');
-    this.profile.bookingURL = this.profile.bookingURL.trim();
+
+    if(this.profile.bookingURL){ this.profile.bookingURL = this.profile.bookingURL.trim(); }
     if (this.profile.bookingURL) {
       this.profile.booking = 'yes';
     } else {
       this.profile.booking = 'no';
     }
+    if(this.profile.website){ this.profile.website = this.profile.website.trim(); }
+
+    const data = JSON.parse(JSON.stringify(this.profile));
+
     this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
       if (res.statusCode === 200) {
         this.profile = res.data;
@@ -451,6 +456,7 @@ export class MyProfileComponent implements OnInit {
             this.toastr.error(res.message);
           }
         }, err => {
+          console.log(err);
           this._sharedService.loader('hide');
           this.toastr.error('There are some errors, please try again after some time !', 'Error');
         });

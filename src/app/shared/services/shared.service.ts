@@ -98,8 +98,15 @@ export class SharedService {
   }
 
   imgUpload(body, path) {
+    const headers = new HttpHeaders();
+    headers.set('Access-Control-Allow-Origin', '*');
+    // headers.set('Access-Control-Allow-Methods', 'POST');
+    headers.set('Origin', 'https://prompthealth.ca');
+    headers.set('Content-Type', 'multipart/form-data');
+
+    // headers.delete('Content-Type');
     // let headers = this.getAuthorizationHeader();
-    return this.http.post(this.rootUrl + path, body);
+    return this.http.post(this.rootUrl + path, body, { headers });
   }
   put(body, path) {
     const headers = this.getAuthorizationHeader();
@@ -139,7 +146,7 @@ export class SharedService {
   socialRegister(body) {
 
     const headers = this.getDefaultHeader();
-    return this.http.post(this.rootUrl + 'user/social-login', body, { headers });
+    return this.http.post(this.rootUrl + 'user/social-login-2', body, { headers });
   }
   logingOut() {
     const headers = this.getAuthorizationHeader();
@@ -223,8 +230,8 @@ export class SharedService {
   getPersonalMatch() {
     return this.personalMatch;
   }
-  clearPersonalMatch(){ this.personalMatch = null; }
-  
+  clearPersonalMatch() { this.personalMatch = null; }
+
   /*This function is use to get access token from cookie. */
   getAccessToken(): string {
     const token = localStorage.getItem('token');
@@ -232,9 +239,9 @@ export class SharedService {
   }
 
   /*This function is use to get header with Authorization or without Authorization. */
-  getAuthorizationHeader(access = true) {
+  getAuthorizationHeader(access = true): HttpHeaders {
     const token = this.getAccessToken();
-    let headers = {};
+    let headers: HttpHeaders = null;
 
     if (access) {
       headers = new HttpHeaders()
@@ -287,11 +294,8 @@ export class SharedService {
 
 
   loginUser(res, type) {
-    console.log(res);
-    console.log(res.data.roles);
     let route;
     if (res.data.roles === 'U') {
-      console.log(res.data.roles);
       // this._router.navigate(['/']);
       route = res.data.roles === 'U' ? '/' : '';
     } else {

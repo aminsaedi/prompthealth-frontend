@@ -1,5 +1,6 @@
 import { Component, ViewChild, Output, EventEmitter, NgZone, ElementRef } from '@angular/core';
 import { SharedService } from '../../shared/services/shared.service';
+import { BehaviorService } from 'src/app/shared/services/behavior.service';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { MapsAPILoader } from '@agm/core';
@@ -31,6 +32,8 @@ export class UserDetailsComponent {
     email: '',
     phone: '',
     address: '',
+    website: '',
+    hideAddress: false,
     state: '',
     city: '',
     certification: '',
@@ -83,6 +86,7 @@ export class UserDetailsComponent {
 
   constructor(
     private _sharedService: SharedService,
+    private _bs: BehaviorService,
     private toastr: ToastrService,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone) {
@@ -307,6 +311,8 @@ export class UserDetailsComponent {
     this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
       this._sharedService.loader('hide');
       if (res.statusCode === 200) {
+        this._bs.setUserData(res.data);
+        
         this.response = res;
         this.toastr.success('Profile updated successfully!');
         // this._router.navigate(['/home']);

@@ -148,19 +148,19 @@ export class HomeComponent implements OnInit {
     {
       imgUrl: 'assets/img/how-ph-works/filter.png',
       title: 'Filter',
-      body: 'Apply filters to your search to narrow down the options in your geographic area. Choose to \
-       select preferences such as experience \
-      level, language, price, pecialization with age group, practitioner gender, and more! ',
+      body: 'Apply filters to your search to narrow down the options in your geographic area. Choose to select\
+       preferences such as experience \
+      level, language, price, specialization with age group, practitioner gender, and more! ',
     },
     {
       imgUrl: 'assets/img/how-ph-works/compare.png',
       title: 'Compare',
-      body: 'Compare: Do side by side comparisons and check out ratings and reviews to help you find the best\
-       practitioner. ',
+      body: 'Do side by side comparisons and check out ratings and reviews written by both clients and other \
+       health professionals in order to help you find the best practitioner or product.',
     },
     {
       imgUrl: 'assets/img/how-ph-works/book.png',
-      title: 'Book',
+      title: 'Booking',
       body: 'Directly request a booking with your preferred availability.',
     },
     {

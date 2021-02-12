@@ -17,7 +17,8 @@ export class VideosBlogsComponent implements OnInit {
   totalItems;
   pageSize: 10;
 
-  reg = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
+  // reg = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
+  reg = /^http(s)?:\/\/(w{3}\.)?((youtube|vimeo)\.com|youtu.be)\/.+/;
 
   constructor(
     private _fb: FormBuilder,
@@ -72,7 +73,7 @@ export class VideosBlogsComponent implements OnInit {
     const path = `user/addVideo`;
     const payload = { user_id: this.userId, data: this.videosForm.value.data };
     // payload.data[0].url = `https://www.youtube.com/embed/${this.getEmbededURL(payload.data[0].url)}`;
-    payload.data[0].url = `https://www.youtube.com/watch?v=${this.getEmbededURL(payload.data[0].url)}`;
+    // payload.data[0].url = `https://www.youtube.com/watch?v=${this.getEmbededURL(payload.data[0].url)}`;
     this.sharedService.loader('show');
     this.sharedService.post(payload, path).subscribe((res: any) => {
       this.sharedService.loader('hide');

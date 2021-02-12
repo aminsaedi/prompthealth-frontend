@@ -79,11 +79,13 @@
       </div>
 
       <div class="form-row mb-3">
-        <label class="col-md-3">Phone Number <span class="text-danger" *ngIf="editFields">*</span></label>
+        <label class="col-md-3">Phone Number 
+          <!-- <span class="text-danger" *ngIf="editFields">*</span> -->
+        </label>
         <div class="col-md-9">
           <input [disabled]="!editFields" type="text" autocomplete="off" id="phone" name="phone" #phone="ngModel"
             [(ngModel)]="profile.phone" class="form-control" maxlength="12" minlength="10"
-            (ngModelChange)="profile.phone = $event" required pattern="^[0-9]*$" />
+            (ngModelChange)="profile.phone = $event" pattern="^[0-9]*$" />
           <div class="error-block" *ngIf="editFields">
             <small *ngIf="phone.errors?.required && phone.touched" class="text-danger">
               Phone Number is required.
@@ -112,9 +114,34 @@
                 Address is required.
               </small>
             </div>
+            <div class="mt-3" *ngIf="roles != 'U'">
+              <label for="do-not-show-address">
+                <input class="radio" type="checkbox" id="do-not-show-address"
+                name="hideAddress" [(ngModel)]="profile.hideAddress">
+
+                <span class="">Do not show my address</span>
+              </label>
+              <div *ngIf="profile.hideAddress == true" class="mt-2 mb-3 font-italic">You'll not be shown on the location based listing page</div>
+            </div>
           </div>
         </div>
       </div>
+
+      <div class="form-row mb-3" *ngIf="roles !== 'U'">
+        <label class="col-md-3">Website</label>
+        <div class="col-md-9">
+          <input type="text" [disabled]="!editFields" id="website" name="website" [(ngModel)]="profile.website"
+          pattern="http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?" #website="ngModel" [placeholder]="editFields ? 'https://example.com' : ''"
+          class="form-control" />
+
+          <div class="error-block" *ngIf="editFields">
+            <small *ngIf="website.invalid && website.touched && website.errors?.pattern" class="text-danger">
+              URL must be a valid URL
+            </small>
+          </div>
+        </div>
+      </div>
+      
       <div *ngIf="roles === 'SP'" class=" form-row mb-3">
         <label class="col-md-3">Professional Association <span class="text-danger" *ngIf="editFields">*</span></label>
         <div class="col-md-9">
@@ -139,10 +166,10 @@
         <!-- <label class="col-md-3">Booking URL <span class="text-danger"  *ngIf="editFields">*</span></label> -->
         <div class="col-md-9">
           <input type="url" [disabled]="!editFields" autocomplete="off" id="bookingURL" name="bookingURL"
-            pattern="https://.*" #bookingURL="ngModel" [placeholder]="editFields ? 'https://example.com' : ''"
+            pattern="http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?"  #bookingURL="ngModel" [placeholder]="editFields ? 'https://example.com' : ''"
             [(ngModel)]="profile.bookingURL" (onFocus)="profile.bookingURL = ''" class="form-control" />
           <div class="error-block" *ngIf="editFields">
-            <small *ngIf="bookingURL.errors" class="text-danger">
+            <small *ngIf="bookingURL.errors?.pattern && bookingURL.touched" class="text-danger">
               Booking URL must be a valid URL
             </small>
           </div>

@@ -17,8 +17,8 @@
                     <span class="fa-li"><i class="far fa-check-circle"></i></span>
                     Advanced Tier
                 </li>
-                <li *ngFor="let desc of (data.description.split('\n'));">
-                    <span class="fa-li"><i class="far fa-check-circle"></i></span>
+                <li *ngFor="let desc of (data.description.split('\n')); let i = index">
+                    <span class="fa-li" *ngIf="i!== 1"><i class="far fa-check-circle" ></i></span>
                     {{desc}}
                 </li>
             </ul>

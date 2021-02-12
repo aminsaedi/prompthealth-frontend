@@ -1,5 +1,6 @@
 import { environment } from 'src/environments/environment';
 import { QuestionnaireAnswer } from '../dashboard/questionnaire.service';
+import { Category } from '../shared/services/category.service';
 
 export interface IProfessional {
   id: string;
@@ -26,12 +27,12 @@ export interface IProfessional {
   // used in detailComponent
   reviews: any[];
   yearsOfExperience: string;
-  languages: string;
+  languages: string[];
   videos: Video[];
   endosements: any[];
   banner: string;
   practicePhilosophy: string;
-  ageRange: string;
+  ageRange: string[];
   organization: string;
   certification: string;
 
@@ -85,6 +86,8 @@ export class Professional implements IProfessional {
   private _priceRange: number[] = [];
   private _gender: string;
   private _address: string;
+  private _hideAddress: boolean;
+  private _website: string;
   private _location: number[];
   private _distance: number;
   private _provideVirtual: boolean;
@@ -98,22 +101,25 @@ export class Professional implements IProfessional {
 
   private _isCheckedForCompared = false;
 
-  private _languagesId: string[] = [];
-  private _ageRangeId: string[] = [];
-  private _availabilityId: string[] = [];
-  private _serviceDeliveryId: string[] = [];
+  protected _languagesId: string[] = [];
+  protected _ageRangeId: string[] = [];
+  protected _availabilityId: string[] = [];
+  protected _serviceDeliveryId: string[] = [];
+  protected _healthStatus: ServiceCategory[] = [];
 
   private _languages: { id: string, item_text: string }[] = [];
   private _ageRange: { id: string, item_text: string }[] = [];
   private _availability: { id: string, item_text: string }[] = [];
 
-  private _typeOfProvider: ServiceCategory[] = [];   /** homeopath / dentist / neuropsychologist */
-  private _treatmentModality: ServiceCategory[] = []; /** laser treatments / tai chi */
-  private _service: ServiceCategory[] = []; /** medical care / preventative health */
+  protected _typeOfProvider: ServiceCategory[] = [];   /** homeopath / dentist / neuropsychologist */
+  protected _treatmentModality: ServiceCategory[] = []; /** laser treatments / tai chi */
+  protected _service: ServiceCategory[] = []; /** medical care / preventative health */
   private _serviceDelivery: ServiceCategory[] = [];  /** service / exercise training / direct billing */
 
   private _banner: string; // todo: implement correctly. currently, this property not used.
   private _endosements: any[]; // todo: impliment correctly. currently, this property not used;
+
+  protected _allServiceId: string[];
 
   private _mapIconUrl: string;
   private _isMapIconReady = false;
@@ -121,8 +127,8 @@ export class Professional implements IProfessional {
   get id() { return this._id; }
   get name() { return this._name; }
   get firstname() { return this._firstname; }
-  get image() { return this._image ? this._baseURLImage + '350x220/' + this._image : '/assets/img/no-image.jpg'; }
-  get imageFull() { return this._image ? this._baseURLImage + this._image : '/assets/img/no-image.jpg'; }
+  get image() { return this._image ? this._baseURLImage + '350x220/' + this._image + '?ver=1.0.1' : '/assets/img/no-image.jpg'; }
+  get imageFull() { return this._image ? this._baseURLImage + this._image + '?ver=1.0.1' : '/assets/img/no-image.jpg'; }
   get banner() { return this._banner ? this._baseURLImage + this._banner : '/assets/img/professional-banner.png'; }
   get role() { return this._roles.toString(); }
   get description() { return this._description; }
@@ -136,7 +142,14 @@ export class Professional implements IProfessional {
   }
   get priceFull() { return (this._priceRange.length === 0) ? 'N/A' : '$' + this._priceRange.join(' - '); }
   get gender() { return this._gender; }
-  get address() { return this._address; }
+  get address() { return (!this._hideAddress && this._address && this._address.length > 0) ? this._address : null; }
+  get website() { return this._website; }
+  get websiteLabel() {
+    let label = '';
+    const match = this._website.match(/https?:\/\/(?:www\.)?([^/]+)/);
+    if (this._website && match) { label = match[1]; }
+    return label;
+  }
   get location() { return this._location; }
   get distance() { return this._distance; }
   get provideVirtual() { return this._provideVirtual; }
@@ -146,12 +159,12 @@ export class Professional implements IProfessional {
   get languages() {
     const languages = [];
     this._languages.forEach(l => { languages.push(l.item_text); });
-    return languages.join(', ');
+    return languages;
   }
   get ageRange() {
     const ageRange = [];
     this._ageRange.forEach(a => { ageRange.push(a.item_text); });
-    return ageRange.join(', ');
+    return ageRange;
   }
   get availability() {
     const result = [];
@@ -180,9 +193,21 @@ export class Professional implements IProfessional {
     return result;
   }
 
+  /** [ mainCategoryString, subCategoryString[] ] [] */
   get service() {
     const result = [];
-    if (this._service) { this._service.forEach(o => { result.push(o.item_text); }); }
+    if (this._service) {
+      this._service.forEach(o => {
+        const cat = [];
+        cat.push(o.item_text);
+        if (o.hasSubAns) {
+          const catSub = [];
+          o.subAnsData.forEach(sub => { catSub.push(sub.item_text); });
+          cat.push(catSub);
+        }
+        result.push(cat);
+      });
+    }
     return result;
   }
 
@@ -197,6 +222,15 @@ export class Professional implements IProfessional {
     if (this._amenities) { this._amenities.forEach(o => { result.push(o.item_text); }); }
     return result;
   }
+
+  get healthStatus() {
+    const result = [];
+    if (this._healthStatus) { this._healthStatus.forEach(o => { result.push(o.item_text); }); }
+    return result;
+  }
+
+  get allServiceId() { return this._allServiceId; }
+
 
   get isCheckedForCompare() { return this._isCheckedForCompared; }
   set isCheckedForCompare(checked: boolean) { this._isCheckedForCompared = checked; }
@@ -213,7 +247,7 @@ export class Professional implements IProfessional {
     this._name = name.trim();
     this._firstname = first;
 
-    this._image = (p.profileImage && p.profileImage.length > 0)? p.profileImage : null;
+    this._image = (p.profileImage && p.profileImage.length > 0) ? p.profileImage : (p.image && p.image.length > 0) ? p.image : null;
     this._banner = null;
 
     this._roles = !p.roles ? ['SP'] : (typeof p.roles === 'string') ? [p.roles] : p.roles;
@@ -245,12 +279,14 @@ export class Professional implements IProfessional {
 
     this._gender = p.gender || null;
     this._address = p.address || null;
+    this._hideAddress = p.hideAddress || false;
+    this._website = p.website || null;
     this._videos = p.videos || [];
     this._yearsOfExperience = p.years_of_experience || null;
     this._languagesId = p.languages || [];
     this._availabilityId = p.typical_hours || [];
     this._ageRangeId = p.age_range || [];
-    this._ageRange = p.age_range || [];
+    this._ageRange = [];
     this._serviceDeliveryId = p.serviceOfferIds || [];
     this._location = p.location || [null, null];
     this._distance = p.calcDistance || null;
@@ -258,6 +294,9 @@ export class Professional implements IProfessional {
 
     this._organization = p.professional_organization || null;
     this._certification = p.certification || null;
+
+    this._healthStatus = p.serviceCategories || [];
+    this._allServiceId = p.services || [];
   }
 
   populate(type: 'languages' | 'availability' | 'ageRange' | 'serviceDelivery', dataSet: QuestionnaireAnswer[]) {
@@ -271,6 +310,31 @@ export class Professional implements IProfessional {
         }
       }
     });
+  }
+  populateService(dataSet: Category[]) {
+    const service = [];
+    dataSet.forEach(c => {
+      if (this._allServiceId.indexOf(c._id) > -1) {
+        const subCat = [];
+        c.subCategory.forEach(cSub => {
+          if (this._allServiceId.indexOf(cSub._id) > -1) {
+            subCat.push({
+              _id: cSub._id,
+              item_text: cSub.item_text,
+              isSubAns: true
+            });
+          }
+        });
+        service.push({
+          _id: c._id,
+          item_text: c.item_text,
+          isSubAns: false,
+          hasSubAns: true,
+          subAnsData: subCat
+        });
+      }
+    });
+    this._service = service;
   }
 
   setServiceCategory(name: string, data: ServiceCategory[]) { this['_' + name] = data; }
@@ -345,40 +409,6 @@ export class Professional implements IProfessional {
       c.height = 2 * (radCircle + padding);
     }
 
-    // const radCircle = 32;
-    // const gap = 5;
-    // const wLabel = 125;
-    // const hLabel = 28;
-
-
-
-    // c.width = needLabel? wLabel : radCircle * 2;
-    // c.height = needLabel? radCircle * 2 + gap + hLabel : radCircle * 2;
-
-    // if(needLabel){
-    //   ctx.beginPath();
-    //   const x = 0;
-    //   const y = radCircle * 2 + gap;
-    //   const w = wLabel;
-    //   const h = hLabel;
-    //   const r = hLabel / 2;
-
-    //   ctx.moveTo(x + r, y);
-    //   ctx.lineTo(x + w - r, y);
-    //   ctx.arc(x + w - r, y + r, r, Math.PI * (3 / 2), Math.PI * (1 / 2), false);
-    //   ctx.lineTo(x + r, y + h);
-    //   ctx.arc(x + r, y + h - r, r, Math.PI * (1 / 2), Math.PI * (3 / 2), false);
-    //   ctx.closePath();
-
-    //   ctx.fillStyle = 'white';
-    //   ctx.fill();
-
-    //   ctx.fillStyle = 'black';
-    //   ctx.font = '16px bold -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
-    //   var wText = ctx.measureText(this.mapLabel).width;
-    //   ctx.fillText(this.mapLabel, (wLabel - wText) / 2, radCircle * 2 + gap + hLabel - 8);
-    // }
-
     img.onload = () => {
 
       ctx.beginPath();
@@ -396,30 +426,14 @@ export class Professional implements IProfessional {
 
       const x = (w > h) ? (w - h) / 2 : 0;
       const y = (w > h) ? 0 : (h - w) / 2;
+      try {
+        ctx.drawImage(img, x, y, rect, rect, padding, padding, padding + radCircle * 2, padding + radCircle * 2);
 
-      ctx.drawImage(img, x, y, rect, rect, padding, padding, padding + radCircle * 2, padding + radCircle * 2);
-      this._mapIconUrl = c.toDataURL();
+        this._mapIconUrl = c.toDataURL();
+      } catch (err) {
+        console.log(err);
+      }
       this._isMapIconReady = true;
-  
-  //     const w = img.width;
-  //     const h = img.height;
-  //     const rect = (w > h)? h : w;
-
-  //     const x = (w > h)? (w - h) / 2 : 0;
-  //     const y = (w > h)? 0 : (h - w) / 2;
-
-  //     ctx.beginPath();
-  //     ctx.arc( c.width / 2, radCircle, radCircle, 0 * Math.PI / 180, 360 * Math.PI / 180);
-  //     ctx.fillStyle = 'white';
-  //     ctx.strokeStyle="grey";
-  //     ctx.lineWidth = 1;
-  //     ctx.fill();
-  //     ctx.stroke();
-  //     ctx.clip();
-
-  //     ctx.drawImage(img, x, y, rect, rect, c.width / 2 - radCircle, 0, radCircle * 2, radCircle * 2);
-  //     this._mapIconUrl = c.toDataURL();
-      //  this._isMapIconReady = true;
     };
 
     img.addEventListener('error', () => {
@@ -432,16 +446,22 @@ export class Professional implements IProfessional {
     });
 
     img.crossOrigin = '';
-    img.src = this._image? this.image : '/assets/img/logo-sm.png';
+    img.src = this._image ? this.image : '/assets/img/logo-sm.png';
   }
 }
-interface ServiceCategory {
+export interface ServiceCategory {
   item_text: string;
   id?: string;
+  _id?: string;
   slug?: string;
   questionId?: string;
   ansId?: string;
   subAnsId?: boolean;
+  subAns?: boolean;   /** true if this category has subcategory */
+  isSubAns?: boolean; /** true if this category is subcategory */
+  hasSubAns?: boolean;
+  subAnsData?: ServiceCategory[];
+
 }
 
 interface Video {

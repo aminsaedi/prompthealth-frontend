@@ -51,7 +51,9 @@
         </div>
       </div>
       <div class="col-md-6 mb-3">
-        <label>Phone <span class="text-danger">*</span></label>
+        <label>Phone 
+          <!-- <span class="text-danger">*</span> -->
+        </label>
         <input
           autofocus
           type="text"
@@ -59,20 +61,20 @@
           name="phone"
           class="form-control"
           placeholder=""
+          minlength="10"
           maxlength="12"
           (keyup)="trim('phone')"
           #phone="ngModel"
           [ngModel]="userDetails.phone"
           (ngModelChange)="userDetails.phone = $event"
-          required 
           pattern="^[0-9]*$"
         />
 
         <div class="error-block">
-          <small *ngIf="phone.errors?.required && phone.touched" class="text-danger">
+          <!-- <small *ngIf="phone.errors?.required && phone.touched" class="text-danger">
             Phone number is required.
-          </small>
-          <small *ngIf="phone.errors" class="text-danger">
+          </small> -->
+          <small *ngIf="phone.touched && phone.invalid && phone.errors" class="text-danger">
             Phone number not valid.
           </small>
         </div>
@@ -115,6 +117,15 @@
             Address is required.
           </small>
         </div>
+
+        <div class="mt-3">
+          <label for="do-not-show-address" >
+            <input class="radio" type="checkbox" id="do-not-show-address"
+            name="hideAddress" [(ngModel)]="userDetails.hideAddress" >
+            <span class="" style="margin-left: 5px;">Do not show my address</span>
+          </label>
+          <div *ngIf="userDetails.hideAddress == true" class="mt-2 mb-3 font-italic">You'll not be shown on the location based listing page</div>
+        </div>
       </div>
       <div class="col-md-6 mb-3">
         <label>City <span class="text-danger">*</span></label>
@@ -154,6 +165,17 @@
             Minumum length should be 3.
           </small>
         </div>
+      </div>
+      <div class="col-md-6 mb-3" *ngIf="roles !== 'U'">
+        <label>Website</label>
+        <input type="text" id="website" name="website" class="form-control" [placeholder]="'https://example.com'"
+        [(ngModel)]="userDetails.website" pattern="http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?" #website="ngModel">
+
+        <div class="error-block">
+          <small *ngIf="website.invalid && website.touched && website.errors?.pattern" class="text-danger">
+            URL must be a valid URL
+          </small>
+        </div>        
       </div>
       <div class="col-md-6 mb-3" *ngIf="roles === 'SP'">
         <div class="radio form-row mb-3">
@@ -206,14 +228,14 @@
       <div class="col-md-6 mb-3" *ngIf="userDetails.booking === 'yes'">
         <label>Booking Url <span class="text-danger">*</span></label>
         <input autofocus type="text" id="bookingURL" name="URL" class="form-control" placeholder="" (keyup)="trim('bookingURL')" #URL="ngModel" [ngModel]="userDetails.bookingURL"
-          (ngModelChange)="userDetails.bookingURL = $event" required />
+          pattern="http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?" (ngModelChange)="userDetails.bookingURL = $event" required />
 
         <div class="error-block">
           <small *ngIf="URL.errors?.required && URL.touched" class="text-danger">
             Booking URL is required.
           </small>
-          <small *ngIf="URL.errors?.minlength && URL.touched" class="text-danger">
-            Minumum length should be 3.
+          <small *ngIf="URL.errors?.pattern && URL.touched" class="text-danger">
+              Booking URL must be a valid URL
           </small>
         </div>
       </div>

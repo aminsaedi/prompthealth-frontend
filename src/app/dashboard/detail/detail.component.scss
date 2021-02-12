@@ -16,12 +16,16 @@
 .fa-video{ color: #00D147; }
 
 .overflow-hidden{ overflow: hidden;}
+.font-weight-300{ font-weight: 300;}
+.font-weight-500{ font-weight: 500; }
 
 .mt-md-6{ @media screen and (min-width: 768px){ margin-top: 120px!important; }}
 .font-md-regular{ @media screen and (min-width: 768px){ font-size: 1em; }}
 .font-md-big{ @media screen and (min-width: 768px){ font-size: 1.2em; }}
 .font-md-bigger{ @media screen and (min-width: 768px){ font-size: 1.4em; }}
 .font-md-biggest{ @media screen and (min-width: 768px){ font-size: 1.6em; }}
+
+.url{ white-space: pre; }
 
 
 $transDurTabStick: 600ms;
@@ -166,9 +170,14 @@ $imageSize: 100, 120;
 .list-item{ white-space: pre-wrap; }
 .table-item{
   flex: 1 0 100%;
-  @media screen and (min-width: 768px){ 
+  @media screen and (min-width: 768px){
     flex: 1 0 50%; 
     white-space: nowrap; 
+
+    &.full{ 
+      flex: 1 0 100%; 
+      white-space: normal;
+    }
   }
 }
 

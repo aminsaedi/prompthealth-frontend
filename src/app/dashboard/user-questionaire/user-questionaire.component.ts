@@ -4,6 +4,7 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { QuestionnaireAnswer, QuestionnaireService, QuestionnaireType } from '../questionnaire.service';
+import { CategoryService } from '../../shared/services/category.service';
 
 @Component({
   selector: 'app-user-questionaire',
@@ -37,6 +38,8 @@ export class UserQuestionaireComponent implements OnInit {
   };
   personalMatch = {
     ids: [],
+    services: [],
+    customer_health: [],
     age_range: [],
     type: 'service',
     typical_hours: [],
@@ -56,6 +59,7 @@ export class UserQuestionaireComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _sharedService: SharedService,
+    private _catService: CategoryService,
     private _qService: QuestionnaireService,
     _changeDetector: ChangeDetectorRef,
   ) {
@@ -155,16 +159,40 @@ export class UserQuestionaireComponent implements OnInit {
   }
 
   /** get questionaire from server */
-  getUserQuestionnaire() {
+  async getUserQuestionnaire() {
     this._sharedService.loader('show');
+    const categories = await this._catService.getCategoryAsync();
+
     //    let path = `questionare/get-questions?type=${this.type}&filter=${this.currentQuestionnaire}`;
     const path = `questionare/get-questions?type=${this.type}`;
     this._sharedService.getNoAuth(path).subscribe((res: any) => {
       if (res.statusCode === 200) {
         this.questionnaire = res.data;
 
-        for (let i in this.questionnaire) {
-          this.questionnaire[i].answers.forEach(obj => { obj.active = false; });
+        for (let q of this.questionnaire) {
+          /** substitute service using categories */
+          if(q.slug === 'your-goal-specialties'){
+            q.answers = [];
+            categories.forEach(c=>{
+              const a = {
+                _id: c._id,
+                item_text: c.item_text,
+                subans: true,
+                active: false,
+                subansData: [],
+              }
+              c.subCategory.forEach(cSub=>{
+                a.subansData.push({
+                  _id: cSub._id,
+                  item_text: cSub.item_text,
+                  subans: false,
+                  active: false,
+                });
+              });
+              q.answers.push(a);
+            });
+          }
+          q.answers.forEach((obj: any) => { obj.active = false; });
         }
 
         this.setAnsChecked();

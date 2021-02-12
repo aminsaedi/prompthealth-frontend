@@ -16,6 +16,8 @@ import { MyAmenitiesComponent } from './my-amenities/my-amenities.component';
 import { MyProductComponent } from './my-product/my-product.component';
 import { MyAffiliateComponent } from './my-affiliate/my-affiliate.component';
 import { MyPasswordComponent } from './my-password/my-password.component';
+import { MyServiceComponent } from './my-service/my-service.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -79,6 +81,10 @@ const routes: Routes = [
         path: 'my-password',
         component: MyPasswordComponent,
       },
+      {
+        path: 'my-service',
+        component: MyServiceComponent,
+      }
     ]
   },
 ];
