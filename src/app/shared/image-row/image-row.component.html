@@ -1,0 +1,11 @@
+<ul 
+class="list-unstyled d-flex"
+[ngClass]="ulClass"
+>
+  <li 
+  [ngClass]="liClass" 
+  *ngFor="let image of images; let i = index;"
+  >
+    <img [src]="image.url" [alt]="image.name ? image.name : 'image'" (click)="onClick($event, i)">
+  </li>
+</ul>

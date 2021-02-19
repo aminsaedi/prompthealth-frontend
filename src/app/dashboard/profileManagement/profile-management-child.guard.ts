@@ -52,7 +52,7 @@ export class ProfileManagementChildGuard implements CanActivateChild {
         else if(profile.plan && profile.plan.name !== 'Basic'){ return true; }
         break;
 
-      case 'my-favorites':
+      case 'my-favourites':
         /** if user role is U, true */
         if(role == 'u'){ return true; }
         break;

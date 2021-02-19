@@ -17,6 +17,7 @@ import { CategoryService } from './services/category.service';
 import { ClickOutsideDirective } from './click-outside.directive';
 import { ScrollDetectorDirective } from './scroll-detector.directive';
 import { SocialButtonsComponent } from './social-buttons/social-buttons.component';
+import { ImageRowComponent } from './image-row/image-row.component';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { SocialButtonsComponent } from './social-buttons/social-buttons.componen
     ClickOutsideDirective,
     ScrollDetectorDirective,
     SocialButtonsComponent,
+    ImageRowComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -54,6 +56,7 @@ import { SocialButtonsComponent } from './social-buttons/social-buttons.componen
     ClickOutsideDirective,
     ScrollDetectorDirective,
     SocialButtonsComponent,
+    ImageRowComponent
   ]
 })
 export class SharedModule { }

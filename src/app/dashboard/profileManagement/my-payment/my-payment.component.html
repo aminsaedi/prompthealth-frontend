@@ -27,7 +27,7 @@
       </td>
       <td width="30%">
         
-        {{transaction.amount}}
+        {{transaction.amount | currency:'CAD'}}
       </td>
       <td width="30%">
         {{transaction.createdAt | date: 'dd/MM/yyyy'}}

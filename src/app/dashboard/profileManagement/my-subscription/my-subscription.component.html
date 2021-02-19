@@ -16,7 +16,7 @@
         <div class="col-sm-6">
             <div class="row">
                 <label class="col-md-3"><b>Price:</b></label>
-                <p class="col-md-9">{{ defaultPlan?.subscriptionPeriod==='year'? defaultPlan.yearlyPrice: defaultPlan.price}}</p>
+                <p class="col-md-9">{{ defaultPlan?.subscriptionPeriod==='year'? defaultPlan.yearlyPrice: defaultPlan.price | currency:'CAD'}}</p>
             </div>
         </div>
     </div>

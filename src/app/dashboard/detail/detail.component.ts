@@ -69,8 +69,8 @@ export class DetailComponent implements OnInit {
   /** for booking */
   public bookingForm: FormGroup;
   private myId = '';
-  public startDate = new Date(); /* used at booking form */
-  public minDate = new Date(); /* used at booking form */
+  public startDate: Date; /* used at booking form */
+  public minDate: Date; /* used at booking form */
   // public timingSelectedValue = ''; /* used at booking form */
   public submitted = false; /* used for form verification */
 
@@ -109,6 +109,10 @@ export class DetailComponent implements OnInit {
   }
   
   async ngOnInit(): Promise<void> {
+    const now = new Date();
+    this.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 9,0,0);
+    this.minDate = new Date(  now.getFullYear(), now.getMonth(), now.getDate() + 1, 0,0,0);
+
     this.bookingForm = this._fb.group({
       name:  new FormControl('', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]),
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -116,7 +120,7 @@ export class DetailComponent implements OnInit {
         Validators.required, 
         Validators.minLength(10), 
         Validators.maxLength(12),
-        Validators.pattern(/[0-9\-]+/)
+        Validators.pattern(/^[0-9][0-9\-]+[0-9]$/)
       ]),
       bookingDateTime: new FormControl('', [Validators.required]),
       note: new FormControl('', [Validators.maxLength(250)])
@@ -424,6 +428,10 @@ export class DetailComponent implements OnInit {
   }
 
   toggleExpandProfessionalDesc() { this.isExpandProfessionals = !this.isExpandProfessionals; }
+
+  public isAmenityViewerShown = false;
+  openAmenityViewer(){ this.isAmenityViewerShown = true; }
+  closeAmenityViewer(){ console.log('close'); this.isAmenityViewerShown = false; }
 }
 
 

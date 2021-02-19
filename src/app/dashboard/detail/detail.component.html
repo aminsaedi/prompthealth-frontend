@@ -115,6 +115,19 @@
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Years Of Experience</div>
           <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.yearsOfExperience}}</p>
         </div>
+
+        <div class="row mt-5" *ngIf="userInfo?.amenityPreview && userInfo.amenityPreview.length > 0">
+          <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Amenity</div>
+          <div class="col-12 col-lg-8">
+            <app-image-row [images]="userInfo.amenityPreview" [option]="{col: 3}"></app-image-row>
+            <button class="btn text-blue border-blue rounded" (click)="openAmenityViewer()">Show detail</button>
+            <app-amenity-viewer 
+            *ngIf="isAmenityViewerShown" 
+            [data]="userInfo.amenity"
+            (close)="closeAmenityViewer()"
+            ></app-amenity-viewer>
+          </div>
+        </div>
   
         <!-- blue section -->
         <div class="row bg-lightblue rounded-top pt-5 pb-0 mt-5">
@@ -137,13 +150,6 @@
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.serviceDelivery">{{item}}</li>
           </ul>
           <p class="font-small col-12 mb-0 " *ngIf="userInfo?.provideVirtual">**Virtual/Online services may not be available to all locations. Please inquire the service provider for confirmation.</p>
-        </div>
-
-        <div class="row bg-lightblue pt-5 pb-0" *ngIf="userInfo?.amenity && userInfo?.amenity.length>0">
-          <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Amenities: </div>
-          <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
-            <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.amenity">{{item}}</li>
-          </ul>
         </div>
 
         <div class="row bg-lightblue pt-5 pb-0">
@@ -434,10 +440,10 @@
                 placeholder="Enter Your Phone Number"
               />
               <div *ngIf="submitted && f.phone.invalid" class="error-msg">
-                <small *ngIf="f.phone.errors.required"  class="text-danger">Phone is required</small>
-                <small *ngIf="f.phone.errors.pattern"   class="text-danger">Please input number</small>
-                <small *ngIf="f.phone.errors.minlength" class="text-danger">Phone number too short</small>
-                <small *ngIf="f.phone.errors.maxlength" class="text-danger">Phone number too long</small>
+                <small *ngIf="f.phone.errors.required"  class="text-danger">Phone number is required</small>
+                <small *ngIf="f.phone.errors.pattern"   class="text-danger">Phone number invalid</small>
+                <small *ngIf="!f.phone.errors.pattern && f.phone.errors.minlength" class="text-danger">Phone number too short</small>
+                <small *ngIf="!f.phone.errors.pattern && f.phone.errors.maxlength" class="text-danger">Phone number too long</small>
               </div>
             </div>
             <!-- <div class="col-md-12 mb-3">
