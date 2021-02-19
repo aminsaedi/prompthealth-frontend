@@ -33,14 +33,14 @@ export class AddProfessionalComponent implements OnInit {
   ngOnInit(): void {
     this.userId = JSON.parse(localStorage.getItem('user'))._id;
     this.addDoctorForm = this.formBuilder.group({
-      fname: ['', [Validators.required]],
-      lname: ['', []],
-      description: ['', [Validators.required]],
+      fname: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]],
+      lname: ['', [Validators.maxLength(50), Validators.pattern(/\S+/)]],
+      description: ['', [Validators.required, Validators.maxLength(500), Validators.pattern(/\S+/)]],
     });
     this.editDoctorForm = this.formBuilder.group({
-      fname: ['', [Validators.required]],
-      lname: ['', []],
-      description: ['', [Validators.required]],
+      fname: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]],
+      lname: ['', [Validators.maxLength(50), Validators.pattern(/\S+/)]],
+      description: ['', [Validators.required, Validators.maxLength(500), Validators.pattern(/\S+/)]],
     });
     this.getStaffList();
     this.AWS_S3 = environment.config.AWS_S3
@@ -105,6 +105,7 @@ export class AddProfessionalComponent implements OnInit {
       const path = `staff/create`;
       this._sharedService.post(data, path).subscribe((res: any) => {
         this._sharedService.loader('hide');
+        console.log(res);
         if (res.statusCode === 200) {
           this.imagesList = '';
           this.toastr.success(res.message);
@@ -119,6 +120,7 @@ export class AddProfessionalComponent implements OnInit {
           this._sharedService.showAlert(res.message, 'alert-danger');
         }
       }, (error) => {
+        this.toastr.error(error);
         this._sharedService.loader('hide');
       });
     }
@@ -143,6 +145,7 @@ export class AddProfessionalComponent implements OnInit {
     });
   }
   editStaff(prod) {
+    this.submitted = false;
     this.editDoctorCheck = true
     this.editDoctorForm.controls.fname.setValue(prod.fname);
     this.editDoctorForm.controls.lname.setValue(prod.lname);
@@ -151,6 +154,8 @@ export class AddProfessionalComponent implements OnInit {
     this.editDoctorId = prod._id;
   }
   updateStaff() {
+    this.submitted = true;
+
     if (this.editDoctorForm.invalid) {
       return;
     }
@@ -181,6 +186,7 @@ export class AddProfessionalComponent implements OnInit {
           this._sharedService.showAlert(res.message, 'alert-danger');
         }
       }, (error) => {
+        this.toastr.error(error);
         this._sharedService.loader('hide');
       });
     }
