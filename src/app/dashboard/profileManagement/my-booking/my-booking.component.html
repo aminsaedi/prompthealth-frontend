@@ -14,7 +14,7 @@
         <th>
           Date/Slot
         </th>
-        <th>
+        <th class="note">
           Notes
         </th>
         <th class="status">
@@ -32,7 +32,10 @@
         <td>
           {{ book.drId.email }}
         </td>
-        <td style="width:30%">{{ book.bookingDateTime }} - {{ book.timing }}</td>
+        <td>
+          <span class="text-nowrap">{{ book.bookingDateTime | date: 'MMM d, y, HH: mm'}}</span> 
+          <!-- - {{ book.timing }} -->
+        </td>
         <td>
           {{ book.note }}
         </td>
@@ -234,7 +237,10 @@
           <p>{{ book.name }}</p>
           {{ book.phone }} / {{ book.email }}
         </td>
-        <td>{{ book.bookingDateTime }} - {{ book.timing }}</td>
+        <td>
+          <span class="text-nowrap">{{ book.bookingDateTime | date: 'MMM d, y, HH: mm'}}</span>
+           <!-- - {{ book.timing }} -->
+        </td>
         <td>
           {{ book.drId.firstName }} - {{ book.drId.lastName }}
           {{ book.drId.email }}

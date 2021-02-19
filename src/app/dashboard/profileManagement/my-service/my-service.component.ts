@@ -160,7 +160,6 @@ export class MyServiceComponent implements OnInit {
       this._sharedService.get(path).subscribe((res: any) => {
         if (res.statusCode === 200) {
           if(res.data[0]){
-            console.log(res.data[0])
             this.profile = new Professional(res.data[0]._id, res.data[0]);
           }
           resolve(true);

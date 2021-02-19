@@ -28,7 +28,8 @@
 
         <div class="error-block">
           <small *ngIf="firstName.errors?.required && firstName.touched" class="text-danger">
-            First name is required.
+            <span *ngIf="roles !== 'C'">First name is required.</span>
+            <span *ngIf="roles === 'C'">Name is required</span>
           </small>
           <small *ngIf="firstName.errors?.minlength && firstName.touched" class="text-danger">
             Minumum length should be 3.
@@ -37,7 +38,7 @@
       </div>
       <div class="col-md-6 mb-3" *ngIf="roles !== 'C'">
         <label>Last Name <span class="text-danger">*</span></label>
-        <input autofocus type="text" id="lastName" name="lastName" class="form-control" placeholder="" minlength="3"
+        <input type="text" id="lastName" name="lastName" class="form-control" placeholder="" minlength="3"
           maxlength="50" (keyup)="trim('lastName')" #lastName="ngModel" [ngModel]="userDetails.lastName"
           (ngModelChange)="userDetails.lastName = $event" required />
 
@@ -55,7 +56,6 @@
           <!-- <span class="text-danger">*</span> -->
         </label>
         <input
-          autofocus
           type="text"
           id="phone"
           name="phone"
@@ -81,7 +81,7 @@
       </div>
       <div class="col-md-6 mb-3">
         <label>Email <span class="text-danger">*</span></label>
-        <input autofocus type="email" id="email" 
+        <input type="email" id="email" 
         [disabled] = "true" name="email" class="form-control" placeholder=""
           (keyup)="trim('email')" #email="ngModel" [ngModel]="userDetails.email" />
       </div>
@@ -110,7 +110,9 @@
       <div class="col-md-6 mb-3">
         <label>Address (<b>Please select suggested Google address</b>)<span class="text-danger">*</span></label>
         <input type="text" id="address" name="address" class="form-control" placeholder="" (keyup)="trim('address')"
-          #address="ngModel" #search [ngModel]="userDetails.address" required />
+          #address="ngModel" #search [ngModel]="userDetails.address" required 
+          (keydown.enter)="$event.preventDefault()"
+        />
 
         <div class="error-block">
           <small *ngIf="address.errors?.required && address.touched" class="text-danger">
@@ -148,7 +150,7 @@
             State is required.
           </small>
           <small *ngIf="state.errors?.minlength && state.touched" class="text-danger">
-            Minumum length should be 3.
+            Minimum length should be 3.
           </small>
         </div>
       </div>
@@ -179,10 +181,11 @@
       </div>
       <div class="col-md-6 mb-3" *ngIf="roles === 'SP'">
         <div class="radio form-row mb-3">
-            <label>What is your professional association<span class="text-danger">*</span></label>
-            <input autofocus type="text" id="professional_organization" name="professional_organization" class="form-control"
+            <label>What is your professional association<span class="text-danger"></span></label>
+            <input type="text" id="professional_organization" name="professional_organization" class="form-control"
               (keyup)="trim('professional_organization')" #professional_organization="ngModel" [ngModel]="userDetails.professional_organization" number
-              (ngModelChange)="userDetails.professional_organization = $event" required />
+              (ngModelChange)="userDetails.professional_organization = $event" 
+              maxlength="50" />
             <div class="error-block">
               <small *ngIf="professional_organization.errors?.required && professional_organization.touched" class="text-danger">
                 Professional is required.
@@ -192,10 +195,11 @@
       </div>
       <div class="col-md-6 mb-3" *ngIf="roles === 'SP'">
         <div class="radio form-row mb-3">
-          <label>List your certification(s)/degree(s)<span class="text-danger">*</span></label>
-          <input autofocus type="text" id="certification" name="certification" class="form-control"
+          <label>List your certification(s)/degree(s)<span class="text-danger"></span></label>
+          <input type="text" id="certification" name="certification" class="form-control"
             (keyup)="trim('certification')" #certification="ngModel" [ngModel]="userDetails.certification" number
-            (ngModelChange)="userDetails.certification = $event" required />
+            (ngModelChange)="userDetails.certification = $event" 
+            maxlength="50" />
           <div class="error-block">
             <small *ngIf="certification.errors?.required && certification.touched" class="text-danger">
               Certitification is required.
@@ -293,7 +297,7 @@
             required />
           <span>Not Critical</span> -->
           <label for="{{item.id}}" >
-            <input class="radio" type="checkbox" required name="age_range" (change)="checkBoxChanged($event, 'ageRange')" [value]="item.id" required id="{{item.id}}"/>
+            <input class="radio" type="checkbox" required name="age_range" (change)="checkBoxChanged($event, 'ageRange')" [value]="item.id" id="{{item.id}}"/>
             <span class="" style="margin-left: 5px;">{{item.name}}</span>
         </label>
         </div>
@@ -391,12 +395,11 @@
       </div>
     </div>
     <div class="col-md-12 mb-3" *ngIf="roles === 'C' || roles === 'SP'">
-      <label>What are your typical hours?</label>
+      <label>What are your typical hours? <span class="text-danger">*</span></label>
       <div class="row">
         <div  class="col-md-4" *ngFor="let item of avalibilityQuestion?.answers; let i = index">
                         
           <label for="{{item._id}}">
-
               <input class="radio" type="checkbox" required id="{{item._id}}" (change)="checkBoxChanged($event, 'avalibilityQuestion')"/>
               <span class="">{{item.item_text}}</span>
           </label>
@@ -418,15 +421,24 @@
       </div>
     </div>
     <div class="col-md-12 mb-3" *ngIf="roles === 'C' || roles === 'SP'">
-      <label>Tell us more about you in a paragraph (optional) <span class="text-danger"></span></label>
+      <label>Practice Philosophy <span class="text-danger"></span></label>
         <textarea rows="4" cols="50" minlength="3" id="product_description" name="product_description"
           class="form-control" (keyup)="trim('product_description')" #product_description="ngModel"
-          [ngModel]="userDetails.product_description" (ngModelChange)="userDetails.product_description = $event">
-          Product Description...</textarea>
+          [ngModel]="userDetails.product_description" (ngModelChange)="userDetails.product_description = $event"
+          placeholder="Tell us more about you in a paragraph"
+          maxlength="500"
+        ></textarea>
     </div>
 
     <div class="col-md-12 mb-3">
-      <label class="mb-0"><input type="checkbox" [(ngModel)]="userDetails.accredited_provide_canada" [ngModelOptions]="{standalone: true}" class="mr-2"> I verify I am an accredited Provider in Canada <span class="text-danger">*</span></label>
+      <label class="mb-0">
+        <input type="checkbox" [(ngModel)]="userDetails.accredited_provide_canada" class="mr-2"
+          name="accredited" #accredited="ngModel" required
+        > I verify I am an accredited Provider in Canada <span class="text-danger">*</span>
+      </label>
+      <div class="error-block" *ngIf="accredited.invalid && accredited.dirty">
+        <small *ngIf="accredited.errors.required"class="text-danger">Please check</small>
+      </div>
     </div>
     <div class="col-md-12 mb-2 text-right">
       <button class="btn btn-primary" [disabled]="!updateDetailForm.valid">

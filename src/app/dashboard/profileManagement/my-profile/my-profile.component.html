@@ -21,26 +21,28 @@
         <!-- <img [src]="defaultImage" /> -->
         <!-- <input type="file" *ngIf="editFields"/> -->
         <input class="d-block " type="file" name="profile" (change)="onFileSelect($event)" *ngIf="editFields"
-          accept="image/x-png,image/gif,image/jpeg,image/jpg" />
+          accept="image/x-png,image/png,image/gif,image/jpeg,image/jpg" />
       </div>
     </div>
     <div class="col-md-12">
       <div class="form-row mb-3">
-        <label class="col-md-3" *ngIf="roles === 'C'; else firstNameLabel">Name</label>
+        <label class="col-md-3" *ngIf="roles === 'C'; else firstNameLabel">Name <span class="text-danger" *ngIf="editFields">*</span></label>
         <ng-template #firstNameLabel>
           <label class="col-md-3">First Name <span class="text-danger" *ngIf="editFields">*</span></label>
         </ng-template>
         <!-- <label class="col-md-3">First Name <span class="text-danger"  *ngIf="editFields">*</span></label> -->
         <div class="col-md-9">
           <input [disabled]="!editFields" type="text" autocomplete="off" id="firstName" name="firstName"
-            #firstName="ngModel" [(ngModel)]="profile.firstName" class="form-control" minlength="1" maxlength="50"
-            (ngModelChange)="profile.firstName = $event" required />
+            #firstName="ngModel" [(ngModel)]="profile.firstName" class="form-control" [minlength]="roles === 'U' ? 1 : 3" maxlength="50"
+            (ngModelChange)="profile.firstName = $event" (keyup)="trim('firstName')" required />
           <div class="error-block" *ngIf="editFields">
             <small *ngIf="firstName.errors?.required && firstName.touched" class="text-danger">
-              First name is required.
+              <span *ngIf="roles !== 'C'">First name is required.</span>
+              <span *ngIf="roles === 'C'">Name is required</span>
             </small>
             <small *ngIf="firstName.errors?.minlength && firstName.touched" class="text-danger">
-              First name must be longer than one letter
+              <span *ngIf="roles !== 'U'">First name must be longer than three letter</span>
+              <span *ngIf="roles === 'U'">First name must be longer than one letter</span>              
             </small>
           </div>
         </div>
@@ -50,15 +52,16 @@
         <label class="col-md-3">Last Name <span class="text-danger" *ngIf="editFields">*</span></label>
         <div class="col-md-9">
           <input [disabled]="!editFields" type="text" autocomplete="off" id="lastName" name="lastName"
-            #lastName="ngModel" [(ngModel)]="profile.lastName" class="form-control" minlength="1" required
-            (ngModelChange)="profile.lastName = $event" />
+            #lastName="ngModel" [(ngModel)]="profile.lastName" class="form-control" [minlength]="roles === 'U' ? 1 : 3" maxlength="50" required
+            (ngModelChange)="profile.lastName = $event"  (keyup)="trim('lastName')" />
 
           <div class="error-block" *ngIf="editFields">
             <small *ngIf="lastName.errors?.required && lastName.touched" class="text-danger">
               Last name is required.
             </small>
             <small *ngIf="lastName.errors?.minlength && lastName.touched" class="text-danger">
-              Last name must be longer than one letter
+              <span *ngIf="roles !== 'U'">Last name must be longer than three letter</span>
+              <span *ngIf="roles === 'U'">Last name must be longer than one letter</span>      
             </small>
           </div>
         </div>
@@ -97,16 +100,48 @@
         </div>
       </div>
 
+      <div class="form-row mb-3" *ngIf="roles !== 'C'">
+        <label class="col-md-3">Gender <span class="text-danger" *ngIf="editFields && roles !== 'U'">*</span></label>
+        <div class="col-md-9">
+          <div class="form-control disable" *ngIf="!editFields">
+            {{profile.gender}}
+          </div>
+
+          <div class="form-row mrt" *ngIf="editFields">
+            <div class="radio col-md-6 mb-3">
+              <label for="gender-f">
+                <input class="radio" type="radio" value="female" name="gender" #gender="ngModel" [(ngModel)]="profile.gender" id="gender-f"
+                  [required]="(roles !== 'U') ? true : false" />
+                <span>Female</span>
+              </label>
+            </div>
+            <div class="radio col-md-6 mb-3">
+              <label for="gender-m">
+                <input class="radio" type="radio" value="male" name="gender" #gender="ngModel" [(ngModel)]="profile.gender" id="gender-m"
+                  [required]="(roles !== 'U') ? true : false"  />
+                <span>Male</span>
+              </label>
+            </div>
+            <div class="error-block">
+              <small *ngIf="gender.errors?.required && gender.touched" class="text-danger">
+                Gender is required.
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="form-row mb-3">
         <label class="col-md-3">Address <span class="text-danger" *ngIf="editFields">*</span></label>
         <div class="col-md-9">
           <div class="form-control disable" *ngIf="!editFields">
             {{profile.address}}
+            <p *ngIf="profile.hideAddress" class="font-italic mt-2">(Your adress will not be shown.)</p>
           </div>
 
           <div *ngIf="editFields">
             <input type="text" class="form-control" [disabled]="!editFields" (keydown.enter)="$event.preventDefault()"
-              (ngModelChange)="profile.address = $event.toLowerCase()" [ngModel]="profile.address" id="address"
+              (ngModelChange)="onChangeAddress($event)" [ngModel]="profile.address" id="address"
               name="address" (onFocus)="profile.address = ''" autocomplete="off" autocorrect="off" autocapitalize="off"
               spellcheck="off" type="text" #search2 #address="ngModel" required>
             <div class="error-block">
@@ -143,25 +178,27 @@
       </div>
       
       <div *ngIf="roles === 'SP'" class=" form-row mb-3">
-        <label class="col-md-3">Professional Association <span class="text-danger" *ngIf="editFields">*</span></label>
+        <label class="col-md-3">Professional Association <span class="text-danger" *ngIf="editFields"></span></label>
         <div class="col-md-9">
 
           <input type="text" [disabled]="!editFields" autocomplete="off" id="association" name="association"
             #association="ngModel" [ngModel]="profile.professional_organization"
-            (onFocus)="profile.professional_organization = ''" class="form-control" />
+            (onFocus)="profile.professional_organization = ''" class="form-control" 
+            maxlength="50" />
         </div>
       </div>
       <div *ngIf="roles === 'SP'" class="form-row mb-3">
-        <label class="col-md-3">Certification <span class="text-danger" *ngIf="editFields">*</span></label>
+        <label class="col-md-3">Certification <span class="text-danger" *ngIf="editFields"></span></label>
         <div class="col-md-9">
 
           <input type="text" [disabled]="!editFields" autocomplete="off" id="certification" name="certification"
             #certification="ngModel" [(ngModel)]="profile.certification" (onFocus)="profile.certification = ''"
+            maxlength="50"
             class="form-control" />
         </div>
       </div>
 
-      <div class="form-row mb-3">
+      <div class="form-row mb-3" *ngIf="roles !== 'U'">
         <label class="col-md-3">Booking URL</label>
         <!-- <label class="col-md-3">Booking URL <span class="text-danger"  *ngIf="editFields">*</span></label> -->
         <div class="col-md-9">
@@ -178,7 +215,7 @@
 
       <div *ngIf="roles === 'C' || roles === 'SP'">
         <div class="radio form-row mb-3">
-          <label class="col-md-3">Available Time</label>
+          <label class="col-md-3">Available Time <span class="text-danger" *ngIf="editFields">*</span></label>
           <div class="col-md-9">
             <div class="form-control disable" *ngIf="!editFields">
               <span *ngFor="let profileItem of profile?.typical_hours; let i = index">
@@ -249,7 +286,7 @@
         </div>
       </div>
       <div class="radio form-row mb-3" *ngIf="roles === 'C' || roles === 'SP'">
-        <label class="col-md-3">Age range of your clients</label>
+        <label class="col-md-3">Age range of your clients <span class="text-danger" *ngIf="editFields">*</span></label>
         <!-- <p class="col-md-9" *ngIf="!editFields">{{profile.age_range}}</p> -->
         <div class="col-sm-9">
           <div class="form-control disable" *ngIf="!editFields">
@@ -292,7 +329,7 @@
         </div>
       </div>
       <div class="radio form-row mb-3" *ngIf="roles === 'C' || roles === 'SP'">
-        <label class="col-md-3">Total years of experience</label>
+        <label class="col-md-3">Total years of experience <span class="text-danger" *ngIf="editFields">*</span></label>
         <div class="form-control disable col-md-9" *ngIf="!editFields">{{profile.years_of_experience}}</div>
         <div *ngIf="editFields" class="col-sm-8">
           <div class="form-row mrt">
@@ -309,7 +346,7 @@
         </div>
       </div>
       <div class="radio form-row mb-3" *ngIf="roles === 'C' || roles === 'SP'">
-        <label class="col-md-3">Price range per hour</label>
+        <label class="col-md-3">Price range per hour <span class="text-danger" *ngIf="editFields">*</span></label>
         <div class="form-control disable col-md-9" *ngIf="!editFields && profile.price_per_hours">
           {{profile.price_per_hours}}</div>
         <div class="form-control disable col-md-9" *ngIf="!editFields && !profile.price_per_hours">Not Critical</div>
@@ -326,7 +363,7 @@
         </div>
       </div>
       <div class="radio form-row mb-3" *ngIf="roles === 'C'">
-        <label class="col-md-3">Kind of Business</label>
+        <label class="col-md-3">Kind of Business <span class="text-danger" *ngIf="editFields">*</span></label>
         <div class="form-control disable col-md-9" *ngIf="!editFields">{{profile.business_kind}}</div>
         <div *ngIf="editFields" class="col-sm-9">
           <div class="form-row">
@@ -341,12 +378,12 @@
         </div>
       </div>
       <div class="radio form-row mb-3" *ngIf="roles === 'C' || roles === 'SP'">
-        <label class="col-md-3">About you</label>
-        <div class="form-control disable col-md-9" *ngIf="!editFields">{{ profile.product_description }}</div>
+        <label class="col-md-3">Practice Philosophy</label>
+        <div class="form-control disable col-md-9 textarea-disabled" *ngIf="!editFields">{{ profile.product_description }}</div>
         <div *ngIf="editFields" class="col-sm-9 mrt">
           <textarea [disabled]="!editFields" id="product_description" name="product_description"
-            [(ngModel)]="profile.product_description" placeholder="Tell us more about you in paragraph (optional)"
-            class="form-control"></textarea>
+            [(ngModel)]="profile.product_description" placeholder="Tell us more about you in paragraph"
+            maxlength="500" class="form-control"></textarea>
         </div>
       </div>
       <div class="radio form-row mb-3" *ngIf="roles === 'C' || roles === 'SP'">
@@ -354,8 +391,12 @@
         <div class="form-control disable col-md-9" *ngIf="!editFields">{{ profile.accredited_provide_canada }}</div>
         <div *ngIf="editFields" class="col-sm-9">
           <label class="mb-0 mrt"><input type="checkbox" [disabled]="!editFields"
-              [(ngModel)]="profile.accredited_provide_canada" [ngModelOptions]="{standalone: true}" class="mr-2"> I
-            verify I am an accredited Provider in Canada <span class="text-danger"></span></label>
+            [(ngModel)]="profile.accredited_provide_canada" class="mr-2"
+            name="accredited" #accredited="ngModel" required
+          > I verify I am an accredited Provider in Canada <span class="text-danger">*</span></label>
+          <div class="error-block" *ngIf="accredited.invalid">
+            <small *ngIf="accredited.errors.required"class="text-danger">Please check</small>
+          </div>
           <!-- <textarea
                     [disabled] = "!editFields"
                     id="product_description"

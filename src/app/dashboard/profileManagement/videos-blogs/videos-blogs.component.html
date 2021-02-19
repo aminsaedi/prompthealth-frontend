@@ -48,14 +48,14 @@
     <div formArrayName="data">
       <div *ngFor="let itemrow of formArr.controls; let i=index" [formGroupName]="i" class="row">
         <div class="form-group col-sm-5">
-          <label>Video Title</label>
-          <input formControlName="title" class="form-control" placeholder="Enter Video Title">
+          <label>Video Title <span class="text-danger">*</span></label>
+          <input formControlName="title" class="form-control" placeholder="Enter Video Title" maxlength="50">
           <small *ngIf="formArr.controls[i].get('title').touched && formArr.controls[i].get('title').errors?.required"  class="text-danger">
             Video Title is required.
           </small>
         </div>
         <div class="form-group col-sm-5">
-          <label>URL</label>
+          <label>URL <span class="text-danger">*</span></label>
           <input formControlName="url" class="form-control" placeholder="Enter YouTube/Vimeo URL">
           <div class="error-block" *ngIf="formArr.controls[i].get('url').touched">
             <small  *ngIf="formArr.controls[i].get('url').errors?.required"  class="text-danger">

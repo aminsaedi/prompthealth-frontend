@@ -29,6 +29,7 @@ export class MyProfileComponent implements OnInit {
   profileQuestions;
   formData = new FormData();
   public AWS_S3 = '';
+  public isAddressSetByGooglemap: boolean = true;
 
   ageRangeList = [
     { id: '5eb1a4e199957471610e6cd7', name: 'Not Critical', checked: false },
@@ -183,10 +184,15 @@ export class MyProfileComponent implements OnInit {
     }
   }
 
+  onChangeAddress(e: string){
+    this.isAddressSetByGooglemap = false;
+    this.profile.address = e.toLowerCase();
+  }
+
   getAddress(latitude, longitude, place = {}) {
     this.geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
-      console.log('place', place);
-      console.log('results', results);
+      // console.log('place', place);
+      // console.log('results', results);
       this.profile.city = '';
       this.profile.state = '';
       this.profile.zipcode = '';
@@ -240,6 +246,10 @@ export class MyProfileComponent implements OnInit {
       } else {
         window.alert('Geocoder failed due to: ' + status);
       }
+
+      if(this.profile.city.length > 0 && this.profile.state.length > 0 && this.profile.zipcode.length > 0){
+        this.isAddressSetByGooglemap = true;
+      }
     });
   }
   getProfileQuestion() {
@@ -271,7 +281,7 @@ export class MyProfileComponent implements OnInit {
     const path = `user/get-profile/${this.userInfo._id}`;
     this._sharedService.get(path).subscribe((res: any) => {
       if (res.statusCode === 200) {
-
+        
         this.profile = res.data[0];
 
         if (this.profile) {
@@ -397,7 +407,15 @@ export class MyProfileComponent implements OnInit {
   }
 
   save() {
+    if(!this.isAddressSetByGooglemap){
+      this.toastr.error('Please select suggested Google address');
+      return;
+    }
+
     if (this.roles === 'C' || this.roles === 'SP') {
+      if(!this.profile.age_range || this.profile.age_range.length == 0){
+        this.profile.age_range = [this.ageRangeList[0].id];
+      }
       if (this.profile.typical_hours.length === 0) {
         this.toastr.error('Please select the available time!');
         return;
@@ -424,7 +442,7 @@ export class MyProfileComponent implements OnInit {
         this.profile = res.data;
         this.toastr.success(res.message);
         this.editFields = false;
-        console.log('proressssssss', res.data);
+        // console.log('proressssssss', res.data);
         this._bs.setUserData(res.data);
       } else {
         this.toastr.error(res.message);
@@ -437,33 +455,67 @@ export class MyProfileComponent implements OnInit {
 
   }
 
-  onFileSelect(event) {
+  async onFileSelect(event) {
+    const maxFileSize = 10 * 1000 * 1000; /** 10MB */
     if (event.target.files[0].type === 'image/png'
       || event.target.files[0].type === 'image/jpg'
       || event.target.files[0].type === 'image/jpeg') {
       if (event.target.files.length > 0) {
         const input = new FormData();
-        // Add your values in here
         input.append('_id', this.userInfo._id);
-        input.append('profileImage', event.target.files[0]);
-        this._sharedService.loader('show');
-        this._sharedService.imgUpload(input, 'user/imgUpload').subscribe((res: any) => {
-          if (res.statusCode === 200) {
-            // this.profile = res.data;
-            this.profile.profileImage = res.data.profileImage;
-            this._sharedService.loader('hide');
-          } else {
-            this.toastr.error(res.message);
+
+        const file: File = event.target.files[0];
+        if(file.size > maxFileSize){
+          try { 
+            const img: Blob = await this.shrinkImage(file, 0.8, 0.8, maxFileSize); 
+            const filename = Date.now().toString() + '.' + img.type.replace('image/', '');
+            input.append('profileImage', img, filename);          
           }
-        }, err => {
-          console.log(err);
-          this._sharedService.loader('hide');
-          this.toastr.error('There are some errors, please try again after some time !', 'Error');
-        });
+          catch(err){ this.toastr.error('Image size is too big. Please upload image size less than 10MB.'); }
+        }else{
+          input.append('profileImage', file);
+        }
+
+        if(input.has('profileImage')){
+          this._sharedService.loader('show');
+          this._sharedService.imgUpload(input, 'user/imgUpload').subscribe((res: any) => {
+            if (res.statusCode === 200) {
+              // this.profile = res.data;
+              this._bs.setUserData(res.data)
+              this.profile.profileImage = res.data.profileImage;
+              this._sharedService.loader('hide');
+            } else {
+              this.toastr.error(res.message);
+            }
+          }, err => {
+            this._sharedService.loader('hide');
+            this.toastr.error('There are some errors, please try again after some time !', 'Error');
+          });
+        }
       }
     } else {
       this.toastr.error('This file format is not supportbale!');
     }
+  }
+
+  async shrinkImage(img0: Blob, ratioSize: number, ratioQuality: number, maxFileSize: number): Promise<Blob>{
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = (e: any)=>{
+        const t = e.target;
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(t.width * ratioSize); 
+        canvas.height = Math.round(t.height * ratioSize);
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(t, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((b: Blob) => {
+          if(b.size >= maxFileSize){ reject('size is too big'); }
+          else{ resolve(b); }
+        }, img0.type, ratioQuality);  
+      }
+      img.src = URL.createObjectURL(img0);
+    })
   }
 
   deleteProfile(content) {
@@ -498,4 +550,7 @@ export class MyProfileComponent implements OnInit {
     );
   }
 
+  trim(key) {
+    if (this.profile[key] && this.profile[key][0] == ' ') this.profile[key] = this.profile[key].trim();
+  }
 }

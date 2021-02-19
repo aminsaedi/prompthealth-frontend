@@ -53,6 +53,7 @@ import { MyServiceComponent } from './my-service/my-service.component';
   imports: [
     AgmCoreModule.forRoot(  {
       apiKey: 'AIzaSyCbRhC6h9Pp43-5t_Knyrd_ewAdLMIJtCg',
+      language: 'en',
       libraries: ['places']
     }),
     NgxPaginationModule,NgxSpinnerModule,

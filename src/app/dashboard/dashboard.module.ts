@@ -64,6 +64,7 @@ import { FilterDropdownSliderComponent } from './filter-dropdown-slider/filter-d
     AutocompleteLibModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCbRhC6h9Pp43-5t_Knyrd_ewAdLMIJtCg',
+      language: 'en',
       libraries: ['places']
     }),
     OwlDateTimeModule,

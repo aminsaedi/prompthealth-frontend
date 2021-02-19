@@ -12,7 +12,7 @@
     <div class="container-fluid">
       <!-- -- {{ userInfo }} -->
       <!-- -- {{ profile | json }}  -->
-      <div class="row upgrade-header" *ngIf="userInfo.roles !== 'U' && profile  && !profile.isVipAffiliateUser && profile && profile.plan && (profile.plan.name ==='Basic' || profile.plan.name ==='basic')">
+      <div class="row upgrade-header" *ngIf="userInfo.roles !== 'U' && profile && !isPremium">
         <div class="col-sm-12 text-center">
           <p style="color:#4a86ab"><i class="fas fa-star-of-life"></i>   Upgrade your plan to get all the exclusive features <span><i class="fas fa-long-arrow-alt-right"></i></span>
             <a class="btn btn-primary pull-right" [routerLink]="['/dashboard/subscriptionplan']">Upgrade Plan</a>

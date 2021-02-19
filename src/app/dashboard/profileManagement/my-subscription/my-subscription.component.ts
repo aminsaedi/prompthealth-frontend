@@ -25,7 +25,6 @@ export class MySubscriptionComponent implements OnInit {
       if (res.statusCode === 200) {
         this.defaultPlan = res.data[0].plan;
         this.addOnPlans = res.data[0].addOnPlans;
-        console.log(this.defaultPlan);
       } else {
         this.sharedService.checkAccessToken(res.message);
       }

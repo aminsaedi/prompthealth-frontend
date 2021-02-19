@@ -29,7 +29,7 @@
       [data]="basicPlan"
       [isPriceMonthly]="isPriceMonthly"
       (select)="setSelectedFreePlan(basicPlan)"
-      [hideButton]="!this.profile || !this.profile.plan"
+      [hideButton]="!this.profile || !!this.profile.plan"
     ></subscription-plan-item-card>
 
     <subscription-plan-item-card class="col-md mt-5 mt-md-0"

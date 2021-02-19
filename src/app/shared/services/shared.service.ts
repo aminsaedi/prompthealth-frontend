@@ -55,6 +55,7 @@ export class SharedService {
     // this.authService.signOut();
     this.showAlert('Logout Sucessfully', 'alert-success');
 
+    localStorage.setItem('userType', 'U');
     this._router.navigate(['/auth/login', 'u']);
   }
 
@@ -98,14 +99,7 @@ export class SharedService {
   }
 
   imgUpload(body, path) {
-    const headers = new HttpHeaders();
-    headers.set('Access-Control-Allow-Origin', '*');
-    // headers.set('Access-Control-Allow-Methods', 'POST');
-    headers.set('Origin', 'https://prompthealth.ca');
-    headers.set('Content-Type', 'multipart/form-data');
-
-    // headers.delete('Content-Type');
-    // let headers = this.getAuthorizationHeader();
+    const headers = this.getAuthorizationHeader();
     return this.http.post(this.rootUrl + path, body, { headers });
   }
   put(body, path) {

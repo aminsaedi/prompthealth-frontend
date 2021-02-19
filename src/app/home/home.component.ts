@@ -199,7 +199,7 @@ export class HomeComponent implements OnInit {
 
   async getHomePageFeatures() {
     this._sharedService.getNoAuth('/addonplans/get-featured', { roles: ['SP', 'C'] }).toPromise().then((res: any) => {
-      console.log(res.data);
+      // console.log(res.data);
       res.data.forEach(item => {
         if (this.introBannerItems[item.category_id]) {
           this.introBannerItems[item.category_id].features.push(item);

@@ -79,7 +79,7 @@ export class HeaderComponent implements OnInit {
 
     this._bs.getUserData().subscribe((res: any) => {
       this.updateData = res;
-      console.log('reeeeeeeeeee', this.updateData);
+      // console.log('reeeeeeeeeee', this.updateData);
       if (res.firstName) {
         localStorage.setItem('user', JSON.stringify(this.updateData));
         this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
@@ -157,9 +157,9 @@ export class HeaderComponent implements OnInit {
   }
 
   handleChange(url, type) {
-    console.log(url);
+    // console.log(url);
     this._router.navigate([url, type]).then(res => {
-      console.log(res);
+      // console.log(res);
     });
     if (url === '/auth/login') {
       this.signin.nativeElement.click();

@@ -18,10 +18,13 @@ import { MyAffiliateComponent } from './my-affiliate/my-affiliate.component';
 import { MyPasswordComponent } from './my-password/my-password.component';
 import { MyServiceComponent } from './my-service/my-service.component';
 
+import { ProfileManagementChildGuard } from './profile-management-child.guard';
+
 const routes: Routes = [
   {
     path: '',
     component: WrapperComponent,
+    canActivateChild: [ProfileManagementChildGuard, ],
     // redirectTo: '/my-profile',
     children: [
       {

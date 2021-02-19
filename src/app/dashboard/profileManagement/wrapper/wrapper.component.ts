@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../../../shared/services/shared.service';
+import { ProfileManagementService } from '../profile-management.service';
 
 @Component({
   selector: 'app-wrapper',
@@ -8,6 +9,8 @@ import { SharedService } from '../../../shared/services/shared.service';
 })
 export class WrapperComponent implements OnInit {
   public profile;
+  public isPremium: boolean = false; /** if the user is vip or subscribe plans, true. */
+
   userInfo;
   listing = [
     {
@@ -41,7 +44,11 @@ export class WrapperComponent implements OnInit {
   cPlan: [];
   spPlan: [];
   constructor(
-    private _sharedService: SharedService,) { }
+    private _sharedService: SharedService,
+    private _managementService: ProfileManagementService,
+  ) { }
+
+  ngOnDestroy(){ this._managementService.destroyProfileDetail(); }
 
   ngOnInit(): void {
     this.getProfileDetails();
@@ -53,6 +60,7 @@ export class WrapperComponent implements OnInit {
     this._sharedService.get(path).subscribe((res: any) => {
       if (res.statusCode === 200) {
         this.profile = res.data[0];
+        this.setUserPremiumStatus();
         if (this.profile) { this.setListing(this.profile); }
       } else {
         this._sharedService.checkAccessToken(res.message);
@@ -62,6 +70,16 @@ export class WrapperComponent implements OnInit {
       this._sharedService.checkAccessToken(err);
     });
   }
+
+  setUserPremiumStatus(){
+    let isPremium = false;
+    if(this.profile){
+      if(this.profile.isVipAffiliateUser){ isPremium = true; }
+      else if(this.profile.plan && this.profile.plan.name.toLowerCase() !== 'basic'){ isPremium = true; }  
+    }
+    this.isPremium = isPremium;
+  }
+
   getSubscriptionPlan(path) {
     this._sharedService.loader('show');
     this._sharedService.getNoAuth(path).subscribe((res: any) => {
@@ -131,6 +149,11 @@ export class WrapperComponent implements OnInit {
 
         } else if (profile.roles === 'C') {
           this.listing.push({
+            title: 'Booking',
+            link: 'my-booking',
+            active: true,
+          });
+          this.listing.push({
             title: 'Amenities',
             link: 'my-amenities',
             active: true,
@@ -151,6 +174,11 @@ export class WrapperComponent implements OnInit {
             active: true,
           });
           this.listing.push({
+            title: 'Subscription',
+            link: 'my-subscription',
+            active: true
+          });
+          this.listing.push({
             title: 'Payment',
             link: 'my-payment',
             active: true,
@@ -163,20 +191,20 @@ export class WrapperComponent implements OnInit {
         }
       } else {
         if (profile.roles === 'SP') {
-          if (profile?.plan?.userType.length == 2) {
+          if(!profile.plan || profile.plan.name.toLowerCase() == 'basic'){
             this.listing.push({
               title: 'Subscription',
               link: 'my-subscription',
               active: true,
             });
             this.listing.push({
-              title: 'Booking',
-              link: 'my-booking',
-              active: false,
-            });
-            this.listing.push({
               title: 'Payment',
               link: 'my-payment',
+              active: true,
+            });
+            this.listing.push({
+              title: 'Booking',
+              link: 'my-booking',
               active: false,
             });
             this.listing.push({
@@ -224,10 +252,15 @@ export class WrapperComponent implements OnInit {
         this.listing.push(...this.uListing);
       }
       if (profile.roles === 'C' && !profile.isVipAffiliateUser) {
-        if (profile?.plan?.userType.length === 2) {
+        if(!profile.plan || profile.plan.name.toLowerCase() == 'basic'){
           this.listing.push({
             title: 'Subscription',
             link: 'my-subscription',
+            active: true,
+          });
+          this.listing.push({
+            title: 'Payment',
+            link: 'my-payment',
             active: true,
           });
           this.listing.push({
@@ -235,16 +268,11 @@ export class WrapperComponent implements OnInit {
             link: 'my-booking',
             active: false,
           });
-          this.listing.push({
-            title: 'Payment',
-            link: 'my-payment',
-            active: false,
-          });
-          this.listing.push({
-            title: 'Affiliate',
-            link: 'my-affiliate',
-            active: false,
-          });
+          // this.listing.push({
+          //   title: 'Affiliate',
+          //   link: 'my-affiliate',
+          //   active: false,
+          // });
 
           this.listing.push({
             title: 'Review and Rating',
@@ -268,18 +296,18 @@ export class WrapperComponent implements OnInit {
             link: 'my-subscription',
             active: true,
           });
-          this.listing.push({
-            title: 'Affiliate',
-            link: 'my-affiliate',
-            active: true,
-          });
+          // this.listing.push({
+          //   title: 'Affiliate',
+          //   link: 'my-affiliate',
+          //   active: true,
+          // });
           this.listing.push({
             title: 'Review and Rating',
             link: 'reviews-ratings',
             active: true,
           });
         }
-        if (profile.plan.ListAmenities === true) {
+        if (profile.plan && profile.plan.ListAmenities === true) {
           this.listing.push({
             title: 'Amenities',
             link: 'my-amenities',

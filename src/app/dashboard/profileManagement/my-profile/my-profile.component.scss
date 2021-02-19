@@ -5,6 +5,10 @@
   margin-top: 12px;
 }
 
+.textarea-disabled{
+  white-space: pre;
+}
+
 .profileeditbox {
   @include profileImageInput(150px);
   margin-bottom: 30px;

@@ -80,7 +80,8 @@ export class UserDetailsComponent {
   private imageSrc: string = '';
   imageSrc1: any;
 
-  public AWS_S3 = environment.config.AWS_S3
+  public AWS_S3 = environment.config.AWS_S3;
+  public isAddressSetByGooglemap: boolean = false;
 
   @Output() ActiveNextTab = new EventEmitter<string>();
 
@@ -172,6 +173,10 @@ export class UserDetailsComponent {
         }
       } else {
         window.alert('Geocoder failed due to: ' + status);
+      }
+
+      if(this.userDetails.city.length > 0 && this.userDetails.state.length > 0 && this.userDetails.zipcode.length > 0){
+        this.isAddressSetByGooglemap = true;
       }
     });
   }
@@ -297,6 +302,14 @@ export class UserDetailsComponent {
     this.defaultImage = reader.result;
   }
   save() {
+    if(!this.isAddressSetByGooglemap){
+      this.toastr.error('Please select suggested Google address');
+      return;
+    }
+
+    if(!this.userDetails.age_range || this.userDetails.age_range.length == 0){
+      this.userDetails.age_range = [this.ageRangeList[0].id];
+    }
     if (this.userDetails.typical_hours.length == 0) {
       this.toastr.error("Please select the typical hours!");
       return;
