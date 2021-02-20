@@ -267,21 +267,18 @@ export class DetailComponent implements OnInit {
 
   getReviews() {
 
-    //    this.sortReviewsBy(0);
+    const path = `booking/get-all-review?userId=${this.id}&count=10&page=1&search=/`;
+    this._sharedService.getNoAuth(path).subscribe((res: any) => {
+      if (res.statusCode === 200 && res.data.data.length > 0) {
+        this.userInfo.setReviews(res.data.data)
+               
+      } else {
+        this._sharedService.checkAccessToken(res.message);
+      }
+    }, err => {
 
-    /*  todo: enable this code after api works
-        const path = `booking/get-all-review?userId=${this.id}&count=10&page=1&search=/`;
-        this._sharedService.getNoAuth(path).subscribe((res: any) => {
-          if (res.statusCode === 200) {
-             this.rating = res.data.data;
-          } else {
-            this._sharedService.checkAccessToken(res.message);
-          }
-        }, err => {
-
-          this._sharedService.checkAccessToken(err);
-        });
-     */
+      this._sharedService.checkAccessToken(err);
+    });
   }
 
   getCategoryServices(): Promise<boolean> {

@@ -66,14 +66,16 @@
         <ul class="reviews p-0 m-0 list-unstyled">
           <li class="d-md-flex flex-md-nowrap p-3 p-md-4 mb-4" *ngFor="let r of userInfo.reviews">
             <div class="mb-3 mb-md-0 col-md-5 col-lg-3 d-flex">
-              <div class="review-image rounded-circle overflow-hidden mr-3"></div>
+              <div class="review-image rounded-circle overflow-hidden mr-3">
+                <img [src]="r.image" [alt]="r.name">
+              </div>
               <p class="font-weight-bold mt-3 font-big mb-0">{{r.name}}</p>
             </div>
             <div class="col-md-7 col-lg-9">
               <star-rate [rate]="r.rate" margin='big'></star-rate>
               <div class="borderb-grey pt-2"></div>
-              <p class='pt-3 pb-0'>{{r.desc}}</p>
-              <div>{{r.updatedAt | date:'longDate'}}</div>
+              <p class='pt-3 pb-0'>{{r.review}}</p>
+              <div>{{r.createdAt | date:'longDate'}}</div>
             </div>
           </li>
         </ul>
@@ -192,7 +194,7 @@
         <div class="row bg-lightblue rounded-bottom pt-5 mb-5"></div>
   
         <!-- professionals at centre-->
-        <div *ngIf="userInfo?.isCentre">
+        <div *ngIf="userInfo?.isCentre && userInfo.professionals && userInfo.professionals.length > 0">
           <div class="row bg-grey rounded-top py-4 mt-5 justify-content-start justify-content-md-between align-items-center">
             <div class="col text-blue font-big font-md-bigger">Meet our professionals</div>
           </div>

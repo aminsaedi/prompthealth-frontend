@@ -82,7 +82,7 @@ export class Professional implements IProfessional {
   private _description: string;
   private _phone: string;
   private _ratingAvg: number;
-  private _reviews: any[] = [];
+  private _reviews: Review[] = [];
   private _priceRange: number[] = [];
   private _gender: string;
   private _address: string;
@@ -287,7 +287,6 @@ export class Professional implements IProfessional {
     this._phone = phone;
 
     this._ratingAvg = p.ratingAvg ? Number(p.ratingAvg) : 0;
-    this._reviews = p.ratingBy || [];
 
     const priceRange: string = p.price_per_hours || '';
     const priceArray: string[] = priceRange ? priceRange.replace('$', '').split('-') : [];
@@ -399,12 +398,34 @@ export class Professional implements IProfessional {
       });
     });
   }
-  setReviews(reviews: any[]) { this._reviews = reviews || []; }
+
+  setReviews(reviews: any[]) { 
+    this.p.ratingBy.forEach((r0: any)=>{
+      for(let r1 of reviews){
+        if(r1._id == r0.bookingId){
+          const name = [];
+          if(r1.customerId.firstName){ name.push(r1.customerId.firstName); }
+          if(r1.customerId.lastName){  name.push(r1.customerId.lastName); }
+    
+          this._reviews.push({
+            name: (name.length > 0) ? name.join(' ') : 'Anonymous',
+            image: (r1.customerId.profileImage) ? this._baseURLImage + '350x220/' + r1.customerId.profileImage : '/assets/img/no-image.jpg',
+            rate: r1.rating,
+            review: r1.review,
+            createdAt: r0.createdAt,
+          });
+          break;
+        }
+      }
+    });
+    this.sortReviewBy(0);
+  }
+
   sortReviewBy(i: number) {
     switch (i) {
       case 0: this._reviews.sort((a, b) => b.rate - a.rate); break; /** rate desc */
       case 1: this._reviews.sort((a, b) => a.rate - b.rate); break; /** rate asc */
-      case 2: this._reviews.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()); break; /** date desc */
+      case 2: this._reviews.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()); break; /** date desc */
     }
   }
 
@@ -535,4 +556,12 @@ export interface ImageData {
   name?: string;
   url: string;
   desc?: string;
+}
+
+export interface Review {
+  name: string, 
+  image: string,
+  rate: number;
+  review: string;
+  createdAt: Date;
 }

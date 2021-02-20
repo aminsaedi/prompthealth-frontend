@@ -34,14 +34,14 @@ export class MyProductComponent implements OnInit {
   ngOnInit(): void {
     this.userId = JSON.parse(localStorage.getItem('user'))._id;
     this.addProductForm = this.formBuilder.group({
-      title: ['', [Validators.required]],
+      title: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]],
       price: ['', [Validators.required]],
-      description: ['', [Validators.required]],
+      description: ['', [Validators.required, Validators.maxLength(500), Validators.pattern(/\S+/)]],
     });
     this.editProductForm = this.formBuilder.group({
-      title: ['', [Validators.required]],
+      title: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]],
       price: ['', [Validators.required]],
-      description: ['', [Validators.required]],
+      description: ['', [Validators.required, Validators.maxLength(500), Validators.pattern(/\S+/)]],
     });
     this.getProductList();
   }
@@ -117,6 +117,12 @@ export class MyProductComponent implements OnInit {
     if (this.addProductForm.invalid) {
       return;
     }
+
+    if(!this.imagesList || this.imagesList.length == 0){
+      this.toastr.error('Please upload at least 1 image');
+      return;
+    }
+    
     else {
       const formData = {
         ...this.addProductForm.value,
@@ -169,6 +175,7 @@ export class MyProductComponent implements OnInit {
     });
   }
   editProduct(prod) {
+    this.submitted = false;
     this.editProductCheck = true
     this.editProductForm.controls.title.setValue(prod.slug);
     this.editProductForm.controls.description.setValue(prod.description);
@@ -177,7 +184,14 @@ export class MyProductComponent implements OnInit {
     this.editProductId = prod._id;
   }
   updateProduct() {
+    this.submitted = true;
+
     if (this.editProductForm.invalid) {
+      return;
+    }
+
+    if(!this.imagesList || this.imagesList.length == 0){
+      this.toastr.error('Please upload at least 1 image');
       return;
     }
     else {
