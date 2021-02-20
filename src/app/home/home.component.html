@@ -173,7 +173,9 @@
               </ng-template> -->
               <div class="col-6 col-md-3" *ngFor="let feature of this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].features">
                 <a [routerLink]="['/dashboard/detail/', feature.userId._id]">
-                  <img [src]="feature.userId.profileImage ? AWS_S3 + feature.userId.profileImage : 'assets/img/default_user.jpg'" class="w-100" />
+                  <div class="featured-image">
+                    <img [src]="feature.userId.profileImage ? AWS_S3 + '350x220/' + feature.userId.profileImage : 'assets/img/default_user.jpg'" class="w-100" />
+                  </div>
                   <div class="text-center mt-1 text-dark">
                     {{feature.userId.firstName}} {{feature.userId.lastName}}
                   </div>

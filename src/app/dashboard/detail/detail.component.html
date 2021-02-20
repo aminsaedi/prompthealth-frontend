@@ -121,13 +121,27 @@
           <div class="col-12 col-lg-8">
             <app-image-row [images]="userInfo.amenityPreview" [option]="{col: 3}"></app-image-row>
             <button class="btn text-blue border-blue rounded" (click)="openAmenityViewer()">Show detail</button>
-            <app-amenity-viewer 
+            <app-product-viewer 
             *ngIf="isAmenityViewerShown" 
             [data]="userInfo.amenity"
             (close)="closeAmenityViewer()"
-            ></app-amenity-viewer>
+            ></app-product-viewer>
           </div>
         </div>
+
+        <div class="row mt-5" *ngIf="userInfo?.productPreview && userInfo.productPreview.length > 0">
+          <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Product</div>
+          <div class="col-12 col-lg-8">
+            <app-image-row [images]="userInfo.productPreview" [option]="{col: 3}"></app-image-row>
+            <button class="btn text-blue border-blue rounded" (click)="openProductViewer()">Show detail</button>
+            <app-product-viewer 
+            *ngIf="isProductViewerShown"
+            [data]="userInfo.product"
+            (close)="closeProductViewer()"
+            ></app-product-viewer>
+          </div>
+        </div>
+
   
         <!-- blue section -->
         <div class="row bg-lightblue rounded-top pt-5 pb-0 mt-5">

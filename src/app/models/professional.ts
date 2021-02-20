@@ -98,6 +98,7 @@ export class Professional implements IProfessional {
   private _certification: string;
   private _professionals: Professional[] = [];
   private _amenities: Amenity[];
+  private _products: Product[];
 
   private _isCheckedForCompared = false;
 
@@ -221,10 +222,22 @@ export class Professional implements IProfessional {
     return (this._amenities && this._amenities.length > 0 && this.p.plan && this.p.plan.ListAmenities) ? this._amenities : [];
   }
 
-  get amenityPreview(){
+  get amenityPreview(){ /** showing amenity is only for premium feature */
     const result = []
     if(this._amenities && this._amenities.length > 0 && this.p.plan && this.p.plan.ListAmenities){
       this._amenities.forEach(a => { a.images.forEach(image=>{ result.push(image); }) });
+    }
+    return (result.length > 3) ? result.slice(0,3) : result;
+  }
+  
+  get product(){ /** showing product is only for premium feature */
+    return (this._products && this._products.length > 0 && this.p.plan && this.p.plan.ListProductsOption) ? this._products : [];
+  }
+  
+  get productPreview(){ /** showing product is only for premium feature */
+    const result = [];
+    if(this._products && this._products.length > 0 && this.p.plan && this.p.plan.ListProductsOption){
+      this._products.forEach(p => { result.push(p.images[0]); });
     }
     return (result.length > 3) ? result.slice(0,3) : result;
   }
@@ -350,7 +363,7 @@ export class Professional implements IProfessional {
   setAmenities(amenities: any[]) {
     const a = [];
     amenities.forEach(amenity => {
-      const images: {url: string, name?: string, desc?: string}[] = [];
+      const images: ImageData[] = [];
       amenity.images.forEach((image: string)=>{ 
         images.push({
           url: this._baseURLImage + image, 
@@ -364,6 +377,27 @@ export class Professional implements IProfessional {
       });
     });
     this._amenities = a;
+  }
+
+  setProducts(products: any[]){
+    this._products = [];
+    products.forEach(p=>{
+      const images: ImageData[] = [];
+      p.images.forEach((image: string)=>{ 
+        images.push({
+          name: p.title,
+          url: this._baseURLImage + image,
+          desc: p.description
+        });
+      });
+      this._products.push({
+        id: p._id,
+        item_text: p.title,
+        desc: p.description,
+        images: images,
+        price: p.price
+      });
+    });
   }
   setReviews(reviews: any[]) { this._reviews = reviews || []; }
   sortReviewBy(i: number) {
@@ -483,8 +517,22 @@ interface Video {
   url: string;
 }
 
-interface Amenity {
+export interface Amenity {
   id: string;
   item_text: string;
-  images: string[];
+  images: ImageData[];
+}
+
+export interface Product {
+  id: string;
+  item_text: string;
+  images: ImageData[];
+  price: number;
+  desc: string;
+}
+
+export interface ImageData {
+  name?: string;
+  url: string;
+  desc?: string;
 }

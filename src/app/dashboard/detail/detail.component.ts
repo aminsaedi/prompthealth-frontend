@@ -231,6 +231,9 @@ export class DetailComponent implements OnInit {
     this._sharedService.getNoAuth(path).subscribe((res: any) => {
       if (res.statusCode === 200) {
         this.products = res.data.data;
+        if(res.data.data){
+          this.userInfo.setProducts(res.data.data);
+        }
         this._sharedService.loader('hide');
 
       } else {
@@ -432,6 +435,10 @@ export class DetailComponent implements OnInit {
   public isAmenityViewerShown = false;
   openAmenityViewer(){ this.isAmenityViewerShown = true; }
   closeAmenityViewer(){ console.log('close'); this.isAmenityViewerShown = false; }
+
+  public isProductViewerShown = false;
+  openProductViewer(){ this.isProductViewerShown = true; }
+  closeProductViewer(){ this.isProductViewerShown = false; }
 }
 
 
