@@ -288,7 +288,7 @@ export class Professional implements IProfessional {
 
     this._ratingAvg = p.ratingAvg ? Number(p.ratingAvg) : 0;
 
-    const priceRange: string = p.price_per_hours || '';
+    const priceRange: string = p.exactPricing ? p.exactPricing.toString() : (p.price_per_hours || '');
     const priceArray: string[] = priceRange ? priceRange.replace('$', '').split('-') : [];
     priceArray.forEach((price) => {
       const p = Number(price.trim());

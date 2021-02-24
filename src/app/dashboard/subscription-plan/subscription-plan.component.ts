@@ -134,7 +134,7 @@ export class SubscriptionPlanComponent implements OnInit {
       this._sharedService.loader('hide');
 
       if (res.statusCode === 200) {
-        console.log(res.data);
+        // console.log(res.data);
         this.addOnPlans = res.data;
       } else {
         // this._commanService.checkAccessToken(res.error);

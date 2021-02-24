@@ -36,6 +36,10 @@
                 [routerLink]="list.link"
                 [routerLinkActive]="['active']"
                 >{{ list.title }}
+                <div *ngIf="list.title == 'Profile' && profile?.isVipAffiliateUser" class="icon-vip font-small rounded ml-3">
+                  <i class="fas fa-ribbon"></i>
+                  <span class="pl-2">VIP</span>
+                </div>
                 <span style="color:#4a86ab; font-size: 10px;" class="pull-right" *ngIf="!list.active"><i class="fas fa-star-of-life"></i></span>
               </button>
             </li>

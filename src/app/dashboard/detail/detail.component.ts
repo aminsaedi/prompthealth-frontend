@@ -159,7 +159,9 @@ export class DetailComponent implements OnInit {
         });
 
         this.getEndosements();
-
+        this.getProducts();
+        this.getReviews();
+  
         if(this.userInfo.isCentre){ this.getProfessionals(); }
       })
       .catch(err=>{ 
@@ -171,8 +173,6 @@ export class DetailComponent implements OnInit {
 
       // this.getUserProfile();
       // this.getProfileQuestion();
-      this.getProducts();
-      this.getReviews();
     });
   }
 
@@ -271,7 +271,7 @@ export class DetailComponent implements OnInit {
     this._sharedService.getNoAuth(path).subscribe((res: any) => {
       if (res.statusCode === 200 && res.data.data.length > 0) {
         this.userInfo.setReviews(res.data.data)
-               
+
       } else {
         this._sharedService.checkAccessToken(res.message);
       }
@@ -431,7 +431,7 @@ export class DetailComponent implements OnInit {
 
   public isAmenityViewerShown = false;
   openAmenityViewer(){ this.isAmenityViewerShown = true; }
-  closeAmenityViewer(){ console.log('close'); this.isAmenityViewerShown = false; }
+  closeAmenityViewer(){ this.isAmenityViewerShown = false; }
 
   public isProductViewerShown = false;
   openProductViewer(){ this.isProductViewerShown = true; }

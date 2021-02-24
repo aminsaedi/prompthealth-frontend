@@ -30,6 +30,7 @@ export class MyProfileComponent implements OnInit {
   formData = new FormData();
   public AWS_S3 = '';
   public isAddressSetByGooglemap: boolean = true;
+  public price = {mode: 'select'};
 
   ageRangeList = [
     { id: '5eb1a4e199957471610e6cd7', name: 'Not Critical', checked: false },
@@ -45,13 +46,13 @@ export class MyProfileComponent implements OnInit {
     { id: 'exp4', label: '>20 Years', value: '> 20' },
   ];
   priceList = [
-    { id: 'price1', label: 'Not Critical', value: 'Not Critical', checked: false },
-    { id: 'price2', label: '< $50', value: '< $50', checked: false },
-    { id: 'price3', label: '$50-100', value: '$50-100', checked: false },
-    { id: 'price4', label: '$100-200', value: '$100-200', checked: false },
-    { id: 'price5', label: '$200-500', value: '$200-500', checked: false },
-    { id: 'price6', label: '$500-1000', value: '$500-1000', checked: false },
-    { id: 'price7', label: '> $1000', value: '$1000', checked: false },
+    { id: 'price1', label: 'Not Critical', value: 'Not Critical', checked: false, minmax: [-100, 0] },
+    { id: 'price2', label: '< $50', value: '< $50', checked: false, minmax: [0, 50] },
+    { id: 'price3', label: '$50-100', value: '$50-100', checked: false, minmax: [50, 100] },
+    { id: 'price4', label: '$100-200', value: '$100-200', checked: false, minmax: [100, 200] },
+    { id: 'price5', label: '$200-500', value: '$200-500', checked: false, minmax: [200, 500] },
+    { id: 'price6', label: '$500-1000', value: '$500-1000', checked: false, minmax: [500, 1000] },
+    { id: 'price7', label: '> $1000', value: '$1000', checked: false, minmax: [1000, 1000000] },
   ];
   businessList = [
     { id: 'business1', label: 'Clinic', value: 'clinic' },
@@ -91,6 +92,7 @@ export class MyProfileComponent implements OnInit {
     age_range: [],
     years_of_experience: '',
     price_per_hours: '',
+    exactPricing: null,
     business_kind: '',
     product_description: '',
     professional_organization: '',
@@ -294,6 +296,8 @@ export class MyProfileComponent implements OnInit {
           this.serviceOfferSelected = this.profile.serviceOfferIds;
           this.hoursSelected = this.profile.typical_hours;
           this.age_rangeSelected = this.profile.age_range;
+          
+          if(this.profile.exactPricing){ this.price.mode = 'input'; }
         }
       } else {
         this._sharedService.checkAccessToken(res.message);
@@ -421,6 +425,19 @@ export class MyProfileComponent implements OnInit {
         return;
       }
     }
+
+    if(this.price.mode == 'select'){ this.profile.exactPricing = null; }
+    else{
+      this.profile.exactPricing = Number(this.profile.exactPricing);
+
+      this.profile.price_per_hours = this.priceList[0].value;
+      for(let p of this.priceList){
+        if(p.minmax[0] <= this.profile.exactPricing && this.profile.exactPricing < p.minmax[1]){
+          this.profile.price_per_hours = p.value;
+        }
+      }
+    }
+
     const payload = this.profile;
     payload._id = localStorage.getItem('loginID');
     if (payload.phone) { payload.phone.toString(); }

@@ -63,20 +63,36 @@ export class MyAmenitiesComponent implements OnInit {
     if (event.target.checked) {
       this.selectedAmenityId = amenity._id;
       this.imagesList = [];
-      this.uploadAmenity = {
-        userId: this.userId,
-        defaultamenityId: amenity._id,
-        images: [],
-      }
-      this.saveAmenities();
+      // this.uploadAmenity = {
+      //   userId: this.userId,
+      //   defaultamenityId: amenity._id,
+      //   images: [],
+      // }
+
+      // this.saveAmenities();
     } else {
-      this.deleteAmenity(amenity._id);
+      this.selectedAmenityId = null;
+      // this.deleteAmenity(amenity._id);
     }
   }
   imageUpload(id) {
     this.imagePushed = id;
   }
   onFileSelect(event) {
+    let target = null;
+    this.savedAminities.forEach(a=>{
+      if(a.defaultamenityId._id == this.selectedAmenityId){ target = a; }
+    });
+
+    const data = {images: []};
+    if(target){
+      data['id'] = target._id;
+      data.images = target.images;
+    }else{
+      data['userId'] = this.userId;
+      data['defaultamenityId'] = this.selectedAmenityId;
+    }
+
     const formData: FormData = new FormData();
     let input = new FormData();
     input.append('imgLocation', 'amenities');
@@ -86,10 +102,22 @@ export class MyAmenitiesComponent implements OnInit {
       input.append('images', event.target.files[0]);
       this.sharedService.imgUpload(input, 'common/imgUpload').subscribe((res: any) => {
         if (res.statusCode === 200) {
-          this.imagesList.push(res.data);
+          // this.imagesList.push(res.data);
           this.uploadAmenity['images'] = [res.data];
           this.updateAmenity['images'] = [res.data];
-          this.updateAmenities();
+
+          data.images.push(res.data);
+          if(target){
+            this.updateAmenity = data;
+            this.updateAmenities();
+          }else{
+            this.uploadAmenity = data;
+            this.saveAmenities();
+          }
+          this.imagesList = [];
+
+          // this.updateAmenities();
+          // this.saveAmenities();
           this.spinner.hide();
           // this.toastr.success(res.message);
         } else {
@@ -101,17 +129,30 @@ export class MyAmenitiesComponent implements OnInit {
       });
     }
     else {
-      if (event.target.files.length > 3) event.target.files.pop();
+      // if (event.target.files.length > 3) event.target.files.pop();
       for (var i = 0; i < event.target.files.length; i++) {
         input.append('images', event.target.files[i]);
       }
       this.spinner.show();
       this.sharedService.imgUpload(input, 'common/imgMultipleUpload').subscribe((res: any) => {
         if (res.statusCode === 200) {
-          this.imagesList = res.data;
-          this.uploadAmenity['images'] = res.data;
-          this.updateAmenity['images'] = res.data;
-          this.updateAmenities();
+          // this.imagesList = res.data;
+          // this.uploadAmenity['images'] = res.data;
+          // this.updateAmenity['images'] = res.data;
+
+          res.data.forEach(image=>{ data.images.push(image); })
+
+          if(target){
+            this.updateAmenity = data;
+            this.updateAmenities();
+          }else{
+            this.uploadAmenity = data;
+            this.saveAmenities();
+          }
+          this.imagesList = [];
+
+          // this.updateAmenities();
+          // this.saveAmenities();
           this.spinner.hide();
           // this.toastr.success(res.message);
         }
@@ -125,6 +166,7 @@ export class MyAmenitiesComponent implements OnInit {
     }
   }
   getSavedAmenties() {
+    this.selectedAmenityId = null;
     const path = `amenity/get-all/?userId=${this.userId}&count=10&page=1&frontend=0`;
     this.sharedService.get(path).subscribe((res: any) => {
       this.spinner.show();
@@ -152,10 +194,10 @@ export class MyAmenitiesComponent implements OnInit {
     this.sharedService.post(this.uploadAmenity, path).subscribe((res: any) => {
       this.spinner.show();
       if (res.statusCode === 200) {
-
-        this.updateAmenity = {
-          id: res.data._id,
-        }
+        this.getSavedAmenties();
+        // this.updateAmenity = {
+        //   id: res.data._id,
+        // }
         // this.getSavedAmenties();
         this.spinner.hide();
       }
@@ -177,7 +219,7 @@ export class MyAmenitiesComponent implements OnInit {
       if (res.statusCode === 200) {
         // this.toastr.success(res.message);
         this.spinner.hide();
-        // this.getSavedAmenties();
+        this.getSavedAmenties();
       }
 
       else {

@@ -38,6 +38,7 @@ $heightFinder: 112px;
 
 .h-100--finder{ height: calc(100vh - #{$heightFinder}); }
 .min-h-100--finder{ min-height: calc(100vh - #{$heightFinder}); }
+.opacity-0 { opacity: 0; }
 
 .clamp-1line{
   display: -webkit-box;
@@ -124,6 +125,9 @@ $heightFinder: 112px;
   right: 5px;
 }
 
+.no-one-found{
+  line-height: 1.5em;
+}
 .btn-get-location.active{
   i{
     animation-name: rotate;

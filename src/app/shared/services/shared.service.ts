@@ -101,7 +101,6 @@ export class SharedService {
   imgUpload(body, path) {
     let headers = this.getAuthorizationHeader();
     headers = headers.delete('Content-Type');
-    // console.log(headers);
     return this.http.post(this.rootUrl + path, body, { headers });
   }
   put(body, path) {

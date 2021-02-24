@@ -55,15 +55,25 @@
         <button class="btn" (click)="removeCustomerHealth(i)"><i class="fas fa-times"></i></button>
       </li>
     </ul>
-    <ul class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
+    <ul *ngIf="!isVirtual" class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
       <li *ngFor="let f of filters; let i = index;">
-        <button [id]="'filter-' + f._id" *ngIf="!(isVirtual && f._id == 'distance')" class="btn border-darkblue text-darkblue text-nowrap py-1 px-4 rounded-pill mr-3" 
+        <button [id]="'filter-' + f._id" class="btn border-darkblue text-darkblue text-nowrap py-1 px-4 rounded-pill mr-3" 
           [ngClass]="{focus: (filterTarget && filterTarget._id == f._id), active: f.active}"
           (click)="setFilterTarget(i)"
         >{{f.item_text}}</button>
       </li>
       <li><button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button></li>
     </ul>
+    <ul *ngIf="!!isVirtual" class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
+      <li *ngFor="let f of filters; let i = index;">
+        <button [id]="'filter-' + f._id" *ngIf="f._id !== 'distance'" class="btn border-darkblue text-darkblue text-nowrap py-1 px-4 rounded-pill mr-3" 
+          [ngClass]="{focus: (filterTarget && filterTarget._id == f._id), active: f.active}"
+          (click)="setFilterTarget(i)"
+        >{{f.item_text}}</button>
+      </li>
+      <li><button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button></li>
+    </ul>
+
 
     <div class="overflow-hidden" [@expandVertical] *ngIf="compareList && compareList.length > 0">
       <div class="compare d-flex">
@@ -89,6 +99,14 @@
     [target]="filterTarget._id"
   ></filter-dropdown> --> <!-- multiple slider which is not built yet. (for price) -->
 
+  <filter-dropdown-location class="position-fixed shadow rounded-15p blur filter-dropdown"
+    *ngIf="filterTarget && (filterTarget._id == 'location')" 
+    [@slideVertical]
+    [ngStyle]="getFilterDropdownPosition()"
+    [data]="filterTarget.data"
+    (changeState)="updateFilterLocation($event)"
+  ></filter-dropdown-location>
+
   <filter-dropdown-select class="position-fixed shadow rounded-15p blur filter-dropdown"
     *ngIf="filterTarget && (filterTarget.type == 'radio' || filterTarget.type == 'checkbox')" 
     [@slideVertical]
@@ -97,8 +115,8 @@
     [multiple]="(filterTarget.type == 'checkbox')? true: false"
     [options]="filterTarget.options"
     (changeState)="updateFilter($event)"
-
   ></filter-dropdown-select>
+
   <filter-dropdown-slider class="position-fixed shadow rounded-15p blur filter-dropdown"
     *ngIf="filterTarget && (filterTarget.type == 'slider')" 
     [@slideVertical]
@@ -115,57 +133,69 @@
       [ngClass]="listingContainerClass"
     >
       <div class="container-fluid postiion-relative">
-        <p class="font-italic">Here are the options we found for you</p>
-        <ul class="professionals list-unstyled row" *ngIf="!pages.data">
-          <li class="col-12 mb-3"
-            *ngFor="let i of [0,1,2,3,4,5]"
-            [ngClass]="listingItemClass"
-          ><div class="card p-1 border-blue rounded-15p"><post-dummy></post-dummy></div></li>
-        </ul>
+        <ng-container *ngIf="!pages.data">
+          <p class="opacity-0">Here are the options we found for you</p>
+          <ul class="professionals list-unstyled row">
+            <li class="col-12 mb-3"
+              *ngFor="let i of [0,1,2,3,4,5]"
+              [ngClass]="listingItemClass"
+            ><div class="card p-1 border-blue rounded-15p"><post-dummy></post-dummy></div></li>
+          </ul>  
+        </ng-container>
 
-        <ul class="professionals list-unstyled row" *ngIf="pages.data">
-          <li class="col-12 mb-3"
-            *ngFor="let p of pages.data[pages.current - 1]"
-            [ngClass]="listingItemClass"
-          >
-            <!-- todo: create component to reuse this card in google map -->
-            <div class="card p-3 text-center border-blue rounded-15p font-small">
-              <div class="img-wrapper mb-3">
-                <img [src]="p.image" [alt]="p.name" [ngClass]="{full: p.isCentre,'rounded-circle': (!p.isCentre)}" crossorigin="anonymous">
-                <i class="icon-video fas fa-video font-biggest" *ngIf="p.provideVirtual"></i>
-              </div>
-              <div class="price-tag bg-tagblue font-weight-bold" *ngIf="p.price">{{p.price}}</div>
-              <div class="button-compare form-check">
-                <input type="checkbox" class="form-check-input" [id]="'compare-' + p.id" [(ngModel)]="p.isCheckedForCompare" (change)="updateCompareList()">
-                <label class="form-check-label" [for]="'compare-' + p.id">Compare</label>
-              </div>
+        <ng-container *ngIf="pages.data && pages.data.length == 0">
+          <p class="font-italic font-big no-one-found">
+            There is no one available in your geographical area with your search criteria right now. <br><br>
+            Be sure to check back as our network is growing everyday!
+          </p>
+        </ng-container>
 
-              <p class="font-weight-bold font-bigger mb-0">
-                <i class="fas fa-clinic-medical pr-1" *ngIf="p?.isCentre"></i>
-                {{p.name}}
-              </p>
-              <star-rate class="my-3" [rate]="p.rating" margin="small" size="small"></star-rate>
-              <p class="mb-1 clamp-1line" *ngIf="!p.isCentre">{{p.organization}}</p>
-              <p class="mb-1" *ngIf="p.isCentre && p.phone">{{p.phone}}</p>
-              <p class="mb-3 address">{{p.address}}</p>
-              <div>
-                <a class="btn border-darkblue text-darkblue rounded-10p"
-                  [routerLink]="['../detail', p.id]"
-                >profile</a>
+        <ng-container *ngIf="pages.data && pages.data.length > 0">
+          <p class="font-italic">Here are the options we found for you</p>
+          <ul class="professionals list-unstyled row" *ngIf="pages.data">
+            <li class="col-12 mb-3"
+              *ngFor="let p of pages.data[pages.current - 1]"
+              [ngClass]="listingItemClass"
+            >
+              <!-- todo: create component to reuse this card in google map -->
+              <div class="card p-3 text-center border-blue rounded-15p font-small">
+                <div class="img-wrapper mb-3">
+                  <img [src]="p.image" [alt]="p.name" [ngClass]="{full: p.isCentre,'rounded-circle': (!p.isCentre)}" crossorigin="anonymous">
+                  <i class="icon-video fas fa-video font-biggest" *ngIf="p.provideVirtual"></i>
+                </div>
+                <div class="price-tag bg-tagblue font-weight-bold" *ngIf="p.price">{{p.price}}</div>
+                <div class="button-compare form-check">
+                  <input type="checkbox" class="form-check-input" [id]="'compare-' + p.id" [(ngModel)]="p.isCheckedForCompare" (change)="updateCompareList()">
+                  <label class="form-check-label" [for]="'compare-' + p.id">Compare</label>
+                </div>
+  
+                <p class="font-weight-bold font-bigger mb-0">
+                  <i class="fas fa-clinic-medical pr-1" *ngIf="p?.isCentre"></i>
+                  {{p.name}}
+                </p>
+                <star-rate class="my-3" [rate]="p.rating" margin="small" size="small"></star-rate>
+                <p class="mb-1 clamp-1line" *ngIf="!p.isCentre">{{p.organization}}</p>
+                <p class="mb-1" *ngIf="p.isCentre && p.phone">{{p.phone}}</p>
+                <p class="mb-3 address">{{p.address}}</p>
+                <div>
+                  <a class="btn border-darkblue text-darkblue rounded-10p"
+                    [routerLink]="['../detail', p.id]"
+                  >profile</a>
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
-
-        <div class="d-flex flex-nowrap justify-content-center pt-2 pb-5" *ngIf="pages.data">
-          <div class="paginator pre" (click)="changePage(pages.current - 1)"></div>
-          <div *ngFor="let p of pages.data; let i = index"
-            class="paginator point mr-1 active" 
-            [ngClass]="{active: (i == pages.current - 1)}"
-            (click)="changePage(i + 1)"
-          ></div>
-          <div *ngIf="pages.data && pages.data.length > 1" class="paginator next" (click)="changePage(pages.current + 1)"></div>
-        </div>
+            </li>
+          </ul>
+  
+          <div class="d-flex flex-nowrap justify-content-center pt-2 pb-5" *ngIf="pages.data">
+            <div class="paginator pre" (click)="changePage(pages.current - 1)"></div>
+            <div *ngFor="let p of pages.data; let i = index"
+              class="paginator point mr-1 active" 
+              [ngClass]="{active: (i == pages.current - 1)}"
+              (click)="changePage(i + 1)"
+            ></div>
+            <div *ngIf="pages.data && pages.data.length > 1" class="paginator next" (click)="changePage(pages.current + 1)"></div>
+          </div>
+        </ng-container>
       </div>
     </div>
     <div class="col-12 col-md-6 d-none d-md-block sticky-to-finder h-100--finder bg-white"
@@ -238,7 +268,6 @@
         </li>
         <li>
           <button class="btn text-blue font-biggest btn-get-location" 
-          *ngIf="isGetLocationButtonShown"
           [disabled]="isGettingCurrentLocation"
           (click)="onClickGetLocationButton()" 
           [ngClass]="{active: isGettingCurrentLocation}"

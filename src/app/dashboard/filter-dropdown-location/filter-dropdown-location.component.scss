@@ -1,0 +1,22 @@
+button.submit{
+  background: var(--ph-blue);
+  color: white;
+}
+
+button.cancel{
+  color: grey;
+  text-decoration: underline;
+}
+
+.borderb-grey{ border-bottom: solid 1px #dcdcdc; }
+
+.form-range{
+  display: block;
+  width: 100%; 
+
+  // &::-webkit-slider-runnable-track{
+  // }
+
+  // &::-webkit-slider-thumb{
+  // }
+}

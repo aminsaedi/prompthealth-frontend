@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, NgZone, OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-// import { MapsAPILoader, MouseEvent } from '@agm/core';
+import { MapsAPILoader, MouseEvent } from '@agm/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
@@ -33,6 +33,7 @@ export class ListingComponent implements OnInit, OnDestroy {
     private _headerService: HeaderStatusService,
     private _catService: CategoryService,
     private _qService: QuestionnaireService,
+    private _maps: MapsAPILoader,
     _el: ElementRef,
   ) {
     this.host = _el.nativeElement;
@@ -48,6 +49,8 @@ export class ListingComponent implements OnInit, OnDestroy {
 
   public mapdata: { lat: number, lng: number, zoom: number } = { lat: 53.89, lng: -111.25, zoom: 3 };
   public searchCenter: { lat: number, lng: number, radius: number } = { lat: 53.89, lng: -111.25, radius: 0 };
+  public initialLocation: {lat: number, lng: number, zoom: number,  radius: number, address: string, isLocationEnabled: boolean} = {lat: 53.89, lng: -111.25, zoom: 3, radius: 0, address: '', isLocationEnabled: false}
+
   public mapInfoWindowPrevious: any = null;
   private isMapInfoWindowReady: boolean = false;
   public isGettingCurrentLocation = false;
@@ -161,13 +164,31 @@ export class ListingComponent implements OnInit, OnDestroy {
     let [lat, lng]: [number, number] = [null, null];
 
     if (ipLat && ipLng) { [lat, lng] = [Number(ipLat), Number(ipLng)]; } else {
-      try { [lat, lng] = await this.getCurrentLocation(); } catch (err) { }
+      try { [lat, lng] = await this.getCurrentLocation(); } 
+      catch (err) {
+        const message = (err.code === 1) ? 'You need to enable your location in order to see options in your geographical area. Alternatively you can only view virtual options!' : 'Could not get current location';
+        this.toastr.success(message);
+      }
     }
 
-    this.searchCenter = (lat & lng) ? { lat, lng, radius: 100 * 1000 } : { lat: null, lng: null, radius: 0 };
-    this.setMapdata((lat && lng) ? { lat, lng, zoom: 10 } : { lat: latDefault, lng: lngDefault, zoom: 3 });
+    this.searchCenter = (lat & lng) ? { lat: lat, lng: lng, radius: 100 * 1000 } : { lat: null, lng: null, radius: 0 };
+    this.setMapdata((lat && lng) ? { lat: lat, lng: lng, zoom: 10 } : { lat: latDefault, lng: lngDefault, zoom: 3 });
     this.listingPayload.latLong = `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
 
+    if(lat && lng){ 
+      this.initialLocation.lat = lat;
+      this.initialLocation.lng = lng;
+      this.initialLocation.zoom = 10;
+      this.initialLocation.radius = 100 * 1000;
+      this.initialLocation.isLocationEnabled = true;
+
+      this.getZipcodeFromLocation([lat, lng]).then(zipcode=>{
+        this.initialLocation.address = zipcode;
+
+        const f = this.getFilter('location');
+        f.data.address = zipcode;
+      });
+    }
 
     /** if personal match exists, reset all filter menu and payload. then set filter menu and payload using personalMatch */
     const personalMatch = this._sharedService.getPersonalMatch();
@@ -238,8 +259,8 @@ export class ListingComponent implements OnInit, OnDestroy {
       const [lat, lng] = await this.getCurrentLocation();
       this.setMapdata({ lat, lng, zoom: 12 });
     } catch (err) {
-      const message = (err.code === 1) ? 'Please allow geo location' : 'Could not get current location';
-      this.toastr.error(message);
+      const message = (err.code === 1) ? 'You need to enable your location in order to see options in your geographical area. Alternatively you can only view virtual options!' : 'Could not get current location';
+      this.toastr.success(message);
     }
 
     this.isGettingCurrentLocation = false;
@@ -251,6 +272,8 @@ export class ListingComponent implements OnInit, OnDestroy {
         const [lat, lng] = [resp.coords.latitude, resp.coords.longitude];
         localStorage.setItem('ipLat', lat.toString());
         localStorage.setItem('ipLong', lng.toString());
+        this.initialLocation.lat = lat;
+        this.initialLocation.lng = lng;
         resolve([lat, lng]);
       },
         err => {
@@ -302,10 +325,18 @@ export class ListingComponent implements OnInit, OnDestroy {
     //    if (updateListing) { this.listing(this.listingPayload, false); }
   }
 
-  searchInThisArea() {
+  async searchInThisArea() {
     this.searchCenter.lat = this.mapdata.lat;
     this.searchCenter.lng = this.mapdata.lng;
     this.searchCenter.radius = this.listingPayload.miles * 1000;
+    
+    try{ 
+      const zipcode = await this.getZipcodeFromLocation([this.mapdata.lat, this.mapdata.lng]); 
+      const f = this.getFilter('location');
+      f.data.address = zipcode;
+    }
+    catch(err){ console.log('error'); }
+    
     this.listingPayload.latLong = `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
     this.listing(this.listingPayload);
   }
@@ -671,6 +702,79 @@ export class ListingComponent implements OnInit, OnDestroy {
     }
   }
 
+  getLocationFromZipcode(zipcode: string): Promise<[number, number]>{
+    return new Promise((resolve, reject)=>{
+      this._maps.load().then(()=>{
+        new google.maps.Geocoder().geocode({'address': zipcode}, (results, status)=>{
+          if(status !== 'OK'){ reject(); }
+          else{
+            const data = results[0].geometry.location;
+            resolve([data.lat(), data.lng()]);
+          }
+        });
+      })
+    })  
+  }
+  getZipcodeFromLocation(location: [number, number]): Promise<string>{
+    return new Promise((resolve, reject) => {
+      this._maps.load().then(() => {
+        new google.maps.Geocoder().geocode({location: {lat: location[0], lng: location[1]}}, (results, status)=>{
+          if(status == 'OK' && results.length > 0){
+            const data = results[0].address_components;
+            let zipcode: string;
+            for(let d of data){
+              if(d.types.indexOf('postal_code') != -1){
+                zipcode = d.long_name;
+                break;
+              }
+            }
+            if(zipcode){ resolve(zipcode); }
+            else{ reject(); }
+          }
+          else{ reject(); }
+        })
+      });
+    })
+  }
+
+  /** trigger when click save / clear in zipcode filter menu and update listingPayload & map. then start listing */
+  async updateFilterLocation(type: string){
+    const f = this.getFilter('location');
+    this.listingPayload.miles = f.data.distance;
+      
+    const zipcode = f.data.address.replace(/\s{2,}/g, '');
+    this._sharedService.loader('show');
+    if(zipcode.length > 0){
+      let latLng: [number, number];
+      try { 
+        latLng = await this.getLocationFromZipcode(zipcode); 
+        f.active = true;
+        this.listingPayload.latLong = latLng[1] + ',' + latLng[0];
+        this.searchCenter = {lat: latLng[0], lng: latLng[1], radius: this.listingPayload.miles * 1000 }
+        this.setMapdata({lat: latLng[0], lng: latLng[1], zoom: 10});
+        this.filterTarget = null;
+        this.listing(this.listingPayload);
+      }
+      catch(err){
+        f.active = false;
+        this._sharedService.loader('hide');
+        this.toastr.error('Please enter valid zip code.');
+      }
+    }
+    /** if user click 'clear' or 'save' without address */
+    else{ 
+      this.filterTarget = null;
+      f.active = (f.data.distance == 100) ? false : true;
+      f.data.address = this.initialLocation.address;
+
+      this.listingPayload.latLong = (this.initialLocation.isLocationEnabled) ? (this.initialLocation.lng + ',' + this.initialLocation.lat) : '';
+      this.searchCenter = {lat: this.initialLocation.lat, lng: this.initialLocation.lng, radius: this.initialLocation.radius};
+      this.setMapdata({lat: this.initialLocation.lat, lng: this.initialLocation.lng, zoom: this.initialLocation.zoom });
+
+      this.listing(this.listingPayload);
+    }    
+  }
+
   /** trigger when click save / clear in filter menu and update listingPayload. then start listing (optional) */
   updateFilter(id: string, listing: boolean = true) {
     const f = this.getFilter(id);
@@ -788,10 +892,13 @@ interface Filter {
   active: boolean;
   options?: QuestionnaireAnswer[];
   range?: { min: number; max: number; current: number; default: number };
+  data?: {distance: number, address: string} /** for location */
 }
 
-const filtersPreset = [
-  { _id: 'distance', item_text: 'Distance', type: 'slider', payloadName: 'miles', active: false, range: { min: 5, max: 100, current: 100, default: 100 } },
+const filtersPreset: Filter[] = [
+  { _id: 'location', item_text: 'Location', type: '', payloadName: '', active: false, data: {distance: 100, address: ''}},
+  // { _id: 'zipcode', item_text: 'Zip Code', type: 'input', payloadName: 'zipcode', active: false, data: {value: '', placeholder: 'Please input zip code'} },
+  // { _id: 'distance', item_text: 'Distance', type: 'slider', payloadName: 'miles', active: false, range: { min: 5, max: 100, current: 100, default: 100 } },
   {
     _id: 'gender', item_text: 'Gender', type: 'radio', payloadName: 'gender', active: false, options: [
       // {_id: 'all', item_text: 'All', active: false, subans: false},

@@ -82,6 +82,7 @@
           name="answers"
           class="mr-2"
           [id]="amenity._id"
+          [checked]="amenity._id == selectedAmenityId"
           (change)="getSelectedAmenties($event, amenity)"
         />
         <img
