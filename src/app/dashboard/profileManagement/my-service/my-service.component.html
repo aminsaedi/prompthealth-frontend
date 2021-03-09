@@ -5,7 +5,7 @@
 </ngx-spinner>
 
 <h4 class="mb-3">
-  My Serivice Information
+  My Service Information
   <button class="btn btn-primary pull-right" (click)="updateFields()">Edit</button>
 </h4>
 <div class="form-container mt-5">
@@ -44,8 +44,17 @@
             </ul>
           </div>  
         </div>
-
       </ng-container>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-3"></div>
+      <div class="col-md-9">
+        <p *ngIf="editFields" class="font-big font-italic bg-lightgrey p-3 line-height-1_5">
+          Please only pick what's applicable to you to allow proper matching.
+          We'll regularly review for inappropriate profiles
+        </p>
+      </div>
     </div>
 
     

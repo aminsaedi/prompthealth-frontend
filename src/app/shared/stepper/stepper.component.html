@@ -1,0 +1,24 @@
+<!-- stepper for midium view or more-->
+<div 
+*ngIf="type != 'simple'"
+class="position-relative d-flex"
+[ngClass]="'item-count-' + data.length"
+>
+  <div 
+  *ngFor="let item of data; let i = index;" 
+  class="stepper-item text-center"
+  [ngClass]="{active: (current >= i)}"
+  >
+    <div class="hand"></div>
+    <div *ngIf="!item.route" class="point rounded-circle d-block"></div>
+    <a *ngIf="item.route" [routerLink]="['./', item.route]">
+      <div class="point rounded-circle d-block"></div>
+      <span class="label" *ngIf="current != i">{{item.label}}</span>  
+    </a>
+  </div>  
+</div>
+
+<!-- stepper for small view -->
+<div [ngClass]="'item-count-simple-' + data.length" *ngIf="type == 'simple'">
+  <div class="stepper-simple-road" [class]="'pos-' + current"></div>
+</div>

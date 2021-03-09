@@ -96,6 +96,7 @@ export class MyProfileComponent implements OnInit {
     business_kind: '',
     product_description: '',
     professional_organization: '',
+    professional_title: '',
     certification: '',
     isPlanExpired: false,
     accredited_provide_canada: ''

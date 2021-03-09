@@ -4,21 +4,27 @@
 <div class='intersection-observer' intersectionObserver (changeStatus)="changeStickyStatusTabbar($event)"></div>
 <div class="container-fluid borderb-grey sticky-top bg-white">
   <div class="max-w-1200 position-relative tabbar" [ngClass]="{sticked: isTabSticked}">
-    <div class="d-flex-column d-md-flex d-wrap d-md-nowrap ml-for-avoid-image profile-info"
+    <div class="d-flex-column d-wrap ml-for-avoid-image profile-info"
       [ngClass]="{sticked: isTabSticked}"
     >
+      <p *ngIf="userInfo?.title" class="mb-2 overflow-hidden fong-regular font-mg-big" [@expandSubtitle]="(isTabSticked? 'shrink' : 'expand')">{{userInfo?.title}} </p> 
       <div class="d-flex align-items-start title-wrapper">
         <i class="fas fa-clinic-medical pr-2" *ngIf="userInfo?.isCentre"></i>
-        <h3 class='mb-0 font-bigger font-md-biggest overflow-hidden ' [@expandTitle]="(isTabSticked? 'shrink' : 'expand')">
+        <h3 class='mb-0 font-big font-mg-biggest overflow-hidden' [@expandTitle]="(isTabSticked? 'shrink' : 'expand')">
           {{userInfo?.name | titlecase}}
         <i class="fas fa-video px-1" *ngIf="userInfo && userInfo.provideVirtual"></i>
       </h3>  
       </div>
-      <!-- <p class="mt-1 mt-md-0 ml-md-3 mb-0  overflow-hidden" [@expandSubtitle]="(isTabSticked? 'shrink' : 'expand')">summary here. if it's too long. you can see only 3 lines. </p> -->
     </div>
 
-    <div class="profile-image rounded-circle">
-      <img *ngIf="userInfo" [src]="userInfo?.image" [alt]="userInfo?.name" crossorigin="anonymous">
+    <div class="profile-image rounded-circle" [ngClass]="{verified: userInfo?.isVerified}">
+      <user-image
+      [image]="userInfo?.image"
+      [alt]="userInfo?.name"
+      [verifiedUser]="userInfo?.isVerified"
+      shadowVerified="0 0 5px #307dd6"
+      badgeSize="35"
+      ></user-image>
     </div>
     <ul class="p-0 mb-0 ml-for-avoid-image list-unstyled d-inline-flex align-items-center position-relative">
       <li class='text-blue text-center tab-item flex-grow-0 flex-shrink-0 py-3' 
@@ -230,6 +236,9 @@
   
       <!-- side column -->
       <div class="col-md-5 col-lg-4">
+        <div class="text-center mb-4" *ngIf="userInfo?.socialLink.isAvailable">
+          <social-buttons class="d-inline-block" [data]="userInfo.socialLink.data" [size]="32" [margin]="'narrow'"></social-buttons>
+        </div>
         <!-- contact info-->
         <div class="rounded shadow text-center pb-3 overflow-hidden mb-5">
           <div class="card-title">Contact Information</div>
@@ -255,8 +264,11 @@
               </tr>
             </tbody>
           </table>
-          <button *ngIf="isLoggedIn" class="btn border-blue text-blue px-5" type="button" data-toggle="modal" data-target="#bookingmodal">Book</button>
-          <button *ngIf="!isLoggedIn" class="btn border-blue text-blue px-5" type="button" data-toggle="modal" data-target="#messagemodal">Login to Book</button>
+          <ng-container *ngIf="userInfo">
+            <a *ngIf="userInfo.bookingUrl" class="btn border-blue text-blue px-5" [href]="userInfo.bookingUrl" target="_blank">Book</a>
+            <button *ngIf="!userInfo.bookingUrl && isLoggedIn" class="btn border-blue text-blue px-5" type="button" data-toggle="modal" data-target="#bookingmodal">Book</button>
+            <button *ngIf="!userInfo.bookingUrl && !isLoggedIn" class="btn border-blue text-blue px-5" type="button" data-toggle="modal" data-target="#messagemodal">Login to Book</button>  
+          </ng-container>
         </div>
   
         <!-- videos-->

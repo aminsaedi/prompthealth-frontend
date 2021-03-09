@@ -3,7 +3,14 @@
   [class]="buttonDirection"
   [ngStyle]="styleButton"
 >
-  <img class="user-image" [src]="getImage()" alt="user avator">
+  <user-image
+  [showBadge]="false"
+  [verifiedUser]="isVerified()"
+  [image]="getImage()"
+  [alt]="getName()"
+  [borderWidthVerified]="2"
+  [shadowVerified]="null"
+  ></user-image>  
   <div class="user-info text-ellipsis font-small">
     <span class="text-nowrap">{{getName()}}</span>
   </div>
@@ -16,9 +23,20 @@
   <div class="menu-header d-flex align-item-center blur-blue text-white"
     [ngStyle]="styleHeader"
   >
-    <img class="user-image" [src]="getImage()" alt="user avator">
+    <user-image
+    [showBadge]="false"
+    [verifiedUser]="isVerified()"
+    [image]="getImage()"
+    [alt]="getName()"
+    [borderWidthVerified]="0"
+    [shadowVerified]="null"
+    ></user-image>
+
     <div class="user-info">
-      <div class="text-nowrap mb-1">{{getName()}}</div>
+      <div class="text-nowrap mb-1 d-flex align-items-center">
+        <badge-verified class="mr-2" *ngIf="isVerified()"></badge-verified>
+        {{getName()}}
+      </div>
       <div class="text-nowrap font-small m-0">{{getEmail()}}</div>
     </div>  
   </div>

@@ -1,0 +1,50 @@
+<div>
+  <stepper
+  class="d-md-none"
+  type="simple"
+  [data]="data"
+  [current]="currentIdx"
+  ></stepper>
+</div>
+
+
+<div class="container-fluid bg-grey-md">
+  <!-- <div class="intersection-observer" intersectionObserver (changeStatus)="changeStickyStatus($event)"></div> -->
+  <div class="row">   
+    <section class="col-md-9 col-lg-8 mainview">
+      <stepper
+      class="mt-3 d-none d-md-block"
+      [data]="data"
+      [current]="currentIdx"
+      ></stepper>
+
+      
+      <div class="bubble-md">
+        <div class="d-none d-md-block triangle" [ngClass]="'position-' + currentIdx"></div>
+        <router-outlet></router-outlet>
+        
+        <div class="sticky-bottom blur pt-3 pb-4 py-md-3 px-3 px-md-5">
+          <div class="row flex-nowrap btn-navigate-group">
+            <div class="col text-center">
+              <button *ngIf="currentIdx != 0" (click)="onClickNavigation('back')" class="btn bg-blue text-white" >Back</button>
+            </div>
+            <div class="col text-center">
+              <button *ngIf="currentIdx != data.length - 1" (click)="onClickNavigation('next')" class="btn bg-blue text-white" >Next</button>
+              <button *ngIf="currentIdx == data.length - 1" (click)="onClickNavigation('next')" class="btn text-blue border-blue" >Agree</button>  
+            </div>
+          </div>
+        </div>  
+      </div>
+    </section> 
+  
+    <section class="col-md-3 col-lg-4 sideview d-none d-md-block h100--header sticky-to-header">
+      <img 
+      *ngFor="let i of [0,1,2,3];" 
+      [ngClass]="{active: (currentIdx == i)}" 
+      [src]="'/assets/img/register-partner-' + i + '.jpg'"
+      >
+    </section> 
+
+
+  </div>
+</div>

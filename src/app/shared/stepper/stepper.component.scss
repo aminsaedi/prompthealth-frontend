@@ -1,0 +1,93 @@
+$colorBlueInactive: #8EB5E2;
+
+/** stepper for medium view or more */
+.stepper-road{
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  top: 10px;
+  background: $colorBlueInactive;
+}
+.stepper-item{
+  position: relative;
+
+  .hand{
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    top: 10px;
+    background: $colorBlueInactive;
+  }
+  &:first-child{
+    .hand{
+      width: 50%;
+      left: 50%;  
+    }
+  }
+  &:last-child{
+    .hand{
+      width: 50%;
+      left: 0;
+    }
+  }
+
+
+  .point{
+    position: relative;
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 15px;
+    background: $colorBlueInactive;
+    transition: transform 200ms;
+  }
+  .label{ 
+    display: inline-block;
+    margin: 0 5px;
+    color: var(--ph-blue); 
+    // white-space: nowrap;
+    letter-spacing: 0;
+    font-size: 14px;
+  }
+
+  &.active{
+    .point{ 
+      background: var(--ph-blue);
+      transform: scale(1.1);
+      transform-origin: center;
+    }
+
+  }
+}
+
+.item-count-4{
+  .stepper-item{
+    flex: 0 0 25%;
+  }
+}
+
+
+/** stepper for small view */
+.stepper-simple-road{
+  position: relative;
+  width: 100%;
+  height: 15px;
+  background: $colorBlueInactive;
+
+  &::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: var(--ph-blue);
+    transition: transform 300ms;
+    transform-origin: left;
+  }
+}
+.item-count-simple-4{
+  .pos-0::after{ transform: scaleX(0.25); }
+  .pos-1::after{ transform: scaleX(0.50); }
+  .pos-2::after{ transform: scaleX(0.75); }
+  .pos-3::after{ transform: scaleX(1); }
+}

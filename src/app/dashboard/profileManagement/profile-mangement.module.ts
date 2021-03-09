@@ -27,6 +27,8 @@ import { MyAffiliateComponent } from './my-affiliate/my-affiliate.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MyPasswordComponent } from './my-password/my-password.component';
 import { MyServiceComponent } from './my-service/my-service.component';
+import { MySocialComponent } from './my-social/my-social.component';
+import { MyBadgeComponent } from './my-badge/my-badge.component';
 @NgModule({
   declarations: [
     WrapperComponent,
@@ -45,6 +47,8 @@ import { MyServiceComponent } from './my-service/my-service.component';
     RatingsComponent,
     MyPasswordComponent,
     MyServiceComponent,
+    MySocialComponent,
+    MyBadgeComponent,
     
   ],
   schemas: [

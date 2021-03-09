@@ -1,0 +1,22 @@
+<div>
+  <textarea 
+  class="form-control" 
+  [id]="name"
+  [formControl]="controller"
+  [attr.disabled]="disabled ? 'disabled' : null"
+  [placeholder]="placeholder"
+  rows="3"
+  ></textarea>
+</div>
+
+<div class="d-flex justify-content-end mt-1 font-small">
+  <ul class="errors text-danger flex-grow-1" *ngIf="controller.invalid && submitted">
+    <li *ngIf="controller.errors.required">{{label}} is required.</li>
+    <li *ngIf="controller.errors.minlength">{{label}} too short.</li>
+    <li *ngIf="controller.errors.maxlength">{{label}} too long.</li>
+  </ul>
+
+  <span *ngIf="max > 0" class="flex-grow-0" 
+    [ngClass]="!controller.dirty ? 'text-secondary' : controller.errors ? 'text-danger' : 'text-success'"
+    >{{controller.value.length}}/{{max}}</span>
+</div>

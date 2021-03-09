@@ -1,0 +1,127 @@
+<ngx-spinner bdColor="#fff" size="medium" color="#fff">
+  <p style="font-size: 20px; color: white" class="loaderbg">
+    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  </p>
+</ngx-spinner>
+
+
+<h4 class="mb-3">
+  Apply for Verified badge
+</h4>
+
+<p class="mb-3 font-italic">
+  Please submit your application to get verified badge.
+</p>
+
+<div class="mt-5">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <section class="d-flex flex-column">
+      <h5 class="mb-3">{{type | titlecase}}</h5>
+
+      <p *ngIf="data && !isVerified" class="bg-lightgrey p-3 font-italic mb-3">Your application is under review. Meanwhile, you can still edit your application to make it more complete.</p>
+      <p *ngIf="isVerified" class="bg-lightgreen p-3 font-italic mb-3 d-flex align-items-center">
+        <badge-verified class="mr-2"></badge-verified>
+        Your application is verified!
+      </p>
+
+      <div *ngIf="!isVerified" class="row-upload-button mb-3" [ngClass]="{'priority-low': !!data}">
+        <button type="button" class="btn px-5 text-blue border-blue font-regular position-relative">
+          <span *ngIf="!data">Upload</span>
+          <span *ngIf="data">Add</span>
+          {{type | titlecase}}
+          <input type="file" class="cursor-pointer" multiple 
+          accept="image/jpeg, image/x-png, image/png, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf" 
+          (change)="onSelect($event)">
+        </button>  
+      </div>
+
+      <div *ngIf="data"  class="row-uploaded-files">
+        <label>Uploaded files</label>
+        <ul class="list-unstyled d-flex flex-wrap row-uploaded-files uploaded-files mb-3">
+          <li *ngFor="let filedata of filesUploaded; let i = index" 
+          class="text-center rounded px-1 pt-3 pb-2 position-relative"
+          (touchend)="showFileMenu(i, $event)"
+          (mouseenter)="showFileMenu(i, $event)"
+          (clickOutside)="hideFileMenu()"
+          >
+            <i class="far fa-file"></i>
+            <span class="font-small mt-2">{{filedata.name}}</span>
+            
+            <div *ngIf="targetFileMenu === i" class="file-menu">
+              <div class="d-flex align-items-center justify-content-around file-menu-bar">
+                <button class="btn" (click)="onDownload(i)" type="button">
+                  <i class="fas fa-download font-bigger"></i>
+                </button>
+                <button *ngIf="!isVerified" type="button" class="btn font-bigger" (click)="onRemove(i)">
+                  <i class="fas fa-times"></i>
+                </button>  
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      
+      <ul *ngIf="files" class="list-unstyled d-flex flex-wrap row-uploading-files file-previews mb-3" [ngClass]="{'priority-low': !!data}">
+        <li *ngFor="let file of files; let i = index" class="d-flex align-items-center rounded-pill">
+          <i class="far fa-file"></i>
+          <span class="font-small">{{file.name}}</span>
+          <button class="btn px-2 py-1" (click)="removeFileBeforeUpload(i)">
+            <i class="fas fa-times"></i>
+          </button>
+        </li>
+      </ul>
+
+      <ng-container *ngIf="files.length > 0 || data">
+        <div class="row-input">
+          <div class="mb-3 row">
+            <div class="col-md-5 col-lg-4">
+              <label for="titleCertification">
+                Document Name
+                <span *ngIf="!isVerified" class="text-danger"> *</span>
+              </label>
+            </div>
+            <div class="col-md-7 col-lg-8">
+              <form-input
+              name="titleCertification"
+              label="Title"
+              [max]="!isVerified ? maxTitle : null"
+              [controller]="f.title"
+              [submitted]="isSubmitted"
+              [disabled]="isVerified"
+              ></form-input>    
+            </div>
+          </div>
+  
+          <div class="mb-3 row">
+            <div class="col-md-5 col-lg-4">
+              <label for="descriptionCertification">
+                Description
+                <span *ngIf="!isVerified" class="text-danger"> *</span>
+              </label>
+            </div>
+            <div class="col-md-7 col-lg-8">
+              <form-textarea
+              name="descriptionCertification"
+              label="Description"
+              [max]="!isVerified ? maxDescription : null"
+              [controller]="f.description"
+              [submitted]="isSubmitted"
+              [disabled]="isVerified"
+              ></form-textarea>
+            </div>
+          </div>
+        </div>
+ 
+        <p class="font-small font-italic row-usage-note">
+          Your certificate data and files are only used for verification purpose and are not publicly viewable.
+        </p>
+
+        <div class="row-submit" *ngIf="!isVerified">
+          <input class="btn bg-blue text-light mr-4" type="submit" [value]="(data ? 'Update ' : 'Upload ')">
+          <button *ngIf="data" class="btn btn-danger font-regular" type="button" (click)="onDelete()">Delete</button>
+        </div>  
+      </ng-container>
+    </section>
+  </form>
+</div>

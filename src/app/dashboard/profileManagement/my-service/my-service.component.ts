@@ -29,7 +29,7 @@ export class MyServiceComponent implements OnInit {
   public questionnaires: {id: string, itemText: string, slug: string, data: Questionnaire}[] = [
     {id: 'service', itemText: 'service', slug: 'serviceCategory', data: null},
     {id: 'healthStatus', itemText: 'status of customer\'s health', slug: 'who-are-your-customers', data: null},
-    {id: 'offer', itemText: 'your offer', slug: 'your-offering', data: null},
+    // {id: 'offer', itemText: 'your offer', slug: 'your-offering', data: null},
     {id: 'treatmentModality', itemText: 'treatment modality', slug: 'treatment-modalities', data: null},
     {id: 'typeOfProvider', itemText: 'type of provider', slug: 'providers-are-you', data: null},
   ];
@@ -226,7 +226,7 @@ export class MyServiceComponent implements OnInit {
     });
 
     const services = [];
-    const serviceList = ['healthStatus', 'offer', 'treatmentModality', 'service', 'typeOfProvider'];
+    const serviceList = ['healthStatus', /*'offer',*/ 'treatmentModality', 'service', 'typeOfProvider'];
     serviceList.forEach(id=>{
       const f = this.getQuestionnaire(id);
       f.answers.forEach(a=>{
@@ -243,7 +243,9 @@ export class MyServiceComponent implements OnInit {
       _id: this.profile.id,
       services: services
     }
+    this._sharedService.loader('show');
     this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
+      this._sharedService.loader('hide');
       if (res.statusCode === 200) {
         this.profile = new Professional(res.data._id, res.data);
         this.initForm();
@@ -255,6 +257,7 @@ export class MyServiceComponent implements OnInit {
         this._toastr.error(res.message);
       }
     }, err => {
+      this._sharedService.loader('hide');
       this._toastr.error('There are some errors, please try again after some time !', 'Error');
     });
   }

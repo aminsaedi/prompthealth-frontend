@@ -42,11 +42,12 @@ $heightFinder: 112px;
 
 .clamp-1line{
   display: -webkit-box;
-  height: 19px;
+  height: 1em;
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+  line-height: 1em;
 }
 :host{ font-size: 16px; }
 
@@ -157,27 +158,18 @@ $heightFinder: 112px;
 .professionals,
 .agm-info-window {
   .card{ overflow: hidden; }
+
+  .title{ 
+    height: 38px;
+    overflow: hidden;
+  }
+
   .img-wrapper{
     $imageHeight: 100px;
 
     position: relative;
     height: $imageHeight;
-    img{
-      height: $imageHeight;
-      width: $imageHeight;
-      object-fit: cover;
-      object-position: center;  
-      &.full{ 
-        width: 100%; 
-        object-fit: contain;
-      }
-    }
 
-    .icon-video{
-      position: absolute;
-      top: 70px;
-      left: calc(50% + 25px);
-    }
   }
 
   .button-compare{
@@ -195,8 +187,8 @@ $heightFinder: 112px;
     .form-check-label{
       margin: 5px 0 0;
     }    
-
   }
+
   .price-tag{
     color: black;
     position: absolute;
@@ -206,6 +198,11 @@ $heightFinder: 112px;
     padding: 35px 0 10px;
     transform-origin: 50% 0;
     transform: rotate(45deg);
+  }
+
+  .indicators{
+    height: 20px;
+    i{ font-size: 20px; }
   }
   .address{
     line-height: 1.5em;

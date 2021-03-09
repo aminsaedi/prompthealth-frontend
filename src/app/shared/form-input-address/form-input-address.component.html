@@ -1,0 +1,14 @@
+<div class="input-group">
+  <input 
+  [id]="name" 
+  class="form-control" 
+  [formControl]="address"
+  (keydown.enter)="$event.preventDefault()"
+  >
+</div>
+<div class="d-flex justify-content-end mt-1 font-small">
+  <ul class="errors text-danger flex-grow-1" *ngIf="submitted && (address.invalid || errorGoogleSuggestion)">
+    <li *ngIf="address.errors?.required">{{label}} is required.</li>
+    <li *ngIf="!address.invalid && errorGoogleSuggestion">Please select address from suggestion.</li>
+  </ul> 
+</div>

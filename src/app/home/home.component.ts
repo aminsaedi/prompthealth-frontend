@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, NgZone, HostListener } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { MapsAPILoader, MouseEvent } from '@agm/core';
 import { Router } from '@angular/router';
@@ -172,6 +172,24 @@ export class HomeComponent implements OnInit {
   ];
   public homePageFeatures = {};
   public keepOriginalOrder = (a, b) => a.key;
+
+  private timerResize: any;
+  public featuredImageData = {
+    badgeSize: 20,
+    borderWidthVerified: 3,
+  }
+  @HostListener('window:resize', ['$event']) windowResize(e: Event){
+    if(this.timerResize){ clearTimeout(this.timerResize); }
+    this.timerResize = setTimeout(() => {
+      if(window.innerWidth < 992){
+        this.featuredImageData.badgeSize = 35,
+        this.featuredImageData.borderWidthVerified = 5
+      }else{
+        this.featuredImageData.badgeSize = 30,
+        this.featuredImageData.borderWidthVerified = 4
+      }
+    }, 500);
+  }
 
   ngOnInit() {
     this.AWS_S3 = environment.config.AWS_S3;

@@ -1,0 +1,19 @@
+:host{
+  font-size: 16px;
+}
+
+.form-check{
+  padding-left: 1.3em;
+}
+.form-check-input{
+  transform: scale(1.2);
+  transform-origin: left center;
+  margin-left: -1.3em;
+  margin-top: 0.2em;
+}
+
+label{
+  font-size: 1em;
+  font-weight: 300;
+  user-select: none;
+}

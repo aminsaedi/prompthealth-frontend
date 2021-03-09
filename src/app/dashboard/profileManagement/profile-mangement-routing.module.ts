@@ -17,6 +17,8 @@ import { MyProductComponent } from './my-product/my-product.component';
 import { MyAffiliateComponent } from './my-affiliate/my-affiliate.component';
 import { MyPasswordComponent } from './my-password/my-password.component';
 import { MyServiceComponent } from './my-service/my-service.component';
+import { MySocialComponent } from './my-social/my-social.component';
+import { MyBadgeComponent } from './my-badge/my-badge.component';
 
 import { ProfileManagementChildGuard } from './profile-management-child.guard';
 
@@ -87,6 +89,14 @@ const routes: Routes = [
       {
         path: 'my-service',
         component: MyServiceComponent,
+      },
+      {
+        path: 'my-social',
+        component: MySocialComponent,
+      },
+      {
+        path: 'my-badge',
+        component: MyBadgeComponent,
       }
     ]
   },

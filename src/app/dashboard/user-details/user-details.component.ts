@@ -43,6 +43,7 @@ export class UserDetailsComponent {
     typical_hours: [],
     serviceOfferIds: [],
     price_per_hours: '',
+    exactPricing: null,
     product_description: '',
     years_of_experience: '',
     business_kind: '',
@@ -53,9 +54,11 @@ export class UserDetailsComponent {
     longitude: 0,
     licence_type_degree: '',
     professional_organization: '',
+    professional_title: '',
     accredited_provide_canada: false
   };
   userId = ''
+  public price = {mode: 'select'};
 
   ageRangeList = [
     { id: '5eb1a4e199957471610e6cd7', name: 'Not Critical', checked: false },
@@ -314,6 +317,29 @@ export class UserDetailsComponent {
       this.toastr.error("Please select the typical hours!");
       return;
     }
+
+    if(this.price.mode == 'select'){ this.userDetails.exactPricing = null; }
+    else{
+      this.userDetails.exactPricing = Number(this.userDetails.exactPricing);
+
+      const priceRange = [
+        { value: 'Not Critical', minmax: [-100, 0] },
+        { value: '< $50',        minmax: [0, 50] },
+        { value: '$50-100',      minmax: [50, 100] },
+        { value: '$100-200',     minmax: [100, 200] },
+        { value: '$200-500',     minmax: [200, 500] },
+        { value: '$500-1000',    minmax: [500, 1000] },
+        { value: '$1000',        minmax: [1000, 1000000] },
+      ]
+
+      this.userDetails.price_per_hours = priceRange[0].value;
+      for(let p of priceRange){
+        if(p.minmax[0] <= this.userDetails.exactPricing && this.userDetails.exactPricing < p.minmax[1]){
+          this.userDetails.price_per_hours = p.value;
+        }
+      }
+    }
+
     const formData = new FormData();
     const payload = this.userDetails;
     payload['_id'] = localStorage.getItem('loginID');

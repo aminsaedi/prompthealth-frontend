@@ -1,0 +1,4 @@
+<div *ngIf="imageUrl" class="image-container rounded-circle" [ngStyle]="containerStyle">
+  <img class="rounded-circle" [src]="imageUrl" [alt]="alt" crossorigin="anonymous">
+  <badge-verified *ngIf="verifiedUser && showBadge" class="badge" [ngStyle]="badgeStyle"></badge-verified>  
+</div>

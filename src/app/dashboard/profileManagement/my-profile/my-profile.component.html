@@ -17,7 +17,7 @@
     <div class="col-md-12 text-center my-3">
       <div class="d-inline-block profileeditbox">
         <img
-          [src]="profile?.profileImage ? AWS_S3+profile?.profileImage : defaultImage" />
+          [src]="profile?.profileImage ? AWS_S3+profile?.profileImage : defaultImage" crossorigin="anonymous"/>
         <!-- <img [src]="defaultImage" /> -->
         <!-- <input type="file" *ngIf="editFields"/> -->
         <input class="d-block " type="file" name="profile" (change)="onFileSelect($event)" *ngIf="editFields"
@@ -177,6 +177,16 @@
         </div>
       </div>
       
+      <div *ngIf="roles !== 'U'" class=" form-row mb-3">
+        <label class="col-md-3">Professional Title <span class="text-danger" *ngIf="editFields"></span></label>
+        <div class="col-md-9">
+
+          <input type="text" [disabled]="!editFields" autocomplete="off" id="title" name="title"
+            #title="ngModel" [(ngModel)]="profile.professional_title"
+            class="form-control" 
+            maxlength="30" />
+        </div>
+      </div>
       <div *ngIf="roles === 'SP'" class=" form-row mb-3">
         <label class="col-md-3">Professional Association <span class="text-danger" *ngIf="editFields"></span></label>
         <div class="col-md-9">
@@ -184,7 +194,7 @@
           <input type="text" [disabled]="!editFields" autocomplete="off" id="association" name="association"
             #association="ngModel" [(ngModel)]="profile.professional_organization"
             class="form-control" 
-            maxlength="50" />
+            maxlength="200" />
         </div>
       </div>
       <div *ngIf="roles === 'SP'" class="form-row mb-3">
@@ -193,7 +203,7 @@
 
           <input type="text" [disabled]="!editFields" autocomplete="off" id="certification" name="certification"
             #certification="ngModel" [(ngModel)]="profile.certification"
-            maxlength="50"
+            maxlength="200"
             class="form-control" />
         </div>
       </div>

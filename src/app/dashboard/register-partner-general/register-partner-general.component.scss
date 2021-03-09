@@ -1,0 +1,45 @@
+.text-blue{ color: var(--ph-blue); }
+.border-blue{ border: solid 2px var(--ph-blue); }
+.cursor-pointer{ cursor: pointer; }
+
+:host{
+  font-size: 16px;
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+h3{
+  @media (max-width: 767px){
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 35px 15px;
+    background-image: url('/assets/img/register-partner-0.jpg');
+    background-position: center;
+  
+    color: white;
+    text-shadow: 0 0 5px #171717, 0 0 7px #a2a2a2, 0 0 16px white;  
+  }
+}
+
+label{
+  font-size: 1em;
+  font-weight: 300;
+  margin-top: 12px;
+}
+
+
+input[type=file]{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0
+}
+
+img.preview{
+  height: 80px;
+  width: auto;
+}

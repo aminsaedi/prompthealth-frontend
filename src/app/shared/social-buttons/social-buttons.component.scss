@@ -1,10 +1,13 @@
 ul li:not(:last-child){ 
   margin-right: 15px;
   @media screen and (min-width: 768px){ margin-right: 20px; }
+
+  &.gap-narrow{ margin-right: 12px; }
+
 }
 
 .icon-sns{
-  flex: 0 0 40px;
+  flex: 0 0 auto;
   position: relative;
 
   width: 40px;
@@ -13,11 +16,20 @@ ul li:not(:last-child){
   overflow: hidden;
   border-radius: 40px;
 
-  &:first-child{  background: #5d68e1; } 
-  &:nth-child(2){ background: #7e65c0; }
-  &:nth-child(3){ background: #9f639f; }
-  &:nth-child(4){ background: #c0607e; }
-  &:nth-child(5){ background: #e15d5d; }  
+  .svg-twitter, .svg-spotify{
+    width: 70%;
+    height: 70%;
+    margin: 15%;
+  }
 
-  img{ width: 40px; }
+
+
+  &:first-child{  background: #5d68e1; } 
+  &:nth-child(2){ background: #9d5acc; }
+  &:nth-child(3){ background: #c34fb1; }
+  &:nth-child(4){ background: #d94a93; }
+  &:nth-child(5){ background: #e24f76; }  
+  &:nth-child(6){ background: #e15d5d; }  
+
+  img{ width: 100%; }
 }

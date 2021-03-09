@@ -1,0 +1,46 @@
+<h3 class="mb-4">Company Services</h3>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h4>Product / Services</h4>
+
+  <ul class="checkbox-group mb-5" *ngIf="categories">
+    <ng-container *ngFor="let cat of categories; let i = index;">
+      <li class="mt-4 mb-0 root">
+        <div [formArrayName]="'service'" class="form-check m-0">
+          <input type="checkbox" [id]="cat._id" class="form-check-input" [formControlName]="i">
+          <label [for]="cat._id" class="form-check-label">{{cat.item_text}}</label>  
+        </div>
+
+        <ul *ngIf="getFormArray('service').value[i]" class="checkbox-group mb-4 pl-3">
+          <ng-container *ngFor="let sub of cat.subCategory; let j = index;">
+            <li class="sub mt-4 mb-0">
+              <div class="form-check m-0" [formArrayName]="cat._id">
+                <input type="checkbox" [id]="sub._id" class="form-check-input" [formControlName]="j">
+                <label [for]="sub._id" class="form-check-label">{{sub.item_text}}</label>  
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+      </li>  
+    </ng-container>
+  </ul>
+
+  <h4>Product Images (max 5)</h4>
+
+  <ul class="d-flex list-unstyled product-images">
+    <ng-container *ngFor="let imageForm of getFormArray('productImage').controls; let i = index;">
+      <li class="rounded">
+        <img [src]="imageForm.value" [alt]="'product image ' + (i + 1)">
+        <button class="btn btn-remove" type="button" (click)="removeProductImage(i)"><i class="fas fa-times"></i></button>
+      </li>
+    </ng-container>
+    <li class="rounded" *ngIf="getFormArray('productImage').length < 5">
+      <i class="fas fa-plus icon-add"></i>
+      <input type="file" class="cursor-pointer" accept="image/jpeg, image/png" (change)="onSelectProductImage($event)">
+    </li>
+  </ul>
+
+  <div class="sticky-bottom bg-white py-2">
+    <input type="submit" class="d-none" value="submit">
+  </div>
+</form>

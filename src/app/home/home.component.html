@@ -154,7 +154,7 @@
 
       <div class="col-12">
         <div class="row">
-          <div class="col-12 col-md-6 p-5" style="min-height: 30vh;">
+          <div class="col-12 col-lg-6 p-5" style="min-height: 30vh">
             <h3 class="text-gradient">
               {{this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].title}}
             </h3>
@@ -162,7 +162,7 @@
               {{this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].description}}
             </p>
           </div>
-          <div class="col-12 col-md-6 p-5">
+          <div class="col-12 col-lg-6 p-5">
             <h4 class="text-primary">You might like</h4>
             <div class="featured row">
               <!-- <div *ngIf="item.value.features.length>0">
@@ -171,10 +171,18 @@
               <ng-template>
 
               </ng-template> -->
-              <div class="col-6 col-md-3" *ngFor="let feature of this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].features">
+              <div class="col-6 col-md-3 col-lg-4" *ngFor="let feature of this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].features">
                 <a [routerLink]="['/dashboard/detail/', feature.userId._id]">
                   <div class="featured-image">
-                    <img [src]="feature.userId.profileImage ? AWS_S3 + '350x220/' + feature.userId.profileImage : 'assets/img/default_user.jpg'" class="w-100" />
+                    <user-image
+                    class="w-100"
+                    [verifiedUser]="feature.userId.verifiedBadge"
+                    [showBadge]="true"
+                    [badgeSize]="featuredImageData.badgeSize"
+                    [borderWidth]="1"
+                    [borderWidthVerified]="featuredImageData.borderWidthVerified"
+                    [image]="feature.userId.profileImage ? AWS_S3 + '350x220/' + feature.userId.profileImage : 'assets/img/default_user.jpg'"
+                    ></user-image>
                   </div>
                   <div class="text-center mt-1 text-dark">
                     {{feature.userId.firstName}} {{feature.userId.lastName}}
@@ -183,7 +191,7 @@
               </div>
               
               <div *ngIf="this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].features.length===0" >
-                <a class="col-6 col-md-3" [routerLink]="['/subscriptionplan']" fragment="addon">
+                <a class="col-6 col-md-3 col-lg-4" [routerLink]="['/subscriptionplan']" fragment="addon">
                   Get featured
                   <!-- <img src="assets/img/get-featured.png" class="w-100" /> -->
                 </a>

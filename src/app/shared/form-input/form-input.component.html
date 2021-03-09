@@ -1,0 +1,15 @@
+<div class="input-group">
+  <div class="input-group-prepend" *ngIf="prepend">
+    <span class="input-group-text">{{prepend}}</span>
+  </div>
+  <input [type]="type" [id]="name" class="form-control" 
+  [formControl]="controller" [attr.disabled]="disabled ? 'disabled' : null"
+  [placeholder]="placeholder"
+  >
+</div>
+<div class="d-flex justify-content-end mt-1">
+  <form-errors class="flex-grow-1" [controller]="controller" [submitted]="submitted" [label]="label"></form-errors>
+  <span *ngIf="max > 0" class="flex-grow-0 font-small" 
+  [ngClass]="!controller.dirty ? 'text-secondary' : controller.errors ? 'text-danger' : 'text-success'"
+  >{{controller.value.length}}/{{max}}</span>
+</div>

@@ -128,7 +128,7 @@ $slideLeftRightPaddding: 80px;
 .featured-image{
   position: relative;
   &::after{
-    content: '';
+    // content: '';
     display: block;
     padding-top: 100%;
   }  

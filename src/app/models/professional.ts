@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 import { QuestionnaireAnswer } from '../dashboard/questionnaire.service';
 import { Category } from '../shared/services/category.service';
-
+import { SocialLinkData } from '../shared/social-buttons/social-buttons.component';
 export interface IProfessional {
   id: string;
 
@@ -119,6 +119,17 @@ export class Professional implements IProfessional {
 
   private _banner: string; // todo: implement correctly. currently, this property not used.
   private _endosements: any[]; // todo: impliment correctly. currently, this property not used;
+  private _socialLink: {isAvailable: boolean, data: SocialLinkData} = {
+    isAvailable: false, 
+    data: {
+      facebook: null,
+      twitter: null,
+      instagram: null,
+      linkedin: null,
+      tiktok: null,
+      youtube: null,
+    }
+  }
 
   protected _allServiceId: string[];
 
@@ -128,9 +139,10 @@ export class Professional implements IProfessional {
   get id() { return this._id; }
   get name() { return this._name; }
   get firstname() { return this._firstname; }
-  get image() { return this._image ? this._baseURLImage + '350x220/' + this._image + '?ver=1.0.1' : '/assets/img/no-image.jpg'; }
-  get imageFull() { return this._image ? this._baseURLImage + this._image + '?ver=1.0.1' : '/assets/img/no-image.jpg'; }
+  get image() { return this._image ? this._baseURLImage + '350x220/' + this._image + '?ver=1.0.2' : '/assets/img/no-image.jpg'; }
+  get imageFull() { return this._image ? this._baseURLImage + this._image + '?ver=1.0.2' : '/assets/img/no-image.jpg'; }
   get banner() { return this._banner ? this._baseURLImage + this._banner : '/assets/img/professional-banner.png'; }
+  get isVerified() { return this.p.verifiedBadge || false; }
   get role() { return this._roles.toString(); }
   get description() { return this._description; }
   get phone() { return this._phone; }
@@ -151,6 +163,7 @@ export class Professional implements IProfessional {
     if (this._website && match) { label = match[1]; }
     return label;
   }
+  get bookingUrl(){ return this.p.bookingURL || null; }
   get location() { return this._location; }
   get distance() { return this._distance; }
   get provideVirtual() { return this._provideVirtual; }
@@ -176,6 +189,7 @@ export class Professional implements IProfessional {
   get endosements() { return this._endosements; }
   get organization() { return this._organization; }
   get certification() { return this._certification; }
+  get title() { return this.p.professional_title || null; }
   get professionals() { return (this.p.plan && this.p.plan.ListOfProviders) ? this._professionals : []; } /** showing professional is only for premium user */
 
   get mapLabel() { return (this.price ? this.price : null); }
@@ -250,6 +264,8 @@ export class Professional implements IProfessional {
 
   get allServiceId() { return this._allServiceId; }
 
+  get socialLink() { return this._socialLink; }
+
 
   get isCheckedForCompare() { return this._isCheckedForCompared; }
   set isCheckedForCompare(checked: boolean) { this._isCheckedForCompared = checked; }
@@ -315,6 +331,13 @@ export class Professional implements IProfessional {
 
     this._healthStatus = p.serviceCategories || [];
     this._allServiceId = p.services || [];
+
+    if(p.socialLinks && p.socialLinks.length > 0 && p.plan && p.plan.name !== 'Basic'){
+      this._socialLink.isAvailable = true;
+      p.socialLinks.forEach((d: {type: string; link: string})=>{
+        this._socialLink.data[d.type] = d.link;
+      });
+    }
   }
 
   populate(type: 'languages' | 'availability' | 'ageRange' | 'serviceDelivery', dataSet: QuestionnaireAnswer[]) {

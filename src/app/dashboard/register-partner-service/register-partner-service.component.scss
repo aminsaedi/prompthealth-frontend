@@ -1,0 +1,106 @@
+:host{
+  font-size: 16px;
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+h3{
+  @media (max-width: 767px){
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 35px 15px;
+    background-image: url('/assets/img/register-partner-1.jpg');
+    background-position: center;
+  
+    color: white;
+    text-shadow: 0 0 5px #171717, 0 0 7px #a2a2a2, 0 0 16px white;  
+  }
+}
+
+.cursor-pointer{ cursor: pointer; }
+
+.checkbox-group{
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+
+  li{
+    margin-bottom: 1em;
+    flex: 1 0 50%;
+    white-space: nowrap;
+
+    &.root{
+      flex: 1 0 100%;
+      white-space: normal;
+      font-weight: 500;
+      &:not(:first-child){
+        margin-top: 1.5em;
+      }
+    }
+    &.sub{ 
+      font-weight: 300;
+    }
+  }
+}
+
+
+.form-check-input{
+  transform: scale(1.2);
+  vertical-align: middle;
+}
+
+.form-check-label{
+  font-size: 1em;
+  font-weight: inherit;
+  vertical-align: middle;
+}
+
+.product-images{
+  li{
+    width: 100px;
+    height: 100px;
+    position: relative;
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+    background: #FBFBFB;
+    &:not(:last-child){ margin-right: 10px;}
+  }
+
+  img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  input[type=file]{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0
+  }
+
+  .icon-add{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    color: #636363;
+  }
+
+  .btn-remove{
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 20px;
+  }
+}

@@ -433,7 +433,7 @@ export class ListingComponent implements OnInit, OnDestroy {
         });
 
         this.professionals = professionals;
-        this.professionals = this.professionals.sort((a, b) => a.distance - b.distance);
+        // this.professionals = this.professionals.sort((a, b) => a.distance - b.distance);
 
         //        this.createNameList(this.doctorsListing); // todo: can be deleted
 

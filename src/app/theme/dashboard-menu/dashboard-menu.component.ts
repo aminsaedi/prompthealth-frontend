@@ -31,6 +31,11 @@ export class DashboardMenuComponent {
     return this.user ? this.user.email : null;
   }
 
+  isVerified() {
+    return this.user ? this.user.verifiedBadge : false;
+  }
+
+
   getName() {
     const noname = 'Anonymous';
     if (!this.user) { return noname; }

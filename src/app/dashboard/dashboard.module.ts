@@ -41,6 +41,11 @@ import { AmenityViewerComponent } from './amenity-viewer/amenity-viewer.componen
 import { ProductViewerComponent } from './product-viewer/product-viewer.component';
 import { FilterDropdownInputComponent } from './filter-dropdown-input/filter-dropdown-input.component';
 import { FilterDropdownLocationComponent } from './filter-dropdown-location/filter-dropdown-location.component';
+import { RegisterPartnerComponent } from './register-partner/register-partner.component';
+import { RegisterPartnerGeneralComponent } from './register-partner-general/register-partner-general.component';
+import { RegisterPartnerServiceComponent } from './register-partner-service/register-partner-service.component';
+import { RegisterPartnerOfferComponent } from './register-partner-offer/register-partner-offer.component';
+import { RegisterPartnerTermComponent } from './register-partner-term/register-partner-term.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +72,11 @@ import { FilterDropdownLocationComponent } from './filter-dropdown-location/filt
     ProductViewerComponent,
     FilterDropdownInputComponent,
     FilterDropdownLocationComponent,
+    RegisterPartnerComponent,
+    RegisterPartnerGeneralComponent,
+    RegisterPartnerServiceComponent,
+    RegisterPartnerOfferComponent,
+    RegisterPartnerTermComponent,
   ],
   imports: [
     AutocompleteLibModule,

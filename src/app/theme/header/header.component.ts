@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 import { fadeAnimation, fadeFastAnimation } from '../../_helpers/animations';
 import { Subscription } from 'rxjs';
 import { CategoryService } from 'src/app/shared/services/category.service';
+import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
 
 
 
@@ -26,6 +27,7 @@ export class HeaderComponent implements OnInit {
     private toastr: ToastrService,
     private _headerStatusService: HeaderStatusService,
     public catService: CategoryService,
+    private _profileService: ProfileManagementService,
     _el: ElementRef
   ) {
     // this.fetchUser();
@@ -90,6 +92,10 @@ export class HeaderComponent implements OnInit {
     this.role = localStorage.getItem('roles');
     // this.payment = localStorage.getItem(isPayment);
     this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
+    if(this.user._id){
+      this._profileService.getProfileDetail(this.user._id);
+    }
+    
     // if (this.token && this.user) {
     //   let roles = this.user.roles;
     //   this.dashboard = roles == "B" ? "dashboard/home" : "dashboard/welcome";

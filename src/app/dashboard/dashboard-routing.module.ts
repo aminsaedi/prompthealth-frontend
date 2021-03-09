@@ -15,7 +15,11 @@ import { ProfessionalHomeComponent } from './professional-home/professional-home
 import { UserQuestionaireComponent } from './user-questionaire/user-questionaire.component';
 import { QuestionnaireItemSelectComponent } from './questionnaire-item-select/questionnaire-item-select.component';
 import { QuestionnaireItemCheckboxComponent } from './questionnaire-item-checkbox/questionnaire-item-checkbox.component';
-
+import { RegisterPartnerComponent } from './register-partner/register-partner.component';
+import { RegisterPartnerGeneralComponent } from './register-partner-general/register-partner-general.component';
+import { RegisterPartnerServiceComponent } from './register-partner-service/register-partner-service.component';
+import { RegisterPartnerOfferComponent } from './register-partner-offer/register-partner-offer.component';
+import { RegisterPartnerTermComponent } from './register-partner-term/register-partner-term.component';
 import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
 
 const routes: Routes = [
@@ -76,6 +80,36 @@ const routes: Routes = [
   {
     path: 'professional-info',
     component: ProfessionalRegisterComponent
+  },
+  {
+    path: 'register-partner',
+    component: RegisterPartnerComponent,
+    children: [
+      {
+        path: '', 
+        redirectTo: 'general'
+      },
+      {
+        path: 'general',
+        component: RegisterPartnerGeneralComponent,
+        data: {index: 0}
+      },
+      {
+        path: 'service',
+        component: RegisterPartnerServiceComponent,
+        data: {index: 1}
+      },
+      {
+        path: 'offer',
+        component: RegisterPartnerOfferComponent,
+        data: {index: 2}
+      },
+      {
+        path: 'term',
+        component: RegisterPartnerTermComponent,
+        data: {index: 3}
+      },
+    ],
   }
 ];
 
@@ -84,3 +118,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class DashboardRoutingModule { }
+ 
