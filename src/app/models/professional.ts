@@ -142,7 +142,7 @@ export class Professional implements IProfessional {
   get image() { return this._image ? this._baseURLImage + '350x220/' + this._image + '?ver=1.0.2' : '/assets/img/no-image.jpg'; }
   get imageFull() { return this._image ? this._baseURLImage + this._image + '?ver=1.0.2' : '/assets/img/no-image.jpg'; }
   get banner() { return this._banner ? this._baseURLImage + this._banner : '/assets/img/professional-banner.png'; }
-  get isVerified() { return this.p.verifiedBadge || false; }
+  get isVerified() { return this.p.verifiedBadge || false; } /* could be only premium account */
   get role() { return this._roles.toString(); }
   get description() { return this._description; }
   get phone() { return this._phone; }
@@ -332,7 +332,7 @@ export class Professional implements IProfessional {
     this._healthStatus = p.serviceCategories || [];
     this._allServiceId = p.services || [];
 
-    if(p.socialLinks && p.socialLinks.length > 0 && p.plan && p.plan.name !== 'Basic'){
+    if(p.socialLinks && p.socialLinks.length > 0 && ( (p.plan && p.plan.name !== 'Basic') || p.isVipAffiliateUser )){
       this._socialLink.isAvailable = true;
       p.socialLinks.forEach((d: {type: string; link: string})=>{
         this._socialLink.data[d.type] = d.link;
