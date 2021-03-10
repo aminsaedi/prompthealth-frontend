@@ -76,6 +76,14 @@
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             Receive requests for booking /integration with your own booking system option
         </li>
+        <li *ngIf="type != 'centre' && data?.socialMediaLink">
+            <span class="fa-li"><i class="far fa-check-circle"></i></span>
+            Link your social media accounts on your Prompthealth profile page
+        </li>
+        <li *ngIf="type != 'centre' && data?.verifiedBadge">
+            <span class="fa-li"><i class="far fa-check-circle"></i></span>
+            Apply for a verified Badge and rank before everyone else in search results
+        </li>
 
         <!-- depend on data -->
         <li *ngIf="data?.ListOfProviders">

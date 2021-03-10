@@ -35,10 +35,19 @@
                 [disabled]=!list.active
                 [routerLink]="list.link"
                 [routerLinkActive]="['active']"
-                >{{ list.title }}
+                >
+                <span class="lead">
+
+                  <b >
+                    {{ list.title }}
+                  </b>
+                </span>
                 <div *ngIf="list.title == 'Profile' && profile?.isVipAffiliateUser" class="icon-vip font-small rounded ml-3">
                   <i class="fas fa-ribbon"></i>
                   <span class="pl-2">VIP</span>
+                </div>
+                <div *ngIf="list.description" style=" font-size: 12px;" >
+                  {{list.description}}
                 </div>
                 <span style="color:#4a86ab; font-size: 10px;" class="pull-right" *ngIf="!list.active"><i class="fas fa-star-of-life"></i></span>
               </button>

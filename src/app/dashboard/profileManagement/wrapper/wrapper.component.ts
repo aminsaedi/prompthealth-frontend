@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SharedService } from '../../../shared/services/shared.service';
 import { ProfileManagementService } from '../profile-management.service';
 
@@ -7,48 +7,120 @@ import { ProfileManagementService } from '../profile-management.service';
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.scss']
 })
-export class WrapperComponent implements OnInit {
-  public profile;
-  public isPremium: boolean = false; /** if the user is vip or subscribe plans, true. */
-
-  userInfo;
-  listing = [
-    {
-      title: 'Profile',
-      link: 'my-profile',
-      active: true,
-    },
-    {
-      title: 'Password',
-      link: 'my-password',
-      active: true
-    }
-  ];
-  uListing = [
-    {
-      title: 'Booking',
-      link: 'my-booking',
-      active: true,
-    },
-    {
-      title: 'Favourite',
-      link: 'my-favourites',
-      active: true,
-    },
-    {
-      title: 'Review and Rating',
-      link: 'reviews-ratings',
-      active: true,
-    }
-  ];
-  cPlan: [];
-  spPlan: [];
+export class WrapperComponent implements OnInit, OnDestroy {
   constructor(
     private _sharedService: SharedService,
     private _managementService: ProfileManagementService,
   ) { }
+  public profile;
+  public isPremium = false; /** if the user is vip or subscribe plans, true. */
 
-  ngOnDestroy(){ this._managementService.destroyProfileDetail(); }
+  userInfo;
+
+  cPlan: [];
+  spPlan: [];
+  public profileTab = (active) => ({
+    title: 'Profile',
+    link: 'my-profile',
+    description: 'Add & Edit your basic info',
+    active,
+  })
+  public passwordTab = (active) => ({
+    title: 'Password',
+    description: 'Change your password',
+    link: 'my-password',
+    active
+  })
+  public bookingTab = (active) => ({
+    title: 'Booking',
+    link: 'my-booking',
+    description: 'View & Reschedule your bookings',
+    active,
+  })
+  public favouriteTab = (active) => ({
+    title: 'Favourite',
+    link: 'my-favourites',
+    description: 'Your favourite practitioners',
+    active,
+  })
+  public reviewTab = (active) => ({
+    title: 'Review and Rating',
+    link: 'reviews-ratings',
+    active,
+  })
+  public socialTab = (active) => ({
+    title: 'Social',
+    description: 'Link your social media profiles',
+    link: 'my-social',
+    active
+  })
+  public badgeTab = (active) => ({
+    title: 'Badges',
+    description: 'Apply for the verified badge and rank ahead of others',
+    link: 'my-badge',
+    active
+  })
+  public serviceTab = (active) => ({
+    title: 'Service',
+    description: 'List your services and treatment etc.',
+    link: 'my-service',
+    active,
+  })
+  public subscriptionTab = (active) => ({
+    title: 'Subscription',
+    description: 'Your premium subscriptions with Prompt Health',
+    link: 'my-subscription',
+    active,
+  })
+  public paymentTab = (active) => ({
+    description: 'Your payment history',
+    title: 'Payment',
+    link: 'my-payment',
+    active,
+  })
+  public videoTab = (active) => ({
+    description: 'Add youtube & vimeo videos to enrich your profile',
+    title: 'Videos',
+    link: 'videos-blogs',
+    active
+  })
+  public affiliateTab = (active) => ({
+    title: 'Affiliate',
+    link: 'my-affiliate',
+    description: 'Introduce your friend to join as a parctitioner and get awarded',
+    active,
+  })
+  public amenityTab = (active) => ({
+    title: 'Amenities',
+    description: 'Introduce your amenities with photos and descriptions',
+    link: 'my-amenities',
+    active,
+  })
+  public professionalTab = (active) => ({
+    description: 'Associate professionals to your center',
+    title: 'Professionals',
+    link: 'add-professionals',
+    active,
+  })
+  public productTab = (active) => ({
+    description: 'Introduce your products with photos and descriptions',
+    title: 'Products',
+    link: 'my-product',
+    active,
+  })
+
+  // tslint:disable-next-line: member-ordering
+  listing: any[] = [
+    this.profileTab(true),
+    this.passwordTab(true)
+  ];
+  // tslint:disable-next-line: member-ordering
+  uListing = [
+    this.bookingTab(true),
+    this.favouriteTab(true),
+    this.reviewTab(true)
+  ];
+  ngOnDestroy() { this._managementService.destroyProfileDetail(); }
 
   ngOnInit(): void {
     this.getProfileDetails();
@@ -71,11 +143,14 @@ export class WrapperComponent implements OnInit {
     });
   }
 
-  setUserPremiumStatus(){
+  setUserPremiumStatus() {
     let isPremium = false;
-    if(this.profile){
-      if(this.profile.isVipAffiliateUser){ isPremium = true; }
-      else if(this.profile.plan && this.profile.plan.name.toLowerCase() !== 'basic'){ isPremium = true; }  
+    if (this.profile) {
+      if (this.profile.isVipAffiliateUser) {
+        isPremium = true;
+      } else if (this.profile.plan && this.profile.plan.name.toLowerCase() !== 'basic') {
+        isPremium = true;
+      }
     }
     this.isPremium = isPremium;
   }
@@ -103,55 +178,37 @@ export class WrapperComponent implements OnInit {
     });
   }
 
-  addMenuItem(title: string, isActive: boolean){
-    switch(title){
-      case 'social': this.listing.push({title: 'Social', link: 'my-social', active: isActive}); break;
-      case 'badge': this.listing.push({title: 'Badges', link: 'my-badge', active: isActive}); break;
+  addMenuItem(title: string, isActive: boolean) {
+    switch (title) {
+      case 'social':
+        this.listing.push(this.socialTab(isActive));
+        break;
+      case 'badge':
+        this.listing.push(this.badgeTab(isActive));
+        break;
     }
   }
 
   setListing(profile) {
     if (profile) {
-      if(profile.roles !== 'U'){
+      if (profile.roles !== 'U') {
         this.listing.push(
-          {
-            title: 'Service',
-            link: 'my-service',
-            active: true,
-          }
+          this.serviceTab(true)
         );
       }
 
       if (profile.isVipAffiliateUser) {
         if (profile.roles === 'SP') {
-          this.addMenuItem('social', true); 
+          this.addMenuItem('social', true);
           this.addMenuItem('badge', true);
 
-          this.listing.push({
-            title: 'Subscription',
-            link: 'my-subscription',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Booking',
-            link: 'my-booking',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Payment',
-            link: 'my-payment',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Videos',
-            link: 'videos-blogs',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Review and Rating',
-            link: 'reviews-ratings',
-            active: true,
-          });
+          this.listing.push(this.subscriptionTab(true));
+          this.listing.push(
+            this.bookingTab(true)
+          );
+          this.listing.push(this.paymentTab(true));
+          this.listing.push(this.videoTab(true));
+          this.listing.push(this.reviewTab(true));
           this.listing.push({
             title: 'Affiliate',
             link: 'my-affiliate',
@@ -160,111 +217,39 @@ export class WrapperComponent implements OnInit {
 
 
         } else if (profile.roles === 'C') {
-          this.addMenuItem('social', true); 
+          this.addMenuItem('social', true);
           this.addMenuItem('badge', true);
 
-          this.listing.push({
-            title: 'Booking',
-            link: 'my-booking',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Amenities',
-            link: 'my-amenities',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Professionals',
-            link: 'add-professionals',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Products',
-            link: 'my-product',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Videos',
-            link: 'videos-blogs',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Subscription',
-            link: 'my-subscription',
-            active: true
-          });
-          this.listing.push({
-            title: 'Payment',
-            link: 'my-payment',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Affiliate',
-            link: 'my-affiliate',
-            active: true,
-          });
+          this.listing.push(this.bookingTab(true));
+          this.listing.push(this.amenityTab(true));
+          this.listing.push(this.professionalTab(true));
+          this.listing.push(this.productTab(true));
+          this.listing.push(this.videoTab(true));
+          this.listing.push(this.subscriptionTab(true));
+          this.listing.push(this.paymentTab(true));
+          this.listing.push(this.affiliateTab(true));
         }
       } else {
         if (profile.roles === 'SP') {
-          if(!profile.plan || profile.plan.name.toLowerCase() == 'basic'){
-            this.listing.push({
-              title: 'Subscription',
-              link: 'my-subscription',
-              active: true,
-            });
-            this.listing.push({
-              title: 'Payment',
-              link: 'my-payment',
-              active: true,
-            });
-            this.addMenuItem('social', false); 
+          if (!profile.plan || profile.plan.name.toLowerCase() === 'basic') {
+            this.listing.push(this.subscriptionTab(true));
+            this.listing.push(this.paymentTab(true));
+            this.addMenuItem('social', false);
             this.addMenuItem('badge', false);
 
-            this.listing.push({
-              title: 'Booking',
-              link: 'my-booking',
-              active: false,
-            });
-            this.listing.push({
-              title: 'Videos',
-              link: 'videos-blogs',
-              active: false,
-            });
-            this.listing.push({
-              title: 'Review and Rating',
-              link: 'reviews-ratings',
-              active: false,
-            });
+            this.listing.push(this.bookingTab(true));
+            this.listing.push(this.videoTab(false));
+            this.listing.push(this.reviewTab(false));
           } else {
-            this.addMenuItem('social', true); 
+            this.addMenuItem('social', true);
             this.addMenuItem('badge', true);
 
-            this.listing.push({
-              title: 'Booking',
-              link: 'my-booking',
-              active: true,
-            }),
-              this.listing.push({
-                title: 'Payment',
-                link: 'my-payment',
-                active: true,
-              });
-            this.listing.push({
-              title: 'Subscription',
-              link: 'my-subscription',
-              active: true,
-            });
-            this.listing.push({
-              title: 'Videos',
-              link: 'videos-blogs',
-              active: true,
-            });
+            this.listing.push(this.bookingTab(true)),
+              this.listing.push(this.paymentTab(true));
+            this.listing.push(this.subscriptionTab(true));
+            this.listing.push(this.videoTab(true));
 
-            this.listing.push({
-              title: 'Review and Rating',
-              link: 'reviews-ratings',
-              active: true,
-            });
+            this.listing.push(this.reviewTab(true));
           }
         }
       }
@@ -273,122 +258,58 @@ export class WrapperComponent implements OnInit {
         this.listing.push(...this.uListing);
       }
       if (profile.roles === 'C' && !profile.isVipAffiliateUser) {
-        if(!profile.plan || profile.plan.name.toLowerCase() == 'basic'){
-          this.listing.push({
-            title: 'Subscription',
-            link: 'my-subscription',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Payment',
-            link: 'my-payment',
-            active: true,
-          });
-          this.addMenuItem('social', false); 
+        if (!profile.plan || profile.plan.name.toLowerCase() === 'basic') {
+          this.listing.push(this.subscriptionTab(true));
+          this.listing.push(this.paymentTab(true));
+          this.addMenuItem('social', false);
           this.addMenuItem('badge', false);
 
-          this.listing.push({
-            title: 'Booking',
-            link: 'my-booking',
-            active: false,
-          });
+          this.listing.push(this.bookingTab(false));
           // this.listing.push({
           //   title: 'Affiliate',
           //   link: 'my-affiliate',
           //   active: false,
           // });
 
-          this.listing.push({
-            title: 'Review and Rating',
-            link: 'reviews-ratings',
-            active: false,
-          });
+          this.listing.push(this.reviewTab(false));
         } else {
-          this.addMenuItem('social', true); 
+          this.addMenuItem('social', true);
           this.addMenuItem('badge', true);
 
-          this.listing.push({
-            title: 'Booking',
-            link: 'my-booking',
-            active: true,
-          });
+          this.listing.push(this.bookingTab(true));
 
-          this.listing.push({
-            title: 'Payment',
-            link: 'my-payment',
-            active: true,
-          });
-          this.listing.push({
-            title: 'Subscription',
-            link: 'my-subscription',
-            active: true,
-          });
+          this.listing.push(this.paymentTab(true));
+          this.listing.push(this.subscriptionTab(true));
           // this.listing.push({
           //   title: 'Affiliate',
           //   link: 'my-affiliate',
           //   active: true,
           // });
-          this.listing.push({
-            title: 'Review and Rating',
-            link: 'reviews-ratings',
-            active: true,
-          });
+          this.listing.push(this.reviewTab(true));
         }
         if (profile.plan && profile.plan.ListAmenities === true) {
-          this.listing.push({
-            title: 'Amenities',
-            link: 'my-amenities',
-            active: true,
-          });
+          this.listing.push(this.amenityTab(true));
 
         } else {
-          this.listing.push({
-            title: 'Amenities',
-            link: 'my-amenities',
-            active: false,
-          });
+          this.listing.push(this.amenityTab(true));
         }
 
         if (profile?.plan?.ListOfProviders === true) {
-          this.listing.push({
-            title: 'Professionals',
-            link: 'add-professionals',
-            active: true,
-          });
+          this.listing.push(this.professionalTab(true));
         } else {
-          this.listing.push({
-            title: 'Professionals',
-            link: 'add-professionals',
-            active: false,
-          });
+          this.listing.push(this.professionalTab(true));
         }
 
         if (profile?.plan?.ListProductsOption === true) {
-          this.listing.push({
-            title: 'Products',
-            link: 'my-product',
-            active: true,
-          });
+          this.listing.push(this.productTab(true));
         } else {
-          this.listing.push({
-            title: 'Products',
-            link: 'my-product',
-            active: false,
-          });
+          this.listing.push(this.productTab(false));
         }
 
         if (profile?.plan?.videoUpload === true) {
-          this.listing.push({
-            title: 'Videos',
-            link: 'videos-blogs',
-            active: true,
-          });
+          this.listing.push(this.videoTab(true));
         } else {
-          this.listing.push({
-            title: 'Videos',
-            link: 'videos-blogs',
-            active: false,
-          });
+          this.listing.push(this.videoTab(false));
         }
       }
     }
