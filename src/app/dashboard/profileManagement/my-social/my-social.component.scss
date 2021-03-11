@@ -1,6 +1,18 @@
 .border-blue{ border: solid 1px var(--ph-blue); }
 .text-blue{ color: var(--ph-blue); }
 
+.screenshot {
+  border: solid 1px #d0d0d0;
+  background: #f7f7f7;
+}
+.screenshot-image{
+  width: 100%;
+  height: auto;
+}
+
+:host{
+  font-size: 16px;
+}
 
 ul li:not(:last-child){ 
   margin-right: 15px;

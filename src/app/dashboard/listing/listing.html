@@ -181,7 +181,7 @@
                 <ul class="d-flex justify-content-center indicators list-unstyled p-0 mt-2 mb-3">
                   <li><i class="fas fa-video" *ngIf="p.provideVirtual"></i></li>
                 </ul>
-                <!-- <star-rate class="my-3" [rate]="p.rating" margin="small" size="small"></star-rate> -->
+                <star-rate class="my-3" [rate]="p.rating" margin="small" size="small"></star-rate>
                 <p class="mb-2 clamp-1line font-big" *ngIf="!p.isCentre">{{p.organization}}</p>
                 <p class="mb-2 clamp-1line font-big" *ngIf="p.isCentre">{{p.phone}}</p>
                 <p class="mb-3 address">{{p.address}}</p>

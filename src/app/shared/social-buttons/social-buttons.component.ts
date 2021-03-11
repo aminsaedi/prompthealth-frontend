@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'social-buttons',
@@ -20,6 +20,8 @@ export class SocialButtonsComponent implements OnInit {
   @Input() size: number = 40;
   @Input() margin: string = 'normal'; /** narrow (10px) | */
 
+  @Output() clickButton = new EventEmitter<string>();
+
   get sizeStyle(){ 
     return {
       width: this.size + 'px',
@@ -33,6 +35,10 @@ export class SocialButtonsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onClick(type: string){
+    this.clickButton.emit(type);
   }
 
 }

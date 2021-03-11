@@ -5,9 +5,9 @@
 </ngx-spinner>
 
 
-<h4 class="mb-3">
+<h3 class="mb-3">
   Apply for Verified badge
-</h4>
+</h3>
 
 <p class="mb-3 font-italic">
   Please submit your application to get verified badge.
@@ -16,7 +16,7 @@
 <div class="mt-5">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <section class="d-flex flex-column">
-      <h5 class="mb-3">{{type | titlecase}}</h5>
+      <h4 class="mb-3">{{type | titlecase}}</h4>
 
       <p *ngIf="data && !isVerified" class="bg-lightgrey p-3 font-italic mb-3">Your application is under review. Meanwhile, you can still edit your application to make it more complete.</p>
       <p *ngIf="isVerified" class="bg-lightgreen p-3 font-italic mb-3 d-flex align-items-center">
@@ -124,4 +124,18 @@
       </ng-container>
     </section>
   </form>
+</div>
+
+<div class="mt-5 rounded-lg p-3 screenshot">
+  <h5>What you can get</h5>
+  <p>You can get the badge in your profile and listing so that users will see you are verified officially.</p>
+
+  <div class="d-flex align-items-stretch flex-wrap flex-md-nowrap">
+    <div>
+      <img src="/assets/img/my-badge-1.png" alt="badge in listing" class="screenshot-image">
+    </div>
+    <div class="mt-3 mt-md-0">
+      <img src="/assets/img/my-badge-2.png" alt="badge in your profile" class="screenshot-image">
+    </div>
+</div>
 </div>

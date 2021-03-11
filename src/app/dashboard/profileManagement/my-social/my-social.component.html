@@ -9,7 +9,13 @@
 </h3>
 
 <section class="mb-5">
-  <p class="font-big mb-3">Please tap icon and add your social media account to show on your profile.</p>
+  <!-- <p class="font-big mb-3">Please tap icon and add your social media account to show on your profile.</p> -->
+
+  <p class="mb-3 font-italic">
+    Please submit your application to get verified badge.
+  </p>
+
+  
   <div class="d-inline-block">
     <ul class="list-unstyled d-flex justify-content-center justify-content-md-end mb-0">
       <li class="icon-sns" [ngClass]="{active: isActive('facebook')}">
@@ -89,5 +95,10 @@
       <button *ngIf="isActive(target.type)" class="btn btn-secondary" type="button" (click)="onClear()">Clear</button>
     </div>
   </form>
+</section>
 
+<section class="mt-5 p-3 screenshot rounded-lg">
+  <h5>What you can get</h5>
+  <p>You can show social media icons in your profile and let users visit your account.</p>
+  <img src="/assets/img/my-social.png" alt="social icons" style="width: min(100%, 350px);">
 </section>
