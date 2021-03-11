@@ -1,0 +1,64 @@
+<h4 class="mb-5">Your Performance on PromptHealth</h4>
+<ng-container *ngIf="user">
+  <section>
+    <ul class="list-unstyled flex-container col-1-2-2">
+      <li class="rounded-lg">
+        <div class="py-3 d-flex align-items-center justify-content-center title">
+          <i class="fas fa-binoculars"></i>
+          <span class="ml-2">Your Profile View</span>
+        </div>
+        <div class="py-4 text-center">{{user.viewCount}}</div>
+      </li>    
+    </ul>
+  </section>
+
+  <section *ngIf="countBooking">
+    <h5>Your Bookings</h5>
+    <ul class="list-unstyled flex-container col-2-3-3">
+      <li class="rounded-lg">
+        <div class="py-3 d-flex align-items-center justify-content-center title">
+          <i class="fas fa-book-medical"></i>
+          <span class="ml-2">Total</span>
+        </div>
+        <div class="py-4 text-center">{{countBooking.pending + countBooking.approved + countBooking.completed + countBooking.rescheduled}}</div>
+      </li>
+
+      <li class="rounded-lg">
+        <div class="py-3 d-flex align-items-center justify-content-center title">
+          <i class="fas fa-calendar-day"></i>          
+          <span class="ml-2">Upcoming</span>
+        </div>
+        <div class="py-4 text-center">{{countBooking.pending + countBooking.approved + countBooking.rescheduled}}</div>
+      </li>      
+
+      <li class="rounded-lg">
+        <div class="py-3 d-flex align-items-center justify-content-center title">
+          <i class="fas fa-calendar-check"></i>
+          <span class="ml-2">Done</span>
+        </div>
+        <div class="py-4 text-center">{{countBooking.completed}}</div>
+      </li>
+    </ul>
+    <div *ngIf="countBooking.pending">
+      <p class="font-italic"><b>There are some bookings that require your attention.</b></p>
+      <a [routerLink]="['../my-booking']" class='btn btn-ph-blue'>See Bookings</a>
+    </div>
+  </section>
+
+  <section>
+    <h5>Social Media Profile View Count</h5>
+    <ul class="list-unstyled flex-container col-2-3-3">
+      <ng-container *ngFor="let type of ['facebook', 'twitter', 'linkedin', 'instagram', 'tiktok', 'youtube']">
+        <li *ngIf="user[type + 'ClickCount'] > 0" class="rounded-lg">
+          <div class="py-3 d-flex align-items-center justify-content-center title" [ngClass]="type">
+            <i *ngIf="type != 'tiktok'" class="fab" [ngClass]="'fa-' + type"></i>
+            <img *ngIf="type == 'tiktok'" src="https://s2.svgbox.net/social.svg?ic=tiktok&color=fff">  
+            <span class="ml-2">{{type | titlecase}}</span>
+          </div>
+          <div class="py-4 text-center">{{user[type + 'ClickCount']}}</div>
+        </li>
+      </ng-container>
+    </ul>  
+  </section>
+
+</ng-container>

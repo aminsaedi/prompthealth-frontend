@@ -7,8 +7,8 @@ import { SharedService } from '../../shared/services/shared.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { EmbedVideoService } from 'ngx-embed-video';
 import { ifStmt } from '@angular/compiler/src/output/output_ast';
-import{ Professional } from '../../models/professional';
-import { QuestionnaireAnswer } from '../questionnaire.service'
+import { Professional } from '../../models/professional';
+import { QuestionnaireAnswer } from '../questionnaire.service';
 import { CategoryService, Category } from '../../shared/services/category.service';
 
 
@@ -38,6 +38,19 @@ const expandSubtitleAnimation = trigger('expandSubtitle', [
   animations: [expandTitleAnimation, expandSubtitleAnimation]
 })
 export class DetailComponent implements OnInit {
+
+  constructor(
+    private _route: ActivatedRoute,
+    private _sharedService: SharedService,
+    private _toastr: ToastrService,
+    private _fb: FormBuilder,
+    private _embedService: EmbedVideoService,
+    private _headerService: HeaderStatusService,
+    private _catService: CategoryService,
+    el: ElementRef,
+  ) { this.host = el.nativeElement; }
+
+  get f() { return this.bookingForm.controls; }
 
   @ViewChild('closebutton') closebutton;
 
@@ -83,7 +96,7 @@ export class DetailComponent implements OnInit {
   private serviceDeliverySet: QuestionnaireAnswer[]; /* used to populate serviceDelivery that the professional can provide */
   private availabilitySet: QuestionnaireAnswer[]; /* used to populate availability when the professional is available */
   private ageRangeSet: QuestionnaireAnswer[] = ageRangeSet;
-  private typeOfProvider: any [];
+  private typeOfProvider: any[];
   private treatmentModality: any[];
   private host: HTMLElement;
 
@@ -91,34 +104,25 @@ export class DetailComponent implements OnInit {
   roles; /** not used anywhere. can be deleted */
   public productSearch: ''; /* can be deleted */
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _sharedService: SharedService,
-    private _toastr: ToastrService,
-    private _fb: FormBuilder,
-    private _embedService: EmbedVideoService,
-    private _headerService: HeaderStatusService,
-    private _catService: CategoryService,
-    el: ElementRef,
-  ) { this.host = el.nativeElement; }
+  public isAmenityViewerShown = false;
 
-  get f() { return this.bookingForm.controls; }
+  public isProductViewerShown = false;
 
   ngOnDestroy() {
     this._headerService.showHeader();
   }
-  
+
   async ngOnInit(): Promise<void> {
     const now = new Date();
-    this.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 9,0,0);
-    this.minDate = new Date(  now.getFullYear(), now.getMonth(), now.getDate() + 1, 0,0,0);
+    this.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 9, 0, 0);
+    this.minDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
 
     this.bookingForm = this._fb.group({
-      name:  new FormControl('', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]),
+      name: new FormControl('', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]),
       email: new FormControl('', [Validators.required, Validators.email]),
       phone: new FormControl('', [
-        Validators.required, 
-        Validators.minLength(10), 
+        Validators.required,
+        Validators.minLength(10),
         Validators.maxLength(12),
         Validators.pattern(/^[0-9][0-9\-]+[0-9]$/)
       ]),
@@ -135,25 +139,25 @@ export class DetailComponent implements OnInit {
     this._route.params.subscribe(async params => {
       this.id = params.id;
 
-      const promiseAll = [ 
+      const promiseAll = [
         this.getUserProfile(),
         this.getProfileQuestion(),
         this.getAmenities(),
         this.getCategoryServices()
       ];
-      Promise.all(promiseAll).then(()=>{
-        this.userInfo.populate('languages', this.languageSet); 
-        this.userInfo.populate('serviceDelivery', this.serviceDeliverySet); 
-        this.userInfo.populate('availability', this.availabilitySet); 
+      Promise.all(promiseAll).then(() => {
+        this.userInfo.populate('languages', this.languageSet);
+        this.userInfo.populate('serviceDelivery', this.serviceDeliverySet);
+        this.userInfo.populate('availability', this.availabilitySet);
         this.userInfo.setAmenities(this.amenities);
         this.userInfo.populateService(this.category);
         this.userInfo.populate('ageRange', this.ageRangeSet);
         this.userInfo.setServiceCategory('typeOfProvider', this.typeOfProvider);
         this.userInfo.setServiceCategory('treatmentModality', this.treatmentModality);
-        
 
-        this.userInfo.videos.forEach(v=> {
-          var ytIframeHtml = this._embedService.embed(v.url);
+
+        this.userInfo.videos.forEach(v => {
+          const ytIframeHtml = this._embedService.embed(v.url);
           ytIframeHtml.title = v.title;
           this.iframe.push(ytIframeHtml);
         });
@@ -161,38 +165,40 @@ export class DetailComponent implements OnInit {
         this.getEndosements();
         this.getProducts();
         this.getReviews();
-  
-        if(this.userInfo.isCentre){ this.getProfessionals(); }
+
+        if (this.userInfo.isCentre) { this.getProfessionals(); }
       })
-      .catch(err=>{ 
-        if(err && err.length > 0){
-          this._toastr.error(err); 
-        }
-      })
-      .finally(()=> { this._sharedService.loader('hide'); });
+        .catch(err => {
+          if (err && err.length > 0) {
+            this._toastr.error(err);
+          }
+        })
+        .finally(() => { this._sharedService.loader('hide'); });
 
       // this.getUserProfile();
       // this.getProfileQuestion();
     });
   }
 
-  getUserProfile(): Promise<boolean>{
-    return new Promise((resolve, reject)=>{
+  getUserProfile(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
       const path = `user/get-profile/${this.id}`;
+      const incPageViewpath = `user/update-view-count`;
+      this._sharedService.postNoAuth({ _id: this.id }, incPageViewpath).subscribe((res: any) => {
+      });
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
-        if (res.statusCode === 200) {      
-          if(res.data && res.data.length > 0){
-            var user: any = res.data[0];
+        if (res.statusCode === 200) {
+          if (res.data && res.data.length > 0) {
+            const user: any = res.data[0];
             this.userInfo = new Professional(user._id, user);
             resolve(true);
-          }
-          else { reject('There are some error please try after some time.'); }
+          } else { reject('There are some error please try after some time.'); }
         } else { reject(res.message); }
       }, err => {
         console.log(err);
         reject('There are some error please try after some time.');
-      })
-    })
+      });
+    });
   }
 
 
@@ -201,7 +207,7 @@ export class DetailComponent implements OnInit {
       const path = `questionare/get-profile-questions`;
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
         if (res.statusCode === 200) {
-          var questions = res.data;
+          const questions = res.data;
           questions.forEach((e: any) => {
             if (e.question_type === 'service' && e.slug === 'offer-your-services') {
               this.serviceDeliverySet = e.answers;
@@ -213,14 +219,13 @@ export class DetailComponent implements OnInit {
               this.availabilitySet = e.answers;
             }
           });
-          resolve(true)
-        } 
-        else { reject(res.message); }
+          resolve(true);
+        } else { reject(res.message); }
       }, err => {
         console.log(err);
         reject('There are some error please try after some time.');
       });
-    })
+    });
   }
 
   getProducts() {
@@ -231,7 +236,7 @@ export class DetailComponent implements OnInit {
     this._sharedService.getNoAuth(path).subscribe((res: any) => {
       if (res.statusCode === 200) {
         this.products = res.data.data;
-        if(res.data.data){
+        if (res.data.data) {
           this.userInfo.setProducts(res.data.data);
         }
         this._sharedService.loader('hide');
@@ -258,11 +263,11 @@ export class DetailComponent implements OnInit {
           this._sharedService.showAlert(res.message, 'alert-danger');
           reject();
         }
-      }, (error) => { 
-        console.log(error); 
-        reject('There are some error please try after some time.'); 
-      });  
-    })
+      }, (error) => {
+        console.log(error);
+        reject('There are some error please try after some time.');
+      });
+    });
   }
 
   getReviews() {
@@ -270,7 +275,7 @@ export class DetailComponent implements OnInit {
     const path = `booking/get-all-review?userId=${this.id}&count=10&page=1&search=/`;
     this._sharedService.getNoAuth(path).subscribe((res: any) => {
       if (res.statusCode === 200 && res.data.data.length > 0) {
-        this.userInfo.setReviews(res.data.data)
+        this.userInfo.setReviews(res.data.data);
 
       } else {
         this._sharedService.checkAccessToken(res.message);
@@ -285,27 +290,26 @@ export class DetailComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const path = `user/getService/${this.id}`;
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
-    
+
         if (res.statusCode === 200) {
           this.typeOfProvider = [];
           this.treatmentModality = [];
-    
+
           res.data.forEach((e: any) => {
-            switch(e.slug){
+            switch (e.slug) {
               case 'providers-are-you': this.typeOfProvider.push(e); break;
               case 'treatment-modalities': this.treatmentModality.push(e); break;
-  //            case 'your-goal-specialties': categories.service.push(e); break;
-   //           case 'your-offerings': categories.serviceOffering.push(e); break;
+              //            case 'your-goal-specialties': categories.service.push(e); break;
+              //           case 'your-offerings': categories.serviceOffering.push(e); break;
             }
           });
           resolve(true);
-        } 
-        else { reject('There are some error please try after some time.')}
+        } else { reject('There are some error please try after some time.'); }
       }, (error) => {
         console.log(error);
         this._toastr.error('There are some error please try after some time.');
       });
-    })
+    });
 
   }
 
@@ -428,14 +432,21 @@ export class DetailComponent implements OnInit {
   }
 
   toggleExpandProfessionalDesc() { this.isExpandProfessionals = !this.isExpandProfessionals; }
+  openAmenityViewer() { this.isAmenityViewerShown = true; }
+  closeAmenityViewer() { this.isAmenityViewerShown = false; }
+  openProductViewer() { this.isProductViewerShown = true; }
+  closeProductViewer() { this.isProductViewerShown = false; }
 
-  public isAmenityViewerShown = false;
-  openAmenityViewer(){ this.isAmenityViewerShown = true; }
-  closeAmenityViewer(){ this.isAmenityViewerShown = false; }
-
-  public isProductViewerShown = false;
-  openProductViewer(){ this.isProductViewerShown = true; }
-  closeProductViewer(){ this.isProductViewerShown = false; }
+  countupSocial(type: string){
+    const data = {
+      _id: this.userInfo.id,
+      type: type,
+    }
+    console.log(type);
+    this._sharedService.postNoAuth(data, 'user/update-social-count').subscribe(res => {
+      console.log(res);
+    })
+  }
 }
 
 
@@ -486,4 +497,4 @@ const ageRangeSet: QuestionnaireAnswer[] = [
   { _id: '5eb1a4e199957471610e6cd9', item_text: 'Adolescent (12-18)' },
   { _id: '5eb1a4e199957471610e6cda', item_text: 'Adult (18+)' },
   { _id: '5eb1a4e199957471610e6cdb', item_text: 'Senior (>64)' },
-]
+];

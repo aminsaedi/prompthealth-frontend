@@ -19,6 +19,7 @@ import { MyPasswordComponent } from './my-password/my-password.component';
 import { MyServiceComponent } from './my-service/my-service.component';
 import { MySocialComponent } from './my-social/my-social.component';
 import { MyBadgeComponent } from './my-badge/my-badge.component';
+import { MyPerformanceComponent } from './my-performance/my-performance.component';
 
 import { ProfileManagementChildGuard } from './profile-management-child.guard';
 
@@ -31,8 +32,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'my-profile',
-        component: MyProfileComponent
+        redirectTo: 'my-performance',
       },
       {
         path: 'my-profile',
@@ -97,6 +97,10 @@ const routes: Routes = [
       {
         path: 'my-badge',
         component: MyBadgeComponent,
+      },
+      {
+        path: 'my-performance',
+        component: MyPerformanceComponent,
       }
     ]
   },

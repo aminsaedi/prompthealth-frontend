@@ -1,129 +1,246 @@
+<ngx-spinner bdColor="#fff" size="medium" color="#fff">
+  <p style="font-size: 20px; color: white" class="loaderbg">
+    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  </p>
+</ngx-spinner>
 
-<div class="table-responsive" *ngIf="bookingList && bookingList.length; else noData">
-  <h3 class="mb-3">My Bookings</h3>
-
-  <table class="table table-hover bookingtable" *ngIf="this.roles === 'U'">
-    <thead>
-      <tr>
-        <th>
-          Name
-        </th>
-        <th>
-          Contact Info
-        </th>
-        <th>
-          Date/Slot
-        </th>
-        <th class="note">
-          Notes
-        </th>
-        <th class="status">
-          Status
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let book of bookingList | paginate: { id: 'booking',
-      itemsPerPage: itemsPerPage,
-      currentPage: currentPage,
-      totalItems: totalItems 
-      }">
-        <td>{{ book.drId.firstName }} - {{ book.drId.lastName }}</td>
-        <td>
-          {{ book.drId.email }}
-        </td>
-        <td>
-          <span class="text-nowrap">{{ book.bookingDateTime | date: 'MMM d, y, HH: mm'}}</span> 
-          <!-- - {{ book.timing }} -->
-        </td>
-        <td>
-          {{ book.note }}
-        </td>
-        <td>
-          <div *ngIf="book.rating === 0">
-            <div class="d-block" [ngSwitch]="book.status">
-              <div *ngSwitchCase="0" class="text-success">
-                <h6>Pending</h6>
-                
-              </div>
-              <div *ngSwitchCase="1" class="text-success">
-                <i class="fa fa-check"></i> Approved
-              </div>
-              <div *ngSwitchCase="2" class="text-danger">
-                <i class="fa fa-times"></i> Rejected
-              </div>
-              <div *ngSwitchCase="3" class="text-danger">
-                <i class="fa fa-ban"></i> Canceled
-              </div>
-              <div *ngSwitchCase="4" class="text-success">
-                <button
-                  *ngIf="!book.rating"
-                  (click)="showReviewModal(book)"
-                  id ="reviewButton"
-                  class="btn btn-success"
-                  data-toggle="modal"
-                  data-target="#reviewModal"
-                >Rate Now</button>
-
-                <!-- Review Modal -->
-                <div
-                  class="modal fade text-secondary"
-                  id="reviewModal"
-                  tabindex="-1"
-                  role="dialog"
-                  aria-labelledby="reviewModalLabel"
-                  aria-hidden="true"
-                >
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="reviewModalLabel">Review</h5>
-                      <button
-                        type="button"
-                        #closeRatingbutton
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                      >
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="bg-gray p-3 mb-3">
-                        <div class="p-2 text-center bg-white">
-                          <h4>Write A Reivew</h4>
-                          <div class="font-weight-bold">Select a rating</div>
-                          <div class="mt-3">
-                            <label class="mx-2">Overall Experience</label>
-                            <app-ratings [rating]='0'  (ratingClick)='ratingComponentClick($event)'></app-ratings>
+<h3 class="mb-3">My Bookings</h3>
+<div *ngIf="(bookingList && bookingList.length > 0); then booking; else noData"></div>
+<ng-template #booking>
+  <div class="table-responsive mb-3">
+    <table class="table table-hover bookingtable" *ngIf="this.roles === 'U'">
+      <thead>
+        <tr>
+          <th>
+            Doctor Info
+          </th>
+          <th>
+            Date/Slot
+          </th>
+          <th class="note">
+            Notes
+          </th>
+          <th class="status">
+            Status
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of bookingList | paginate: { id: 'booking',
+        itemsPerPage: itemsPerPage,
+        currentPage: currentPage,
+        totalItems: totalItems 
+        }">
+          <td>
+            {{ book.drId.firstName }} - {{ book.drId.lastName }}<br>
+            {{ book.drId.email }}
+          </td>
+          <td>
+            <span class="text-nowrap">{{ book.bookingDateTime | date: 'MMM d, y, HH: mm'}}</span> 
+            <!-- - {{ book.timing }} -->
+          </td>
+          <td>
+            {{ book.note }}
+          </td>
+          <td>
+            <div *ngIf="book.rating === 0">
+              <div class="d-block" [ngSwitch]="book.status">
+                <div *ngSwitchCase="0" class="text-success">
+                  <h6>Pending</h6>
+                  
+                </div>
+                <div *ngSwitchCase="1" class="text-success">
+                  <i class="fa fa-check"></i> Approved
+                </div>
+                <div *ngSwitchCase="2" class="text-danger">
+                  <i class="fa fa-times"></i> Rejected
+                </div>
+                <div *ngSwitchCase="3" class="text-danger">
+                  <i class="fa fa-ban"></i> Canceled
+                </div>
+                <div *ngSwitchCase="4" class="text-success">
+                  <button
+                    *ngIf="!book.rating"
+                    (click)="showReviewModal(book)"
+                    id ="reviewButton"
+                    class="btn btn-success"
+                    data-toggle="modal"
+                    data-target="#reviewModal"
+                  >Rate Now</button>
+  
+                  <!-- Review Modal -->
+                  <div
+                    class="modal fade text-secondary"
+                    id="reviewModal"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="reviewModalLabel"
+                    aria-hidden="true"
+                  >
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="reviewModalLabel">Review</h5>
+                        <button
+                          type="button"
+                          #closeRatingbutton
+                          class="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="bg-gray p-3 mb-3">
+                          <div class="p-2 text-center bg-white">
+                            <h4>Write A Reivew</h4>
+                            <div class="font-weight-bold">Select a rating</div>
+                            <div class="mt-3">
+                              <label class="mx-2">Overall Experience</label>
+                              <app-ratings [rating]='0'  (ratingClick)='ratingComponentClick($event)'></app-ratings>
+                            </div>
+  
+                            <small *ngIf="ratingSubmited && !ratingClicked" class="text-danger col-sm-12">
+                              Rating is required
+                            </small>
                           </div>
-
-                          <small *ngIf="ratingSubmited && !ratingClicked" class="text-danger col-sm-12">
-                            Rating is required
-                          </small>
                         </div>
+  
+                        <div class="text-primary text-center font-weight-bold mb-3">
+                          Your Review
+                        </div>
+                        <textarea
+                          class="form-control"
+                          [(ngModel)] = "review"
+                          placeholder="Write a review..."
+                        ></textarea>
                       </div>
-
-                      <div class="text-primary text-center font-weight-bold mb-3">
-                        Your Review
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" (click)="submitRating()">Post Your Review</button>
                       </div>
-                      <textarea
-                        class="form-control"
-                        [(ngModel)] = "review"
-                        placeholder="Write a review..."
-                      ></textarea>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary" (click)="submitRating()">Post Your Review</button>
                     </div>
                   </div>
+                  </div>
+  
+                  <!-- Review Modal End -->
                 </div>
+  
+                <div *ngSwitchCase="5" class="text-success">
+                  <button
+                    (click)="updateBooking(book._id, 1)"
+                    class="btn btn-primary mr-1"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    (click)="updateBooking(book._id, 2)"
+                    class="btn btn-danger mr-1"
+                  >
+                    Reject
+                  </button>
+                  <!-- <button
+                    class="btn btn-success"
+                    data-toggle="modal"
+                    data-target="#reviewModal"
+                  >
+                    Completed
+                  </button> -->
                 </div>
-
-                <!-- Review Modal End -->
+                <div *ngSwitchCase="6" class="text-success">
+                  
+                  <i class="fa fa-check"></i> Accepted
+                </div>
+                <div *ngSwitchDefault></div>
               </div>
-
-              <div *ngSwitchCase="5" class="text-success">
+            </div>
+            <div *ngIf="book.rating !== 0">
+              <div class="text-review mb-2" *ngIf="book.rating">
+                <div class="text-rating mb-2" *ngIf="book.rating === 5">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                </div>
+                <div class="text-rating mb-2" *ngIf="book.rating === 4">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+                <div class="text-rating mb-2" *ngIf="book.rating === 3">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+                <div class="text-rating mb-2" *ngIf="book.rating === 2">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+                <div class="text-rating mb-2" *ngIf="book.rating === 1">
+                  <i class="fa fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table
+      class="table table-hover bookingtable w-100"
+      *ngIf="this.roles === 'C' || this.roles === 'SP'"
+    >
+      <thead>
+        <tr>
+          <th>
+            Patient's Info
+          </th>
+          <th>
+            Date/Slot
+          </th>
+          <th>
+            Doctor's Info
+          </th>
+          <th class="Reschedule"  style="text-align: center;">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let book of bookingList | paginate: { id: 'booking',
+          itemsPerPage: itemsPerPage,
+          currentPage: currentPage,
+          totalItems: totalItems 
+          }"
+          [ngClass]="{ disabled: book.status === 2 }"
+        >
+          <td>
+            <p>{{ book.name }}</p>
+            {{ book.phone }} / {{ book.email }}
+          </td>
+          <td>
+            <span class="text-nowrap">{{ book.bookingDateTime | date: 'MMM d, y, HH: mm'}}</span>
+             <!-- - {{ book.timing }} -->
+          </td>
+          <td>
+            {{ book.drId.firstName }} - {{ book.drId.lastName }}
+            {{ book.drId.email }}
+          </td>
+          <td style="text-align: center;">
+            <div class="d-block" [ngSwitch]="book.status">
+              <div *ngSwitchCase="0">
                 <button
                   (click)="updateBooking(book._id, 1)"
                   class="btn btn-primary mr-1"
@@ -136,176 +253,50 @@
                 >
                   Reject
                 </button>
-                <!-- <button
-                  class="btn btn-success"
+                <button
+                  (click)="rescheduleBooking(book._id)"
                   data-toggle="modal"
-                  data-target="#reviewModal"
+                  data-target="#editbookingmodal"
+                  class="btn btn-success"
+                >
+                  Reschedule
+                </button>
+              </div>
+              <div *ngSwitchCase="1">
+                <span class="text-success"
+                  ><i class="fa fa-check"></i> Approved</span
+                >
+                <button
+                  (click)="updateBooking(book._id, 4)"
+                  class="btn btn-primary mr-1"
                 >
                   Completed
-                </button> -->
-              </div>
-              <div *ngSwitchCase="6" class="text-success">
+                </button>
                 
-                <i class="fa fa-check"></i> Accepted
+  
+              </div>
+              <div *ngSwitchCase="2">Rejected</div>
+              <div *ngSwitchCase="3" class="text-danger">
+                <i class="fa fa-times"></i> Canceled
+              </div>
+              <div *ngSwitchCase="4" class="text-primary">
+                <i class="fa fa-check"></i> Completed
+              </div>
+              <div *ngSwitchCase="5" class="text-primary">
+                Waiting for Acceptance
               </div>
               <div *ngSwitchDefault></div>
             </div>
-          </div>
-          <div *ngIf="book.rating !== 0">
-            <div class="text-review mb-2" *ngIf="book.rating">
-              <div class="text-rating mb-2" *ngIf="book.rating === 5">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-              </div>
-              <div class="text-rating mb-2" *ngIf="book.rating === 4">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="far fa-star"></i>
-              </div>
-              <div class="text-rating mb-2" *ngIf="book.rating === 3">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-              </div>
-              <div class="text-rating mb-2" *ngIf="book.rating === 2">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-              </div>
-              <div class="text-rating mb-2" *ngIf="book.rating === 1">
-                <i class="fa fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-              </div>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-
-    <tfoot>
-      <tr>
-          <td colspan="4" *ngIf="totalItems > 5">
-              <pagination-controls
-                  id="booking" 
-                  (pageChange)="currentPage = $event"></pagination-controls>
           </td>
-      </tr>
-  </tfoot>
-  </table>
-  <table
-    class="table table-hover bookingtable w-100"
-    *ngIf="this.roles === 'C' || this.roles === 'SP'"
-  >
-    <thead>
-      <tr>
-        <th>
-          Patient's Info
-        </th>
-        <th>
-          Date/Slot
-        </th>
-        <th>
-          Doctor's Info
-        </th>
-        <th class="Reschedule"  style="text-align: center;">
-          Actions
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        *ngFor="let book of bookingList | paginate: { id: 'booking2',
-        itemsPerPage: itemsPerPage,
-        currentPage: currentPage,
-        totalItems: totalItems 
-        }"
-        [ngClass]="{ disabled: book.status === 2 }"
-      >
-        <td>
-          <p>{{ book.name }}</p>
-          {{ book.phone }} / {{ book.email }}
-        </td>
-        <td>
-          <span class="text-nowrap">{{ book.bookingDateTime | date: 'MMM d, y, HH: mm'}}</span>
-           <!-- - {{ book.timing }} -->
-        </td>
-        <td>
-          {{ book.drId.firstName }} - {{ book.drId.lastName }}
-          {{ book.drId.email }}
-        </td>
-        <td style="text-align: center;">
-          <div class="d-block" [ngSwitch]="book.status">
-            <div *ngSwitchCase="0">
-              <button
-                (click)="updateBooking(book._id, 1)"
-                class="btn btn-primary mr-1"
-              >
-                Accept
-              </button>
-              <button
-                (click)="updateBooking(book._id, 2)"
-                class="btn btn-danger mr-1"
-              >
-                Reject
-              </button>
-              <button
-                (click)="rescheduleBooking(book._id)"
-                data-toggle="modal"
-                data-target="#editbookingmodal"
-                class="btn btn-success"
-              >
-                Reschedule
-              </button>
-            </div>
-            <div *ngSwitchCase="1">
-              <span class="text-success"
-                ><i class="fa fa-check"></i> Approved</span
-              >
-              <button
-                (click)="updateBooking(book._id, 4)"
-                class="btn btn-primary mr-1"
-              >
-                Completed
-              </button>
-              
+        </tr>
+      </tbody>
+    </table>  
+  </div>
+  <div class="text-center paginator" *ngIf="totalItems > itemsPerPage">
+    <pagination-controls id="booking" (pageChange)="changePage($event)"></pagination-controls>
+  </div>
+</ng-template>
 
-            </div>
-            <div *ngSwitchCase="2">Rejected</div>
-            <div *ngSwitchCase="3" class="text-danger">
-              <i class="fa fa-times"></i> Canceled
-            </div>
-            <div *ngSwitchCase="4" class="text-primary">
-              <i class="fa fa-check"></i> Completed
-            </div>
-            <div *ngSwitchCase="5" class="text-primary">
-              Waiting for Acceptance
-            </div>
-            <div *ngSwitchDefault></div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="4" *ngIf="totalItems > 5">
-          <pagination-controls id="booking2" (pageChange)="currentPage = $event"></pagination-controls>
-        </td>
-      </tr>
-  </tfoot>
-  </table>
-</div>
 
 <ng-template #noData>
   <h5>No Booking done...</h5>

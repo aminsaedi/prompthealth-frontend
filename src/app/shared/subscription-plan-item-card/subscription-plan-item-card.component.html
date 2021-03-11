@@ -78,12 +78,16 @@
         </li>
         <li *ngIf="type != 'centre' && data?.socialMediaLink">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
+            <span class="badge badge-info">NEW</span>
+
             Link your social media accounts on your Prompthealth profile page
         </li>
         <li *ngIf="type != 'centre' && data?.verifiedBadge">
-            <span class="fa-li"><i class="far fa-check-circle"></i></span>
+            <span class="fa-li"><i class="far fa-check-circle" ></i></span>
+            <span class="badge badge-info">NEW</span>
             Apply for a verified Badge and rank before everyone else in search results
         </li>
+
 
         <!-- depend on data -->
         <li *ngIf="data?.ListOfProviders">
@@ -93,6 +97,12 @@
         <li *ngIf="data?.ListOfProviders">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             List of Providers
+        </li>
+
+        <li *ngIf="type != 'basic'">
+          <span class="fa-li"><i class="far fa-check-circle" ></i></span>
+          <span class="badge badge-info">NEW</span>
+          Exciting features & benefits coming every month 
         </li>
     </ul>
             

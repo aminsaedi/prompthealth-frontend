@@ -369,7 +369,7 @@ export class SharedService {
         if (this.previousRouteService.getPreviousUrl() === '') {
 
         } else {
-          route = res.data.roles === 'U' ? '/' : '/dashboard/profilemanagement/my-profile';
+          route = res.data.roles === 'U' ? '/' : '/dashboard/profilemanagement/';
         }
       }
     }

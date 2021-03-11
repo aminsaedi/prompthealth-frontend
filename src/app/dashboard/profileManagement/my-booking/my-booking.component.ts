@@ -18,9 +18,9 @@ export class MyBookingComponent implements OnInit {
   ratingPayload = {}
   ratingClicked: number;
   review = '';
-  currentPage;
-  totalItems;
-  itemsPerPage = 5
+  public currentPage = 1;
+  public totalItems: number;
+  public itemsPerPage = 10;
 
   timingList = [
     { id: 'timing1', name: 'Morning' },
@@ -56,18 +56,24 @@ export class MyBookingComponent implements OnInit {
     this.roles = localStorage.getItem('roles');
     // this.roles = 'U';
     this.userId = localStorage.getItem('loginID');
-    let path = `booking/get-all?userId=${this.userId}&count=10&page=1&frontend=0/`;
+
+    const userType = (this.roles.toLowerCase() == 'u') ? 'client' : 'doctor';
+    const path = `booking/get-by-${userType}/${this.userId}?count=${this.itemsPerPage}&page=${this.currentPage}`; 
+
+    this._sharedService.loader('show');
     this._sharedService.get(path).subscribe((res: any) => {
+      this._sharedService.loader('hide');
       if (res.statusCode === 200) {
         this.bookingList = res.data.data;
-        this.totalItems = this.bookingList.length;
+        this.totalItems = res.data.total;
       } else {
         this._sharedService.checkAccessToken(res.message);
       }
-    }, err => {
-
-      this._sharedService.checkAccessToken(err);
-    });
+      }, err => {
+        this._sharedService.loader('hide');
+        this._sharedService.checkAccessToken(err);
+      }
+    );
   }
   cancelBooking(id) {
     this._sharedService.loader('show');
@@ -109,6 +115,11 @@ export class MyBookingComponent implements OnInit {
     }, err => {
       this._sharedService.loader('hide');
     });
+  }
+
+  changePage(e: any){
+    this.currentPage = e;
+    this.getBookingList();
   }
 
   timingSelected(evt) {

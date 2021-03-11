@@ -31,25 +31,24 @@
           >
             <li class="nav-item" *ngFor = "let list of listing">
               <button
-                class="nav-link"
+                class="nav-link d-flex flex-between"
                 [disabled]=!list.active
                 [routerLink]="list.link"
                 [routerLinkActive]="['active']"
                 >
-                <span class="lead">
-
-                  <b >
-                    {{ list.title }}
-                  </b>
-                </span>
-                <div *ngIf="list.title == 'Profile' && profile?.isVipAffiliateUser" class="icon-vip font-small rounded ml-3">
-                  <i class="fas fa-ribbon"></i>
-                  <span class="pl-2">VIP</span>
+                <div class="flex-grow-1 d-flex align-items-center flex-wrap">
+                  <span class="lead">
+                    <b>{{ list.title }}</b>
+                  </span>
+                  <div *ngIf="list.title == 'Profile' && profile?.isVipAffiliateUser" class="icon-vip font-small rounded ml-3">
+                    <i class="fas fa-ribbon"></i>
+                    <span class="pl-2">VIP</span>
+                  </div>
+                  <div *ngIf="list.description" style=" font-size: 12px;" class="w-100">
+                    {{list.description}}
+                  </div>  
                 </div>
-                <div *ngIf="list.description" style=" font-size: 12px;" >
-                  {{list.description}}
-                </div>
-                <span style="color:#4a86ab; font-size: 10px;" class="pull-right" *ngIf="!list.active"><i class="fas fa-star-of-life"></i></span>
+                <div style="color:#4a86ab; font-size: 10px;" class="pull-right mr-2" *ngIf="!list.active"><i class="fas fa-star-of-life"></i></div>
               </button>
             </li>
           </ul>

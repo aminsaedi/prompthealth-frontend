@@ -29,6 +29,7 @@ import { MyPasswordComponent } from './my-password/my-password.component';
 import { MyServiceComponent } from './my-service/my-service.component';
 import { MySocialComponent } from './my-social/my-social.component';
 import { MyBadgeComponent } from './my-badge/my-badge.component';
+import { MyPerformanceComponent } from './my-performance/my-performance.component';
 @NgModule({
   declarations: [
     WrapperComponent,
@@ -49,6 +50,7 @@ import { MyBadgeComponent } from './my-badge/my-badge.component';
     MyServiceComponent,
     MySocialComponent,
     MyBadgeComponent,
+    MyPerformanceComponent,
     
   ],
   schemas: [

@@ -19,6 +19,7 @@
   <div class="max-w-1200">
     <price-range-switcher (change)="changePriceRange($event)"></price-range-switcher>
     <span class="pt-3 pt-md-0 pl-md-5 font-italic text-blue font-big d-block d-md-inline-block">save 20% with yearly subscription</span>  
+
   </div>
 </div>
 
@@ -45,8 +46,8 @@
       [isPriceMonthly]="isPriceMonthly"
       (select)="setSelectedPlan(cPlan)"
       ></subscription-plan-item-card>
+  </div>
 </div>
-
 
 <div class="container-fluid max-w-1200" *ngIf="addOnPlans.length>0" id="addon">
   <h3 class="text-pink mt-5 mb-3">Add-ons for Provider and Centre</h3>
