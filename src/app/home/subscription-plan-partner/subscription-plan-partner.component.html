@@ -13,31 +13,16 @@
       <div class="text-light text-center">
         We are looking for organizations in health and wellness that provide products or services and are interested in collaborating with us. 
       </div>
+
+      <div  class="text-center mt-5">
+        <a class="btn btn-ph-blue font-regular shadow rounded-pill px-4" [routerLink]="['/auth/registration/p']">Sign Up Now!</a>
+      </div>
     </div>
   </section>
 
 
 <!-- Pricing table -->
 <div class="container-fluid my-5">
-  <div class="max-w-1200 d-lg-flex align-items-center mb-5">
-    <p class="text-blue mb-3 mb-lg-0 mr-lg-3 text-md-nowrap">Get updated when partner's program is ready</p>
-    <form class="d-md-flex align-items-center" [formGroup]="form" (ngSubmit)="submitRegister()">
-      <div class="input-group mb-3 mb-md-0 mr-md-3">
-        <input formControlName="firstname" class="form-control" type="text" name="firstname" (input)="onInputForm()"  placeholder="First Name">
-      </div>
-      <div class="input-group mb-3 mb-md-0 mr-md-3">
-        <input formControlName="lastname" class="form-control" type="text" name="lastname" (input)="onInputForm()"  placeholder="Last Name">
-      </div>
-      <div class="input-group email mb-3 mb-md-0 mr-md-3">
-        <input formControlName="email" class="form-control" type="text" name="email" (input)="onInputForm()"  placeholder="Email">
-      </div>
-      <div class="position-relative">
-        <input class="input-submit btn bg-blue text-light rounded-pill" type="submit" value="submit">
-        <p *ngIf="errorForm" class="mt-1 mt-md-3 mb-0 error text-md-nowrap">{{errorForm}}</p>
-      </div>
-    </form>
-  </div>
-
   <div class="max-w-1200">
     <price-range-switcher (change)="changePriceRange($event)"></price-range-switcher>
     <br class="d-block d-md-none"> 
