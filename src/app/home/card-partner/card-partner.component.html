@@ -1,0 +1,12 @@
+<a [routerLink]="[data.id]">
+  <div class="rounded-15p overflow-hidden partner-card">
+    <div class="image-container overflow-hidden">
+      <img [src]="data.image" [alt]="data.name">
+    </div>
+  
+    <div class="pl-3 pt-4 py-md-3 px-md-2">
+      <div class="font-weight-400 mb-3 mb-md-1 font-big title">{{data.name}}</div>
+      <p class="m-0 clamp-3line">{{data.description}}</p>
+    </div>  
+  </div>
+</a>

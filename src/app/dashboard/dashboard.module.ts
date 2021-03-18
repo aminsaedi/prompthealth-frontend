@@ -27,7 +27,7 @@ import { NpnSliderModule } from 'npn-slider';
 import { AgmCoreModule } from '@agm/core';
 import { AddOnCardComponent } from './add-on-card/add-on-card.component';
 import { environment } from 'src/environments/environment';
-import { DetailTabbarIntersectionObserverDirective } from './detail-tabbar-intersection-observer.directive';
+// import { DetailTabbarIntersectionObserverDirective } from './detail-tabbar-intersection-observer.directive';
 
 import { UserQuestionaireComponent } from './user-questionaire/user-questionaire.component';
 import { QuestionnaireItemSelectComponent } from './questionnaire-item-select/questionnaire-item-select.component';
@@ -46,6 +46,7 @@ import { RegisterPartnerGeneralComponent } from './register-partner-general/regi
 import { RegisterPartnerServiceComponent } from './register-partner-service/register-partner-service.component';
 import { RegisterPartnerOfferComponent } from './register-partner-offer/register-partner-offer.component';
 import { RegisterPartnerTermComponent } from './register-partner-term/register-partner-term.component';
+import { RegisterPartnerCompleteComponent } from './register-partner-complete/register-partner-complete.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,7 @@ import { RegisterPartnerTermComponent } from './register-partner-term/register-p
     ProfessionalRegisterComponent,
     EmbededURLPipe,
     AddOnCardComponent,
-    DetailTabbarIntersectionObserverDirective,
+    // DetailTabbarIntersectionObserverDirective,
     UserQuestionaireComponent,
     QuestionnaireItemSelectComponent,
     QuestionnaireItemCheckboxComponent,
@@ -77,6 +78,7 @@ import { RegisterPartnerTermComponent } from './register-partner-term/register-p
     RegisterPartnerServiceComponent,
     RegisterPartnerOfferComponent,
     RegisterPartnerTermComponent,
+    RegisterPartnerCompleteComponent,
   ],
   imports: [
     AutocompleteLibModule,

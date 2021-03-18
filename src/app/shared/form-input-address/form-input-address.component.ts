@@ -15,6 +15,8 @@ export class FormInputAddressComponent implements OnInit {
   @Input() submitted: boolean = false;
   @Input() controllerGroup: FormGroup;
 
+  @Output() selectAddress = new EventEmitter<void>();
+
 
   get address(){ return this.controllerGroup.controls.address; }
   get errorGoogleSuggestion(){
@@ -44,7 +46,7 @@ export class FormInputAddressComponent implements OnInit {
 
   setAddress(p: google.maps.places.PlaceResult){
     const cs = this.controllerGroup.controls;
-    cs.address.patchValue(p.name);
+    cs.address.patchValue(p.formatted_address);
 
     if(p.geometry){
       cs.latitude.patchValue(p.geometry.location.lat());
@@ -57,6 +59,7 @@ export class FormInputAddressComponent implements OnInit {
       });
       
       this._changeDetector.markForCheck();
+      this.selectAddress.emit();
     }
     else{
       cs.latitude.patchValue(0);

@@ -81,7 +81,7 @@ export class DetailComponent implements OnInit {
 
   /** for booking */
   public bookingForm: FormGroup;
-  private myId = '';
+  public myId = '';
   public startDate: Date; /* used at booking form */
   public minDate: Date; /* used at booking form */
   // public timingSelectedValue = ''; /* used at booking form */
@@ -437,15 +437,15 @@ export class DetailComponent implements OnInit {
   openProductViewer() { this.isProductViewerShown = true; }
   closeProductViewer() { this.isProductViewerShown = false; }
 
-  countupSocial(type: string){
+  countupSocial(type: string) {
     const data = {
       _id: this.userInfo.id,
-      type: type,
-    }
-    console.log(type);
+      type,
+    };
+    // console.log(type);
     this._sharedService.postNoAuth(data, 'user/update-social-count').subscribe(res => {
-      console.log(res);
-    })
+      // console.log(res);
+    });
   }
 }
 

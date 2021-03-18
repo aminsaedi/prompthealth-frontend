@@ -20,10 +20,10 @@ export class AddProfessionalComponent implements OnInit {
   doctorSearch: '';
   imagesList = '';
   currentPage: 1;
-  totalItems
-  pageSize: 10
+  totalItems;
+  pageSize: 10;
   userId: '';
-  public AWS_S3='';
+  public AWS_S3 = '';
   constructor(
     private _sharedService: SharedService,
     private toastr: ToastrService,
@@ -43,18 +43,18 @@ export class AddProfessionalComponent implements OnInit {
       description: ['', [Validators.required, Validators.maxLength(500), Validators.pattern(/\S+/)]],
     });
     this.getStaffList();
-    this.AWS_S3 = environment.config.AWS_S3
+    this.AWS_S3 = environment.config.AWS_S3;
   }
 
   get f() { return this.addDoctorForm.controls; }
   get ef() { return this.editDoctorForm.controls; }
   getStaffList() {
-    let path = `staff/get-all?userId=${this.userId}&count=10&page=1&frontend=0/`;
+    const path = `staff/get-all?userId=${this.userId}&count=10&page=1&frontend=0/`;
     this._sharedService.get(path).subscribe((res: any) => {
       if (res.statusCode === 200) {
         this.doctors = res.data.data;
         this.totalItems = this.doctors.length;
-        if (this.doctors.length > 0) this.addMore = false
+        if (this.doctors.length > 0) { this.addMore = false }
 
       } else {
         this._sharedService.checkAccessToken(res.message);
@@ -68,7 +68,7 @@ export class AddProfessionalComponent implements OnInit {
   }
   onFileSelect(event) {
     const formData: FormData = new FormData();
-    let input = new FormData();
+    const input = new FormData();
     input.append('imgLocation', 'users');
     input.append('images', event.target.files[0]);
     this._sharedService.loader('show');
@@ -90,22 +90,21 @@ export class AddProfessionalComponent implements OnInit {
     this.submitted = true;
     if (this.addDoctorForm.invalid) {
       return;
-    }
-    else {
+    } else {
       const formData = {
         ...this.addDoctorForm.value,
-        'image': this.imagesList,
-      }
-      let data = {
-        'userId': this.userId,
+        image: this.imagesList,
+      };
+      const data = {
+        userId: this.userId,
         ...formData,
       };
-      data['userId'] = this.userId;
+      data.userId = this.userId;
       this._sharedService.loader('show');
       const path = `staff/create`;
       this._sharedService.post(data, path).subscribe((res: any) => {
         this._sharedService.loader('hide');
-        console.log(res);
+        // console.log(res);
         if (res.statusCode === 200) {
           this.imagesList = '';
           this.toastr.success(res.message);
@@ -114,9 +113,7 @@ export class AddProfessionalComponent implements OnInit {
           this.addDoctorForm.reset();
           this.submitted = false;
 
-        }
-
-        else {
+        } else {
           this._sharedService.showAlert(res.message, 'alert-danger');
         }
       }, (error) => {
@@ -133,7 +130,7 @@ export class AddProfessionalComponent implements OnInit {
       if (res.statusCode === 200) {
         this.toastr.success(res.message);
         this.doctors.forEach((ele, index) => {
-          if (ele._id === i) this.doctors.splice(index, 1);
+          if (ele._id === i) { this.doctors.splice(index, 1); }
         });
         // this._router.navigate(['/home']);
       } else {
@@ -146,7 +143,7 @@ export class AddProfessionalComponent implements OnInit {
   }
   editStaff(prod) {
     this.submitted = false;
-    this.editDoctorCheck = true
+    this.editDoctorCheck = true;
     this.editDoctorForm.controls.fname.setValue(prod.fname);
     this.editDoctorForm.controls.lname.setValue(prod.lname);
     this.editDoctorForm.controls.description.setValue(prod.description);
@@ -158,18 +155,17 @@ export class AddProfessionalComponent implements OnInit {
 
     if (this.editDoctorForm.invalid) {
       return;
-    }
-    else {
+    } else {
       const formData = {
         ...this.editDoctorForm.value,
-        'image': this.imagesList,
-      }
-      let body = {
-        'userId': this.userId,
+        image: this.imagesList,
+      };
+      const body = {
+        userId: this.userId,
         ...formData,
       };
-      body['userId'] = this.userId;
-      const path = `staff/update/${this.editDoctorId}`
+      body.userId = this.userId;
+      const path = `staff/update/${this.editDoctorId}`;
       this._sharedService.put(body, path).subscribe((res: any) => {
         this._sharedService.loader('hide');
         if (res.statusCode === 200) {
@@ -180,9 +176,7 @@ export class AddProfessionalComponent implements OnInit {
           this.addDoctorForm.reset();
           this.submitted = false;
 
-        }
-
-        else {
+        } else {
           this._sharedService.showAlert(res.message, 'alert-danger');
         }
       }, (error) => {

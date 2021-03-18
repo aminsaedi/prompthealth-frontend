@@ -14,6 +14,7 @@ export class FilterDropdownSelectComponent implements OnInit, OnChanges {
   @Input() multiple = true;
 
   @Output() changeState = new EventEmitter<string>();
+  @Output() changeValue = new EventEmitter<void>();
 
   public form: FormGroup;
 
@@ -49,15 +50,25 @@ export class FilterDropdownSelectComponent implements OnInit, OnChanges {
     this.options.forEach((o, i) => {
       if (i === idx) { this.options[i].active = true; } else { this.options[i].active = false; }
     });
+    this.changeValue.emit();
   }
 
   changeStateCheckbox(idx: number) {
     this.options[idx].active = !this.options[idx].active;
+    this.changeValue.emit();
   }
 
   reset() {
     this.options.forEach(o => { o.active = false; });
+    if(this.multiple){
+      (this.form.controls.checkbox as FormArray).controls.forEach(c => {
+        c.setValue(false);
+      });  
+    }else{
+      this.form.controls.radio.setValue('');
+    }
     this.changeState.emit(this.target);
+    this.changeValue.emit();
   }
   save() { this.changeState.emit(this.target); }
 

@@ -7,11 +7,24 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class RegisterQuestionnaireService {
 
+  get isCompleted() {
+    let isCompleted = true;
+    if(this.questionnaireData){
+      this.questionnaireData.forEach(data => {
+        if(!data.isComplete){ 
+          isCompleted = false; 
+        }
+      });
+    }else{
+      isCompleted = false;
+    }
+    return isCompleted;
+  }
   constructor(
     private _router: Router,
   ) { }
 
-  private user: any = {};
+  private user: UserData = {};
   private questionnaireData: QuestionnaireItemData[];
   
   /** notification for parent component to let it know current questionnaire index. */
@@ -31,9 +44,9 @@ export class RegisterQuestionnaireService {
   private emitFinish(isCompleteAll: boolean){ this.finishOvserver.next(isCompleteAll); }
 
 
-  init(data: QuestionnaireItemData[]){
+  init(data: QuestionnaireItemData[], user: UserData){
     this.questionnaireData = data;
-    this.user = {};
+    this.user = user;
   }
 
   getUser(){ return this.user; }
@@ -108,10 +121,17 @@ export class RegisterQuestionnaireService {
 
   updateUser(data: any){
     Object.keys(data).forEach(key => {
-      if(key == 'location'){ }
-      else if(key == 'phone'){
+      if(key == 'phone'){
         let phone = data.phone.replace(/[\(\)\-]/g, '').trim();
         this.user[key] = phone;
+      }
+      else if(key == 'longitude'){
+        if(!this.user.location){ this.user.location = [0,0]; }
+        this.user.location[0] = data.longitude;
+      }
+      else if(key == 'latitude'){
+        if(!this.user.location){ this.user.location = [0,0]; }
+        this.user.location[1] = data.latitude;
       }
       else{
         this.user[key] = data[key];
@@ -124,4 +144,36 @@ export interface QuestionnaireItemData {
   label: string;
   route: string;
   isComplete: boolean;
+}
+
+interface UserData {
+  _id?: string;
+  firstName?: string;
+  lastName?: string;
+  profileImage?: string;
+  email?: string
+  address?: string
+  location?: number[] /*[lng, lat]*/
+  city?: string 
+  state?: string
+  zipcode?: string
+  phone?: string
+
+  /** for ps / c / p */
+  website?: string
+  product_description?: string
+  services?: string[];
+
+  /** for p */
+  messageToPlatform?: string;
+  image?: string[];
+  isFree?: boolean;
+  priceLevel?: number;
+  price1?: number;
+  price2?: number;
+  signupURL?: string;
+  couponLink?: string;
+  sampleLink?: string;
+  trialLink?: string;
+  affiliateLink?: string;
 }

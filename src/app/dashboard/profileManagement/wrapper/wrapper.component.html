@@ -57,6 +57,10 @@
         <div class="col-md-9">
           <!-- Tab panes -->
           <div class="tab-content py-3">
+            <div class="bg-grey p-4 mb-3" *ngIf="profile?.isApproved === false">
+              <p class="font-italic mb-0 font-big">Your profile is been reviewed by our administrator and won't be shown in listing just yet.</p>
+            </div>
+            
             <router-outlet></router-outlet>
           </div>
         </div>

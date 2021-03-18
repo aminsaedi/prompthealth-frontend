@@ -15,6 +15,7 @@ export class FormInputComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() submitted: boolean = false;
   @Input() prepend: string = null;
+  @Input() prependIcon: string = null
 
   @Input() controller: FormControl;
   @Input() max: number = null;
@@ -24,6 +25,7 @@ export class FormInputComponent implements OnInit {
 
   ngOnInit(): void {
 
+    console.log(this.prependIcon)
   }
 
 }

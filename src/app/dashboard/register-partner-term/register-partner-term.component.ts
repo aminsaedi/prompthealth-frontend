@@ -16,7 +16,6 @@ export class RegisterPartnerTermComponent implements OnInit {
   constructor(
     private _qService: RegisterQuestionnaireService,
     private _route: ActivatedRoute,
-    private _toastr: ToastrService,
   ) {
   }
   
@@ -35,6 +34,7 @@ export class RegisterPartnerTermComponent implements OnInit {
   }  
 
   onSubmit(){
+    this._qService.updateUser({accredited_provide_canada: true});
     this._qService.goNext(this._route);
   }
 }

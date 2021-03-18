@@ -6,6 +6,8 @@ import { RegisterQuestionnaireService } from '../register-questionnaire.service'
 import { Subscription } from 'rxjs';
 import { SharedService } from '../../shared/services/shared.service';
 import { CategoryService, Category } from '../../shared/services/category.service';
+import { environment } from 'src/environments/environment';
+import { BehaviorService } from '../../shared/services/behavior.service'; 
 
 @Component({
   selector: 'app-register-partner-service',
@@ -19,6 +21,7 @@ export class RegisterPartnerServiceComponent implements OnInit {
 
   public categories: Category[];
 
+  public baseURLImage = environment.config.AWS_S3;
   private subscriptionNavigation: Subscription;
 
 
@@ -33,6 +36,7 @@ export class RegisterPartnerServiceComponent implements OnInit {
     private _toastr: ToastrService,
     private _catService: CategoryService,
     private _sharedService: SharedService,
+    private _bsService: BehaviorService,
   ) {
   }
   
@@ -59,10 +63,10 @@ export class RegisterPartnerServiceComponent implements OnInit {
     const user = this._qService.getUser();
 
     /** for product */
-    this.form.setControl('productImage', new FormArray([]));
-    if(user.productImage && user.productImage.length > 0){
-      user.productImage.forEach((image: string)=>{
-        this.getFormArray('productImage').push(new FormControl(image));
+    this.form.setControl('image', new FormArray([]));
+    if(user.image && user.image.length > 0){
+      user.image.forEach((image: string)=>{
+        this.getFormArray('image').push(new FormControl(image));
       });
     }
 
@@ -71,80 +75,122 @@ export class RegisterPartnerServiceComponent implements OnInit {
     this.categories = cats;
     this.form.setControl('service', new FormArray([]));
     cats.forEach(cat => {
-      this.getFormArray('service').push(new FormControl( (user.ids && user.ids.indexOf(cat._id) > -1) ? true : false));
+      this.getFormArray('service').push(new FormControl( (user.services && user.services.indexOf(cat._id) > -1) ? true : false));
 
       this.form.setControl(cat._id, new FormArray([]));
       cat.subCategory.forEach(sub => {
-        this.getFormArray(cat._id).push(new FormControl((user.ids && user.ids.indexOf(sub._id) > -1) ? true : false));
+        this.getFormArray(cat._id).push(new FormControl((user.services && user.services.indexOf(sub._id) > -1) ? true : false));
       });
     });
   }
 
-  async onSelectProductImage(e: Event){
+  async onSelectProductImages(e: Event){
     const files = (e.target as HTMLInputElement).files;
     if(files && files.length > 0){
-      let image: {file: File | Blob, filename: string};
-      try { image = await this._sharedService.shrinkImage(files[0]); }
-      catch(err){
-        this.f.photo.setValue('');
-        this._toastr.error('Image size is too big. Please upload image size less than 10MB.');
+      if(files.length + this.getFormArray('image').length > 5){
+        this._toastr.error('Cannot upload more than 5 images.');
         return;
       }
 
-      try { 
-        const imageURL = await this.uploadImage(image.file, image.filename); 
-        this.getFormArray('productImage').push(new FormControl(imageURL));
+      const imagesUploading: {file: File | Blob, filename: string}[] = [];
+      let imageCountTooBig = 0;
+      for(var i=0; i<files.length; i++){
+        try { 
+          const image = await this._sharedService.shrinkImage(files.item(i)); 
+          imagesUploading.push(image);
+        }
+        catch(err){
+          imageCountTooBig++;
+        }
       }
-      catch(err){ }
+
+      if(imageCountTooBig > 0){
+        const error = ((imageCountTooBig == 1) ? 'A image is' : imageCountTooBig + 'images are') + 'too big. Please upload image size less than 10MB.';
+        this._toastr.error(error);
+      }
+
+      if(imagesUploading.length > 0){
+        this._sharedService.loader('show');
+        try{
+          const result = await this.uploadImages(imagesUploading);
+          result.forEach(path => {
+            this.getFormArray('image').push(new FormControl(path));
+          });
+          const images = [];
+          this.getFormArray('image').controls.forEach(control => {
+            images.push(control.value);
+          });
+          this._bsService.setUserDataOf('image', images);
+          this._qService.updateUser({image: images});
+        }
+        catch(err){ this._toastr.error(err); }
+        finally{ this._sharedService.loader('hide'); }
+      }
     }
   }
 
   removeProductImage(index: number){
-    this.getFormArray('productImage').removeAt(index);
+    this.getFormArray('image').removeAt(index);
   }
 
-  async uploadImage(file: File | Blob, name: string): Promise<string>{
+  async uploadImages(images: {file: File | Blob, filename: string}[]): Promise<string[]>{
     return new Promise((resolve, reject) => {
+      const userid = this._qService.getUser()._id;
       const uploadImage = new FormData();
-      uploadImage.append('_id', '');
-      uploadImage.append('profileImage', file, name);
-      resolve('/assets/img/register-partner-0.jpg');
+      uploadImage.append('imgLocation', 'partner');
+      uploadImage.append('_id', userid);
+      images.forEach(image => {
+        uploadImage.append('images', image.file, image.filename);
+      });
+
+      const path = (images.length == 1) ? 'common/imgUpload' : 'common/imgMultipleUpload';
+      this._sharedService.imgUpload(uploadImage, path).subscribe((res: any) => {
+        if(res.statusCode == 200){
+          const result = (images.length == 1) ? [res.data] : res.data;
+          resolve(result);
+        }else{
+          reject('Something went wrong. Please try again.');
+        }
+      }), (error: any) => {
+        console.log(error);
+        reject('Something went wrong. Please try again.');
+      };
     });
   }
 
 
   onSubmit(){
     const vals = this.form.value;
-    const ids = [];
+    const services = [];
 
-    /** get selected ids. (if root category is not selected, sub category is ignored.) */
+    /** get selected services. (if root category is not selected, sub category is ignored.) */
     vals.service.forEach((v: boolean, i: number) => {
       if(v){
         let id = this.categories[i]._id;
-        ids.push(id);
+        services.push(id);
 
         vals[id].forEach((vSub: boolean, j: number) => {
           if(vSub){
             let idSub = this.categories[i].subCategory[j]._id;
-            ids.push(idSub);
+            services.push(idSub);
           }
         });
       }
     });
 
-    if(ids.length == 0){
+    if(services.length == 0){
       this._toastr.error('Please select at least 1 service.');
       return;
     }
 
-    const data: {ids: string[], productImage?: string[]} = { ids: ids }
+    const data: {services: string[], image?: string[]} = { services: services }
 
-    if(this.getFormArray('productImage').length > 0){
-      const productImage = [];
-      this.getFormArray('productImage').controls.forEach(c=>{
-        productImage.push(c.value);
+    if(this.getFormArray('image').length > 0){
+      const images = [];
+      this.getFormArray('image').controls.forEach(c=>{
+        images.push(c.value);
       });
-      data.productImage = productImage;
+      data.image = images;
     }
 
     this._qService.updateUser(data);

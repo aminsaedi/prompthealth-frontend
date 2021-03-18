@@ -104,7 +104,9 @@
         <label class="col-md-3">Gender <span class="text-danger" *ngIf="editFields && roles !== 'U'">*</span></label>
         <div class="col-md-9">
           <div class="form-control disable" *ngIf="!editFields">
-            {{profile.gender}}
+            <span *ngIf="profile.gender == 'male'">Male</span>
+            <span *ngIf="profile.gender == 'female'">Female</span>
+            <span *ngIf="profile.gender == 'nonbinary'">Non-Binary</span>
           </div>
 
           <div class="form-row mrt" *ngIf="editFields">
@@ -120,6 +122,13 @@
                 <input class="radio" type="radio" value="male" name="gender" #gender="ngModel" [(ngModel)]="profile.gender" id="gender-m"
                   [required]="(roles !== 'U') ? true : false"  />
                 <span>Male</span>
+              </label>
+            </div>
+            <div class="radio col-md-6 mb-3">
+              <label for="gender-m">
+                <input class="radio" type="radio" value="nonbinary" name="gender" #gender="ngModel" [(ngModel)]="profile.gender" id="gender-m"
+                  [required]="(roles !== 'U') ? true : false"  />
+                <span>Non-Binary</span>
               </label>
             </div>
             <div class="error-block">

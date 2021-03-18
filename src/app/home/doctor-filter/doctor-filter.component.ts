@@ -48,7 +48,7 @@ export class DoctorFilterComponent implements OnInit {
     { value: '$500-1000', name: '$ 500-1000' },
     { value: '$1000', name: '$ > 1000' },
   ];
-  miles = 100;
+  kms = 100;
 
   queryLatLong;
 
@@ -58,8 +58,8 @@ export class DoctorFilterComponent implements OnInit {
     lati: 51.673858,
     lng: 7.815982,
   };
-  
-  public AWS_S3='';
+
+  public AWS_S3 = '';
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -92,7 +92,7 @@ export class DoctorFilterComponent implements OnInit {
           this.long = place.geometry.location.lng();
           const payload = {
             latLong: `${this.long}, ${this.lat}`,
-            miles: this.miles
+            miles: this.kms
           };
           this.getDoctorList(payload);
         });
@@ -100,10 +100,10 @@ export class DoctorFilterComponent implements OnInit {
     });
 
     this.searchedAddress = localStorage.getItem('searchedAddress');
-    this.getDoctorList({ latLong: this.queryLatLong, miles: this.miles });
+    this.getDoctorList({ latLong: this.queryLatLong, miles: this.kms });
     this.getProfileQuestion();
 
-    this.AWS_S3 = environment.config.AWS_S3
+    this.AWS_S3 = environment.config.AWS_S3;
   }
 
   getProfileQuestion() {
@@ -202,7 +202,7 @@ export class DoctorFilterComponent implements OnInit {
     }
   }
   onRangeChange(event) {
-    this.miles = Math.round(Math.ceil(event.target.value / 5) * 5);
+    this.kms = Math.round(Math.ceil(event.target.value / 5) * 5);
   }
   onOptionsSelected(value: string, type) {
 
@@ -233,10 +233,10 @@ export class DoctorFilterComponent implements OnInit {
     this.selectedLang = '';
     this.selectedHours = '';
     this.selectedServiceType = '';
-    this.miles = 100;
+    this.kms = 100;
     this.selectedPriceRange = '';
     this.getDoctorList({
-      latLong: (this.long && this.lat) ? `${this.long}, ${this.lat}` : this.queryLatLong, miles: this.miles
+      latLong: (this.long && this.lat) ? `${this.long}, ${this.lat}` : this.queryLatLong, miles: this.kms
     });
   }
   applyFilter() {
@@ -252,7 +252,7 @@ export class DoctorFilterComponent implements OnInit {
       typicalHoursId: this.selectedHours,
       serviceOfferId: this.selectedServiceType,
       price_per_hours: this.selectedPriceRange,
-      miles: this.miles,
+      miles: this.kms,
       latLong: latlongs
     };
 
@@ -297,7 +297,7 @@ export class DoctorFilterComponent implements OnInit {
   serviceFilter(event) {
     const payload = {
       latLong: (this.long && this.lat) ? `${this.long}, ${this.lat}` : this.queryLatLong,
-      miles: this.miles,
+      miles: this.kms,
       serviceId: event.target.id,
       name: this.selectedName ? this.selectedName : ''
     };
@@ -308,7 +308,7 @@ export class DoctorFilterComponent implements OnInit {
   selectEvent(item) {
     const payload = {
       latLong: (this.long && this.lat) ? `${this.long}, ${this.lat}` : this.queryLatLong,
-      miles: this.miles,
+      miles: this.kms,
       name: item.name,
       serviceId: this.selectedServiceId
     };
@@ -318,7 +318,7 @@ export class DoctorFilterComponent implements OnInit {
   resetNames() {
     const payload = {
       latLong: (this.long && this.lat) ? `${this.long}, ${this.lat}` : this.queryLatLong,
-      miles: this.miles,
+      miles: this.kms,
       name: '',
       serviceId: this.selectedServiceId
     };

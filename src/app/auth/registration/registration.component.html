@@ -3,137 +3,93 @@
     <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
   </p>
 </ngx-spinner>
-<section
-  class="heightHF-100 pt-4 pb-4 d-flex justify-content-center align-items-center bg-blue"
->
-<div class="container-fluid w-max-1200">
-  <div class="row m-0 justify-content-between bg-white rounded-lg overflow-hidden">
-    <div class="p-5 col-md-4 order-md-2 py-md-5 pr-md-5 pl-md-0">
-      <h5 class="mb-3">
-        Create An Account
-      </h5>
-          <a class="btn btn-google w-100 mb-2 font-weight-bold" (click)="signInWithGoogle()"
-            ><i class="fab fa-google"></i> Sign up with Google</a>
-          <a class="btn btn-facebook w-100 mb-2 font-weight-bold" (click)="signInWithFB()"
-            ><i class="fab fa-facebook-square"></i> Sign up with Facebook</a>
-     
-          <!-- <a class="btn btn-facebook w-100 mb-2 font-weight-bold" (click)="signInWithFB()"
+<section class="heightHF-100 pt-4 pb-4 d-flex justify-content-center align-items-center bg-blue">
+  <div class="container-fluid w-max-1200">
+    <div class="row m-0 justify-content-between bg-white rounded-lg overflow-hidden">
+      <div class="p-5 col-md-4 order-md-2 py-md-5 pr-md-5 pl-md-0">
+        <h5 class="mb-3">
+          Create An Account
+        </h5>
+        <a class="btn btn-google w-100 mb-2 font-weight-bold" (click)="signInWithGoogle()"><i class="fab fa-google"></i>
+          Sign up with Google</a>
+        <a class="btn btn-facebook w-100 mb-2 font-weight-bold" (click)="signInWithFB()"><i
+            class="fab fa-facebook-square"></i> Sign up with Facebook</a>
+
+        <!-- <a class="btn btn-facebook w-100 mb-2 font-weight-bold" (click)="signInWithFB()"
             ><i class="fab fa-apple-square"></i> Sign up with Apple</a>
       -->
-          <hr />
-          <div class="form-row">
-            <form class="form-row"
-            [formGroup]="registerForm"
-            (ngSubmit)="registerUser()">
-              <div class="col-md-12 mb-2">
-                <label>Email Address <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Enter your email"
-                    formControlName="email"
-                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
-                   required />
-                   <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                    <div *ngIf="f.email.errors.required">Email is required</div>
-                    <div *ngIf="f.email.errors?.pattern">
-                      Email must be a valid email address
-                    </div>
+        <hr />
+        <div class="form-row">
+          <form class="form-row" [formGroup]="registerForm" (ngSubmit)="registerUser()">
+            <div class="col-md-12 mb-2">
+              <label>Email Address <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Enter your email" formControlName="email"
+                  [ngClass]="{ 'is-invalid': submitted && f.email.errors }" required />
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                  <div *ngIf="f.email.errors.required">Email is required</div>
+                  <div *ngIf="f.email.errors?.pattern">
+                    Email must be a valid email address
                   </div>
                 </div>
               </div>
-              <div class="col-md-12 mb-2">
-                <label>Password <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <input
-                    type="password"
-                    class="form-control"
-                    placeholder="Enter your password"
-                    formControlName="password"
-                    [ngClass]="{
-                      'is-invalid': submitted && f.password.errors
-                    }"
-                  />
-                  <div
-                    *ngIf="submitted && f.password.errors"
-                    class="invalid-feedback"
-                  >
-                    <div *ngIf="f.password.errors.required">
-                      Password is required
-                    </div>
-                    <div *ngIf="f.password.errors.minlength">
-                      Password must be at least 8 characters
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12 mb-2">
-                <label
-                  >Confirm Password <span class="text-danger">*</span></label
-                >
-                <div class="input-group">
-                  <input
-                    type="password"
-                    class="form-control"
-                    placeholder="Enter Confirm Password"
-                    formControlName="confirm_password"
-                    [ngClass]="{
-                      'is-invalid': submitted && f.confirm_password.errors
-                    }"
-                  />
-                  <div
-                    *ngIf="submitted && f.confirm_password.errors"
-                    class="invalid-feedback"
-                  >
-                    <div *ngIf="f.confirm_password.errors.required">
-                      Confirm Password is required
-                    </div>
-                    <div *ngIf="f.confirm_password.errors.mustMatch">
-                      Passwords must match
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12 mb-2">
-                <label
-                  >How did you hear about us?
-                  <span class="text-danger">*</span></label
-                >
-                <div class="input-group">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="How did you hear about us?"
-                    formControlName="hear_from"
-                    [ngClass]="{
-                      'is-invalid': submitted && f.hear_from.errors
-                    }"
-                  />
-                  <div
-                    *ngIf="submitted && f.hear_from.errors"
-                    class="invalid-feedback"
-                  >
-                    <div *ngIf="f.hear_from.errors.required">
-                      Hear from is required
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12 mb-2 d-flex align-items-start mk-checkbox">
-                <input
-                  type="checkbox"
-                  formControlName="t_c"
+            </div>
+            <div class="col-md-12 mb-2">
+              <label>Password <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input type="password" class="form-control" placeholder="Enter your password" formControlName="password"
                   [ngClass]="{
-                    'is-invalid': submitted && f.t_c.errors
-                  }"
-                /><span class="small"
-                  >I agree to the terms of service and privacy policy</span
-                >
-                <div *ngIf="submitted && f.t_c.errors" class="invalid-feedback">
-                  <div *ngIf="f.t_c.errors.required">
-                    Terms of service and privacy is required
+                      'is-invalid': submitted && f.password.errors
+                    }" />
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                  <div *ngIf="f.password.errors.required">
+                    Password is required
                   </div>
+                  <div *ngIf="f.password.errors.minlength">
+                    Password must be at least 8 characters
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-2">
+              <label>Confirm Password <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input type="password" class="form-control" placeholder="Enter Confirm Password"
+                  formControlName="confirm_password" [ngClass]="{
+                      'is-invalid': submitted && f.confirm_password.errors
+                    }" />
+                <div *ngIf="submitted && f.confirm_password.errors" class="invalid-feedback">
+                  <div *ngIf="f.confirm_password.errors.required">
+                    Confirm Password is required
+                  </div>
+                  <div *ngIf="f.confirm_password.errors.mustMatch">
+                    Passwords must match
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-2">
+              <label>How did you hear about us?
+                <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="How did you hear about us?"
+                  formControlName="hear_from" [ngClass]="{
+                      'is-invalid': submitted && f.hear_from.errors
+                    }" />
+                <div *ngIf="submitted && f.hear_from.errors" class="invalid-feedback">
+                  <div *ngIf="f.hear_from.errors.required">
+                    Hear from is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-2 d-flex align-items-start mk-checkbox">
+              <input type="checkbox" formControlName="t_c" [ngClass]="{
+                    'is-invalid': submitted && f.t_c.errors
+                  }" /><span class="small">I agree to the terms of service and privacy policy</span>
+              <div *ngIf="submitted && f.t_c.errors" class="invalid-feedback">
+                <div *ngIf="f.t_c.errors.required">
+                  Terms of service and privacy is required
                 </div>
               </div>
               <div class="col-md-12">
@@ -143,43 +99,48 @@
                 <hr />
               </div>
               <div class="col-md-12">
-                <a
-                  href=""
-                  [routerLink]="['/auth/login', 'u']"
-                  class="btn btn-outline-secondary w-100"
-                  >Have an account? Login</a
-                >
+                <a href="" [routerLink]="['/auth/login']" class="btn btn-outline-secondary w-100">Have an account?
+                  Login</a>
               </div>
-            </form>
-          </div>
+          </form>
         </div>
-        <div class="col-md-8 order-md-1 pt-5 pb-0 px-5 bg"
-        [ngClass]="{ 'bg-professional': professionalSignup, 'bg-user': !professionalSignup }"
-        >
-          <div class="h-100">
-            <div class="w-100" *ngIf="professionalSignup">
-              <h3>Join Our Canadian Network </h3>
-              <p class="p-sd-for-image pb-md-0">
-                Join the growing network of Canadian health and wellness professionals.
-                Together, we will change the health and wellness experience.<br><br>
+      </div>
+      <div class="col-md-8 order-md-1 pt-5 pb-0 px-5 bg"
+        [ngClass]="{ 'bg-user': (!partnerSignup && !professionalSignup), 'bg-professional': (!partnerSignup && professionalSignup), 'bg-partner': !!partnerSignup }">
+        <div class="h-100">
+          <div class="w-100" *ngIf="!partnerSignup && professionalSignup">
+            <h3>Join Our Canadian Network </h3>
+            <p class="p-sd-for-image pb-md-0">
+              Join the growing network of Canadian health and wellness professionals.
+              Together, we will change the health and wellness experience.<br><br>
 
-                Prompt Health for every practice:
-                Medical / Dental / Allied Health / Holistic / Wellness / Nutrition / Fitness
-              </p>
-            </div>
-            <div class="w-100" *ngIf="!professionalSignup">
-              <h3>Find The Right Care For You </h3>
-              <p class="p-sd-for-image pb-md-0">
-                Prompt Health empowers you with the convenience and accessibility you need to better manage
-                your health and the health of your family.<br><br>
-                No more guesswork. We’ve got you! 
-              </p>
-            </div>
+              Prompt Health for every practice:
+              Medical / Dental / Allied Health / Holistic / Wellness / Nutrition / Fitness
+            </p>
+          </div>
+          <div class="w-100" *ngIf="!partnerSignup && !professionalSignup">
+            <h3>Find The Right Care For You </h3>
+            <p class="p-sd-for-image pb-md-0">
+              Prompt Health empowers you with the convenience and accessibility you need to better manage
+              your health and the health of your family.<br><br>
+              No more guesswork. We’ve got you!
+            </p>
+          </div>
+          <div class="w-100" *ngIf="partnerSignup">
+            <h3>Join Our Canadian Network </h3>
+            <p class="p-sd-for-image pb-md-0 partner">
+              Do you want your current clients to have access to more individualized options for their health?
+              <br><br>
+              Partner with Prompt Health to extend the reach of both parties via cross-platform visibility to get in
+              front of both clients and health and wellness providers.
+            </p>
           </div>
         </div>
       </div>
-     
-    <!-- <div class="text-center text-light pt-3">
+    </div>
+  </div>
+
+  <!-- <div class="text-center text-light pt-3">
       <span class="mr-2">Forget your password?</span>
       <a href="" [routerLink]="['/auth/forgot-password']" class="text-light"
         >Get a new password</a

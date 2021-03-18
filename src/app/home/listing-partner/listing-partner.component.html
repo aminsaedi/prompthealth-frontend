@@ -1,0 +1,135 @@
+<ngx-spinner bdColor="#fff" size="medium" color="#fff">
+  <p style="font-size: 20px; color: white" class="loaderbg">
+    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  </p>
+</ngx-spinner>
+
+<section class="hero text-light">
+  <div class="position-relative container py-5">
+    <div class="row">
+      <div class="col-12 col-md-9 col-lg-7">
+        <h2>Would you like to partner with Prompt Health?</h2>
+        <p class="mt-3 mb-0 font-weight-400 font-md-big">We are looking for organizations in health and wellness that provide products or services and are interested in collaborating with us. </p>          
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #filterTop>
+  <div class="pt-3 px-3 pb-2 position-relative">
+    <h4 class="text-ph-blue font-weight-400 mb-3">Filter Categories</h4>
+    <div class="d-flex justify-content-between align-items-center">
+      <button class="btn btn-ph-blue px-4" (click)="onApplyFilter()">Apply</button>
+      <button class='btn' (click)="onResetFilter()">Clear</button>
+    </div>
+    <button class="btn btn-close text-ph-blue d-md-none font-bigger" (click)="hideFilter()"><i class="fas fa-times"></i></button>
+  </div>    
+</ng-template>
+
+<div class="container mt-5">
+  <div class="intersection-observer" intersectionObserver (changeStatus)="onChangeStickyStatus($event)"></div>
+  <div class="row">
+    <section class="col-12 col-md-4 col-lg-4 col-xl-3 d-none d-md-block">
+      <div class="bg-lightblue">
+        <div class="sticky-top">
+          <div class="bg-white pt-3">
+            <form-input 
+            name="search"
+            label="search"
+            placeholder="What area are you looking for?"
+            prependIcon="fas fa-search"
+            [controller]="formSearch"
+            (keyup.enter)="onSearchSet()"
+            ></form-input>  
+          </div>
+          <div class="bg-lightblue">
+            <ng-container *ngTemplateOutlet="filterTop"></ng-container>
+          </div>
+        </div>
+
+        <div class="pb-3 px-3 pt-3" *ngIf="!isViewSmall">
+          <form-service 
+          [col2]="false" 
+          [data]="filterServices"
+          ></form-service>
+        </div>
+      </div>
+    </section>
+
+    <section class="col-12 col-md-8 col-lg-8 col-xl-9">
+      <div class="mb-3 sticky-top pb-2 blur" (clickOutside)="hideFilter()">
+        <div class="bg-white pt-3 position-relative d-md-none">
+          <form-input 
+          name="search"
+          label="search"
+          placeholder="What area are you looking for?"
+          prependIcon="fas fa-search"
+          [controller]="formSearch"
+          (click)="showFilter()"
+          (keyup.enter)="onSearchSet()"
+          ></form-input>  
+          <div class="position-absolute w-100 px-3 bg-lightblue z-index-10" *ngIf="isFilterShown && isViewSmall">
+            <ng-container *ngTemplateOutlet="filterTop"></ng-container>
+            <div class="form-service-sm">
+              <form-service 
+              class="form-service-sm" 
+              [data]="filterServices"
+              ></form-service>  
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end pt-3">
+          <div class="d-flex align-items-center">
+            <div class="mr-3 whitespace-nowrap font-weight-400">Sort by:</div>
+            <ul class="d-flex flex-nowrap sorts list-unstyled p-0 m-0">
+              <li *ngFor="let data of sortData" class="position-relative whitespace-nowrap">
+                <button class="btn font-regular text-ph-blue" 
+                [ngClass]="{active: (currentSortTarget == data.id)}" 
+                (click)="sortPartners(data)"
+                >{{data.label}}</button>
+              </li>
+            </ul>
+          </div>  
+        </div>
+      </div>
+
+      <p *ngIf="!partners" class="message-dummy">Here are the options we found for you</p>
+      <ul class="row list-unstyled partners" *ngIf="!partners">
+        <li class="col-12 col-md-6 col-xl-4 mb-4" *ngFor="let i of [0,1,2,3]">
+          <post-dummy class="rounded-10p"></post-dummy>
+        </li>
+      </ul>
+
+      <p *ngIf="partners && partners.length > 0" class="font-italic">Here are the options we found for you</p>
+      <ul class="partners list-unstyled row" *ngIf="partners && partners.length > 0">
+        <li *ngFor="let p of partners;"
+        class="col-12 col-md-6 col-xl-4 mb-4"
+        >
+          <card-partner [data]='p'></card-partner>  
+        </li>
+      </ul>
+
+      <p *ngIf="partners && partners.length == 0" class="font-italic font-big">
+        There is no one available in your geographical area with your search criteria right now.
+        <br><br>
+        Be sure to check back as our network is growing everyday!
+      </p>
+
+      <div class="text-center" *ngIf="countPageTotal > 1">
+        <ul class="paginator list-unstyled d-inline-flex flex-nowrap align-items-center">
+          <li><button class="btn" (click)="backPage()">
+            <i class="fas fa-chevron-left font-bigger text-ph-blue"></i>
+          </button></li>
+          <li *ngFor="let i of paginator;">
+            <button class="btn text-ph-blue px-2" (click)="changePage(i)">
+              <div class="btn-circle" [ngClass]="{active: (currentPage == i) }"></div>
+            </button>
+          </li>
+          <li><button class="btn" (click)="nextPage()">
+            <i class="fas fa-chevron-right font-bigger text-ph-blue"></i>
+          </button></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>

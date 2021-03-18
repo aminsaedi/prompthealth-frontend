@@ -45,6 +45,12 @@
   </div>
 </div>
 
+<section *ngIf="myId == userInfo?.id && userInfo.isApproved === false"
+class="container-fluid bg-grey p-4"
+>
+  <p class="font-italic mb-0 max-w-1200">Your profile is been reviewed by our administrator and won't be shown in listing just yet.</p>
+</section>
+
 <!-- section review -->
 <section class="container-fluid bg-white mt-5 mt-md-6" *ngIf="indexTabItem == 1">
   <div class="max-w-1200">

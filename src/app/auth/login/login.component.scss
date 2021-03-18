@@ -1,31 +1,53 @@
 .w-max-1200{ max-width: 1200px; }
 .bg-blue{ background: #EBF3FA; }
 
-.bg{
-    background-position: center bottom;
-    background-size: contain;
-    background-repeat: no-repeat;
- 
-    &.bg-user{ 
-        background-image: url(/assets/img/login-client-s.png); 
-        @media screen and (min-width: 768px){
-            background-size: 95%;
-            background-image: url(/assets/img/login-client.png);
-        }
-    }
-    &.bg-professional { 
-        background-image: url(/assets/img/login-professional-s.png); 
-        @media screen and (min-width: 768px){ 
-            background-image: url(/assets/img/login-professional.png); 
-            background-size: 110%;
-        }
-        @media screen and (min-width: 992px){ background-size: 100%; }
-    }
-}
+.carousel{
+    position: relative;
+    height: 400px;
+    @media (min-width: 500px){ height: 500px; }
+    @media (min-width: 768px){ height: 100%; }
 
-.p-sd-for-image::after{
-    content: '';
-    display: block;
-    padding-top: 55%;
-    @media screen and (min-width: 768px){ content: none; }
+
+}
+.slide{
+    // position: absolute;
+    // top: 0;
+    // left: 0;
+    // width: 100%;
+    // height: 50vh;
+
+    img{
+        // z-index: 0;
+        // position: absolute;
+        bottom: 0;
+    }
+
+    img.user{
+        left: -30px;
+        width: calc(100% + 60px);
+    }
+
+    img.professional{
+        left: -30px;
+        width: calc(100% + 60px);
+        @media (min-width: 768px){
+            left: -70px;
+            width: calc(100% + 140px);
+        }
+
+    }
+
+    img.partner{
+        left: -50px;
+        width: calc(100% + 100px);
+        @media (min-width: 768px){
+            left: -90px;
+            width: calc(100% + 180px);
+        }
+        
+        @media (min-width: 992px) {
+            left: -40px;
+            width: calc(100% + 80px);
+        }
+    }
 }

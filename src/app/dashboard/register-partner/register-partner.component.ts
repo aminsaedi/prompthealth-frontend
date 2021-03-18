@@ -1,9 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { RegisterQuestionnaireService, QuestionnaireItemData } from '../register-questionnaire.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { SharedService } from '../../shared/services/shared.service';
+import { BehaviorService } from '../../shared/services/behavior.service';
 
 @Component({
   selector: 'app-register-partner',
@@ -27,11 +30,13 @@ export class RegisterPartnerComponent implements OnInit {
 
   constructor(
     private _changeDetector: ChangeDetectorRef,
+    private _router: Router,
     private _qService: RegisterQuestionnaireService,
     private _headerService: HeaderStatusService,
     private _toastr: ToastrService,
+    private _sharedService: SharedService,
+    private _bsService: BehaviorService,
   ){
-    this._qService.init(this.data);
   }
 
   ngOnDestroy(){
@@ -40,6 +45,14 @@ export class RegisterPartnerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('user'));
+    this._qService.init(this.data, {
+      _id: user._id, 
+      email: user.email, 
+      // profileImage: user.profileImage,
+      // image: user.image
+    });
+
     this.subscriptionIndex = this._qService.observeIndex().subscribe((i: number) => {
       this.currentIdx = i;
       this._changeDetector.detectChanges();
@@ -49,19 +62,47 @@ export class RegisterPartnerComponent implements OnInit {
       if(!isCompleteAll){
         this._toastr.error('You haven\'t enter some sections. Please review from beginning.');
       }
-      else{
-        this._toastr.success('Thank you for answering all answers!');
+      else{ 
+        this._sharedService.loader('show');
+        try{
+          this.save(); 
+          this._router.navigate(['/dashboard/register-partner/complete']);
+          
+        }catch(err){
+          this._toastr.error(err);
+        }finally{
+          this._sharedService.loader('hide');
+        }
       }
     });
+  }
 
+  async save(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const data = this._qService.getUser();
+      this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
+        this._sharedService.loader('hide');
+        if(res.statusCode == 200){
+          this._bsService.setUserData(res.data);
+          resolve(true);
+        }else{
+          reject(res.message);
+        }
+      }, error => {
+        console.log(error);
+        reject('There are some errors, please try again after some time.');
+      });
+    });
   }
 
   onClickNavigation(type: string){ this._qService.navigateByParent(type); }
 
-
-
   changeStickyStatus(isSticked: boolean){
-  if(isSticked){ this._headerService.hideHeader(); } else{ this._headerService.showHeader(); }
+    if(isSticked){ 
+      this._headerService.hideHeader();
+    } else{ 
+      this._headerService.showHeader(); 
+    }
   }
 
   

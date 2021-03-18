@@ -1,0 +1,28 @@
+<div class="blur" (click)="onClose()"></div>
+<button class="icon-clear btn" (click)="onClose()"><i class="fas fa-times"></i></button>
+
+<div class="viewer" *ngIf="itemTarget">
+  <div class="main d-flex flex-column">
+    <h3 *ngIf="itemTarget.item_text" class="flex-grow-0 my-0">{{itemTarget.item_text}}</h3>
+    <div *ngIf="itemTarget.price" class="my-3 flex-grow-0">
+      <span class="py-1 px-3 rounded price font-regular">
+        {{itemTarget.price | currency:'CAD'}}
+      </span>
+    </div>
+    <p *ngIf="itemTarget.desc" class="flex-grow-0 whitespace-pre">{{itemTarget.desc}}</p>  
+
+    <div class="flex-grow-1 position-relative">
+      <ul class="d-flex flex-nowrap list-unstyled h-100 w-100 position-absolute overflow-auto images m-0">
+        <li [ngClass]="(itemTarget.images.length > 1) ? 'w-90' : ''" *ngFor="let image of itemTarget.images">
+          <img [src]="image.url" [alt]="(image.name) ? image.name : ''">
+        </li>
+      </ul>    
+    </div>
+  </div>
+  <app-image-row 
+  class="thumbnails"
+  [images]="thumbnails" 
+  [option]="{fixHeight: true}" 
+  (select)="selectImage($event)"
+  ></app-image-row>
+</div>

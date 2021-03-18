@@ -15,6 +15,7 @@ $colorPaginatorLight: #B7D3F3;
 
 .bg-lightblue{ background: $colorBlueLight; }
 
+
 .border-darkblue{ border: solid 1px $colorBlueDark; }
 .text-darkblue{ color: $colorBlueDark; }
 
@@ -26,6 +27,11 @@ $colorPaginatorLight: #B7D3F3;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.sticky-right{
+  position: sticky;
+  right: 0;
 }
 
 .fa-video{ color: #00D147; }
@@ -86,7 +92,7 @@ $heightFinder: 112px;
   }
 
   li button.active{
-    background-color: $colorBlueLight;
+    background-color: #cee1ff;
     -webkit-text-stroke: 1px;
   }
   li button.focus{

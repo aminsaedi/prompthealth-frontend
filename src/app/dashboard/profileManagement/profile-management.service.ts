@@ -25,14 +25,17 @@ export class ProfileManagementService {
       }else{
         const rootUrl: string = environment.config.API_URL; 
         this.http.get(rootUrl + 'user/get-profile/' + id).subscribe((res: any)=>{
-          if(res.statusCode === 200){
+          if(res.statusCode === 200 && res.data.length > 0){
             this.profileDetail = res.data[0];
             this._bs.setUserVerifiedStatus(this.profileDetail.verifiedBadge);
             resolve(this.profileDetail);
           }
           else{ reject('cannot find user data'); }
         },
-        err => { reject('cannot connect to server'); });
+        err => { 
+          console.log(err);
+          reject('cannot connect to server'); 
+        });
       }
     });
   }

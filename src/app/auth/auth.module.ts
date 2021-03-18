@@ -22,6 +22,8 @@ import { ContactUspageComponent } from './contact-uspage/contact-uspage.componen
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from '../auth/login/login.component';
 import { EnterpriseContactComponent } from './enterprise-contact/enterprise-contact.component';
+// import { NgxCarouselModule } from 'ngx-carousel';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 // import { AppleLoginProvider } from './apple.provider';
 // import { environment } from 'src/environments/environment';
 
@@ -34,6 +36,8 @@ import { EnterpriseContactComponent } from './enterprise-contact/enterprise-cont
     SharedModule,
     FormsModule,
     NgxSpinnerModule,
+    // NgxCarouselModule,
+    SlickCarouselModule,
     // NgxIntlTelInputModule,
     ReactiveFormsModule,
     SocialLoginModule,

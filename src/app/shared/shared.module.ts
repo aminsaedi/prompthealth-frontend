@@ -27,6 +27,11 @@ import { FormCheckboxComponent } from './form-checkbox/form-checkbox.component';
 import { FormErrorsComponent } from './form-errors/form-errors.component';
 import { BadgeVerifiedComponent } from './badge-verified/badge-verified.component';
 import { UserImageComponent } from './user-image/user-image.component';
+import { IntersectionObserverDirective } from './intersection-observer.directive';
+import { ImageViewerComponent } from './image-viewer/image-viewer.component';
+import { FormLoginComponent } from './form-login/form-login.component';
+import { ShareMenuComponent } from './share-menu/share-menu.component';
+import { FormServiceComponent } from './form-service/form-service.component';
 
 @NgModule({
   imports: [
@@ -59,8 +64,13 @@ import { UserImageComponent } from './user-image/user-image.component';
     FormInputAddressComponent,
     FormCheckboxComponent,
     FormErrorsComponent,
+    FormServiceComponent,
     BadgeVerifiedComponent,
     UserImageComponent,
+    IntersectionObserverDirective,
+    ImageViewerComponent,
+    FormLoginComponent,
+    ShareMenuComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -81,8 +91,13 @@ import { UserImageComponent } from './user-image/user-image.component';
     FormInputAddressComponent,
     FormCheckboxComponent,
     FormErrorsComponent,
+    FormServiceComponent,
     BadgeVerifiedComponent,
     UserImageComponent,
+    IntersectionObserverDirective,
+    ImageViewerComponent,
+    FormLoginComponent,
+    ShareMenuComponent,
   ]
 })
 export class SharedModule { }

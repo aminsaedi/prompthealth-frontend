@@ -56,7 +56,7 @@ export class SharedService {
     this.showAlert('Logout Sucessfully', 'alert-success');
 
     localStorage.setItem('userType', 'U');
-    this._router.navigate(['/auth/login', 'u']);
+    this._router.navigate(['/auth/login']);
   }
 
   get(path, setParams = {}) {
@@ -74,19 +74,19 @@ export class SharedService {
     const url = this.rootUrl + path;
     return this.http.get(url, { params });
   }
-  
+
   downloadFile(filepath: string, filename: string = null): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const headers = this.getAuthorizationHeader();
-      return this.http.post(this.rootUrl + '/common/file-download', {fileKey: filepath}, { headers, responseType: 'blob' }).subscribe((res: any) => {
+      return this.http.post(this.rootUrl + '/common/file-download', { fileKey: filepath }, { headers, responseType: 'blob' }).subscribe((res: any) => {
 
-        if(!filename){
+        if (!filename) {
           const array = filepath.split('/');
           filename = array[array.length - 1];
         }
 
         const a = document.createElement('a');
-        a.href = URL.createObjectURL(res);        
+        a.href = URL.createObjectURL(res);
         a.download = filename;
         a.click();
         URL.revokeObjectURL(res);
@@ -121,51 +121,50 @@ export class SharedService {
     return throwError(error);
   }
 
-  async shrinkImage(file: File, maxFileSize: number = 10 * 1000 * 1000, ratioSize: number = 0.8, ratioQuality: number = 0.8): Promise<{file: Blob, filename: string}>{
-    return new Promise((resolve, reject)=>{
-      if(file.size > maxFileSize){
+  async shrinkImage(file: File, maxFileSize: number = 10 * 1000 * 1000, ratioSize: number = 0.8, ratioQuality: number = 0.8): Promise<{ file: Blob, filename: string }> {
+    return new Promise((resolve, reject) => {
+      if (file.size > maxFileSize) {
         const img = new Image();
-        img.onload = (e: any)=>{
+        img.onload = (e: any) => {
           const t = e.target;
           const canvas = document.createElement('canvas');
-          canvas.width = Math.round(t.width * ratioSize); 
+          canvas.width = Math.round(t.width * ratioSize);
           canvas.height = Math.round(t.height * ratioSize);
           const ctx = canvas.getContext('2d');
-  
+
           ctx.drawImage(t, 0, 0, canvas.width, canvas.height);
           canvas.toBlob((b: Blob) => {
-            if(b.size >= maxFileSize){ reject('size is too big'); }
-            else{ 
+            if (b.size >= maxFileSize) { reject('size is too big'); } else {
               const filename = Date.now().toString() + '.' + b.type.replace('image/', '');
-              resolve({file: b, filename: filename}); 
+              resolve({ file: b, filename });
             }
-          }, file.type, ratioQuality);  
-        }
+          }, file.type, ratioQuality);
+        };
         img.src = URL.createObjectURL(file);
-      }else{
-        resolve({file: file, filename: file.name});
+      } else {
+        resolve({ file, filename: file.name });
       }
     });
   }
 
-  async shrinkImageByFixedHeight(file: File, height: number = 100): Promise<{file: Blob, filename: string}>{
-    return new Promise((resolve, reject)=>{
+  async shrinkImageByFixedHeight(file: File, height: number = 100): Promise<{ file: Blob, filename: string }> {
+    return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = (e: any)=>{
+      img.onload = (e: any) => {
         const t = e.target;
         const canvas = document.createElement('canvas');
-        canvas.width = img.width * height / img.height; 
+        canvas.width = img.width * height / img.height;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
 
         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
         canvas.toBlob((b: Blob) => {
           const filename = Date.now().toString() + '.' + b.type.replace('image/', '');
-          resolve({file: b, filename: filename});
+          resolve({ file: b, filename });
         }, file.type);
-      }
+      };
       img.src = URL.createObjectURL(file);
-    })
+    });
   }
 
   imgUpload(body, path) {
@@ -179,7 +178,7 @@ export class SharedService {
     headers = headers.delete('Content-Type');
     return this.http.put(this.rootUrl + path, body, { headers });
   }
-  
+
   put(body, path) {
     const headers = this.getAuthorizationHeader();
     return this.http.put(this.rootUrl + path, body, { headers });
@@ -364,7 +363,14 @@ export class SharedService {
       route = res.data.roles === 'U' ? '/' : '';
     } else {
       if (type === 'reg') {
-        route = res.data.roles === 'U' ? '/dashboard/questions/User' : '/dashboard/professional-info';
+        switch(res.data.roles.toLowerCase()){
+          case 'u': route = '/dashboard/questions/User'; break;
+          case 'p': route = '/dashboard/register-partner'; break;
+          case 'sp':
+          case 'c': 
+            route = '/dashboard/professional-info';
+            break;
+        }
       } else {
         if (this.previousRouteService.getPreviousUrl() === '') {
 

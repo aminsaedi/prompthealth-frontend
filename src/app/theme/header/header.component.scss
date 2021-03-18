@@ -83,7 +83,7 @@ img.brand-sm{
   }
 
   .menu_inner{
-    border-radius: 0 0 20px 20px;
+    border-radius: 20px;
     overflow: hidden;
     background: white;
     width: calc(100% - 36px);
@@ -93,7 +93,6 @@ img.brand-sm{
 
   .menu-title{
     position: relative;
-    border-bottom: 4px solid #3377C5;
     color: #3377C5;
     line-height: 2em;
     text-align: center;
@@ -116,6 +115,17 @@ img.brand-sm{
     padding: 0 0 0 35px;
     overflow: auto;
     height: 100%;
+    scrollbar-color: #b6d5f8 var(--ph-blue);
+    scrollbar-width: 7px;
+    
+    &::-webkit-scrollbar{
+      width: 7px;
+      background: #b6d5f8;
+    }
+    &::-webkit-scrollbar-thumb{
+      background: var(--ph-blue);
+      border-radius: 7px;
+    }
   }
 
   .menu-subcategory{ padding: 0 0 0 50px; }
@@ -190,7 +200,7 @@ img.brand-sm{
     position: absolute;
     bottom: 50px;
     right: 50px;
-    width: 50%;
+    width: 30%;
   }
 }
 

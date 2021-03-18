@@ -594,15 +594,47 @@ textarea.form-control {
 
 //.font-mg-smallest{ @media screen and (min-width: 768px){ font-size: 0.4em; }}
 //.font-mg-smaller{ @media screen and (min-width: 768px){ font-size: 0.6em; }}
-.font-mg-small{ @media screen and (min-width: 768px){ font-size: 0.8em; }}
-.font-mg-regular{ @media screen and (min-width: 768px){ font-size: 1em; }}
-.font-mg-big{ @media screen and (min-width: 768px){ font-size: 1.2em; }}
-.font-mg-bigger{ @media screen and (min-width: 768px){ font-size: 1.4em; }}
-.font-mg-biggest{ @media screen and (min-width: 768px){ font-size: 1.6em; }}
+.font-mg-small, .font-md-small{ @media screen and (min-width: 768px){ font-size: 0.8em; }}
+.font-mg-regular, .font-md-regular{ @media screen and (min-width: 768px){ font-size: 1em; }}
+.font-mg-big, .font-md-big{ @media screen and (min-width: 768px){ font-size: 1.2em; }}
+.font-mg-bigger, .font-md-bigger{ @media screen and (min-width: 768px){ font-size: 1.4em; }}
+.font-mg-biggest, .font-md-biggest{ @media screen and (min-width: 768px){ font-size: 1.6em; }}
 
 .bg-white{ background: white; }
 .rounded-15p{ border-radius: 15px; }
 .rounded-10p{ border-radius: 10px; }
+.btn-ph-blue{
+  background: var(--ph-blue);
+  color: white;
+  &:hover{ color: white; }
+}
+.text-ph-blue { color: var(--ph-blue); }
+.bg-ph-blue{ background: var(--ph-blue); }
+.border-ph-blue { border: solid 1px var(--ph-blue); }
+
+.font-weight-400 { font-weight: 400; }
+
+.whitespace-pre{ white-space: pre; }
+
+.clamp-2line{
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.clamp-3line{
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.clamp-4line{
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
 
 .sticky-top{
   z-index: 10;

@@ -200,7 +200,6 @@ export class MyServiceComponent implements OnInit {
 
 
   save(){
-    console.log(this.profile)
     this.questionnaires.forEach(q=>{
       const vals = this.getFormArray(q.id).value as boolean[];
       vals.forEach((val, i)=>{

@@ -28,6 +28,9 @@ import { SubscriptionPlanPartnerComponent } from './subscription-plan-partner/su
 import { SharedModule } from '../shared/shared.module'; 
 import { NgxSocialShareModule } from 'ngx-social-share';
 import { GetFeaturedTabComponent } from './get-featured-tab/get-featured-tab.component';
+import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
+import { ListingPartnerComponent } from './listing-partner/listing-partner.component';
+import { CardPartnerComponent } from './card-partner/card-partner.component';
 
 
 @NgModule({
@@ -51,6 +54,9 @@ import { GetFeaturedTabComponent } from './get-featured-tab/get-featured-tab.com
     UnsubscribeComponent,
     SubscriptionPlanPartnerComponent,
     GetFeaturedTabComponent,
+    ProfilePartnerComponent,
+    ListingPartnerComponent,
+    CardPartnerComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

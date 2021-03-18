@@ -68,14 +68,16 @@
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             Genuine Reviews And Feedback
         </li>
-        <li *ngIf="type != 'centre' && data?.performanceDashboard">
-            <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Performance Dashboard
-        </li>
         <li *ngIf="type != 'centre' && data?.receiveMessagesForBooking">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             Receive requests for booking /integration with your own booking system option
         </li>
+        <li *ngIf="type != 'centre' && data?.performanceDashboard">
+          <span class="fa-li"><i class="far fa-check-circle"></i></span>
+          <span class="badge badge-info">NEW</span>
+
+          Performance Dashboard
+      </li>
         <li *ngIf="type != 'centre' && data?.socialMediaLink">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             <span class="badge badge-info">NEW</span>
@@ -107,7 +109,7 @@
     </ul>
             
     <!-- if user is not loggedin, go to signin / login page -->
-    <a *ngIf="!isLoggedIn && type != 'partner'"
+    <a *ngIf="!isLoggedIn"
         class="btn btn-more"
         [routerLink]="getLinkToSignin()"
         >

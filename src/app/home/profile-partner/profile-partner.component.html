@@ -1,0 +1,121 @@
+<div class="container">
+  <div class="row align-items-start mt-after-header">
+    <section class="col-12 col-md-6 col-lg-7 col-xl-8 pt-3 position-sm-relative sticky-top d-md-flex flex-column mainview">
+      <div class="d-lg-inline-flex align-items-center mb-3 mb-lg-0 flex-grow-0">
+        <h2>{{profile?.name}}</h2>
+        <star-rate 
+        [rate]="profile?.priceLevel" 
+        [showActiveOnly]="false"
+        size="big"
+        sign="dollar" 
+        class="ml-0 ml-lg-4"
+        ></star-rate>
+      </div>
+      
+      <div class="image-grid flex-grow-1" [ngClass]="'item-count-' + profile?.countProductImages">
+        <ng-container *ngFor="let imageData of profile?.productImages; let i = index">
+          <div class="position-relative" [ngClass]="'item-' + i" (click)="changeImageViewerTarget(i)">
+            <img class="rounded-10p" [src]="imageData.url" >
+          </div>  
+        </ng-container>
+      </div>
+    </section>
+
+    <section class="col-12 col-md-6 col-lg-5 col-xl-4">
+      <div class="position-relative">
+        <div class="intersection-observer" intersectionObserver (changeStatus)="changeStickyStatus($event)"></div>
+      </div>
+      <div class="sidebar-tab sticky-top blur pt-3">
+        <ul class="list-unstyled d-flex text-center mb-0">
+          <li *ngFor="let tab of ['About', 'Review']; let i = index;" 
+          class="py-3 text-ph-blue font-big"
+          [ngClass]="{active: (currentTabIndex == i)}"
+          (click)="changeTabIndex(i)"
+          >{{tab}}</li>
+        </ul> 
+        <div class="highlighter bg-ph-blue" [ngClass]="'index-' + currentTabIndex"></div>
+      </div>
+      <div class="bg-lightblue rounded-10p mt-3 py-5 overflow-hidden position-relative">
+        <div *ngIf="currentTabIndex == 0">
+          <div class="px-4">
+            <h3 class="mb-4">{{profile?.name}}</h3>
+            <p class="whitespace-pre" [ngClass]="{'clamp-4line': isDescriptionClamped}">{{profile?.description}}</p>            
+            <button class="btn text-ph-blue pl-0 font-regular" (click)="toggleDescriptionLength()">
+              <u *ngIf="isDescriptionClamped">See full profile</u>
+              <u *ngIf="!isDescriptionClamped">See less profile</u>
+            </button>
+          </div>
+  
+          <table class="table table-borderless table-hover px-2 mt-3">
+            <tbody>
+              <tr *ngIf="profile?.address">
+                <td class="pl-4 text-ph-blue text-center"><i class="fas fa-map-marker-alt font-big"></i></td>
+                <td class="text-left pl-0">{{profile.address}}</td>
+              </tr>
+              <tr *ngIf="profile?.phone">
+                <td class="pl-4 text-ph-blue text-center"><i class="fas fa-phone font-big"></i></td>
+                <td class="text-left pl-0">{{profile.phone}}</td>
+              </tr>
+              <tr *ngIf="profile?.email">
+                <td class="pl-4 text-ph-blue text-center"><i class="far fa-envelope font-big"></i></td>
+                <td class="text-left pl-0"><a [href]="'mailto:' + profile.email" class="clamp-1line">{{profile.email}}</a></td>
+              </tr>
+              <tr *ngIf="profile?.website">
+                <td class="pl-4 text-ph-blue text-center"><i class="fas fa-globe font-big"></i></td>
+                <td class="text-left pl-0"><a [href]="profile.website">{{profile.websiteLabel}}</a></td>
+              </tr>
+            </tbody>
+          </table>
+  
+          <ul *ngIf="profile?.service" class="list-unstyled d-flex flex-wrap justify-content-start mx-4">
+            <li *ngFor="let s of profile.service" 
+            class="text-ph-blue border-ph-blue p-2 mr-2 mb-3 font-weight-400 rounded-lg font-small"
+            >{{s[0]}}</li>
+          </ul>
+  
+          <table class="table table-borderless table-hover px-2 mt-3">
+            <tbody>
+              <tr *ngIf="profile?.coupon" class="font-weight-bold">
+                <td class="pl-4 text-ph-blue">Coupon</td>
+                <td class="pl-0">{{profile.coupon}}</td>
+              </tr>
+              <tr *ngIf="profile?.coupon" class="font-weight-bold">
+                <td class="pl-4 text-ph-blue">Sample</td>
+                <td class="pl-0"><a [href]="profile.sampleLink" target="_blank">{{profile.sampleLinkLabel}}</a></td>
+              </tr>
+              <tr *ngIf="profile?.coupon" class="font-weight-bold">
+                <td class="pl-4 text-ph-blue">Affiliate</td>
+                <td class="pl-0"><a [href]="profile.affiliateLink" target="_blank">{{profile.affiliateLinkLabel}}</a></td>
+              </tr>
+              <tr *ngIf="profile?.coupon" class="font-weight-bold">
+                <td class="pl-4 text-ph-blue">Trial</td>
+                <td class="pl-0"><a [href]="profile.trialLink" target="_blank">{{profile.trialLinkLabel}}</a></td>
+              </tr>
+            </tbody>
+          </table>
+  
+          <div class="text-center mx-4" *ngIf="profile?.signupURL">
+            <a class="btn btn-ph-blue rounded w-100 font-regular" [href]="profile.signupURL" target="_blank">Sign up</a>
+          </div>
+  
+          <div class="share-menu-container" *ngIf="profile">
+            <share-menu
+            [media]="(profile.productImages && profile.productImages[0]) ? profile.productImages[0].url : null"
+            [description]="profile.description"
+            ></share-menu>
+          </div>
+        </div>
+
+        <div *ngIf="currentTabIndex == 1">
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<image-viewer 
+*ngIf="imageViewerTarget !== null" 
+[target]="imageViewerTarget" 
+[data]="profile?.productImageViewerData" 
+(close)="changeImageViewerTarget(null)"
+></image-viewer>

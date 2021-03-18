@@ -3,58 +3,43 @@
     <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
   </p>
 </ngx-spinner>
-<section
-  class="heightHF-100 pt-4 pb-4 d-flex justify-content-center align-items-center bg-blue"
->
+<section class="heightHF-100 pt-4 pb-4 d-flex justify-content-center align-items-center bg-blue">
   <div class="container-fluid w-max-1200">
     <div class="row m-0 justify-content-between bg-white rounded-lg overflow-hidden">
       <div class="p-5 col-md-4 order-md-2 py-md-5 pr-md-5 pl-md-0">
         <h5 class="mb-3">
-          Login
+          Sign in to PromptHealth
         </h5>
-        <a class="btn btn-google w-100 mb-2 font-weight-bold"  (click)="signInWithGoogle()"
-          ><i class="fab fa-google"></i> Sign in with Google</a>
-        <a class="btn btn-facebook w-100 mb-2 font-weight-bold" (click)="signInWithFB()"
-          ><i class="fab fa-facebook-square"></i> Sign in with Facebook</a>
+        <a class="btn btn-google w-100 mb-2 font-weight-bold" (click)="signInWithGoogle()"><i class="fab fa-google"></i>
+          Sign in with Google</a>
+        <a class="btn btn-facebook w-100 mb-2 font-weight-bold" (click)="signInWithFB()"><i
+            class="fab fa-facebook-square"></i> Sign in with Facebook</a>
         <hr />
         <div class="form-row">
-          <form class="form-row"
-          [formGroup]="loginForm"
-          (ngSubmit)="loginUser(loginForm)">
+          <form class="form-row" [formGroup]="loginForm" (ngSubmit)="loginUser(loginForm)">
             <div class="col-md-12 mb-2">
               <label>Email address <span class="text-danger">*</span></label>
               <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Enter your email"
-                  formControlName="email"
-                  [ngClass]="{ 'is-invalid': submitted && loginForm.invalid }"
-                  required />
-                  <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                    <div *ngIf="f.email.errors.required">Email is required</div>
-                    <div *ngIf="f.email.errors?.pattern">
-                      Email must be a valid email address
-                    </div>
+                <input type="text" class="form-control" placeholder="Enter your email" formControlName="email"
+                  [ngClass]="{ 'is-invalid': submitted && loginForm.invalid }" required />
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                  <div *ngIf="f.email.errors.required">Email is required</div>
+                  <div *ngIf="f.email.errors?.pattern">
+                    Email must be a valid email address
                   </div>
+                </div>
               </div>
             </div>
             <div class="col-md-12 mb-2">
               <label>Password <span class="text-danger">*</span></label>
               <div class="input-group">
-                <input
-                  type="password"
-                  class="form-control"
-                  placeholder="Enter your password"
-                  formControlName="password"
+                <input type="password" class="form-control" placeholder="Enter your password" formControlName="password"
                   [ngClass]="{
                     'is-invalid': submitted && loginForm.invalid
-                  }"
-                />
-                <div 
-                  *ngIf="loginForm.controls['password'].dirty || loginForm.controls['password'].touched"
+                  }" />
+                <div *ngIf="loginForm.controls['password'].dirty || loginForm.controls['password'].touched"
                   class="invalid-feedback">
-                  <div  *ngIf="loginForm.controls['password'].hasError('required')">
+                  <div *ngIf="loginForm.controls['password'].hasError('required')">
                     Password is required
                   </div>
                   <div *ngIf="loginForm.controls['password'].hasError('minlength')">
@@ -79,43 +64,93 @@
             </div> -->
             <div class="col-md-12">
               <button type="submit" class="btn btn-success w-100">
-                Login
+                Sign In
               </button>
 
               <div class="text-right mt-2">
-                <a href="" [routerLink]="['/auth/forgot-password']" class="text-primary font-weight-medium">Forgot Password?</a>
+                <a href="" [routerLink]="['/auth/forgot-password']" class="text-primary font-weight-medium">Forgot
+                  Password?</a>
               </div>
               <hr />
             </div>
             <div class="col-md-12">
-              <a
-                href=""
-                [routerLink]="['/auth/registration', userType]"
-                class="btn btn-outline-secondary w-100"
-                >Create Account</a
-              >
+              <a href="" [routerLink]="['/auth/registration', userType]" class="btn btn-outline-secondary w-100">Create
+                Account</a>
             </div>
           </form>
         </div>
       </div>
-      <div class="col-md-8 order-md-1 pt-5 pb-0 px-5 bg"
-      [ngClass]="{ 'bg-user': !professionalLogin, 'bg-professional': professionalLogin }"
-      >
-        <div
-          class="h-100"
-        >
-          <div class="w-100" *ngIf="!professionalLogin">
-            <h3 class="">Client</h3>
-            <p class="p-sd-for-image pb-md-0">
+      <div class="overflow-hidden col-md-8 order-md-1 pt-5 pb-0 px-5">
+        <ngx-slick-carousel [config]="slideConfig">
+          <!-- <div ngxSlickItem *ngFor="let slide of slides" class="slide">
+          <img src="{{ slide.img }}" alt="" width="100%">
+          </div> -->
+          <div ngxSlickItem class=" slide d-flex flex-column justify-content-between">
+            <div>
+
+              <h3 class="">Client</h3>
+              <p class=" pb-md-0">
+                Prompt Health empowers you with the convenience and accessibility you need to better manage
+                your health and the health of your family.<br><br>
+                No more guesswork. We’ve got you!
+              </p>
+            </div>
+            <div>
+
+              <img class="user" src="/assets/img/login-client-1.png" class="img-fluid" alt="">
+            </div>
+
+          </div>
+          <div ngxSlickItem class=" slide d-flex flex-column justify-content-between">
+            <div>
+
+              <h3 class="">Professional</h3>
+              <p class=" pb-md-0">
+                Join the growing network of Canadian health and wellness professionals.
+                Together, we will change the health and wellness experience.<br><br>
+
+                Prompt Health for every practice:
+                Medical / Dental / Allied Health / Holistic / Wellness / Nutrition / Fitness
+              </p>
+            </div>
+            <div>
+
+              <img class="professional" src="/assets/img/login-professional.png" class="img-fluid" alt="">
+            </div>
+
+          </div>
+          <div ngxSlickItem class=" slide d-flex flex-column justify-content-between">
+            <div>
+
+              <h3 class="">Partner</h3>
+              <p class=" pb-md-0">
+                Do you want your current clients to have access to more individualized options for their health?
+                <br><br>
+                Partner with Prompt Health to extend the reach of both parties via cross-platform visibility to get in
+                front of both clients and health and wellness providers.
+              </p>
+            </div>
+            <div>
+
+              <img class="partner" src="/assets/img/login-partner-1.png" class="img-fluid" alt="">
+            </div>
+
+          </div>
+        </ngx-slick-carousel>
+        <!-- <div class="carousel">
+          <div class="slide" *ngIf="currentSlide == 0" [@carousel]>
+            <img class="user" src="/assets/img/login-client.png" alt="">
+            <h3 class="position-relative">Client</h3>
+            <p class="position-relative pb-md-0">
               Prompt Health empowers you with the convenience and accessibility you need to better manage
               your health and the health of your family.<br><br>
               No more guesswork. We’ve got you!
             </p>
-
           </div>
-          <div class="w-100" *ngIf="professionalLogin">
-            <h3 class="">Professional</h3>
-            <p class="p-sd-for-image pb-md-0">
+          <div class="slide" *ngIf="currentSlide == 1" [@carousel]>
+            <img class="professional" src="/assets/img/login-professional.png" alt="">
+            <h3 class="position-relative">Professional</h3>
+            <p class="position-relative pb-md-0">
               Join the growing network of Canadian health and wellness professionals.
               Together, we will change the health and wellness experience.<br><br>
 
@@ -123,7 +158,16 @@
               Medical / Dental / Allied Health / Holistic / Wellness / Nutrition / Fitness
             </p>
           </div>
-        </div>
+          <div class="slide" *ngIf="currentSlide == 2" [@carousel]>
+            <img class="partner" src="/assets/img/login-partner.png" alt="">
+            <h3 class="position-relative">Partner</h3>
+            <p class="position-relative pb-md-0">
+              Do you want your current clients to have access to more individualized options for their health? 
+              <br><br>
+              Partner with Prompt Health to extend the reach of both parties via cross-platform visibility to get in front of both clients and health and wellness providers.
+            </p>
+          </div>
+        </div> -->
       </div>
     </div>
     <!-- <div class="text-center text-light pt-3">

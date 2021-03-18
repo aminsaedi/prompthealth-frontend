@@ -20,6 +20,9 @@ import { RegisterPartnerGeneralComponent } from './register-partner-general/regi
 import { RegisterPartnerServiceComponent } from './register-partner-service/register-partner-service.component';
 import { RegisterPartnerOfferComponent } from './register-partner-offer/register-partner-offer.component';
 import { RegisterPartnerTermComponent } from './register-partner-term/register-partner-term.component';
+import { RegisterPartnerCompleteComponent } from './register-partner-complete/register-partner-complete.component';
+import { RegisterPartnerGuard } from './register-partner.guard';
+import { RegisterPartnerCompleteGuard } from './register-partner-complete.guard';
 import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
 
 const routes: Routes = [
@@ -84,6 +87,7 @@ const routes: Routes = [
   {
     path: 'register-partner',
     component: RegisterPartnerComponent,
+    canActivate: [RegisterPartnerGuard],
     children: [
       {
         path: '', 
@@ -110,6 +114,11 @@ const routes: Routes = [
         data: {index: 3}
       },
     ],
+  },
+  {
+    path: 'register-partner/complete',
+    component: RegisterPartnerCompleteComponent,
+    canActivate: [RegisterPartnerCompleteGuard,],
   }
 ];
 

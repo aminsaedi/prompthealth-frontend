@@ -29,7 +29,6 @@ export class MyPasswordComponent implements OnInit {
       return;
     }
     this._sharedService.post(this.pass, '/user/change-password').subscribe((res) => {
-      console.log(res);
       this.toastr.success(res.message);
     }, error => {
       this.toastr.error(error);

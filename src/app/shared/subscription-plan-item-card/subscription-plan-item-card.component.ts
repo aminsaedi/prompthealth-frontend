@@ -62,7 +62,8 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
         break;
 
       case 'partner':
-      /* todo: add link */
+        link.push('p')
+        break;
 
     }
     return link;

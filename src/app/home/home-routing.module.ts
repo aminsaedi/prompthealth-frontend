@@ -19,6 +19,8 @@ import { BlogCategoryComponent } from './blog-category/blog-category.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 import { SubscriptionPlanPartnerComponent } from "./subscription-plan-partner/subscription-plan-partner.component";
+import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
+import { ListingPartnerComponent } from './listing-partner/listing-partner.component';
 
 const routes: Routes = [
   {
@@ -91,6 +93,9 @@ const routes: Routes = [
   },
 
   { path: 'subscriptionplan-partner', component: SubscriptionPlanPartnerComponent },
+  
+  { path: 'partners', component: ListingPartnerComponent, },
+  { path: 'partners/:id', component: ProfilePartnerComponent },
 ];
 
 @NgModule({

@@ -44,6 +44,7 @@ export class HeaderComponent implements OnInit {
   public role = '';
   public payment = 'true';
 
+  public isMenuMobileForcibly = false;
   public isHeaderShown = true;
   public isNavMenuShown = false;
   public isDashboardMenuShown = false;
@@ -75,7 +76,12 @@ export class HeaderComponent implements OnInit {
 
 
   // Start ngOninit
-  ngOnInit() {
+  async ngOnInit() {
+
+    const isTouchEnabled = !!('ontouchstart' in window);
+    if(navigator.userAgent.toLowerCase().match('ipad|android|iphone') || (isTouchEnabled && navigator.userAgent.toLowerCase().match('mac')) ){
+      this.isMenuMobileForcibly = true;
+    }
 
     this.AWS_S3 = environment.config.AWS_S3;
 
@@ -92,9 +98,6 @@ export class HeaderComponent implements OnInit {
     this.role = localStorage.getItem('roles');
     // this.payment = localStorage.getItem(isPayment);
     this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
-    if(this.user._id){
-      this._profileService.getProfileDetail(this.user._id);
-    }
     
     // if (this.token && this.user) {
     //   let roles = this.user.roles;
@@ -128,6 +131,12 @@ export class HeaderComponent implements OnInit {
     this._headerStatusService.observeHeaderStatus().subscribe(([key, val]: [string, any]) => {
       this[key] = val;
     });
+
+    if(this.user._id){
+      //call getProfileDetail function to fetch latest data which is changed by admin including verifiedBadge
+      try { await this._profileService.getProfileDetail(this.user._id); }
+      catch(err){ console.log(err); }
+    }
     // if(this.token) {
     //   if(this.role === 'U') {
     //     this.showDashboard = true;
@@ -181,9 +190,10 @@ export class HeaderComponent implements OnInit {
 
 
   hideMenu() { this._headerStatusService.hideNavMenu(); }
-  showMenu(slow: boolean = false) {
+  showMenu(jumpToCategory: boolean = false) {
+
     setTimeout(() => {
-      this._headerStatusService.showNavMenu(false);
+      this._headerStatusService.showNavMenu(jumpToCategory);
     });
   }
 
@@ -193,6 +203,22 @@ export class HeaderComponent implements OnInit {
     this.activeCategory = i;
     this.setClassForSubcategory(i);
   }
+
+  onMouseOverMenuMd(i: number){
+    this.changeMenuCategory(i);
+  }
+
+  onClickMenuMd(i: number){
+    if(this.activeCategory != i){
+      this.changeMenuCategory(i);
+    }else{
+      this.hideMenu();
+      this._router.navigate(
+        ['/dashboard/listing'], 
+        {queryParams: {id: this.catService.categoryList[i]._id}});
+    }
+  }
+
   setClassForSubcategory(i: number) {
     let clname = ['', ''];
     switch (this.catService.categoryList[i]._id) {
@@ -211,6 +237,39 @@ export class HeaderComponent implements OnInit {
     const dashboardMenuButton = this.elHost.querySelector('#dashboardMenuButton');
     if (!dashboardMenuButton.contains(target)) {
       this.isDashboardMenuShown = false;
+    }
+  }
+
+  private timerScrollCategory: any;
+  private isCategoryScrolling: boolean = false;
+  onMouseOverRootMenuCategory(e: MouseEvent){
+    const menu = (this.elHost.querySelector('.menu-category') as HTMLElement)
+    const menuRect = menu.getBoundingClientRect();
+
+    if(menuRect.bottom - e.y < 50){ 
+      if(!this.isCategoryScrolling){
+        let scrollTotal: number = 0;
+        this.isCategoryScrolling = true;
+        this.timerScrollCategory = setInterval(() => {
+          scrollTotal += 10;
+          menu.scrollBy(0,10);
+          if(scrollTotal > 500){ clearInterval(this.timerScrollCategory); }
+        }, 30);  
+      }
+    }else if (e.y - menuRect.top < 50){
+      if(!this.isCategoryScrolling){
+        let scrollTotal: number = 0;
+        this.isCategoryScrolling = true;
+        this.timerScrollCategory = setInterval(() => {
+          scrollTotal += 10;
+          menu.scrollBy(0, -10);
+          if(scrollTotal > 500){ clearInterval(this.timerScrollCategory); }
+        }, 30);  
+      }
+    }
+    else{
+      this.isCategoryScrolling = false;
+      if(this.timerScrollCategory){ clearInterval(this.timerScrollCategory); }
     }
   }
 }

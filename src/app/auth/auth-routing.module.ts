@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuardService as AuthGuard  } from '../auth/auth-gaurd.service';
+import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
 import { RoleGuardService as RoleGuard } from '../auth/role-guard.service';
 import { ContactUspageComponent } from './contact-uspage/contact-uspage.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
@@ -9,31 +9,31 @@ import { RegistrationComponent } from './registration/registration.component';
 import { EnterpriseContactComponent } from './enterprise-contact/enterprise-contact.component';
 
 const routes: Routes = [
-	{
-		path: 'contact-us',
-		component: ContactUspageComponent
-	},
-	{
-		path: 'get-in-touch',
-		component: EnterpriseContactComponent
-	},
-	{
-		path: 'forgot-password',
-		component: ForgotPasswordComponent
-	},
-	{
-		path: 'registration/:type',
-		component: RegistrationComponent,
-		canActivate: [RoleGuard] 
-	},
-	{
-		path: 'login/:type',
-		component: LoginComponent
-	},
+  {
+    path: 'contact-us',
+    component: ContactUspageComponent
+  },
+  {
+    path: 'get-in-touch',
+    component: EnterpriseContactComponent
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
+  },
+  {
+    path: 'registration/:type',
+    component: RegistrationComponent,
+    canActivate: [RoleGuard]
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
 ];
 
 @NgModule({
-	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
 export class AuthRoutingModule { }

@@ -3,8 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
+import { BehaviorService } from '../../shared/services/behavior.service';
 import { RegisterQuestionnaireService } from '../register-questionnaire.service'; 
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-register-partner-general',
@@ -19,6 +21,8 @@ export class RegisterPartnerGeneralComponent implements OnInit {
   public maxName: number = 100;
   public maxTextarea: number = 1000;
 
+  public baseURLImage = environment.config.AWS_S3;
+
   private subscriptionNavigation: Subscription;
 
   get f(){ return this.form.controls; }
@@ -31,6 +35,7 @@ export class RegisterPartnerGeneralComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private _sharedService: SharedService,
+    private _bsService: BehaviorService,
     private _qService: RegisterQuestionnaireService,
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
@@ -57,9 +62,10 @@ export class RegisterPartnerGeneralComponent implements OnInit {
 
   initForm(){
     const user = this._qService.getUser();
+    console.log(user);
     this.form = this._fb.group({
-      photo: new FormControl((user.photo ? user.photo : ''), [Validators.required,]),
-      name: new FormControl((user.name ? user.name : ''), [
+      profileImage: new FormControl((user.profileImage ? user.profileImage : ''), [Validators.required,]),
+      firstName: new FormControl((user.firstName ? user.firstName : ''), [
         Validators.required, 
         Validators.minLength(3), 
         Validators.maxLength(this.maxName)
@@ -70,8 +76,8 @@ export class RegisterPartnerGeneralComponent implements OnInit {
       ]),
 
       address: new FormControl((user.address ? user.address : ''),   []),
-      latitude: new FormControl((user.latitude ? user.latitude : 0), []),
-      longitude: new FormControl((user.latitude ? user.latitude : 0), []),
+      latitude: new FormControl(((user.location && user.location[1]) ? user.location[1] : 0), []),
+      longitude: new FormControl(((user.location && user.location[0]) ? user.location[0] : 0), []),
       city: new FormControl((user.city ? user.city : ''), []),
       state: new FormControl((user.state ? user.state : ''), []),
       zipcode: new FormControl((user.zipcode ? user.zipcode : ''), []),
@@ -82,11 +88,11 @@ export class RegisterPartnerGeneralComponent implements OnInit {
         Validators.maxLength(13),
       ]),
       website: new FormControl((user.website ? user.website : ''), [Validators.pattern(this.patternURL)]),
-      description: new FormControl((user.description ? user.description : ''), [
+      product_description: new FormControl((user.product_description ? user.product_description : ''), [
         Validators.required,
         Validators.maxLength(this.maxTextarea),
       ]),
-      message: new FormControl((user.message ? user.message : ''), [Validators.maxLength(this.maxTextarea)]),
+      messageToPlatform: new FormControl((user.messageToPlatform ? user.messageToPlatform : ''), [Validators.maxLength(this.maxTextarea)]),
     });
   }
 
@@ -96,25 +102,41 @@ export class RegisterPartnerGeneralComponent implements OnInit {
       let image: {file: File | Blob, filename: string};
       try { image = await this._sharedService.shrinkImage(files[0]); }
       catch(err){
-        this.f.photo.setValue('');
+        this.f.profileImage.setValue('');
         this._toastr.error('Image size is too big. Please upload image size less than 10MB.');
         return;
       }
 
+      this._sharedService.loader('show');
       try { 
         const imageURL = await this.uploadImage(image.file, image.filename); 
-        this.f.photo.setValue(imageURL);
+        this.f.profileImage.setValue(imageURL);
+
+        this._bsService.setUserDataOf('profileImage', imageURL);
+        this._qService.updateUser({profileImage: imageURL});
       }
-      catch(err){ }
+      catch(err){ this._toastr.error(err); }
+      finally{ this._sharedService.loader('hide'); }
     }
   }
 
   async uploadImage(file: File | Blob, name: string): Promise<string>{
     return new Promise((resolve, reject) => {
+      const userid = this._qService.getUser()._id;
       const uploadImage = new FormData();
-      uploadImage.append('_id', '');
+      uploadImage.append('_id', userid);
       uploadImage.append('profileImage', file, name);
-      resolve('/assets/img/register-partner-0.jpg');
+
+      this._sharedService.imgUpload(uploadImage, 'user/imgUpload').subscribe((res: any) => {
+        if(res.statusCode == 200){
+          resolve(res.data.profileImage);
+        }else{
+          reject('Something went wrong. Please try again.');
+        }
+      }, error => {
+        console.log(error);
+          reject('Something went wrong. Please try again.');
+      });
     });
   }
 

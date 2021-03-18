@@ -1,6 +1,7 @@
 <div class="input-group">
-  <div class="input-group-prepend" *ngIf="prepend">
-    <span class="input-group-text">{{prepend}}</span>
+  <div class="input-group-prepend" *ngIf="prepend || prependIcon">
+    <span class="input-group-text" *ngIf="prepend">{{prepend}}</span>
+    <span class="input-group-text" *ngIf="prependIcon"><i [ngClass]="prependIcon"></i></span>
   </div>
   <input [type]="type" [id]="name" class="form-control" 
   [formControl]="controller" [attr.disabled]="disabled ? 'disabled' : null"

@@ -1,28 +1,23 @@
 <form (submit)="save()">
   <div class="p-3 form-group">
     <p>Address</p>
-    <input type="text"
-      name="input"
-      class="form-control" 
-      [(ngModel)]="data.address"
-      placeholder="Please input address"
-    >
+    <form-input-address
+    name="address"
+    label="Address"
+    placeholder="Please enter address"
+    [controllerGroup]="formAddress"
+    (selectAddress)="onSelectAddress()"
+    ></form-input-address>
   </div>
 
   <div class="px-3 pt-0 pb-4 borderb-grey">
-    <p>Distance: {{data.distance}} Kms</p>
-    <input type="range"  
-      name="range"
-      class="form-range" 
-      [min]="min"
-      [max]="max"
-      [(ngModel)]="data.distance"
-    >
+    <p>Distance: {{data.distance}} KM</p>
+    <input type="range" name="range" class="form-range" [min]="data.distanceMin" [max]="data.distanceMax" [(ngModel)]="data.distance"
+    (change)="onChange()">
   </div>
-  
+
   <div class="p-2 d-flex align-items-center justify-content-between">
-    <button class="btn text-underline cancel" type="button"  (click)="reset()">Clear</button>
-    <button class="btn submit" type="button" (click)="save()">Save</button>
+    <button class="btn text-underline cancel" type="button" (click)="reset()">Clear</button>
+    <!-- <button class="btn submit" type="button" (click)="save()">Save</button> -->
   </div>
 </form>
-

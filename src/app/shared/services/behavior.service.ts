@@ -64,13 +64,17 @@ export class BehaviorService {
     }
 
     setUserVerifiedStatus(isVerified: boolean){
+        this.setUserDataOf('verifiedBadge', isVerified);
+    }
+    setUserDataOf(key: string, value: any) {
         const user = JSON.parse(localStorage.getItem('user'));
         if(user){
-            user.verifiedBadge = isVerified;
+            user[key] = value;
+            localStorage.setItem('user', JSON.stringify(user));
+            this.userData.next(user);
         }
-        this.userData.next(user);
     }
-
+    
     getUserData() {
         return this.userData.asObservable();
     }

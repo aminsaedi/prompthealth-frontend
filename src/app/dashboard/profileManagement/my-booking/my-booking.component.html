@@ -30,10 +30,18 @@
         itemsPerPage: itemsPerPage,
         currentPage: currentPage,
         totalItems: totalItems 
-        }">
+        }"
+        [ngClass]="{'bg-lightgrey': !(book.drId)}"
+        >
           <td>
-            {{ book.drId.firstName }} - {{ book.drId.lastName }}<br>
-            {{ book.drId.email }}
+            <span *ngIf="book.drId; then drName; else noDrName;"></span>
+            <ng-template #drName>
+              {{ book.drId.firstName }} - {{ book.drId.lastName }}<br>
+              {{ book.drId.email }}              
+            </ng-template>
+            <ng-template #noDrName>
+              This doctor is no longer available.
+            </ng-template>
           </td>
           <td>
             <span class="text-nowrap">{{ book.bookingDateTime | date: 'MMM d, y, HH: mm'}}</span> 
@@ -224,8 +232,8 @@
           currentPage: currentPage,
           totalItems: totalItems 
           }"
-          [ngClass]="{ disabled: book.status === 2 }"
-        >
+          [ngClass]="{ disabled: book.status === 2, 'bg-lightgrey': !book.drId }"
+          >
           <td>
             <p>{{ book.name }}</p>
             {{ book.phone }} / {{ book.email }}
@@ -235,8 +243,14 @@
              <!-- - {{ book.timing }} -->
           </td>
           <td>
-            {{ book.drId.firstName }} - {{ book.drId.lastName }}
-            {{ book.drId.email }}
+            <span *ngIf="book.drId; then drName; else noDrName;"></span>
+            <ng-template #drName>
+              {{ book.drId.firstName }} - {{ book.drId.lastName }}<br>
+              {{ book.drId.email }}              
+            </ng-template>
+            <ng-template #noDrName>
+              This doctor is no longer available.
+            </ng-template>
           </td>
           <td style="text-align: center;">
             <div class="d-block" [ngSwitch]="book.status">

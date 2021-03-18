@@ -3,23 +3,23 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <section class="mb-4">
     <form-checkbox 
-    [controller]="f.offerForFree" 
+    [controller]="f.isFree" 
     label="Offer for free" 
-    name="offerForFree"
+    name="isFree"
     (changeValue)="onChangeForFree($event)"
     ></form-checkbox>
   </section>
 
-  <ng-container *ngIf="!f.offerForFree.value">
+  <ng-container *ngIf="!f.isFree.value">
     <section class="mb-4">
       <h4>Price Range</h4>
       <div class="d-inline-block">
         <label *ngFor="let i of [1,2,3,4,5]" class="price-range" [for]="'price' + i">
-          <i class="fas fa-dollar-sign" [ngClass]="{active: (i <= f.priceRange.value)}"></i>
-          <input class="d-none" [id]="'price' + i" type="radio" [value]="i" formControlName="priceRange">
+          <i class="fas fa-dollar-sign" [ngClass]="{active: (i <= f.priceLevel.value)}"></i>
+          <input class="d-none" [id]="'price' + i" type="radio" [value]="i" formControlName="priceLevel">
         </label>  
       </div>
-      <form-errors [controller]="f.priceRange" label="Price Range" [submitted]="isSubmitted"></form-errors>
+      <form-errors [controller]="f.priceLevel" label="Price Range" [submitted]="isSubmitted"></form-errors>
     </section>
   
     <section class="mb-4">
@@ -69,7 +69,7 @@
       <div class="col-4">
         <form-checkbox 
         [controller]="getFormArray(o.id).controls[0]" 
-        (changeValue)="onChangeOffer(o.id)"
+        (changeValue)="onChangeOfferCheck(o.id)"
         [name]="o.id + 'Check'" 
         [label]="o.label"
         ></form-checkbox>

@@ -23,6 +23,7 @@ export class RegistrationComponent implements OnInit {
   private user: SocialUser;
   public submitted = false;
   public professionalSignup = false;
+  public partnerSignup = false;
   private userType = 'U';
   private returnUrl = '';
   public APPLE_CLIENT_ID = environment.config.APPLE_CLIENT_ID;
@@ -65,10 +66,12 @@ export class RegistrationComponent implements OnInit {
     this.route.params.subscribe(param => {
       const type = param.type;
       this.professionalSignup = (type.toLowerCase() == 'u') ? false : true;
+      this.partnerSignup = (type.toLowerCase() == 'p') ? true : false;
       switch (type.toLowerCase()) {
         case 'u': this.userType = 'U'; break;
         case 'sp': this.userType = 'SP'; break;
         case 'c': this.userType = 'C'; break;
+        case 'p': this.userType = 'P'; break;
       }
 
       this.registerForm.controls.roles.setValue(this.userType);
@@ -88,13 +91,13 @@ export class RegistrationComponent implements OnInit {
         firstName: x.firstName,
         lastName: x.lastName
       };
-      console.log(x);
+      // console.log(x);
       this._sharedService.socialRegister(payload).subscribe((res: any) => {
         this._sharedService.loader('hide');
         console.log(res);
         if (res.statusCode === 200) {
 
-          this.toastr.success('Thanks for the registeration we have sent a welcome email to the address provided');
+          this.toastr.success('Thanks for the registeration. we have sent you a welcome email.');
           this.registerForm.reset();
           this.submitted = false;
 
@@ -134,7 +137,7 @@ export class RegistrationComponent implements OnInit {
         this._sharedService.loader('hide');
         if (res.statusCode === 200) {
 
-          this.toastr.success('Thanks for the registeration we have sent a welcome email to the address provided');
+          this.toastr.success('Thanks for the registeration. we have sent you a welcome email.');
           this.registerForm.reset();
           this.submitted = false;
 
@@ -166,7 +169,7 @@ export class RegistrationComponent implements OnInit {
         this._sharedService.loader('hide');
         if (res.statusCode === 200) {
 
-          this.toastr.success('Thanks for the registeration we have sent a welcome email to the address provided');
+          this.toastr.success('Thanks for the registeration. we have sent you a welcome email.');
           this.registerForm.reset();
           this.submitted = false;
 

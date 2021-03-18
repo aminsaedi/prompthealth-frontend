@@ -11,24 +11,24 @@
         <input type="file" class="cursor-pointer" accept="image/jpeg, image/png" (change)="onSelectCoverPhoto($event)">
       </button>
       <div class="mt-2">
-        <img class="preview" *ngIf="f.photo.value" [src]="f.photo.value" alt="cover photo">
+        <img class="preview" *ngIf="f.profileImage.value" [src]="baseURLImage + f.profileImage.value" alt="cover photo">
       </div>
-      <form-errors [controller]="f.photo" label="Cover photo" [submitted]="isSubmitted"></form-errors>
+      <form-errors [controller]="f.profileImage" label="Cover photo" [submitted]="isSubmitted"></form-errors>
 
     </div>
   </div>
 
   <div class="row mb-4">
-    <label class="col-md-4" for="name">
+    <label class="col-md-4" for="firstName">
       Company name 
       <span class="text-danger">*</span>
     </label>
     <div class="col-md-8">
       <form-input 
-      name="name"
+      name="firstName"
       label="Company name" 
       type="text"
-      [controller]="f.name" 
+      [controller]="f.firstName" 
       [max]="maxName"
       [submitted]="isSubmitted" 
       ></form-input>           
@@ -45,7 +45,7 @@
       name="description"
       label="Description"
       placeholder="Tell a little bit about your company"
-      [controller]="f.description"
+      [controller]="f.product_description"
       [max]="maxTextarea"
       [submitted]="isSubmitted"
       ></form-textarea>
@@ -55,7 +55,7 @@
   <div class="row mb-4">
     <label class="col-md-4" for="email">
       Email 
-      <span class="text-danger">*</span>
+      <!-- <span class="text-danger">*</span> -->
     </label>
     <div class="col-md-8">
       <form-input 
@@ -64,6 +64,7 @@
       type="email"
       [controller]="f.email"
       [submitted]="isSubmitted" 
+      [disabled]="true"
       ></form-input>
     </div>
   </div>
@@ -122,9 +123,10 @@
       <form-textarea
       name="message"
       label="Message"
-      [controller]="f.message"
+      [controller]="f.messageToPlatform"
       [max]="maxTextarea"
       [submitted]="isSubmitted"
+      placeholder="We would like to collaborate with you. Please share your idea how we grow together!"
       ></form-textarea>
     </div>
   </div>

@@ -1,0 +1,26 @@
+<ul class="list-unstyled">
+  <ng-container *ngFor="let cat of categories; let i = index;">
+    <li class="mt-4 mb-0 root">
+      <form-checkbox 
+      [name]="cat._id" 
+      [controller]="getFormArray('root').controls[i]"
+      [label]="cat.item_text"
+      ></form-checkbox>
+
+      <ul 
+      *ngIf="getFormArray('root').controls[i].value"
+      class="checkbox-group mb-4 pl-3 list-unstyled"
+      >
+        <ng-container *ngFor="let sub of cat.subCategory; let j = index;">
+          <li class="sub mt-4 mb-0" [ngClass]="{col2: col2}">
+            <form-checkbox 
+            [name]="sub._id" 
+            [controller]="getFormArray(cat._id).controls[j]"
+            [label]="sub.item_text"
+            ></form-checkbox>
+          </li>
+        </ng-container>
+      </ul>
+    </li>  
+  </ng-container>
+</ul>

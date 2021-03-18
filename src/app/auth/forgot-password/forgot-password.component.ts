@@ -6,72 +6,71 @@ import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 @Component({
-    selector: 'app-forgot-password',
-    templateUrl: './forgot-password.component.html',
-    styleUrls: ['./forgot-password.component.scss']
+  selector: 'app-forgot-password',
+  templateUrl: './forgot-password.component.html',
+  styleUrls: ['./forgot-password.component.scss']
 })
 export class ForgotPasswordComponent implements OnInit {
-    forgotForm: FormGroup;
-    submitted = false;
-    professionalOption = false
-    public email
+  forgotForm: FormGroup;
+  submitted = false;
+  professionalOption = false;
+  public email;
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private toastr: ToastrService,
-        private _router: Router,
-        private _sharedService: SharedService) { }
-    get ff() { return this.forgotForm.controls; }
+  constructor(
+    private formBuilder: FormBuilder,
+    private toastr: ToastrService,
+    private _router: Router,
+    private _sharedService: SharedService) { }
+  get ff() { return this.forgotForm.controls; }
 
-    ngOnInit() {
-        this._sharedService.sendTop();
-        this.forgotForm = this.formBuilder.group({
+  ngOnInit() {
+    this._sharedService.sendTop();
+    this.forgotForm = this.formBuilder.group({
 
-            email: ['', [Validators.required, Validators.pattern(re)]],
+      email: ['', [Validators.required, Validators.pattern(re)]],
 
-        });
-    }
+    });
+  }
 
-    submit() {
-        this.submitted = true;
+  submit() {
+    this.submitted = true;
 
-        if (this.forgotForm.invalid) {
-            return;
+    if (this.forgotForm.invalid) {
+      return;
+    } else {
+      this.submitted = true;
+      const data = JSON.parse(JSON.stringify(this.forgotForm.value));
+
+      this._sharedService.loader('show');
+      this._sharedService.postNoAuth(data, 'user/forgotpassword').subscribe((res: any) => {
+        this._sharedService.loader('hide');
+        if (res.statusCode === 200) {
+          this.toastr.success(res.message);
+          this._router.navigate(['/auth/login']);
+
+        } else {
+          this._sharedService.loader('hide');
+          // if (res.success == false)
+          this.toastr.error(res.message);
+
         }
-        else {
-            this.submitted = true;
-            let data = JSON.parse(JSON.stringify(this.forgotForm.value));
 
-            this._sharedService.loader('show');
-            this._sharedService.postNoAuth(data, 'user/forgotpassword').subscribe((res: any) => {
-                this._sharedService.loader('hide');
-                if (res.statusCode === 200) {
-                    this.toastr.success(res.message);
-                    this._router.navigate(['/auth/login/u']);
-
-                } else {
-                    this._sharedService.loader('hide');
-                    // if (res.success == false)
-                        this.toastr.error(res.message);
-
-                }
-
-            }, (error) => {
-                this.toastr.error(error);
-                this._sharedService.loader('hide');
-                // this.toastr.error("There are some error please try after some time.");
-            });
-        }
+      }, (error) => {
+        this.toastr.error(error);
+        this._sharedService.loader('hide');
+        // this.toastr.error("There are some error please try after some time.");
+      });
     }
-    handleChange(url) {
-        
-        this._router.navigate([url]);
-    }
+  }
+  handleChange(url) {
+
+    this._router.navigate([url]);
+  }
 
 
-    // validateEmail(email) {
-    //     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    //     return re.test(String(email).toLowerCase());
-    // }
+  // validateEmail(email) {
+  //     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  //     return re.test(String(email).toLowerCase());
+  // }
 
 }
