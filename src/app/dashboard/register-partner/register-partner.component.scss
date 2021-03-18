@@ -104,12 +104,7 @@ section.sideview{
 
 .btn-navigate-group{
   button{
-    @media (max-width: 767px){
-      width: 100%;
-    }
-    @media (min-width: 768px){
-      padding-left: 100px;
-      padding-right: 100px;  
-    }
+    width: 100%;
+    max-width: 300px;
   }
 }

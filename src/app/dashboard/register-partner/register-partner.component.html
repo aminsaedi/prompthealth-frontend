@@ -29,15 +29,13 @@
         <div class="d-none d-md-block triangle" [ngClass]="'position-' + currentIdx"></div>
         <router-outlet></router-outlet>
         
-        <div class="sticky-bottom blur pt-3 pb-4 py-md-3 px-3 px-md-5">
-          <div class="row flex-nowrap btn-navigate-group">
-            <div class="col text-center">
-              <button *ngIf="currentIdx != 0" (click)="onClickNavigation('back')" class="btn bg-blue text-white" >Back</button>
-            </div>
-            <div class="col text-center">
-              <button *ngIf="currentIdx != data.length - 1" (click)="onClickNavigation('next')" class="btn bg-blue text-white" >Next</button>
-              <button *ngIf="currentIdx == data.length - 1" (click)="onClickNavigation('next')" class="btn text-blue border-blue" >Agree</button>  
-            </div>
+        <div class="sticky-bottom blur pt-3 pb-4 py-md-3 row btn-navigate-group">
+          <div class="col text-left">
+            <button *ngIf="currentIdx != 0" (click)="onClickNavigation('back')" class="btn bg-blue text-white" >Back</button>
+          </div>
+          <div class="col text-right">
+            <button *ngIf="currentIdx != data.length - 1" (click)="onClickNavigation('next')" class="btn bg-blue text-white" >Next</button>
+            <button *ngIf="currentIdx == data.length - 1" (click)="onClickNavigation('next')" class="btn text-blue border-blue" >Agree</button>  
           </div>
         </div>  
       </div>
