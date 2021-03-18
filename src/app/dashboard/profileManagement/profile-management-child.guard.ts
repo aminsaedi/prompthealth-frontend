@@ -27,7 +27,7 @@ export class ProfileManagementChildGuard implements CanActivateChild {
 
     /** if profile is not set, false */
     let profile: any;
-    try{ profile = await this._managementService.getProfileDetail(userInfo._id); }
+    try{ profile = await this._managementService.getProfileDetail(userInfo); }
     catch(err){ console.log(err); }
     if(!profile){ 
       this._router.navigate(['/']);

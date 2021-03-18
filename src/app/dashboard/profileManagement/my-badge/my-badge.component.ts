@@ -50,7 +50,7 @@ export class MyBadgeComponent implements OnInit {
     this._sharedService.loader('show');
 
     const user = JSON.parse(localStorage.getItem('user'));
-    this.user = await this._profileService.getProfileDetail(user._id);
+    this.user = await this._profileService.getProfileDetail(user);
     this.isVerified = this.user.verifiedBadge || false;
 
     try { await this.getBadgeData(); } catch (err) {

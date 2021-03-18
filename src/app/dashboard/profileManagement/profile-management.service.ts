@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { BehaviorService } from '../../shared/services/behavior.service';
 
@@ -18,13 +18,20 @@ export class ProfileManagementService {
   destroyProfileDetail(){ this.profileDetail = null; }
 
   /** this is called by header at first access and set the userdata from server in this service. and then someplace will use the data which is stored here */
-  getProfileDetail(id: string): Promise<any>{
+  getProfileDetail(user: {_id: string, roles: string}): Promise<any>{
+    const id = user._id;
+    const role = user.roles.toLowerCase();
+
     return new Promise((resolve, reject) => {
       if(this.profileDetail && this.profileDetail._id == id){ 
         resolve(this.profileDetail); 
       }else{
-        const rootUrl: string = environment.config.API_URL; 
-        this.http.get(rootUrl + 'user/get-profile/' + id).subscribe((res: any)=>{
+        const path = environment.config.API_URL + ((role == 'p') ? 'partner/get/' : 'user/get-profile') + id;
+        const headers = new HttpHeaders()
+          .set('Authorization', localStorage.getItem('token'))
+          .set('Content-Type', 'application/json');
+
+        this.http.get( path, {headers} ).subscribe((res: any)=>{
           if(res.statusCode === 200 && res.data.length > 0){
             this.profileDetail = res.data[0];
             this._bs.setUserVerifiedStatus(this.profileDetail.verifiedBadge);

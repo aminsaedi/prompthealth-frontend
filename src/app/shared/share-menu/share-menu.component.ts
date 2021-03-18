@@ -41,7 +41,7 @@ export class ShareMenuComponent implements OnInit {
     const url = window.location.href;
     switch(type){
       case 'facebook'  : link = 'https://www.facebook.com/share.php?u=' + url ; break;
-      case 'twitter'   : link = 'https://twiter.com/share?url=' + url; break;
+      case 'twitter'   : link = 'https://twitter.com/share?url=' + url; break;
       case 'linkedin'  : link = 'https://www.linkedin.com/shareArticle?mini=true&url=' + url; break;
       case 'pinterest' : link = `https://www.pinterest.com/pin/create/button/?url=${url}&media=${this.media}&description=${this.description}`
     }

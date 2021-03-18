@@ -30,7 +30,7 @@ export class MySocialComponent implements OnInit {
 
   async ngOnInit() {
     const userInfo = JSON.parse(localStorage.getItem('user'));
-    this.profile = await this._pService.getProfileDetail(userInfo._id);
+    this.profile = await this._pService.getProfileDetail(userInfo);
   }
 
   isActive(type: string){

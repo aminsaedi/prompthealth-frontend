@@ -134,7 +134,7 @@ export class HeaderComponent implements OnInit {
 
     if(this.user._id){
       //call getProfileDetail function to fetch latest data which is changed by admin including verifiedBadge
-      try { await this._profileService.getProfileDetail(this.user._id); }
+      try { await this._profileService.getProfileDetail(this.user); }
       catch(err){ console.log(err); }
     }
     // if(this.token) {
