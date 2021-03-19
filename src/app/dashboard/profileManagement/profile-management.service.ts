@@ -26,7 +26,7 @@ export class ProfileManagementService {
       if(this.profileDetail && this.profileDetail._id == id){ 
         resolve(this.profileDetail); 
       }else{
-        const path = environment.config.API_URL + ((role == 'p') ? 'partner/get/' : 'user/get-profile') + id;
+        const path = environment.config.API_URL + ((role == 'p') ? 'partner/get/' : 'user/get-profile/') + id;
         const headers = new HttpHeaders()
           .set('Authorization', localStorage.getItem('token'))
           .set('Content-Type', 'application/json');

@@ -163,10 +163,11 @@ export class LoginComponent implements OnInit {
       return;
     } else {
       this.submitted = true;
-      this.loginForm.controls.loginType.setValue(this.loginUserType);
+      this.loginForm.controls.loginType.setValue('U');
       const data = JSON.stringify(this.loginForm.value);
       this._sharedService.loader('show');
       this._sharedService.login(data).subscribe((res: any) => {
+        console.log(res);
         this._sharedService.loader('hide');
         if (res.statusCode === 200) {
           this._sharedService.loginUser(res, 'login');
@@ -179,6 +180,7 @@ export class LoginComponent implements OnInit {
         }
 
       }, (error) => {
+        console.log(error);
         this.toastr.error(error);
         this._sharedService.loader('hide');
       });
