@@ -14,13 +14,15 @@ import { QuestionnaireService, Questionnaire, QuestionnaireAnswer } from '../que
 import { Professional } from '../../models/professional';
 import { slideVerticalAnimation, expandVerticalAnimation } from '../../_helpers/animations';
 import { CategoryService, Category } from '../../shared/services/category.service';
+import { slideHorizontalAnimation } from '../../_helpers/animations';
+import { ifStmt } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
   selector: 'app-listing',
   templateUrl: './listing.html',
   styleUrls: ['./listing.scss'],
-  animations: [expandVerticalAnimation, slideVerticalAnimation],
+  animations: [expandVerticalAnimation, slideVerticalAnimation, slideHorizontalAnimation],
 })
 export class ListingComponent implements OnInit, OnDestroy {
 
@@ -118,6 +120,17 @@ export class ListingComponent implements OnInit, OnDestroy {
   }
   get isCustomerHealthOn() {
     return (this.listingPayload.customer_health && this.listingPayload.customer_health.length > 0);
+  }
+
+  get isApplyFilterButtonShown(){
+    let isShown = false;
+    for(let f of this.filters){
+      if(f.active){
+        isShown = true;
+        break;
+      }
+    }
+    return isShown;
   }
 
   getServiceName(id: string) {
@@ -744,20 +757,28 @@ export class ListingComponent implements OnInit, OnDestroy {
   /** trigger when click save / clear in zipcode filter menu and update listingPayload & map. then start listing */
   async updateFilterLocation(listing: boolean = false) {
     const f = this.getFilter('location');
-    this.listingPayload.miles = f.data.distance;
+
     const [lat,lng] = (f.data.latLng) ? f.data.latLng : [this.initialLocation.lat, this.initialLocation.lng];
-    this.listingPayload.latLong = lng + ', ' + lat;
-    this.searchCenter = {lat: lat, lng: lng, radius: this.listingPayload.miles * 1000 };
-    this.setMapdata({lat: lat, lng: lng, zoom: 10});
+    this.listingPayload.latLong = (f.data.latLng)? (lng + ', ' + lat) : '';
+    this.searchCenter = {lat: lat, lng: lng, radius: (f.data.latLng ? this.listingPayload.miles * 1000 : 0) };
+    this.setMapdata({lat: lat, lng: lng, zoom: f.data.latLng ? 10 : 3});
 
     if(listing){
       this.listing(this.listingPayload);
     }
   }
 
+  onChangeStateFilterMenu(state: string){
+    this.updateFilterActiveStatus(this.filterTarget);
+    if(state == 'save'){
+      this.setFilterTarget(null);  
+    }
+  }
+
   /** trigger when click save / clear in filter menu and update listingPayload. then start listing (optional) */
   updateFilter(id: string, listing: boolean = true) {
     const f = this.getFilter(id);
+
     if(f.active){
       if(f.type == 'radio'){
         for (let i = 0; i < f.options.length; i++) {

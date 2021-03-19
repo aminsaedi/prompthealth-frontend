@@ -22,7 +22,11 @@ $testimonialsAvtarSize: 100px;
   object-fit: cover;
   object-position: top center;
 }
-
+.info-banner {
+  background-color: $primaryColor;
+  font-size: medium;
+  font-weight: 500;
+}
 .testimonials-text {
   font-size: 16px;
   line-height: 28px;
@@ -245,7 +249,7 @@ video {
   letter-spacing: 0.04em;
 }
 
-@media (min-width: 676px){
+@media (min-width: 768px){
   .coming-soon-bottom-bar {
     background: url('src/assets/img/app-coming-soon-bottom.svg') no-repeat;
     background-size: contain;
@@ -255,6 +259,28 @@ video {
   }
 }
 
+.image-app{
+  width: 100%;
+  height: auto;
+  @media (min-width: 768px){ transform: translateY(45px); }
+}
+
+.badge-appstore{
+  width: 150px;
+  height: auto;
+  @media (min-width: 768px){
+    height: 50px;
+    width: auto;  
+  }
+}
+.badge-playstore{
+  width: 173px;
+  height: auto;
+  @media (min-width: 768px){
+    height: 75px;
+    width: auto;  
+  }
+}
 .switch-tab:checked {
   animation-duration: 0.2s !important;
   animation-timing-function: cubic-bezier(0, 0, 0.1, 1) !important;

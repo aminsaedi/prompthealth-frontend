@@ -62,7 +62,7 @@
       <li>
         <button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button>
       </li>
-      <li class="pl-3 sticky-right bg-white">
+      <li class="pl-3 sticky-right bg-white" *ngIf="isApplyFilterButtonShown"  [@slideHorizontal]>
         <button class="btn btn-primary py-1" (click)="updateFilterAll()">Apply</button>
       </li>
     </ul>
@@ -76,7 +76,7 @@
       <li>
         <button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button>
       </li>
-      <li class="pl-3 sticky-right bg-white">
+      <li class="pl-3 sticky-right bg-white" *ngIf="isApplyFilterButtonShown"  [@slideHorizontal] >
         <button class="btn btn-primary py-1" (click)="updateFilterAll()">Apply</button>
       </li>
     </ul>
@@ -102,29 +102,20 @@
 </section>
 
 <div (clickOutside)="onClickOutsideOfFilter($event)">
-  <!-- <filter-dropdown class="position-absolute shadow rounded-15p bg-white filter-dropdown" 
-    *ngIf="filterTarget.type == 'range'" 
-    [ngStyle]="getFilterDropdownPosition()"
-    [target]="filterTarget._id"
-  ></filter-dropdown> -->
-  <!-- multiple slider which is not built yet. (for price) -->
 
   <filter-dropdown-location class="position-fixed shadow rounded-15p blur filter-dropdown"
     *ngIf="filterTarget && (filterTarget._id == 'location')" [@slideVertical] [ngStyle]="getFilterDropdownPosition()"
     [data]="filterTarget.data" (changeValue)="updateFilterActiveStatus(filterTarget)"
+    (changeState)="onChangeStateFilterMenu($event)"
   ></filter-dropdown-location>
 
   <filter-dropdown-select class="position-fixed shadow rounded-15p blur filter-dropdown"
     *ngIf="filterTarget && (filterTarget.type == 'radio' || filterTarget.type == 'checkbox')" [@slideVertical]
     [ngStyle]="getFilterDropdownPosition()" [target]="filterTarget._id"
     [multiple]="(filterTarget.type == 'checkbox')? true: false" [options]="filterTarget.options"
-    (changeValue)="updateFilterActiveStatus(filterTarget)"
+    (changeState)="onChangeStateFilterMenu($event)"
   ></filter-dropdown-select>
 
-  <!-- <filter-dropdown-slider class="position-fixed shadow rounded-15p blur filter-dropdown"
-    *ngIf="filterTarget && (filterTarget.type == 'slider')" [@slideVertical] [ngStyle]="getFilterDropdownPosition()"
-    [target]="filterTarget._id" [range]="filterTarget.range" (changeState)="updateFilter($event, false)">
-  </filter-dropdown-slider> -->
 </div>
 
 <section class="container-fluid bg-lightblue" id="professionalList">

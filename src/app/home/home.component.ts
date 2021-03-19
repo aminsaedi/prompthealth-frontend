@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedService } from '../shared/services/shared.service';
 import { HeaderStatusService } from '../shared/services/header-status.service';
 import { environment } from 'src/environments/environment';
+declare function registerEvent(eventId, action): void;
 
 @Component({
   selector: 'app-home',
@@ -178,19 +179,23 @@ export class HomeComponent implements OnInit {
     badgeSize: 20,
     borderWidthVerified: 3,
   }
-  @HostListener('window:resize', ['$event']) windowResize(e: Event){
-    if(this.timerResize){ clearTimeout(this.timerResize); }
+  @HostListener('window:resize', ['$event']) windowResize(e: Event) {
+    if (this.timerResize) { clearTimeout(this.timerResize); }
     this.timerResize = setTimeout(() => {
-      if(window.innerWidth < 992){
+      if (window.innerWidth < 992) {
         this.featuredImageData.badgeSize = 35,
-        this.featuredImageData.borderWidthVerified = 5
-      }else{
+          this.featuredImageData.borderWidthVerified = 5
+      } else {
         this.featuredImageData.badgeSize = 30,
-        this.featuredImageData.borderWidthVerified = 4
+          this.featuredImageData.borderWidthVerified = 4
       }
     }, 500);
   }
-
+  eventbriteCheckout(event) {
+    registerEvent(146694387863, (res) => {
+      console.log(res);
+    })
+  }
   ngOnInit() {
     this.AWS_S3 = environment.config.AWS_S3;
     this.roles = localStorage.getItem('roles') ? localStorage.getItem('roles') : '';

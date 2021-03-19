@@ -41,7 +41,8 @@
               "src/assets/js/slick.js",
               "src/assets/js/popper.min.js",
               "src/assets/js/bootstrap.min.js",
-              "src/assets/js/main.js"
+              "src/assets/js/main.js",
+              "src/assets/js/eventbrite.js"
             ]
           },
           "configurations": {

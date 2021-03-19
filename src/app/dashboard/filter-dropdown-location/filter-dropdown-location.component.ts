@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { latinize } from 'ngx-bootstrap/typeahead';
 
 @Component({
   selector: 'filter-dropdown-location',
@@ -12,47 +13,61 @@ export class FilterDropdownLocationComponent implements OnInit {
   @Output() changeState = new EventEmitter<string>();
   @Output() changeValue = new EventEmitter<void>();
 
-  public formAddress:FormGroup;
+  public form:FormGroup;
 
   constructor(_fb: FormBuilder) {
-    this.formAddress = _fb.group({
+    this.form = _fb.group({
       address: new FormControl(),
       state: new FormControl(),
       city: new FormControl(),
       zipcode: new FormControl(),
       latitude: new FormControl(),
       longitude: new FormControl(),
+      distance: new FormControl(),
     })
   }
 
   ngOnInit(): void {
-    this.formAddress.controls.address.setValue( this.data.latLng ? this.data.address : this.data.defaultAddress );
+    this.form.controls.distance.setValue( this.data.distance ? this.data.distance : this.data.distanceMax);
+
+    if(this.data.latLng){
+      this.form.controls.address.setValue(this.data.address);
+      this.form.controls.latitude.setValue(this.data.latLng[0]);
+      this.form.controls.longitude.setValue(this.data.latLng[1]);
+    }
+  }
+
+  resetAddress(){
+    this.form.controls.address.setValue(this.data.defaultAddress);
+    this.form.controls.latitude.setValue(null);
+    this.form.controls.longitude.setValue(null);
+    // this.data.latLng = null;
+    // this.data.address = this.data.defaultAddress;    
   }
 
   reset() {
-    this.data.distance = this.data.distanceMax;
-    this.formAddress.controls.address.setValue(this.data.defaultAddress);
-    this.data.latLng = null;
-    this.changeState.emit('clear');
-    this.changeValue.emit();
+    this.resetAddress();
+
+    this.form.controls.distance.setValue(this.data.distanceMax);
+    // this.data.distance = this.data.distanceMax;
+
+    // this.changeState.emit('clear');
   }
 
   save() {
-    this.data.address = this.data.address.trim(); 
+    this.data.distance = this.form.controls.distance.value;
+
+    const [lat, lng] = [this.form.controls.latitude.value, this.form.controls.longitude.value];
+    if(lat && lng){
+      this.data.address = this.form.controls.address.value;
+      this.data.latLng = [lat, lng];
+    }else{
+      this.resetAddress();
+      this.data.latLng = null;
+      this.data.address = this.data.defaultAddress;    
+  }
+
     this.changeState.emit('save'); 
-  }
-
-  private timer: any;
-  onChange(){
-    if(this.timer){ clearTimeout(this.timer); }
-    this.timer = setTimeout(()=>{ this.changeValue.emit(); },500)
-  }
-
-  onSelectAddress(){
-    if(this.timer){ clearTimeout(this.timer); }
-    this.data.latLng = [this.formAddress.controls.latitude.value, this.formAddress.controls.longitude.value];
-    this.data.address = this.formAddress.controls.address.value;
-    this.changeValue.emit();
   }
 }
 

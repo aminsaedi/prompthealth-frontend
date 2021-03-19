@@ -14,7 +14,6 @@ export class FilterDropdownSelectComponent implements OnInit, OnChanges {
   @Input() multiple = true;
 
   @Output() changeState = new EventEmitter<string>();
-  @Output() changeValue = new EventEmitter<void>();
 
   public form: FormGroup;
 
@@ -46,20 +45,9 @@ export class FilterDropdownSelectComponent implements OnInit, OnChanges {
     }
   }
 
-  changeStateRadio(idx: number) {
-    this.options.forEach((o, i) => {
-      if (i === idx) { this.options[i].active = true; } else { this.options[i].active = false; }
-    });
-    this.changeValue.emit();
-  }
-
-  changeStateCheckbox(idx: number) {
-    this.options[idx].active = !this.options[idx].active;
-    this.changeValue.emit();
-  }
-
   reset() {
-    this.options.forEach(o => { o.active = false; });
+    // this.options.forEach(o => { o.active = false; });
+
     if(this.multiple){
       (this.form.controls.checkbox as FormArray).controls.forEach(c => {
         c.setValue(false);
@@ -67,9 +55,25 @@ export class FilterDropdownSelectComponent implements OnInit, OnChanges {
     }else{
       this.form.controls.radio.setValue('');
     }
-    this.changeState.emit(this.target);
-    this.changeValue.emit();
+    // this.changeState.emit('clear');
   }
-  save() { this.changeState.emit(this.target); }
 
+  save() { 
+    if(this.multiple){
+      (this.form.controls.checkbox as FormArray).controls.forEach((c, i) => {
+        this.options[i].active = c.value;
+      });
+    }else{
+    }
+
+    this.options.forEach((o, i) => {
+      if(this.multiple){
+        o.active = (this.form.controls.checkbox as FormArray).controls[i].value;
+      }else{
+        o.active = (this.form.controls.radio.value == o._id) ? true : false;
+      }
+    });
+    
+    this.changeState.emit('save'); 
+  }
 }
