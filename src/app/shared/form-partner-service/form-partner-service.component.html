@@ -1,0 +1,30 @@
+  <h4>Product / Services</h4>
+
+  <div class="mb-5">
+    <form-service
+    [data]="data.services"
+    [disabled]="disabled"
+    (changeValue)=onChangeSelectedServices($event)
+    ></form-service>
+  </div>
+
+
+  <h4>Product Images (max 5)</h4>
+
+  <ul class="d-flex list-unstyled product-images">
+    <ng-container *ngFor="let imageForm of formImages.controls; let i = index;">
+      <li class="rounded">
+        <img [src]="baseURLImage + imageForm.value" [alt]="'product image ' + (i + 1)">
+        <button 
+        *ngIf="!disabled"
+        class="btn btn-remove" 
+        type="button" 
+        (click)="removeProductImage(i)"
+        ><i class="fas fa-times"></i></button>
+      </li>
+    </ng-container>
+    <li class="rounded" *ngIf="formImages.length < 5 && !disabled">
+      <i class="fas fa-plus icon-add"></i>
+      <input type="file" class="cursor-pointer" accept="image/jpeg, image/png" multiple (change)="onSelectProductImages($event)">
+    </li>
+  </ul>

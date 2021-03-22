@@ -114,6 +114,27 @@ export class WrapperComponent implements OnInit, OnDestroy {
     link: 'my-performance',
     active,
   })
+
+  public partnerServiceTab = (active) => ({
+    description: 'List your services',
+    title: 'Service',
+    link: 'partner-service',
+    active,
+  });
+
+  public partnerProfileTab = (active) => ({
+    description: 'Add & Edit your basic info',
+    title: 'Profile',
+    link: 'partner-profile',
+    active,
+  });
+
+  public partnerOfferTab = (active) => ({
+    description: 'Add & Edit your offer',
+    title: 'Offer',
+    link: 'partner-offer',
+    active,
+  })
   
   // tslint:disable-next-line: member-ordering
   listing: any[] = [
@@ -132,21 +153,35 @@ export class WrapperComponent implements OnInit, OnDestroy {
     this.getProfileDetails();
     // this.getSubscriptionPlan('user/get-plans');
   }
-  getProfileDetails() {
+  async getProfileDetails() {
     this.userInfo = JSON.parse(localStorage.getItem('user'));
-    const path = `user/get-profile/${this.userInfo._id}`;
-    this._sharedService.get(path).subscribe((res: any) => {
-      if (res.statusCode === 200) {
-        this.profile = res.data[0];
+    if(this.userInfo){
+      try { 
+        this.profile = await this._managementService.getProfileDetail(this.userInfo); 
         this.setUserPremiumStatus();
-        if (this.profile) { this.setListing(this.profile); }
-      } else {
-        this._sharedService.checkAccessToken(res.message);
+        this.setListing(this.profile);
       }
-    }, err => {
+      catch(error){ 
+        console.log(error);
+      }
+    }else{
+      console.log('cannot fine user data in localstorage');
+    }
 
-      this._sharedService.checkAccessToken(err);
-    });
+
+    // const path = `user/get-profile/${this.userInfo._id}`;
+    // this._sharedService.get(path).subscribe((res: any) => {
+    //   if (res.statusCode === 200) {
+    //     // this.profile = res.data[0];
+    //     this.setUserPremiumStatus();
+    //     if (this.profile) { this.setListing(this.profile); }
+    //   } else {
+    //     this._sharedService.checkAccessToken(res.message);
+    //   }
+    // }, err => {
+
+    //   this._sharedService.checkAccessToken(err);
+    // });
   }
 
   setUserPremiumStatus() {
@@ -195,12 +230,114 @@ export class WrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  setListing(profile) {
+  setListing(profile: any) {
     if (profile) {
+      switch(profile.roles){
+        case 'U':
+          this.listing = [
+            this.profileTab(true),
+            this.passwordTab(true),
+            this.bookingTab(true),
+            this.favouriteTab(true),
+            this.reviewTab(true),
+          ];
+          break;
+        case 'SP':
+          if(this.isPremium) {
+            this.listing = [
+              this.performanceTab(true),
+              this.profileTab(true),
+              this.passwordTab(true),
+              this.serviceTab(true),
+              this.socialTab(true),
+              this.badgeTab(true),
+              this.bookingTab(true),
+            ];
+
+            if(profile.plan && profile.plan.videoUpload) { this.listing.push( this.videoTab(true) ); }
+            
+            this.listing.push( this.reviewTab(true) );
+            this.listing.push( this.subscriptionTab(true) );
+            this.listing.push( this.paymentTab(true) );
+
+          }else {
+            this.listing =  [
+              this.profileTab(true),
+              this.passwordTab(true),
+              this.serviceTab(true),
+              this.subscriptionTab(true),
+              this.paymentTab(true),
+              this.performanceTab(false),
+              this.socialTab(false),
+              this.badgeTab(false),
+              this.bookingTab(false),
+              this.videoTab(false),
+              this.reviewTab(false),
+            ];
+          }
+
+          break;
+        case 'C':
+          if(this.isPremium) {
+            this.listing = [
+              this.performanceTab(true),
+              this.profileTab(true),
+              this.passwordTab(true),
+              this.serviceTab(true),
+              this.socialTab(true),
+              this.badgeTab(true),
+              this.bookingTab(true),
+              this.reviewTab(true),
+            ];
+
+            if(profile.plan && profile.plan.ListAmenities) { this.listing.push( this.amenityTab(true) ); }
+            if(profile.plan && profile.plan.ListOfProviders) { this.listing.push( this.professionalTab(true) ); }
+            if(profile.plan && profile.plan.ListProductsOption) { this.listing.push( this.productTab(true) ); }
+            if(profile.plan && profile.plan.videoUpload) { this.listing.push( this.videoTab(true) ); }
+
+            this.listing.push( this.subscriptionTab(true) );
+            this.listing.push( this.paymentTab(true) );
+          }
+          else {
+            this.listing = [
+              this.profileTab(true),
+              this.passwordTab(true),
+              this.serviceTab(true),
+              this.subscriptionTab(true),
+              this.paymentTab(true),
+              this.performanceTab(false),
+              this.socialTab(false),
+              this.badgeTab(false),
+              this.bookingTab(false),
+              this.reviewTab(false),
+              this.amenityTab(false),
+              this.professionalTab(false),
+              this.productTab(false),
+              this.videoTab(false),
+            ];
+          }
+          break;
+
+        case 'P':
+          this.listing = [
+            this.partnerProfileTab(true),
+            this.passwordTab(true),
+            this.partnerServiceTab(true),
+            this.partnerOfferTab(true),
+          ];
+          break;
+      }
+      
+      if(profile.isVipAffiliateUser){
+        this.listing.push( this.affiliateTab(true) );
+      }
+
+      return;
+
+
+
       if (profile.roles !== 'U') {
-        this.listing.push(
-          this.serviceTab(true)
-        );
+        this.listing.push( this.serviceTab(true) );
       }
 
       if (profile.isVipAffiliateUser) {

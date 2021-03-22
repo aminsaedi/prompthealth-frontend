@@ -99,13 +99,21 @@ export class ProfileManagementChildGuard implements CanActivateChild {
         }
         break;
 
+      case 'partner-service':
+      case 'partner-profile':
+      case 'partner-offer':
+        /** if user role is P, true */
+        if(role == 'p'){ return true; }
+        break;
+
       case 'my-affiliate': 
         /** if user vip, true */
         if(profile.isVipAffiliateUser){ return true; }
         break;
     }
 
-    this._router.navigate(['/dashboard/profilemanagement/my-profile']);
+    if(role == 'p'){ this._router.navigate(['/dashboard/profilemanagement/partner-profile']); }
+    else{ this._router.navigate(['/dashboard/profilemanagement/my-profile']); }
     return false;
   }
 }

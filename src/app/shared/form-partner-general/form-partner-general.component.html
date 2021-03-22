@@ -1,0 +1,140 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row mb-4">
+    <label class="col-md-4" for="name">
+      Cover photo
+      <span class="text-danger">*</span>
+    </label>
+    <div class="col-md-8">
+      <button type="button" class="btn px-5 text-blue border-blue font-regular position-relative" *ngIf="!disabled">
+        Upload cover photo
+        <input type="file" class="cursor-pointer" accept="image/jpeg, image/png" (change)="onSelectCoverPhoto($event)">
+      </button>
+      <div class="mt-2">
+        <img class="preview" *ngIf="f.profileImage.value" [src]="baseURLImage + f.profileImage.value" alt="cover photo">
+      </div>
+      <form-errors [controller]="f.profileImage" label="Cover photo" [submitted]="isSubmitted"></form-errors>
+
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="firstName">
+      Company name 
+      <span class="text-danger">*</span>
+    </label>
+    <div class="col-md-8">
+      <form-input 
+      name="firstName"
+      label="Company name" 
+      type="text"
+      [controller]="f.firstName" 
+      [max]="maxName"
+      [submitted]="isSubmitted" 
+      [disabled]="disabled"
+      ></form-input>           
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="description">
+      Description
+      <span class="text-danger">*</span>
+    </label>
+    <div class="col-md-8">
+      <form-textarea
+      name="description"
+      label="Description"
+      placeholder="Tell a little bit about your company"
+      [controller]="f.product_description"
+      [max]="maxTextarea"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-textarea>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="email">
+      Email 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-input 
+      name="email"
+      label="Email" 
+      type="email"
+      [controller]="f.email"
+      [submitted]="isSubmitted" 
+      [disabled]="true"
+      ></form-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="phone">
+      Phone Number 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-input 
+      name="phone"
+      label="Phone number" 
+      type="tel"
+      [controller]="f.phone" 
+      [submitted]="isSubmitted" 
+      [disabled]="disabled"
+      ></form-input>           
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="address">
+      Location 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-input-address
+      name="address"
+      label="Location" 
+      [controllerGroup]="form" 
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-input-address>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="website">
+      Website Link 
+    </label>
+    <div class="col-md-8">
+      <form-input 
+      name="website"
+      label="Website Link" 
+      type="text"
+      [controller]="f.website" 
+      [submitted]="isSubmitted" 
+      [disabled]="disabled"
+      ></form-input>       
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="message">
+      Message to platform
+    </label>
+    <div class="col-md-8">
+      <form-textarea
+      name="message"
+      label="Message"
+      [controller]="f.messageToPlatform"
+      [max]="maxTextarea"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      placeholder="We would like to collaborate with you. Please share your idea how we grow together!"
+      ></form-textarea>
+    </div>
+  </div>
+
+  <input type="submit" class="d-none">
+</form>

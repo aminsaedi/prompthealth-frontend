@@ -14,6 +14,7 @@ export class FormInputAddressComponent implements OnInit {
   @Input() placeholder: string = '';
   @Input() submitted: boolean = false;
   @Input() controllerGroup: FormGroup;
+  @Input() disabled: boolean = false;
 
   @Output() selectAddress = new EventEmitter<void>();
 

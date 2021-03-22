@@ -1,0 +1,123 @@
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, Validators, FormArray} from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+
+@Component({
+  selector: 'form-partner-offer',
+  templateUrl: './form-partner-offer.component.html',
+  styleUrls: ['./form-partner-offer.component.scss']
+})
+export class FormPartnerOfferComponent implements OnInit {
+
+  @Input() data: any;
+  @Input() disabled = false;
+
+  @Output() submitForm = new EventEmitter<PartnerOfferData>(); /** it does NOT return userID */
+
+  public offers: {id: string, label: string, placeholder: string}[] = [
+    {id: 'couponLink',    label: 'Coupons',        placeholder: 'Coupon name',},
+    {id: 'sampleLink',    label: 'Free samples',   placeholder: 'https://example.com', },
+    {id: 'trialLink',     label: 'Trials',         placeholder: 'https://example.com', },
+    {id: 'affiliateLink', label: 'Affiliate Link', placeholder: 'https://example.com', }
+  ];
+
+  public form: FormGroup;
+  public isSubmitted: boolean = false;
+
+  public maxCode = 50;
+
+  private patternURL = "http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?";
+  private patternPrice = "[0-9]{1,}(\\.[0-9]{1,2})?";
+
+
+  get f(){ return this.form.controls; }
+  getFormArray(name: string){ return this.form.controls[name] as FormArray; }
+
+  constructor(
+    private _fb: FormBuilder,
+    private _toastr: ToastrService,
+  ) { }
+
+  ngOnInit(): void {
+
+    this.form = this._fb.group({
+      isFree: new FormControl((this.data.isFree ? this.data.isFree : false)),
+      priceLevel: new FormControl((this.data.priceLevel ? this.data.priceLevel : ''), [Validators.required]),
+      price1: new FormControl((this.data.price1 ? this.data.price1 : ''), [Validators.pattern(this.patternPrice)]),
+      price2: new FormControl((this.data.price2 ? this.data.price2 : ''), [Validators.pattern(this.patternPrice)]),
+      signupURL: new FormControl((this.data.signupURL ? this.data.signupURL : ''), [Validators.pattern(this.patternURL)]),
+      couponLink: new FormArray([
+        new FormControl(this.data.couponLink ? true : false),
+        new FormControl(this.data.couponLink ? this.data.couponLink : '', []),
+      ]),
+      sampleLink: new FormArray([
+        new FormControl(this.data.sampleLink ? true : false),
+        new FormControl(this.data.sampleLink ? this.data.sampleLink : '', [Validators.pattern(this.patternURL)]),        
+      ]),
+      trialLink: new FormArray([
+        new FormControl(this.data.trialLink ? true : false),
+        new FormControl(this.data.trialLink ? this.data.trialLink : '', [Validators.pattern(this.patternURL)]),        
+      ]),
+      affiliateLink: new FormArray([
+        new FormControl(this.data.affiliateLink ? true : false),
+        new FormControl(this.data.affiliateLink ? this.data.affiliateLink : '', [Validators.pattern(this.patternURL)]),        
+      ]),
+    });
+  }
+
+
+  onChangeForFree(isFree: boolean){
+    if(isFree){
+      this.f.priceLevel.clearValidators();
+      this.f.priceLevel.setValue('');
+      this.f.price1.setValue('');
+      this.f.price2.setValue('');
+    }else{
+      this.f.priceLevel.setValidators(Validators.required);
+    }
+    this.f.priceLevel.updateValueAndValidity();
+  }
+
+  onChangeOfferCheck(id: string){
+    const control = this.getFormArray(id).controls as FormControl[];
+    if(!control[0].value){ control[1].setValue(''); }
+  }
+
+
+  onSubmit(){
+    this.isSubmitted = true;
+    if(this.form.invalid){
+      this._toastr.error('There are some items that require your attention.');
+      return; 
+    }
+
+    const data: PartnerOfferData = {
+      isFree: this.f.isFree.value,
+      priceLevel: this.f.priceLevel.value || null,
+      price1: this.f.price1.value || null,
+      price2: this.f.price2.value || null,
+      signupURL: this.f.signupURL.value,      
+    };
+
+    this.offers.forEach(o=>{
+      const control = this.getFormArray(o.id).controls as FormControl[];
+      if(control[0].value && control[1].value != ''){
+        data[o.id]= control[1].value;   
+      }
+    });
+    this.isSubmitted = false;
+    this.submitForm.emit(data);
+  }
+}
+
+export interface PartnerOfferData {
+  isFree: boolean;
+  priceLevel: number;
+  price1: number;
+  price2: number;
+  signupURL: string;
+  couponLink?: String;
+  sampleLink?: string;
+  trialLink?: string;
+  affiliateLink?: string;
+}

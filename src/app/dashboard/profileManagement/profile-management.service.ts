@@ -37,13 +37,26 @@ export class ProfileManagementService {
             this._bs.setUserVerifiedStatus(this.profileDetail.verifiedBadge);
             resolve(this.profileDetail);
           }
-          else{ reject('cannot find user data'); }
+          else{ 
+            checkAccessToken(res);
+            reject('cannot find user data');             
+          }
         },
         err => { 
           console.log(err);
+          checkAccessToken(err);
           reject('cannot connect to server'); 
         });
       }
     });
+  }
+}
+
+/** remove token because if it's expired (same as SharedService.checkAccessToken) */    
+function checkAccessToken(err: any){
+  if(typeof err == 'object'){
+    if ((err.code == 401 && err.message == 'authorization')) {
+      localStorage.removeItem('token');
+    }  
   }
 }

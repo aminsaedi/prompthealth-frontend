@@ -1,5 +1,7 @@
 @import "../../../../assets/scss/mixins";
-
+:host{
+  font-size: 16px;
+}
 
 .mrt{
   margin-top: 12px;

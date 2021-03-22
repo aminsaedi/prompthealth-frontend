@@ -3,6 +3,8 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { Router, NavigationEnd, ActivationStart } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
+declare let gtag: Function;
+
 @Injectable()
 export class ScrollTopService {
 
@@ -19,6 +21,12 @@ export class ScrollTopService {
         if (event instanceof ActivationStart) { this.isInitial = false; }
 
         if (event instanceof NavigationEnd) {
+          /** google analytics */
+          gtag('config', 'UA-192757039-1',{
+            'page_path': event.urlAfterRedirects
+          });
+
+
           if (event.url.match(/#addon/)) {
             const timer = this.isInitial ? 1000 : 400;
             setTimeout(() => {

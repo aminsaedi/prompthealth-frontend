@@ -99,8 +99,8 @@ export class LoginComponent implements OnInit {
         social_id: x.id,
         profileImage: x.photoUrl,
         firstName: x.firstName,
-        lastName: x.lastName
-
+        lastName: x.lastName,
+        roles: 'U'
       };
       // console.log(x);
       this._sharedService.socialRegister(payload).subscribe((res: any) => {
@@ -118,6 +118,7 @@ export class LoginComponent implements OnInit {
         }
       }, (error) => {
         this.toastr.error('There are some error please try after some time.');
+        console.log(error);
         this._sharedService.loader('hide');
       });
     });
@@ -133,7 +134,8 @@ export class LoginComponent implements OnInit {
         social_id: x.id,
         profileImage: x.photoUrl,
         firstName: x.firstName,
-        lastName: x.lastName
+        lastName: x.lastName,
+        roles: 'U'
       };
 
       this._sharedService.socialRegister(payload).subscribe((res: any) => {
@@ -150,7 +152,8 @@ export class LoginComponent implements OnInit {
           this.toastr.error(res.message);
         }
       }, (error) => {
-        this.toastr.error(error.message);
+        console.log(error);
+        this.toastr.error('There are some error please try after some time.');
         this._sharedService.loader('hide');
       });
     });

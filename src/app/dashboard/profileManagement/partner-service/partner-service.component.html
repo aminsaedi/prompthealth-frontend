@@ -1,0 +1,29 @@
+<ngx-spinner bdColor="#fff" size="medium" color="#fff">
+  <p style="font-size: 20px; color: white" class="loaderbg">
+    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  </p>
+</ngx-spinner>
+
+<h3 class="mb-3">
+  Service
+  <button 
+  *ngIf="profile"
+  class="btn btn-primary pull-right" 
+  (click)="toggleEdit()"
+  >Edit</button>
+</h3>
+
+<div class="mt-5" *ngIf="profile">
+  <form (ngSubmit)="update()">
+    <form-partner-service
+    [data]="profile"
+    [disabled]="!isEditing"
+    (changeService)="onChangeSelectedServices($event)"
+    (changeImage)="onChangeUploadedImages($event)"
+    ></form-partner-service>
+
+    <div class="mt-3 text-right" *ngIf="isEditing">
+      <input class="btn btn-ph-blue" type="submit" value="Update">
+    </div>
+  </form>
+</div>

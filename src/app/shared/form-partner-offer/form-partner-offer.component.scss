@@ -1,0 +1,24 @@
+:host{
+  font-size: 16px;
+}
+
+h4{
+  font-size: 1em;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+
+label.price-range{
+  font-size: 25px;
+  padding: 10px 15px;  
+  &:first-child{ padding-left: 0; }
+
+  i{
+    color: #B1B1B1;
+    &.active{ 
+      color: var(--ph-blue);
+      -webkit-text-stroke: 1px; 
+    }
+  }  
+}

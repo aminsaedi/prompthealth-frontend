@@ -458,6 +458,7 @@ export class ListingComponent implements OnInit, OnDestroy {
         this.toastr.error(res.message);
       }
     }, err => {
+      console.log(err);
       this._sharedService.loader('hide');
     });
   }

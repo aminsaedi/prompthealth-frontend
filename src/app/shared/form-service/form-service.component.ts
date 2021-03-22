@@ -11,6 +11,7 @@ export class FormServiceComponent implements OnInit {
 
   @Input() data: string[] = null; /** serviceId[] */
   @Input() col2: boolean = true;
+  @Input() disabled: boolean = false;
 
   @Output() changeValue = new EventEmitter<string[]>();
 
