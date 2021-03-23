@@ -1,7 +1,9 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { SharedService } from '../../shared/services/shared.service';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-questionnaire',
   templateUrl: './questionnaire.component.html',
@@ -31,14 +33,22 @@ export class QuestionnaireComponent implements OnInit {
     options: []
   };
 
+  private subAnswers: any = {}; /** {parentId: subanswer[]} */
+
+  public form: FormGroup;
+  get f(){ return this.form.controls; }
+  fArray(name: string){ return this.f[name] as FormArray; }
+
   @Output() ActiveNextTab = new EventEmitter<string>();
-  constructor
-    (
-      private toastr: ToastrService,
-      private _router: Router,
-      private _sharedService: SharedService,) { }
+  constructor(
+    private toastr: ToastrService,
+    private _router: Router,
+    private _sharedService: SharedService,
+    private _fb: FormBuilder
+  ) { }
 
   ngOnInit(): void {
+    this.form = this._fb.group({});
 
     this.userSavePayload = {
       _id: localStorage.getItem('loginID'),
@@ -54,12 +64,35 @@ export class QuestionnaireComponent implements OnInit {
     this.getSelectedSkill();
   }
 
+  initForm(){
+    this.questionnaire.forEach((q: any) => { 
+      if(q.choice_type == 'single'){
+        this.form.addControl(q.slug, new FormControl());
+      }
+      else{
+        this.form.addControl(q.slug, new FormArray([]));
+        q.answers.forEach(() => {
+          this.fArray(q.slug).push(new FormControl(false));
+        });  
+      }
+    });
+  }
+
+  addFormControl(subRes: {quesId, options: any[]}){
+    if(!this.form.contains(subRes.quesId)){
+      this.form.addControl(subRes.quesId, new FormArray([]));
+      subRes.options.forEach(q => {
+        this.fArray(subRes.quesId).push(new FormControl(false));
+      });
+    }
+  }
+
   getSelectedSkill() {
     let path = `questionare/get-questions?type=${this.type}`;
     this._sharedService.get(path).subscribe((res: any) => {
       if (res.statusCode === 200) {
         this.questionnaire = res.data;
-
+        this.initForm();
       } else {
         this._sharedService.checkAccessToken(res.message);
       }
@@ -84,11 +117,31 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   saveQuestionnaire() {
+    const services = [];
+    this.questionnaire.forEach((q: any) => {
+      const f = this.fArray(q.slug);
+      f.controls.forEach((c, i) => {
+        if(c.value){
+          const id = q.answers[i]._id;
+          services.push(id);
+          if(this.form.contains(id)){
+            const fSub = this.fArray(id);
+            fSub.controls.forEach((cSub, j) => {
+              if(cSub.value){
+                const idSub = this.subAnswers[id][j]._id;
+                services.push(idSub);
+              }
+            });
+          }
+        }
+      });
+    });
+
     this._sharedService.loader('show');
     let payload;
     payload = {
       _id: localStorage.getItem('loginID'),
-      services: this.selectedItems,
+      services: services,
     }
 
     let path = 'user/updateServices';
@@ -130,12 +183,14 @@ export class QuestionnaireComponent implements OnInit {
       }
     }
     if (evt.target.checked && subOption) {
-      this.subRes.question = evt.target.name
-      this.subRes.quesId = parentId;
       const path = `questionare/get-answer/${evt.target.id}`;
       this._sharedService.get(path).subscribe((res: any) => {
         if (res.statusCode === 200) {
+          this.subRes.question = evt.target.name
+          this.subRes.quesId = parentId;
           this.subRes.options = res.data;
+          this.subAnswers[this.subRes.quesId] = res.data;
+          this.addFormControl(this.subRes);
         } else {
           this._sharedService.checkAccessToken(res.message);
         }
