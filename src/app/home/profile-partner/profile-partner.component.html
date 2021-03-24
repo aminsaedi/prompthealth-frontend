@@ -39,7 +39,7 @@
         <div *ngIf="currentTabIndex == 0">
           <div class="px-4">
             <h3 class="mb-4">{{profile?.name}}</h3>
-            <p class="whitespace-pre" [ngClass]="{'clamp-4line': isDescriptionClamped}">{{profile?.description}}</p>            
+            <p class="whitespace-prewrap" [ngClass]="{'clamp-4line': isDescriptionClamped}">{{profile?.description}}</p>            
             <button class="btn text-ph-blue pl-0 font-regular" (click)="toggleDescriptionLength()">
               <u *ngIf="isDescriptionClamped">See full profile</u>
               <u *ngIf="!isDescriptionClamped">See less profile</u>
@@ -79,15 +79,15 @@
                 <td class="pl-4 text-ph-blue">Coupon</td>
                 <td class="pl-0">{{profile.coupon}}</td>
               </tr>
-              <tr *ngIf="profile?.coupon" class="font-weight-bold">
+              <tr *ngIf="profile?.sampleLink" class="font-weight-bold">
                 <td class="pl-4 text-ph-blue">Sample</td>
                 <td class="pl-0"><a [href]="profile.sampleLink" target="_blank">{{profile.sampleLinkLabel}}</a></td>
               </tr>
-              <tr *ngIf="profile?.coupon" class="font-weight-bold">
+              <tr *ngIf="profile?.affiliateLink" class="font-weight-bold">
                 <td class="pl-4 text-ph-blue">Affiliate</td>
                 <td class="pl-0"><a [href]="profile.affiliateLink" target="_blank">{{profile.affiliateLinkLabel}}</a></td>
               </tr>
-              <tr *ngIf="profile?.coupon" class="font-weight-bold">
+              <tr *ngIf="profile?.trialLink" class="font-weight-bold">
                 <td class="pl-4 text-ph-blue">Trial</td>
                 <td class="pl-0"><a [href]="profile.trialLink" target="_blank">{{profile.trialLinkLabel}}</a></td>
               </tr>
