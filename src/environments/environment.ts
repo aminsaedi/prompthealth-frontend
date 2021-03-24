@@ -20,7 +20,9 @@ export const environment = {
     AWS_S3: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/',
 
     APPLE_TEAM_ID: '8JS3W47P32',
-    APPLE_CLIENT_ID: 'com.prompthealthtest'
+    APPLE_CLIENT_ID: 'com.prompthealthtest',
+
+    disableAnalytics: true,
   },
   api_routes: {
     LOGIN: 'login',

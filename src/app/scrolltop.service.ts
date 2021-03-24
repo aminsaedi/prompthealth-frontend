@@ -2,6 +2,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { Router, NavigationEnd, ActivationStart } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from 'src/environments/environment';
 
 declare let gtag: Function;
 
@@ -14,6 +15,7 @@ export class ScrollTopService {
   }
 
   private isInitial = true;
+  private disableAnalytics: boolean = environment.config.disableAnalytics;
 
   setScrollTop() {
     if (isPlatformBrowser(this.platformId)) {
@@ -22,9 +24,11 @@ export class ScrollTopService {
 
         if (event instanceof NavigationEnd) {
           /** google analytics */
-          gtag('config', 'UA-192757039-1',{
-            'page_path': event.urlAfterRedirects
-          });
+          if(!this.disableAnalytics){
+            gtag('config', 'UA-192757039-1',{
+              'page_path': event.urlAfterRedirects
+            });  
+          }
 
 
           if (event.url.match(/#addon/)) {
