@@ -484,12 +484,12 @@ export class WrapperComponent implements OnInit, OnDestroy {
     }
 
     const data = {
-      _id: this.profile._id,
+      id: this.profile._id,
       phListedLink: this.formPhListedLink.value,
     }
 
     this._sharedService.loader('show');
-    this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
+    this._sharedService.post(data, 'partner/update-status').subscribe((res: any) => {
       this._sharedService.loader('hide');
       if(res.statusCode == 200){
         this._toastr.success(res.message);
