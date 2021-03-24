@@ -170,7 +170,6 @@ export class LoginComponent implements OnInit {
       const data = JSON.stringify(this.loginForm.value);
       this._sharedService.loader('show');
       this._sharedService.login(data).subscribe((res: any) => {
-        console.log(res);
         this._sharedService.loader('hide');
         if (res.statusCode === 200) {
           this._sharedService.loginUser(res, 'login');

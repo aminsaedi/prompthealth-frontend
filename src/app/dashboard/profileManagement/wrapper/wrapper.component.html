@@ -57,10 +57,45 @@
         <div class="col-md-9">
           <!-- Tab panes -->
           <div class="tab-content py-3">
-            <div class="bg-grey p-4 mb-3" *ngIf="profile?.isApproved === false">
-              <p class="font-italic mb-0 font-big">Your profile is been reviewed by our administrator and won't be shown in listing just yet.</p>
-            </div>
-            
+            <ng-container *ngIf="profile?.isApproved == false">
+              <div class="bg-grey p-4 mb-3">
+                <p class="font-italic mb-0 font-big" *ngIf="profile.roles !== 'P'">
+                  Your profile is being reviewed by our administrator and won't be shown in listing just yet.
+                </p>
+
+                <ng-container *ngIf="profile.roles == 'P'">
+                  <div *ngIf="!profile.phListedLink">
+                    <p class="font-italic font-big">
+                      To get listed with us as a partner, please link Prompt Health to your website, social media, or other platform first. 
+                    </p>
+                    <button class="btn btn-ph-blue" (click)="isPhLinkFieldShown = true">I added the link</button>    
+                  </div>
+
+                  <div *ngIf="profile.phListedLink">
+                    <p class="font-italic font-big">
+                      Your profile is being reviewed by our administrator and won't be shown in listing just yet.<br><br>
+                      If needed, you can edit the URL where you have linked Prompt Health.
+                    </p>
+                    <button class="btn btn-ph-blue" (click)="isPhLinkFieldShown = true">Edit</button>    
+                  </div>
+                </ng-container>
+                <form (ngSubmit)="onSubmitPhListedLink()" *ngIf="isPhLinkFieldShown" class="mt-3">
+                  <form-input
+                  name="phListedLink"
+                  label="Link"
+                  placeholder="Enter the URL to where you have linked Prompt Health"
+                  [controller]="formPhListedLink"
+                  [submitted]="isFormPhListedLinkSubmitted"
+                  ></form-input>  
+                  <div class="mt-3">
+                    <input type="submit" class="btn btn-ph-blue" value="Submit">
+                  </div>
+                </form>
+              </div>
+
+              
+            </ng-container>
+
             <router-outlet></router-outlet>
           </div>
         </div>

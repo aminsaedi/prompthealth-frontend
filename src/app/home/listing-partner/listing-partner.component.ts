@@ -47,7 +47,8 @@ export class ListingPartnerComponent implements OnInit {
     count: 20,
     page: 1,
     priceLevel: 0,
-    keyword: ''
+    keyword: '',
+    frontend: 1,
   }
 
   @ViewChild(FormServiceComponent) private formServiceComponent: FormServiceComponent;
@@ -164,4 +165,5 @@ type SearchQuery = {
   page: number;
   priceLevel: number;
   keyword: string; 
+  frontend: number;
 }

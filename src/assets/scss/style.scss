@@ -390,6 +390,13 @@ textarea.form-control {
   -webkit-text-fill-color: transparent;
 }
 
+.text-gradient-on-blue{
+  background: -webkit-linear-gradient(135deg, rgb(89 147 214) 0%, rgb(49 100 156) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .text-gradient-light {
   background: $ph-gradient-light;
   -webkit-background-clip: text;

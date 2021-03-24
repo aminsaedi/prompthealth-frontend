@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { SharedService } from '../../../shared/services/shared.service';
 import { ProfileManagementService } from '../profile-management.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-wrapper',
@@ -11,9 +13,15 @@ export class WrapperComponent implements OnInit, OnDestroy {
   constructor(
     private _sharedService: SharedService,
     private _managementService: ProfileManagementService,
+    private _toastr: ToastrService,
   ) { }
   public profile;
   public isPremium = false; /** if the user is vip or subscribe plans, true. */
+  public isPhLinkFieldShown = false;
+  public formPhListedLink: FormControl;
+  public isFormPhListedLinkSubmitted = false;
+
+  private patternURL = "http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?";
 
   userInfo;
 
@@ -150,6 +158,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
   ngOnDestroy() { this._managementService.destroyProfileDetail(); }
 
   ngOnInit(): void {
+    this.formPhListedLink = new FormControl('', [Validators.required, Validators.pattern(this.patternURL)]);
     this.getProfileDetails();
     // this.getSubscriptionPlan('user/get-plans');
   }
@@ -158,6 +167,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
     if(this.userInfo){
       try { 
         this.profile = await this._managementService.getProfileDetail(this.userInfo); 
+        this.formPhListedLink.setValue(this.profile.phListedLink);
         this.setUserPremiumStatus();
         this.setListing(this.profile);
       }
@@ -464,5 +474,35 @@ export class WrapperComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  onSubmitPhListedLink(){
+    this.isFormPhListedLinkSubmitted = true;
+    if(this.formPhListedLink.invalid){
+      this._toastr.error('There is an item that require your attention.');
+      return;
+    }
+
+    const data = {
+      _id: this.profile._id,
+      phListedLink: this.formPhListedLink.value,
+    }
+
+    this._sharedService.loader('show');
+    this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
+      this._sharedService.loader('hide');
+      if(res.statusCode == 200){
+        this._toastr.success(res.message);
+        this.isFormPhListedLinkSubmitted = false;
+        this.isPhLinkFieldShown = false;
+        this.profile = res.data;
+      }else{
+        this._toastr.error(res.message);
+      }
+    }, error => {
+      this._sharedService.loader('hide');
+      console.log(error);
+      this._toastr.error('There are some errors, please try again after some time.');
+    });
   }
 }

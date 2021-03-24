@@ -44,7 +44,7 @@ export class SharedService {
   }
 
 
-  logout() {
+  logout(navigate: boolean = true) {
 
     localStorage.removeItem('token');
     localStorage.removeItem('loginID');
@@ -56,7 +56,9 @@ export class SharedService {
     this.showAlert('Logout Sucessfully', 'alert-success');
 
     localStorage.setItem('userType', 'U');
-    this._router.navigate(['/auth/login']);
+    if(navigate){
+      this._router.navigate(['/auth/login']);
+    }
   }
 
   get(path, setParams = {}) {

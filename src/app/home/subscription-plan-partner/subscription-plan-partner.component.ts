@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -14,17 +15,19 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
 
   public isPriceMonthly: boolean = true;
   public partnerPlan: any = null;
+  public userType = '';
 
   public form: FormGroup;
 
-  private isLoggedIn = false;
+  private isLoggedIn = false; /** can delete */
   private subscription: Subscription;
 
   constructor(
     private _sharedService: SharedService,
     private _toastr: ToastrService,
     private _spinner: NgxSpinnerService,
-    _fb: FormBuilder
+    private _router: Router,
+    _fb: FormBuilder,
   ) {
     this.form = _fb.group({
       firstname: new FormControl('', Validators.required),
@@ -40,6 +43,10 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
 
   ngOnInit(): void {
     if (localStorage.getItem('token')) { this.isLoggedIn = true; }
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(user){
+      this.userType = user.roles;
+    }
 
     /** enable to get usbscription plan after api is ready */
 //    this.getSubscriptionPlan('user/get-plans');
@@ -47,6 +54,11 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
 if (this.isLoggedIn === true) {
 //      this.getProfileDetails();
     }
+  }
+
+  onLogout(){
+    this._sharedService.logout(false);
+    this._router.navigate(['/auth/registration/P']);
   }
 
   getSubscriptionPlan(path) {

@@ -39,10 +39,14 @@ export class ProfileManagementChildGuard implements CanActivateChild {
     const urls = state.url.split('/')
     const url = urls[urls.length - 1];
     switch(url){
-      case 'my-profile':
       case 'my-password':
         /** if user logged in, true */
         return true;
+      
+      case 'my-profile':
+        /** if user role is not P , true */
+        if(role != 'p'){ return true; }
+        break;
 
       case 'my-booking':
       case 'reviews-ratings':
@@ -60,16 +64,16 @@ export class ProfileManagementChildGuard implements CanActivateChild {
       case 'my-subscription':
       case 'my-service':
       case 'my-payment':
-          /** if user role is not U, true  */
-        if(role !== 'u'){ return true; }
+          /** if user role is not U nor not P, true  */
+        if(role !== 'u' && role !== 'p'){ return true; }
         break;
 
       case 'videos-blogs':
       case 'my-social':
       case 'my-badge':
       case 'my-performance':
-          /** if user role is not U && premium account, true  */
-        if(role !== 'U'){
+          /** if user role is not U && user role is not P && premium account, true  */
+        if(role !== 'u' && role !== 'p'){
           if(profile.isVipAffiliateUser){ return true; }
           else if(profile.plan && profile.plan.name !== 'Basic'){ return true; }  
         }
