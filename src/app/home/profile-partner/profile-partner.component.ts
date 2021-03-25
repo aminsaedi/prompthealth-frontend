@@ -5,6 +5,7 @@ import { SharedService } from '../../shared/services/shared.service';
 import { Partner } from '../../models/partner';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from '../../shared/services/category.service';
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile-partner',
@@ -26,9 +27,13 @@ export class ProfilePartnerComponent implements OnInit {
     private _sharedService: SharedService,
     private _catService: CategoryService,
     private _toastr: ToastrService,
+    private _meta: Meta,
+    private _title: Title,
   ) { }
 
   ngOnInit() {
+    this._meta.updateTag({property: 'og:title', content: 'This is test title'});
+
     this._route.params.subscribe(async params => {
       const id = params.id;
 

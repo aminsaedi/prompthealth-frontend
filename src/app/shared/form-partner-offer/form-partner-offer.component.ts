@@ -101,9 +101,7 @@ export class FormPartnerOfferComponent implements OnInit {
 
     this.offers.forEach(o=>{
       const control = this.getFormArray(o.id).controls as FormControl[];
-      if(control[0].value && control[1].value != ''){
-        data[o.id]= control[1].value;   
-      }
+      data[o.id] = (control[0].value && control[1].value != '') ? control[1].value : '';
     });
     this.isSubmitted = false;
     this.submitForm.emit(data);
