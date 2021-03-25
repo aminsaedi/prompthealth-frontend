@@ -7,78 +7,7 @@
   <div class="container-fluid w-max-1200">
     <div class="row m-0 justify-content-between bg-white rounded-lg overflow-hidden">
       <div class="p-5 col-md-4 order-md-2 py-md-5 pr-md-5 pl-md-0">
-        <h5 class="mb-3">
-          Sign in to PromptHealth
-        </h5>
-        <a class="btn btn-google w-100 mb-2 font-weight-bold" (click)="signInWithGoogle()"><i class="fab fa-google"></i>
-          Sign in with Google</a>
-        <a class="btn btn-facebook w-100 mb-2 font-weight-bold" (click)="signInWithFB()"><i
-            class="fab fa-facebook-square"></i> Sign in with Facebook</a>
-        <hr />
-        <div class="form-row">
-          <form class="form-row" [formGroup]="loginForm" (ngSubmit)="loginUser(loginForm)">
-            <div class="col-md-12 mb-2">
-              <label>Email address <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Enter your email" formControlName="email"
-                  [ngClass]="{ 'is-invalid': submitted && loginForm.invalid }" required />
-                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                  <div *ngIf="f.email.errors.required">Email is required</div>
-                  <div *ngIf="f.email.errors?.pattern">
-                    Email must be a valid email address
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12 mb-2">
-              <label>Password <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <input type="password" class="form-control" placeholder="Enter your password" formControlName="password"
-                  [ngClass]="{
-                    'is-invalid': submitted && loginForm.invalid
-                  }" />
-                <div *ngIf="loginForm.controls['password'].dirty || loginForm.controls['password'].touched"
-                  class="invalid-feedback">
-                  <div *ngIf="loginForm.controls['password'].hasError('required')">
-                    Password is required
-                  </div>
-                  <div *ngIf="loginForm.controls['password'].hasError('minlength')">
-                    Password must be at least 8 characters
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- <div class="col-md-12 mb-2 d-flex align-items-start mk-checkbox">
-              <input type="checkbox" formControlName="termsCondition" /><span
-                class="small"
-                >I agree to the terms of service and privacy policy</span
-              >
-              <div 
-                *ngIf="loginForm.controls['termsCondition'].dirty || loginForm.controls['termsCondition'].touched"
-                class="invalid-feedback">
-                <div  *ngIf="loginForm.controls['termsCondition'].hasError('required')">
-                  Terms of service and privacy is required
-                </div>
-              </div>
-            </div> -->
-            <div class="col-md-12">
-              <button type="submit" class="btn btn-success w-100">
-                Sign In
-              </button>
-
-              <div class="text-right mt-2">
-                <a href="" [routerLink]="['/auth/forgot-password']" class="text-primary font-weight-medium">Forgot
-                  Password?</a>
-              </div>
-              <hr />
-            </div>
-            <div class="col-md-12">
-              <a href="" [routerLink]="['/auth/registration', userType]" class="btn btn-outline-secondary w-100">Create
-                Account</a>
-            </div>
-          </form>
-        </div>
+        <form-auth></form-auth>
       </div>
       <div class="overflow-hidden col-md-8 order-md-1 pt-5 pb-0 px-5">
         <ngx-slick-carousel [config]="slideConfig">

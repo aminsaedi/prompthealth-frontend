@@ -1,3 +1,9 @@
+<ngx-spinner bdColor="#fff" size="medium" color="#fff">
+  <p style="font-size: 20px; color: white" class="loaderbg">
+    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  </p>
+</ngx-spinner>
+
 <div class="container-fluid banner position-relative" 
   [style]="(userInfo? 'background-image: url(' + userInfo?.banner + ')': '')"
 ></div>
@@ -279,7 +285,7 @@ class="container-fluid bg-grey p-4"
           <ng-container *ngIf="userInfo">
             <a *ngIf="userInfo.bookingUrl" class="btn border-blue text-blue px-5" [href]="userInfo.bookingUrl" target="_blank">Book</a>
             <button *ngIf="!userInfo.bookingUrl && isLoggedIn" class="btn border-blue text-blue px-5" type="button" data-toggle="modal" data-target="#bookingmodal">Book</button>
-            <button *ngIf="!userInfo.bookingUrl && !isLoggedIn" class="btn border-blue text-blue px-5" type="button" data-toggle="modal" data-target="#messagemodal">Login to Book</button>  
+            <button *ngIf="!userInfo.bookingUrl && !isLoggedIn" class="btn border-blue text-blue px-5" type="button" (click)="loginModal.show()">Login to Book</button>  
           </ng-container>
         </div>
   
@@ -350,7 +356,8 @@ class="container-fluid bg-grey p-4"
 <!-- Modal login -->
 <div
   class="modal fade"
-  id="messagemodal"
+  bsModal
+  #loginModal="bs-modal"
   tabindex="-1"
   role="dialog"
   aria-labelledby="messagemodal"
@@ -380,31 +387,7 @@ class="container-fluid bg-grey p-4"
         </button>
       </div>
       <div class="modal-body pb-4">
-        <div class="form-row">
-          <div class="col-md-12 mb-3">
-            <label>Email Address <span class="text-danger">*</span></label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Enter Your Email Address"
-            />
-          </div>
-          <div class="col-md-12 mb-3">
-            <label>Password <span class="text-danger">*</span></label>
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Enter Your Password"
-            />
-          </div>
-          <div class="col-md-12 d-flex justify-content-between">
-            <div class="small">
-              Not Registered yet ? <a href="/auth/registration/u">Register Here</a><br />
-              <a href="/auth/forgot-password">Forgot Your Password?</a>
-            </div>
-            <button type="submit" class="btn btn-primary px-4">Login</button>
-          </div>
-        </div>
+        <form-auth [staySamePage]="true" (changeState)="onChangeLoginState($event)"></form-auth>
       </div>
     </div>
   </div>

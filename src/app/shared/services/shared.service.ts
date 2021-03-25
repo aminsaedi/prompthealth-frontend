@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { FlashMessagesService } from 'ngx-flash-messages';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PreviousRouteService } from './previousUrl.service';
+import { BehaviorService } from './behavior.service';
 
 // import { SocialAuthService } from 'angularx-social-login';
 
@@ -37,6 +38,7 @@ export class SharedService {
     private _flashMessagesService: FlashMessagesService,
     private spinner: NgxSpinnerService,
     private previousRouteService: PreviousRouteService,
+    private _bs: BehaviorService,
 
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
@@ -54,6 +56,7 @@ export class SharedService {
     localStorage.removeItem('isVipAffiliateUser');
     // this.authService.signOut();
     this.showAlert('Logout Sucessfully', 'alert-success');
+    this._bs.setUserData({});
 
     localStorage.setItem('userType', 'U');
     if(navigate){
