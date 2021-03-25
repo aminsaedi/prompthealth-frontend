@@ -24,6 +24,7 @@ import { LoginComponent } from '../auth/login/login.component';
 import { EnterpriseContactComponent } from './enterprise-contact/enterprise-contact.component';
 // import { NgxCarouselModule } from 'ngx-carousel';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { FormAuthComponent } from './form-auth/form-auth.component';
 // import { AppleLoginProvider } from './apple.provider';
 // import { environment } from 'src/environments/environment';
 
@@ -48,7 +49,9 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     LoginComponent,
     RegistrationComponent,
     EnterpriseContactComponent,
+    FormAuthComponent,
   ],
+  exports: [FormAuthComponent],
   providers: [{
     provide: 'SocialAuthServiceConfig',
     useValue: {

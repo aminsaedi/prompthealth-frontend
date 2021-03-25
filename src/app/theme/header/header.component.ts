@@ -91,6 +91,8 @@ export class HeaderComponent implements OnInit {
       if (res.firstName) {
         localStorage.setItem('user', JSON.stringify(this.updateData));
         this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
+        this.token = localStorage.getItem('token');
+        this.role = localStorage.getItem('roles');
       }
     });
 

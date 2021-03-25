@@ -6,11 +6,12 @@ import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@ang
 import { SharedService } from '../../shared/services/shared.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { EmbedVideoService } from 'ngx-embed-video';
-import { ifStmt } from '@angular/compiler/src/output/output_ast';
 import { Professional } from '../../models/professional';
 import { QuestionnaireAnswer } from '../questionnaire.service';
 import { CategoryService, Category } from '../../shared/services/category.service';
-
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { BehaviorService } from '../../shared/services/behavior.service';
+import { Subscription } from 'rxjs';
 
 const expandTitleAnimation = trigger('expandTitle', [
   state('shrink', style({ height: '1.2em' })),
@@ -47,12 +48,14 @@ export class DetailComponent implements OnInit {
     private _embedService: EmbedVideoService,
     private _headerService: HeaderStatusService,
     private _catService: CategoryService,
+    private _bs: BehaviorService,
     el: ElementRef,
   ) { this.host = el.nativeElement; }
 
   get f() { return this.bookingForm.controls; }
 
   @ViewChild('closebutton') closebutton;
+  @ViewChild('loginModal') public loginModal: ModalDirective;
 
   /** for Tab */
   public indexTabItem = 0;
@@ -89,7 +92,7 @@ export class DetailComponent implements OnInit {
 
   /** for general use */
   public userInfo: Professional = null;
-  public isLoggedIn = '';
+  public isLoggedIn = false;
   private id: number;
   private amenities: any[];
   private languageSet: QuestionnaireAnswer[]; /* used to populate languages that the professional can provide */
@@ -99,6 +102,7 @@ export class DetailComponent implements OnInit {
   private typeOfProvider: any[];
   private treatmentModality: any[];
   private host: HTMLElement;
+  private loginSubscription: Subscription;
 
   /** delete */
   roles; /** not used anywhere. can be deleted */
@@ -110,6 +114,7 @@ export class DetailComponent implements OnInit {
 
   ngOnDestroy() {
     this._headerService.showHeader();
+    this.loginSubscription.unsubscribe();
   }
 
   async ngOnInit(): Promise<void> {
@@ -130,9 +135,11 @@ export class DetailComponent implements OnInit {
       note: new FormControl('', [Validators.maxLength(250)])
     });
 
-    this.roles = localStorage.getItem('roles') ? localStorage.getItem('roles') : '';
-    this.isLoggedIn = localStorage.getItem('token') ? localStorage.getItem('token') : '';
-    this.myId = localStorage.getItem('loginID') ? localStorage.getItem('loginID') : '';
+    this.loginSubscription = this._bs.getUserData().subscribe((user: any) => {
+      this.roles = user.roles || '';
+      this.myId = user._id || '';
+      this.isLoggedIn = (user._id) ? true: false; 
+    });
 
     this.category = await this._catService.getCategoryAsync();
 
@@ -446,6 +453,12 @@ export class DetailComponent implements OnInit {
     this._sharedService.postNoAuth(data, 'user/update-social-count').subscribe(res => {
       // console.log(res);
     });
+  }
+
+  onChangeLoginState(state: string){
+    if(state == 'done'){
+      this.loginModal.hide();
+    }
   }
 }
 
