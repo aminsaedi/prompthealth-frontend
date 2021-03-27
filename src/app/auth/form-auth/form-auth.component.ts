@@ -8,6 +8,7 @@ import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-logi
 
 import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
+import { MustMatch } from '../../_helpers/must-match.validator';
 
 @Component({
   selector: 'form-auth',
@@ -35,15 +36,16 @@ export class FormAuthComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.form = this._fb.group({
+    this.form = (this.authType == 'signin') ? this._fb.group({
       'email': new FormControl('', [Validators.required, Validators.email]),
       'password': new FormControl('', [Validators.required, Validators.minLength(8)])
-    });
-    if(this.authType == 'signup'){
-      this.form.addControl('password2', new FormControl('', [Validators.required, Validators.minLength(8)]));
-      this.form.addControl('hear_from', new FormControl('', [Validators.required]));
-      this.form.addControl('t_c', new FormControl('', [Validators.required]));
-    }
+    }) : this._fb.group({
+      'email': new FormControl('', [Validators.required, Validators.email]),
+      'password': new FormControl('', [Validators.required, Validators.minLength(8)]),
+      'confirm_password': new FormControl('', []),
+      'hear_from': new FormControl('', [Validators.required]),
+      't_c': new FormControl('', [Validators.requiredTrue]),
+    }, { validator: MustMatch('password', 'confirm_password') });
   }
 
   signinWith(type: string) {
@@ -53,9 +55,15 @@ export class FormAuthComponent implements OnInit {
     }
 
     this._authService.signIn(providerId[type]).then(x => {
-      console.log(x);
+      // console.log(x);
+      let socialToken: string;
+      switch(type){
+        case 'google': socialToken = x.idToken; break;
+        case 'facebook': socialToken = x.id;
+      }
+  
       const data: SocialRegisterData = {
-        socialToken: x.idToken,
+        socialToken: socialToken,
         social_id: x.id,
         roles: this.userRole,
         profileImage: x.photoUrl,
@@ -108,7 +116,8 @@ export class FormAuthComponent implements OnInit {
     this._sharedService.loader('show');
     this.changeState.emit('start');
 
-    this._sharedService.login(data).subscribe((res: any) => {
+    const subscription = (this.authType == 'signin') ? this._sharedService.login(data) : this._sharedService.register(data);
+    subscription.subscribe((res: any) => {
       this._sharedService.loader('hide');
       if(res.statusCode == 200){
         this.afterLogin(res.data);
@@ -127,8 +136,10 @@ export class FormAuthComponent implements OnInit {
     this.isSubmitted = false;
     this._toastr.success('Welcome');
 
+    const role = userinfo.roles;
+
     this._sharedService.addCookie('token', userinfo.loginToken);
-    this._sharedService.addCookie('roles', userinfo.roles);
+    this._sharedService.addCookie('roles', role);
     this._sharedService.addCookie('loginID', userinfo._id);
     this._sharedService.addCookie('isVipAffiliateUser', userinfo.isVipAffiliateUser);
     this._sharedService.addCookieObject('user', userinfo);
@@ -137,7 +148,7 @@ export class FormAuthComponent implements OnInit {
 
     if(!this.staySamePage){
       let next: string;
-      switch(this.userRole.toLowerCase()){
+      switch(role.toLowerCase()){
         case 'u': 
           next = '/'; 
           break;

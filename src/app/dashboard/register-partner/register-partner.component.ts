@@ -18,7 +18,7 @@ export class RegisterPartnerComponent implements OnInit {
   public data: QuestionnaireItemData[] = [
     {label: 'General Information',     isComplete: false, route: 'general'},
     {label: 'Company services',        isComplete: false, route: 'service'},
-    {label: 'Offer for Prompt Health', isComplete: false, route: 'offer'},
+    {label: 'Offer for PromptHealth',  isComplete: false, route: 'offer'},
     {label: 'Terms and Conditions',    isComplete: false, route: 'term'},
   ];
   

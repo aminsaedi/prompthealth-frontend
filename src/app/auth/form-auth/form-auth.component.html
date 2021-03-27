@@ -22,6 +22,7 @@
       name="email"
       label="Email Address"
       placeholder="Enter your email"
+      autcomplete="email"
       [submitted]="isSubmitted"
       [controller]="f.email"
       ></form-input>
@@ -34,9 +35,48 @@
       label="Password"
       type="password"
       placeholder="Enter your password"
+      [autocomplete]="(authType == 'signin') ? 'current-password' : 'new-password'"
       [submitted]="isSubmitted"
       [controller]="f.password"
       ></form-input>
+    </div>
+
+    <div class="mb-3" *ngIf="authType == 'signup'">
+      <label>Confirm Password <span class="text-danger">*</span></label>
+      <form-input
+      name="confirmPassword"
+      label="Password"
+      type="password"
+      placeholder="Confirm your password"
+      autocomplete="new-password"
+      [submitted]="isSubmitted"
+      [controller]="f.confirm_password"
+      ></form-input>
+    </div>
+
+    <div class="mb-3" *ngIf="authType == 'signup'">
+      <label>How did you hear about us? <span class="text-danger">*</span></label>
+      <form-input
+      name="hear_from"
+      label="Message"
+      placeholder="Enter your message"
+      [submitted]="isSubmitted"
+      [controller]="f.hear_from"
+      ></form-input>
+    </div>
+
+    <div class="mb-3" *ngIf="authType == 'signup'">
+      <form-checkbox
+      class="font-small"
+      name="t_c"
+      label="I agree to the terms of service and privacy policy"
+      [controller]="f.t_c"
+      ></form-checkbox>
+      <form-errors
+      [controller]="f.t_c"
+      label="Agreement"
+      [submitted]="isSubmitted"
+      ></form-errors>
     </div>
 
     <div class="mb-2">
@@ -56,8 +96,10 @@
       <a [routerLink]="['/auth/registration/U']" class="btn btn-outline-secondary w-100">Create Account</a>
     </div>
 
-
-
+    <div *ngIf="authType == 'signup'">
+      <hr>
+      <a [routerLink]="['/auth/login']" class="btn btn-outline-secondary w-100">Have an account? Login</a>
+    </div>
   </form>
 </section>
 

@@ -76,7 +76,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
   })
   public subscriptionTab = (active) => ({
     title: 'Subscription',
-    description: 'Your premium subscriptions with Prompt Health',
+    description: 'Your premium subscriptions with PromptHealth',
     link: 'my-subscription',
     active,
   })
