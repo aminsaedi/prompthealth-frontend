@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IUserDetail } from '../models/user-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class RegisterQuestionnaireService {
     private _router: Router,
   ) { }
 
-  private user: UserData = {};
+  private user: IUserDetail = {};
   private questionnaireData: QuestionnaireItemData[];
   
   /** notification for parent component to let it know current questionnaire index. */
@@ -44,7 +45,7 @@ export class RegisterQuestionnaireService {
   private emitFinish(isCompleteAll: boolean){ this.finishOvserver.next(isCompleteAll); }
 
 
-  init(data: QuestionnaireItemData[], user: UserData){
+  init(data: QuestionnaireItemData[], user: IUserDetail){
     this.questionnaireData = data;
     this.user = user;
   }
@@ -144,36 +145,4 @@ export interface QuestionnaireItemData {
   label: string;
   route: string;
   isComplete: boolean;
-}
-
-interface UserData {
-  _id?: string;
-  firstName?: string;
-  lastName?: string;
-  profileImage?: string;
-  email?: string
-  address?: string
-  location?: number[] /*[lng, lat]*/
-  city?: string 
-  state?: string
-  zipcode?: string
-  phone?: string
-
-  /** for ps / c / p */
-  website?: string
-  product_description?: string
-  services?: string[];
-
-  /** for p */
-  messageToPlatform?: string;
-  image?: string[];
-  isFree?: boolean;
-  priceLevel?: number;
-  price1?: number;
-  price2?: number;
-  signupURL?: string;
-  couponLink?: string;
-  sampleLink?: string;
-  trialLink?: string;
-  affiliateLink?: string;
 }

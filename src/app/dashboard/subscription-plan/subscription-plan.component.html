@@ -28,23 +28,20 @@
     <subscription-plan-item-card class="col-md"
       type="basic"
       [data]="basicPlan"
-      [isPriceMonthly]="isPriceMonthly"
-      (select)="setSelectedFreePlan(basicPlan)"
+      [monthly]="isPriceMonthly"
       [hideButton]="!this.profile || !!this.profile.plan"
     ></subscription-plan-item-card>
 
     <subscription-plan-item-card class="col-md mt-5 mt-md-0"
       type="provider"
       [data]="spPlan"
-      [isPriceMonthly]="isPriceMonthly"
-      (select)="setSelectedPlan(spPlan)"
+      [monthly]="isPriceMonthly"
       ></subscription-plan-item-card>
 
     <subscription-plan-item-card class="col-md mt-5 mt-md-0"
       type="centre"
       [data]="cPlan"
-      [isPriceMonthly]="isPriceMonthly"
-      (select)="setSelectedPlan(cPlan)"
+      [monthly]="isPriceMonthly"
       ></subscription-plan-item-card>
   </div>
 </div>
@@ -56,10 +53,9 @@
   class="mb-3"
    >
 
-   <subscription-plan-addon-card type="op1" 
+   <subscription-plan-addon-card
    [data]="addOnPlan"
-   [isPriceMonthly]="isPriceMonthly"
-   (select)="buyAddOnPlan($event)"
+   [monthly]="isPriceMonthly"
    ></subscription-plan-addon-card>
   </div>
    <!-- <subscription-plan-addon-card type="op2" class="mt-5" [isPriceMonthly]="isPriceMonthly"></subscription-plan-addon-card> -->

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
+import { ProfileManagementService } from '../profile-management.service';
+import { IUserDetail } from '../../../models/user-detail';
 
 @Component({
   selector: 'app-my-subscription',
@@ -8,39 +10,47 @@ import { SharedService } from '../../../shared/services/shared.service';
   styleUrls: ['./my-subscription.component.scss']
 })
 export class MySubscriptionComponent implements OnInit {
+  private profile: IUserDetail;
   public defaultPlan;
   public addOnPlans = {};
+  public userRole: string;
   constructor(
     private sharedService: SharedService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private _profileService: ProfileManagementService,
   ) { }
 
-  ngOnInit(): void {
-    this.getProfileDetails();
+  async ngOnInit() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    this.profile = await this._profileService.getProfileDetail(user);
+    this.addOnPlans = this.profile.addOnPlans;
+    this.defaultPlan = this.profile.plan;
+    this.userRole = this.profile.roles;
+    // this.getProfileDetails();
   }
-  getProfileDetails() {
-    const userInfo = JSON.parse(localStorage.getItem('user'));
-    const path = `user/get-profile/${userInfo._id}`;
-    this.sharedService.get(path).subscribe((res: any) => {
-      if (res.statusCode === 200) {
-        this.defaultPlan = res.data[0].plan;
-        this.addOnPlans = res.data[0].addOnPlans;
-        console.log(this.addOnPlans);
-      } else {
-        this.sharedService.checkAccessToken(res.message);
-      }
-    }, err => {
+  // getProfileDetails() {
+  //   const userInfo = JSON.parse(localStorage.getItem('user'));
+  //   const path = `user/get-profile/${userInfo._id}`;
+  //   this.sharedService.get(path).subscribe((res: any) => {
+  //     if (res.statusCode === 200) {
+  //       this.defaultPlan = res.data[0].plan;
+  //       this.addOnPlans = res.data[0].addOnPlans;
+  //       console.log(this.addOnPlans);
+  //     } else {
+  //       this.sharedService.checkAccessToken(res.message);
+  //     }
+  //   }, err => {
 
-      this.sharedService.checkAccessToken(err);
-    });
-  }
+  //     this.sharedService.checkAccessToken(err);
+  //   });
+  // }
 
   manageBilling() {
     const payload = {
       return_url: location.href,
-      userId: localStorage.getItem('loginID'),
-      userType: localStorage.getItem('roles'),
-      email: JSON.parse(localStorage.getItem('user')).email,
+      userId: this.profile._id,
+      userType: this.profile.roles,
+      email: this.profile.email,
     };
     const path = `user/customer-portal`;
     this.sharedService.post(payload, path).subscribe((res: any) => {

@@ -1,8 +1,16 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { IAddonPlan } from '../../models/addon-plan';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service'
+import { AddonSelectCategoryComponent } from '../../dashboard/addon-select-category/addon-select-category.component';
+import { Category, CategoryService } from '../services/category.service';
+import { SharedService } from '../services/shared.service';
+import { ToastrService } from 'ngx-toastr';
+import { StripeService } from 'ngx-stripe';
+import { environment } from 'src/environments/environment';
+import { IStripeCheckoutData } from 'src/app/models/stripe-checkout-data';
+import { IUserDetail } from 'src/app/models/user-detail';
 
-
-type AddonType = 'op1' | 'op2' | 'advanced' | 'endorsement' | 'social';
-interface AddonData { title: string; desc: string[]; }
 
 @Component({
   selector: 'subscription-plan-addon-card',
@@ -11,81 +19,129 @@ interface AddonData { title: string; desc: string[]; }
 })
 export class SubscriptionPlanAddonCardComponent implements OnInit {
 
-  @Input() type: AddonType;
-  @Input() data: any;
-  @Input() isPriceMonthly = true;
-  @Input() hasPlan = false;
+  @Input() data: IAddonPlan;
+  @Input() monthly = true;
   @Input() flexibleButtonPosition = true;
 
-  @Output() select = new EventEmitter<AddonType>();
-
   public isLoggedIn = false;
-  public addon: AddonData = null;
+  public profile: IUserDetail;
 
-  constructor() { }
+  constructor(
+    private _profileService: ProfileManagementService,
+    private _modalService: NgbModal,
+    private _catService: CategoryService,
+    private _sharedService: SharedService,
+    private _toastr: ToastrService,
+    private _stripeService: StripeService,
+  ) { }
 
-  ngOnInit(): void {
-    if (localStorage.getItem('token')) { this.isLoggedIn = true; }
-    this.addon = addons[this.type];
+  async ngOnInit() {
+    if (localStorage.getItem('token')) { 
+      this.isLoggedIn = true;
+      const user = JSON.parse(localStorage.getItem('user'));
+      this.profile = await this._profileService.getProfileDetail(user);
+    }
   }
 
-  getTabName() {
-    /** tod: use real data for price */
+  get tabName() {
     let name = '';
-    switch (this.type) {
-      case 'social': name = 'Ask us for a quote'; break;
-      default: name = `$${this.isPriceMonthly ? ('xx/Monthly') : ('xx/Annually')}`;
-    }
 
     if (this.data) {
-      name = `$${this.isPriceMonthly ? (this.data.price + '/Monthly') : (this.data.yearlyPrice + '/Annually')}`;
+      if(this.data.price && this.monthly){
+        const price = this.data.price;
+        name = '$' + this.data.price + '/Monthly';
+      }else if(this.data.yearlyPrice && !this.monthly){
+        const price = this.data.yearlyPrice;
+        name = '$' + price + '/Yearly';
+      }
     }
     return name;
   }
 
-  getLinkToSignin() {
-    /** todo: add code  */
-    const link = ['/auth', 'registration', 'sp'];
+  get linkToRegistration() {
+    const link = ['/auth', 'registration'];
+    if(this.data.userType.includes('P')){
+      link.push('p');
+    }else{
+      /**todo: have to add c. but how? */
+      link.push('sp');
+    }
     return link;
   }
 
-  triggerButtonClick() { this.select.emit(this.data); }
 
-}
 
-const addons: { op1: AddonData, op2: AddonData, advanced: AddonData, endorsement: AddonData, social: AddonData } = {
-  op1: {
-    title: 'Option 1 - The Networker',
-    desc: [
-      'Get featured on our homepage for ultimate exposure',
-    ],
-  },
-  op2: {
-    title: 'Option 2 - The Socialite',
-    desc: [
-      '3 general health content IG/FB posts/week',
-      'IG/FB posts for all special occasions',
-      '1 custom TikTok, IGTV, or Podcast per year, which will also be uploaded to YouTube',
-    ]
-  },
-  advanced: {
-    title: 'Advanced Tier',
-    desc: [
-      'Get featured on our home page',
-    ]
-  },
-  endorsement: {
-    title: 'Endorsement Tier',
-    desc: [
-      'Service provider/center can endorse the partner on their profile page and share to social media for clinical credibility',
-    ]
-  },
-  social: {
-    title: 'Social Collaboration',
-    desc: [
-      'Custom YouTube video',
-      'Creating challenges (i.e. 30 days eating vegan challenge)',
-      'encouraging others to try products with us',
-    ]
+  async triggerButtonClick() { 
+    
+    if (this.data.name === 'The Networker') {
+      const cat = await this._catService.getCategoryAsync();
+
+      const modalRef = this._modalService.open(AddonSelectCategoryComponent, {
+        centered: true
+      });
+
+      modalRef.componentInstance.categories = cat;
+      // this._changeDetector.markForCheck();
+      modalRef.result.then(res => {
+        const metadata = this._catService.categoryList[res];
+        delete metadata.subCategory;
+        metadata.userType = this.data.userType;
+        this.checkoutAddonPlan(metadata);
+      }).catch(error => {
+        console.log(error);
+      });
+    } else {
+      this.checkoutAddonPlan();
+    }
   }
-};
+
+  checkoutAddonPlan(metadata = {}) {
+    const payload: IStripeCheckoutData = {
+      cancel_url: location.href,
+      success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
+      userId: this.profile._id,
+      userType: this.profile.roles,
+      email: this.profile.email,
+      plan: this.data,
+      isMonthly: this.monthly,
+      type: 'addon',
+      metadata
+    };
+    this.stripeCheckout(payload);
+  }
+
+  stripeCheckout(payload: IStripeCheckoutData) {
+    const path = `user/checkoutSession`;
+    this._sharedService.loader('show');
+    this._sharedService.post(payload, path).subscribe((res: any) => {
+      console.log('there we go');
+      if (res.statusCode === 200) {
+        console.log(res);
+        this._stripeService.changeKey(environment.config.stripeKey);
+
+        if (res.data.type === 'checkout') {
+          this._toastr.success('Checking out...');
+
+          this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
+            console.log('success!');
+          }, error => {
+            this._toastr.error(error);
+            console.log(error);
+          });
+        }
+        if (res.data.type === 'portal') {
+          this._toastr.success('You already have this plan. Redirecting to billing portal');
+          console.log(res.data);
+          location.href = res.data.url;
+        }
+      } else {
+        this._toastr.error(res.message, 'Error');
+      }
+
+      this._sharedService.loader('hide');
+    }, (error) => {
+      this._toastr.error(error);
+      this._sharedService.loader('hide');
+    });
+  }
+}

@@ -62,8 +62,12 @@ export class ProfileManagementChildGuard implements CanActivateChild {
         break;
 
       case 'my-subscription':
-      case 'my-service':
       case 'my-payment':
+        /** if user role is not U, true */
+        if(role !== 'u'){ return true; }
+        break;
+
+      case 'my-service':
           /** if user role is not U nor not P, true  */
         if(role !== 'u' && role !== 'p'){ return true; }
         break;

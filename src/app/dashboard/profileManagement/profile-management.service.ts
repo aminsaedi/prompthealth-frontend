@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { BehaviorService } from '../../shared/services/behavior.service';
+import { IUserDetail } from '../../models/user-detail';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileManagementService {
 
-  private profileDetail: any;
+  private profileDetail: IUserDetail;
 
   constructor( 
     private http: HttpClient,
@@ -18,7 +19,7 @@ export class ProfileManagementService {
   destroyProfileDetail(){ this.profileDetail = null; }
 
   /** this is called by header at first access and set the userdata from server in this service. and then someplace will use the data which is stored here */
-  getProfileDetail(user: {_id: string, roles: string}): Promise<any>{
+  getProfileDetail(user: {_id: string, roles: string}): Promise<IUserDetail>{
     const id = user._id;
     const role = user.roles.toLowerCase();
 
@@ -52,7 +53,7 @@ export class ProfileManagementService {
   }
 }
 
-/** remove token because if it's expired (same as SharedService.checkAccessToken) */    
+/** remove token if it's expired (same as SharedService.checkAccessToken) */    
 function checkAccessToken(err: any){
   if(typeof err == 'object'){
     if ((err.code == 401 && err.message == 'authorization')) {

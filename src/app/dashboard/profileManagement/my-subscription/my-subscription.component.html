@@ -53,5 +53,5 @@
 
 <ng-template #noAddonPlan>
   <p>No Add-on Plan yet. Our Add-on plans offer great marketing value and help you grow your business</p>
-  <button  type="button" class="btn btn-primary" [routerLink]="['/subscriptionplan']">See our add-on plans</button>
+  <button  type="button" class="btn btn-primary" [routerLink]="(userRole == 'P') ? ['/subscriptionplan-partner'] : ['/subscriptionplan']">See our add-on plans</button>
 </ng-template>

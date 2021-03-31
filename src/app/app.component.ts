@@ -11,9 +11,10 @@ export class AppComponent implements OnInit {
   constructor(private scrollTopService: ScrollTopService) {
 }
 
-ngOnInit() {
+async ngOnInit() {
   this.scrollTopService.setScrollTop();
-  this.getPosition()
+  try { await this.getPosition(); }
+  catch(error){ console.log(error); }
 }
 
 getPosition(): Promise<any> {

@@ -20,6 +20,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
   public isPhLinkFieldShown = false;
   public formPhListedLink: FormControl;
   public isFormPhListedLinkSubmitted = false;
+  public linkToSubscription: string[];
 
   private patternURL = "http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?";
 
@@ -167,6 +168,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
     if(this.userInfo){
       try { 
         this.profile = await this._managementService.getProfileDetail(this.userInfo); 
+        this.linkToSubscription = (this.profile.roles == 'P') ? ['/subscriptionplan-partner'] : ['/dashboard/subscriptionplan'];
         this.formPhListedLink.setValue(this.profile.phListedLink);
         this.setUserPremiumStatus();
         this.setListing(this.profile);
@@ -334,6 +336,8 @@ export class WrapperComponent implements OnInit, OnDestroy {
             this.passwordTab(true),
             this.partnerServiceTab(true),
             this.partnerOfferTab(true),
+            this.subscriptionTab(true),
+            this.paymentTab(true),
           ];
           break;
       }

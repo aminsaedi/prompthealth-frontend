@@ -16,7 +16,7 @@ export class FormPartnerOfferComponent implements OnInit {
 
   public offers: {id: string, label: string, placeholder: string}[] = [
     {id: 'couponLink',    label: 'Coupons',        placeholder: 'Coupon name',},
-    {id: 'sampleLink',    label: 'Free samples',   placeholder: 'https://example.com', },
+    {id: 'freeSampleLink',label: 'Free samples',   placeholder: 'https://example.com', },
     {id: 'trialLink',     label: 'Trials',         placeholder: 'https://example.com', },
     {id: 'affiliateLink', label: 'Affiliate Link', placeholder: 'https://example.com', }
   ];
@@ -50,9 +50,9 @@ export class FormPartnerOfferComponent implements OnInit {
         new FormControl(this.data.couponLink ? true : false),
         new FormControl(this.data.couponLink ? this.data.couponLink : '', []),
       ]),
-      sampleLink: new FormArray([
-        new FormControl(this.data.sampleLink ? true : false),
-        new FormControl(this.data.sampleLink ? this.data.sampleLink : '', [Validators.pattern(this.patternURL)]),        
+      freeSampleLink: new FormArray([
+        new FormControl(this.data.freeSampleLink ? true : false),
+        new FormControl(this.data.freeSampleLink ? this.data.freeSampleLink : '', [Validators.pattern(this.patternURL)]),        
       ]),
       trialLink: new FormArray([
         new FormControl(this.data.trialLink ? true : false),
@@ -115,7 +115,7 @@ export interface PartnerOfferData {
   price2: number;
   signupURL: string;
   couponLink?: String;
-  sampleLink?: string;
+  freeSampleLink?: string;
   trialLink?: string;
   affiliateLink?: string;
 }

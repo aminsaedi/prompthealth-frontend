@@ -16,7 +16,9 @@ import { environment } from 'src/environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddonSelectCategoryComponent } from '../addon-select-category/addon-select-category.component';
 import { CategoryService } from 'src/app/shared/services/category.service';
-declare var jQuery: any;
+import { IAddonPlan } from '../../models/addon-plan';
+import { IDefaultPlan } from 'src/app/models/default-plan';
+// declare var jQuery: any;
 
 
 @Component({
@@ -38,9 +40,9 @@ export class SubscriptionPlanComponent implements OnInit {
 
   loading = false;
   confirmation;
-  spPlan;
-  cPlan;
-  basicPlan;
+  spPlan: IDefaultPlan;
+  cPlan: IDefaultPlan;
+  basicPlan: IDefaultPlan;
   error: string;
   token: any;
   roles: string;
@@ -53,7 +55,7 @@ export class SubscriptionPlanComponent implements OnInit {
 
   public isPriceMonthly = true;
 
-  public addOnPlans: any[] = [];
+  public addOnPlans: IAddonPlan[] = [];
   public checkout = {
     email: 'this.userEmail.email',
     token: 'this.token'
@@ -134,8 +136,13 @@ export class SubscriptionPlanComponent implements OnInit {
       this._sharedService.loader('hide');
 
       if (res.statusCode === 200) {
-        // console.log(res.data);
-        this.addOnPlans = res.data;
+        const addons = [];
+        res.data.forEach((data: IAddonPlan) => {
+          if(data.userType.includes('C') || data.userType.includes('SP')){
+            addons.push(data);
+          }
+        })
+        this.addOnPlans = addons;
       } else {
         // this._commanService.checkAccessToken(res.error);
       }
@@ -157,53 +164,53 @@ export class SubscriptionPlanComponent implements OnInit {
       this._sharedService.checkAccessToken(err);
     });
   }
-  setSelectedPlan(plan) {
-    this.selectedPlan = plan;
-    if (this.roles === 'SP') {
-      this.selectedPlan.price = this.spYearly ? plan.yearlyPrice : plan.price;
-      this.selectedPlan.monthly = this.spYearly ? false : true;
-    }
-    if (this.roles === 'C') {
-      this.selectedPlan.price = this.centreYearly ? plan.yearlyPrice : plan.price;
-      this.selectedPlan.monthly = this.centreYearly ? false : true;
-    }
-    if (this.profile.refererencePointEarned) {
-      // const discountedPrice = this.selectedPlan.price - (this.selectedPlan.price * (this.profile.refererencePointEarned / 100));
-      // this.discounttype = 'reference';
-      // this.finalPrice = discountedPrice + (discountedPrice * (5 / 100));
-    } else {
-      // const sepDiscount = this.selectedPlan.price - (this.selectedPlan.price * (50 / 100)); // Undo this after sep discount
-      // this.discounttype = 'sepdiscount';
-      // this.finalPrice = sepDiscount + (sepDiscount * (5 / 100));  // Undo this after sep discount
-      // this.finalPrice  = this.selectedPlan.price + (this.selectedPlan.price * (5/100));
-    }
-    this.buyDefaultPlan();
-  }
-  setSelectedFreePlan(plan) {
-    this._router.navigate(['/']);
-    if (this.roles === 'U') {
-    } else {
-      const payload = {
-        _id: localStorage.getItem('loginID'),
-        plan
-      };
+  // setSelectedPlan(plan) {
+  //   this.selectedPlan = plan;
+  //   if (this.roles === 'SP') {
+  //     this.selectedPlan.price = this.spYearly ? plan.yearlyPrice : plan.price;
+  //     this.selectedPlan.monthly = this.spYearly ? false : true;
+  //   }
+  //   if (this.roles === 'C') {
+  //     this.selectedPlan.price = this.centreYearly ? plan.yearlyPrice : plan.price;
+  //     this.selectedPlan.monthly = this.centreYearly ? false : true;
+  //   }
+  //   if (this.profile.refererencePointEarned) {
+  //     // const discountedPrice = this.selectedPlan.price - (this.selectedPlan.price * (this.profile.refererencePointEarned / 100));
+  //     // this.discounttype = 'reference';
+  //     // this.finalPrice = discountedPrice + (discountedPrice * (5 / 100));
+  //   } else {
+  //     // const sepDiscount = this.selectedPlan.price - (this.selectedPlan.price * (50 / 100)); // Undo this after sep discount
+  //     // this.discounttype = 'sepdiscount';
+  //     // this.finalPrice = sepDiscount + (sepDiscount * (5 / 100));  // Undo this after sep discount
+  //     // this.finalPrice  = this.selectedPlan.price + (this.selectedPlan.price * (5/100));
+  //   }
+  //   this.buyDefaultPlan();
+  // }
+  // setSelectedFreePlan(plan) {
+  //   this._router.navigate(['/']);
+  //   if (this.roles === 'U') {
+  //   } else {
+  //     const payload = {
+  //       _id: localStorage.getItem('loginID'),
+  //       plan
+  //     };
 
-      this._sharedService.post(payload, 'user/updateProfile').subscribe((res: any) => {
-        if (res.statusCode === 200) {
-          this.toastr.success(res.message);
+  //     this._sharedService.post(payload, 'user/updateProfile').subscribe((res: any) => {
+  //       if (res.statusCode === 200) {
+  //         this.toastr.success(res.message);
 
-          this._router.navigate(['/dashboard/profilemanagement/my-subscription']);
-        } else {
-          this.toastr.error(res.message);
+  //         this._router.navigate(['/dashboard/profilemanagement/my-subscription']);
+  //       } else {
+  //         this.toastr.error(res.message);
 
-        }
-      }, err => {
-        this.toastr.error('There are some errors, please try again after some time !', 'Error');
-      });
+  //       }
+  //     }, err => {
+  //       this.toastr.error('There are some errors, please try again after some time !', 'Error');
+  //     });
 
-    }
+  //   }
 
-  }
+  // }
   getUserDetails() {
     this._sharedService.loader('show');
     this._sharedService.getUserDetails().subscribe((res: any) => {
@@ -220,115 +227,115 @@ export class SubscriptionPlanComponent implements OnInit {
     });
   }
 
-  checkLogin(data) {
-    this.selectedPlan = data;
-  }
+  // checkLogin(data) {
+  //   this.selectedPlan = data;
+  // }
 
-  goToContactPage() {
-    this._router.navigate(['/contact-us']);
-  }
+  // goToContactPage() {
+  //   this._router.navigate(['/contact-us']);
+  // }
 
-  handleChange(url, type) {
-    this._router.navigate([url, type]);
-    if (url === '/auth/login') {
-      this.signin.nativeElement.click();
-    }
-  }
-
-
-  stripeCheckout(payload) {
-    const path = `user/checkoutSession`;
-    this._sharedService.loader('show');
-    this._sharedService.post(payload, path).subscribe((res: any) => {
-      console.log('there we go');
-      if (res.statusCode === 200) {
-        // this.closebutton.nativeElement.click();
-        // console.log(environment.config.stripeKey);
-        console.log(res);
-        this.stripeService.changeKey(environment.config.stripeKey);
-
-        if (res.data.type === 'checkout') {
-          this.toastr.success('Checking out...');
-
-          this.stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
-            console.log('success!');
-          }, error => {
-            this.toastr.error(error);
-            console.log(error);
-          });
-        }
-        if (res.data.type === 'portal') {
-          this.toastr.success('You already have this plan. Redirecting to billing portal');
-          console.log(res.data);
-          location.href = res.data.url;
-        }
+  // handleChange(url, type) {
+  //   this._router.navigate([url, type]);
+  //   if (url === '/auth/login') {
+  //     this.signin.nativeElement.click();
+  //   }
+  // }
 
 
-      } else {
-        this.toastr.error(res.message, 'Error');
-      }
+//   stripeCheckout(payload) {
+//     const path = `user/checkoutSession`;
+//     this._sharedService.loader('show');
+//     this._sharedService.post(payload, path).subscribe((res: any) => {
+//       console.log('there we go');
+//       if (res.statusCode === 200) {
+//         // this.closebutton.nativeElement.click();
+//         // console.log(environment.config.stripeKey);
+//         console.log(res);
+//         this.stripeService.changeKey(environment.config.stripeKey);
 
-      this._sharedService.loader('hide');
-    }, (error) => {
-      this.toastr.error(error);
-      this._sharedService.loader('hide');
-    });
-  }
-  buyDefaultPlan() {
-    // this._sharedService.loader('show');
-    const payload = {
-      cancel_url: location.href,
-      success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
-      userId: localStorage.getItem('loginID'),
-      userType: localStorage.getItem('roles'),
-      email: JSON.parse(localStorage.getItem('user')).email,
-      plan: this.selectedPlan,
-      isMonthly: this.isPriceMonthly,
-      type: 'default'
-    };
-    console.log(payload);
+//         if (res.data.type === 'checkout') {
+//           this.toastr.success('Checking out...');
 
-    this.stripeCheckout(payload);
-  }
+//           this.stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
+//             console.log('success!');
+//           }, error => {
+//             this.toastr.error(error);
+//             console.log(error);
+//           });
+//         }
+//         if (res.data.type === 'portal') {
+//           this.toastr.success('You already have this plan. Redirecting to billing portal');
+//           console.log(res.data);
+//           location.href = res.data.url;
+//         }
 
-  buyAddOnPlan(plan) {
-    console.log(plan);
-    console.log(this.profile);
-    if (plan.name === 'The Networker') {
-      const modalRef = this._modalService.open(AddonSelectCategoryComponent, {
-        centered: true
-      });
-      modalRef.componentInstance.categories = this.catService.categoryList;
-      modalRef.result.then(res => {
-        console.log(res);
-        const metadata = this.catService.categoryList[res];
-        delete metadata.subCategory;
-        metadata.userType = plan.userType;
-        console.log(metadata);
-        this.checkoutAddonPlan(plan, metadata);
-      }).catch(error => {
-        console.log(error);
-      });
-    } else {
-      this.checkoutAddonPlan(plan);
-    }
 
-  }
-  checkoutAddonPlan(plan, metadata = {}) {
-    const payload = {
-      cancel_url: location.href,
-      success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
-      userId: localStorage.getItem('loginID'),
-      userType: localStorage.getItem('roles'),
-      email: JSON.parse(localStorage.getItem('user')).email,
-      plan,
-      isMonthly: this.isPriceMonthly,
-      type: 'addon',
-      metadata
-    };
-    console.log(payload);
-    this.stripeCheckout(payload);
-  }
+//       } else {
+//         this.toastr.error(res.message, 'Error');
+//       }
+
+//       this._sharedService.loader('hide');
+//     }, (error) => {
+//       this.toastr.error(error);
+//       this._sharedService.loader('hide');
+//     });
+//   }
+//   buyDefaultPlan() {
+//     // this._sharedService.loader('show');
+//     const payload = {
+//       cancel_url: location.href,
+//       success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
+//       userId: localStorage.getItem('loginID'),
+//       userType: localStorage.getItem('roles'),
+//       email: JSON.parse(localStorage.getItem('user')).email,
+//       plan: this.selectedPlan,
+//       isMonthly: this.isPriceMonthly,
+//       type: 'default'
+//     };
+//     console.log(payload);
+
+//     this.stripeCheckout(payload);
+//   }
+
+//   buyAddOnPlan(plan) {
+//     console.log(plan);
+//     console.log(this.profile);
+//     if (plan.name === 'The Networker') {
+//       const modalRef = this._modalService.open(AddonSelectCategoryComponent, {
+//         centered: true
+//       });
+//       modalRef.componentInstance.categories = this.catService.categoryList;
+//       modalRef.result.then(res => {
+//         console.log(res);
+//         const metadata = this.catService.categoryList[res];
+//         delete metadata.subCategory;
+//         metadata.userType = plan.userType;
+//         console.log(metadata);
+//         this.checkoutAddonPlan(plan, metadata);
+//       }).catch(error => {
+//         console.log(error);
+//       });
+//     } else {
+//       this.checkoutAddonPlan(plan);
+//     }
+
+//   }
+//   checkoutAddonPlan(plan, metadata = {}) {
+//     const payload = {
+//       cancel_url: location.href,
+//       success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
+//       userId: localStorage.getItem('loginID'),
+//       userType: localStorage.getItem('roles'),
+//       email: JSON.parse(localStorage.getItem('user')).email,
+//       plan,
+//       isMonthly: this.isPriceMonthly,
+//       type: 'addon',
+//       metadata
+//     };
+//     console.log(payload);
+//     this.stripeCheckout(payload);
+//   }
   changePriceRange(isMonthly: boolean) {
     this.isPriceMonthly = isMonthly;
   }
@@ -336,4 +343,3 @@ export class SubscriptionPlanComponent implements OnInit {
 
 }
 // end section
-

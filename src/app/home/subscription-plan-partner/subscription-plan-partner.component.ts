@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
 import { Subscription } from 'rxjs';
+import { IAddonPlan } from '../../models/addon-plan';
+import { IDefaultPlan } from 'src/app/models/default-plan';
 
 @Component({
   selector: 'app-subscription-plan-partner',
@@ -14,18 +14,18 @@ import { Subscription } from 'rxjs';
 export class SubscriptionPlanPartnerComponent implements OnInit {
 
   public isPriceMonthly: boolean = true;
-  public partnerPlan: any = null;
+  public partnerPlan: IDefaultPlan = null;
+  public partnerBasicPlan: IDefaultPlan = null;
+  public partnerEnterprisePlan: IDefaultPlan = null;
+  public addonPlans: IAddonPlan[] = null;
   public userType = '';
 
   public form: FormGroup;
 
-  private isLoggedIn = false; /** can delete */
   private subscription: Subscription;
 
   constructor(
     private _sharedService: SharedService,
-    private _toastr: ToastrService,
-    private _spinner: NgxSpinnerService,
     private _router: Router,
     _fb: FormBuilder,
   ) {
@@ -41,19 +41,24 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
-    if (localStorage.getItem('token')) { this.isLoggedIn = true; }
+  async ngOnInit() {
     const user = JSON.parse(localStorage.getItem('user'));
     if(user){
       this.userType = user.roles;
     }
 
-    /** enable to get usbscription plan after api is ready */
-//    this.getSubscriptionPlan('user/get-plans');
+    const promiseAll = [
+      this.getSubscriptionPlan(),
+      this.getAddonPlan(),
+    ];
 
-if (this.isLoggedIn === true) {
-//      this.getProfileDetails();
-    }
+    this._sharedService.loader('show');
+    Promise.all(promiseAll)
+      .then(() => {})
+      .catch(err => { console.log(err); })
+      .finally(() => {
+        this._sharedService.loader('hide');
+      });
   }
 
   onLogout(){
@@ -61,55 +66,83 @@ if (this.isLoggedIn === true) {
     this._router.navigate(['/auth/registration/P']);
   }
 
-  getSubscriptionPlan(path) {
-    this._sharedService.loader('show');
-    this._sharedService.getNoAuth(path).subscribe((res: any) => {
-      this._sharedService.loader('hide');
+  getAddonPlan(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this._sharedService.getNoAuth('addonplans/get-all').subscribe((res: any) => {
+        if(res.statusCode === 200){
+          const addons = [];
+          res.data.forEach((data: IAddonPlan) => {
+            if(data.userType.includes('P')){
+              addons.push(data);
+            }
+          });
+          this.addonPlans = addons;
+          resolve(true);
+        }else{
+          this._sharedService.checkAccessToken(res.error);
+          reject(res.error);
+        }
+      }, error => {
+        console.log(error);
+        reject(error);
+      });  
+    });
+  }
 
-      if (res.statusCode === 200) {
-        res.data.forEach(element => {
-          if (element.userType.length > 1 && element.name === 'Basic') {
-            this.partnerPlan = element;
-          }
-        });
-      } else {
-        // this._commanService.checkAccessToken(res.error);
-      }
-    }, err => {
-      this._sharedService.loader('hide');
+  getSubscriptionPlan(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const path = 'user/get-plans?userType=P'
+      this._sharedService.getNoAuth(path).subscribe((res: any) => {
+        if (res.statusCode === 200) {
+          res.data.forEach((element: IDefaultPlan) => {
+            if (element.name == 'Partner Basic') {
+              this.partnerBasicPlan = element;
+            }else if(element.name == 'Partner Enterprise') {
+              this.partnerEnterprisePlan = element;
+            }
+          });
+          resolve(true);
+        } else {
+          this._sharedService.checkAccessToken(res.error);
+          reject(res.error);
+        }
+      }, err => {
+        console.log(err);
+        reject(err);
+      });
     });
   }
 
 
   changePriceRange(isMonthly: boolean){ this.isPriceMonthly = isMonthly; }
 
-  public errorForm: string = null;
-  onInputForm(){ if(this.errorForm){ this.errorForm = null; } }
+  // public errorForm: string = null;
+  // onInputForm(){ if(this.errorForm){ this.errorForm = null; } }
 
-  submitRegister(){    
-    var f = this.form.controls;
+  // submitRegister(){    
+  //   var f = this.form.controls;
 
-    if(f.firstname.invalid || f.lastname.invalid || (f.email.invalid && f.email.errors.required)){
-      this.errorForm = 'Please fill all items.';
-    }else if( f.email.invalid && f.email.errors.email ){
-      this.errorForm = 'Please input correct email address.';
-    }else{
-      this.errorForm = null;
-    }
+  //   if(f.firstname.invalid || f.lastname.invalid || (f.email.invalid && f.email.errors.required)){
+  //     this.errorForm = 'Please fill all items.';
+  //   }else if( f.email.invalid && f.email.errors.email ){
+  //     this.errorForm = 'Please input correct email address.';
+  //   }else{
+  //     this.errorForm = null;
+  //   }
     
-    if(this.errorForm){ return; }
-    else{
-      this._spinner.show();
-      this.subscription = this._sharedService.sendEmailSubscribers(this.form.value).subscribe((res: any) => {
-        this._spinner.hide();
-        if (res.statusCode === 200) { this._toastr.success(res.message); } 
-        else { this._toastr.error(res.error.message); }
-      },
-      error => {
-        this._spinner.hide();
-        this._toastr.error(error);
-      });
-    }
-  }
+  //   if(this.errorForm){ return; }
+  //   else{
+  //     this._spinner.show();
+  //     this.subscription = this._sharedService.sendEmailSubscribers(this.form.value).subscribe((res: any) => {
+  //       this._spinner.hide();
+  //       if (res.statusCode === 200) { this._toastr.success(res.message); } 
+  //       else { this._toastr.error(res.error.message); }
+  //     },
+  //     error => {
+  //       this._spinner.hide();
+  //       this._toastr.error(error);
+  //     });
+  //   }
+  // }
 
 }
