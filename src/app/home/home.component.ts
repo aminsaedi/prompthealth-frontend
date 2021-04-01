@@ -6,6 +6,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedService } from '../shared/services/shared.service';
 import { HeaderStatusService } from '../shared/services/header-status.service';
 import { environment } from 'src/environments/environment';
+import { Partner } from '../models/partner';
+import { PartnerSearchFilterQuery } from '../models/partner-search-filter-query';
 declare function registerEvent(eventId, action): void;
 
 @Component({
@@ -23,7 +25,10 @@ export class HomeComponent implements OnInit {
     private toastr: ToastrService,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
-  ) { }
+    _el: ElementRef,
+  ) { 
+    this.elHost = _el.nativeElement;
+  }
 
   get f() {
     return this.homeForm.controls;
@@ -50,6 +55,8 @@ export class HomeComponent implements OnInit {
   // _host = environment.config.BASE_URL;
   id: any;
   showPersonalMatch = true;
+
+  private elHost: HTMLElement;
 
   introBannerItems = {
     '5eb1a4e199957471610e6ce8': {
@@ -173,6 +180,7 @@ export class HomeComponent implements OnInit {
   ];
   public homePageFeatures = {};
   public keepOriginalOrder = (a, b) => a.key;
+  public partnersFeatured: Partner[];
 
   private timerResize: any;
   public featuredImageData = {
@@ -213,6 +221,7 @@ export class HomeComponent implements OnInit {
     });
 
     this.getHomePageFeatures();
+    this.getPartnersFeatured();
     this.timer();
     this.id = setInterval(() => {
       this.timer();
@@ -229,8 +238,56 @@ export class HomeComponent implements OnInit {
         }
       });
     });
-
   }
+
+  async getPartnersFeatured() {
+    return new Promise((resolve, reject) => {
+      const query = new PartnerSearchFilterQuery({featured: true, count: 7});
+      const path = 'partner/get-all';
+      this._sharedService.postNoAuth(query.json, path).subscribe((res: any) => {
+        if(res.statusCode == 200){
+          const partners = [];
+
+          res.data.data.forEach((data: any) => {
+            partners.push(new Partner(data));
+          });  
+
+          this.partnersFeatured = partners;
+          // this.startCarouselPartners();
+          resolve(true);
+        }else{
+          reject(res.message)
+        }
+      }, error => {
+        console.log(error);
+        reject('There are some error please try after some time.');
+      });
+    });
+  }
+
+  private timerCarouselPartner: any;
+  startCarouselPartners() {
+    if(this.timerCarouselPartner){ clearInterval(this.timerCarouselPartner); }
+
+    const target = this.elHost.querySelector('#carousel-partner-1') as HTMLElement;
+    const partners = target.querySelectorAll('.carousel-partner-item');
+    this.timerCarouselPartner = setInterval(() => {
+      // partners.forEach(p => {
+      // });
+      target.scrollBy(1, 0);
+    }, 25);
+
+    const target2 = this.elHost.querySelector('#carousel-partner-2') as HTMLElement;
+    setTimeout(() => {
+      const partner = target2.querySelector('.carousel-partner-item');
+      const wPartner = partner.getBoundingClientRect().width;
+      console.log(wPartner);
+      this.timerCarouselPartner = setInterval(() => {
+        target2.scrollBy({left: wPartner * ((window.innerWidth < 768) ? 2 : 4), behavior: 'smooth'});
+      }, 5000);        
+    }, 1000);
+  };
+
 
   switchTab(selectedKey: string) {
     this.currentKeyIndex = this.allIntroBannerKeys.indexOf(selectedKey);

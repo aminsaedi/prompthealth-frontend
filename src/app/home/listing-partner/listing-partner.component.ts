@@ -4,6 +4,7 @@ import { Partner } from '../../models/partner';
 import { SharedService } from '../../shared/services/shared.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { FormServiceComponent } from '../../shared/form-service/form-service.component';
+import { PartnerSortByType, PartnerSearchFilterQuery } from '../../models/partner-search-filter-query';
 
 @Component({
   selector: 'app-listing-partner',
@@ -35,21 +36,13 @@ export class ListingPartnerComponent implements OnInit {
   public isFilterShown: boolean = false;
   public isViewSmall = false;
 
-  public sortData: {id: SortBy, label: string, isDesc: boolean}[] = [
+  public sortData: {id: PartnerSortByType, label: string, isDesc: boolean}[] = [
     {id: 'createdAt', label: 'Newest', isDesc: false},
     {id: 'rating', label: 'Top-rated', isDesc: true},
     {id: 'price', label: 'Price', isDesc: false},
   ]; 
 
-  private searchData: SearchQuery = { 
-    services: [],
-    sortBy: 'createdAt',
-    count: 20,
-    page: 1,
-    priceLevel: 0,
-    keyword: '',
-    frontend: 1,
-  }
+  private searchData = new PartnerSearchFilterQuery();
 
   @ViewChild(FormServiceComponent) private formServiceComponent: FormServiceComponent;
 
@@ -70,9 +63,9 @@ export class ListingPartnerComponent implements OnInit {
 
   getPartners(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      let path = 'partner/get-all?';
+      let path = 'partner/get-all';
       this._sharedService.loader('show');
-      this._sharedService.postNoAuth(this.searchData, path).subscribe((res: any) => {
+      this._sharedService.postNoAuth(this.searchData.json, path).subscribe((res: any) => {
         this._sharedService.loader('hide');
         if(res.statusCode == 200){
           const partners = [];
@@ -93,13 +86,13 @@ export class ListingPartnerComponent implements OnInit {
     });
   }
 
-  sortPartners(data: {id: SortBy, isDesc: boolean}){
-    this.searchData.sortBy = data.id;
+  sortPartners(data: {id: PartnerSortByType, isDesc: boolean}){
+    this.searchData.setValue('sortBy', data.id);
     this.getPartners();
   }
 
   onApplyFilter(listing: boolean = true){
-    this.searchData.services = this.formServiceComponent.getSelected();
+    this.searchData.setValue('services', this.formServiceComponent.getSelected());
     this.hideFilter();
     if(listing){
       this.getPartners();
@@ -107,7 +100,7 @@ export class ListingPartnerComponent implements OnInit {
   }
 
   onResetFilter(listing: boolean = true){
-    this.searchData.services = [];
+    this.searchData.resetFilter();
     this.formServiceComponent.reset();
     this.hideFilter();
     if(listing){
@@ -119,12 +112,12 @@ export class ListingPartnerComponent implements OnInit {
   hideFilter(){ this.isFilterShown = false; }
 
   onSearchSet(){
-    this.searchData.keyword = this.formSearch.value;
+    this.searchData.setValue('keyword', this.formSearch.value);
     this.getPartners();
   }
 
   onChangeFilter(services: string[]){
-    this.searchData.services = services;
+    this.searchData.setValue('services', services);
   }
 
   onChangeStickyStatus(isSticked: boolean){
@@ -152,18 +145,8 @@ export class ListingPartnerComponent implements OnInit {
   }
 
   changePage(i: number){
-    this.searchData.page = i;
+    this.searchData.setValue('page', i);
     this.getPartners();
   }
 }
 
-type SortBy = 'createdAt' | 'price' | 'rating';
-type SearchQuery = {
-  services: string[];
-  sortBy: SortBy;
-  count: number;
-  page: number;
-  priceLevel: number;
-  keyword: string; 
-  frontend: number;
-}

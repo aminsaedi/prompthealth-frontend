@@ -43,7 +43,13 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
 
 
   async ngOnInit() {
-    this.color = this.type === 'provider' ? 'blue' : this.type === 'centre' ? 'red' : 'green';
+    switch(this.type) {
+      case 'provider': this.color = 'blue'; break;
+      case 'centre' : this.color = 'red'; break;
+      case 'partnerEnterprise': this.color= 'green-bright'; break;
+      default: this.color ='green'; break;
+    }
+    // this.color = this.type === 'provider' ? 'blue' : this.type === 'centre' ? 'red' : 'green';
     this.isPlanForPartner = (this.type.toLowerCase().match(/partner/)) ? true : false;
 
     switch(this.type){

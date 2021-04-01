@@ -1,6 +1,8 @@
 $basic-green: #95C38B;
 $darker-green: #82B378;
 
+$bright-green: #50bb38;
+
 $monthly-red: #F25249;//FF9797 too light
 $yearly-red: #F25249;
 
@@ -11,6 +13,7 @@ $yearly-blue: #3377C5;
     .colorset-red & {   color: $monthly-red; border-color: $monthly-red;} 
     .colorset-green & { color: $basic-green; border-color: $darker-green;} 
     .colorset-blue & {  color: $monthly-blue; border-color: $monthly-blue;} 
+    .colorset-green-bright & { color: $bright-green; border-color: $bright-green; }
 
     .colorset-red-yearly & {   color: $yearly-red; border-color: $yearly-red;} 
     .colorset-green-yearly & { color: $basic-green; border-color: $darker-green;} 
@@ -35,10 +38,12 @@ $yearly-blue: #3377C5;
     &.colorset-red{   background: $monthly-red;}
     &.colorset-green { background: $basic-green; }
     &.colorset-blue {  background: $monthly-blue; }
+    &.colorset-green-bright { background: $bright-green; }
 
     &.colorset-red-yearly{   background: $yearly-red;}
     &.colorset-green-yearly { background: $basic-green; }
     &.colorset-blue-yearly {  background: $yearly-blue; }
+    &.colorset-green-bright-yearly { background: $bright-green; }
 }
 
 

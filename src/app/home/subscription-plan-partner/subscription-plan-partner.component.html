@@ -7,15 +7,15 @@
   <div class="container pt-5 pb-5">
     <div class="row justify-content-center text-center text-light">
       <h2>
-        Would you like to partner with Prompt Health?
+        Would you like to be partner with PromptHealth?
       </h2>
     </div>
-    <div class="text-light text-center">
+    <div class="text-light text-center font-big mt-4 font-weight-400">
       We are looking for organizations in health and wellness that provide products or services and are interested in collaborating with us. 
     </div>
 
-    <div  class="text-center mt-5">
-      <ng-container *ngIf="userType != 'P'">
+    <div *ngIf="userType != 'P'" class="text-center mt-5">
+      <ng-container>
         <a *ngIf="userType != ''" class="btn btn-ph-blue text-light font-regular shadow rounded-pill px-4" data-toggle="modal" data-target="#logoutModal">Sign Up Now!</a>
         <a *ngIf="userType == ''" class="btn btn-ph-blue text-light font-regular shadow rounded-pill px-4" [routerLink]="['/auth/registration/p']">Sign Up Now!</a>
       </ng-container>
@@ -24,7 +24,7 @@
 </section>
 <section class="bg-ph-blue py-4 text-light">
   <div class="container-fluid">
-    <div class="max-w-1200 font-big">
+    <div class="max-w-1200 font-big font-italic">
       Sign up before May 1st and receive 50% off!
     </div>  
   </div>

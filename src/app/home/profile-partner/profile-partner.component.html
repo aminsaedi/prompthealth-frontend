@@ -38,7 +38,10 @@
       <div class="bg-lightblue rounded-10p mt-3 py-5 overflow-hidden position-relative">
         <div *ngIf="currentTabIndex == 0">
           <div class="px-4">
-            <h3 class="mb-4">{{profile?.name}}</h3>
+            <div class="profile-image-container">
+              <img [src]="profile?.image" [alt]="profile ? profile.name : ''">
+            </div>
+            <h3 class="mt-3 mb-4">{{profile?.name}}</h3>
             <p class="whitespace-prewrap" [ngClass]="{'clamp-4line': isDescriptionClamped}">{{profile?.description}}</p>            
             <button class="btn text-ph-blue pl-0 font-regular" (click)="toggleDescriptionLength()">
               <u *ngIf="isDescriptionClamped">See full profile</u>

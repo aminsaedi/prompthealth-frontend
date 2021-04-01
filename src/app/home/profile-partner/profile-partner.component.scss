@@ -83,7 +83,6 @@ $marginTopAfterHeader: 40px;
 
 /** sidebar */
 .sidebar-tab{
-
   li{
     transition: width 300ms ease;
     cursor: pointer;
@@ -104,6 +103,17 @@ $marginTopAfterHeader: 40px;
     &.index-0{ left: 0; }
     &.index-1{ left: 40%; }
   }
+}
+
+
+.profile-image-container{
+  height: 70px;
+  img{ 
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: left;
+  }  
 }
 
 .table{

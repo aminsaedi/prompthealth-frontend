@@ -1,6 +1,7 @@
 export interface IDefaultPlan {
   _id: string;
   name: string;
+  planName: string;
   price: number;
   yearlyPrice: number;
   userType: string[];
