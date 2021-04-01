@@ -18,7 +18,7 @@
 
 <div class="plan-card h-100 shadow text-center" [class]="'colorset-' + color">
 
-    <h3 class="title d-inline-block" [innerText]="title | titlecase"></h3>
+    <h3 class="title d-inline-block" [innerText]="title"></h3>
     <p class="my-4">
         <span *ngIf="type == 'basic'">Get listed with us for free so that the clients can find you.</span>
         <span *ngIf="type == 'provider'">This is for a solo health and wellness professional looking to boost their
@@ -45,27 +45,36 @@
 
     <ul class="feature text-left fa-ul my-4">
 
-        <!-- only for partner -->
-        <li *ngIf="type == 'partner'">
-            <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Company name
-        </li>
-        <li *ngIf="type == 'partner'">
-            <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Description
-        </li>
-        <li *ngIf="type == 'partner'">
-            <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Link
-        </li>
-        <li *ngIf="type == 'partner'">
-            <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            5 pictures
-        </li>
-        <li *ngIf="type == 'partner'">
-            <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Contact info
-        </li>
+        <!-- only for partnerBasic -->
+        <ng-container *ngIf="type == 'partnerBasic'">
+            <li>
+                <span class="fa-li"><i class="far fa-check-circle"></i></span>
+                Company name
+            </li>
+            <li>
+                <span class="fa-li"><i class="far fa-check-circle"></i></span>
+                Description
+            </li>
+            <li>
+                <span class="fa-li"><i class="far fa-check-circle"></i></span>
+                Link
+            </li>
+            <li>
+                <span class="fa-li"><i class="far fa-check-circle"></i></span>
+                5 pictures
+            </li>
+            <li>
+                <span class="fa-li"><i class="far fa-check-circle"></i></span>
+                Contact info
+            </li>    
+        </ng-container>
+
+        <ng-container *ngIf="type == 'partnerEnterprise'">
+            <li>
+                <span class="fa-li"><i class="far fa-check-circle"></i></span>
+                All the Product/Service features.
+            </li>
+        </ng-container>
 
         <!-- only for centre -->
         <li *ngIf="type == 'centre'">
@@ -125,7 +134,7 @@
 
         <li *ngIf="data?.featuredOnHomePage">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Get Featured On Our Homepage
+            Get featured on the homepage of our web and App
         </li>
 
         <li *ngIf="type != 'basic' && type != 'partnerBasic'">

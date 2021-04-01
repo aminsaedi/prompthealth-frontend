@@ -30,6 +30,8 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
   public features: string[];
   public isLoggedIn = false;
   public profile: IUserDetail;
+  public isPlanForPartner: boolean;
+
 
   constructor(
     private _router: Router,
@@ -39,12 +41,17 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
     private _stripeService: StripeService,
   ) { }
 
+
   async ngOnInit() {
     this.color = this.type === 'provider' ? 'blue' : this.type === 'centre' ? 'red' : 'green';
-    
+    this.isPlanForPartner = (this.type.toLowerCase().match(/partner/)) ? true : false;
+
     switch(this.type){
       case 'partnerBasic' : this.title = 'Product/Service'; break;
       case 'partnerEnterprise' : this.title = 'Enterprise'; break;
+      case 'basic' : this.title = 'Basic'; break;
+      case 'provider' : this.title = 'Provider'; break;
+      case 'centre' : this.title = 'Centre'; break;
       default: this.title = this.type;
     }
 
