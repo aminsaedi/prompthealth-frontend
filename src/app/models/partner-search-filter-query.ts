@@ -54,7 +54,6 @@ export class PartnerSearchFilterQuery implements IPartnerSearchFilterQuery {
         this['_' + key] = data[key];
       }
     });
-    console.log(this);
   }
 
   setValue(key: FilterType, val: any){

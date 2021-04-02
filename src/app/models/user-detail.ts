@@ -1,3 +1,6 @@
+import { IAddonPlan } from "./addon-plan";
+import { IDefaultPlan } from "./default-plan";
+
 export interface IUserDetail {
   /** general */
   _id?: string;
@@ -66,8 +69,8 @@ export interface IUserDetail {
 
 
   /** for subscriber */
-  plan?: any;
-  addOnPlans?: any;
+  plan?: IDefaultPlan;
+  addOnPlans?: IAddonPlan[];
 
   videos?: string[];
 

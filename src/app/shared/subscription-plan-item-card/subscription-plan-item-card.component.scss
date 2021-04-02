@@ -25,12 +25,14 @@ $yearly-blue: #3377C5;
     .colorset-red & {   background: $monthly-red; }
     .colorset-green & { background: $basic-green; } 
     .colorset-blue & {  background: $monthly-blue; } 
+    .colorset-green-bright & { background: $bright-green; }
 }
 
 .feature i{
     .colorset-red & {   color: $monthly-red; }
     .colorset-green & { color: $basic-green; } 
     .colorset-blue & {  color: $monthly-blue; } 
+    .colorset-green-bright & { color: $bright-green; }
 }
 
 .tab{
