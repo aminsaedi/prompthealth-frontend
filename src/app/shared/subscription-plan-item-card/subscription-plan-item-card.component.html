@@ -1,19 +1,25 @@
 <div class="tab shadow font-weight-bold d-flex align-items-center flex-nowrap"
     [class]="isPriceMonthly? 'colorset-' + color : 'colorset-' + color + '-yearly'">
-    <div>
-        <div *ngIf="price != 0">{{price | currency : 'CAD' : 'symbol-narrow' : '2.0'}}</div>
-        <div *ngIf="price == 0">Free</div>
-        <div class="font-small font-weight-normal" *ngIf="discounted"><s>${{priceOriginal}}</s></div>
-    </div>
-    <ng-container *ngIf="price != 0">
-        <div class="mx-2">/</div>
+
+    <ng-container *ngIf="type != 'partnerEnterprise'; else tabPartnerEnterprise">
         <div>
-            <div *ngIf="monthly">Monthly</div>
-            <div *ngIf="!monthly">Yearly</div>    
-        </div>    
+            <div *ngIf="price != 0">{{price | currency : 'CAD' : 'symbol-narrow' : '2.0'}}</div>
+            <div *ngIf="price == 0">Free</div>
+            <div class="font-small font-weight-normal" *ngIf="discounted"><s>${{priceOriginal}}</s></div>
+        </div>
+        <ng-container *ngIf="price != 0">
+            <div class="mx-2">/</div>
+            <div>
+                <div *ngIf="monthly">Monthly</div>
+                <div *ngIf="!monthly">Yearly</div>    
+            </div>    
+        </ng-container>
+        <span class="save-annualy font-weight-normal text-center d-inline-block font-italic"
+            *ngIf="!monthly && type != 'basic' && type != 'partner'">save<br>20%</span>
     </ng-container>
-    <span class="save-annualy font-weight-normal text-center d-inline-block font-italic"
-        *ngIf="!isPriceMonthly && type != 'basic' && type != 'partner'">save<br>20%</span>
+    <ng-template #tabPartnerEnterprise>
+        Contact Us
+    </ng-template>
 </div>
 
 <div class="plan-card h-100 shadow text-center" [class]="'colorset-' + color">
@@ -46,7 +52,7 @@
     <ul class="feature text-left fa-ul my-4">
 
         <!-- only for partnerBasic -->
-        <ng-container *ngIf="type == 'partnerBasic'">
+        <ng-container *ngIf="type == 'partnerBasic' || type == 'partnerEnterprise'">
             <li>
                 <span class="fa-li"><i class="far fa-check-circle"></i></span>
                 Company name
@@ -69,12 +75,12 @@
             </li>    
         </ng-container>
 
-        <ng-container *ngIf="type == 'partnerEnterprise'">
+        <!-- <ng-container *ngIf="type == 'partnerEnterprise'">
             <li>
                 <span class="fa-li"><i class="far fa-check-circle"></i></span>
                 All the Product/Service features.
             </li>
-        </ng-container>
+        </ng-container> -->
 
         <!-- only for centre -->
         <li *ngIf="type == 'centre'">
@@ -134,6 +140,7 @@
 
         <li *ngIf="data?.featuredOnHomePage">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
+            <span class="badge badge-info">NEW</span>
             Get featured on the homepage of our web and App
         </li>
 
@@ -145,16 +152,21 @@
     </ul>
 
     <!-- if user is not loggedin, go to signin / login page -->
-    <a *ngIf="!isLoggedIn" class="btn btn-more" [routerLink]="linkToRegistration">
-        <span *ngIf="type == 'basic'">Explore</span>
-        <span *ngIf="type != 'basic'">Get Started</span>
-        <!-- <span *ngIf="type == 'partner'">Get in touch</span> -->
-    </a>
-
-    <button *ngIf="isLoggedIn && !hideButton" class="btn btn-more" (click)="triggerButtonClick()">
-        <span *ngIf="type == 'basic'">Explore</span>
-        <span *ngIf="type != 'basic'">Get Started</span>
-        <!-- <span *ngIf="type == 'partner'">Get in touch</span> -->
-    </button>
+    <ng-container *ngIf="type != 'partnerEnterprise'; else buttonPartnerEnterPrise">
+        <a *ngIf="!isLoggedIn" class="btn btn-more" [routerLink]="linkToRegistration">
+            <span *ngIf="type == 'basic'">Explore</span>
+            <span *ngIf="type != 'basic'">Get Started</span>
+            <!-- <span *ngIf="type == 'partner'">Get in touch</span> -->
+        </a>
+    
+        <button *ngIf="isLoggedIn && !hideButton" class="btn btn-more" (click)="triggerButtonClick()">
+            <span *ngIf="type == 'basic'">Explore</span>
+            <span *ngIf="type != 'basic'">Get Started</span>
+            <!-- <span *ngIf="type == 'partner'">Get in touch</span> -->
+        </button>    
+    </ng-container>
+    <ng-template #buttonPartnerEnterPrise>
+        <a class="btn btn-more" [routerLink]="['/contact-us']">Contact</a>
+    </ng-template>
 
 </div>
