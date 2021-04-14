@@ -1,0 +1,61 @@
+<ng-container *ngIf="mode == 'form'">
+  <ul class="list-unstyled" *ngIf="disabled">
+    <ng-container *ngFor="let item of selectionList; let i = index;">
+      <li class="mt-4 mb-0 root" *ngIf="getFormArray('root').controls[i].value">
+        {{item.label}}
+  
+        <ul 
+        *ngIf="getFormArray('root').controls[i].value && item.child"
+        class="checkbox-group mb-4 pl-3 list-unstyled"
+        >
+          <ng-container *ngFor="let itemSub of item.child; let j = index;">
+            <li class="sub mt-4 mb-0" [ngClass]="{col2: col2}" *ngIf="getFormArray(item.id).controls[j].value">
+              {{itemSub.label}}
+            </li>
+          </ng-container>
+        </ul>
+      </li>  
+    </ng-container>
+  </ul>
+  
+  <ul class="list-unstyled" *ngIf="!disabled">
+    <ng-container *ngFor="let item of selectionList; let i = index;">
+      <li class="mt-4 mb-0 root">
+        <form-item-checkbox 
+        [name]="item.id"
+        [controller]="getFormArray('root').controls[i]"
+        [label]="item.label"
+        (changeValue)="onChange()"
+        ></form-item-checkbox>
+  
+        <ul 
+        *ngIf="getFormArray('root').controls[i].value"
+        class="checkbox-group mb-4 pl-3 list-unstyled"
+        >
+          <ng-container *ngFor="let itemSub of item.child; let j = index;">
+            <li class="sub mt-4 mb-0" [ngClass]="{col2: col2}">
+              <form-item-checkbox 
+              [name]="itemSub.id" 
+              [controller]="getFormArray(item.id).controls[j]"
+              [label]="itemSub.label"
+              (changeValue)="onChange()"
+            ></form-item-checkbox>
+            </li>
+          </ng-container>
+        </ul>
+      </li>  
+    </ng-container>
+  </ul>
+</ng-container>
+
+<ul class="tags-horizontal m-0 list-unstyled d-flex flex-nowrap" *ngIf="mode == 'tag' && data && data.length > 0">
+  <ng-container *ngFor="let item of selectionList; let i = index;">
+    <li *ngIf="getFormArray('root').controls[i].value"
+    class="main text-nowrap rounded mr-3 position-relative"
+    >
+      <span class="px-3">{{item.label}}</span>
+      <label class="btn m-0" [for]="item.id"><i class="fas fa-times"></i></label>
+      <input [id]="item.id" type="checkbox" class="d-none" [formControl]="getFormArray('root').controls[i]" (change)="onChange()">
+    </li>
+  </ng-container>
+</ul>

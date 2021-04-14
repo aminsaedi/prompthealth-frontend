@@ -66,7 +66,7 @@ export class RegisterPartnerComponent implements OnInit {
         this._sharedService.loader('show');
         try{
           this.save(); 
-          this._router.navigate(['/dashboard/register-partner/complete']);
+          this._router.navigate(['/dashboard/register-product/complete']);
           
         }catch(err){
           this._toastr.error(err);

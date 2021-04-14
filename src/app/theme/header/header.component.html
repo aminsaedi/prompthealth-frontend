@@ -1,6 +1,7 @@
 <header>
-  <nav class="blur main-header position-fixed navbar-light shadow w-100 p-md-2" [ngClass]="{hide: !isHeaderShown}">
-    <div class="d-flex justify-content-between align-items-center">
+  <nav class="blur main-header position-fixed navbar-light shadow w-100" [ngClass]="{hide: !isHeaderShown}">
+    <!-- <banner-top></banner-top> -->
+    <div class="d-flex justify-content-between align-items-center p-md-2">
       <div class="ml-2 flex-grow-0 flex-shrink-0">
         <a class="navbar-brand" ref="#" [routerLink]="['/']">
           <img class="d-none d-md-block" src="assets/img/logo.png" />
@@ -48,10 +49,10 @@
           <a class="nav-link" class="nav-link" [routerLink]="'/'">Home</a>
         </div>
         <div class="nav-item" (click)="showMenu(true)">
-          <a class="nav-link">Categories</a>
+          <a class="nav-link">Find practitioners</a>
         </div>
         <div class="nav-item">
-          <a class="nav-link" class="nav-link" [routerLink]="['/partners']">Partner</a>
+          <a class="nav-link" class="nav-link" [routerLink]="['/partners']">Products/Services</a>
         </div>
         <div class="nav-item">
           <a class="nav-link" class="nav-link" [routerLink]="['/subscriptionplan']">Pricing</a>
@@ -65,7 +66,7 @@
 
     <!-- menu for medium view or more-->
     <div class="menu d-none" [ngClass]="(isMenuMobileForcibly) ? '' : 'd-md-block'"
-      *ngIf="isNavMenuShown && catService.categoryList && catService.categoryList.length>0" [@fade]>
+      *ngIf="isNavMenuShown && catService.categoryList && catService.categoryList.length>0" [@slideVertical]>
 
       <div class="shadow menu_inner position-relative">
         <button class="btn close-menu btn-icon text-blue" (click)="hideMenu()">
@@ -73,7 +74,7 @@
         </button>
         <div class="close-menu-full" (click)="hideMenu()"></div>
 
-        <!-- <div class="menu-title center">Service/Goal</div> -->
+        <div class="menu-title text-center font-bigger text-dark p-3">Start by selecting category</div>
         <div class="menu-category-group w-100">
           <div class="col-4 menu-category" (mousemove)="onMouseOverRootMenuCategory($event)">
             <ul class="category">
@@ -113,9 +114,9 @@
   </button>
   <ul class="menu-item font-weight-bold" [ngClass]="{before: (levelMenuSm > 0), after: (levelMenuSm < 0)}">
     <li><a class="text-blue" [routerLink]="'/'" (click)="hideMenu()">Home</a></li>
-    <li><a class="text-blue" (click)="scrollMenuSm(1)">Categories</a></li>
+    <li><a class="text-blue" (click)="scrollMenuSm(1)">Find Practioners</a></li>
+    <li><a class="text-blue" [routerLink]="['/partners']" (click)="hideMenu()">Products/Services</a></li>
     <li><a class="text-blue" [routerLink]="['/subscriptionplan']" (click)="hideMenu()">Pricing</a></li>
-    <li><a class="text-blue" [routerLink]="['/partners']" (click)="hideMenu()">Partner</a></li>
     <li><a class="text-blue" [routerLink]="['/blogs']" (click)="hideMenu()">Blogs</a></li>
 
     <li *ngIf="!token">
@@ -136,7 +137,7 @@
       <button class="btn btn-icon text-blue" (click)="scrollMenuSm(0)">
         <i class="fas fa-arrow-left"></i>
       </button>
-      Categories
+      Find Practioners
     </li>
     <li *ngFor="let cat of catService.categoryList; let i = index">
       <span (click)="changeMenuCategory(i); scrollMenuSm(2)" class="d-flex justify-content-between">

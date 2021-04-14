@@ -13,8 +13,6 @@ import { ProfessionalRegisterComponent } from './professional-register/professio
 import { ProfessionalHomeComponent } from './professional-home/professional-home.component';
 
 import { UserQuestionaireComponent } from './user-questionaire/user-questionaire.component';
-import { QuestionnaireItemSelectComponent } from './questionnaire-item-select/questionnaire-item-select.component';
-import { QuestionnaireItemCheckboxComponent } from './questionnaire-item-checkbox/questionnaire-item-checkbox.component';
 import { RegisterPartnerComponent } from './register-partner/register-partner.component';
 import { RegisterPartnerGeneralComponent } from './register-partner-general/register-partner-general.component';
 import { RegisterPartnerServiceComponent } from './register-partner-service/register-partner-service.component';
@@ -24,6 +22,8 @@ import { RegisterPartnerCompleteComponent } from './register-partner-complete/re
 import { RegisterPartnerGuard } from './register-partner.guard';
 import { RegisterPartnerCompleteGuard } from './register-partner-complete.guard';
 import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
+import { UserQuestionnaireItemSelectComponent } from './user-questionnaire-item-select/user-questionnaire-item-select.component';
+import { UserQuestionnaireItemSelectMultipleComponent } from './user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component';
 
 const routes: Routes = [
   {
@@ -53,12 +53,11 @@ const routes: Routes = [
   {
     path: 'questions/User',
     component: UserQuestionaireComponent, children: [
-      { path: '', redirectTo: 'age' },
-      { path: 'age', component: QuestionnaireItemSelectComponent, data: { q: 'age' } },
-      { path: 'background', component: QuestionnaireItemCheckboxComponent, data: { q: 'background', style: 'block' } },
-      { path: 'goal', component: QuestionnaireItemCheckboxComponent, data: { q: 'goal', style: 'block' } },
-      { path: 'availability', component: QuestionnaireItemCheckboxComponent, data: { q: 'availability', style: 'block' } },
-      { path: '**', redirectTo: 'age' },
+      { path: 'gender', component: UserQuestionnaireItemSelectComponent, data: {index: 0, q: 'gender'} },
+      { path: 'age', component: UserQuestionnaireItemSelectComponent, data: {index: 1, q: 'age' } },
+      { path: 'background', component: UserQuestionnaireItemSelectMultipleComponent, data: {index: 2, q: 'background'} },
+      { path: 'goal', component: UserQuestionnaireItemSelectMultipleComponent, data: {index: 3, q: 'goal'} },
+      { path: '**', redirectTo: 'gender' },
     ],
     // canActivate: [AuthGuard]
   },
@@ -85,7 +84,7 @@ const routes: Routes = [
     component: ProfessionalRegisterComponent
   },
   {
-    path: 'register-partner',
+    path: 'register-product',
     component: RegisterPartnerComponent,
     canActivate: [RegisterPartnerGuard],
     children: [
@@ -116,7 +115,7 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'register-partner/complete',
+    path: 'register-product/complete',
     component: RegisterPartnerCompleteComponent,
     canActivate: [RegisterPartnerCompleteGuard,],
   }

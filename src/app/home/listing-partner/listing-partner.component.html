@@ -12,7 +12,7 @@
         <p class="mt-4 mb-0 font-weight-400 font-md-big">We are looking for organizations in health and wellness that provide products or services and are interested in collaborating with us. </p>          
       </div>
       <div class="col-12 col-md-4 col-lg-5 text-center mt-4 mt-md-0">
-        <a [routerLink]="['/subscriptionplan-partner']" class="btn btn-green-partner font-regular shadow rounded-pill px-5">See Plans</a>
+        <a [routerLink]="['/plans/product']" class="btn btn-green-partner font-regular shadow rounded-pill px-5">See Plans</a>
       </div>
     </div>
   </div>
@@ -36,14 +36,14 @@
       <div class="bg-lightblue">
         <div class="sticky-top bg-white">
           <div class="pt-3">
-            <form-input 
+            <form-item-input 
             name="search"
             label="search"
             placeholder="What area are you looking for?"
             prependIcon="fas fa-search"
             [controller]="formSearch"
             (keyup.enter)="onSearchSet()"
-            ></form-input>  
+            ></form-item-input>  
           </div>
           <div class="bg-lightblue">
             <ng-container *ngTemplateOutlet="filterTop"></ng-container>
@@ -51,10 +51,10 @@
         </div>
 
         <div class="pb-3 px-3 pt-3" *ngIf="!isViewSmall">
-          <form-service 
+          <form-item-service 
           [col2]="false" 
           [data]="filterServices"
-          ></form-service>
+          ></form-item-service>
         </div>
       </div>
     </section>
@@ -62,7 +62,7 @@
     <section class="col-12 col-md-8 col-lg-8 col-xl-9">
       <div class="mb-3 sticky-top pt-3 pb-2 blur" (clickOutside)="hideFilter()">
         <div class="position-relative d-md-none">
-          <form-input 
+          <form-item-input 
           name="search"
           label="search"
           placeholder="What area are you looking for?"
@@ -70,14 +70,14 @@
           [controller]="formSearch"
           (click)="showFilter()"
           (keyup.enter)="onSearchSet()"
-          ></form-input>  
+          ></form-item-input>  
           <div class="position-absolute w-100 px-3 bg-lightblue z-index-10" *ngIf="isFilterShown && isViewSmall">
             <ng-container *ngTemplateOutlet="filterTop"></ng-container>
-            <div class="form-service-sm">
-              <form-service 
-              class="form-service-sm" 
+            <div class="form-item-service-sm">
+              <form-item-service 
+              class="form-item-service-sm" 
               [data]="filterServices"
-              ></form-service>  
+              ></form-item-service>  
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@
       <p *ngIf="!partners" class="message-dummy">Here are the options we found for you</p>
       <ul class="row list-unstyled partners" *ngIf="!partners">
         <li class="col-12 col-md-6 col-xl-4 mb-4" *ngFor="let i of [0,1,2,3]">
-          <post-dummy class="rounded-10p"></post-dummy>
+          <card-dummy class="rounded-10p"></card-dummy>
         </li>
       </ul>
 
@@ -113,7 +113,7 @@
       </ul>
 
       <p *ngIf="partners && partners.length == 0" class="font-italic font-big">
-        There is no one available in your geographical area with your search criteria right now.
+        There is no one available with your search criteria right now.
         <br><br>
         Be sure to check back as our network is growing everyday!
       </p>

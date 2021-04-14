@@ -4,6 +4,14 @@
 >
   <div class="container text-center text-light">
     <h2>Profile Management</h2>
+
+    <button-tutorial
+    *ngIf="profile?.role != 'U'"
+    type="dashboard"
+    label="tutorial"
+    title="How To Use Dashboard"
+    buttonClass="btn-primary rounded-10p py-2 px-4"
+    ></button-tutorial>
   </div>
 </section>
 
@@ -80,13 +88,13 @@
                   </div>
                 </ng-container> -->
                 <form (ngSubmit)="onSubmitPhListedLink()" *ngIf="isPhLinkFieldShown" class="mt-3">
-                  <form-input
+                  <form-item-input
                   name="phListedLink"
                   label="Link"
                   placeholder="Enter the URL to where you have linked Prompt Health"
                   [controller]="formPhListedLink"
                   [submitted]="isFormPhListedLinkSubmitted"
-                  ></form-input>  
+                  ></form-item-input>  
                   <div class="mt-3">
                     <input type="submit" class="btn btn-ph-blue" value="Submit">
                   </div>

@@ -18,19 +18,19 @@
   <form [formGroup]="form" (ngSubmit)="signinEmail()">
     <div class="mb-3">
       <label>Email Address <span class="text-danger">*</span></label>
-      <form-input
+      <form-item-input
       name="email"
       label="Email Address"
       placeholder="Enter your email"
       autcomplete="email"
       [submitted]="isSubmitted"
       [controller]="f.email"
-      ></form-input>
+      ></form-item-input>
     </div>
 
     <div class="mb-3">
       <label>Password <span class="text-danger">*</span></label>
-      <form-input
+      <form-item-input
       name="password"
       label="Password"
       type="password"
@@ -38,12 +38,12 @@
       [autocomplete]="(authType == 'signin') ? 'current-password' : 'new-password'"
       [submitted]="isSubmitted"
       [controller]="f.password"
-      ></form-input>
+      ></form-item-input>
     </div>
 
     <div class="mb-3" *ngIf="authType == 'signup'">
       <label>Confirm Password <span class="text-danger">*</span></label>
-      <form-input
+      <form-item-input
       name="confirmPassword"
       label="Password"
       type="password"
@@ -51,32 +51,32 @@
       autocomplete="new-password"
       [submitted]="isSubmitted"
       [controller]="f.confirm_password"
-      ></form-input>
+      ></form-item-input>
     </div>
 
     <div class="mb-3" *ngIf="authType == 'signup'">
       <label>How did you hear about us? <span class="text-danger">*</span></label>
-      <form-input
+      <form-item-input
       name="hear_from"
       label="Message"
       placeholder="Enter your message"
       [submitted]="isSubmitted"
       [controller]="f.hear_from"
-      ></form-input>
+      ></form-item-input>
     </div>
 
     <div class="mb-3" *ngIf="authType == 'signup'">
-      <form-checkbox
+      <form-item-checkbox
       class="font-small"
       name="t_c"
       label="I agree to the terms of service and privacy policy"
       [controller]="f.t_c"
-      ></form-checkbox>
-      <form-errors
+      ></form-item-checkbox>
+      <form-item-errors
       [controller]="f.t_c"
       label="Agreement"
       [submitted]="isSubmitted"
-      ></form-errors>
+      ></form-item-errors>
     </div>
 
     <div class="mb-2">

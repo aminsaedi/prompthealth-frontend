@@ -1,0 +1,27 @@
+:host{
+  font-size: 16px;
+}
+
+.banner{
+  background: var(--ph-blue);
+  color: white;
+  font-size: 16px;
+  position: relative;
+
+  .badge-appstore{
+    height: 30px;
+    width: auto;
+  }
+  .badge-playstore{
+    height: 44px;
+    width: auto;
+  }
+
+  .btn-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 20px;
+    color: white;
+  }
+}

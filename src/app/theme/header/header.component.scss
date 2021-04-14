@@ -62,7 +62,7 @@ img.brand-sm{
 
 .menu{
   position: absolute;
-  top: 100%;
+  top: 110%;
   left: 0;
   width: 100%;
   box-sizing: border-box;
@@ -92,11 +92,7 @@ img.brand-sm{
   }
 
   .menu-title{
-    position: relative;
-    color: #3377C5;
-    line-height: 2em;
-    text-align: center;
-    padding: 10px;
+    border-bottom: solid 3px #d8eafd;
   }
 
   .menu-category-group{

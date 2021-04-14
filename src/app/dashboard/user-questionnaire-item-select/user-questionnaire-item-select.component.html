@@ -1,0 +1,23 @@
+<h4>{{title}}</h4>
+<form-item-checkbox-group
+*ngIf="form && type == 'gender'"
+id="gender"
+type="selectbox"
+label="Gender"
+[controller]="form"
+[responsive]="true"
+[submitted]="isSubmitted"
+[includePreferNotToSay]="true"
+></form-item-checkbox-group>
+
+<form-item-checkbox-group
+*ngIf="form && type == 'age'"
+id="age_range"
+ageRangeType="detail"
+type="selectbox"
+label="Age range"
+[controller]="form"
+[responsive]="true"
+[submitted]="isSubmitted"
+[includePreferNotToSay]="true"
+></form-item-checkbox-group>

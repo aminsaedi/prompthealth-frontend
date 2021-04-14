@@ -16,17 +16,27 @@
 
 <!-- Pricing table -->
 <div class="container-fluid my-5">
-  <div class="max-w-1200">
+  <div class="max-w-1200 d-md-flex align-items-center">
     <price-range-switcher (change)="changePriceRange($event)"></price-range-switcher>
-    <span class="pt-3 pt-md-0 pl-md-5 font-italic text-blue font-big d-block d-md-inline-block">save 20% with yearly subscription</span>  
+    <span class="pt-3 pt-md-0 pl-md-3 pl-lg-5 font-italic text-blue font-big d-block d-md-inline-block">save 20% with yearly subscription</span>
 
+    <div class="d-inline-block mt-3 mt-md-0 ml-md-3 ml-lg-5">
+      <button-tutorial
+      type="signup"
+      label="How To Signup"
+      title="How To signup"
+      ></button-tutorial>
+    </div>
   </div>
 </div>
+
+
 
 <div class="container-fluid max-w-1200">
   <div class="row align-items-stretch">
     <subscription-plan-item-card class="col-md"
       type="basic"
+      theme="green"
       [data]="basicPlan"
       [monthly]="isPriceMonthly"
       [hideButton]="!this.profile || !!this.profile.plan"
@@ -34,29 +44,43 @@
 
     <subscription-plan-item-card class="col-md mt-5 mt-md-0"
       type="provider"
+      theme="blue"
       [data]="spPlan"
       [monthly]="isPriceMonthly"
       ></subscription-plan-item-card>
 
     <subscription-plan-item-card class="col-md mt-5 mt-md-0"
       type="centre"
+      theme="red"
       [data]="cPlan"
       [monthly]="isPriceMonthly"
       ></subscription-plan-item-card>
   </div>
 </div>
 
-<div class="container-fluid max-w-1200" *ngIf="addOnPlans.length>0" id="addon">
+<div class="container-fluid max-w-1200" id="addon">
   <h3 class="text-pink mt-5 mb-3">Add-ons for Provider and Centre</h3>
-  <div 
-  *ngFor="let addOnPlan of addOnPlans"
-  class="mb-3"
-   >
-
-   <subscription-plan-addon-card
-   [data]="addOnPlan"
-   [monthly]="isPriceMonthly"
-   ></subscription-plan-addon-card>
+  <div class="row align-items-start">
+    <subscription-plan-addon-card
+    *ngIf="addonNetworker"
+    class="col-md-6 mb-3"
+    [data]="addonNetworker"
+    [monthly]="isPriceMonthly"
+    theme="lightpink"
+    ></subscription-plan-addon-card>
+    <subscription-plan-addon-card
+    *ngIf="addonSocialite"
+    class="col-md-6 mb-3"
+    [data]="addonSocialite"
+    [monthly]="isPriceMonthly"
+    theme="lightblue"
+    ></subscription-plan-addon-card>
   </div>
-   <!-- <subscription-plan-addon-card type="op2" class="mt-5" [isPriceMonthly]="isPriceMonthly"></subscription-plan-addon-card> -->
 </div> 
+
+<div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{shrink: isCouponShrink}" (click)="expandMessageCoupon()">
+  <div class="mb-2 font-weight-400">You have coupon!</div>
+  <card-coupon [couponCode]="couponCode" style="font-size: 11px;"></card-coupon>
+
+  <button class="btn btn-shrink" (click)="shrinkMessageCoupon($event)"><i class="fas fa-minus"></i></button>
+</div>

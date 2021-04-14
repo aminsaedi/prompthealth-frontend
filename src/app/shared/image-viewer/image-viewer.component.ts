@@ -1,9 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { fadeAnimation } from '../../_helpers/animations';
 
 @Component({
   selector: 'image-viewer',
   templateUrl: './image-viewer.component.html',
-  styleUrls: ['./image-viewer.component.scss']
+  styleUrls: ['./image-viewer.component.scss'],
+  animations: [fadeAnimation]
 })
 export class ImageViewerComponent implements OnInit {
 
@@ -16,7 +18,12 @@ export class ImageViewerComponent implements OnInit {
   public imageGroups: ImageGroupData[] = [];
   public thumbnails: ImageData[] = [];
 
-  constructor() { }
+  public isNavigatorShown: boolean = false;
+  public targetImage: number = 0;
+
+  private host: HTMLElement;
+
+  constructor(_el: ElementRef) { this.host = _el.nativeElement; }
 
   ngOnInit(): void {
     if(!this.data.imageGroups && !this.data.images){ console.log('have to set either images or imageGroups'); }
@@ -36,6 +43,21 @@ export class ImageViewerComponent implements OnInit {
     this.imageGroups.forEach(group => {
       this.thumbnails.push(group.images[0]);
     });
+  }
+
+  showNavigator(){
+    this.isNavigatorShown = true;
+    setTimeout(()=>{
+      this.isNavigatorShown = false;
+    }, 5000);
+  }
+
+  goNext(){ this.goto(this.targetImage + 1); }
+  goBack(){ this.goto(this.targetImage - 1); }
+  goto(i: number){
+    this.targetImage = i;
+    const el: HTMLUListElement = this.host.querySelector('#carousel');
+    el.scrollTo({top: 0, left: el.getBoundingClientRect().width * i, behavior: 'smooth'});
   }
 
   selectImage(i: number){ this.target = i; }

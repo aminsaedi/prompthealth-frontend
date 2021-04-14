@@ -3,20 +3,32 @@
 
 <div class="viewer" *ngIf="itemTarget">
   <div class="main d-flex flex-column">
-    <h3 *ngIf="itemTarget.item_text" class="flex-grow-0 my-0">{{itemTarget.item_text}}</h3>
-    <div *ngIf="itemTarget.price" class="my-3 flex-grow-0">
+    <h3 *ngIf="itemTarget.item_text" class="flex-grow-0 mt-0 mb-3">{{itemTarget.item_text}}</h3>
+    <div *ngIf="itemTarget.price" class="mb-3 flex-grow-0">
       <span class="py-1 px-3 rounded price font-regular">
         {{itemTarget.price | currency:'CAD'}}
       </span>
     </div>
     <p *ngIf="itemTarget.desc" class="flex-grow-0 whitespace-pre">{{itemTarget.desc}}</p>  
 
-    <div class="flex-grow-1 position-relative">
-      <ul class="d-flex flex-nowrap list-unstyled h-100 w-100 position-absolute overflow-auto images m-0">
-        <li [ngClass]="(itemTarget.images.length > 1) ? 'w-90' : ''" *ngFor="let image of itemTarget.images">
+    <div class="flex-grow-1 position-relative" (click)="showNavigator()">
+      <ul class="d-flex flex-nowrap list-unstyled h-100 w-100 position-absolute images m-0" id="carousel">
+        <li *ngFor="let image of itemTarget.images; let i = index">
           <img [src]="image.url" [alt]="(image.name) ? image.name : ''">
         </li>
       </ul>    
+      <div class="navigator position-relative h-100" *ngIf="isNavigatorShown" [@fade]>
+        <div class="go-back" *ngIf="targetImage != 0" (click)="goBack()"><i class="fas fa-angle-left"></i></div>
+        <div class="go-next" *ngIf="targetImage != itemTarget.images.length - 1" (click)="goNext()"><i class="fas fa-angle-right"></i></div>  
+      </div>
+    </div>
+
+    <div class="flex-grow-0 position-relative">
+      <ul class="d-flex flex-wrap list-unstyled justify-content-center thumbnails-small">
+        <li *ngFor="let image of itemTarget.images; let i= index" [ngClass]="{selected: (i == targetImage)}" (click)="goto(i)">
+          <img [src]="image.url" [alt]="image.name ? image.name : ''">
+        </li>
+      </ul>
     </div>
   </div>
   <app-image-row 

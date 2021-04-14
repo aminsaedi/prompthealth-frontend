@@ -11,8 +11,8 @@
             <div class="mx-2">/</div>
             <div>
                 <div *ngIf="monthly">Monthly</div>
-                <div *ngIf="!monthly">Yearly</div>    
-            </div>    
+                <div *ngIf="!monthly">Yearly</div>
+            </div>
         </ng-container>
         <span class="save-annualy font-weight-normal text-center d-inline-block font-italic"
             *ngIf="!monthly && type != 'basic' && type != 'partner'">save<br>20%</span>
@@ -24,7 +24,9 @@
 
 <div class="plan-card h-100 shadow text-center" [class]="'colorset-' + color">
 
-    <h3 class="title d-inline-block" [innerText]="title"></h3>
+    <h3 class="title d-inline-block m-0" [innerText]="title"></h3>
+    <div class="separator"></div>
+
     <p class="my-4">
         <span *ngIf="type == 'basic'">Get listed with us for free so that the clients can find you.</span>
         <span *ngIf="type == 'provider'">This is for a solo health and wellness professional looking to boost their
@@ -39,48 +41,59 @@
             showcase their product or service to clients and get exposure and endorsement by heath
             professionals.
         </span>
-        <span *ngIf="type == 'partnerBasic'">For health and wellness companies looking to showcase their products or
-            services to clients. Get exposure and have the opportunity to be endorsed by the health professionals on our
-            network, further increasing your visibility. 
+        <span *ngIf="type == 'partnerBasic'">For health and wellness companies looking to showcase their products
+            orservices to clients. Get exposure and have the opportunity to be endorsed bythe health professionals on
+            our network, further increasing your visibility.
         </span>
         <span *ngIf="type == 'partnerEnterprise'">For large enterprises who believe in unlocking the power of true
-            personalized health and wellness. Partner and collaborate with us to help your users access suitable
-            solutions anytime, anywhere from the palms of their hand. 
+            personalizedhealth and wellness. Partner and collaborate with us to help your users access suitable solutions
+            anytime, anywhere from the palm of your hand
         </span>
     </p>
 
     <ul class="feature text-left fa-ul my-4">
 
         <!-- only for partnerBasic -->
-        <ng-container *ngIf="type == 'partnerBasic' || type == 'partnerEnterprise'">
+        <ng-container *ngIf="type == 'partnerBasic'">
             <li>
                 <span class="fa-li"><i class="far fa-check-circle"></i></span>
-                Company name
+                <div class="font-weight-400">Be Visible</div>
+                <p>Get in front of all Canadians with a professional profile on our platform + app homepage.</p>
             </li>
             <li>
                 <span class="fa-li"><i class="far fa-check-circle"></i></span>
-                Description
+                <div class="font-weight-400">Be Recognized</div>
+                <p>Photo gallery for your clients to get to know you.</p>
             </li>
             <li>
                 <span class="fa-li"><i class="far fa-check-circle"></i></span>
-                Link
+                <div class="font-weight-400">Share</div>
+                <p>Tell clients about yourself, link contact info, social media,promotions, and more</p>
             </li>
             <li>
                 <span class="fa-li"><i class="far fa-check-circle"></i></span>
-                5 pictures
+                <div class="font-weight-400">
+                    Be Trusted
+                    <span class="badge badge-info">Coming Soon!</span>
+                </div>
+                <p>Endorsement from health professionals</p>
             </li>
-            <li>
-                <span class="fa-li"><i class="far fa-check-circle"></i></span>
-                Contact info
-            </li>    
         </ng-container>
 
-        <!-- <ng-container *ngIf="type == 'partnerEnterprise'">
+        <ng-container *ngIf="type == 'partnerEnterprise'">
             <li>
-                <span class="fa-li"><i class="far fa-check-circle"></i></span>
-                All the Product/Service features.
+              <span class="fa-li"><i class="far fa-check-circle"></i></span>
+              <p>Get featured on the homepage of our website and app</p>
             </li>
-        </ng-container> -->
+            <li>
+              <span class="fa-li"><i class="far fa-check-circle"></i></span>
+              <div class="font-weight-400">
+                Analytics
+                <span class="badge badge-info">Coming Soon!</span>
+              </div>
+              <p>Custom solutions that provide insight into your organization</p>
+            </li>
+        </ng-container>
 
         <!-- only for centre -->
         <li *ngIf="type == 'centre'">
@@ -138,13 +151,13 @@
             List of Providers
         </li>
 
-        <li *ngIf="data?.featuredOnHomePage">
+        <!-- <li *ngIf="data?.featuredOnHomePage">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             <span class="badge badge-info">NEW</span>
             Get featured on the homepage of our web and App
-        </li>
+        </li> -->
 
-        <li *ngIf="type != 'basic' && type != 'partnerBasic'">
+        <li *ngIf="type == 'provider' || type == 'centre'">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             <span class="badge badge-info">NEW</span>
             Exciting features & benefits coming every month
@@ -158,15 +171,15 @@
             <span *ngIf="type != 'basic'">Get Started</span>
             <!-- <span *ngIf="type == 'partner'">Get in touch</span> -->
         </a>
-    
+
         <button *ngIf="isLoggedIn && !hideButton" class="btn btn-more" (click)="triggerButtonClick()">
             <span *ngIf="type == 'basic'">Explore</span>
             <span *ngIf="type != 'basic'">Get Started</span>
             <!-- <span *ngIf="type == 'partner'">Get in touch</span> -->
-        </button>    
+        </button>
     </ng-container>
     <ng-template #buttonPartnerEnterPrise>
-        <a class="btn btn-more" [routerLink]="['/contact-us']">Contact</a>
+        <a class="btn btn-more" [routerLink]="['/contact-us']">Get in touch</a>
     </ng-template>
 
 </div>

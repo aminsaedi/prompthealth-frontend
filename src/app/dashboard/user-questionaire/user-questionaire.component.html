@@ -8,9 +8,9 @@
 
   <!-- stepper for small view-->
   <div class="container-fruid d-md-none flex-grow-0 sticky-top-sm pb-3">
-    <div class="stepper-road-sm" [class]="'pos-' + idxCurrentQuestionnaire"></div>
+    <div class="stepper-road-sm" [class]="'pos-' + currentIdx"></div>
     <div class="container">
-      <div class="stepper-item-sm font-weight-bold mt-4">{{questionnaireTypes[idxCurrentQuestionnaire].label}}</div>
+      <div class="stepper-item-sm font-weight-bold mt-4">{{data[currentIdx].label}}</div>
     </div>
   </div>
 
@@ -19,8 +19,8 @@
     <div class="max-w-1200">
       <div class="d-inline-flex position-relative">
         <div class="stepper-road"></div>
-        <div *ngFor="let type of questionnaireTypes; let i = index;" class="stepper-item mx-4 mx-lg-5 text-center"
-          [ngClass]="{active: (idxCurrentQuestionnaire == i)}">
+        <div *ngFor="let type of data; let i = index;" class="stepper-item mx-4 mx-lg-5 text-center"
+          [ngClass]="{active: (currentIdx == i)}">
           <div class="point rounded-circle d-block"></div>
           <span class="label">{{type.label}}</span>
         </div>
@@ -29,10 +29,32 @@
     </div>
   </div>
 
-
   <div class="container-fluid mt-3 flex-grow-1 position-relative">
-    <div class="max-w-1200">
-      <router-outlet></router-outlet>
+    <div class="max-w-1200 user-input-wrapper">
+      <div class="row">
+        <div class="col-12 col-md-7">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-1200 button-group">
+      <div class="row justify-content-between">
+        <div class="col-5 col-md-3">
+          <button class="btn rounded btn-lg btn-block" *ngIf="currentIdx != 0" type="button"
+            (click)="onClickNavigation('back')">Back</button>
+        </div>
+        <div class="d-none d-md-block col-md-1"></div>
+        <div class="col-5 col-md-3">
+          <button class="btn rounded btn-lg btn-block" (click)="onClickNavigation('next')">
+            <span *ngIf="currentIdx == data.length - 1">Submit</span>
+            <span *ngIf="currentIdx < data.length - 1">Next</span>
+          </button>
+        </div>
+        <div class="d-none d-md-block col-md-5"></div>
+      </div>
+      <img class="d-none d-md-block image-questionnaire" src="/assets/img/user-questionnaire.png" alt="questionnaire">
+    
     </div>
   </div>
 </section>

@@ -1,8 +1,0 @@
-<ul class="errors text-danger font-small" *ngIf="controller && controller.invalid && submitted">
-  <li *ngIf="controller.errors.required">{{label}} is required.</li>
-  <li *ngIf="controller.errors.minlength">{{label}} too short.</li>
-  <li *ngIf="controller.errors.maxlength">{{label}} too long.</li>
-  <li *ngIf="controller.errors.email">{{label}} is invalid.</li>
-  <li *ngIf="controller.errors.pattern">{{label}} is invalid.</li>
-  <li *ngIf="controller.errors.mustMatch">{{label}} is not matched.</li>
-</ul> 

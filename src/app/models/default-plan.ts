@@ -1,3 +1,4 @@
+/** default plan data type fetched from server by calling the api 'user/get-plans' */
 export interface IDefaultPlan {
   _id: string;
   name: string;

@@ -31,6 +31,7 @@ import { GetFeaturedTabComponent } from './get-featured-tab/get-featured-tab.com
 import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
 import { ListingPartnerComponent } from './listing-partner/listing-partner.component';
 import { CardPartnerComponent } from './card-partner/card-partner.component';
+import { InvitationComponent } from './invitation/invitation.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { CardPartnerComponent } from './card-partner/card-partner.component';
     ProfilePartnerComponent,
     ListingPartnerComponent,
     CardPartnerComponent,
+    InvitationComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

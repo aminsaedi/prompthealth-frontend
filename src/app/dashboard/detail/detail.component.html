@@ -58,48 +58,99 @@ class="container-fluid bg-grey p-4"
 </section>
 
 <!-- section review -->
-<section class="container-fluid bg-white mt-5 mt-md-6" *ngIf="indexTabItem == 1">
-  <div class="max-w-1200">
-    <div class='my-5'>
-      <star-rate [rate]="((userInfo)? userInfo.rating : 0)" margin='big'></star-rate>
-      <span class='text-blue pl-4'>{{(userInfo && userInfo.reviews.length > 0)? ('(' + userInfo.reviews.length + ')') : 'No review yet'}}</span>
-    </div>
-    <div *ngIf="userInfo && userInfo.reviews.length > 0">
-      <div class="my-5">
-        <ul class="review-controller list-unstyled d-inline-flex mb-3">
-          <li class="btn text-blue mr-2 mr-md-4 font-regular "
-            (click)="sortReviewsBy(0)" 
-            [ngClass]="{active: indexSortReviews == 0}"
-          >Highest Rated</li>
-          <li class="btn text-blue mr-2 mr-md-4 font-regular"
-            (click)="sortReviewsBy(1)" 
-            [ngClass]="{active: indexSortReviews == 1}" 
-          >Lowest Rated</li>
-          <li class="btn text-blue font-regular"
-            (click)="sortReviewsBy(2)" 
-            [ngClass]="{active: indexSortReviews == 2}"
-          >Most Recent</li>
-        </ul>
+<section class="container bg-white mt-5 mt-md-6" *ngIf="indexTabItem == 1">
+    <div class="row justify-content-between my-5">
+      <div class="col-12 col-md-6 col-lg-7">
+        <div>
+          <star-rate [rate]="((userInfo)? userInfo.rating : 0)" margin='big'></star-rate>
+          <span class='text-blue pl-4'>{{(userInfo && userInfo.reviews.length > 0)? ('(' + userInfo.reviews.length + ')') : 'No review yet'}}</span>
+        </div>
+        <div *ngIf="userInfo && userInfo.reviews.length > 0">
+          <div class="my-5">
+            <ul class="review-controller list-unstyled d-inline-flex mb-3">
+              <li class="btn text-blue mr-2 mr-md-4 font-regular "
+                (click)="sortReviewsBy(0)" 
+                [ngClass]="{active: indexSortReviews == 0}"
+              >Highest Rated</li>
+              <li class="btn text-blue mr-2 mr-md-4 font-regular"
+                (click)="sortReviewsBy(1)" 
+                [ngClass]="{active: indexSortReviews == 1}" 
+              >Lowest Rated</li>
+              <li class="btn text-blue font-regular"
+                (click)="sortReviewsBy(2)" 
+                [ngClass]="{active: indexSortReviews == 2}"
+              >Most Recent</li>
+            </ul>
+        
+            <ul class="reviews p-0 m-0 list-unstyled">
+              <li class="d-md-flex flex-md-nowrap p-3 p-md-4 mb-4" *ngFor="let r of userInfo.reviews">
+                <div class="mb-3 mb-md-0 col-md-5 col-lg-3 d-flex">
+                  <div class="review-image rounded-circle overflow-hidden mr-3">
+                    <img [src]="r.image" [alt]="r.name">
+                  </div>
+                  <p class="font-weight-bold mt-3 font-big mb-0">{{r.name}}</p>
+                </div>
+                <div class="col-md-7 col-lg-9">
+                  <star-rate [rate]="r.rate" margin='big'></star-rate>
+                  <div class="borderb-grey pt-2"></div>
+                  <p class='pt-3 pb-0'>{{r.review}}</p>
+                  <div>{{r.createdAt | date:'longDate'}}</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
     
-        <ul class="reviews p-0 m-0 list-unstyled">
-          <li class="d-md-flex flex-md-nowrap p-3 p-md-4 mb-4" *ngFor="let r of userInfo.reviews">
-            <div class="mb-3 mb-md-0 col-md-5 col-lg-3 d-flex">
-              <div class="review-image rounded-circle overflow-hidden mr-3">
-                <img [src]="r.image" [alt]="r.name">
+      </div>
+      <div class="col-12 col-md-5 col-lg-4">
+        <div *ngIf="userInfo?.detailByGoogle">
+          <h5 class="text-ph-blue">Google Review</h5>
+          <div class="card card-google-place shadow overflow-hidden rounded-10p">
+            <div class="image-container">
+              <img class="atmosphere" [src]="userInfo?.detailByGoogle?.photos[0].getUrl()" alt="">
+              <img class="badge-google" src="/assets/img/logo-google.png" alt="">
+            </div>
+            <div class="py-3 px-3 ">
+              <h5>{{userInfo.name}}</h5>
+              <div>
+                <star-rate [rate]="userInfo.detailByGoogle.rating" size="small"></star-rate>
               </div>
-              <p class="font-weight-bold mt-3 font-big mb-0">{{r.name}}</p>
             </div>
-            <div class="col-md-7 col-lg-9">
-              <star-rate [rate]="r.rate" margin='big'></star-rate>
-              <div class="borderb-grey pt-2"></div>
-              <p class='pt-3 pb-0'>{{r.review}}</p>
-              <div>{{r.createdAt | date:'longDate'}}</div>
-            </div>
-          </li>
-        </ul>
+            <table class="table table-borderless table-hover px-2">
+              <tbody>
+                <tr>
+                  <td class="pr-0"><i class="fas fa-map-marker-alt"></i></td>
+                  <td>{{userInfo.address}}</td>
+                </tr>
+                <tr>
+                  <td class="pr-0"><i class="fas fa-phone"></i></td>
+                  <td>{{userInfo.phone}}</td>
+                </tr>
+                <tr>
+                  <td class="pr-0"><i class="fas fa-compass color-card-icon"></i></td>
+                  <td><a class="url" [href]="userInfo.detailByGoogle.url" target="_blank">{{userInfo.getURLLabel(userInfo.detailByGoogle.url)}}</a></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <ul class="list-unstyled google-reviews">
+              <li class="m-2" *ngFor="let r of userInfo.detailByGoogle.reviews">
+                <div class="d-flex flex-nowrap align-items-start mb-2">
+                  <img class="user" [src]="r.profile_photo_url" alt="">
+                  <div class="ml-2 mb-1 flex-grow-1">
+                    <span class="font-weight-400">{{r.author_name}}</span><br>
+                    <star-rate [rate]="r.rating" size="small" margin="narrow"></star-rate>
+                  </div>
+                </div>
+                <p class="font-small">{{r.text}}</p>
+                <div class="text-right font-small">{{r.relative_time_description}}</div>
+              </li>
+            </ul>
+
+          </div>  
+        </div>
       </div>
     </div>
-  </div>
 </section>
 
 <!-- section about -->
@@ -111,9 +162,9 @@ class="container-fluid bg-grey p-4"
       <div class="col-md-6 col-lg-7">
   
         <!-- basic section -->
-        <div class="row mb-5" *ngIf="userInfo && userInfo.practicePhilosophy">
+        <div class="row mb-5" *ngIf="userInfo && userInfo.description">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Practice Philosophy:</div>
-          <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.practicePhilosophy}}</p>
+          <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.description}}</p>
         </div>
         <div class="row mb-5">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Specialty Age Group</div>
@@ -141,11 +192,11 @@ class="container-fluid bg-grey p-4"
           <div class="col-12 col-lg-8">
             <app-image-row [images]="userInfo.amenityPreview" [option]="{col: 3}"></app-image-row>
             <button class="btn text-blue border-blue rounded" (click)="openAmenityViewer()">Show detail</button>
-            <app-product-viewer 
-            *ngIf="isAmenityViewerShown" 
+            <image-viewer
+            *ngIf="isAmenityViewerShown"
             [data]="userInfo.amenity"
             (close)="closeAmenityViewer()"
-            ></app-product-viewer>
+            ></image-viewer>
           </div>
         </div>
 
@@ -154,11 +205,11 @@ class="container-fluid bg-grey p-4"
           <div class="col-12 col-lg-8">
             <app-image-row [images]="userInfo.productPreview" [option]="{col: 3}"></app-image-row>
             <button class="btn text-blue border-blue rounded" (click)="openProductViewer()">Show detail</button>
-            <app-product-viewer 
+            <image-viewer
             *ngIf="isProductViewerShown"
             [data]="userInfo.product"
             (close)="closeProductViewer()"
-            ></app-product-viewer>
+            ></image-viewer>
           </div>
         </div>
 
@@ -177,6 +228,14 @@ class="container-fluid bg-grey p-4"
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.treatmentModality">{{item}}</li>
           </ul>
         </div>
+
+        <div class="row bg-lightblue pt-5 pb-0">
+          <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Health Status: </div>
+          <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
+            <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.healthStatus">{{item}}</li>
+          </ul>
+        </div>
+
         
         <div class="row bg-lightblue pt-5 pb-0">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Service Delivery:</div>
@@ -231,8 +290,8 @@ class="container-fluid bg-grey p-4"
                 <span *ngIf="isExpandProfessionals">- show less -</span>
               </button> 
             </li>
-            <li class="col-12 col-md-6 mb-5" *ngIf="isGettingProfessional"><post-dummy class="bg-white"></post-dummy></li>
-            <li class="col-12 col-md-6 mb-5" *ngIf="isGettingProfessional"><post-dummy class="bg-white"></post-dummy></li>
+            <li class="col-12 col-md-6 mb-5" *ngIf="isGettingProfessional"><card-dummy class="bg-white"></card-dummy></li>
+            <li class="col-12 col-md-6 mb-5" *ngIf="isGettingProfessional"><card-dummy class="bg-white"></card-dummy></li>
           </ul>
           <div class="bg-grey row pb-4 rounded-bottom mb-5">
             <div class="col text-center">
@@ -311,7 +370,7 @@ class="container-fluid bg-grey p-4"
             </div>
           </div>
 
-          <post-dummy *ngIf="!userInfo"></post-dummy>
+          <card-dummy *ngIf="!userInfo"></card-dummy>
 
           <div *ngIf="userInfo" class="px-3">
             <ul *ngIf="userInfo.videos.length>0" class="list-unstyled m-0 p-0">
@@ -329,7 +388,7 @@ class="container-fluid bg-grey p-4"
           <div class="card-title font-big font-md-regular text-center m-0">Endorsement</div>
           <div class="px-3 py-5 font-italic coming-soon-gradient font-bigger font-weight-bold">Coming soon...</div>
 
-          <!-- <post-dummy *ngIf="!userInfo ||!userInfo.endosements"></post-dummy>
+          <!-- <card-dummy *ngIf="!userInfo ||!userInfo.endosements"></card-dummy>
           <div class="px-3">
             <div class="endosement-wrapper py-4" *ngFor="let endosement of userInfo?.endosements;">
               <div class="d-flex justify-content-between align-items-center mb-2">

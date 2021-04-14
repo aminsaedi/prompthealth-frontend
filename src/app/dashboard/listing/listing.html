@@ -47,10 +47,7 @@
       </li>
 
       <li *ngIf="isCustomerHealthOn" class="text-nowrap mx-3 main-group">Health status:</li>
-      <li *ngFor="let id of listingPayload?.customer_health; let i = index;" class="main text-nowrap rounded mr-3">
-        <span class="px-3">{{getCustomerHealthName(id)}}</span>
-        <button class="btn" (click)="removeCustomerHealth(i)"><i class="fas fa-times"></i></button>
-      </li>
+      <form-item-customer-health [data]="listingPayload?.customer_health" mode="tag" type="simple" (changeValue)="onChangeCustomerHealth($event)"></form-item-customer-health>
     </ul>
     <ul *ngIf="!isVirtual" class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
       <li *ngFor="let f of filters; let i = index;">
@@ -127,7 +124,7 @@
           <ul class="professionals list-unstyled row">
             <li class="col-12 mb-3" *ngFor="let i of [0,1,2,3,4,5]" [ngClass]="listingItemClass">
               <div class="card p-1 border-blue rounded-15p">
-                <post-dummy></post-dummy>
+                <card-dummy></card-dummy>
               </div>
             </li>
           </ul>

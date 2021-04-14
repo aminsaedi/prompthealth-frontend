@@ -1,20 +1,26 @@
 import { IAddonPlan } from "./addon-plan";
 import { IDefaultPlan } from "./default-plan";
 
+/** user data type fetched from server by calling the api 'user/get-profile | partner/get | user/filter | partner/get-all */
 export interface IUserDetail {
   /** general */
   _id?: string;
+  userId?: string;
   roles?: string; /** U | SP | C | P */
 
   firstName?: string;
   lastName?: string;
+  fname?: string;
+  lname?: string;
   profileImage?: string;
   email?: string;
   address?: string;
   city?: string
   state?: string;
   zipcode?: string;
-  location?: number[]; /** [lat, lng] */
+  location?: number[]; /** [lng, lat] */
+  placeId?: string;
+  
   phone?: string;
 
   isApproved?: boolean;
@@ -27,8 +33,15 @@ export interface IUserDetail {
   accredited_provide_canada?: boolean;
   t_c?: boolean;
   hear_from?: string;
+  
+  customer_health?: string[];
+  services?: string[];
 
+  /** for U | SP */
+  gender?: string;
 
+  /** for C */
+  business_kind?: string;
 
   /** for SP | C */
   age_range?: string[];
@@ -41,10 +54,20 @@ export interface IUserDetail {
   serviceOfferIds?: string[];
   verifiedBadge?: boolean;
   typical_hours?: string[];
+  bookingURL?: string;
+  calcDistance?: number;
+  provideVirtual?: boolean;
+  years_of_experience?: string;
+  professional_organization?: string;
+  certification?: string;
+  exactPricing?: number;
+  price_per_hours?: string;
+
+
 
   /** for SP | C | P */
-  services?: string[];
-  product_description?: string;
+  product_description?: string; /** practicePhilosophy */
+  description?: string; /** partner description | description of professional belonging at centre */
   website?: string;
   viewCount?: number;
   isVerified?: string; /** Y |  */
@@ -65,16 +88,16 @@ export interface IUserDetail {
   trialLink?: string;
 
   /** for P | professionals at C (subscriber) */
-  image?: string[];
+  image?: string[] /** used for product images of partner */ | string /** used for professionals belonging at centre */;
 
 
   /** for subscriber */
   plan?: IDefaultPlan;
   addOnPlans?: IAddonPlan[];
 
-  videos?: string[];
+  videos?: IVideo[];
 
-  socialLinks?: string[];
+  socialLinks?: {_id: string, link: string, type: string}[];
   facebookClickCount?: number;
   instagramClickCount?: number;
   linkedinClickCount?: number;
@@ -86,7 +109,6 @@ export interface IUserDetail {
   paymentMethod?: string[];
 
   /** not used in front end? */
-  // customer_health?: string[]
   // exp_date?: any;
 
   /** points info */
@@ -100,4 +122,11 @@ export interface IUserDetail {
   // lastLogin?: string;
   // loginType?: string;
   // date_registered?: string;
+}
+
+
+export interface IVideo {
+  _id: string;
+  title: string;
+  url: string;
 }

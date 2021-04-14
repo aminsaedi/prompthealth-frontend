@@ -3,6 +3,7 @@ import { FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
+import { minmax, pattern } from 'src/app/_helpers/form-settings';
 
 @Component({
   selector: 'form-partner-general',
@@ -20,13 +21,13 @@ export class FormPartnerGeneralComponent implements OnInit {
   public form: FormGroup;
   public isSubmitted: boolean = false;
 
-  public maxName: number = 100;
-  public maxTextarea: number = 1000;
+  public maxName: number = minmax.nameMax;
+  public maxTextarea: number = minmax.textareaMax;
 
   public baseURLImage = environment.config.AWS_S3;
 
-  private patternURL = "http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?";
-  private patternPhone = '^[0-9\\-\\(\\)]+$';
+  private patternURL = pattern.url;
+  private patternPhone = pattern.phone;
 
   get f(){ return this.form.controls; }
 

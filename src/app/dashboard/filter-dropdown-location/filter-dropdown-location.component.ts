@@ -34,6 +34,10 @@ export class FilterDropdownLocationComponent implements OnInit {
       this.form.controls.address.setValue(this.data.address);
       this.form.controls.latitude.setValue(this.data.latLng[0]);
       this.form.controls.longitude.setValue(this.data.latLng[1]);
+    }else {
+      this.form.controls.address.setValue(this.data.defaultAddress);
+      this.form.controls.latitude.setValue(this.data.defaultLatLng[0]);
+      this.form.controls.longitude.setValue(this.data.defaultLatLng[1]);
     }
   }
 
@@ -75,6 +79,7 @@ interface Data{
   address: string;
   distance: number; 
   defaultAddress: string; 
+  defaultLatLng: number[],
   latLng: number[];
   distanceMin: number;
   distanceMax: number;

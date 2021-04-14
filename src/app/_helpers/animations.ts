@@ -43,6 +43,8 @@ export const expandVerticalAnimation = trigger('expandVertical', [
   ])
 ]);
 
+/** IN (ngIf false --> true): right --> left */
+/** OUT (ngIf true --> false): left --> right */
 export const slideHorizontalAnimation = trigger('slideHorizontal', [
   transition(':enter', [
     style({opacity: 0, transform: 'translateX(50px)'}),

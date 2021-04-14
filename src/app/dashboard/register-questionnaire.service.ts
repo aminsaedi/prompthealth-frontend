@@ -26,6 +26,8 @@ export class RegisterQuestionnaireService {
   ) { }
 
   private user: IUserDetail = {};
+  private userTracking: IUserDetail = {}; /** this is used for tracking user data in personal match */
+
   private questionnaireData: QuestionnaireItemData[];
   
   /** notification for parent component to let it know current questionnaire index. */
@@ -51,6 +53,7 @@ export class RegisterQuestionnaireService {
   }
 
   getUser(){ return this.user; }
+  getUserTracking(){ return this.userTracking; }
   getPreviousNoAnsweredRoute(currentIndex: number){
     let route: string = null;
     this.questionnaireData.forEach((d,i)=>{
@@ -137,6 +140,12 @@ export class RegisterQuestionnaireService {
       else{
         this.user[key] = data[key];
       }
+    });
+  }
+
+  updateUserTracking(data: any){
+    Object.keys(data).forEach(key => {
+      this.userTracking[key] = data[key];
     });
   }
 }

@@ -1,0 +1,39 @@
+:host{ display: block; }
+.bg-grey{ background: #F3F3F3; }
+.card-dummy{
+    position: relative;
+    overflow: hidden;
+  
+    .text{ height: 1.3em; }
+    .text-inline{ width: 50%; }
+    .button{
+      width: 80px;
+      height: 2em;
+    }
+    .image::after{
+      content: '';
+      display: block;
+      padding-top: 50%;
+    }
+    [class^='loading']{
+      position: absolute;
+      top: 50%;
+      left: 0%;
+      width: 25%;
+      height: 150%;
+      background: white;
+      opacity: 0;
+    }
+  
+    .loading-1{ animation: 2s linear infinite running slidein1 }
+    .loading-2{ animation: 2s 1s linear infinite running slidein2 }
+  
+    @keyframes slidein1 {
+      from{ transform: translate(-150%, -50%) rotate(-20deg); opacity: 0.4; }
+      to{ transform: translate(550%, -50%) rotate(-20deg); opacity: 0.4;}
+    }
+    @keyframes slidein2 {
+      from{ transform: translate(-150%, -50%) rotate(-20deg); opacity: 0.4;}
+      to{ transform: translate(550%, -50%) rotate(-20deg); opacity: 0.4;}
+    }
+  }

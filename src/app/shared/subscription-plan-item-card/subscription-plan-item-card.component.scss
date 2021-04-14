@@ -1,57 +1,32 @@
-$basic-green: #95C38B;
-$darker-green: #82B378;
+@use 'sass:map';
 
-$bright-green: #50bb38;
+$green: ('text': #95C38B, 'bg': #95C38B);
+$red: ('text': #F25249, 'bg': #F25249);
+$blue: ('text': #3377C5, 'bg': #3377C5);
 
-$monthly-red: #F25249;//FF9797 too light
-$yearly-red: #F25249;
+@mixin theme($color){
+  .title,
+  .feature i{
+    color: map.get($color, 'text');
+  }
 
-$monthly-blue: #3377C5;//A5B9F9 too light
-$yearly-blue: #3377C5;
-
-.title{
-    .colorset-red & {   color: $monthly-red; border-color: $monthly-red;} 
-    .colorset-green & { color: $basic-green; border-color: $darker-green;} 
-    .colorset-blue & {  color: $monthly-blue; border-color: $monthly-blue;} 
-    .colorset-green-bright & { color: $bright-green; border-color: $bright-green; }
-
-    .colorset-red-yearly & {   color: $yearly-red; border-color: $yearly-red;} 
-    .colorset-green-yearly & { color: $basic-green; border-color: $darker-green;} 
-    .colorset-blue-yearly & {  color: $monthly-blue; border-color: $monthly-blue;} 
-}
-
-.btn-more{
+  .tab,
+  .btn-more,
+  .separator{
     color: white;
-    .colorset-red & {   background: $monthly-red; }
-    .colorset-green & { background: $basic-green; } 
-    .colorset-blue & {  background: $monthly-blue; } 
-    .colorset-green-bright & { background: $bright-green; }
+    background: map.get($color, 'bg');
+  }
 }
 
-.feature i{
-    .colorset-red & {   color: $monthly-red; }
-    .colorset-green & { color: $basic-green; } 
-    .colorset-blue & {  color: $monthly-blue; } 
-    .colorset-green-bright & { color: $bright-green; }
-}
-
-.tab{
-    color: white;
-    &.colorset-red{   background: $monthly-red;}
-    &.colorset-green { background: $basic-green; }
-    &.colorset-blue {  background: $monthly-blue; }
-    &.colorset-green-bright { background: $bright-green; }
-
-    &.colorset-red-yearly{   background: $yearly-red;}
-    &.colorset-green-yearly { background: $basic-green; }
-    &.colorset-blue-yearly {  background: $yearly-blue; }
-    &.colorset-green-bright-yearly { background: $bright-green; }
-}
-
+:host.theme-green::ng-deep{ @include theme($green); }
+:host.theme-blue::ng-deep{ @include theme($blue); }
+:host.theme-red::ng-deep{ @include theme($red); }
 
 :host{
     position: relative;
     padding-top: 50px;
+    font-size: 16px;
+    line-height: 1.5em;
 }
 
 .tab{
@@ -86,10 +61,15 @@ $yearly-blue: #3377C5;
 }
 
 .title{
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
     padding: 0 20px 5px;
     font-size: 2.3em;
+}
+
+.separator{
+  width: 50%;
+  height: 1px;
+  margin: auto;
+  border: none;
 }
 
 .feature{

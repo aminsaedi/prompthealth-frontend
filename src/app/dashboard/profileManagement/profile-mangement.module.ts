@@ -5,6 +5,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AgmCoreModule } from '@agm/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { ProfileManagementRoutingModule } from './profile-mangement-routing.module'
 import { WrapperComponent } from './wrapper/wrapper.component';
@@ -68,6 +69,7 @@ import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
       language: 'en',
       libraries: ['places']
     }),
+    ModalModule.forRoot(),
     NgxPaginationModule,NgxSpinnerModule,
     SharedModule,NgxDatatableModule,
     OwlDateTimeModule, OwlNativeDateTimeModule,

@@ -161,22 +161,29 @@ export class HomeComponent implements OnInit {
       level, language, price, specialization with age group, practitioner gender, and more! ',
     },
     {
-      imgUrl: 'assets/img/how-ph-works/compare.png',
+      imgUrl: 'assets/img/how-ph-works/book.png',
       title: 'Compare',
       body: 'Do side by side comparisons and check out ratings and reviews written by both clients and other \
        health professionals in order to help you find the best practitioner or product.',
     },
     {
-      imgUrl: 'assets/img/how-ph-works/book.png',
-      title: 'Booking',
-      body: 'Directly request a booking with your preferred availability.',
-    },
-    {
       imgUrl: 'assets/img/how-ph-works/session.png',
-      title: 'Session',
-      body: 'Enjoy your treatment with relaxation and ease. Build your dashboard of providers and services\
-       for future reference.',
-    },
+      title: 'Connect',
+      body: 'Directly request a booking with your preferred availability. \
+      Enjoy your treatment with relaxation and ease. Build your dashboard of providers and services \
+      for future reference.',
+    }
+    // {
+    //   imgUrl: 'assets/img/how-ph-works/book.png',
+    //   title: 'Booking',
+    //   body: 'Directly request a booking with your preferred availability.',
+    // },
+    // {
+    //   imgUrl: 'assets/img/how-ph-works/session.png',
+    //   title: 'Session',
+    //   body: 'Enjoy your treatment with relaxation and ease. Build your dashboard of providers and services\
+    //    for future reference.',
+    // },
   ];
   public homePageFeatures = {};
   public keepOriginalOrder = (a, b) => a.key;

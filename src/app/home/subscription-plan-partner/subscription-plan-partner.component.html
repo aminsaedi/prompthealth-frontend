@@ -25,7 +25,7 @@
 <section class="bg-ph-blue py-4 text-light">
   <div class="container-fluid">
     <div class="max-w-1200 font-big font-italic">
-      Sign up before May 1st and receive 50% off!
+      Receive 50% off for a limited time!
     </div>  
   </div>
 </section>
@@ -42,19 +42,21 @@
 
 <div class="container-fluid">
   <div class="max-w-1200">
-    <div class="row align-items-stretch">
+    <div class="row align-items-stretch justify-content-center">
       <subscription-plan-item-card class="col-md-6 col-lg-5"
         type="partnerBasic"
+        theme="green"
         [data]="partnerBasicPlan"
         [monthly]="isPriceMonthly"
         [discounted]="50"
       ></subscription-plan-item-card>
-      <subscription-plan-item-card class="mt-4 mt-md-0 col-md-6 col-lg-5"
+      <!-- <subscription-plan-item-card class="mt-4 mt-md-0 col-md-6 col-lg-5"
         type="partnerEnterprise"
+        theme="red"
         [data]="partnerEnterprisePlan"
         [monthly]="isPriceMonthly"
         [discounted]="50"
-        ></subscription-plan-item-card>
+        ></subscription-plan-item-card> -->
       
       <!-- <div class="col-md-7">
         <h3 class="text-pink mt-5 mt-md-0 mb-3">Add-ons for Partner</h3>
@@ -96,4 +98,11 @@
       </div>
     </div>
   </div>
+</div>
+
+<div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{shrink: isCouponShrink}" (click)="expandMessageCoupon()">
+  <div class="mb-2 font-weight-400">You have coupon!</div>
+  <card-coupon [couponCode]="couponCode" style="font-size: 11px;"></card-coupon>
+
+  <button class="btn btn-shrink" (click)="shrinkMessageCoupon($event)"><i class="fas fa-minus"></i></button>
 </div>

@@ -1,8 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { SharedService } from '../../../shared/services/shared.service';
 import { ProfileManagementService } from '../profile-management.service';
 import { ToastrService } from 'ngx-toastr';
+import { pattern } from 'src/app/_helpers/form-settings';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-wrapper',
@@ -14,7 +16,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
     private _sharedService: SharedService,
     private _managementService: ProfileManagementService,
     private _toastr: ToastrService,
-  ) { }
+  ) {}
   public profile;
   public isPremium = false; /** if the user is vip or subscribe plans, true. */
   public isPhLinkFieldShown = false;
@@ -22,7 +24,11 @@ export class WrapperComponent implements OnInit, OnDestroy {
   public isFormPhListedLinkSubmitted = false;
   public linkToSubscription: string[];
 
-  private patternURL = "http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?";
+  private patternURL =pattern.url;
+  
+  @ViewChild('videoPlayer') videoPlayer: ElementRef;
+  @ViewChild('tutorialModal') public tutorialModal: ModalDirective;
+
 
   userInfo;
 
@@ -168,7 +174,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
     if(this.userInfo){
       try { 
         this.profile = await this._managementService.getProfileDetail(this.userInfo); 
-        this.linkToSubscription = (this.profile.roles == 'P') ? ['/subscriptionplan-partner'] : ['/dashboard/subscriptionplan'];
+        this.linkToSubscription = (this.profile.roles == 'P') ? ['/plans/product'] : ['/dashboard/subscriptionplan'];
         this.formPhListedLink.setValue(this.profile.phListedLink);
         this.setUserPremiumStatus();
         this.setListing(this.profile);
@@ -479,6 +485,9 @@ export class WrapperComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  playVideo() { (this.videoPlayer.nativeElement as HTMLVideoElement).play(); }
+  pauseVideo() { (this.videoPlayer.nativeElement as HTMLVideoElement).pause(); }
 
   onSubmitPhListedLink(){
     this.isFormPhListedLinkSubmitted = true;

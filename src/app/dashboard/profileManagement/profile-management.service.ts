@@ -11,6 +11,7 @@ export class ProfileManagementService {
 
   private profileDetail: IUserDetail;
 
+
   constructor( 
     private http: HttpClient,
     private _bs: BehaviorService,
@@ -19,7 +20,7 @@ export class ProfileManagementService {
   destroyProfileDetail(){ this.profileDetail = null; }
 
   /** this is called by header at first access and set the userdata from server in this service. and then someplace will use the data which is stored here */
-  getProfileDetail(user: {_id: string, roles: string}): Promise<IUserDetail>{
+  getProfileDetail(user: IUserDetail): Promise<IUserDetail>{
     const id = user._id;
     const role = user.roles.toLowerCase();
 

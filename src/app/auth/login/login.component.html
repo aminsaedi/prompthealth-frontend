@@ -7,7 +7,7 @@
   <div class="container-fluid w-max-1200">
     <div class="row m-0 justify-content-between bg-white rounded-lg overflow-hidden">
       <div class="p-5 col-md-4 order-md-2 py-md-5 pr-md-5 pl-md-0">
-        <form-auth></form-auth>
+        <form-auth [nextPage]="nextPage" [nextPageKeyword]="nextPageKeyword"></form-auth>
       </div>
       <div class="overflow-hidden col-md-8 order-md-1 pt-5 pb-0 px-5">
         <ngx-slick-carousel [config]="slideConfig">

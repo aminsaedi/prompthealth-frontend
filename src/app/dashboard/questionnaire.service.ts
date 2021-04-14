@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
+import { IUserDetail } from '../models/user-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,11 @@ export class QuestionnaireService {
   private currentQuestionnaireType: string;
   private questionnaire: Questionnaire[];
 
+  private activityData: any = {};
+  private personalMatch: any = {};
+
   private questionnaireTypes: QuestionnaireType[] = [
+    { id: 'gender', label: 'Gender', slug: null, personalMatchTarget: null},
     { id: 'age', label: 'Age', slug: 'age-range-of-clients', personalMatchTarget: 'age_range' },
     { id: 'background', label: 'Health Background', slug: 'who-are-your-customers', personalMatchTarget: 'customer_health' },
     { id: 'goal', label: 'Goal', slug: 'your-goal-specialties', personalMatchTarget: 'services' },
@@ -96,6 +101,13 @@ export class QuestionnaireService {
   getQuestionnaireTypeNext() {
     const i = this.getCurrentIdxQuestionnaire();
     if (i >= this.questionnaireTypes.length - 1) { return null; } else { return this.questionnaireTypes[i + 1].id; }
+  }
+
+  getPersonalMatch(){ return this.personalMatch; }
+  update(data: IUserDetail){
+    Object.keys(data).forEach((k,i) => {
+      this.personalMatch[k] = data[k];
+    });
   }
 
 }

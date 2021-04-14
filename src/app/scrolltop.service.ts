@@ -5,6 +5,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
 declare let gtag: Function;
+declare let fbq: Function;
 
 @Injectable()
 export class ScrollTopService {
@@ -27,7 +28,8 @@ export class ScrollTopService {
           if(!this.disableAnalytics){
             gtag('config', 'UA-192757039-1',{
               'page_path': event.urlAfterRedirects
-            });  
+            });
+            fbq('track', 'PageView');  
           }
 
 

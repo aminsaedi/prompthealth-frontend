@@ -82,14 +82,14 @@
               </label>
             </div>
             <div class="col-md-7 col-lg-8">
-              <form-input
+              <form-item-input
               name="titleCertification"
               label="Title"
               [max]="!isVerified ? maxTitle : null"
               [controller]="f.title"
               [submitted]="isSubmitted"
               [disabled]="isVerified"
-              ></form-input>    
+              ></form-item-input>    
             </div>
           </div>
   
@@ -101,14 +101,14 @@
               </label>
             </div>
             <div class="col-md-7 col-lg-8">
-              <form-textarea
+              <form-item-textarea
               name="descriptionCertification"
               label="Description"
               [max]="!isVerified ? maxDescription : null"
               [controller]="f.description"
               [submitted]="isSubmitted"
               [disabled]="isVerified"
-              ></form-textarea>
+              ></form-item-textarea>
             </div>
           </div>
         </div>

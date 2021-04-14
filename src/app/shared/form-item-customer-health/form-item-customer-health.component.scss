@@ -1,0 +1,17 @@
+.tags-horizontal{
+  li{
+    border: solid 1px;
+    font-size: 0.85em;
+    color: #00208F;
+    border-color: #00208F;
+    overflow: hidden;
+    flex: 0 0 auto;
+    line-height: 1em;
+    label{ 
+      background: #cfdaff;
+      color: #00208F;
+      padding: 3px 10px; 
+      border-radius: 0;
+    }
+  }
+}

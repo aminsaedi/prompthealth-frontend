@@ -5,11 +5,13 @@ import { SharedService } from '../../shared/services/shared.service';
 import { Subscription } from 'rxjs';
 import { IAddonPlan } from '../../models/addon-plan';
 import { IDefaultPlan } from 'src/app/models/default-plan';
+import { slideHorizontalAnimation } from '../../_helpers/animations';
 
 @Component({
   selector: 'app-subscription-plan-partner',
   templateUrl: './subscription-plan-partner.component.html',
-  styleUrls: ['./subscription-plan-partner.component.scss']
+  styleUrls: ['./subscription-plan-partner.component.scss'],
+  animations: [slideHorizontalAnimation],
 })
 export class SubscriptionPlanPartnerComponent implements OnInit {
 
@@ -19,6 +21,10 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
   public partnerEnterprisePlan: IDefaultPlan = null;
   public addonPlans: IAddonPlan[] = null;
   public userType = '';
+
+  public couponCode: string = null;
+  public isCouponShown = false;
+  public isCouponShrink = false;
 
   public form: FormGroup;
 
@@ -45,6 +51,11 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem('user'));
     if(user){
       this.userType = user.roles;
+    }
+
+    this.couponCode = sessionStorage.getItem('stripe_coupon_code');
+    if(this.couponCode){
+      setTimeout(()=>{ this.isCouponShown = true; }, 1000)
     }
 
     const promiseAll = [
@@ -115,6 +126,13 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
 
 
   changePriceRange(isMonthly: boolean){ this.isPriceMonthly = isMonthly; }
+
+  expandMessageCoupon() { this.isCouponShrink = false; }
+  shrinkMessageCoupon(e: Event) { 
+    this.isCouponShrink = true;
+    e.stopPropagation(); 
+  }
+
 
   // public errorForm: string = null;
   // onInputForm(){ if(this.errorForm){ this.errorForm = null; } }

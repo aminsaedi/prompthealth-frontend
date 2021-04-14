@@ -83,12 +83,12 @@
   <h4>{{target.type | titlecase}}</h4>
 
   <form (ngSubmit)="onSubmit()">
-    <form-input
+    <form-item-input
     name="url"
     label="URL"
     [controller]="form"
     [submitted]="isSubmitted"
-    ></form-input>
+    ></form-item-input>
     
     <div class="mt-3">
       <input class="btn btn-primary mr-3" type="submit" [value]="isActive(target.type) ? 'Update' : 'Add'">

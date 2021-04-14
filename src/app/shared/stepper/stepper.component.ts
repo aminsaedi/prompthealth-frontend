@@ -14,7 +14,7 @@ export class StepperComponent implements OnInit {
     {label: 'Availability'}
   ];
 
-  @Input() type: string = 'regular';
+  @Input() type: string = 'regular' /** regular ==> for midium or bigger, simple ==> for small */;
   @Input() current: number = 0;
 
   constructor() { }

@@ -15,3 +15,31 @@
   }
 }
 
+.message-coupon {
+  z-index: 1000;
+  position: fixed;
+  bottom: 30px;
+  right: 0;
+  // background: white;
+  width: 300px;
+  padding: 20px 20px 20px 30px;
+  border-radius: 10px 0 0 10px;
+  // background: var(--ph-blue);
+  border: solid 2px #ececec;
+  border-right-width: 0;
+
+  transition-duration: 300ms;
+  transition-property: background-color, transform, border-color;
+
+  &.shrink {
+    transform: translateX(calc(100% - 30px));
+    background: var(--ph-blue);
+    border-color: transparent;
+  }
+
+  .btn-shrink {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}

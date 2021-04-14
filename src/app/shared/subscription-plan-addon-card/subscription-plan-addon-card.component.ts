@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { IAddonPlan } from '../../models/addon-plan';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service'
 import { AddonSelectCategoryComponent } from '../../dashboard/addon-select-category/addon-select-category.component';
-import { Category, CategoryService } from '../services/category.service';
+import { CategoryService } from '../services/category.service';
 import { SharedService } from '../services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { StripeService } from 'ngx-stripe';
@@ -21,10 +21,85 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
 
   @Input() data: IAddonPlan;
   @Input() monthly = true;
+  @Input() theme: 'lightpink' | 'lightblue' = 'lightpink';
   @Input() flexibleButtonPosition = true;
+
+  @HostBinding('class.theme-lightpink') get lightpink() { return (this.theme == 'lightpink'); }
+  @HostBinding('class.theme-lightblue') get lightblue() { return (this.theme == 'lightblue'); }
 
   public isLoggedIn = false;
   public profile: IUserDetail;
+
+  get subtitle(): string {
+    let s: string = null;
+    if(this.data){
+      switch(this.data.name){
+        case 'The Networker': s = 'Be seen first. No work required.'; break;
+        case 'The Socialite': s = 'Do what you do best. We’ll take care of the rest.'; break;
+      }
+    }
+    return s;
+  }
+
+  get summary(): string {
+    let s: string = null;
+    if(this.data){
+      switch(this.data.name){
+        case 'The Networker': 
+          s = "A higher tier of visibility. Be the first thing all clients see on PromptHealth."; 
+          break;
+        case 'The Socialite': 
+          s = "We’ll take care of the rest. Focus on what’s important – treating your clients. Let us take care of your recognition and growth.";
+          break;
+      }
+    }
+    return s;
+  }
+
+  get descriptionArray(): string[] {
+    const descriptionArray: string[] = [];
+    if(this.data.name == 'The Socialite'){
+      this.data.description = `Health content creation and management
+      - We design, schedule, and post strategic, quality content directly to your social media accounts. (3 posts weekly and 1 video or podcast yearly)`;  
+    }
+    if(this.data){
+      const descArray = this.data.description.split('\n');
+      descArray.forEach((d,i)=>{
+        if(d.trim().match(/^-/)){
+          descriptionArray[descriptionArray.length - 1] = descriptionArray[descriptionArray.length - 1] + d.trim().replace(/^\s*\-\s*/, '\n');
+        }else{
+          descriptionArray.push(d.trim());
+        }
+      });
+    }
+    return descriptionArray;
+  }
+
+  get tabName(): string {
+    let name = '';
+
+    if (this.data) {
+      if(this.data.price && this.monthly){
+        const price = this.data.price;
+        name = '$' + this.data.price + '/Monthly';
+      }else if(this.data.yearlyPrice && !this.monthly){
+        const price = this.data.yearlyPrice;
+        name = '$' + price + '/Yearly';
+      }
+    }
+    return name;
+  }
+
+  get linkToRegistration(): string[] {
+    const link = ['/auth', 'registration'];
+    if(this.data.userType.includes('P')){
+      link.push('p');
+    }else{
+      /**todo: have to add c. but how? */
+      link.push('sp');
+    }
+    return link;
+  }
 
   constructor(
     private _profileService: ProfileManagementService,
@@ -42,34 +117,6 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
       this.profile = await this._profileService.getProfileDetail(user);
     }
   }
-
-  get tabName() {
-    let name = '';
-
-    if (this.data) {
-      if(this.data.price && this.monthly){
-        const price = this.data.price;
-        name = '$' + this.data.price + '/Monthly';
-      }else if(this.data.yearlyPrice && !this.monthly){
-        const price = this.data.yearlyPrice;
-        name = '$' + price + '/Yearly';
-      }
-    }
-    return name;
-  }
-
-  get linkToRegistration() {
-    const link = ['/auth', 'registration'];
-    if(this.data.userType.includes('P')){
-      link.push('p');
-    }else{
-      /**todo: have to add c. but how? */
-      link.push('sp');
-    }
-    return link;
-  }
-
-
 
   async triggerButtonClick() { 
     

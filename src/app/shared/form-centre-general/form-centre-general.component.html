@@ -1,0 +1,309 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <label for="firstName">
+        Name
+        <span class="text-danger">*</span>
+      </label>
+    </div>
+
+    <div class="col-md-8">
+      <form-item-place
+      *ngIf="isPremiumAccount" 
+      name="firstName"
+      label="Name"
+      type="text"
+      [controllerGroup]="form"
+      [max]="maxName"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      (selectPlace)="onChangePlace()"
+      ></form-item-place>
+
+      <form-item-input 
+      *ngIf="!isPremiumAccount"
+      name="firstName"
+      label="Name"
+      type="text"
+      [max]="maxName"
+      [controller]="f.firstName"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="userType">
+      Membership Type 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="userType"
+      label="Membership type"
+      type="text"
+      [controller]="f.userType"
+      [disabled]="true"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="email">
+      Email Address 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="email"
+      label="Email Address"
+      type="text"
+      [controller]="f.email"
+      [disabled]="true"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="phone">
+      Phone Number 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="phone"
+      label="Phone number"
+      type="text"
+      [controller]="f.phone"
+      [submitted]="isSubmitted"
+      [disabled]="disabled || f.placeId.value"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="address">
+      Location 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-address
+      name="address"
+      label="Location" 
+      [controllerGroup]="form"
+      [submitted]="isSubmitted"
+      [disabled]="disabled || f.placeId.value"
+      ></form-item-address>
+      <div class="mt-2">
+        <form-item-checkbox
+        *ngIf="!disabled && !f.placeId.value"
+        name="hideAddress"
+        label="Do not show address"
+        [controller]="f.hideAddress"
+        ></form-item-checkbox>
+      </div>
+      <div *ngIf="f.hideAddress.value" class="mt-2 mb-3 font-italic">You'll not be shown on the location based listing page</div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="website">
+      Website 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="website"
+      label="Website"
+      type="text"
+      [controller]="f.website"
+      [submitted]="isSubmitted"
+      [disabled]="disabled || f.placeId.value"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="bookingURL">
+      Booking URL 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="bookingURL"
+      label="Booking URL"
+      type="text"
+      [controller]="f.bookingURL"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="professionalTitle">
+      Professional Title 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="professionalTitle"
+      label="Professional title"
+      type="text"
+      [max]="maxProfessionalTitle"
+      [controller]="f.professional_title"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4 mt-0">
+      Available Time
+      <span class="text-danger">*</span>
+    </label>
+    <div class="col-md-8">
+      <form-item-checkbox-group
+      id="typical_hours"
+      label="Available time"
+      [data]="data?.typical_hours"
+      [controller]="f.typical_hours"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      [selections]="typicalHourList"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4 mt-0">
+      Languages
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-checkbox-group
+      id="languages"
+      label="Languages"
+      [data]="data?.languages"
+      [controller]="f.languages"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      [selections]="languageList"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4 mt-0">
+      Service Type
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-checkbox-group
+      id="serviceOfferIds"
+      label="Service type"
+      [data]="data?.serviceOfferIds"
+      [controller]="f.serviceOfferIds"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      [selections]="serviceOfferList"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+
+
+  <div class="row mb-4">
+    <label class="col-md-4 mt-0">
+      Age Range of Your Clients
+      <span class="text-danger">*</span>
+    </label>
+    <div class="col-md-8">
+      <form-item-checkbox-group
+      id="age_range"
+      label="Age range"
+      [data]="data?.age_range"
+      [controller]="f.age_range"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4 mt-0">
+      Total Years of Experience
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-checkbox-group
+      id="years_of_experience"
+      type="radio"
+      label="Years of experience"
+      [data]="data?.years_of_experience"
+      [controller]="f.years_of_experience"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" [ngClass]="{'mt-0': (f.priceMode.value == 'select' && disabled)}">
+      Price Range Per Hour
+      <span class="text-danger">*</span>
+    </label>
+    <div class="col-md-8">
+      <form-item-pricing
+      [data]="data" 
+      [formGroup]="form"
+      [disabled]="disabled"
+      [submitted]="isSubmitted"
+      ></form-item-pricing>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4 mt-0">
+      Kind of Business
+      <span class="text-danger">*</span>
+    </label>
+    <div class="col-md-8">
+      <form-item-checkbox-group
+      id="business_kind"
+      type="radio"
+      label="Kind of business"
+      [data]="data?.business_kind"
+      [controller]="f.business_kind"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+  
+  <div class="row mb-4">
+    <label class="col-md-4" for="productDescription">
+      Practice Philosophy 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-textarea 
+      name="productDescription"
+      label="Practice philosophy"
+      placeholder="Tell us more about you in paragraph"
+      [max]="maxTextarea"
+      [controller]="f.product_description"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-textarea>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!disabled">
+    <div class="col text-right">
+      <button class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+
+</form>

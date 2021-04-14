@@ -663,6 +663,21 @@ textarea.form-control {
   -webkit-text-fill-color: transparent;
 }
 
+.checkbox-group{
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  margin-bottom: 0;
+
+  li{
+    margin-bottom: 1em;
+    flex: 1 0 50%;
+    white-space: nowrap;
+  }
+}
 
 // npn-handle{
 //   .filler{}

@@ -1,0 +1,6 @@
+<div class="form-check">
+  <input *ngIf="type == 'checkbox'" type="checkbox" [id]="name" class="form-check-input" [formControl]="controller" (change)="onChange()">
+  <input *ngIf="type == 'radio'" type="radio" [id]="name" class="form-check-input" [name]="group" [value]="value" [formControl]="controller" (change)="onChange()">
+
+  <label [for]="name">{{label}}</label>  
+</div>

@@ -1,0 +1,33 @@
+<div class="btn-group btn-group-toggle mb-3" *ngIf="!disabled">
+  <label class="btn btn-primary mt-0" [ngClass]="{active: f.priceMode.value == 'select'}">
+    <input type="radio" name="priceMode" id="option1" autocomplete="off" value="select" [formControl]="f.priceMode">Select a price range
+  </label> 
+  <label class="btn btn-primary mt-0" [ngClass]="{active: f.priceMode.value == 'input'}">
+    <input type="radio" name="priceMode" id="option2" autocomplete="off" value="input"  [formControl]="f.priceMode">Enter specific price
+  </label>
+</div>
+
+<div *ngIf="f.priceMode.value == 'input'">
+  <form-item-input 
+  name="exactPricing"
+  label="Price"
+  type="text"
+  prepend="$"
+  [controller]="f.exactPricing"
+  [submitted]="submitted"
+  [disabled]="disabled"
+  ></form-item-input>
+</div>
+
+<div *ngIf="f.priceMode.value == 'select'">
+  <form-item-checkbox-group
+  id="price_per_hours"
+  type="radio"
+  label="Price per hours"
+  [data]="data?.price_per_hours"
+  [controller]="f.price_per_hours"
+  [selections]="selectionList"
+  [submitted]="submitted"
+  [disabled]="disabled"
+  ></form-item-checkbox-group>
+</div>

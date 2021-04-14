@@ -1,0 +1,131 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <label for="firstName">
+        First Name
+        <span class="text-danger">*</span>
+      </label>
+    </div>
+    <div class="col-md-8">
+      <form-item-input 
+      name="firstName"
+      label="First name"
+      type="text"
+      [controller]="f.firstName"
+      [max]="maxName"
+      [disabled]="disabled"
+      [submitted]="isSubmitted"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <label for="lastName">
+        Last Name
+        <!-- <span class="text-danger">*</span> -->
+      </label>
+    </div>
+    <div class="col-md-8">
+      <form-item-input 
+      name="lastName"
+      label="Last name"
+      type="text"
+      [controller]="f.lastName"
+      [max]="maxName"
+      [disabled]="disabled"
+      [submitted]="isSubmitted"
+      ></form-item-input>
+    </div>
+  </div>
+  
+  <div class="row mb-4">
+    <label class="col-md-4" for="userType">
+      Membership Type 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="userType"
+      label="Membership type"
+      type="text"
+      [controller]="f.userType"
+      [disabled]="true"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="email">
+      Email Address 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="email"
+      label="Email Address"
+      type="text"
+      [controller]="f.email"
+      [disabled]="true"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="phone">
+      Phone Number 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="phone"
+      label="Phone number"
+      type="text"
+      [controller]="f.phone"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4 pt-2">
+    <label class="col-md-4 mt-0">
+      Gender
+      <span class="text-danger">*</span>
+    </label>
+    <div class="col-md-8">
+      <form-item-checkbox-group
+      id="gender"
+      type="radio"
+      label="Gender"
+      [data]="data?.gender"
+      [controller]="f.gender"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="address">
+      Location 
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-address
+      name="address"
+      label="Location" 
+      [controllerGroup]="form"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      ></form-item-address>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!disabled">
+    <div class="col text-right">
+      <button class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+
+</form>

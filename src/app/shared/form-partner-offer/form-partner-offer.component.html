@@ -1,13 +1,13 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <section class="mb-4">
     <div *ngIf="disabled && !!f.isFree.value">Offer For Free</div>
-    <form-checkbox 
+    <form-item-checkbox 
     *ngIf="!disabled"
     [controller]="f.isFree" 
     label="Offer for free" 
     name="isFree"
     (changeValue)="onChangeForFree($event)"
-    ></form-checkbox>
+    ></form-item-checkbox>
   </section>
 
   <ng-container *ngIf="!f.isFree.value">
@@ -19,14 +19,14 @@
           <input class="d-none" [id]="'price' + i" type="radio" [value]="i" formControlName="priceLevel" [attr.disabled]="disabled ? 'disabled' : null">
         </label>  
       </div>
-      <form-errors [controller]="f.priceLevel" label="Price Range" [submitted]="isSubmitted"></form-errors>
+      <form-item-errors [controller]="f.priceLevel" label="Price Range" [submitted]="isSubmitted"></form-item-errors>
     </section>
   
     <section class="mb-4">
       <h4>Enter your price range</h4>
       <div class="row align-items-center">
         <div class="col">
-          <form-input
+          <form-item-input
           name="price1"
           label="Price" 
           type="text"
@@ -34,11 +34,11 @@
           [controller]="f.price1" 
           [submitted]="isSubmitted"
           [disabled]="disabled"
-          ></form-input>  
+          ></form-item-input>  
         </div>
         <div class="col-1 text-center"> - </div>
         <div class="col">
-          <form-input
+          <form-item-input
           name="price2"
           label="Price" 
           type="text"
@@ -46,7 +46,7 @@
           [controller]="f.price2" 
           [submitted]="isSubmitted" 
           [disabled]="disabled"
-          ></form-input>  
+          ></form-item-input>  
         </div>
       </div>
     </section>
@@ -55,7 +55,7 @@
 
   <section class="mb-4">
     <h4>Link to signup page</h4>
-    <form-input
+    <form-item-input
     name="website"
     label="Signup page" 
     type="text"
@@ -63,7 +63,7 @@
     [controller]="f.signupURL" 
     [submitted]="isSubmitted" 
     [disabled]="disabled"
-    ></form-input>
+    ></form-item-input>
   </section>
 
   <section class="mb-4">
@@ -71,17 +71,17 @@
     <ng-container *ngFor="let o of offers">
       <div class="row mb-2 align-items-center">
         <div class="col-4">
-          <form-checkbox
+          <form-item-checkbox
           *ngIf="!disabled"
           [controller]="getFormArray(o.id).controls[0]" 
           (changeValue)="onChangeOfferCheck(o.id)"
           [name]="o.id + 'Check'" 
           [label]="o.label"
-          ></form-checkbox>
+          ></form-item-checkbox>
           <span *ngIf="disabled">{{o.label}}</span>
         </div>
         <div class="col">
-          <form-input
+          <form-item-input
           [name]="o.id + 'Text'"
           [label]="o.label" 
           type="text"
@@ -89,7 +89,7 @@
           [controller]="getFormArray(o.id).controls[1]" 
           [submitted]="isSubmitted"
           [disabled]="!getFormArray(o.id).controls[0].value || disabled"
-          ></form-input>
+          ></form-item-input>
         </div>
       </div>
     </ng-container>

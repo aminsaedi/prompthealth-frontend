@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from '../services/shared.service';
 import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service'
@@ -16,6 +16,7 @@ import { IDefaultPlan } from 'src/app/models/default-plan';
 })
 export class SubscriptionPlanItemCardComponent implements OnInit {
 
+  @Input() theme: 'green' | 'blue' | 'red' = 'green';
   @Input() type: string; /* basic | provider | centre | partnerBasic | partnerEnterprise*/
   @Input() data: IDefaultPlan;
   @Input() hideButton = false;
@@ -23,6 +24,10 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
 
   @Input() isPriceMonthly = true;
   @Input() monthly = true;
+
+  @HostBinding('class.theme-red') get red() { return (this.theme == 'red'); }
+  @HostBinding('class.theme-blue') get blue() { return (this.theme == 'blue'); }
+  @HostBinding('class.theme-green') get green() { return (this.theme == 'green'); }
 
 
   public color: string;

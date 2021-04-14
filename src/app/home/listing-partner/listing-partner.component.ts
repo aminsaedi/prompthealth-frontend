@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Partner } from '../../models/partner';
 import { SharedService } from '../../shared/services/shared.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
-import { FormServiceComponent } from '../../shared/form-service/form-service.component';
+import { FormItemServiceComponent } from '../../shared/form-item-service/form-item-service.component';
 import { PartnerSortByType, PartnerSearchFilterQuery } from '../../models/partner-search-filter-query';
 
 @Component({
@@ -44,7 +44,7 @@ export class ListingPartnerComponent implements OnInit {
 
   private searchData = new PartnerSearchFilterQuery();
 
-  @ViewChild(FormServiceComponent) private formServiceComponent: FormServiceComponent;
+  @ViewChild(FormItemServiceComponent) private formItemServiceComponent: FormItemServiceComponent;
 
   private timer: any;
   @HostListener ('window:resize') onWindowResize(){
@@ -92,7 +92,7 @@ export class ListingPartnerComponent implements OnInit {
   }
 
   onApplyFilter(listing: boolean = true){
-    this.searchData.setValue('services', this.formServiceComponent.getSelected());
+    this.searchData.setValue('services', this.formItemServiceComponent.getSelected());
     this.hideFilter();
     if(listing){
       this.getPartners();
@@ -101,7 +101,7 @@ export class ListingPartnerComponent implements OnInit {
 
   onResetFilter(listing: boolean = true){
     this.searchData.resetFilter();
-    this.formServiceComponent.reset();
+    this.formItemServiceComponent.reset();
     this.hideFilter();
     if(listing){
       this.getPartners();

@@ -1,3 +1,4 @@
+/** addon plan data type fetched from server by calling the api 'addonplans/get-all' */
 export interface IAddonPlan {
   _id?: string;
   userType: ('SP' | 'P' | 'C' | 'U')[];

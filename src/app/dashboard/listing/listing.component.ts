@@ -162,6 +162,11 @@ export class ListingComponent implements OnInit, OnDestroy {
     this._headerService.showHeader();
   }
 
+  onChangeCustomerHealth(selectedIds: string[]){
+    this.listingPayload.customer_health = selectedIds;
+    this.listing(this.listingPayload);
+  }
+
   async ngOnInit() {
     this.AWS_S3 = environment.config.AWS_S3;
     this.serviceSet = await this._catService.getCategoryAsync();
@@ -194,41 +199,37 @@ export class ListingComponent implements OnInit, OnDestroy {
       this.initialLocation.radius = 100 * 1000;
       this.initialLocation.isLocationEnabled = true;
 
+      const f = this.getFilter('location');
+      f.data.defaultLatLng = [lat, lng];
+
       this.getAddressFromLocation([lat, lng]).then(address => {
         this.initialLocation.address = address;
 
         const f = this.getFilter('location');
         f.data.defaultAddress = address;
+      }, (error) => {
+        console.log(error);
       });
     }
 
     /** if personal match exists, reset all filter menu and payload. then set filter menu and payload using personalMatch */
-    const personalMatch = this._sharedService.getPersonalMatch();
-    if (personalMatch) {
-      this.customerHealthSet = this._qService.getQuestionnaire('background').answers;
-      this.filters.forEach(f => {
-        f.active = false;
-        if (f.options) { f.options.forEach(o => { o.active = false; }); }
-        if (f.range) { f.range.current = f.range.default; }
-        this.updateFilter(f._id, false);
-      });
-      if (personalMatch.customer_health && personalMatch.customer_health.length > 0) {
-        this.listingPayload.customer_health = personalMatch.customer_health;
-      }
-      if (personalMatch.services && personalMatch.services.length > 0) {
-        this.listingPayload.services = personalMatch.services;
-      }
-      //      this.listingPayload.ids = personalMatch.ids ? personalMatch.ids : [];
-      this.listingPayload.age_range = personalMatch.age_range;
-      this.listingPayload.typicalHoursId = personalMatch.typical_hours.length > 1 ? '' : personalMatch.typical_hours[0];
-      this.listingPayload.typical_hours = personalMatch.typical_hours.length > 0 ? personalMatch.typical_hours : [];
-      // this.listingPayload.type = personalMatch.type;
+    const data = this._sharedService.getPersonalMatch();
+    if (data) {
+      this.listingPayload.customer_health = (data.customer_health && data.customer_health.length > 0) ? data.customer_health : [];
+      this.listingPayload.services = (data.services && data.services.length > 0) ? data.services : [];
+      this.listingPayload.age_range = data.age_range ? [data.age_range] : [];
 
-      if (this.filters[3].options.length > 0 && this.filters[4].options.length > 0 && this.filters[5].options.length > 0) {
-        this.setFilterByPersonalMatch();
-      } else {
-        /** update filter menu when filter data is fetched from server (it will be done in getProfileQuestion function) */
+      if(data.age_range){
+        const f = this.getFilter('age');
+        f.active = true;
+        f.options.forEach(option => {
+          if(data.age_range.includes(option._id)){ 
+            option.active = true; 
+          }
+        });
       }
+
+      this._sharedService.clearPersonalMatch();     
     }
 
 
@@ -405,9 +406,6 @@ export class ListingComponent implements OnInit, OnDestroy {
             this.setFilterOptions('availability', element);
           }
         });
-
-        this.setFilterByPersonalMatch();
-
       } else {
         this.toastr.error(res.message);
       }
@@ -702,34 +700,6 @@ export class ListingComponent implements OnInit, OnDestroy {
     f.active = isActive;
   }
 
-  /** if personalMatch exists, filter menu will be set by the personalMatch information and then clear personalMatch*/
-  setFilterByPersonalMatch() {
-
-    const personalMatch = this._sharedService.getPersonalMatch();
-    if (personalMatch) {
-      const answers: string[] = [];
-      Object.keys(personalMatch).forEach((k) => {
-        if (k.match(/ids|age_range|typical_hours/)) {
-          personalMatch[k].forEach((id: string) => { answers.push(id); });
-        }
-      });
-      this.filters.forEach(f => {
-        if (f.options) {
-          f.options.forEach(o => {
-            for (let i = 0; i < answers.length; i++) {
-              if (o._id === answers[i]) {
-                o.active = true;
-                f.active = true;
-                break;
-              }
-            }
-          });
-        }
-      });
-      this._sharedService.clearPersonalMatch();
-    }
-  }
-
   getLocationFromZipcode(zipcode: string): Promise<[number, number]> {
     return new Promise((resolve, reject) => {
       this._maps.load().then(() => {
@@ -761,6 +731,7 @@ export class ListingComponent implements OnInit, OnDestroy {
 
     const [lat,lng] = (f.data.latLng) ? f.data.latLng : [this.initialLocation.lat, this.initialLocation.lng];
     this.listingPayload.latLong = (f.data.latLng)? (lng + ', ' + lat) : '';
+    if(f.data.distance) { this.listingPayload.miles = f.data.distance };
     this.searchCenter = {lat: lat, lng: lng, radius: (f.data.latLng ? this.listingPayload.miles * 1000 : 0) };
     this.setMapdata({lat: lat, lng: lng, zoom: f.data.latLng ? 10 : 3});
 
@@ -869,10 +840,6 @@ export class ListingComponent implements OnInit, OnDestroy {
     this.keyword = '';
     this.setQueryParams();
   }
-  removeCustomerHealth(i: number) {
-    this.listingPayload.customer_health.splice(i, 1);
-    this.listing(this.listingPayload);
-  }
 
   setQueryParams() {
     const params: { id?: string, keyword?: string, virtual?: boolean } = {};
@@ -924,11 +891,11 @@ interface Filter {
   active: boolean;
   options?: QuestionnaireAnswer[];
   range?: { min: number; max: number; current: number; default: number }; /** not used currently. */
-  data?: { distance: number, address: string, defaultAddress: string, latLng: number[], distanceMin: number, distanceMax: number }; /** for location */
+  data?: { distance: number, address: string, defaultAddress: string, latLng: number[], defaultLatLng: number[], distanceMin: number, distanceMax: number }; /** for location */
 }
 
 const filtersPreset: Filter[] = [
-  { _id: 'location', item_text: 'Location', type: 'location', payloadName: '', active: false, data: { distance: 100, address: '', defaultAddress: '', latLng: null, distanceMin: 5, distanceMax: 100, } },
+  { _id: 'location', item_text: 'Location', type: 'location', payloadName: '', active: false, data: { distance: 100, address: '', defaultAddress: '', latLng: null, defaultLatLng: null, distanceMin: 5, distanceMax: 100, } },
   // { _id: 'zipcode', item_text: 'Zip Code', type: 'input', payloadName: 'zipcode', active: false, data: {value: '', placeholder: 'Please input zip code'} },
   // { _id: 'distance', item_text: 'Distance', type: 'slider', payloadName: 'miles', active: false, range: { min: 5, max: 100, current: 100, default: 100 } },
   {

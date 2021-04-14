@@ -1,29 +1,33 @@
-.title{ color: #D461B7; }
+@use 'sass:map';
 
-.btn-more{
+$lightpink: ('text': #D461B7, 'bg': #D59DD4);
+$lightblue: ('text': #728ad7, 'bg': #A5B9F9);
+
+
+@mixin theme($color){
+  .title, 
+  .feature i{
+    color: map.get($color, 'text');
+  }
+  .tab,
+  .btn-more,
+  .separator{
     color: white;
-    background: #B149AB;
+    background: map.get($color, 'bg');
+  }  
 }
 
-.feature i{
-    color: #D461B7;
-}
-
-.tab{
-    color: white;
-    background: #B149AB;
-}
-
+:host.theme-lightpink::ng-deep{@include theme($lightpink); }
+:host.theme-lightblue::ng-deep{@include theme($lightblue); }
 
 :host{
-    position: relative;
-    padding-top: 50px;
-    display: block;
+  position: relative;
+  padding-top: 50px;
+  display: block;
+  font-size: 16px;
+  line-height: 1.5em;
 }
 
-.title{
-    @media screen and (max-width: 767px){ font-size: 1.3em; }
-}
 .tab{
     position: absolute;
     z-index: 1;
@@ -49,15 +53,30 @@
 .addon-card{
     position: relative;
     z-index: 2;
-    padding: 20px; 
+    padding: 20px 10px;
     border-radius: 10px;
     background: white;
 }
 
+.title{
+  font-size: 2.3em; 
+}
+
+.subtitle{
+  line-height: 1.3em;
+}
+
+.separator{
+  width: 50%;
+  height: 1px;
+  margin: auto;
+  border: none;
+}
 
 .feature{
     list-style: none;
     li:not(:last-child){ margin-bottom: 10px; }
+    li{ white-space: pre-line; }
 }
 
 .btn-more{

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { animate, transition, style, trigger } from '@angular/animations';
+import { ActivatedRoute } from '@angular/router';
 
 // const animation = trigger('carousel', [
 //   transition(':enter', [
@@ -27,10 +28,23 @@ export class LoginComponent implements OnInit {
     cssEase: 'ease'
   };
 
-  constructor() { }
+  public nextPage: string;
+  public nextPageKeyword: string;
+
+  constructor(
+    private _route: ActivatedRoute,
+  ) { }
 
 
   ngOnInit(): void {
+    this._route.queryParams.subscribe((data: QueryParams) => {
+      this.nextPage = data.next ? data.next : null;
+      this.nextPageKeyword = data.nextKeyword ? data.nextKeyword : null;
+    });
   }
+}
 
+interface QueryParams {
+  next: string;
+  nextKeyword: string;
 }

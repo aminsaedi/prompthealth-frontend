@@ -370,7 +370,7 @@ export class SharedService {
       if (type === 'reg') {
         switch(res.data.roles.toLowerCase()){
           case 'u': route = '/dashboard/questions/User'; break;
-          case 'p': route = '/dashboard/register-partner'; break;
+          case 'p': route = '/dashboard/register-product'; break;
           case 'sp':
           case 'c': 
             route = '/dashboard/professional-info';

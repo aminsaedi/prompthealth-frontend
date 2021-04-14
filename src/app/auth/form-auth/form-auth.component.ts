@@ -20,6 +20,8 @@ export class FormAuthComponent implements OnInit {
   @Input() userRole: string = 'U'; /** U | SP | C | P */
   @Input() authType: string = 'signin'; /** signin | signup */
   @Input() staySamePage: boolean = false;
+  @Input() nextPage: string = null;
+  @Input() nextPageKeyword: string = null;
   @Output() changeState = new EventEmitter<string>();
 
   get f(){ return this.form.controls}
@@ -134,8 +136,6 @@ export class FormAuthComponent implements OnInit {
 
   afterLogin(userinfo: any){
     this.isSubmitted = false;
-    this._toastr.success('Welcome');
-
     const role = userinfo.roles;
 
     this._sharedService.addCookie('token', userinfo.loginToken);
@@ -146,24 +146,47 @@ export class FormAuthComponent implements OnInit {
 
     this._bs.setUserData(userinfo);
 
+    let toastrMessage = 'Welcome!';
+
     if(!this.staySamePage){
       let next: string;
-      switch(role.toLowerCase()){
-        case 'u': 
-          next = '/'; 
-          break;
-        case 'sp':
-        case 'c':
-          next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/professional-info';
-          break;
-        case 'p':
-          next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/register-partner';
-          break;
+      if(this.nextPage){
+        next = this.nextPage;
+      }else if(this.nextPageKeyword){
+        if(this.nextPageKeyword == 'buyplan') {
+          switch(role.toLowerCase()){
+            case 'u':
+              next = '/';
+              toastrMessage = 'We don\'t have a subscription plan for your account type.';
+              break;
+            case 'sp':
+            case 'c':
+              next = '/subscriptionplan';
+              break;
+            case 'p':
+              next = '/plans/product';
+              break;
+          }
+        }
+      }else{
+        switch(role.toLowerCase()){
+          case 'u': 
+            next = '/'; 
+            break;
+          case 'sp':
+          case 'c':
+            next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/professional-info';
+            break;
+          case 'p':
+            next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/register-product';
+            break;
+        }  
       }
       this._router.navigate([next]);
     }
 
     this.changeState.emit('done');
+    this._toastr.success(toastrMessage);
   }
 }
 

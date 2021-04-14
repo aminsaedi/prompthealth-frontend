@@ -15,8 +15,26 @@
 }
 
 .platform-message{
-  text-shadow: 2px 2px 1px #9ebfe2, -1px -1px 1px #b9daff, 1px 1px 1px #e4effb
+  text-shadow: 2px 2px 1px #9ebfe2, -1px -1px 1px #b9daff, 1px 1px 1px #e4effb;
+
+  @media (min-width: 768px){ font-size: 1.7rem; }
 }
+
+h1.ph-title{
+  @media (max-width: 767px) {
+    font-size: 1.7rem!important;
+  }
+}
+
+.badge-appstore-top{
+  height: 43px;
+  width: auto;
+}
+.badge-playstore-top{
+  height: 61px;
+  width: auto;
+}
+
 // testimonials
 $testimonialsAvtarSize: 100px;
 .testimonials-avtar {
@@ -147,13 +165,6 @@ $slideLeftRightPaddding: 80px;
     border-radius: 500px;
     border: solid 1px #b9b9b9;
   }
-}
-
-.link-ask-us{
-  position: relative;
-  font-size: 16px;
-  $shadow: #daeafb;
-  text-shadow: 1px 1px 0 $shadow, -1px 1px 0 $shadow, 1px -1px 0 $shadow, -1px -1px 0 $shadow;
 }
 
 .about-us-body-font {
