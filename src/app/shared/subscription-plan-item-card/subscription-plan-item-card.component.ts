@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from '../services/shared.service';
-import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service'
+import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
 import { ToastrService } from 'ngx-toastr';
 import { StripeService } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
@@ -48,25 +48,25 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
 
 
   async ngOnInit() {
-    switch(this.type) {
+    switch (this.type) {
       case 'provider': this.color = 'blue'; break;
-      case 'centre' : this.color = 'red'; break;
-      case 'partnerEnterprise': this.color= 'green-bright'; break;
-      default: this.color ='green'; break;
+      case 'centre': this.color = 'red'; break;
+      case 'partnerEnterprise': this.color = 'green-bright'; break;
+      default: this.color = 'green'; break;
     }
     // this.color = this.type === 'provider' ? 'blue' : this.type === 'centre' ? 'red' : 'green';
     this.isPlanForPartner = (this.type.toLowerCase().match(/partner/)) ? true : false;
 
-    switch(this.type){
-      case 'partnerBasic' : this.title = 'Product/Service'; break;
-      case 'partnerEnterprise' : this.title = 'Enterprise'; break;
-      case 'basic' : this.title = 'Basic'; break;
-      case 'provider' : this.title = 'Provider'; break;
-      case 'centre' : this.title = 'Centre'; break;
+    switch (this.type) {
+      case 'partnerBasic': this.title = 'Product/Service'; break;
+      case 'partnerEnterprise': this.title = 'Enterprise'; break;
+      case 'basic': this.title = 'Basic'; break;
+      case 'provider': this.title = 'Provider'; break;
+      case 'centre': this.title = 'Centre'; break;
       default: this.title = this.type;
     }
 
-    if (localStorage.getItem('token')) { 
+    if (localStorage.getItem('token')) {
       this.isLoggedIn = true;
       const user = JSON.parse(localStorage.getItem('user'));
       this.profile = await this._profileService.getProfileDetail(user);
@@ -75,7 +75,7 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
 
   get priceOriginal() {
     let price = 0;
-    if(!!this.discounted && this.discounted > 0 && this.data){
+    if (!!this.discounted && this.discounted > 0 && this.data) {
       price = (this.monthly ? this.data.price : this.data.yearlyPrice) / (100 - this.discounted) * 100;
     }
     return price;
@@ -84,14 +84,14 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
   get price() {
     let price = 0;
     switch (this.type) {
-      case 'basic': 
+      case 'basic':
         price = 0;
         break;
-      default: 
+      default:
         if (this.data) {
-          if(this.data.price && this.monthly){
+          if (this.data.price && this.monthly) {
             price = this.data.price;
-          }else if(this.data.yearlyPrice && !this.monthly){
+          } else if (this.data.yearlyPrice && !this.monthly) {
             price = this.data.yearlyPrice;
           }
         }
@@ -113,30 +113,28 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
 
       case 'partnerBasic':
       case 'partnerEnterprise':
-        link.push('p')
+        link.push('p');
         break;
     }
     return link;
 
   }
 
-  triggerButtonClick() { 
-    if(this.profile.roles == 'U'){
-      this._toastr.error('You don\'t need to buy this plan');  
-    }
-    else if(this.type == 'basic'){
+  triggerButtonClick() {
+    if (this.profile.roles == 'U') {
+      this._toastr.error('You don\'t need to buy this plan');
+    } else if (this.type == 'basic') {
       this.checkoutFreePlan();
-    }
-    else{
+    } else {
       this.checkoutDefaultPlan();
     }
   }
 
-  checkoutFreePlan(){
+  checkoutFreePlan() {
     const payload = {
       _id: this.profile._id,
       plan: this.data
-    }
+    };
     this._sharedService.post(payload, 'user/updateProfile').subscribe((res: any) => {
       if (res.statusCode === 200) {
         this._toastr.success(res.message);
@@ -150,7 +148,9 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
     });
   }
 
-  checkoutDefaultPlan(){
+  checkoutDefaultPlan() {
+    const savedCoupon = JSON.parse(sessionStorage.getItem('stripe_coupon_code'));
+
     const payload: IStripeCheckoutData = {
       cancel_url: location.href,
       success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
@@ -161,6 +161,10 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
       isMonthly: this.monthly,
       type: 'default',
     };
+    if (savedCoupon) {
+      payload.coupon = savedCoupon.id;
+      // payload.success_url += '?action=couponused';
+    }
     this.stripeCheckout(payload);
   }
 

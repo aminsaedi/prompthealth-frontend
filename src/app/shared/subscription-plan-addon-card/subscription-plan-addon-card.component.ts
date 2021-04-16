@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { IAddonPlan } from '../../models/addon-plan';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service'
+import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
 import { AddonSelectCategoryComponent } from '../../dashboard/addon-select-category/addon-select-category.component';
 import { CategoryService } from '../services/category.service';
 import { SharedService } from '../services/shared.service';
@@ -32,8 +32,8 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
 
   get subtitle(): string {
     let s: string = null;
-    if(this.data){
-      switch(this.data.name){
+    if (this.data) {
+      switch (this.data.name) {
         case 'The Networker': s = 'Be seen first. No work required.'; break;
         case 'The Socialite': s = 'Do what you do best. We’ll take care of the rest.'; break;
       }
@@ -43,13 +43,13 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
 
   get summary(): string {
     let s: string = null;
-    if(this.data){
-      switch(this.data.name){
-        case 'The Networker': 
-          s = "A higher tier of visibility. Be the first thing all clients see on PromptHealth."; 
+    if (this.data) {
+      switch (this.data.name) {
+        case 'The Networker':
+          s = 'A higher tier of visibility. Be the first thing all clients see on PromptHealth.';
           break;
-        case 'The Socialite': 
-          s = "We’ll take care of the rest. Focus on what’s important – treating your clients. Let us take care of your recognition and growth.";
+        case 'The Socialite':
+          s = 'We’ll take care of the rest. Focus on what’s important – treating your clients. Let us take care of your recognition and growth.';
           break;
       }
     }
@@ -58,16 +58,16 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
 
   get descriptionArray(): string[] {
     const descriptionArray: string[] = [];
-    if(this.data.name == 'The Socialite'){
+    if (this.data.name == 'The Socialite') {
       this.data.description = `Health content creation and management
-      - We design, schedule, and post strategic, quality content directly to your social media accounts. (3 posts weekly and 1 video or podcast yearly)`;  
+      - We design, schedule, and post strategic, quality content directly to your social media accounts. (3 posts weekly and 1 video or podcast yearly)`;
     }
-    if(this.data){
+    if (this.data) {
       const descArray = this.data.description.split('\n');
-      descArray.forEach((d,i)=>{
-        if(d.trim().match(/^-/)){
+      descArray.forEach((d, i) => {
+        if (d.trim().match(/^-/)) {
           descriptionArray[descriptionArray.length - 1] = descriptionArray[descriptionArray.length - 1] + d.trim().replace(/^\s*\-\s*/, '\n');
-        }else{
+        } else {
           descriptionArray.push(d.trim());
         }
       });
@@ -79,10 +79,10 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
     let name = '';
 
     if (this.data) {
-      if(this.data.price && this.monthly){
+      if (this.data.price && this.monthly) {
         const price = this.data.price;
         name = '$' + this.data.price + '/Monthly';
-      }else if(this.data.yearlyPrice && !this.monthly){
+      } else if (this.data.yearlyPrice && !this.monthly) {
         const price = this.data.yearlyPrice;
         name = '$' + price + '/Yearly';
       }
@@ -92,10 +92,10 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
 
   get linkToRegistration(): string[] {
     const link = ['/auth', 'registration'];
-    if(this.data.userType.includes('P')){
+    if (this.data.userType.includes('P')) {
       link.push('p');
-    }else{
-      /**todo: have to add c. but how? */
+    } else {
+      /* todo: have to add c. but how? */
       link.push('sp');
     }
     return link;
@@ -111,15 +111,15 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    if (localStorage.getItem('token')) { 
+    if (localStorage.getItem('token')) {
       this.isLoggedIn = true;
       const user = JSON.parse(localStorage.getItem('user'));
       this.profile = await this._profileService.getProfileDetail(user);
     }
   }
 
-  async triggerButtonClick() { 
-    
+  async triggerButtonClick() {
+
     if (this.data.name === 'The Networker') {
       const cat = await this._catService.getCategoryAsync();
 
@@ -143,6 +143,8 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
   }
 
   checkoutAddonPlan(metadata = {}) {
+    const savedCoupon = JSON.parse(sessionStorage.getItem('stripe_coupon_code'));
+
     const payload: IStripeCheckoutData = {
       cancel_url: location.href,
       success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
@@ -152,6 +154,7 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
       plan: this.data,
       isMonthly: this.monthly,
       type: 'addon',
+      coupon: savedCoupon.id,
       metadata
     };
     this.stripeCheckout(payload);

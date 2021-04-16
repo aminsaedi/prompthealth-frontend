@@ -20,8 +20,10 @@ import { SubscriptionComponent } from './subscription/subscription.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 import { SubscriptionPlanPartnerComponent } from "./subscription-plan-partner/subscription-plan-partner.component";
 import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
-import { ListingPartnerComponent } from './listing-partner/listing-partner.component';
+import { ListingProductComponent } from './listing-product/listing-product.component';
 import { InvitationComponent } from './invitation/invitation.component';
+import { LandingClubhouseComponent } from "./landing-clubhouse/landing-clubhouse.component";
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
   {
@@ -95,9 +97,13 @@ const routes: Routes = [
 
   { path: 'plans/product', component: SubscriptionPlanPartnerComponent },
   
-  { path: 'partners', component: ListingPartnerComponent, },
-  { path: 'partners/:id', component: ProfilePartnerComponent },
-  { path: 'invitation', component: InvitationComponent }
+  { path: 'products', component: ListingProductComponent, },
+  { path: 'products/:id', component: ProfilePartnerComponent },
+
+  { path: 'invitation', component: InvitationComponent },
+  { path: 'clubhouse', component: LandingClubhouseComponent },
+
+  { path: '404', component: NotFoundComponent },
 ];
 
 @NgModule({

@@ -29,9 +29,11 @@ import { SharedModule } from '../shared/shared.module';
 import { NgxSocialShareModule } from 'ngx-social-share';
 import { GetFeaturedTabComponent } from './get-featured-tab/get-featured-tab.component';
 import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
-import { ListingPartnerComponent } from './listing-partner/listing-partner.component';
+import { ListingProductComponent } from './listing-product/listing-product.component';
 import { CardPartnerComponent } from './card-partner/card-partner.component';
 import { InvitationComponent } from './invitation/invitation.component';
+import { LandingClubhouseComponent } from './landing-clubhouse/landing-clubhouse.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 @NgModule({
@@ -56,9 +58,11 @@ import { InvitationComponent } from './invitation/invitation.component';
     SubscriptionPlanPartnerComponent,
     GetFeaturedTabComponent,
     ProfilePartnerComponent,
-    ListingPartnerComponent,
+    ListingProductComponent,
     CardPartnerComponent,
     InvitationComponent,
+    LandingClubhouseComponent,
+    NotFoundComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

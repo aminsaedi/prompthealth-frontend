@@ -7,8 +7,8 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CardCouponComponent implements OnInit {
 
-  @Input() couponCode: string;
-  
+  @Input() couponData;
+
   constructor() { }
 
   ngOnInit(): void {

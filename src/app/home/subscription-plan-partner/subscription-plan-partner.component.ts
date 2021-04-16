@@ -15,14 +15,14 @@ import { slideHorizontalAnimation } from '../../_helpers/animations';
 })
 export class SubscriptionPlanPartnerComponent implements OnInit {
 
-  public isPriceMonthly: boolean = true;
+  public isPriceMonthly = true;
   public partnerPlan: IDefaultPlan = null;
   public partnerBasicPlan: IDefaultPlan = null;
   public partnerEnterprisePlan: IDefaultPlan = null;
   public addonPlans: IAddonPlan[] = null;
   public userType = '';
 
-  public couponCode: string = null;
+  public couponCode = {};
   public isCouponShown = false;
   public isCouponShrink = false;
 
@@ -49,13 +49,13 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
 
   async ngOnInit() {
     const user = JSON.parse(localStorage.getItem('user'));
-    if(user){
+    if (user) {
       this.userType = user.roles;
     }
 
-    this.couponCode = sessionStorage.getItem('stripe_coupon_code');
-    if(this.couponCode){
-      setTimeout(()=>{ this.isCouponShown = true; }, 1000)
+    this.couponCode = JSON.parse(sessionStorage.getItem('stripe_coupon_code'));
+    if (this.couponCode) {
+      setTimeout(() => { this.isCouponShown = true; }, 1000);
     }
 
     const promiseAll = [
@@ -65,14 +65,14 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
 
     this._sharedService.loader('show');
     Promise.all(promiseAll)
-      .then(() => {})
+      .then(() => { })
       .catch(err => { console.log(err); })
       .finally(() => {
         this._sharedService.loader('hide');
       });
   }
 
-  onLogout(){
+  onLogout() {
     this._sharedService.logout(false);
     this._router.navigate(['/auth/registration/P']);
   }
@@ -80,35 +80,35 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
   getAddonPlan(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this._sharedService.getNoAuth('addonplans/get-all').subscribe((res: any) => {
-        if(res.statusCode === 200){
+        if (res.statusCode === 200) {
           const addons = [];
           res.data.forEach((data: IAddonPlan) => {
-            if(data.userType.includes('P')){
+            if (data.userType.includes('P')) {
               addons.push(data);
             }
           });
           this.addonPlans = addons;
           resolve(true);
-        }else{
+        } else {
           this._sharedService.checkAccessToken(res.error);
           reject(res.error);
         }
       }, error => {
         console.log(error);
         reject(error);
-      });  
+      });
     });
   }
 
   getSubscriptionPlan(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const path = 'user/get-plans?userType=P'
+      const path = 'user/get-plans?userType=P';
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
         if (res.statusCode === 200) {
           res.data.forEach((element: IDefaultPlan) => {
             if (element.name == 'Partner Basic') {
               this.partnerBasicPlan = element;
-            }else if(element.name == 'Partner Enterprise') {
+            } else if (element.name == 'Partner Enterprise') {
               this.partnerEnterprisePlan = element;
             }
           });
@@ -125,19 +125,19 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
   }
 
 
-  changePriceRange(isMonthly: boolean){ this.isPriceMonthly = isMonthly; }
+  changePriceRange(isMonthly: boolean) { this.isPriceMonthly = isMonthly; }
 
   expandMessageCoupon() { this.isCouponShrink = false; }
-  shrinkMessageCoupon(e: Event) { 
+  shrinkMessageCoupon(e: Event) {
     this.isCouponShrink = true;
-    e.stopPropagation(); 
+    e.stopPropagation();
   }
 
 
   // public errorForm: string = null;
   // onInputForm(){ if(this.errorForm){ this.errorForm = null; } }
 
-  // submitRegister(){    
+  // submitRegister(){
   //   var f = this.form.controls;
 
   //   if(f.firstname.invalid || f.lastname.invalid || (f.email.invalid && f.email.errors.required)){
@@ -147,13 +147,13 @@ export class SubscriptionPlanPartnerComponent implements OnInit {
   //   }else{
   //     this.errorForm = null;
   //   }
-    
+
   //   if(this.errorForm){ return; }
   //   else{
   //     this._spinner.show();
   //     this.subscription = this._sharedService.sendEmailSubscribers(this.form.value).subscribe((res: any) => {
   //       this._spinner.hide();
-  //       if (res.statusCode === 200) { this._toastr.success(res.message); } 
+  //       if (res.statusCode === 200) { this._toastr.success(res.message); }
   //       else { this._toastr.error(res.error.message); }
   //     },
   //     error => {

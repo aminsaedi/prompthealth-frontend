@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
@@ -12,24 +13,37 @@ export class InvitationComponent implements OnInit {
 
   public user: IUserDetail;
   public couponCode: string;
+  public couponData;
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _toaster: ToastrService,
     private _sharedService: SharedService,
   ) { }
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user'));
     this._route.queryParams.subscribe((data: QueryParams) => {
-      if(data.code){
+      if (data.code) {
         this.couponCode = data.code;
-        sessionStorage.setItem('stripe_coupon_code', data.code);
+
+        this._sharedService.get('user/get-coupon/' + this.couponCode).subscribe((res: any) => {
+          sessionStorage.setItem('stripe_coupon_code', JSON.stringify(res.data));
+          this.couponData = res.data;
+          console.log(res);
+        }, error => {
+          console.log(error);
+          this._router.navigate(['/404'], {replaceUrl: true});
+          this._toaster.error('The coupon is invalid');
+        });
+      }else{
+        this._router.navigate(['/404'], {replaceUrl: true});
       }
     });
   }
 
-  logoutAndSignup(role: string){
+  logoutAndSignup(role: string) {
     this._sharedService.logout();
     this._router.navigate(['/auth/registration', role]);
   }

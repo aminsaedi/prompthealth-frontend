@@ -48,7 +48,7 @@
       <a *ngIf="hasProfile()" 
         (click)="onClose()"
         class="btn font-regular pl-0 py-2 text-nowrap" 
-        [routerLink]="[ ((user.roles == 'P') ? '/partners' : '/dashboard/detail'), getId()]"
+        [routerLink]="[ ((user.roles == 'P') ? '/products' : '/dashboard/detail'), getId()]"
       >See my profile</a>
     </div>
     <div>

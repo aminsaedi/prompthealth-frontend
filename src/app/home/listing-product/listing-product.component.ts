@@ -7,11 +7,11 @@ import { FormItemServiceComponent } from '../../shared/form-item-service/form-it
 import { PartnerSortByType, PartnerSearchFilterQuery } from '../../models/partner-search-filter-query';
 
 @Component({
-  selector: 'app-listing-partner',
-  templateUrl: './listing-partner.component.html',
-  styleUrls: ['./listing-partner.component.scss']
+  selector: 'app-listing-product',
+  templateUrl: './listing-product.component.html',
+  styleUrls: ['./listing-product.component.scss']
 })
-export class ListingPartnerComponent implements OnInit {
+export class ListingProductComponent implements OnInit {
 
   constructor(
     private _sharedService: SharedService,

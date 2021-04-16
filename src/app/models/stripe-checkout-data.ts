@@ -7,14 +7,15 @@ export interface IStripeCheckoutData {
   userId: string;
   userType: string;
   email: string;
-  plan: IAddonPlan | IDefaultPlan,
+  plan: IAddonPlan | IDefaultPlan;
   isMonthly: boolean;
   type: string; /** default | addon */
+  coupon?: string;
   metadata?: {
     _id?: string;
     userType?: ('SP' | 'C' | 'U' | 'P')[];
     item_text?: string;
     image?: string;
     color?: string;
-  }
+  };
 }

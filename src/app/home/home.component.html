@@ -250,11 +250,13 @@
       </a>
     </div>
   
-    <div class="col-6 col-md-4 col-lg-3 carousel-partner-item" *ngFor="let p of partnersFeatured;">
-      <a [routerLink]="['partners', p.id]">
+    <!-- disabled this section for now -->
+    <!-- <div class="col-6 col-md-4 col-lg-3 carousel-partner-item" *ngFor="let p of partnersFeatured;">
+      <a [routerLink]="['/partners', p.id]">
         <img [src]="p.image" [alt]="p.name" style="width: 100%; height: auto;">
       </a>
-    </div>
+    </div> -->
+
     <div class="col-6 col-md-4 col-lg-3 text-center">
       <a class="btn btn-home font-big font-weight-400 rounded-10p" [routerLink]="['plans/product']">Become a partner</a>
     </div>

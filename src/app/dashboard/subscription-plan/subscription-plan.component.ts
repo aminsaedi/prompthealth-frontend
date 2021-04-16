@@ -113,11 +113,11 @@ export class SubscriptionPlanComponent implements OnInit {
       this.getProfileDetails();
     }
 
-    this.couponCode = sessionStorage.getItem('stripe_coupon_code');
-    if(this.couponCode){
-      setTimeout(()=>{ this.isCouponShown = true; }, 1000)
+    this.couponCode = JSON.parse(sessionStorage.getItem('stripe_coupon_code'));
+    if (this.couponCode) {
+      setTimeout(() => { this.isCouponShown = true; }, 1000);
     }
-    
+
   }
   getSubscriptionPlan(path) {
     this._sharedService.loader('show');
@@ -152,8 +152,8 @@ export class SubscriptionPlanComponent implements OnInit {
 
       if (res.statusCode === 200) {
         res.data.forEach((data: IAddonPlan) => {
-          if(data.name == 'The Networker') { this.addonNetworker = data; }
-          if(data.name == 'The Socialite') { this.addonSocialite = data; }
+          if (data.name == 'The Networker') { this.addonNetworker = data; }
+          if (data.name == 'The Socialite') { this.addonSocialite = data; }
         });
         console.log(this.addonNetworker);
       } else {
@@ -256,107 +256,107 @@ export class SubscriptionPlanComponent implements OnInit {
   // }
 
 
-//   stripeCheckout(payload) {
-//     const path = `user/checkoutSession`;
-//     this._sharedService.loader('show');
-//     this._sharedService.post(payload, path).subscribe((res: any) => {
-//       console.log('there we go');
-//       if (res.statusCode === 200) {
-//         // this.closebutton.nativeElement.click();
-//         // console.log(environment.config.stripeKey);
-//         console.log(res);
-//         this.stripeService.changeKey(environment.config.stripeKey);
+  //   stripeCheckout(payload) {
+  //     const path = `user/checkoutSession`;
+  //     this._sharedService.loader('show');
+  //     this._sharedService.post(payload, path).subscribe((res: any) => {
+  //       console.log('there we go');
+  //       if (res.statusCode === 200) {
+  //         // this.closebutton.nativeElement.click();
+  //         // console.log(environment.config.stripeKey);
+  //         console.log(res);
+  //         this.stripeService.changeKey(environment.config.stripeKey);
 
-//         if (res.data.type === 'checkout') {
-//           this.toastr.success('Checking out...');
+  //         if (res.data.type === 'checkout') {
+  //           this.toastr.success('Checking out...');
 
-//           this.stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
-//             console.log('success!');
-//           }, error => {
-//             this.toastr.error(error);
-//             console.log(error);
-//           });
-//         }
-//         if (res.data.type === 'portal') {
-//           this.toastr.success('You already have this plan. Redirecting to billing portal');
-//           console.log(res.data);
-//           location.href = res.data.url;
-//         }
+  //           this.stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
+  //             console.log('success!');
+  //           }, error => {
+  //             this.toastr.error(error);
+  //             console.log(error);
+  //           });
+  //         }
+  //         if (res.data.type === 'portal') {
+  //           this.toastr.success('You already have this plan. Redirecting to billing portal');
+  //           console.log(res.data);
+  //           location.href = res.data.url;
+  //         }
 
 
-//       } else {
-//         this.toastr.error(res.message, 'Error');
-//       }
+  //       } else {
+  //         this.toastr.error(res.message, 'Error');
+  //       }
 
-//       this._sharedService.loader('hide');
-//     }, (error) => {
-//       this.toastr.error(error);
-//       this._sharedService.loader('hide');
-//     });
-//   }
-//   buyDefaultPlan() {
-//     // this._sharedService.loader('show');
-//     const payload = {
-//       cancel_url: location.href,
-//       success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
-//       userId: localStorage.getItem('loginID'),
-//       userType: localStorage.getItem('roles'),
-//       email: JSON.parse(localStorage.getItem('user')).email,
-//       plan: this.selectedPlan,
-//       isMonthly: this.isPriceMonthly,
-//       type: 'default'
-//     };
-//     console.log(payload);
+  //       this._sharedService.loader('hide');
+  //     }, (error) => {
+  //       this.toastr.error(error);
+  //       this._sharedService.loader('hide');
+  //     });
+  //   }
+  //   buyDefaultPlan() {
+  //     // this._sharedService.loader('show');
+  //     const payload = {
+  //       cancel_url: location.href,
+  //       success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
+  //       userId: localStorage.getItem('loginID'),
+  //       userType: localStorage.getItem('roles'),
+  //       email: JSON.parse(localStorage.getItem('user')).email,
+  //       plan: this.selectedPlan,
+  //       isMonthly: this.isPriceMonthly,
+  //       type: 'default'
+  //     };
+  //     console.log(payload);
 
-//     this.stripeCheckout(payload);
-//   }
+  //     this.stripeCheckout(payload);
+  //   }
 
-//   buyAddOnPlan(plan) {
-//     console.log(plan);
-//     console.log(this.profile);
-//     if (plan.name === 'The Networker') {
-//       const modalRef = this._modalService.open(AddonSelectCategoryComponent, {
-//         centered: true
-//       });
-//       modalRef.componentInstance.categories = this.catService.categoryList;
-//       modalRef.result.then(res => {
-//         console.log(res);
-//         const metadata = this.catService.categoryList[res];
-//         delete metadata.subCategory;
-//         metadata.userType = plan.userType;
-//         console.log(metadata);
-//         this.checkoutAddonPlan(plan, metadata);
-//       }).catch(error => {
-//         console.log(error);
-//       });
-//     } else {
-//       this.checkoutAddonPlan(plan);
-//     }
+  //   buyAddOnPlan(plan) {
+  //     console.log(plan);
+  //     console.log(this.profile);
+  //     if (plan.name === 'The Networker') {
+  //       const modalRef = this._modalService.open(AddonSelectCategoryComponent, {
+  //         centered: true
+  //       });
+  //       modalRef.componentInstance.categories = this.catService.categoryList;
+  //       modalRef.result.then(res => {
+  //         console.log(res);
+  //         const metadata = this.catService.categoryList[res];
+  //         delete metadata.subCategory;
+  //         metadata.userType = plan.userType;
+  //         console.log(metadata);
+  //         this.checkoutAddonPlan(plan, metadata);
+  //       }).catch(error => {
+  //         console.log(error);
+  //       });
+  //     } else {
+  //       this.checkoutAddonPlan(plan);
+  //     }
 
-//   }
-//   checkoutAddonPlan(plan, metadata = {}) {
-//     const payload = {
-//       cancel_url: location.href,
-//       success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
-//       userId: localStorage.getItem('loginID'),
-//       userType: localStorage.getItem('roles'),
-//       email: JSON.parse(localStorage.getItem('user')).email,
-//       plan,
-//       isMonthly: this.isPriceMonthly,
-//       type: 'addon',
-//       metadata
-//     };
-//     console.log(payload);
-//     this.stripeCheckout(payload);
-//   }
+  //   }
+  //   checkoutAddonPlan(plan, metadata = {}) {
+  //     const payload = {
+  //       cancel_url: location.href,
+  //       success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
+  //       userId: localStorage.getItem('loginID'),
+  //       userType: localStorage.getItem('roles'),
+  //       email: JSON.parse(localStorage.getItem('user')).email,
+  //       plan,
+  //       isMonthly: this.isPriceMonthly,
+  //       type: 'addon',
+  //       metadata
+  //     };
+  //     console.log(payload);
+  //     this.stripeCheckout(payload);
+  //   }
   changePriceRange(isMonthly: boolean) {
     this.isPriceMonthly = isMonthly;
   }
 
   expandMessageCoupon() { this.isCouponShrink = false; }
-  shrinkMessageCoupon(e: Event) { 
+  shrinkMessageCoupon(e: Event) {
     this.isCouponShrink = true;
-    e.stopPropagation(); 
+    e.stopPropagation();
   }
 
 
