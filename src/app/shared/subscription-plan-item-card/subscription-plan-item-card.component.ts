@@ -196,6 +196,7 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
 
       } else {
         this._toastr.error(res.message, 'Error');
+        console.log(res);
       }
 
       this._sharedService.loader('hide');

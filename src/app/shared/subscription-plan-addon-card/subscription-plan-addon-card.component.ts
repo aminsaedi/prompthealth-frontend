@@ -154,9 +154,12 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
       plan: this.data,
       isMonthly: this.monthly,
       type: 'addon',
-      coupon: savedCoupon.id,
       metadata
     };
+    if (savedCoupon) {
+      payload.coupon = savedCoupon.id;
+      // payload.success_url += '?action=couponused';
+    }
     this.stripeCheckout(payload);
   }
 
@@ -175,6 +178,9 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
           this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
             console.log('success!');
           }, error => {
+            if (error.code === 'COUPON_INVALID') {
+              sessionStorage.removeItem('stripe_coupon_code');
+            }
             this._toastr.error(error);
             console.log(error);
           });
