@@ -178,9 +178,6 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
           this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
             console.log('success!');
           }, error => {
-            if (error.code === 'COUPON_INVALID') {
-              sessionStorage.removeItem('stripe_coupon_code');
-            }
             this._toastr.error(error);
             console.log(error);
           });
@@ -196,6 +193,9 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
 
       this._sharedService.loader('hide');
     }, (error) => {
+      if (error.code === 'COUPON_INVALID') {
+        sessionStorage.removeItem('stripe_coupon_code');
+      }
       this._toastr.error(error);
       this._sharedService.loader('hide');
     });
