@@ -272,7 +272,8 @@ export class Professional implements IProfessional {
 
   }
   get customerHealth() {
-    return this.p.customer_health;
+    const array = this.p.customer_health.concat(this.p.services); /** customer_health was contained in services before */
+    return array;
   }
 
   get allServiceId() { return this.p.services || []; }

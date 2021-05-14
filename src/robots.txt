@@ -1,6 +1,10 @@
+User-agent:Twitterbot
+Disallow: /dashboard/
+Disallow: /auth/
+Allow: /invitation/
+
 User-Agent:*
 Disallow: /dashboard/
 Disallow: /auth/
-Disallow: /invitation/
 
 Sitemap: https://prompthealth.ca/sitemap
