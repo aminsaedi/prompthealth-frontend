@@ -300,8 +300,6 @@ export class ListingComponent implements OnInit, OnDestroy {
         this.typical_hours = ls.getItem('typical_hours').split(',');
       }
 
-      console.log(this.id);
-
       // if (this.id && this.type) {
       //   this.listingPayload.ids = [this.id];
       //   this.listingPayload.type = this.type;
