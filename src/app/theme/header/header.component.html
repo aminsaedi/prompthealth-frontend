@@ -59,9 +59,9 @@
         <div class="nav-item" (click)="showMenu(true)">
           <a class="nav-link">Find practitioners</a>
         </div>
-        <!-- <div class="nav-item">
+        <div class="nav-item">
           <a class="nav-link" class="nav-link" [routerLink]="['/products']">Products/Services</a>
-        </div> -->
+        </div>
         <div class="nav-item" *ngIf="priceType != null">
           <a *ngIf="priceType == 'practitioner'" class="nav-link" class="nav-link" [routerLink]="['/plans']">Pricing</a>
           <a *ngIf="priceType == 'product'" class="nav-link" class="nav-link" [routerLink]="['/plans/product']">Pricing</a>
@@ -124,7 +124,7 @@
   <ul class="menu-item font-weight-bold" [ngClass]="{before: (levelMenuSm > 0), after: (levelMenuSm < 0)}">
     <li><a class="text-blue" [routerLink]="'/'" (click)="hideMenu()">Home</a></li>
     <li><a class="text-blue" (click)="scrollMenuSm(1)">Find Practioners</a></li>
-    <!-- <li><a class="text-blue" [routerLink]="['/products']" (click)="hideMenu()">Products/Services</a></li> -->
+    <li><a class="text-blue" [routerLink]="['/products']" (click)="hideMenu()">Products/Services</a></li>
     <li *ngIf="priceType != null">
       <a *ngIf="priceType == 'practitioner'" class="text-blue" [routerLink]="['/plans']" (click)="hideMenu()">Pricing</a>
       <a *ngIf="priceType == 'product'" class="text-blue" [routerLink]="['/plans/product']" (click)="hideMenu()">Pricing</a>
