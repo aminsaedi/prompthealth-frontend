@@ -1,8 +1,8 @@
 <section class="bg-accent ">
 
-  <agm-map [latitude]="lat" [longitude]="long" [scrollwheel]="true" [fullscreenControl]="true" [mapTypeId]="'hybrid'">
+  <!-- <agm-map [latitude]="lat" [longitude]="long" [scrollwheel]="true" [fullscreenControl]="true" [mapTypeId]="'hybrid'">
     <agm-marker [latitude]="lat" [longitude]="long"></agm-marker>
-  </agm-map>
+  </agm-map> -->
   <div class="container">
     <div class="row pt-3" style="min-height: 50rem;">
       <div class="col-lg-5 col-md-6 order-2 order-md-0 align-self-end">
@@ -19,19 +19,7 @@
         </h1>
 
         <div class="mt-3">
-          <button class="btn btn-home px-5" (click)="questionnaire()">Get Started</button>
-
-          <!-- <div class="row mb-3">
-            <div class="col-md-5 mb-3">
-              <button class="btn btn-home w-100 h-100" [disabled]='!showPersonalMatch'
-                (click)="questionnaire()">Personal
-                Match</button>
-            </div>
-            <div class="col-md-5 mb-3">
-              <a class="btn btn-home w-100 h-100" (click)="showMenu()">Find By Category</a>
-            </div>
-          </div> -->
-
+          <a class="btn btn-home px-5" [routerLink]="['/personal-match']">Get Started</a>
         </div>
         <div class="my-5">
           <div class="font-bigger font-md-biggest font-weight-400 text-gradient-on-blue mb-3">Personalize. Compare.

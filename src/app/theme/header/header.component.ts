@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+// import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { environment } from '../../../environments/environment';
 import { fadeAnimation, fadeFastAnimation, slideHorizontalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
-import { Subscription } from 'rxjs';
+// import { Subscription } from 'rxjs';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
     private _router: Router,
     private _sharedService: SharedService,
     private _bs: BehaviorService,
-    private toastr: ToastrService,
+    // private toastr: ToastrService,
     private _headerStatusService: HeaderStatusService,
     public catService: CategoryService,
     private _profileService: ProfileManagementService,
@@ -42,10 +42,10 @@ export class HeaderComponent implements OnInit {
 
   private elHost: HTMLElement;
 
-  @ViewChild('signup') signup: ElementRef;
-  @ViewChild('signin') signin: ElementRef;
-  _host = environment.config.BASE_URL;
-  showDashboard = false;
+  // @ViewChild('signup') signup: ElementRef;
+  // @ViewChild('signin') signin: ElementRef;
+  // _host = environment.config.BASE_URL;
+  // showDashboard = false;
   public token = '';
   public role = '';
   public payment = 'true';
@@ -62,19 +62,19 @@ export class HeaderComponent implements OnInit {
   public priceType: PriceType = null;
 
   user: any = {};
-  updateData: any;
-  cities = [];
-  Items = [];
-  showCities = false;
-  showItems = false;
+  // updateData: any;
+  // cities = [];
+  // Items = [];
+  // showCities = false;
+  // showItems = false;
   @Input() eventKey: any;
-  eventKeyValue: any;
-  searchKeyword: any;
-  dashboard: any;
-  currentUrl = '';
-  uname: any;
-  public userType = '';
-  professionalOption = false;
+  // eventKeyValue: any;
+  // searchKeyword: any;
+  // dashboard: any;
+  // currentUrl = '';
+  // uname: any;
+  // public userType = '';
+  // professionalOption = false;
 
 
   public classSubcategory = '';
@@ -98,9 +98,8 @@ export class HeaderComponent implements OnInit {
       });
 
       this._bs.getUserData().subscribe((res: any) => {
-        this.updateData = res;
         if (res.firstName) {
-          ls.setItem('user', JSON.stringify(this.updateData));
+          ls.setItem('user', JSON.stringify(res));
           this.user = ls.getItem('user') ? JSON.parse(ls.getItem('user')) : {};
           this.token = ls.getItem('token');
           this.role = ls.getItem('roles');
@@ -130,15 +129,15 @@ export class HeaderComponent implements OnInit {
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
-      this.currentUrl = evt.url;
+      // this.currentUrl = evt.url;
       this.token = ls.getItem('token');
       this.role = ls.getItem('roles');
       this.payment = ls.getItem('isPayment');
       this.user = ls.getItem('user') ? JSON.parse(ls.getItem('user')) : {};
-      if (this.token && this.user) {
-        const roles = this.user.roles;
-        this.dashboard = roles === 'B' ? 'dashboard/home' : 'dashboard/welcome';
-      }
+      // if (this.token && this.user) {
+      //   const roles = this.user.roles;
+      //   this.dashboard = roles === 'B' ? 'dashboard/home' : 'dashboard/welcome';
+      // }
     });
 
     // this._bs.user.subscribe(obj => {
@@ -165,9 +164,9 @@ export class HeaderComponent implements OnInit {
     //   }
     // }
   }
-  route(path) {
-    this._router.navigate([path]);
-  }
+  // route(path) {
+  //   this._router.navigate([path]);
+  // }
 
   keywordSearch() {
     this._router.navigate(['/practitioners'], {
@@ -183,28 +182,28 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  isSelectedURL(path) {
-    if ((this.currentUrl === '/' || this.currentUrl === '') && path === '/') {
-      return true;
-    } else if (this.currentUrl.indexOf(path) >= 0 && path !== '/') { return true; } else { return false; }
-  }
+  // isSelectedURL(path) {
+  //   if ((this.currentUrl === '/' || this.currentUrl === '') && path === '/') {
+  //     return true;
+  //   } else if (this.currentUrl.indexOf(path) >= 0 && path !== '/') { return true; } else { return false; }
+  // }
 
-  handleChange(url, type) {
-    // console.log(url);
-    this._router.navigate([url, type]).then(res => {
-      // console.log(res);
-    });
-    if (url === '/auth/login') {
-      this.signin.nativeElement.click();
-    } else {
-      this.signup.nativeElement.click();
-    }
-  }
+  // handleChange(url, type) {
+  //   // console.log(url);
+  //   this._router.navigate([url, type]).then(res => {
+  //     // console.log(res);
+  //   });
+  //   if (url === '/auth/login') {
+  //     this.signin.nativeElement.click();
+  //   } else {
+  //     this.signup.nativeElement.click();
+  //   }
+  // }
 
-  optUserType(value) {
-    // this._bs.setRole(value);
-    this._uService.localStorage.setItem('userType', value);
-  }
+  // optUserType(value) {
+  //   // this._bs.setRole(value);
+  //   this._uService.localStorage.setItem('userType', value);
+  // }
 
 
   hideMenu() { this._headerStatusService.hideNavMenu(); }

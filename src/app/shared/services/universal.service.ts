@@ -46,6 +46,7 @@ export class UniversalService {
       meta.imageAlt = 'PromptHealth';
     }
 
+    console.log(meta);
     const baseUrl = 'https://prompthealth.ca';
     this._title.setTitle(meta.title);
 
