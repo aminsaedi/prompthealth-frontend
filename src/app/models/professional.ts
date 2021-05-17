@@ -271,10 +271,10 @@ export class Professional implements IProfessional {
     return result;
 
   }
-  get customerHealth() {
-    const array = this.p.customer_health.concat(this.p.services); /** customer_health was contained in services before */
-    return array;
-  }
+  // get customerHealth() {
+  //   const array = this.p.customer_health.concat(this.p.services); /** customer_health was contained in services before */
+  //   return array;
+  // }
 
   get allServiceId() { return this.p.services || []; }
   get serviceOfferIds() { return this.p.serviceOfferIds || []};

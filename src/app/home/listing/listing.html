@@ -44,16 +44,18 @@
         <button class="btn" (click)="removeKeyword()"><i class="fas fa-times"></i></button>
       </li>
 
-      <li *ngFor="let id of listingPayload?.services; let i = index;" class="main text-nowrap rounded mr-3">
-        <span class="px-2">{{getServiceName(id)}}</span>
-        <button class="btn" (click)="removeService(i)"><i class="fas fa-times"></i></button>
-      </li>
+      <ng-container *ngFor="let id of listingPayload?.services; let i = index;">
+        <li *ngIf="!!getServiceName(id)" class="main text-nowrap rounded mr-3">
+          <span class="px-2">{{getServiceName(id)}}</span>
+          <button class="btn" (click)="removeService(i)"><i class="fas fa-times"></i></button>
+        </li>  
+      </ng-container>
 
       <li *ngIf="isCustomerHealthOn" class="text-nowrap mx-3 main-group">Health status:</li>
       <form-item-customer-health 
       *ngIf="customerHealthSet" 
       [selections]="customerHealthSet" 
-      [data]="listingPayload?.customer_health"
+      [data]="listingPayload?.services"
       [controller]=""
       mode="tag" 
       type="detail"

@@ -84,7 +84,6 @@ export class FormPractitionerServiceComponent implements OnInit {
     }
 
     const services = [];
-    const customer_health = [];
     this.formItemCheckboxGroupComponents.forEach(item=> {
       item.getSelected().forEach(id=>{
         services.push(id);
@@ -94,13 +93,12 @@ export class FormPractitionerServiceComponent implements OnInit {
       services.push(id);
     });
     this.formHealthComponent.getSelectedValue().forEach(id=>{
-      customer_health.push(id);
+      services.push(id);
     });
 
     const data = {
       _id: this.data._id,
       services: services,
-      customer_health: customer_health
     };
 
     this.submitForm.emit(data);

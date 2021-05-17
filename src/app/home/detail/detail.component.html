@@ -314,7 +314,7 @@ class="container-fluid bg-grey p-4"
             <form-item-customer-health
             *ngIf="questionnaires"
             type="detail"
-            [data]="userInfo?.customerHealth"
+            [data]="userInfo?.allServiceId"
             [selections]="questionnaires.customerHealth.answers"
             [disabled]="true"
             ></form-item-customer-health>  
