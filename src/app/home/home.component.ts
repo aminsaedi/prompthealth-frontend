@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 // import { Partner } from '../models/partner';
 // import { PartnerSearchFilterQuery } from '../models/partner-search-filter-query';
 import { UniversalService } from '../shared/services/universal.service';
+import { rejects } from 'assert';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -212,7 +213,7 @@ export class HomeComponent implements OnInit {
   //     // console.log(res);
   //   });
   // }
-  ngOnInit() {
+  async ngOnInit() {
     this._uService.setMeta(this.router.url, {
       title: 'PromptHealth | Your health and wellness personal assistant',
       description: 'Take control of your health with options tailored to you',
@@ -238,7 +239,7 @@ export class HomeComponent implements OnInit {
     // this.timer(); /** NO NEED */
 
     if (!this._uService.isServer) {
-//      this.getHomePageFeatures(); /** need to reinstate after many practitioners buy addonPlan */
+      await this.getHomePageFeatures(); /** need to reinstate after many practitioners buy addonPlan */
       this.getPractitionersFeatured(); /** temporary solition */
       this.id = setInterval(() => {
         // this.timer();
@@ -248,16 +249,18 @@ export class HomeComponent implements OnInit {
   }
 
   /** need to reinstate after many practitioners buy addonPlan */
-  // async getHomePageFeatures() {
-  //   this._sharedService.getNoAuth('/addonplans/get-featured', { roles: ['SP', 'C'] }).toPromise().then((res: any) => {
-  //     // console.log(res.data);
-  //     res.data.forEach(item => {
-  //       if (this.introBannerItems[item.category_id]) {
-  //         this.introBannerItems[item.category_id].features.push(item);
-  //       }
-  //     });
-  //   });
-  // }
+  getHomePageFeatures(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this._sharedService.getNoAuth('/addonplans/get-featured', { roles: ['SP', 'C'] }).toPromise().then((res: any) => {
+        res.data.forEach(item => {
+          if (this.introBannerItems[item.category_id]) {
+            this.introBannerItems[item.category_id].features.push(item);
+          }
+        });
+        resolve(true);
+      });  
+    });
+  }
 
   /** temporary solution to fill featured practitioners */
   getPractitionersFeatured() {
