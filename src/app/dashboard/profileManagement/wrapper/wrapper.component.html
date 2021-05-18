@@ -63,9 +63,9 @@
         <div class="col-md-9">
           <!-- Tab panes -->
           <div class="tab-content py-3">
-            <ng-container *ngIf="profile?.isApproved == false && profile.roles != 'P'">
+            <ng-container *ngIf="!profile?.isApproved && (profile?.roles != 'P' && profile?.roles != 'U')">
               <div class="bg-grey p-4 mb-3">
-                <p class="font-italic mb-0 font-big" *ngIf="profile.roles !== 'P'">
+                <p class="font-italic mb-0 font-big">
                   Your profile is being reviewed by our administrator and won't be shown in listing just yet.
                 </p>
 

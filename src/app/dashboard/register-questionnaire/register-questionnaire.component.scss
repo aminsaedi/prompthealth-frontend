@@ -31,6 +31,10 @@
     top: $headerHeightLoggedinLg; 
     height: calc(100vh - #{$headerHeightLoggedinLg});
   }
+  @media (min-width: 1200px) {
+    top: $headerHeightLoggedinXl;
+    height: calc(100vh - #{$headerHeightLoggedinXl});
+  }
 }
 
 section.mainview{

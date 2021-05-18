@@ -55,7 +55,7 @@ export function app() {
   // Example Express Rest API endpoints
   // app.get('/api/**', (req, res) => { });
   // Serve static files from /browser
-  server.get('/bootstrap.min.css.map', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary. */
+  server.get('/bootstrap.min.css.map', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary not to try SSR because this file doesn't exist. */
   server.get('*.*', express.static(distFolder, {
     maxAge: '1y'
   }));
@@ -63,71 +63,30 @@ export function app() {
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/dashboard',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
-  // server.use('/invitation',            (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/personal-match',        (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/compare-practitioners', (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
-  // server.use('/subscribe-email',       (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/unsubscribe',           (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
-  // server.use('/contact-us',            (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/404',                   (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/thankyou',              (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   
-  // server.use('/practitioners', (req, res) => {
-  //   res.render(indexHtml, { req, providers: [ { provide: APP_BASE_HREF, useValue: '/practitioners' + req.baseUrl } ]},
-  //   (err, html) => {
-  //     showMeta(html);
-  //     res.send(html);
-  //   });      
-  // });
-
-  // server.use('/products', (req,res) => {
-  //   res.render(indexHtml, { req, providers: [ { provide: APP_BASE_HREF, useValue: '/products' + req.baseUrl } ]},
-  //   (err, html) => {
-  //     showMeta(html);
-  //     res.send(html);
-  //   });
-  // });
-
-  // server.use('/plans', (req,res) => {
-  //   res.render(indexHtml, { req, providers: [ { provide: APP_BASE_HREF, useValue: '/plans' + req.baseUrl } ]},
-  //   (err, html) => {
-  //     showMeta(html);
-  //     res.send(html);
-  //   });
-  // });
-
-  // server.use('/blogs', (req, res) => {
-  //   res.render(indexHtml, { req, providers: [ { provide: APP_BASE_HREF, useValue: '/blogs' + req.baseUrl } ]},
-  //   (err, html) => {
-  //     showMeta(html);
-  //     res.send(html);
-  //   });
-  // });
-
-  // server.get('/', (req, res) => {
-  //   res.render(indexHtml, { req, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ]},
-  //   (err, html) => {
-  //     showMeta(html);
-  //     res.send(html);
-  //   });
-  // });
-
+  // create sitemap dynamically (SSR)
   server.get('/sitemap', async (req, res) => { 
     const sitemap = await getSitemap(server.get('env') == 'production');
     res.set('Content-Type', 'text/xml');
     res.send(sitemap);
   });
 
-  // All regular routes use the Universal engine
+  // All other routes use the Universal engine
   server.get('*', (req, res) => {
     res.render(
       indexHtml, 
       { req, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ]},
       (err, html) => {
         if(err){
-          console.log('something went wrong: ');
+          console.log('SSR error. something went wrong: ');
           console.log(err)
         }
-        showMeta(req.originalUrl, html);
+        // showMeta(req.originalUrl, html);
         res.send(html);
       }
     );

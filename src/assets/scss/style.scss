@@ -581,13 +581,15 @@ textarea.form-control {
 @import "responsive_variables";
 .spacer-top{
   height: $headerHeight;
-  @media screen and (min-width: 768px){ height: $headerHeightMd; }
-  @media screen and (min-width: 992px){ height: $headerHeightLg; }
+  @media screen and (min-width:  768px){ height: $headerHeightMd; }
+  @media screen and (min-width:  992px){ height: $headerHeightLg; }
+  @media screen and (min-width: 1200px){ height: $headerHeightXl; }
 
   &.loggedin{
     height: $headerHeightLoggedin;
-    @media screen and (min-width: 768px){ height: $headerHeightLoggedinMd; }
-    @media screen and (min-width: 992px){ height: $headerHeightLoggedinLg; }
+    @media screen and (min-width:  768px){ height: $headerHeightLoggedinMd; }
+    @media screen and (min-width:  992px){ height: $headerHeightLoggedinLg; }
+    @media screen and (min-width: 1200px){ height: $headerHeightLoggedinXl; }
   }
 }
 

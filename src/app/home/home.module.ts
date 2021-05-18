@@ -50,6 +50,7 @@ import { UserQuestionnaireItemSelectComponent } from "./user-questionnaire-item-
 import { UserQuestionaireComponent } from "./user-questionaire/user-questionaire.component";
 import { UserQuestionnaireItemGenderComponent } from "./user-questionnaire-item-gender/user-questionnaire-item-gender.component";
 import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
+import { AuthModule } from "../auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -108,6 +109,7 @@ import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan
     ReactiveFormsModule,
     NgxSocialShareModule,
     SharedModule,
+    AuthModule,
     ModalModule.forRoot(),
   ],
 

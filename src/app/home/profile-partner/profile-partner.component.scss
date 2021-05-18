@@ -21,6 +21,9 @@ $marginTopAfterHeader: 40px;
     /** (doesn't have to be exact value) */
     height: calc(100vh - #{$headerHeightLoggedinLg + $marginTopAfterHeader + 30});
   }
+  @media (min-width: 1200px) {
+    height: calc(100vh - #{$headerHeightLoggedinXl + $marginTopAfterHeader + 30});
+  }
 }
 
 .image-grid{
