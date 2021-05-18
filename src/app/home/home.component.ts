@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 // import { Partner } from '../models/partner';
 // import { PartnerSearchFilterQuery } from '../models/partner-search-filter-query';
 import { UniversalService } from '../shared/services/universal.service';
-import { rejects } from 'assert';
+import { IUserDetail } from '../models/user-detail';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -264,29 +264,15 @@ export class HomeComponent implements OnInit {
 
   /** temporary solution to fill featured practitioners */
   getPractitionersFeatured() {
-    this._sharedService.postNoAuth({}, 'user/filter').subscribe((res: any) => {
+    this._sharedService.getNoAuth('user/get-paid-spc').subscribe((res: any) => {
       if (res.statusCode === 200) {
-        const users: { userId: string, userData: any, ans: any[] }[] = res.data;
-        const usersPaid: { [k: string]: any[] } = {};
-        // const usersFree: {[k: string]: any[]} = {};
+        const users: IUserDetail[] = res.data;
+        const usersMapByCategory: { [k: string]: any[] } = {};
         for (const key of Object.keys(this.introBannerItems)) {
-          usersPaid[key] = [];
-          // usersFree[key] = [];
+          usersMapByCategory[key] = [];
           for (const u of users) {
-            for (const ans of u.ans) {
-              if (ans._id == key) {
-                const userdata = {
-                  _id: u.userId,
-                  ...u.userData
-                };
-                if (u.userData.verifiedBadge) {
-                  usersPaid[key].push(userdata);
-                }
-                // else {
-                //   usersFree[key].push(userdata);
-                // }
-                break;
-              }
+            if (u.services.includes(key)) {
+              usersMapByCategory[key].push(u);
             }
           }
         }
@@ -300,17 +286,14 @@ export class HomeComponent implements OnInit {
         };
 
         Object.keys(this.introBannerItems).forEach(key => {
-          usersPaid[key] = shuffle(usersPaid[key]);
-          // usersFree[key] = shuffle(usersFree[key]);
-
-          // const usersAll = usersPaid[key].concat(usersFree[key]);
-          for (const u of usersPaid[key]) {
+          usersMapByCategory[key] = shuffle(usersMapByCategory[key]);
+          for (const u of usersMapByCategory[key]) {
             this.introBannerItems[key].features.push({ userId: u });
             if (this.introBannerItems[key].features.length >= 8) { break; }
           }
         });
       }
-    });
+    }, (error) => { console.log(error); });
   }
 
   // async getPartnersFeatured() {
