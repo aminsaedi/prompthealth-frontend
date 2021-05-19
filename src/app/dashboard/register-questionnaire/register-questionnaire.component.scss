@@ -65,7 +65,8 @@ section.sideview{
 
     border-radius: 10px;
     background-color: white;
-    filter:drop-shadow(0 0 8px #00000025);
+    // filter:drop-shadow(0 0 8px #00000025);
+    box-shadow: 0 0 8px #00000025;
   }
 }
 .triangle{
@@ -78,6 +79,7 @@ section.sideview{
   border-radius:14px 0 0 0;
   overflow: hidden;
   transform: translateY(50%) rotate(30deg) skewY(30deg) scaleX(.866);
+  box-shadow: -3px -3px 2px #e2e2e2;
 
   &:before, &:after{
     content: '';

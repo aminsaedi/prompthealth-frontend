@@ -8,10 +8,15 @@
         [routerLink]="['/plans']">Renew Plan</a></span> </p>
 </h4>
 <hr *ngIf="profile?.isPlanExpired">
-<h4 class="mb-3">Personal Information
-  <button class="btn btn-primary pull-right" (click)="updateFields()">Edit Profile</button>
-  <!-- <button class="btn btn-primary pull-right mr-2" (click)="deleteProfile(content)">Delete Profile</button> -->
-</h4>
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+  <h4 class="mb-0 flex-grow-1">Personal Information</h4>
+  <div class="d-flex justify-content-end flex-grow-1">
+    <button-profile-guideline class="mr-2" *ngIf="profile?.isApproved && profile?.roles != 'U'"></button-profile-guideline>
+    <button class="btn btn-primary" (click)="updateFields()">Edit Profile</button>  
+    <!-- <button class="btn btn-primary pull-right mr-2" (click)="deleteProfile(content)">Delete Profile</button> -->  
+  </div>  
+</div>
 
 <div class="form-container">
 

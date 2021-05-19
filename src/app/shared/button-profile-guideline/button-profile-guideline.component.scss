@@ -1,0 +1,11 @@
+:host {
+  font-style: normal; 
+}
+p {
+  line-height: 1.3em;
+}
+
+.btn.btn-outline-ph-blue {
+  color: var(--ph-blue);
+  border: solid 1px var(--ph-blue);  
+}

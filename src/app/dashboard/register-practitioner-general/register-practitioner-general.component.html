@@ -1,5 +1,14 @@
 <h3 class="mb-4">General Information</h3>
 
+<div class="d-md-flex align-items-center mb-5">
+  <p class="mb-3 mb-md-0">Please read profile guidelines before entering your profile.</p>
+  <button-profile-guideline
+  class="ml-md-4"
+  label="See Profile Guidelines"
+  buttonClass="btn btn-outline-ph-blue text-nowrap"
+  ></button-profile-guideline>  
+</div>
+
 <form-centre-general
 *ngIf="user?.roles == 'C'"
 [data]="user"

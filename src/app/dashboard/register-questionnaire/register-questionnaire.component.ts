@@ -11,7 +11,7 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
-  selector: 'app-register-partner',
+  selector: 'app-register-questionnaire',
   templateUrl: './register-questionnaire.component.html',
   styleUrls: ['./register-questionnaire.component.scss']
 })
