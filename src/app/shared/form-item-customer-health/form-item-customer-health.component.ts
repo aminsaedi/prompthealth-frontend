@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { QuestionnaireAnswer } from '../services/questionnaire.service';
 
 @Component({
   selector: 'form-item-customer-health',
@@ -11,31 +12,53 @@ export class FormItemCustomerHealthComponent implements OnInit {
   @Input() data: string[] = null; /** value[] | valueForTracking[]*/
   @Input() col2: boolean = true; /** only available when mode == form  */
   @Input() disabled: boolean = false; /** only available when mode == form */
-  @Input() mustSelectAtLeast = 0; /** todo: add validator if needed */
   @Input() type: 'simple' | 'detail' = 'simple'; /** detail is used for tracking */
   @Input() mode: 'form' | 'tag' = 'form';
+  @Input() selections: QuestionnaireAnswer[];
+  @Input() controller: FormGroup = new FormGroup({});
+  @Input() submitted = false;
 
   @Output() changeValue = new EventEmitter<string[]>();
   @Output() changeValueForTracking = new EventEmitter<string[]>();
 
-  public form: FormGroup;
-  public selectionList: SelectionItem[] = customerHealth;
+  public selectionList: CustomerHealthSelectionItem[];
 
-  getFormArray(name: string){ return this.form.controls[name] as FormArray; }
+  getFormArray(name: string){ return this.controller.controls[name] as FormArray; }
 
-  constructor(
-    _fb: FormBuilder
-  ) { 
-    this.form = _fb.group({root: new FormArray([])});
-  }
+  constructor() { }
 
   ngOnInit(): void {
+    this.controller.setControl('root', new FormArray([]));
+    
+    const selections: CustomerHealthSelectionItem[] = [];
+    this.selections.forEach(a=>{
+      const item: CustomerHealthSelectionItem = {
+        id: a._id,
+        label: a.item_text,
+        value: a._id,
+        valueForTracking: a._id,
+      };
+      if(a.subans){
+        item.child = [];
+        a.subansData.forEach(aSub => {
+          item.child.push({
+            id: aSub._id,
+            label: aSub.item_text,
+            value: aSub._id,
+            valueForTracking: aSub._id,
+          });
+        });
+      }
+      selections.push(item);
+    });
+    this.selectionList = selections;
+
     this.selectionList.forEach(item => {
       const val = (this.data && this.type == 'simple' && this.data.includes(item.value)) ? true : (this.data && this.type == 'detail' && this.data.includes(item.valueForTracking)) ? true : false;
       this.getFormArray('root').push(new FormControl(val));
 
       if(item.child){
-        this.form.setControl(item.id, new FormArray([]));
+        this.controller.setControl(item.id, new FormArray([]));
         item.child.forEach(itemSub => {
           const val = (this.data && this.type == 'simple' && this.data.includes(itemSub.value)) ? true : (this.data && this.type == 'detail' && this.data.includes(itemSub.valueForTracking)) ? true : false;
           this.getFormArray(item.id).push(new FormControl(val));
@@ -47,14 +70,23 @@ export class FormItemCustomerHealthComponent implements OnInit {
 
   /** get seleceted values */ 
   /** this is only for value. not valueForTracking */
-  /** subcategory is ignored because its value is same as root category */
   getSelectedValue(emit: boolean = false): string[]{
-    const vals = this.form.value as {[k:string]: boolean[]};
+    const vals = this.controller.value as {[k:string]: boolean[]};
     const selectedValues: string[] = [];
     vals.root.forEach((isSelected, i) => {
       if(isSelected){
         let val = this.selectionList[i].value;
         selectedValues.push(val);  
+
+        if(vals[this.selectionList[i].id]){
+          vals[this.selectionList[i].id].forEach((isSelected, j) => {
+            if(isSelected){
+              let val = this.selectionList[i].child[j].value;
+              selectedValues.push(val);
+            }
+          });
+        }
+
       }
     });
 
@@ -65,7 +97,7 @@ export class FormItemCustomerHealthComponent implements OnInit {
   /** get selected values for tracking */
   /** this is only for valueForTracking. not value */
   getSelectedValueForTracking(emit: boolean = false): string[]{
-    const vals = this.form.value as {[k:string]: boolean[]};
+    const vals = this.controller.value as {[k:string]: boolean[]};
     const selectedValues: string[] = [];
     vals.root.forEach((isSelected, i) => {
       if(isSelected){
@@ -93,23 +125,11 @@ export class FormItemCustomerHealthComponent implements OnInit {
   }
 }
 
-export const customerHealth: SelectionItem[] = [
-  {id: 'ch1',     label: 'Chronic Health',            value: '5eb1a4e199957471610e6cd4', valueForTracking: 'chronic-health', child: [
-    {id: 'ch1a',  label: 'Cardiovascular Disease',    value: '5eb1a4e199957471610e6cd4', valueForTracking: 'chronic-cardiovascular-disease'},
-    {id: 'ch1b',  label: 'Diabetes',                  value: '5eb1a4e199957471610e6cd4', valueForTracking: 'chronic-diabetes'},
-    {id: 'ch1c',  label: 'Cancer',                    value: '5eb1a4e199957471610e6cd4', valueForTracking: 'chronic-cancer'},
-    {id: 'ch1d',  label: 'Neurodegenrative Disease',  value: '5eb1a4e199957471610e6cd4', valueForTracking: 'chronic-neurodegenrative-disease'},
-    {id: 'ch1e',  label: 'Autoimmune Disease',        value: '5eb1a4e199957471610e6cd4', valueForTracking: 'chronic-autoimmune-disease'},
-    {id: 'ch1f',  label: 'Other',                     value: '5eb1a4e199957471610e6cd4', valueForTracking: 'chronic-other'},
-  ]},
-  {id: 'ch2',     label: 'Pregnant',                  value: '5eb1a4e199957471610e6cd2', valueForTracking: 'pregnant'},
-  {id: 'ch3',     label: 'Not Critical',              value: '5eb1a4e199957471610e6cd1', valueForTracking: 'not-critical'}
-]
 
-interface SelectionItem {
+export interface CustomerHealthSelectionItem {
   id: string;
   label: string;
   value: string;
   valueForTracking: string;
-  child?: SelectionItem[]
+  child?: CustomerHealthSelectionItem[]
 }

@@ -19,7 +19,7 @@ import { MyFavouriteComponent } from './my-favourite/my-favourite.component';
 import { ReviewsRatingsComponent } from './reviews-ratings/reviews-ratings.component';
 import { VideosBlogsComponent } from './videos-blogs/videos-blogs.component';
 
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+// import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { MyAmenitiesComponent } from './my-amenities/my-amenities.component';
 import { SharedModule } from '../../shared/shared.module';
 import { MyProductComponent } from './my-product/my-product.component';
@@ -72,7 +72,7 @@ import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
     ModalModule.forRoot(),
     NgxPaginationModule,NgxSpinnerModule,
     SharedModule,NgxDatatableModule,
-    OwlDateTimeModule, OwlNativeDateTimeModule,
+    // OwlDateTimeModule, OwlNativeDateTimeModule,
     CommonModule, ProfileManagementRoutingModule, ReactiveFormsModule, FormsModule,NgbModule ]
     
 })

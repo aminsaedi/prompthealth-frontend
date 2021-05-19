@@ -1,0 +1,148 @@
+:host {
+  font-size: 16px; 
+  line-height: 1.5em;
+}
+
+@mixin textGradient($c1, $c2){
+  background: -webkit-linear-gradient(135deg, $c1 0%, $c2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-blue {
+  @include textGradient(#5d7dc1, #213f7a);
+}
+
+.text-gradient-light-blue {
+  @include textGradient(#94B0ED, #21617D);
+}
+
+.text-gradient-purple {
+  @include textGradient(#95b3ef, #6f3bef);
+}
+
+.text-dark-blue{
+  color: #213f7a;
+}
+
+.practitioner-name {
+  min-width: 280px;
+  white-space: pre-wrap;
+  border-bottom: solid 2px #213f7a;
+  vertical-align: bottom;
+}
+
+@media (max-width: 768px){
+  h2 { font-size: 28px; }
+  h3 { font-size: 22px; }    
+}
+
+
+.z-index-1{
+  z-index: 1
+}
+
+.ambassador-container {
+  top: 64px;
+}
+
+.input-link{
+  position: relative;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+.image-people-sm {
+  width: 100%;
+}
+
+.how-ph-work {
+  li{
+    border-radius: 10px;
+    border: solid 1px #f3f3f3;
+
+    @media (min-width: 768px) {
+      border-radius: 0;
+      &:first-child {
+        border-radius: 10px 0 0 10px;
+        border-right: none;
+      }
+      &:nth-child(2),
+      &:nth-child(3) {
+        border-left: none;
+        border-right: none;
+      }
+      &:last-child {
+        border-radius: 0 10px 10px 0;
+        border-left: none;
+      }
+    }
+  }
+  .image-container{
+    position: relative;
+    &::after{
+      content: '';
+      display: block;
+      padding-top: 70%;  
+    }
+    img {
+      position: absolute;
+      left: 10%;
+      width: 80%;
+      height: 100%;
+      object-fit: contain;
+
+      @media (min-width: 768px) {
+        left: 0;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.canvas {
+  top: 0;
+  left: 0;
+  z-index: 0;
+
+  .object-1 {
+    position: absolute;
+    width: 350px;
+    top: 30%;
+    left: 82%;
+    transform: translate(-50%, -50%);
+
+    @media (min-width: 992px){
+      width: 420px;
+    }
+
+    @media (min-width: 1280px){
+      top: 35%;
+      width: 550px;
+    }
+  }
+  .object-2 {
+    position: absolute;
+    top: 35%;
+    left: 80%;
+    width: 500px;
+    transform: translate(-50%, -50%);
+
+    @media (min-width: 768px){
+      top: 50%;
+      left: 80%;
+      width: 800px;
+    }
+  }
+  .object-3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 400px;
+    transform: translate(-50%, 50%);
+
+    @media (min-width: 768px){
+      width: 700px;
+    }
+  }
+}

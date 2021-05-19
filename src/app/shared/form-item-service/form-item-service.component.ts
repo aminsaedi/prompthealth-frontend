@@ -12,41 +12,41 @@ export class FormItemServiceComponent implements OnInit {
   @Input() data: string[] = null; /** serviceId[] */
   @Input() col2: boolean = true;
   @Input() disabled: boolean = false;
+  @Input() submitted: boolean = false;
+  @Input() controller: FormGroup = new FormGroup({});
 
   @Output() changeValue = new EventEmitter<string[]>();
 
-  public form: FormGroup;
   public categories: Category[];
 
-  getFormArray(name: string){ return this.form.controls[name] as FormArray; }
+  getFormArray(name: string){ return this.controller.controls[name] as FormArray; }
 
   constructor(
-    _fb: FormBuilder,
     private _catService: CategoryService,
-  ) {
-    this.form = _fb.group({root: new FormArray([])});
-  }
+  ) { }
 
   async ngOnInit() {
+    this.controller.setControl('root', new FormArray([]));
+
     const cats = await this._catService.getCategoryAsync();
     this.categories = cats;
 
     cats.forEach(cat => {
       this.getFormArray('root').push(new FormControl( (this.data && this.data.indexOf(cat._id) > -1) ? true : false));
 
-      this.form.setControl(cat._id, new FormArray([]));
+      this.controller.setControl(cat._id, new FormArray([]));
       cat.subCategory.forEach(sub => {
         this.getFormArray(cat._id).push(new FormControl((this.data && this.data.indexOf(sub._id) > -1) ? true : false));
       });
     });
 
-    this.form.valueChanges.subscribe(()=>{
+    this.controller.valueChanges.subscribe(()=>{
       this.getSelected(true);
     });
   }
 
   getSelected(emit: boolean = false){
-    const vals = this.form.value;
+    const vals = this.controller.value;
       /** get selected services. (if root category is not selected, sub category is ignored.) */
       const services: string[] = [];
       vals.root.forEach((v: boolean, i: number) => {

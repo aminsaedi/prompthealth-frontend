@@ -4,6 +4,8 @@ import { SharedService } from '../../../shared/services/shared.service';
 import { BehaviorService } from '../../../shared/services/behavior.service';
 import { FormPartnerGeneralComponent } from '../../../shared/form-partner-general/form-partner-general.component';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-partner-general',
@@ -22,9 +24,14 @@ export class PartnerGeneralComponent implements OnInit {
     private _sharedService: SharedService,
     private _bs: BehaviorService,
     private _toastr: ToastrService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   async ngOnInit() {
+    this._uService.setMeta(this._router.url, {
+      title: 'Edit profile | PromptHealth',
+    });    
     try {
       const user = JSON.parse(localStorage.getItem('user')); 
       this.profile = await this._profileService.getProfileDetail(user);

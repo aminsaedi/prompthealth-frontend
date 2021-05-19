@@ -1,15 +1,16 @@
 <ng-container *ngIf="mode == 'form'">
-  <ul class="list-unstyled" *ngIf="disabled">
+  <ul class="list-unstyled checkbox-group-root" *ngIf="disabled">
     <ng-container *ngFor="let item of selectionList; let i = index;">
-      <li class="mt-4 mb-0 root" *ngIf="getFormArray('root').controls[i].value">
+      <li *ngIf="getFormArray('root').controls[i].value">
         {{item.label}}
   
         <ul 
         *ngIf="getFormArray('root').controls[i].value && item.child"
-        class="checkbox-group mb-4 pl-3 list-unstyled"
+        class="checkbox-group-sub pl-3 list-unstyled"
+        [ngClass]="{col2: col2}"
         >
           <ng-container *ngFor="let itemSub of item.child; let j = index;">
-            <li class="sub mt-4 mb-0" [ngClass]="{col2: col2}" *ngIf="getFormArray(item.id).controls[j].value">
+            <li *ngIf="getFormArray(item.id).controls[j].value">
               {{itemSub.label}}
             </li>
           </ng-container>
@@ -18,9 +19,9 @@
     </ng-container>
   </ul>
   
-  <ul class="list-unstyled" *ngIf="!disabled">
+  <ul class="list-unstyled checkbox-group-root" *ngIf="!disabled">
     <ng-container *ngFor="let item of selectionList; let i = index;">
-      <li class="mt-4 mb-0 root">
+      <li>
         <form-item-checkbox 
         [name]="item.id"
         [controller]="getFormArray('root').controls[i]"
@@ -30,10 +31,11 @@
   
         <ul 
         *ngIf="getFormArray('root').controls[i].value"
-        class="checkbox-group mb-4 pl-3 list-unstyled"
+        class="checkbox-group-sub pl-3 list-unstyled"
+        [ngClass]="{col2: col2}"
         >
           <ng-container *ngFor="let itemSub of item.child; let j = index;">
-            <li class="sub mt-4 mb-0" [ngClass]="{col2: col2}">
+            <li>
               <form-item-checkbox 
               [name]="itemSub.id" 
               [controller]="getFormArray(item.id).controls[j]"
@@ -46,6 +48,11 @@
       </li>  
     </ng-container>
   </ul>
+  <form-item-errors
+  label="Health status"
+  [submitted]="submitted"
+  [controller]="controller"
+  ></form-item-errors>
 </ng-container>
 
 <ul class="tags-horizontal m-0 list-unstyled d-flex flex-nowrap" *ngIf="mode == 'tag' && data && data.length > 0">
@@ -57,5 +64,16 @@
       <label class="btn m-0" [for]="item.id"><i class="fas fa-times"></i></label>
       <input [id]="item.id" type="checkbox" class="d-none" [formControl]="getFormArray('root').controls[i]" (change)="onChange()">
     </li>
+    <ng-container *ngIf="item.child">
+      <ng-container *ngFor="let itemSub of item.child; let j = index">
+        <li *ngIf="getFormArray(item.id).controls[j].value"
+        class="main text-nowrap rounded mr-3 position-relative"
+        >
+          <span class="px-3">{{itemSub.label}}</span>
+          <label class="btn m-0" [for]="itemSub.id"><i class="fas fa-times"></i></label>
+          <input [id]="itemSub.id" type="checkbox" class="d-none" [formControl]="getFormArray(item.id).controls[j]" (change)="onChange()">
+        </li>
+      </ng-container>
+    </ng-container>
   </ng-container>
 </ul>

@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-add-professional',
@@ -28,9 +30,15 @@ export class AddProfessionalComponent implements OnInit {
     private _sharedService: SharedService,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Manage professionals | PromptHealth',
+    });
+    
     this.userId = JSON.parse(localStorage.getItem('user'))._id;
     this.addDoctorForm = this.formBuilder.group({
       fname: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]],

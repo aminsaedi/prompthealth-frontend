@@ -50,31 +50,7 @@ export class FormClientGeneralComponent implements OnInit {
       city: new FormControl(this.data.city ? this.data.city : '' ),
       state: new FormControl( this.data.state ? this.data.state : '' ),
       zipcode: new FormControl( this.data.zipcode ? this.data.zipcode : '' ),
-      // placeId: new FormControl( this.data.placeId ? this.data.placeId : '' ),
-      // hideAddress: new FormControl( this.data.hideAddress ? this.data.hideAddress : false ),
-
-      // website: new FormControl( this.data.website ? this.data.website : '', validators.website),
-      // professional_title: new FormControl( this.data.professional_title ? this.data.professional_title : '', validators.professionalTitle),
-      // professional_organization: new FormControl( this.data.professional_organization ? this.data.professional_organization : '', validators.professionalOrganization),
-      // certification: new FormControl( this.data.certification ? this.data.certification : '', validators.certification),
-      // bookingURL: new FormControl( this.data.bookingURL ? this.data.bookingURL : '', validators.bookingURL),
-      
-      // typical_hours: new FormArray([], validators.typicalHours),
-      // languages: new FormArray([]),
-      // serviceOfferIds: new FormArray([]),
-
-      // age_range: new FormArray([], validators.ageRange),
-      // years_of_experience: new FormControl( this.data.years_of_experience ? this.data.years_of_experience : ''),
-
-      // priceMode: new FormControl( this.data.exactPricing ? 'input' : 'select'),
-      // exactPricing: new FormControl( this.data.exactPricing ? this.data.exactPricing : '', validators.exactPricing),
-      // price_per_hours: new FormControl( this.data.price_per_hours ? this.data.price_per_hours : ''),
-
-      // business_kind: new FormControl( this.data.business_kind ? this.data.business_kind : '', validators.businessKind),
-
-      // product_description: new FormControl( this.data.product_description ? this.data.product_description : '', validators.productDescription),
-    });
-
+    }, {validators: validators.addressSelectedFromSuggestion});
   }
 
 

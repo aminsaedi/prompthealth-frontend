@@ -2,7 +2,7 @@ import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { IAddonPlan } from '../../models/addon-plan';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
-import { AddonSelectCategoryComponent } from '../../dashboard/addon-select-category/addon-select-category.component';
+import { AddonSelectCategoryComponent } from '../addon-select-category/addon-select-category.component';
 import { CategoryService } from '../services/category.service';
 import { SharedService } from '../services/shared.service';
 import { ToastrService } from 'ngx-toastr';
@@ -10,6 +10,7 @@ import { StripeService } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
 import { IStripeCheckoutData } from 'src/app/models/stripe-checkout-data';
 import { IUserDetail } from 'src/app/models/user-detail';
+import { UniversalService } from '../services/universal.service';
 
 
 @Component({
@@ -108,12 +109,14 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
     private _sharedService: SharedService,
     private _toastr: ToastrService,
     private _stripeService: StripeService,
+    private _uService: UniversalService,
   ) { }
 
   async ngOnInit() {
-    if (localStorage.getItem('token')) {
+    const ls = this._uService.localStorage;
+    if (ls.getItem('token')) {
       this.isLoggedIn = true;
-      const user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(ls.getItem('user'));
       this.profile = await this._profileService.getProfileDetail(user);
     }
   }
@@ -189,13 +192,16 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
         }
       } else {
         this._toastr.error(res.message, 'Error');
+
+        console.error(res);
       }
 
       this._sharedService.loader('hide');
     }, (error) => {
-      if (error.code === 'COUPON_INVALID') {
+      if (error.errorCode === 'COUPON_INVALID') {
         sessionStorage.removeItem('stripe_coupon_code');
       }
+      console.log(error);
       this._toastr.error(error);
       this._sharedService.loader('hide');
     });

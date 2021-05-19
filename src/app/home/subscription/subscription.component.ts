@@ -3,6 +3,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-subscription',
@@ -21,7 +23,9 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private _sharedService: SharedService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) {
     this.createForm();
   }
@@ -37,6 +41,10 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   get f() { return this.subscriptionForm.controls; }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Subscribe Email | PromptHealth',
+      description: 'Subscribe to our newsletter and get latest news from PromptHealth.',
+    });
   }
 
   onSubmit() {

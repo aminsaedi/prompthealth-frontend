@@ -37,8 +37,22 @@
   <title>Prompthealth</title>
   <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/x-icon" href="assets/img/favicon.jpg" />
+  <!-- <link rel="icon" type="image/x-icon" href="assets/img/favicon.jpg" /> -->
+  
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="assets/favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-config" content="assets/favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
   <link rel="stylesheet" href="assets/fontawesome/css/all.min.css" />
+
+  <meta name="robots" content="index, follow" />
 
   <meta name="title" content="Prompthealth" />
   <meta name="description" content="Prompthealth">
@@ -49,11 +63,18 @@
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Prompthealth" />
   <meta property="og:description" content="Prompthealth" />
-  <meta property="og:image" content="https://prompthealth.ca/assets/img/logo.png" />
+  <meta property="og:image" content="https://prompthealth.ca/assets/img/prompthealth.png" />
   <meta property="og:image:type" content="image/png" />
-  <meta property="og:image:width" content="400" />
-  <meta property="og:image:height" content="300" />
+  <!-- <meta name="og:image:width" content="800" />
+  <meta name="og:image:height" content="600" /> -->
   <meta property="og:image:alt" content="Prompthealth" />
+
+  <meta name="twitter:site" content="PromptHealth" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PromptHealth" />
+  <meta name="twitter:description" content="PromptHealth" />
+  <meta name="twitter:image" content="https://prompthealth.ca/assets/img/logo.png" />
+
   <!-- <script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script> -->
   <script type="text/javascript">
     adroll_adv_id = "NMOMAU3PKJAZLMZQCGKAMT";
@@ -86,7 +107,7 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-192757039-1"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'UA-192757039-1');
@@ -94,25 +115,29 @@
 
   <!-- Facebook Pixel Code -->
   <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window,document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1152883915125254');
-  fbq('track', 'PageView');
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return; n = f.fbq = function () {
+        n.callMethod ?
+          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      };
+      if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+      n.queue = []; t = b.createElement(e); t.async = !0;
+      t.src = v; s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s)
+    }(window, document, 'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1152883915125254');
+    fbq('track', 'PageView');
   </script>
   <noscript>
-  <img height="1" width="1"
-  src="https://www.facebook.com/tr?id=1152883915125254&ev=PageView
-  &noscript=1"/>
+    <img height="1" width="1" src="https://www.facebook.com/tr?id=1152883915125254&ev=PageView
+  &noscript=1" />
   </noscript>
   <!-- End Facebook Pixel Code -->
 
-  <!-- Start of HubSpot Embed Code --> <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/19655331.js"></script> <!-- End of HubSpot Embed Code -->
+  <!-- Start of HubSpot Embed Code -->
+  <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/19655331.js"></script>
+  <!-- End of HubSpot Embed Code -->
 
 </head>
 
@@ -125,6 +150,11 @@
   <noscript></a>Buy Tickets on Eventbrite</noscript>
 
   <script src="https://www.eventbrite.ca/static/widgets/eb_widgets.js"></script>
+  <!-- <script>
+    if('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then((reg) => {});
+    }
+  </script> -->
   <!-- 
   <script type="text/javascript">
     var exampleCallback = function () {

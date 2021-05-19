@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfileManagementService } from '../profile-management.service';
 import { SharedService } from '../../../shared/services/shared.service';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-my-performance',
@@ -22,9 +24,15 @@ export class MyPerformanceComponent implements OnInit {
   constructor(
     private _profileService: ProfileManagementService,
     private _sharedService: SharedService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   async ngOnInit(): Promise<void> {
+    this._uService.setMeta(this._router.url, {
+      title: 'Dashboard | PromptHealth',
+    });
+    
     const user = JSON.parse(localStorage.getItem('user'));
 
     this.getBookingList(user._id)

@@ -4,12 +4,14 @@
   class="form-control" 
   [formControl]="address"
   [attr.disabled]="disabled ? 'disabled' : null"
+  (input)="onChangeAddress()"
   (keydown.enter)="$event.preventDefault()"
   >
 </div>
+
 <div class="d-flex justify-content-end mt-1 font-small">
-  <ul class="errors text-danger flex-grow-1" *ngIf="submitted && (address.invalid || errorGoogleSuggestion)">
+  <ul class="errors text-danger flex-grow-1" *ngIf="submitted && (controllerGroup.invalid)">
     <li *ngIf="address.errors?.required">{{label}} is required.</li>
-    <li *ngIf="!address.invalid && errorGoogleSuggestion">Please select address from suggestion.</li>
+    <li *ngIf="controllerGroup.errors?.addressSelectedFromSuggestion">Please select address from suggestion.</li>
   </ul> 
 </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { BehaviorService } from '../../shared/services/behavior.service';
+// import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from '../../models/user-detail';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class ProfileManagementService {
 
   constructor( 
     private http: HttpClient,
-    private _bs: BehaviorService,
+    // private _bs: BehaviorService,
   ) {}
 
   destroyProfileDetail(){ this.profileDetail = null; }
@@ -36,7 +36,7 @@ export class ProfileManagementService {
         this.http.get( path, {headers} ).subscribe((res: any)=>{
           if(res.statusCode === 200 && res.data.length > 0){
             this.profileDetail = res.data[0];
-            this._bs.setUserVerifiedStatus(this.profileDetail.verifiedBadge);
+            // this._bs.setUserVerifiedStatus(this.profileDetail.verifiedBadge);
             resolve(this.profileDetail);
           }
           else{ 

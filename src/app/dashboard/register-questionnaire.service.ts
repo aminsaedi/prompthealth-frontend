@@ -50,10 +50,11 @@ export class RegisterQuestionnaireService {
   init(data: QuestionnaireItemData[], user: IUserDetail){
     this.questionnaireData = data;
     this.user = user;
+    this.userTracking = user;
   }
 
-  getUser(){ return this.user; }
-  getUserTracking(){ return this.userTracking; }
+  getUser(): IUserDetail { return this.user; }
+  getUserTracking(): IUserDetail { return this.userTracking; }
   getPreviousNoAnsweredRoute(currentIndex: number){
     let route: string = null;
     this.questionnaireData.forEach((d,i)=>{

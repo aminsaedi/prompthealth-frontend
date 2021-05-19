@@ -26,8 +26,8 @@
   >
     <div class="text-primary">
       <a
-        href="/dashboard/detail"
-        [routerLink]="['/dashboard/detail']"
+        href="/practitioners/"
+        [routerLink]="['/pracititioners', doc._id]"
         class="d-block h5 text-uppercase mb-0"
         >{{doc.firstName}} {{doc.lastName}}</a
       >
@@ -93,7 +93,7 @@
   <div class="desciption text-truncate">
   {{doc.address}}
   <a
-      [routerLink]="['/dashboard/detail', doc._id]"
+      [routerLink]="['/practitioners', doc._id]"
     class="text-primary font-weight-normal pull-right"
     >Go To Profile <i class="fa fa-chevron-right"></i
   ></a>

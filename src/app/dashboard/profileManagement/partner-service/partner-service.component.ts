@@ -4,6 +4,8 @@ import { ProfileManagementService } from '../profile-management.service';
 import { Category, CategoryService } from '../../../shared/services/category.service';
 import { SharedService } from '../../../shared/services/shared.service';
 import { BehaviorService } from '../../../shared/services/behavior.service';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-partner-service',
@@ -24,9 +26,14 @@ export class PartnerServiceComponent implements OnInit {
     private _sharedService: SharedService,
     private _toastr: ToastrService,
     private _bs: BehaviorService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   async ngOnInit() {
+    this._uService.setMeta(this._router.url, {
+      title: 'Edit service | PromptHealth',
+    });
     try { this.categories = await this._catService.getCategoryAsync(); }
     catch(err){ console.log(err); }
 

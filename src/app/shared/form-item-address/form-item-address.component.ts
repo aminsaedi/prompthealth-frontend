@@ -20,11 +20,7 @@ export class FormItemAddressComponent implements OnInit {
 
 
   get address(){ return this.controllerGroup.controls.address; }
-  get errorGoogleSuggestion(){
-    const cs = this.controllerGroup.controls;
-    return !!(cs.state.invalid || cs.city.invalid || cs.zipcode.invalid || cs.latitude.invalid || cs.longitude.invalid);
-  }
-
+  
   private host: HTMLElement;
 
   constructor(
@@ -45,6 +41,15 @@ export class FormItemAddressComponent implements OnInit {
     });
   }
 
+  onChangeAddress(){
+    const cs = this.controllerGroup.controls;
+    cs.latitude.patchValue(0);
+    cs.longitude.patchValue(0);
+    cs.state.patchValue('');
+    cs.city.patchValue('');
+    cs.zipcode.patchValue('');  
+  }
+
   setAddress(p: google.maps.places.PlaceResult){
     const cs = this.controllerGroup.controls;
     cs.address.patchValue(p.formatted_address);
@@ -54,9 +59,9 @@ export class FormItemAddressComponent implements OnInit {
       cs.longitude.patchValue(p.geometry.location.lng());
 
       p.address_components.forEach(c=>{
-        if(c.types.indexOf('administrative_area_level_2') >= 0){ cs.state.patchValue(c.long_name); }
+        if(c.types.indexOf('administrative_area_level_1') >= 0){ cs.state.patchValue(c.long_name); }
         else if(c.types.indexOf('postal_code') >= 0){ cs.zipcode.patchValue(c.long_name); }
-        else if(c.types.indexOf('locality')){ cs.city.patchValue(c.long_name); }
+        else if(c.types.indexOf('locality') >= 0){ cs.city.patchValue(c.long_name); }
       });
       
       this._changeDetector.markForCheck();

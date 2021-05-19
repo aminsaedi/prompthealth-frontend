@@ -47,7 +47,7 @@ img.brand-sm{
 .searchbar{
   border: 2px solid #4683CC;
   overflow: none;
-  padding: 4px 15px;
+  padding: 0 0 0 15px;
 
   input{
     display: block;
@@ -56,6 +56,15 @@ img.brand-sm{
     outline: none;
     appearance: none;
     background: none;
+    padding: 4px 0;
+  }
+
+  .btn-search {
+    border-radius: 0;
+    padding: 4px 12px;
+    @media (min-width: 768px) {
+      padding: 4px 12px 4px 8px;
+    }
   }
 }
 
@@ -429,5 +438,41 @@ ul.dropdown-menu.multi-level.show {
 
   input {
     margin-right: 5px;
+  }
+}
+
+.modal-signup{
+  .modal-dialog {
+    width: 500px;
+    max-width: 90%;
+    margin: auto;
+  }
+  .image-container{
+    width: 50%;
+    top: 0;
+    left: 0;
+
+    transform: translate(-7%, -40%);
+    @media (min-width: 768px){ transform: translate(-5%, -50%); }
+
+    img {
+      position: absolute;
+      width: 95%;
+      height: 95%;
+      object-fit: contain;
+    }
+
+    &::after{
+      content: '';
+      display: block;
+      padding-top: 100%;
+    }
+  }
+
+  h2{
+    margin-left: 55%;
+    .hidden-i5 {
+      @media (max-width: 374px){ display: none; }
+    }
   }
 }

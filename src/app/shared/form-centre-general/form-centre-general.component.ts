@@ -16,7 +16,9 @@ export class FormCentreGeneralComponent implements OnInit {
 
   @Input() data: IUserDetail = {};
   @Input() disabled = false;
+  @Input() hideSubmit: boolean = false;
   
+  @Output() changeImage = new EventEmitter<string>();
   @Output() submitForm = new EventEmitter<IUserDetail>();
 
   get f() { return this.form.controls; }
@@ -48,12 +50,12 @@ export class FormCentreGeneralComponent implements OnInit {
 
 
   async ngOnInit() {
-
     this.isPremiumAccount = (this.data.isVipAffiliateUser || (this.data.plan && this.data.plan.name.toLowerCase() !== 'basic')) ? true : false;
     try { await this.getQuestions(); }
     catch(error){ this._toastr.error(error); }
 
     this.form = this._fb.group({
+      profileImage: new FormControl(this.data.profileImage ? this.data.profileImage : '', validators.profileImageProvider),
       firstName: new FormControl(this.data.firstName ? this.data.firstName : '', validators.nameCentre),
       userType: new FormControl('Centre'),
       email: new FormControl(this.data.email ? this.data.email : '', validators.email),
@@ -86,7 +88,7 @@ export class FormCentreGeneralComponent implements OnInit {
       business_kind: new FormControl( this.data.business_kind ? this.data.business_kind : '', validators.businessKind),
 
       product_description: new FormControl( this.data.product_description ? this.data.product_description : '', validators.productDescription),
-    });
+    }, {validators: validators.addressSelectedFromSuggestion});
   }
 
   async getQuestions(): Promise<boolean> {
@@ -125,6 +127,10 @@ export class FormCentreGeneralComponent implements OnInit {
     this._changeDetector.detectChanges();
   }
 
+  onChangeImage(imageURL: string) {
+    this.changeImage.emit(imageURL);
+  }
+
   onSubmit(){
     if(this.form.invalid){
       this.isSubmitted = true;
@@ -136,10 +142,16 @@ export class FormCentreGeneralComponent implements OnInit {
     
     const data: IUserDetail = {};
     data._id = this.data._id;
+    data.location = [null, null];
+
     for(const key in this.form.controls){
       const f = this.form.controls[key];
       if(key == 'priceMode' || key == 'userType'){
         //nothing to do
+      }else if(key == 'latitude'){ 
+        data.location[1] = f.value;
+      }else if(key == 'longitude') {
+        data.location[0] = f.value;
       }else if(f instanceof FormControl){
         data[key] = f.value;
       }else if(f instanceof FormArray) {
@@ -150,6 +162,7 @@ export class FormCentreGeneralComponent implements OnInit {
         });
       }
     }
+
 
     this.submitForm.emit(data);
   }

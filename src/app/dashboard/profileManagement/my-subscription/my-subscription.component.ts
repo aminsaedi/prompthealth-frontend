@@ -3,6 +3,8 @@ import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { ProfileManagementService } from '../profile-management.service';
 import { IUserDetail } from '../../../models/user-detail';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-my-subscription',
@@ -18,9 +20,15 @@ export class MySubscriptionComponent implements OnInit {
     private sharedService: SharedService,
     private toastr: ToastrService,
     private _profileService: ProfileManagementService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   async ngOnInit() {
+    this._uService.setMeta(this._router.url, {
+      title: 'Manage subscription | PromptHealth',
+    });
+
     const user = JSON.parse(localStorage.getItem('user'));
     this.profile = await this._profileService.getProfileDetail(user);
     this.addOnPlans = this.profile.addOnPlans;

@@ -314,7 +314,7 @@
 
 <ng-template #noData>
   <h5>No Booking done...</h5>
-  <button *ngIf="this.roles === 'U'"  type="button" class="btn btn-primary" [routerLink]="['/dashboard/listing']">Book Now</button>
+  <button *ngIf="this.roles === 'U'"  type="button" class="btn btn-primary" [routerLink]="['/practitioners']">Book Now</button>
 </ng-template>
 <div
   class="modal fade"
@@ -351,7 +351,7 @@
           (ngSubmit)="rescheduleBookingApi()"
         >
           <div class="form-row">
-            <div class="col-md-12 mb-3">
+            <!-- <div class="col-md-12 mb-3">
               <label>Timing <span class="text-danger">*</span></label>
               <div class="row">
                 <div
@@ -378,18 +378,11 @@
                   </small>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="col-md-12 mb-3">
               <label>Date</label>
-              <input
-                class="form-control"
-                [owlDateTime]="dt1"
-                [min]="minDate"
-                [owlDateTimeTrigger]="dt1"
-                placeholder="Date Time"
-                formControlName="bookingDateTime"
-              />
-              <owl-date-time #dt1 [startAt]="startDate"></owl-date-time>
+              <form-item-datetime [controller]="f.bookingDateTime" [minDateTime]="minDateTime"></form-item-datetime>
+
               <div *ngIf="submitted" class="error-msg">
                 <small *ngIf="f.bookingDateTime.errors" class="text-danger">
                   Booking Date is required

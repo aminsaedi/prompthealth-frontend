@@ -7,7 +7,7 @@ export class ScrollDetectorDirective {
 
   @Input() scrollDetector: boolean = false;
   @Input() direction: 'x' | 'y' = 'y';
-  @Input() offset: 1;
+  @Input() offset: number = 1;
 
   @Output() detect = new EventEmitter<void>()
 
@@ -21,8 +21,8 @@ export class ScrollDetectorDirective {
       if(!this.initialPosition){ this.initialPosition = [window.scrollX, window.scrollY]; }
 
       var p0 = (this.direction == 'x')? this.initialPosition[0] : this.initialPosition[1];
-      var p1 = (this.direction) == 'x'? window.scrollX : window.scrollY;
-  
+      var p1 = (this.direction) == 'x'? window.scrollX : window.scrollY;      
+
       if(Math.abs(p1 - p0) > this.offset){
         this.detect.emit()
         this.initialPosition = null;

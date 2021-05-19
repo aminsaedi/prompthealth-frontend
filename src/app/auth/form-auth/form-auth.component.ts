@@ -9,6 +9,7 @@ import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-logi
 import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
 import { MustMatch } from '../../_helpers/must-match.validator';
+import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
   selector: 'form-auth',
@@ -40,10 +41,10 @@ export class FormAuthComponent implements OnInit {
   ngOnInit(): void {
     this.form = (this.authType == 'signin') ? this._fb.group({
       'email': new FormControl('', [Validators.required, Validators.email]),
-      'password': new FormControl('', [Validators.required, Validators.minLength(8)])
+      'password': new FormControl('', [Validators.required, Validators.minLength(8)]),
     }) : this._fb.group({
       'email': new FormControl('', [Validators.required, Validators.email]),
-      'password': new FormControl('', [Validators.required, Validators.minLength(8)]),
+      'password': new FormControl('', validators.password),
       'confirm_password': new FormControl('', []),
       'hear_from': new FormControl('', [Validators.required]),
       't_c': new FormControl('', [Validators.requiredTrue]),
@@ -161,7 +162,7 @@ export class FormAuthComponent implements OnInit {
               break;
             case 'sp':
             case 'c':
-              next = '/subscriptionplan';
+              next = '/plans';
               break;
             case 'p':
               next = '/plans/product';
@@ -175,7 +176,7 @@ export class FormAuthComponent implements OnInit {
             break;
           case 'sp':
           case 'c':
-            next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/professional-info';
+            next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/register-practitioner';
             break;
           case 'p':
             next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/register-product';

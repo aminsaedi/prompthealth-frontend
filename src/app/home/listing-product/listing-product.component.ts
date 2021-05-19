@@ -5,6 +5,8 @@ import { SharedService } from '../../shared/services/shared.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { FormItemServiceComponent } from '../../shared/form-item-service/form-item-service.component';
 import { PartnerSortByType, PartnerSearchFilterQuery } from '../../models/partner-search-filter-query';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listing-product',
@@ -14,8 +16,10 @@ import { PartnerSortByType, PartnerSearchFilterQuery } from '../../models/partne
 export class ListingProductComponent implements OnInit {
 
   constructor(
+    private _router: Router,
     private _sharedService: SharedService,
     private _headerService: HeaderStatusService,
+    private _uService: UniversalService,
   ) { }
 
   get currentSortTarget() { return this.searchData.sortBy; }
@@ -56,6 +60,14 @@ export class ListingProductComponent implements OnInit {
 
   async ngOnInit() {
     this.isViewSmall = (window.innerWidth < 768) ? true: false; 
+    this._uService.setMeta(this._router.url, {
+      title: 'Products and Services | PromptHealth',
+      description: 'Discover our favorite innovative health apps, products and services. Find promo codes, free samples and reviews.',
+      pageType: 'website',
+      image: 'https://prompthealth.ca/assets/img/listing-product.png',
+      imageType: 'image/png',
+      imageAlt: 'PromptHealth',
+    });
 
     this.formSearch = new FormControl();
     this.getPartners();

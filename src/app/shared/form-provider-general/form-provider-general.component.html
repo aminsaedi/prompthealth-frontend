@@ -1,6 +1,25 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
   <div class="row mb-4">
     <div class="col-md-4">
+      <label>
+        Profile image
+        <span class="text-danger">*</span>
+      </label>
+    </div>
+    <div class="col-md-8">
+      <form-item-upload-image-button
+      [userid]="data?._id"
+      label="Profile image"
+      [disabled]="disabled"
+      [submitted]="isSubmitted"
+      [controller]="f.profileImage"
+      (changeImage)="onChangeImage($event)"
+      ></form-item-upload-image-button>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-4">
       <label for="firstName">
         First Name
         <span class="text-danger">*</span>
@@ -109,7 +128,7 @@
   <div class="row mb-4">
     <label class="col-md-4" for="address">
       Location 
-      <!-- <span class="text-danger">*</span> -->
+      <span class="text-danger">*</span>
     </label>
     <div class="col-md-8">
       <form-item-address
@@ -342,7 +361,7 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="!disabled">
+  <div class="row" *ngIf="!disabled" [ngClass]="{'d-none': hideSubmit}">
     <div class="col text-right">
       <button class="btn btn-primary">Submit</button>
     </div>

@@ -8,21 +8,34 @@
           <img class="d-md-none brand-sm" src="assets/img/logo-sm.png" />
         </a>
       </div>
-      <div class="mx-2 mx-md-4 flex-grow-1 flex-shrink-1">
-        <form (submit)="keywordSearch()">
-          <div class="searchbar rounded-pill">
-            <input type="text" aria-describedby="Search for Provider name/email"
-              placeholder="Search for Provider name/email" [(ngModel)]="keyword" name="keyword" />
-          </div>
-        </form>
-
+      
+      <div class="mx-2 mx-md-4 ml-xl-4 mr-xl-0 flex-grow-1 flex-shrink-1 d-flex">
+        <div class="flex-grow-1">
+          <form (submit)="keywordSearch()">
+            <div class="searchbar rounded-pill d-flex justify-content-between overflow-hidden">
+              <input type="text" aria-describedby="Search for Provider name/email"
+                placeholder="Search for Provider name/email" [(ngModel)]="keyword" name="keyword" />
+              <button
+              *ngIf="keyword && keyword.length > 0"
+              [@slideHorizontal]
+              type="submit"
+              class="btn btn-primary btn-search d-flex align-items-center"
+              >
+                <i class="fas fa-search"></i>
+                <span class="pl-2 d-none d-md-inline">Search</span>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="d-none d-xl-block px-4">
+          <ng-container *ngTemplateOutlet="navMd; context: {$implicit: 'narrow'}" class="d-none d-lg-block"></ng-container>
+        </div>
       </div>
+      
       <div *ngIf="!token; else logoutblock" class="d-none d-md-block flex-grow-0 glrex-shrink-0">
         <div class="d-flex align-items-center flex-nowrap">
-          <!-- <a class="btn" data-toggle="modal" data-target="#loginmodal">Login</a> -->
           <a class="btn" [routerLink]="['/auth/login']">Login</a>
-          <a class="btn btn-signup text-darkblue border-darkblue" data-toggle="modal" data-target="#signupModal">Sign
-            up</a>
+          <button type="button" class="btn btn-signup text-darkblue border-darkblue" (click)="signupModal.show()">Sign up</button>
         </div>
       </div>
 
@@ -43,26 +56,32 @@
       </div>
     </div>
 
-    <div class="d-none d-md-block w-100">
-      <div class="d-flex justify-content-center align-items-center w-100">
-        <div class="nav-item">
-          <a class="nav-link" class="nav-link" [routerLink]="'/'">Home</a>
-        </div>
-        <div class="nav-item" (click)="showMenu(true)">
-          <a class="nav-link">Find practitioners</a>
-        </div>
-        <div class="nav-item">
-          <a class="nav-link" class="nav-link" [routerLink]="['/products']">Products/Services</a>
-        </div>
-        <div class="nav-item">
-          <a class="nav-link" class="nav-link" [routerLink]="['/subscriptionplan']">Pricing</a>
-        </div>
-        <div class="nav-item">
-          <a class="nav-link" class="nav-link" [routerLink]="['/blogs']">Blogs</a>
-        </div>
-      </div>
+    <div class="d-none d-md-block d-xl-none w-100">
+      <ng-container *ngTemplateOutlet="navMd; context: {$implicit: 'regular'}"></ng-container>
     </div>
 
+
+    <!-- navigation for medium view or more-->
+    <ng-template #navMd let-margin>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="nav-item">
+          <a class="nav-link" [ngClass]="{'px-2': (margin == 'narrow')}" [routerLink]="'/'">Home</a>
+        </div>
+        <div class="nav-item" (click)="showMenu(true)">
+          <a class="nav-link" [ngClass]="{'px-2': (margin == 'narrow')}" >Find practitioners</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-link" [ngClass]="{'px-2': (margin == 'narrow')}" [routerLink]="['/products']">Products/Services</a>
+        </div>
+        <div class="nav-item" *ngIf="priceType != null">
+          <a *ngIf="priceType == 'practitioner'" class="nav-link" [ngClass]="{'px-2': (margin == 'narrow')}" [routerLink]="['/plans']">Pricing</a>
+          <a *ngIf="priceType == 'product'" class="nav-link" [ngClass]="{'px-2': (margin == 'narrow')}" [routerLink]="['/plans/product']">Pricing</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-link" [ngClass]="{'px-2': (margin == 'narrow')}" [routerLink]="['/blogs']">Blogs</a>
+        </div>
+      </div>
+    </ng-template>
 
     <!-- menu for medium view or more-->
     <div class="menu d-none" [ngClass]="(isMenuMobileForcibly) ? '' : 'd-md-block'"
@@ -90,7 +109,7 @@
             <ul class="category sub" [class]="classSubcategory">
               <li *ngFor="let sub of catService.categoryList[activeCategory].subCategory"
                 [class]="classSubcategoryItem">
-                <a [routerLink]="['/dashboard/listing']" [queryParams]=" {id: sub._id, type: 'goal'}"
+                <a [routerLink]="['/practitioners/category', sub._id]"
                   (click)="hideMenu()">{{sub.item_text}}</a>
               </li>
             </ul>
@@ -116,14 +135,17 @@
     <li><a class="text-blue" [routerLink]="'/'" (click)="hideMenu()">Home</a></li>
     <li><a class="text-blue" (click)="scrollMenuSm(1)">Find Practioners</a></li>
     <li><a class="text-blue" [routerLink]="['/products']" (click)="hideMenu()">Products/Services</a></li>
-    <li><a class="text-blue" [routerLink]="['/subscriptionplan']" (click)="hideMenu()">Pricing</a></li>
+    <li *ngIf="priceType != null">
+      <a *ngIf="priceType == 'practitioner'" class="text-blue" [routerLink]="['/plans']" (click)="hideMenu()">Pricing</a>
+      <a *ngIf="priceType == 'product'" class="text-blue" [routerLink]="['/plans/product']" (click)="hideMenu()">Pricing</a>
+    </li>
     <li><a class="text-blue" [routerLink]="['/blogs']" (click)="hideMenu()">Blogs</a></li>
 
     <li *ngIf="!token">
       <!-- <a class="px-2 text-blue" data-toggle="modal" data-target="#loginmodal" (click)="hideMenu()">Log in</a> -->
       <a class="px-2 text-blue" [routerLink]="['/auth/login']" (click)="hideMenu()">Log in</a>
       <span class="display-inline-block mx-2">/</span>
-      <a class="px-2 text-blue" data-toggle="modal" data-target="#signupModal" (click)="hideMenu()">Sign up</a>
+      <a class="px-2 text-blue" (click)="hideMenu(); signupModal.show()">Sign up</a>
     </li>
 
     <li class="dashboard-menu-wrapper d-md-none" *ngIf="token">
@@ -159,13 +181,12 @@
     </li>
 
     <li>
-      <a class="font-weight-bold" [routerLink]="['/dashboard/listing']"
-        [queryParams]="{id: catService.categoryList[activeCategory]._id, type: 'goal'}"
+      <a class="font-weight-bold" [routerLink]="['/practitioners/category', catService.categoryList[activeCategory]._id]"
         (click)="hideMenu()">{{catService.categoryList[activeCategory].item_text}}</a>
     </li>
 
     <li *ngFor="let sub of catService.categoryList[activeCategory].subCategory">
-      <a [routerLink]="['/dashboard/listing']" [queryParams]=" {id: sub._id, type: 'goal'}"
+      <a [routerLink]="['/practitioners/category', sub._id]"
         (click)="hideMenu()">{{sub.item_text}}</a>
     </li>
   </ul>
@@ -174,40 +195,27 @@
 
 
 <!-- Modal signup -->
-<div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document" style="margin: auto !important;width:100%">
-    <div class="modal-content mk-border">
-      <div class="modal-header">
-        <h5 class="modal-title w-100 text-center" id="exampleModalLabel" style="text-indent: 56px;">
-          Join network
-        </h5>
-        <button #signup type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+<div 
+class="modal fade modal-signup" 
+bsModal
+#signupModal="bs-modal"
+tabindex="-1" 
+role="dialog" 
+aria-labelledby="exampleModalLabel"
+aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content rounded-15p position-relative p-4">
+      <div class="image-container position-absolute bg-white rounded-circle">
+        <img src="/assets/img/signup-modal.png" alt="sign up">
       </div>
-      <div class="modal-body text-center pb-4">
-        <div class="text-center">
-          <img src="assets/img/logo.png" class="mb-3" style="max-width: 220px;" />
-        </div>
-        <div class="text-secondary font-weight-bold mb-3">Are You A</div>
-        <a class="btn btn-primary w-100 mr-2" (click)="professionalOption = !professionalOption"
-          style="max-width: 175px;">PROFESSIONAL</a>
-        or
-        <a class="btn btn-secondary w-100 ml-2" [routerLink]="['/auth/registration', 'u']" data-dismiss="modal"
-          style="max-width: 175px;" aria-label="Close">CLIENT</a>
+      <h2 class="my-3 text-ph-blue">I AM <span class="hidden-i5">...</span></h2>
+
+      <div class="mt-3 d-flex justify-content-between flex-column flex-md-row position-relative">
+        <a class="btn btn-outline-primary font-regular px-4 rounded-10p mx-md-4 flex-grow-1" data-dismiss="modal" (click)="setPriceType(); signupModal.hide()" [routerLink]="['/auth/registration/u']">Health Seeker</a>
+        <a *ngIf="(role == 'SP' || role == 'C') || !onProductPage" class="btn btn-primary font-regular px-4 rounded-10p mt-3 mt-md-0 mx-md-4 flex-grow-1" (click)="setPriceType('practitioner'); signupModal.hide()" [routerLink]="['/plans']">Health Provider</a>
+        <a *ngIf="role == 'P' || onProductPage" class="btn btn-primary font-regular px-4 rounded-10p mt-3 mt-md-0 mx-md-4 flex-grow-1" (click)="setPriceType('product'); signupModal.hide()" [routerLink]="['/plans/product']">Product Provider</a>
       </div>
-      <div class="mb-3 text-center" *ngIf="professionalOption">
-        <div class="radio mb-3">
-          <input type="radio" name="userType" (change)="handleChange('/auth/registration', 'sp')" />
-          <span class="font-weight-bold">Service Provider</span>
-        </div>
-        <div class="radio">
-          <input type="radio" name="userType" (change)="handleChange('/auth/registration', 'c')" />
-          <span class="font-weight-bold">Center</span>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -268,10 +276,10 @@
           <img src="assets/img/logo.png" class="mb-3" style="max-width: 220px;" />
         </div>
         <div class="text-secondary font-weight-bold mb-3">Are You A</div>
-        <a class="btn btn-primary w-100 mr-2" [routerLink]="['/subscriptionplan']" data-dismiss="modal"
+        <a class="btn btn-primary w-100 mr-2" [routerLink]="['/plans']" data-dismiss="modal"
           aria-label="Close" style="max-width: 175px;">PROFESSIONAL</a>
         or
-        <a class="btn btn-secondary w-100 ml-2" [routerLink]="['/subscriptionplan']" data-dismiss="modal"
+        <a class="btn btn-secondary w-100 ml-2" [routerLink]="['/plans']" data-dismiss="modal"
           style="max-width: 175px;" aria-label="Close">USER</a>
       </div>
     </div>

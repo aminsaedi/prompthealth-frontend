@@ -6,7 +6,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { HomeComponent } from './../home/home.component';
 import { DashboardModule } from '../dashboard/dashboard.module';
 
-import { SubscriptionPlanComponent } from '../dashboard/subscription-plan/subscription-plan.component';
+// import { SubscriptionPlanComponent } from '../home/subscription-plan/subscription-plan.component';
 import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
 import { ThankuPageComponent } from './thanku-page/thanku-page.component';
 
@@ -33,10 +33,10 @@ const routes: Routes = [
         // CanActivate: [AuthGuard]
       },
 
-      {
-        path: 'subscriptionplan',
-        component: SubscriptionPlanComponent
-      },
+      // {
+      //   path: 'subscriptionplan',
+      //   component: SubscriptionPlanComponent
+      // },
 
     ]
   },

@@ -9,82 +9,10 @@
   <button class="btn btn-primary pull-right" (click)="updateFields()">Edit</button>
 </h4>
 <div class="form-container mt-5">
-  <form role="form" class="form-row m-0 w-100" [formGroup]="form" (submit)="save()">
-    <div class="col-md-12">
-      <ng-container *ngFor="let q of questionnaires; let i = index">
-        <div class="form-row mb-5">
-          <label class="col-md-3 mt-3">{{q.itemText | titlecase}}</label>
-          <div class="col-md-9">
-            <ul *ngIf="q.data" class="checkbox-group mb-0">
-              <ng-container *ngFor="let a of q.data.answers; let i = index;">
-                <li *ngIf="a.isActive || editFields" [ngClass]="{root: a.hasChild}" class="mt-3 mb-0">
-                  <div *ngIf="!editFields && a.isActive">
-                    {{a.itemText}}
-                  </div>
-                  <div *ngIf="editFields" [formArrayName]="q.id" class="form-check m-0">
-                    <input type="checkbox" [id]="a.id" class="form-check-input" [formControlName]="i">
-                    <label [for]="a.id" class="form-check-label">{{a.itemText}}</label>  
-                  </div>
-  
-                  <ul *ngIf="a.hasChild && getFormArray(q.id).value[i]" class="checkbox-group mb-3 pl-3">
-                    <ng-container *ngFor="let aSub of a.subAnswers; let j = index;">
-                      <li *ngIf="aSub.isActive || editFields" class="sub mt-3 mb-0">
-                        <div *ngIf="!editFields && aSub.isActive">
-                          {{aSub.itemText}}
-                        </div>
-                        <div *ngIf="editFields" class="form-check m-0" [formArrayName]="q.id + '_' + a.id">
-                          <input type="checkbox" [id]="aSub.id" class="form-check-input" [formControlName]="j">
-                          <label [for]="aSub.id" class="form-check-label">{{aSub.itemText}}</label>  
-                        </div>
-                      </li>
-                    </ng-container>
-                  </ul>
-                </li>  
-              </ng-container>
-            </ul>
-          </div>  
-        </div>
-      </ng-container>
-    </div>
-
-    <div class="form-row">
-      <div class="col-md-3"></div>
-      <div class="col-md-9">
-        <p *ngIf="editFields" class="font-big font-italic bg-lightgrey p-3 line-height-1_5">
-          Please only pick what's applicable to you to allow proper matching.
-          We'll regularly review for inappropriate profiles
-        </p>
-      </div>
-    </div>
-
-    
-    <!-- <ng-container *ngFor="let q of questionnairesB; let i = index">
-      <div class="form-row mb-3">
-        <label class="col-md-3">{{q.item_text | titlecase}}</label>
-      </div>
-      <div class="col-md-9">
-        <ul *ngIf="!editFields && profile" class="item-array-group">
-          <li *ngFor="let val of profile[q._id]">{{val}}</li>
-        </ul>
-        <ul *ngIf="editFields" class="checkbox-group">
-          <li *ngFor="let a of q.data?.answers; let i = index;">
-            <div [formArrayName]="q._id" class="form-check">
-              <input type="checkbox" [id]="a._id" class="form-check-input" [value]="a.active" [formControlName]="i">
-              <label [for]="a._id" class="form-check-label">{{a.item_text}}</label>
-            </div>
-            <ul *ngIf="a.subans" class="checkbox-group child">
-              <li *ngFor="let aSub of a.subansData; let j = index;" [formArrayName]="q._id + '_' + a._id" class="form-check">
-                <input type="checkbox" [id]="aSub._id" class="form-check-input" [formControlName]="j">
-                <label [for]="aSub._id" class="form-check-label">{{aSub.item_text}}</label>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>  
-    </ng-container> -->
-
-    <div class="col-md-12 text-right" *ngIf="editFields">
-      <button [disabled]="form.invalid" class="btn btn-primary">Submit</button>
-    </div>
-  </form>
+  <form-practitioner-service
+  *ngIf="profile"
+  [data]="profile"
+  [disabled]="isDisabled"
+  (submitForm)="onSubmit($event)"
+  ></form-practitioner-service>
 </div>

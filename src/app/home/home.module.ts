@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { HomeRoutingModule } from "./home-routing.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { HomeComponent } from "../home/home.component";
 import { FAQComponent } from "./faq/faq.component";
 import { PricvacyPolicyComponent } from "./pricvacy-policy/pricvacy-policy.component";
@@ -24,7 +25,7 @@ import { BlogDetailComponent } from './blog-detail/blog-detail.component';
 import { BlogCategoryComponent } from './blog-category/blog-category.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
-import { SubscriptionPlanPartnerComponent } from './subscription-plan-partner/subscription-plan-partner.component';
+import { subscriptionPlanProductComponent } from './subscription-plan-product/subscription-plan-product.component';
 import { SharedModule } from '../shared/shared.module'; 
 import { NgxSocialShareModule } from 'ngx-social-share';
 import { GetFeaturedTabComponent } from './get-featured-tab/get-featured-tab.component';
@@ -34,7 +35,22 @@ import { CardPartnerComponent } from './card-partner/card-partner.component';
 import { InvitationComponent } from './invitation/invitation.component';
 import { LandingClubhouseComponent } from './landing-clubhouse/landing-clubhouse.component';
 import { NotFoundComponent } from './not-found/not-found.component';
-
+import { LandingAmbassadorComponent } from './landing-ambassador/landing-ambassador.component';
+import { DetailComponent } from "./detail/detail.component";
+import { ListingComponent } from "./listing/listing.component";
+import { FilterDropdownComponent } from "./filter-dropdown/filter-dropdown.component";
+import { FilterDropdownInputComponent } from "./filter-dropdown-input/filter-dropdown-input.component";
+import { FilterDropdownLocationComponent } from "./filter-dropdown-location/filter-dropdown-location.component";
+import { FilterDropdownSelectComponent } from "./filter-dropdown-select/filter-dropdown-select.component";
+import { FilterDropdownSliderComponent } from "./filter-dropdown-slider/filter-dropdown-slider.component";
+import { ListingcompareComponent } from "./listingcompare/listingcompare.component";
+import { UserQuestionnaireItemSelectMultipleComponent } from "./user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component";
+import { UserQuestionnaireItemBackgroundComponent } from "./user-questionnaire-item-background/user-questionnaire-item-background.component";
+import { UserQuestionnaireItemSelectComponent } from "./user-questionnaire-item-select/user-questionnaire-item-select.component";
+import { UserQuestionaireComponent } from "./user-questionaire/user-questionaire.component";
+import { UserQuestionnaireItemGenderComponent } from "./user-questionnaire-item-gender/user-questionnaire-item-gender.component";
+import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
+import { AuthModule } from "../auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -55,7 +71,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     BlogCategoryComponent,
     SubscriptionComponent,
     UnsubscribeComponent,
-    SubscriptionPlanPartnerComponent,
+    SubscriptionPlanComponent,
+    subscriptionPlanProductComponent,
     GetFeaturedTabComponent,
     ProfilePartnerComponent,
     ListingProductComponent,
@@ -63,6 +80,20 @@ import { NotFoundComponent } from './not-found/not-found.component';
     InvitationComponent,
     LandingClubhouseComponent,
     NotFoundComponent,
+    LandingAmbassadorComponent,
+    DetailComponent,
+    ListingComponent,
+    ListingcompareComponent,
+    FilterDropdownComponent,
+    FilterDropdownInputComponent,
+    FilterDropdownLocationComponent,
+    FilterDropdownSelectComponent,
+    FilterDropdownSliderComponent,
+    UserQuestionaireComponent,
+    UserQuestionnaireItemGenderComponent,
+    UserQuestionnaireItemSelectComponent,
+    UserQuestionnaireItemBackgroundComponent,
+    UserQuestionnaireItemSelectMultipleComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [
@@ -78,6 +109,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     ReactiveFormsModule,
     NgxSocialShareModule,
     SharedModule,
+    AuthModule,
+    ModalModule.forRoot(),
   ],
 
   schemas: [

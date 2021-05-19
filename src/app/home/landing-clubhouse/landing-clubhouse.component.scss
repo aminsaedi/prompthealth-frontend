@@ -1,6 +1,17 @@
 :host{
   font-size: 16px;
+  line-height: 1.5em;
 }
+
+.clubhouse-container {
+  top: 64px;
+}
+
+.z-index-1{
+  z-index: 1
+}
+
+
 .selections {
   z-index: 10;
   max-height: 200px;
@@ -11,6 +22,53 @@
     &.active {
       background-color: var(--ph-blue);
       color: white;
+    }
+  }
+}
+
+.canvas {
+  top: 0;
+  left: 0;
+  z-index: 0;
+
+  .object-1 {
+    position: absolute;
+    width: 350px;
+    top: 30%;
+    left: 82%;
+    transform: translate(-50%, -50%);
+
+    @media (min-width: 992px){
+      width: 420px;
+    }
+
+    @media (min-width: 1280px){
+      top: 35%;
+      width: 550px;
+    }
+  }
+  .object-2 {
+    position: absolute;
+    top: 35%;
+    left: 80%;
+    width: 500px;
+    transform: translate(-50%, -50%);
+
+    @media (min-width: 768px){
+      top: 50%;
+      left: 80%;
+      width: 800px;
+    }
+  }
+  .object-3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 400px;
+    transform: translate(-50%, 50%);
+
+    @media (min-width: 768px){
+      width: 700px;
     }
   }
 }

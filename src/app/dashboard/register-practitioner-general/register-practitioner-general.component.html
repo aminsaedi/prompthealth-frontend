@@ -1,0 +1,34 @@
+<h3 class="mb-4">General Information</h3>
+
+<form-centre-general
+*ngIf="user?.roles == 'C'"
+[data]="user"
+[hideSubmit]="true"
+(changeImage)="onChangeImage($event)"
+(submitForm)="update($event)"
+></form-centre-general>
+
+<form-provider-general
+*ngIf="user?.roles == 'SP'"
+[data]="user"
+[hideSubmit]="true"
+(changeImage)="onChangeImage($event)"
+(submitForm)="update($event)"
+></form-provider-general>
+
+<div class="row mb-5">
+  <div class="col-md-4"></div>
+  <div class="col-md-8">
+    <form-item-checkbox
+    type="checkbox"
+    name="accreditInCanada"
+    label="I verify I am an accredited Provider in Canada"
+    [controller]="fAccredit"
+    ></form-item-checkbox>
+    <form-item-errors
+    label="This item"
+    [submitted]="isSubmitted"
+    [controller]="fAccredit"
+    ></form-item-errors>
+  </div>
+</div>

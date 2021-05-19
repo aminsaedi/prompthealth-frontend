@@ -5,15 +5,14 @@
       <span class="text-danger">*</span>
     </label>
     <div class="col-md-8">
-      <button type="button" class="btn px-5 text-blue border-blue font-regular position-relative" *ngIf="!disabled">
-        Upload cover photo
-        <input type="file" class="cursor-pointer" accept="image/jpeg, image/png" (change)="onSelectCoverPhoto($event)">
-      </button>
-      <div class="mt-2">
-        <img class="preview" *ngIf="f.profileImage.value" [src]="baseURLImage + f.profileImage.value" alt="cover photo">
-      </div>
-      <form-item-errors [controller]="f.profileImage" label="Cover photo" [submitted]="isSubmitted"></form-item-errors>
-
+      <form-item-upload-image-button
+      [userid]="data?._id"
+      label="Cover photo"
+      [disabled]="disabled"
+      [submitted]="isSubmitted"
+      [controller]="f.profileImage"
+      (changeImage)="onChangeImage($event)"
+      ></form-item-upload-image-button>
     </div>
   </div>
 

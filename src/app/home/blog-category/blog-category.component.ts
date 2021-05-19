@@ -3,6 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from '../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 
 @Component({
@@ -21,10 +22,12 @@ export class BlogCategoryComponent implements OnInit {
 
 
   constructor(
+    private _router: Router,
     private activeRoute: ActivatedRoute,
     public route: Router,
     private _sharedService: SharedService,
     private toastr: ToastrService,
+    private _uService: UniversalService,
   ) { }
 
   ngOnInit(): void {
@@ -57,6 +60,20 @@ export class BlogCategoryComponent implements OnInit {
       this._sharedService.loader('hide');
       if (res.statusCode === 200) {
         this.categoryList = res.data;
+
+        let cat: any;
+        this.categoryList.forEach(c=>{
+          if(c._id == this.id) {
+            cat = c;
+          }
+        })
+
+        this._uService.setMeta(this._router.url, {
+          title: `${cat.title} - News & Media | PromptHealth`,
+          description: `Check out our latest news, podcast, videos and tips regarding to ${cat.title}.`,
+          pageType: 'blog',
+        });
+
       } else {
         this.toastr.error(res.message);
       }

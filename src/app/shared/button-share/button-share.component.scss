@@ -1,0 +1,47 @@
+:host{
+  font-size: 16px;
+}
+
+.btn-share {
+  &.color-inherit {
+    color: inherit;
+  }
+}
+
+.share-menu{
+  position: absolute;
+  width: 200px;
+  overflow: hidden;
+  box-shadow: 0 0 5px #d1d1d1, 0 0 10px white;
+
+  &.center {
+    left: calc(50% - 100px);
+  }
+
+  &.right {
+    right: 0;
+  }
+
+  &.left {
+    left: 0;
+  }
+}
+
+a{
+  cursor: pointer;
+  color: #4274BA;
+
+  transition: color 200ms;
+  &:hover{
+    color: #0056b3;
+  }
+
+  span {
+    line-height: 1em;
+  }
+}
+
+.facebook{
+  background: #4267B2;
+  color: white;
+}

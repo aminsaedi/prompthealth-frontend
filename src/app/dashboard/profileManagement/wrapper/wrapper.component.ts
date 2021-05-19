@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { SharedService } from '../../../shared/services/shared.service';
 import { ProfileManagementService } from '../profile-management.service';
 import { ToastrService } from 'ngx-toastr';
-import { pattern } from 'src/app/_helpers/form-settings';
+import { pattern } from '../../../_helpers/form-settings';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -174,7 +174,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
     if(this.userInfo){
       try { 
         this.profile = await this._managementService.getProfileDetail(this.userInfo); 
-        this.linkToSubscription = (this.profile.roles == 'P') ? ['/plans/product'] : ['/dashboard/subscriptionplan'];
+        this.linkToSubscription = (this.profile.roles == 'P') ? ['/plans/product'] : ['/plans'];
         this.formPhListedLink.setValue(this.profile.phListedLink);
         this.setUserPremiumStatus();
         this.setListing(this.profile);

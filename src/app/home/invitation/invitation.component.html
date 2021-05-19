@@ -3,20 +3,25 @@
     <h2 class="text-center">
       A Gift For You From Us
     </h2>
+    <div class="d-flex justify-content-center">
+
+      <img class="img-thumbnail" style="max-width: 250px;" src="{{couponData.metadata.logo}}" alt="Coupon Logo"
+        *ngIf="couponData.metadata.logo">
+    </div>
   </section>
 
   <section class="container" *ngIf="!user">
     <div style="width: 100%; max-width: 400px; margin: 50px auto">
       <ng-container *ngTemplateOutlet="coupon"></ng-container>
     </div>
-  
+
     <div class="mt-5 row justify-content-center">
       <div class="col-12 col-md-5 text-center mb-4">
         <h5>Do you have an account?</h5>
         <a [routerLink]="['/auth/login']" [queryParams]="{nextKeyword: 'buyplan'}"
           class="btn btn-outline-primary w-100 font-regular">Log in and see plans</a>
       </div>
-  
+
       <div class="col-12 col-md-5 text-center">
         <h5>You are not member yet?</h5>
         <div class="mb-3">
@@ -27,26 +32,26 @@
           <a [routerLink]="['/auth/registration/c']" class="btn btn-outline-primary w-100 font-regular">Sign up as
             Centre</a>
         </div>
-        <!-- <div class="mb-3">
+        <div class="mb-3">
           <a [routerLink]="['/auth/registration/p']" [queryParams]="{nextKeyword: 'buyplan'}" class="btn btn-outline-primary w-100 font-regular">Sign up as Partner</a>
-        </div> -->
+        </div>
       </div>
     </div>
   </section>
-  
+
   <section class="container" *ngIf="user">
     <div style="width: 100%; max-width: 400px; margin: 50px auto;">
       <ng-container *ngTemplateOutlet="coupon"></ng-container>
     </div>
-  
+
     <div *ngIf="user.roles == 'U'; then messageClient; else messageProfessional"></div>
     <ng-template #messageClient>
-  
+
       <p class="mt-5 text-center font-big">
         We don't have any plans for your account type yet.<br>
         Wanna have professional account? Choose business type and signup!
       </p>
-  
+
       <div class="row flex-column justify-content-center align-items-center">
         <div class="col-12 col-md-5 mb-3">
           <button class="btn btn-outline-primary w-100 font-regular" (click)="logoutAndSignup('sp')">Sign up as Service
@@ -60,11 +65,11 @@
           <button class="btn btn-outline-primary w-100 font-regular" (click)="logoutAndSignup('p')">Sign up as Partner</button>
         </div>   -->
       </div>
-  
+
     </ng-template>
     <ng-template #messageProfessional>
       <div class="mt-5 text-center">
-        <a [routerLink]="[(user.roles == 'P') ? '/plans/product' : '/subscriptionplan']"
+        <a [routerLink]="[(user.roles == 'P') ? '/plans/product' : '/plans']"
           class="btn btn-outline-primary font-big">See our plans</a>
       </div>
     </ng-template>
@@ -73,7 +78,7 @@
 
 <ng-template #coupon>
   <h4 class="text-center mb-3">
-    sign up today and take an additional {{couponData.percent_off}}% off any PromptHealth plan
+    Sign up today and take an additional {{couponData.percent_off}}% off any PromptHealth plan
     <!-- You have a coupon!<br>
     Use it on our great premium plans today -->
   </h4>

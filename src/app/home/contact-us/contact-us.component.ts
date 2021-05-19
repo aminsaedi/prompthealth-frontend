@@ -4,6 +4,7 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { SharedService } from '../../shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-contact-us',
@@ -21,11 +22,17 @@ export class ContactUsComponent implements OnInit {
     private toastr: ToastrService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _sharedService: SharedService) { }
+    private _sharedService: SharedService,
+    private _uService: UniversalService,
+  ) { }
   get ff() { return this.contactForm.controls; }
 
   ngOnInit() {
-    this._sharedService.sendTop();
+    // this._sharedService.sendTop();
+    this._uService.setMeta(this._router.url, {
+      title: 'Contact us | PromptHealth',
+      description: 'Do you have questions about our service or our app? Feel free to contact us!',
+    });
     this.contactForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       name: ['', [Validators.required]],
@@ -50,7 +57,7 @@ export class ContactUsComponent implements OnInit {
         this._sharedService.loader('hide');
         if (res.statusCode===200) {
           this.toastr.success(res.message);
-          this._router.navigate(['/home']);
+          this._router.navigate(['/']);
 
         } else {
           this._sharedService.loader('hide');

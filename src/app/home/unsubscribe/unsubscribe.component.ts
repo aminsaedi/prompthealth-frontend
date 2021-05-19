@@ -3,6 +3,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 // import { Router } from 'express';
 
 @Component({
@@ -18,10 +19,14 @@ export class UnsubscribeComponent implements OnInit {
     private router: Router,
     private sharedService: SharedService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private _uService: UniversalService,
   ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this.router.url, {
+      title: 'Unsbscribe Email | PromptHealth',
+    });
     this.spinner.show();
     this.route.paramMap
       .subscribe(params => {

@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   config: {
     APP_NAME: 'Wellness',
     // server

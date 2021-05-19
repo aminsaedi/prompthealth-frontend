@@ -1,0 +1,20 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+        docker: 18
+    pre_build:
+    commands:
+      - aws --version
+  build:
+    commands:
+      - echo Installing node modules ...
+      - npm i
+      - echo Building ... | tee -a log.txt
+      - npm run build
+artifacts:
+  files:
+    - '*'
+    - '**/*'
+  name: buildFile
+  base-directory: dist/wellness-frontend/browser

@@ -7,6 +7,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
 import { ProfileManagementService } from '../profile-management.service';
 import { IUserDetail } from 'src/app/models/user-detail';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-my-profile',
@@ -33,9 +35,15 @@ export class MyProfileComponent implements OnInit {
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
     private _profileService: ProfileManagementService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   async ngOnInit() {
+    this._uService.setMeta(this._router.url, {
+      title: 'Edit profile | PromptHealth',
+    });
+    
     this.AWS_S3 = environment.config.AWS_S3;
     const userInfo = JSON.parse(localStorage.getItem('user'));
     this.profile = await this._profileService.getProfileDetail(userInfo);
@@ -61,68 +69,10 @@ export class MyProfileComponent implements OnInit {
     });
   }
 
-  async onFileSelect(event) {
-    const maxFileSize = 10 * 1000 * 1000; /** 10MB */
-    if (event.target.files[0].type === 'image/png'
-      || event.target.files[0].type === 'image/jpg'
-      || event.target.files[0].type === 'image/jpeg') {
-      if (event.target.files.length > 0) {
-        const input = new FormData();
-        input.append('_id', this.profile._id);
-
-        const file: File = event.target.files[0];
-        if(file.size > maxFileSize){
-          try { 
-            const img: Blob = await this.shrinkImage(file, 0.8, 0.8, maxFileSize); 
-            const filename = Date.now().toString() + '.' + img.type.replace('image/', '');
-            input.append('profileImage', img, filename);          
-          }
-          catch(err){ this.toastr.error('Image size is too big. Please upload image size less than 10MB.'); }
-        }else{
-          input.append('profileImage', file);
-        }
-
-        if(input.has('profileImage')){
-          this._sharedService.loader('show');
-          this._sharedService.imgUpload(input, 'user/imgUpload').subscribe((res: any) => {
-            if (res.statusCode === 200) {
-              // this.profile = res.data;
-              this._bs.setUserData(res.data)
-              this.profile.profileImage = res.data.profileImage;
-              this._sharedService.loader('hide');
-            } else {
-              this.toastr.error(res.message);
-            }
-          }, err => {
-            this._sharedService.loader('hide');
-            this.toastr.error('There are some errors, please try again after some time !', 'Error');
-          });
-        }
-      }
-    } else {
-      this.toastr.error('This file format is not supportbale!');
-    }
+  onChangeImage(imageURL: string) {
+    this._bs.setUserDataOf('profileImage', imageURL);
   }
 
-  async shrinkImage(img0: Blob, ratioSize: number, ratioQuality: number, maxFileSize: number): Promise<Blob>{
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = (e: any)=>{
-        const t = e.target;
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.round(t.width * ratioSize); 
-        canvas.height = Math.round(t.height * ratioSize);
-        const ctx = canvas.getContext('2d');
-
-        ctx.drawImage(t, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob((b: Blob) => {
-          if(b.size >= maxFileSize){ reject('size is too big'); }
-          else{ resolve(b); }
-        }, img0.type, ratioQuality);  
-      }
-      img.src = URL.createObjectURL(img0);
-    })
-  }
 
   deleteProfile(content) {
     this.modalref = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', size: 'sm' });

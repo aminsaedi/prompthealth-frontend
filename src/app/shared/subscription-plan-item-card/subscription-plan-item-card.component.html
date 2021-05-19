@@ -24,32 +24,38 @@
 
 <div class="plan-card h-100 shadow text-center" [class]="'colorset-' + color">
 
-    <h3 class="title d-inline-block m-0" [innerText]="title"></h3>
-    <div class="separator"></div>
+    <ng-container *ngIf="!showFeatureOnly">
+        <h3 class="title d-inline-block m-0">{{title}}</h3>
+        <div class="separator"></div>
+    
+        <p class="my-4">
+            <span *ngIf="type == 'basic'">Get listed with us for free so that the clients can find you.</span>
+            <span *ngIf="type == 'provider'">This is for a solo health and wellness professional looking to boost their
+                online presence and acquire and retain more clients.
+            </span>
+            <span *ngIf="type == 'centre'">This is for a centre in any area of health and wellness with multiple
+                professionals or products
+                looking to showcase their facility and offerings. There is no limit to how many you can list, but
+                you must have at least one professional.
+            </span>
+            <span *ngIf="type == 'partner'">This is for an enterprise in any area of health and wellness looking to
+                showcase their product or service to clients and get exposure and endorsement by heath
+                professionals.
+            </span>
+            <span *ngIf="type == 'partnerBasic'">For health and wellness companies looking to showcase their products
+                orservices to clients. Get exposure and have the opportunity to be endorsed bythe health professionals on
+                our network, further increasing your visibility.
+            </span>
+            <span *ngIf="type == 'partnerEnterprise'">For large enterprises who believe in unlocking the power of true
+                personalizedhealth and wellness. Partner and collaborate with us to help your users access suitable solutions
+                anytime, anywhere from the palm of your hand
+            </span>
+        </p>    
+    </ng-container>
 
-    <p class="my-4">
-        <span *ngIf="type == 'basic'">Get listed with us for free so that the clients can find you.</span>
-        <span *ngIf="type == 'provider'">This is for a solo health and wellness professional looking to boost their
-            online presence and acquire and retain more clients.
-        </span>
-        <span *ngIf="type == 'centre'">This is for a centre in any area of health and wellness with multiple
-            professionals or products
-            looking to showcase their facility and offerings. There is no limit to how many you can list, but
-            you must have at least one professional.
-        </span>
-        <span *ngIf="type == 'partner'">This is for an enterprise in any area of health and wellness looking to
-            showcase their product or service to clients and get exposure and endorsement by heath
-            professionals.
-        </span>
-        <span *ngIf="type == 'partnerBasic'">For health and wellness companies looking to showcase their products
-            orservices to clients. Get exposure and have the opportunity to be endorsed bythe health professionals on
-            our network, further increasing your visibility.
-        </span>
-        <span *ngIf="type == 'partnerEnterprise'">For large enterprises who believe in unlocking the power of true
-            personalizedhealth and wellness. Partner and collaborate with us to help your users access suitable solutions
-            anytime, anywhere from the palm of your hand
-        </span>
-    </p>
+    <ng-container *ngIf="showFeatureOnly">
+        <h3 class="my-3 text-colored">What you will get</h3>
+    </ng-container>
 
     <ul class="feature text-left fa-ul my-4">
 
@@ -98,13 +104,13 @@
         <!-- only for centre -->
         <li *ngIf="type == 'centre'">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            All the Provider benefits
+            All the provider benefits
         </li>
 
         <!-- except centre and depend on data-->
         <li *ngIf="type != 'centre' && data?.professionalProfile">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Your Professional Profile
+            Your professional profile
         </li>
         <li *ngIf="type != 'centre' && data?.sideBySideComparisons">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
@@ -116,7 +122,7 @@
         </li>
         <li *ngIf="type != 'centre' && data?.reviewsAndFeedback">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            Genuine Reviews And Feedback
+            Genuine reviews and feedback
         </li>
         <li *ngIf="type != 'centre' && data?.receiveMessagesForBooking">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
@@ -126,7 +132,7 @@
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             <span class="badge badge-info">NEW</span>
 
-            Performance Dashboard
+            Performance dashboard
         </li>
         <li *ngIf="type != 'centre' && data?.socialMediaLink">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
@@ -137,18 +143,18 @@
         <li *ngIf="type != 'centre' && data?.verifiedBadge">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
             <span class="badge badge-info">NEW</span>
-            Apply for a verified Badge and rank before everyone else in search results
+            Apply for a verified badge and rank before everyone else in search results
         </li>
 
 
         <!-- depend on data -->
         <li *ngIf="data?.ListOfProviders">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            List Special Amenities
+            List special amenities
         </li>
         <li *ngIf="data?.ListOfProviders">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>
-            List of Providers
+            List of providers
         </li>
 
         <!-- <li *ngIf="data?.featuredOnHomePage">
@@ -156,6 +162,12 @@
             <span class="badge badge-info">NEW</span>
             Get featured on the homepage of our web and App
         </li> -->
+
+        <li *ngIf="type == 'centre'">
+            <span class="fa-li"><i class="far fa-check-circle"></i></span>
+            <span class="badge badge-info">NEW</span>
+            Link your google business profile and display your google reviews on your profile page
+        </li>
 
         <li *ngIf="type == 'provider' || type == 'centre'">
             <span class="fa-li"><i class="far fa-check-circle"></i></span>

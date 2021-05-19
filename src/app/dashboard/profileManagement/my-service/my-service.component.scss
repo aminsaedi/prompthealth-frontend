@@ -1,5 +1,9 @@
 @import "../../../../assets/scss/mixins";
 
+:host{
+  font-size: 16px;
+}
+
 .bg-lightgrey{ background: #efefef; }
 .line-height-1_5{ line-height: 1.5em; }
 

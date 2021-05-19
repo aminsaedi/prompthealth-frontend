@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../../shared/services/shared.service';
 import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-terms-conditions',
@@ -13,8 +14,11 @@ export class TermsConditionsComponent implements OnInit {
   title: any;
   description: any;
 
-  constructor(private _router: Router,
-    private _sharedService: SharedService) {
+  constructor(
+    private _router: Router,
+    private _sharedService: SharedService,
+    private _uService: UniversalService,
+  ) {
     this._sharedService.loader('show');
     this._sharedService.get("Pages/fixTitle/t-c").subscribe((res: any) => {
 
@@ -28,7 +32,9 @@ export class TermsConditionsComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this._uService.setMeta(this._router.url, {
+      title: 'Terms and Conditions',
+    });
   }
 
 }

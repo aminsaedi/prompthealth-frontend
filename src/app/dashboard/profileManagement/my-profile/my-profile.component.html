@@ -5,46 +5,25 @@
 </ngx-spinner>
 <h4 *ngIf="profile?.isPlanExpired">
   <p>Renew Plan to be listed in user search <span class="pull-right"><a class="btn btn-primary pull-right"
-        [routerLink]="['/dashboard/subscriptionplan']">Renew Plan</a></span> </p>
+        [routerLink]="['/plans']">Renew Plan</a></span> </p>
 </h4>
 <hr *ngIf="profile?.isPlanExpired">
 <h4 class="mb-3">Personal Information
   <button class="btn btn-primary pull-right" (click)="updateFields()">Edit Profile</button>
-  <button class="btn btn-primary pull-right mr-2" (click)="deleteProfile(content)">Delete Profile</button>
+  <!-- <button class="btn btn-primary pull-right mr-2" (click)="deleteProfile(content)">Delete Profile</button> -->
 </h4>
 
 <div class="form-container">
-  <div class="col-md-12 text-center my-3">
-    <div class="d-inline-block profileeditbox">
-      <img
-        [src]="profile?.profileImage ? AWS_S3+profile?.profileImage : defaultImage" crossorigin="anonymous"/>
-      <!-- <img [src]="defaultImage" /> -->
-      <!-- <input type="file" *ngIf="editFields"/> -->
-      <input class="d-block " type="file" name="profile" (change)="onFileSelect($event)" *ngIf="editFields"
-        accept="image/x-png,image/png,image/gif,image/jpeg,image/jpg" />
-    </div>
-  </div>
 
-  <form-client-general
-  *ngIf="profile && profile.roles == 'U'"
-  [disabled]="!editFields" 
-  [data]="profile" 
-  (submitForm)="onSubmit($event)"
-  ></form-client-general>
 
-  <form-provider-general 
-  *ngIf="profile && profile.roles == 'SP'" 
-  [disabled]="!editFields" 
-  [data]="profile" 
-  (submitForm)="onSubmit($event)"
-  ></form-provider-general>
+  <form-client-general *ngIf="profile && profile.roles == 'U'" [disabled]="!editFields" [data]="profile"
+    (submitForm)="onSubmit($event)"></form-client-general>
 
-  <form-centre-general 
-  *ngIf="profile && profile.roles == 'C'" 
-  [disabled]="!editFields" 
-  [data]="profile" 
-  (submitForm)="onSubmit($event)"
-  ></form-centre-general>
+  <form-provider-general *ngIf="profile && profile.roles == 'SP'" [disabled]="!editFields" [data]="profile"
+    (submitForm)="onSubmit($event)"></form-provider-general>
+
+  <form-centre-general *ngIf="profile && profile.roles == 'C'" [disabled]="!editFields" [data]="profile"
+    (changeImage)="onChangeImage($event)" (submitForm)="onSubmit($event)"></form-centre-general>
 
 </div>
 

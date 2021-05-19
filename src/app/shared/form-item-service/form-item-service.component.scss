@@ -2,33 +2,36 @@
   font-size: 16px; 
 }
 
-
-.checkbox-group{
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0;
-
-  li{
-    margin-bottom: 1em;
+.checkbox-group-root {
+  >li {
+    white-space: pre-wrap;
     flex: 1 0 100%;
-    white-space: normal;
 
-    &.root{
-      font-weight: 500;
-      &:not(:first-child){
-        margin-top: 1.5em;
-      }
+    &:not(:first-child){
+      margin-top: 1em;
     }
-    &.sub{ 
-      font-weight: 300;
+  }  
+}
 
-      &.col2{
-        flex: 1 0 50%;
-        white-space: nowrap;
-      }
-    }
+.checkbox-group-sub {
+  margin-top: 1em;
+  white-space: pre-wrap;
+
+  &.col2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    margin-bottom: 0; 
+    li {
+      flex: 1 0 50%;
+      white-space: nowrap;
+
+    } 
   }
+
+  >li {
+    margin-bottom: 1em;
+  }  
 }

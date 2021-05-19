@@ -5,6 +5,8 @@ import { FormPartnerOfferComponent } from '../../../shared/form-partner-offer/fo
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorService } from '../../../shared/services/behavior.service';
 import { FormPartnerGeneralComponent } from 'src/app/shared/form-partner-general/form-partner-general.component';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-partner-offer',
@@ -23,9 +25,15 @@ export class PartnerOfferComponent implements OnInit {
     private _sharedService: SharedService,
     private _toastr: ToastrService,
     private _bs: BehaviorService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   async ngOnInit() {
+    this._uService.setMeta(this._router.url, {
+      title: 'Manage offer | PromptHealth',
+    });
+    
     try {
       const user = JSON.parse(localStorage.getItem('user')); 
       this.profile = await this._profileService.getProfileDetail(user);

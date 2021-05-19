@@ -5,6 +5,8 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 @Component({
   selector: 'app-my-amenities',
   templateUrl: './my-amenities.component.html',
@@ -35,9 +37,14 @@ export class MyAmenitiesComponent implements OnInit {
     private formBuilder: FormBuilder,
     private sharedService: SharedService,
     private toastr: ToastrService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Manage amenities | PromptHealth',
+    });
     this.userId = JSON.parse(localStorage.getItem('user'))._id;
     this.getDefaultAmenities();
     this.getSavedAmenties();

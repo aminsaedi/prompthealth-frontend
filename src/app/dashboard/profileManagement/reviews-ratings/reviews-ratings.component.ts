@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 @Component({
   selector: 'app-reviews-ratings',
   templateUrl: './reviews-ratings.component.html',
@@ -18,9 +20,14 @@ export class ReviewsRatingsComponent implements OnInit {
   public AWS_S3='';
   constructor(
     private _sharedService: SharedService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Reviews and Ratings | PromptHealth',
+    });
 
     this.userInfo = JSON.parse(localStorage.getItem('user'));
 

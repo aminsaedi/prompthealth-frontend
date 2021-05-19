@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-registration',
@@ -14,6 +15,8 @@ export class RegistrationComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   ngOnInit() {
@@ -28,5 +31,9 @@ export class RegistrationComponent implements OnInit {
         case 'p':  this.userRole = 'P';  break;
       }
     });
+
+    this._uService.setMeta(this._router.url, {
+      title: 'Registration | PromptHealth',
+    })
   }
 }

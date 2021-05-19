@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 @Component({
   selector: 'app-my-favourite',
   templateUrl: './my-favourite.component.html',
@@ -14,11 +16,17 @@ export class MyFavouriteComponent implements OnInit {
   constructor(
     private _sharedService: SharedService,
     private toastr: ToastrService,
+    private _router: Router,
+    private _uService: UniversalService
   ) { }
 
   doctorsListing = [1, 2, 3];
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Favorite Practitioners | PromptHealth',
+    });
+
     this.getFavList();
     this.AWS_S3 = environment.config.AWS_S3
   }

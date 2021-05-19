@@ -25,7 +25,7 @@ export class ShareMenuComponent implements OnInit {
   public socials = [
     {id: 'facebook', label: 'Facebook'},
     {id: 'twitter', label: 'Twitter'},
-    {id: 'linkedin', label: 'LinkedIn'},
+    // {id: 'linkedin', label: 'LinkedIn'},
     {id: 'pinterest', label: 'Pinterest'}
   ]
 

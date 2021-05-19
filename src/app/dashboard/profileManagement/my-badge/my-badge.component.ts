@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { ProfileManagementService } from '../profile-management.service';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-my-badge',
@@ -38,6 +40,8 @@ export class MyBadgeComponent implements OnInit {
     private _sharedService: SharedService,
     private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) {
     this.form = _fb.group({
       title: new FormControl('', [Validators.required, Validators.maxLength(this.maxTitle)]),
@@ -46,6 +50,9 @@ export class MyBadgeComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this._uService.setMeta(this._router.url, {
+      title: 'Manage verified badge | PromptHealth',
+    });
 
     this._sharedService.loader('show');
 

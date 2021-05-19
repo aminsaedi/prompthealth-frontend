@@ -1,0 +1,8 @@
+<button type="button" class="btn px-5 text-blue border-blue font-regular position-relative" *ngIf="!disabled">
+  Upload {{label | titlecase}}
+  <input type="file" class="cursor-pointer" accept="image/jpeg, image/png" (change)="onSelectImage($event)">
+</button>
+<div class="mt-2">
+  <img class="preview" *ngIf="controller.value" [src]="baseURLImage + controller.value" [alt]="label">
+</div>
+<form-item-errors [controller]="controller" [label]="label" [submitted]="submitted"></form-item-errors>

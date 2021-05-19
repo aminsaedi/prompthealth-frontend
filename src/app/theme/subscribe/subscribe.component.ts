@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { SharedService } from '../../shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 
 
@@ -25,10 +26,13 @@ export class SubscribeComponent implements OnInit {
   // _host = environment.config.BASE_URL;
   id: any;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private formBuilder: FormBuilder,
     private _sharedService: SharedService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private _uService: UniversalService,
+  ) {
 
   }
 
@@ -37,6 +41,10 @@ export class SubscribeComponent implements OnInit {
 
   get f() { return this.homeForm.controls; }
   ngOnInit() {
+    this._uService.setMeta(this.router.url, {
+      title: 'Subscribe Email | PromptHealth',
+      description: 'Subscribe to our newsletter and get latest updates from PromptHealth.'
+    });
 
     this.homeForm = this.formBuilder.group({
 

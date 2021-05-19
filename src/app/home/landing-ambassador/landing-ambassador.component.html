@@ -1,0 +1,174 @@
+<div class="position-relative overflow-hidden ambassador-container pb-5">
+  <section class="container text-dark position-relative z-index-1">
+    <ng-container *ngIf="faceType == 'provider'">
+      <div class="row align-items-start">
+        <div class="col-12 col-md-8">
+          <h2 class="text-gradient-blue mb-4">Welcome to the PromptHealth Brand Ambassador Program </h2>
+          <h3 class="text-ph-blue mb-4">Open to All Accredited Health and Wellness Professionals in Canada</h3>
+          <p class="mb-4">
+            Join the movement to help people connect with medical and holistic services based on individualized needs
+            quickly
+            and easily. Help spread our mission of the importance of personalized healthcare with your clients. 
+          </p>
+
+          <h4 class="text-dark-blue mb-3">Eligibility Criteria:</h4>
+          <ol class="mb-4">
+            <li>You must be signed up as a practitioner on our platform.</li>
+            <li>You must be an accredited health or wellness professional within Canada.</li>
+          </ol>
+
+          <h4 class="text-dark-blue mb-3">What you do:</h4>
+          <p class="mb-4">
+            Share our referral link on your social media accounts, on your website, and anywhere else you can.<br>
+            Also, tag us <b>@prompthealth</b> on your social media accounts!<br>
+          </p>
+
+          <div 
+          *ngIf="user"
+          class="border rounded-lg px-3 py-2 mb-3 d-flex align-items-center justify-content-end" 
+          style="background: #ffffffcc;" 
+          >
+            <input class="flex-grow-1 input-link" #referralLink
+              [value]="FRONTEND_URL +'/invitation/' + user._id" readonly>
+            <button-share
+            facebook twitter linkedin email
+            label="Share"
+            [url]="FRONTEND_URL +'/invitation/' + user._id"
+            title="Join PromptHealth!"
+            text="Join PromptHealth to take control your health!"
+            ></button-share>
+          </div>
+
+          <div *ngIf="!user">
+            <p>To get the referral link, you must sign up first.</p>
+            <div class="mb-5 d-flex flex-column align-items-start">
+              <a class="btn btn-outline-primary rounded-10p" [routerLink]="['/plans']">Sign up as Practitioner</a>
+              <a class="btn btn-outline-primary rounded-10p mt-3" [routerLink]="['/plans/product']">Sign up as
+                Products/Services</a>
+            </div>
+          </div>
+
+
+          <h4 class="text-dark-blue mb-3">What you get:</h4>
+          <div class="mb-md-5">
+
+            <p class="mb-md-2">
+              The more engagement your shared referral link gets, the more credits you are awarded. The credits can then be used towards our premium services. 
+            </p>
+            <a [routerLink]="'/dashboard/profilemanagement/my-payment'">
+              Check credit balance
+            </a>
+          </div>
+
+          <div class="d-md-none"><img class="image-people-sm" src="/assets/img/ambassador-people.png"></div>
+
+
+          <h3 class="text-gradient-light-blue mb-3">Our services include:</h3>
+          <h5 class="text-dark mb-3">Premium Membership (valued from $20~100/month):</h5>
+          <div class="mb-4">
+            <ul class="mb-3">
+              <li class="mb-1">Photo and video introduction</li>
+              <li class="mb-1">Verified badge on your profile</li>
+              <li class="mb-1">Genuine reviews and feedback</li>
+              <li class="mb-1">Receive requests for booking or integration with your own booking system option</li>
+              <li class="mb-1">Performance dashboard</li>
+              <li>Link your social media accounts on your PromptHealth profile page</li>
+            </ul>
+            <p class="">* Centres receive even more features and benefits</p>  
+          </div>
+
+
+          <h5 class="text-gradient-light-blue mb-3">Add-Ons:</h5>
+          <h5 class="text-dark mb-3">The Networker (valued at $100/month):</h5>
+          <ul class="mb-4">
+            <li>A feature displaying your main services on the homepage of our website for the ultimate exposure toward clients. </li>
+          </ul>
+
+          <h5 class="text-dark mb-3">The Socialite (Valued at $200/month):</h5>
+          <ul class="mb-3">
+            <li>We will take care of your recognition and growth by creating and posting quality health content three times a week for your social media channels, allowing you to focus on what’s important – treating your clients. </li>
+          </ul>
+          <a [routerLink]="'/plans'">Check out our services</a>
+
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="faceType == 'client' && ambassador">
+
+      <div class="d-flex justify-content-center">
+        <!-- <img class="img-thumbnail rounded mr-4" style="width: 150px; height: 150px;" src="assets/img/logo-sm.png"
+          alt="PromptHealth"> -->
+        <div>
+          <a [routerLink]="['/practitioners', practitionerId]">
+            <div class="mb-3">
+              <div class="text-center">
+                <user-image
+                style="width: 120px;"
+                [image]="ambassador.profileImage ? AWS_S3 + ambassador.profileImage: 'assets/img/default_user.jpg'"
+                [alt]="ambassador.firstName"
+                [verifiedUser]="ambassador.verifiedBadge"
+                shadowVerified="0 0 5px #307dd6"
+                badgeSize="35"
+                ></user-image>  
+              </div>
+            </div>
+            <h3 class="font-big text-center pb-1 mr-2">{{ambassador.firstName +
+              ambassador.lastName}}</h3>
+          </a>
+        </div>
+      </div>
+      <h2 class="text-gradient-blue my-5 text-center">
+
+        Invites you to check out PromptHealth, your personalised health concierge
+      </h2>
+
+      <div class="my-5 py-4 text-center">
+        <a class="btn btn-outline-primary font-regular rounded-10p px-5" [routerLink]="['/']" (click)="countup()">Get
+          Started</a>
+      </div>
+      <ul class="row how-ph-work list-unstyled m-0 p-0">
+        <li class="col-12 col-md-3 blur p-3">
+          <div class="image-container mb-3">
+            <img src="assets/img/how-ph-work2/search.png" alt="">
+          </div>
+          <h4 class="text-center text-dark-blue mb-3">Search</h4>
+          <p>Get started with personal match, or search by treatment types.</p>
+        </li>
+        <li class="col-12 col-md-3 mt-5 mt-md-0 blur p-3">
+          <div class="image-container mb-3">
+            <img src="assets/img/how-ph-work2/filter.png" alt="">
+          </div>
+          <h4 class="text-center text-dark-blue mb-3">Filter</h4>
+          <p>
+            Apply filters to your search to narrow down the options.
+          </p>
+        </li>
+        <li class="col-12 col-md-3 mt-5 mt-md-0 blur p-3">
+          <div class="image-container mb-3">
+            <img src="assets/img/how-ph-work2/book.png" alt="">
+          </div>
+          <h4 class="text-center text-dark-blue mb-3">Compare</h4>
+          <p>
+            Do side by side comparisons and check out ratings and reviews.
+          </p>
+        </li>
+        <li class="col-12 col-md-3 mt-5 mt-md-0 blur p-3">
+          <div class="image-container mb-3">
+            <img src="assets/img/how-ph-work2/session.png" alt="">
+          </div>
+          <h4 class="text-center text-dark-blue mb-3">Session</h4>
+          <p>
+            Directly request a booking and enjoy your treatment with relaxation and ease.
+          </p>
+        </li>
+      </ul>
+    </ng-container>
+  </section>
+
+  <div class="canvas heightH-100 w-100 position-absolute">
+    <img class="object-3" src="/assets/img/ambassador-left-bottom.png">
+    <img class="object-2" src="/assets/img/ambassador-right.png">
+    <img *ngIf="faceType == 'provider'" class="object-1 d-none d-md-block" src="/assets/img/ambassador-people.png">
+  </div>
+</div>

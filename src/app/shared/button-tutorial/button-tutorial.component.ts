@@ -23,6 +23,7 @@ export class ButtonTutorialComponent implements OnInit {
   ngOnInit(): void {
     switch(this.type){
       case 'signup': this.videoUrl = 'https://prompt-images.s3.us-east-2.amazonaws.com/tutorial-register-sp.MP4'; break;
+      case 'signup-product': this.videoUrl = 'https://prompt-images.s3.us-east-2.amazonaws.com/tutorial-signup-product.mp4'; break;
       case 'dashboard': this.videoUrl = 'https://prompt-images.s3.us-east-2.amazonaws.com/tutorial-dashboard.mp4'; break;
     }
   }
@@ -32,4 +33,4 @@ export class ButtonTutorialComponent implements OnInit {
 
 }
 
-type TutorialType = 'signup' | 'dashboard';
+type TutorialType = 'signup' | 'signup-product' | 'dashboard';

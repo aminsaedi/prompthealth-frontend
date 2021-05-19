@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 
 import { SharedService } from './services/shared.service';
 import { PreviousRouteService } from './services/previousUrl.service';
@@ -44,13 +45,19 @@ import { FormItemCheckboxGroupComponent } from './form-item-checkbox-group/form-
 import { FormItemPricingComponent } from './form-item-pricing/form-item-pricing.component';
 import { FormClientGeneralComponent } from './form-client-general/form-client-general.component';
 import { FormItemCustomerHealthComponent } from './form-item-customer-health/form-item-customer-health.component';
-
+import { FormPractitionerServiceComponent } from './form-practitioner-service/form-practitioner-service.component';
+import { FormItemDatetimeComponent } from './form-item-datetime/form-item-datetime.component';
+import { FormItemUploadImageButtonComponent } from './form-item-upload-image-button/form-item-upload-image-button.component';
+import { AddonSelectCategoryComponent } from './addon-select-category/addon-select-category.component';
+import { ButtonShareComponent } from './button-share/button-share.component';
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     ReactiveFormsModule,
     ModalModule.forRoot(),
+    NgbModule,
 
     // FlashMessagesModule,
   ],
@@ -96,6 +103,11 @@ import { FormItemCustomerHealthComponent } from './form-item-customer-health/for
     FormItemPricingComponent,
     FormClientGeneralComponent,
     FormItemCustomerHealthComponent,
+    FormPractitionerServiceComponent,
+    FormItemDatetimeComponent,
+    FormItemUploadImageButtonComponent,
+    AddonSelectCategoryComponent,
+    ButtonShareComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -133,6 +145,10 @@ import { FormItemCustomerHealthComponent } from './form-item-customer-health/for
     ButtonTutorialComponent,
     FormItemCheckboxGroupComponent,
     FormItemCustomerHealthComponent,
+    FormPractitionerServiceComponent,
+    FormItemDatetimeComponent,
+    FormItemUploadImageButtonComponent,
+    ButtonShareComponent,
   ]
 })
 export class SharedModule { }

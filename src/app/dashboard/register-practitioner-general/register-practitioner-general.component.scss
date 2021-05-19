@@ -1,0 +1,20 @@
+:host{
+  font-size: 16px;
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+h3{
+  @media (max-width: 767px){
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 35px 15px;
+    background-image: url('/assets/img/register-questionnaire-general.jpg');
+    background-position: center;
+  
+    color: white;
+    text-shadow: 0 0 5px #171717, 0 0 7px #a2a2a2, 0 0 16px white;  
+  }
+}

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { animate, transition, style, trigger } from '@angular/animations';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 // const animation = trigger('carousel', [
 //   transition(':enter', [
@@ -33,6 +34,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
 
@@ -41,6 +44,10 @@ export class LoginComponent implements OnInit {
       this.nextPage = data.next ? data.next : null;
       this.nextPageKeyword = data.nextKeyword ? data.nextKeyword : null;
     });
+    
+    this._uService.setMeta(this._router.url, {
+      title: 'Login | PromptHealth',
+    })
   }
 }
 

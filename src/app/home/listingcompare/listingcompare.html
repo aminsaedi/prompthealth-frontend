@@ -1,0 +1,119 @@
+<section class="pt-5 pb-5">
+  <div class="container">
+    <h3 class="text-primary mb-3">COMPARE PROFESSIONALS</h3>
+    <div class="tableoverflow overflow-auto">
+      <table class="table table-hover comparetable">
+        <thead>
+          <tr>
+            <th class="border-0"></th>
+            <th *ngFor="let user of data" class="border-0">
+              <div class="avatartable">
+                <!-- <img src="assets/img/man-testimonial.jpg" class="w-100" /> -->
+                <img
+                  [src]=" AWS_S3 +user.userData?.profileImage"
+                  class="w-100"
+                  *ngIf="user.userData?.profileImage"
+                />
+                <img
+                  src="/assets/img/default_user.jpg"
+                  class="w-100 noimage"
+                  *ngIf="!user.userData?.profileImage"
+                />
+              </div>
+            </th>
+          </tr>
+          <tr class="bg-primary text-light">
+            <th class="table-active">Feature</th>
+            <th *ngFor="let user of data">
+              <a 
+                [routerLink]="['/practitioners/', user.userId]"
+              >{{user.userData.firstName}} {{user.userData.lastName}}</a></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th class="table-active">Location</th>
+            <td *ngFor="let user of data">{{user.userData.address}}</td>
+          </tr>
+
+          <tr>
+            <th class="table-active">Contact Information</th>
+            <!-- <td *ngFor="let user of data">Email: {{user.userData.email }}, Phone: {{user.userData.phone}}</td> -->
+            <td *ngFor="let user of data"><div *ngIf="loggedInUser">Email: {{user.userData.email }},</div> Phone: {{user.userData.phone}}</td>
+          </tr>
+
+          <tr>
+            <th class="table-active">Standard fee per hour</th>
+            <td *ngFor="let user of data">
+              {{user.userData.price_per_hours}}
+            </td>
+          </tr>
+
+          <tr>
+            <th class="table-active">Languages</th>
+            <td *ngFor="let user of data">
+              <span *ngFor="let item of languageQuestion?.answers">
+                <span *ngFor="let profileItem of user.userData.languages; let i = index">
+                  <span *ngIf="item._id === profileItem">{{item.item_text}}  </span>
+                </span>
+              </span>
+            </td>
+          </tr>
+          <tr class="bg-primary text-light">
+            <th class="table-active">Type of Provider</th>
+            <td *ngFor="let user of data">
+
+            <span class="d-inline-block mr-2" *ngFor="let serv of user.serviceData">
+              {{serv.item_text}},
+            </span>
+            </td>
+          </tr>
+          <tr>
+            <th>Treatment Modalities</th>
+            <td *ngFor="let user of data">
+
+            <span class="d-inline-block mr-2" *ngFor="let serv of user.treatmentModalities">
+              {{serv.item_text}},
+            </span>
+            </td>
+          </tr>
+
+          <tr>
+            <th class="table-active">Services</th>
+            <td *ngFor="let user of data"> 
+            <span class="d-inline-block mr-2" *ngFor="let serv of user.serviceType">
+              {{serv}},
+            </span>
+          </td>
+          </tr>
+
+          <tr>
+            <th class="table-active">Working Hours</th>
+            <td *ngFor="let user of data">
+              <span *ngFor="let item of avalibilityQuestion?.answers">
+                <span *ngFor="let profileItem of user.userData.typical_hours; let i = index">
+                  <span *ngIf="item._id === profileItem">{{item.item_text}}  </span>
+                </span>
+              </span>
+            </td>
+          </tr>
+
+          <tr>
+            <th class="table-active">Total Experience</th>
+            <td *ngFor="let user of data">
+              {{user.userData.years_of_experience}}
+            </td>
+          </tr>
+
+          <tr>
+            <th class="table-active">Description</th>
+            <td *ngFor="let user of data">
+              {{user.userData.product_description}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+

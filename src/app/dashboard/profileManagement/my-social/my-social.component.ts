@@ -3,6 +3,8 @@ import { ProfileManagementService } from '../profile-management.service';
 import { FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-my-social',
@@ -25,10 +27,16 @@ export class MySocialComponent implements OnInit {
     private _pService: ProfileManagementService,
     private _toastr: ToastrService,
     private _sharedService: SharedService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
 
   async ngOnInit() {
+    this._uService.setMeta(this._router.url, {
+      title: 'Connect social media | PromptHealth',
+    });
+    
     const userInfo = JSON.parse(localStorage.getItem('user'));
     this.profile = await this._pService.getProfileDetail(userInfo);
   }

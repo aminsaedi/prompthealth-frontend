@@ -24,8 +24,9 @@
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/robots.txt",
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -33,8 +34,7 @@
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/slick-carousel/slick/slick.scss",
               "node_modules/slick-carousel/slick/slick-theme.scss",
-              "src/assets/scss/style.scss",
-              "./node_modules/ng-pick-datetime/assets/style/picker.min.css"
+              "src/assets/scss/style.scss"
             ],
             "scripts": [
               "src/assets/js/jquery-3.4.1.slim.min.js",

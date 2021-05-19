@@ -3,7 +3,8 @@ import { FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
-import { minmax, pattern } from 'src/app/_helpers/form-settings';
+import { minmax, pattern, validators } from 'src/app/_helpers/form-settings';
+import { IUserDetail } from 'src/app/models/user-detail';
 
 @Component({
   selector: 'form-partner-general',
@@ -12,7 +13,7 @@ import { minmax, pattern } from 'src/app/_helpers/form-settings';
 })
 export class FormPartnerGeneralComponent implements OnInit {
 
-  @Input() data: any;  
+  @Input() data: IUserDetail;  
   @Input() disabled = false;
 
   @Output() changeImage = new EventEmitter<string>();
@@ -69,50 +70,11 @@ export class FormPartnerGeneralComponent implements OnInit {
         Validators.maxLength(this.maxTextarea),
       ]),
       messageToPlatform: new FormControl((this.data.messageToPlatform ? this.data.messageToPlatform : ''), [Validators.maxLength(this.maxTextarea)]),
-    });
+    }, {validators: validators.addressSelectedFromSuggestion});
   }
 
-  async onSelectCoverPhoto(e: Event){
-    const files = (e.target as HTMLInputElement).files;
-    if(files && files.length > 0){
-      let image: {file: File | Blob, filename: string};
-      try { image = await this._sharedService.shrinkImage(files[0]); }
-      catch(err){
-        this.f.profileImage.setValue('');
-        this._toastr.error('Image size is too big. Please upload image size less than 10MB.');
-        return;
-      }
-
-      this._sharedService.loader('show');
-      try { 
-        const imageURL = await this.uploadImage(image.file, image.filename); 
-        this.f.profileImage.setValue(imageURL);
-
-        this.changeImage.emit(imageURL);
-      }
-      catch(err){ this._toastr.error(err); }
-      finally{ this._sharedService.loader('hide'); }
-    }
-  }
-
-  async uploadImage(file: File | Blob, name: string): Promise<string>{
-    return new Promise((resolve, reject) => {
-      const userid = this.data._id;
-      const uploadImage = new FormData();
-      uploadImage.append('_id', userid);
-      uploadImage.append('profileImage', file, name);
-
-      this._sharedService.imgUpload(uploadImage, 'user/imgUpload').subscribe((res: any) => {
-        if(res.statusCode == 200){
-          resolve(res.data.profileImage);
-        }else{
-          reject('Something went wrong. Please try again.');
-        }
-      }, error => {
-        console.log(error);
-          reject('Something went wrong. Please try again.');
-      });
-    });
+  onChangeImage(imageURL: string){
+    this.changeImage.emit(imageURL);
   }
 
   onSubmit(){
@@ -121,7 +83,7 @@ export class FormPartnerGeneralComponent implements OnInit {
       this._toastr.error('There are some items that require your attention.');
       return; 
     }
-    
+
     this.submitText.emit(this.form.value);
   }
 }

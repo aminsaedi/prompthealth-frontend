@@ -15,3 +15,36 @@
     }
   }
 }
+
+.checkbox-group-root {
+
+  >li {
+    flex: 1 0 100%;
+
+    &:not(:first-child){
+      margin-top: 1em;
+    }
+  }  
+}
+
+.checkbox-group-sub {
+  margin-top: 1em;
+
+  &.col2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    margin-bottom: 0; 
+    li {
+      flex: 1 0 50%;
+      white-space: nowrap;
+
+    } 
+  }
+
+  >li {
+    margin-bottom: 1em;
+  }  
+}

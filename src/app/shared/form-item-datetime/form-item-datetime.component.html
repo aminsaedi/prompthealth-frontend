@@ -1,0 +1,25 @@
+<div (clickOutside)="hidePicker()">
+  <form-item-input
+  [controller]="controller"
+  (click)="showPicker()"
+  placeholder="yyyy-mm-dd HH:MM"
+  [disabled]="disabled"
+  ></form-item-input>
+  
+  <div
+  *ngIf="isPickerShown" 
+  [@slideVertical]
+  class="d-flex p-3 mt-2 flex-column align-items-center position-absolute bg-white datetime-picker orverflow-hidden rounded-lg">
+    <ngb-datepicker 
+    [formControl]="fDate" 
+    [minDate]="minDateTime" 
+    ></ngb-datepicker>
+    
+    <ngb-timepicker 
+    [formControl]="fTime" 
+    [meridian]="true" 
+    [minuteStep]="stepMinute" 
+    [hourStep]="stepHour" 
+    ></ngb-timepicker>  
+  </div>  
+</div>

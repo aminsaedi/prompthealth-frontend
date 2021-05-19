@@ -16,7 +16,9 @@ export class FormProviderGeneralComponent implements OnInit {
 
   @Input() data: IUserDetail = {};
   @Input() disabled = false;
+  @Input() hideSubmit: boolean = false;
   
+  @Output() changeImage = new EventEmitter<string>();
   @Output() submitForm = new EventEmitter<IUserDetail>();
 
   get f() { return this.form.controls; }
@@ -55,6 +57,7 @@ export class FormProviderGeneralComponent implements OnInit {
     catch(error){ this._toastr.error(error); }
 
     this.form = this._fb.group({
+      profileImage: new FormControl(this.data.profileImage ? this.data.profileImage : '', validators.profileImageProvider),
       firstName: new FormControl(this.data.firstName ? this.data.firstName : '', validators.nameProvider),
       lastName: new FormControl(this.data.lastName ? this.data.lastName : '', validators.nameProvider),
       
@@ -93,7 +96,7 @@ export class FormProviderGeneralComponent implements OnInit {
 
       product_description: new FormControl( this.data.product_description ? this.data.product_description : '', validators.productDescription),
 
-    });
+    }, {validators: validators.addressSelectedFromSuggestion});
 
   }
 
@@ -133,6 +136,10 @@ export class FormProviderGeneralComponent implements OnInit {
     this._changeDetector.detectChanges();
   }
 
+  onChangeImage(imageURL: string) {
+    this.changeImage.emit(imageURL);
+  }
+
   onSubmit(){
     if(this.form.invalid){
       this.isSubmitted = true;
@@ -144,10 +151,17 @@ export class FormProviderGeneralComponent implements OnInit {
     
     const data: IUserDetail = {};
     data._id = this.data._id;
+    data.location = [null, null];
+
     for(const key in this.form.controls){
       const f = this.form.controls[key];
+
       if(key == 'priceMode' || key == 'userType'){
         //nothing to do
+      }else if(key == 'latitude'){ 
+        data.location[1] = f.value;
+      }else if(key == 'longitude') {
+        data.location[0] = f.value;
       }else if(f instanceof FormControl){
         data[key] = f.value;
       }else if(f instanceof FormArray) {

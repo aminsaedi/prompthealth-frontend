@@ -9,6 +9,10 @@ $blue: ('text': #3377C5, 'bg': #3377C5);
   .feature i{
     color: map.get($color, 'text');
   }
+  
+  .text-colored{ 
+    color: map.get($color, 'text'); 
+  }
 
   .tab,
   .btn-more,

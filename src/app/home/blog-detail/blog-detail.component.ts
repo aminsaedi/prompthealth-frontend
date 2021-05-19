@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from '../../shared/services/shared.service';
-import { Meta, Title } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-blog-detail',
@@ -25,8 +25,7 @@ export class BlogDetailComponent implements OnInit {
     private router: Router,
     private _sharedService: SharedService,
     private toastr: ToastrService,
-    private title: Title,
-    private meta: Meta
+    private _uService: UniversalService,
   ) {
   }
 
@@ -61,25 +60,18 @@ export class BlogDetailComponent implements OnInit {
           des = this.removeTags(this.blogList.description);
         }
 
-        this.title.setTitle(this.blogList.title);
-        this.meta.updateTag({ name: 'title', content: this.blogList.title });
-        this.meta.updateTag({ property: 'og:title', content: this.blogList.title });
-        if (des) {
-          this.meta.updateTag({ name: 'description', content: des });
-          this.meta.updateTag({ property: 'og:description', content: des });
-        }
-        if (this.router.url) {
-          url = url + this.router.url;
-        }
-        this.meta.updateTag({ property: 'og:url', content: url });
+        this._uService.setMeta(this.router.url, {
+          title: this.blogList.title + ' | PromptHealth',
+          description: des,
+          pageType: 'article',
+          image: img,
+          imageType: 'image/png',
+          imageAlt: this.blogList.title,
+        });
 
         // if (this.blogList.image) {
         //   img = "https://api.prompthealth.ca/blogs/" + this.blogList.image
         // }
-
-        this.meta.updateTag({ property: 'og:image', content: img, itemprop: 'image' });
-        this.meta.updateTag({ property: 'og:image:url', content: img, itemprop: 'image' });
-        this.meta.updateTag({ property: 'og:image:type', content: 'image/png' });
       } else {
         this.toastr.error(res.message);
       }

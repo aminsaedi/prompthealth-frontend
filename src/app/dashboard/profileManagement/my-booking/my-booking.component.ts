@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SharedService } from '../../../shared/services/shared.service';
 
 @Component({
@@ -21,7 +24,9 @@ export class MyBookingComponent implements OnInit {
   public currentPage = 1;
   public totalItems: number;
   public itemsPerPage = 10;
+  public minDateTime: DateTimeData;
 
+  @ViewChild(FormItemDatetimeComponent) formDateTimeComponent: FormItemDatetimeComponent;
   timingList = [
     { id: 'timing1', name: 'Morning' },
     { id: 'timing2', name: 'Afternoon' },
@@ -37,16 +42,32 @@ export class MyBookingComponent implements OnInit {
   roles = '';
   submitted = false;
   slectedBookingId = ''
+
   constructor(
     private _sharedService: SharedService,
     private toastr: ToastrService,
-    private formBuilder: FormBuilder,) { }
+    private formBuilder: FormBuilder,
+    private _router: Router,
+    private _uService: UniversalService,  
+  ) { }
 
   get f() { return this.bookingForm.controls; }
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Manage booking | PromptHealth',
+    });
+
+    const now = new Date();
+    this.minDateTime = {
+      year: now.getFullYear(), 
+      month: now.getMonth() + 1, 
+      day: now.getDate(),
+      hour: 9,
+      minute: 0
+    };
 
     this.bookingForm = this.formBuilder.group({
-      timing: new FormControl('', [Validators.required]),
+      // timing: new FormControl('', [Validators.required]),
       bookingDateTime: new FormControl('', [Validators.required]),
     });
     this.getBookingList();
@@ -130,6 +151,7 @@ export class MyBookingComponent implements OnInit {
     this.slectedBookingId = id;
   }
   rescheduleBookingApi() {
+    console.log(this.bookingForm);
     this.submitted = true;
     this.submitted = true;
     if (this.bookingForm.invalid) {
@@ -143,8 +165,9 @@ export class MyBookingComponent implements OnInit {
         'id': this.slectedBookingId,
         ...formData,
       };
-      data.timing = this.timingSelectedValue;
-      data.bookingDateTime = data.bookingDateTime.toString();
+      // data.timing = this.timingSelectedValue;
+      data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
+      // data.bookingDateTime = data.bookingDateTime.toString();
       this._sharedService.loader('show');
       const path = `/booking/rescheduleBooking`
       this._sharedService.put(data, path).subscribe((res: any) => {

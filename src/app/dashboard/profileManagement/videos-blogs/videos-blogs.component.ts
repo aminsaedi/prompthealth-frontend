@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SharedService } from '../../../shared/services/shared.service';
 
 @Component({
@@ -23,13 +25,19 @@ export class VideosBlogsComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private sharedService: SharedService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private _router: Router,
+    private _uService: UniversalService
   ) {
   }
   get formArr() {
     return this.videosForm.get('data') as FormArray;
   }
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Manage videos | PromptHealth',
+    });
+
     this.userId = JSON.parse(localStorage.getItem('user'))._id;
     this.videosForm = this._fb.group({
       data: this._fb.array([this.initItemRows()])

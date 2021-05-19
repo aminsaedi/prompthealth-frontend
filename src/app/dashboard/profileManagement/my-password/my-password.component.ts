@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-my-password',
@@ -11,7 +13,9 @@ export class MyPasswordComponent implements OnInit {
 
   constructor(
     private toastr: ToastrService,
-    private _sharedService: SharedService
+    private _sharedService: SharedService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   public pass = {
@@ -21,6 +25,9 @@ export class MyPasswordComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Change password | PromptHealth',
+    });
   }
 
   changePassword(event) {

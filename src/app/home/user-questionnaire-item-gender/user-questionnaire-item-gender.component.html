@@ -1,0 +1,47 @@
+<h4>{{qGender?.c_question}}</h4>
+<form-item-checkbox-group
+*ngIf="dataGender"
+id="gender"
+type="selectbox"
+label="Gender"
+[controller]="f.gender"
+[responsive]="true"
+[submitted]="isSubmitted"
+[selections]="dataGender"
+></form-item-checkbox-group>
+
+<h4 class="mt-5">{{qSpGender?.c_question}}</h4>
+<form-item-checkbox-group
+*ngIf="dataSpGender"
+id="spGender"
+type="selectbox"
+label="Gender"
+[controller]="f.spGender"
+[responsive]="true"
+[submitted]="isSubmitted"
+[selections]="dataSpGender"
+></form-item-checkbox-group>
+
+
+<!-- 
+<h4>What gender do you identify as?</h4>
+<form-item-checkbox-group
+id="gender"
+type="selectbox"
+label="Gender"
+[controller]="f.gender"
+[responsive]="true"
+[submitted]="isSubmitted"
+[includePreferNotToSay]="true"
+></form-item-checkbox-group>
+
+<h4 class="mt-5">What gender do you want to see?</h4>
+<form-item-checkbox-group
+id="gender"
+type="selectbox"
+label="Gender"
+[controller]="f.spGender"
+[responsive]="true"
+[submitted]="isSubmitted"
+[includePreferNotToSay]="true"
+></form-item-checkbox-group> -->

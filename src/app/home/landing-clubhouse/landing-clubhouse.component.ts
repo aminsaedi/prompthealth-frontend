@@ -1,5 +1,9 @@
 import { Component, HostBinding, HostListener, OnInit, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
@@ -15,7 +19,15 @@ export class LandingClubhouseComponent implements OnInit {
   public idxCountryFocused = 0;
 
   private host: HTMLElement;
+  // private canvas: HTMLElement;
+
   get f(){ return this.form.controls; }
+
+	// @HostListener('window:scroll') windowScroll(){
+  //   if(this.canvas){
+  //     this.canvas.style.top = Math.floor(window.scrollY * 2 / 3) + 'px';
+  //   }
+  // }
 
   @HostListener('window:keydown', ['$event']) windowKeydown(e: KeyboardEvent) {
     if(this.countryList.length > 0){
@@ -42,8 +54,19 @@ export class LandingClubhouseComponent implements OnInit {
   }
   constructor(
     _fb: FormBuilder,
-    _el: ElementRef
+    _el: ElementRef,
+		private _toastr: ToastrService,
+		private _sharedService: SharedService,
+		private _uService: UniversalService,
+		private _router: Router,
   ) {
+		this._uService.setMeta(this._router.url, {
+			title: 'Join us on Clubhouse - HealthLoop | PromptHealth',
+			description: 'We are on Clubhouse where we spark conversations in this forum on challenges of both health and wellness seekers and providers',
+			image: 'https://prompthealth.ca/assets/img/clubhouse.png',
+			imageAlt: 'HealthLoop on Clubhouse',
+			imageType: 'image/png',
+		});
     this.form = _fb.group({
       name: new FormControl('', validators.firstnameClient),
       email: new FormControl('', validators.email),
@@ -54,6 +77,7 @@ export class LandingClubhouseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+		// this.canvas = this.host.querySelector('.canvas');
     this.f.region.valueChanges.subscribe(value => {
       if(value.length > 0) {
         const list = [];
@@ -93,7 +117,26 @@ export class LandingClubhouseComponent implements OnInit {
 
   onSubmit(){
     this.isSubmitted = true;
-    console.log(this.form.value);
+		if(this.form.invalid) {
+			this._toastr.error('There are some items that require your attention.');
+			return;
+		}
+
+		const path = 'clubhouse/create';
+		this._sharedService.postNoAuth(this.form.value, path).subscribe((res: any) => {
+			if(res.statusCode == 200) {
+				this._toastr.success(res.message);
+			}else {
+				let message = 'Something went wrong. Please try again later.';
+				if(res.message.match(/^E11000/)){
+					message = 'This email is already registered. Please try different email address.';
+				}
+				this._toastr.error(message);
+			}
+		}, error => {
+			console.log(error);
+			this._toastr.error('Something went wrong. Please try again later');
+		});
   }
 }
 

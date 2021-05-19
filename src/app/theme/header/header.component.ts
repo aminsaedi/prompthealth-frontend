@@ -1,33 +1,39 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+// import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { environment } from '../../../environments/environment';
-import { fadeAnimation, fadeFastAnimation, slideVerticalAnimation } from '../../_helpers/animations';
-import { Subscription } from 'rxjs';
+import { fadeAnimation, fadeFastAnimation, slideHorizontalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
+// import { Subscription } from 'rxjs';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
-
-
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  animations: [fadeAnimation, fadeFastAnimation, slideVerticalAnimation]
+  animations: [fadeAnimation, fadeFastAnimation, slideVerticalAnimation, slideHorizontalAnimation]
 })
 export class HeaderComponent implements OnInit {
+
+  @ViewChild('signupModal') public signupModal: ModalDirective;
+  get onProductPage(){
+    return !!this._router.url.match('product');
+  }
 
   constructor(
     private _router: Router,
     private _sharedService: SharedService,
     private _bs: BehaviorService,
-    private toastr: ToastrService,
+    // private toastr: ToastrService,
     private _headerStatusService: HeaderStatusService,
     public catService: CategoryService,
     private _profileService: ProfileManagementService,
+    private _uService: UniversalService,
     _el: ElementRef
   ) {
     // this.fetchUser();
@@ -36,10 +42,10 @@ export class HeaderComponent implements OnInit {
 
   private elHost: HTMLElement;
 
-  @ViewChild('signup') signup: ElementRef;
-  @ViewChild('signin') signin: ElementRef;
-  _host = environment.config.BASE_URL;
-  showDashboard = false;
+  // @ViewChild('signup') signup: ElementRef;
+  // @ViewChild('signin') signin: ElementRef;
+  // _host = environment.config.BASE_URL;
+  // showDashboard = false;
   public token = '';
   public role = '';
   public payment = 'true';
@@ -53,20 +59,22 @@ export class HeaderComponent implements OnInit {
 
   public AWS_S3 = '';
 
+  public priceType: PriceType = null;
+
   user: any = {};
-  updateData: any;
-  cities = [];
-  Items = [];
-  showCities = false;
-  showItems = false;
+  // updateData: any;
+  // cities = [];
+  // Items = [];
+  // showCities = false;
+  // showItems = false;
   @Input() eventKey: any;
-  eventKeyValue: any;
-  searchKeyword: any;
-  dashboard: any;
-  currentUrl = '';
-  uname: any;
-  userType = '';
-  professionalOption = false;
+  // eventKeyValue: any;
+  // searchKeyword: any;
+  // dashboard: any;
+  // currentUrl = '';
+  // uname: any;
+  // public userType = '';
+  // professionalOption = false;
 
 
   public classSubcategory = '';
@@ -74,65 +82,72 @@ export class HeaderComponent implements OnInit {
   // End Ngoninit
   public keyword: string;
 
-
   // Start ngOninit
   async ngOnInit() {
-
-    const isTouchEnabled = !!('ontouchstart' in window);
-    if(navigator.userAgent.toLowerCase().match('ipad|android|iphone') || (isTouchEnabled && navigator.userAgent.toLowerCase().match('mac')) ){
-      this.isMenuMobileForcibly = true;
-    }
-
+    const ls = this._uService.localStorage;
     this.AWS_S3 = environment.config.AWS_S3;
 
-    this._bs.getUserData().subscribe((res: any) => {
-      this.updateData = res;
-      // console.log('reeeeeeeeeee', this.updateData);
-      if (res.firstName) {
-        localStorage.setItem('user', JSON.stringify(this.updateData));
-        this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
-        this.token = localStorage.getItem('token');
-        this.role = localStorage.getItem('roles');
+    if (!this._uService.isServer) {
+      const isTouchEnabled = !!('ontouchstart' in window);
+      if(navigator.userAgent.toLowerCase().match('ipad|android|iphone') || (isTouchEnabled && navigator.userAgent.toLowerCase().match('mac')) ){
+        this.isMenuMobileForcibly = true;
       }
-    });
 
-    this.token = localStorage.getItem('token');
-    this.role = localStorage.getItem('roles');
-    // this.payment = localStorage.getItem(isPayment);
-    this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
-    
-    // if (this.token && this.user) {
-    //   let roles = this.user.roles;
-    //   this.dashboard = roles == "B" ? "dashboard/home" : "dashboard/welcome";
-    // }
+      this._headerStatusService.observeHeaderStatus().subscribe(([key, val]: [string, any]) => {
+        this[key] = val;
+      });
+
+      this._bs.getUserData().subscribe((res: any) => {
+        if (res.firstName) {
+          ls.setItem('user', JSON.stringify(res));
+          this.user = ls.getItem('user') ? JSON.parse(ls.getItem('user')) : {};
+          this.token = ls.getItem('token');
+          this.role = ls.getItem('roles');
+        }
+        this.role = this.user.roles || null;
+        switch(this.user.roles){
+          case 'SP':
+          case 'C':
+            this.setPriceType('practitioner');
+            break;
+          case 'P':
+            this.setPriceType('product');
+            break;
+          default:
+            this.setPriceType();
+        }
+      });
+
+      this.token = ls.getItem('token');
+      this.role = ls.getItem('roles');
+      this.user = ls.getItem('user') ? JSON.parse(ls.getItem('user')) : {};
+
+      this._bs.setUserData(this.user);
+    }
+
     this._router.events.subscribe(evt => {
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
-      this.currentUrl = evt.url;
-      this.token = localStorage.getItem('token');
-      this.role = localStorage.getItem('roles');
-      this.payment = localStorage.getItem('isPayment');
-      this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
-      if (this.token && this.user) {
-        const roles = this.user.roles;
-        this.dashboard = roles === 'B' ? 'dashboard/home' : 'dashboard/welcome';
-      }
+      // this.currentUrl = evt.url;
+      this.token = ls.getItem('token');
+      this.role = ls.getItem('roles');
+      this.payment = ls.getItem('isPayment');
+      this.user = ls.getItem('user') ? JSON.parse(ls.getItem('user')) : {};
+      // if (this.token && this.user) {
+      //   const roles = this.user.roles;
+      //   this.dashboard = roles === 'B' ? 'dashboard/home' : 'dashboard/welcome';
+      // }
     });
 
     // this._bs.user.subscribe(obj => {
     //   this.user = obj ? (obj["user"] ? obj["user"] : []) : [];
     // });
 
-    this.token = localStorage.getItem('token');
-    this.role = localStorage.getItem('roles');
-    this.payment = localStorage.getItem('isPayment');
-    this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))
-      : {};
-
-    this._headerStatusService.observeHeaderStatus().subscribe(([key, val]: [string, any]) => {
-      this[key] = val;
-    });
+    this.token = ls.getItem('token');
+    this.role = ls.getItem('roles');
+    this.payment = ls.getItem('isPayment');
+    this.user = ls.getItem('user') ? JSON.parse(ls.getItem('user')) : {};
 
     if(this.user._id){
       //call getProfileDetail function to fetch latest data which is changed by admin including verifiedBadge
@@ -149,12 +164,12 @@ export class HeaderComponent implements OnInit {
     //   }
     // }
   }
-  route(path) {
-    this._router.navigate([path]);
-  }
+  // route(path) {
+  //   this._router.navigate([path]);
+  // }
 
   keywordSearch() {
-    this._router.navigate(['/dashboard/listing'], {
+    this._router.navigate(['/practitioners'], {
       queryParams: {
         keyword: this.keyword
       }
@@ -167,28 +182,28 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  isSelectedURL(path) {
-    if ((this.currentUrl === '/' || this.currentUrl === '') && path === '/') {
-      return true;
-    } else if (this.currentUrl.indexOf(path) >= 0 && path !== '/') { return true; } else { return false; }
-  }
+  // isSelectedURL(path) {
+  //   if ((this.currentUrl === '/' || this.currentUrl === '') && path === '/') {
+  //     return true;
+  //   } else if (this.currentUrl.indexOf(path) >= 0 && path !== '/') { return true; } else { return false; }
+  // }
 
-  handleChange(url, type) {
-    // console.log(url);
-    this._router.navigate([url, type]).then(res => {
-      // console.log(res);
-    });
-    if (url === '/auth/login') {
-      this.signin.nativeElement.click();
-    } else {
-      this.signup.nativeElement.click();
-    }
-  }
+  // handleChange(url, type) {
+  //   // console.log(url);
+  //   this._router.navigate([url, type]).then(res => {
+  //     // console.log(res);
+  //   });
+  //   if (url === '/auth/login') {
+  //     this.signin.nativeElement.click();
+  //   } else {
+  //     this.signup.nativeElement.click();
+  //   }
+  // }
 
-  optUserType(value) {
-    this._bs.setRole(value);
-    localStorage.setItem('userType', value);
-  }
+  // optUserType(value) {
+  //   // this._bs.setRole(value);
+  //   this._uService.localStorage.setItem('userType', value);
+  // }
 
 
   hideMenu() { this._headerStatusService.hideNavMenu(); }
@@ -216,8 +231,8 @@ export class HeaderComponent implements OnInit {
     }else{
       this.hideMenu();
       this._router.navigate(
-        ['/dashboard/listing'], 
-        {queryParams: {id: this.catService.categoryList[i]._id}});
+        ['/practitioners/category', this.catService.categoryList[i]._id], 
+      );
     }
   }
 
@@ -274,4 +289,10 @@ export class HeaderComponent implements OnInit {
       if(this.timerScrollCategory){ clearInterval(this.timerScrollCategory); }
     }
   }
+
+  setPriceType(type: PriceType = null){
+    this.priceType = type;
+  }
 }
+
+type PriceType = 'practitioner' | 'product';

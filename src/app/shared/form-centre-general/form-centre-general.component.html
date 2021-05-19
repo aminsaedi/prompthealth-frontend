@@ -1,4 +1,23 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <label>
+        Profile image
+        <span class="text-danger">*</span>
+      </label>
+    </div>
+    <div class="col-md-8">
+      <form-item-upload-image-button
+      [userid]="data?._id"
+      label="Profile image"
+      [disabled]="disabled"
+      [submitted]="isSubmitted"
+      [controller]="f.profileImage"
+      (changeImage)="onChangeImage($event)"
+      ></form-item-upload-image-button>
+    </div>
+  </div>
   <div class="row mb-4">
     <div class="col-md-4">
       <label for="firstName">
@@ -19,6 +38,10 @@
       [disabled]="disabled"
       (selectPlace)="onChangePlace()"
       ></form-item-place>
+
+      <div *ngIf="isPremiumAccount && !disabled && !f.placeId.value" class="p-3 bg-lightgrey">
+        You can connect to Google Business account. To connect, enter business name and select from suggestion.
+      </div>
 
       <form-item-input 
       *ngIf="!isPremiumAccount"
@@ -85,7 +108,7 @@
   <div class="row mb-4">
     <label class="col-md-4" for="address">
       Location 
-      <!-- <span class="text-danger">*</span> -->
+      <span class="text-danger">*</span>
     </label>
     <div class="col-md-8">
       <form-item-address
@@ -300,7 +323,7 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="!disabled">
+  <div class="row" *ngIf="!disabled" [ngClass]="{'d-none': hideSubmit}"> 
     <div class="col text-right">
       <button class="btn btn-primary">Submit</button>
     </div>

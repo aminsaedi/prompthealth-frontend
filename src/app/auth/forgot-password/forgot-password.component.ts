@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { SharedService } from '../../shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 @Component({
   selector: 'app-forgot-password',
@@ -20,7 +21,9 @@ export class ForgotPasswordComponent implements OnInit {
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private _router: Router,
-    private _sharedService: SharedService) { }
+    private _sharedService: SharedService,
+    private _uService: UniversalService,  
+  ) { }
   get ff() { return this.forgotForm.controls; }
 
   ngOnInit() {
@@ -29,6 +32,10 @@ export class ForgotPasswordComponent implements OnInit {
 
       email: ['', [Validators.required, Validators.pattern(re)]],
 
+    });
+
+    this._uService.setMeta(this._router.url, {
+      title: 'Forgot password? | PromptHealth',
     });
   }
 

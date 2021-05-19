@@ -1,14 +1,15 @@
-import { Component, OnInit, ElementRef, ViewChild, NgZone, HostListener } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { MapsAPILoader, MouseEvent } from '@agm/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedService } from '../shared/services/shared.service';
 import { HeaderStatusService } from '../shared/services/header-status.service';
 import { environment } from 'src/environments/environment';
-import { Partner } from '../models/partner';
-import { PartnerSearchFilterQuery } from '../models/partner-search-filter-query';
-declare function registerEvent(eventId, action): void;
+// import { Partner } from '../models/partner';
+// import { PartnerSearchFilterQuery } from '../models/partner-search-filter-query';
+import { UniversalService } from '../shared/services/universal.service';
+import { IUserDetail } from '../models/user-detail';
+
+/** for event bright */
+// declare function registerEvent(eventId, action): void;
 
 @Component({
   selector: 'app-home',
@@ -18,45 +19,44 @@ declare function registerEvent(eventId, action): void;
 export class HomeComponent implements OnInit {
   constructor(
     private router: Router,
-    private formBuilder: FormBuilder,
-    // tslint:disable-next-line: variable-name
+    // private formBuilder: FormBuilder, /** NO NEED */
     private _sharedService: SharedService,
     private _headerStatusService: HeaderStatusService,
-    private toastr: ToastrService,
-    private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone,
-    _el: ElementRef,
-  ) { 
-    this.elHost = _el.nativeElement;
+    // private toastr: ToastrService,
+    private _uService: UniversalService,
+    // _el: ElementRef,
+  ) {
+    // this.elHost = _el.nativeElement;
   }
 
-  get f() {
-    return this.homeForm.controls;
-  }
-  @ViewChild('searchGlobal')
-  public searchGlobalElementRef: ElementRef;
+  // get f() {
+  //   return this.homeForm.controls;
+  // } /** NO NEED */
 
-  token = '';
-  days: any;
-  hours: any;
-  minutes: any;
-  seconds: any;
-  private future: Date;
-  private futureString: string;
-  private message: string;
-  private geoCoder;
-  homeForm: FormGroup;
-  submitted = false;
-  roles = '';
-  zipCodeSearched;
-  lat;
-  long;
+  // @ViewChild('searchGlobal') 
+  // public searchGlobalElementRef: ElementRef; /** NO NEED */
+
+  // token = ''; /** NO NEED */
+  // days: any; /** NO NEED */
+  // hours: any; /** NO NEED */
+  // minutes: any; /** NO NEED */
+  // seconds: any; /** NO NEED */
+  // private future: Date; /** NO NEED */
+  // private futureString: string; /** NO NEED */
+  // private message: string; /** NO NEED */
+  // private geoCoder; /** NO NEED */
+  // homeForm: FormGroup; /** NO NEED */
+  // submitted = false; /** NO NEED */
+  // roles = ''; /** NO NEED */
+  // zipCodeSearched; /** NO NEED */
+  // lat; /** NO NEED */
+  // long; /** NO NEED */
   AWS_S3 = '';
-  // _host = environment.config.BASE_URL;
+  // _host = environment.config.BASE_URL; /** NO NEED */
   id: any;
-  showPersonalMatch = true;
+  // showPersonalMatch = true; /** NO NEED */
 
-  private elHost: HTMLElement;
+  // private elHost: HTMLElement;
 
   introBannerItems = {
     '5eb1a4e199957471610e6ce8': {
@@ -185,183 +185,231 @@ export class HomeComponent implements OnInit {
     //    for future reference.',
     // },
   ];
-  public homePageFeatures = {};
-  public keepOriginalOrder = (a, b) => a.key;
-  public partnersFeatured: Partner[];
+  // public homePageFeatures = {}; /** NO NEED */
+  // public partnersFeatured: Partner[];
 
   private timerResize: any;
   public featuredImageData = {
     badgeSize: 20,
     borderWidthVerified: 3,
-  }
+  };
+
+  // private timerCarouselPartner: any; 
+  public keepOriginalOrder = (a, b) => a.key;
   @HostListener('window:resize', ['$event']) windowResize(e: Event) {
     if (this.timerResize) { clearTimeout(this.timerResize); }
     this.timerResize = setTimeout(() => {
       if (window.innerWidth < 992) {
         this.featuredImageData.badgeSize = 35,
-          this.featuredImageData.borderWidthVerified = 5
+          this.featuredImageData.borderWidthVerified = 5;
       } else {
         this.featuredImageData.badgeSize = 30,
-          this.featuredImageData.borderWidthVerified = 4
+          this.featuredImageData.borderWidthVerified = 4;
       }
     }, 500);
   }
-  eventbriteCheckout(event) {
-    registerEvent(146694387863, (res) => {
-      console.log(res);
-    })
-  }
-  ngOnInit() {
+  // eventbriteCheckout(event) {
+  //   registerEvent(146694387863, (res) => {
+  //     // console.log(res);
+  //   });
+  // }
+  async ngOnInit() {
+    this._uService.setMeta(this.router.url, {
+      title: 'PromptHealth | Your health and wellness personal assistant',
+      description: 'Take control of your health with options tailored to you',
+    });
+
+    const ls = this._uService.localStorage;
     this.AWS_S3 = environment.config.AWS_S3;
-    this.roles = localStorage.getItem('roles') ? localStorage.getItem('roles') : '';
-    localStorage.removeItem('searchedAddress');
-    this.token = localStorage.getItem('token');
-    if (this.token) {
-      if (this.roles === 'SP' || this.roles === 'C') {
-        this.showPersonalMatch = false;
-      } else {
-        this.showPersonalMatch = true;
-      }
+    // this.roles = ls.getItem('roles') ? ls.getItem('roles') : ''; /** NO NEED */
+    ls.removeItem('searchedAddress');
+    // this.token = ls.getItem('token'); /** NO NEED */
+    // if (this.token) { /** NO NEED */
+    //   if (this.roles === 'SP' || this.roles === 'C') {
+    //     this.showPersonalMatch = false;
+    //   } else {
+    //     this.showPersonalMatch = true;
+    //   }
+    // }
+    // this.homeForm = this.formBuilder.group({
+    //   email: ['', [Validators.required, Validators.email]]
+    // }); /** NO NEED */
+
+    // this.getPartnersFeatured();
+    // this.timer(); /** NO NEED */
+
+    if (!this._uService.isServer) {
+      await this.getHomePageFeatures(); /** need to reinstate after many practitioners buy addonPlan */
+      this.getPractitionersFeatured(); /** temporary solition */
+      this.id = setInterval(() => {
+        // this.timer();
+        this.currentKeyIndex = (this.currentKeyIndex + 1) % 9;
+      }, 10000);
     }
-    this.homeForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]]
-    });
-
-    this.getHomePageFeatures();
-    this.getPartnersFeatured();
-    this.timer();
-    this.id = setInterval(() => {
-      this.timer();
-      this.currentKeyIndex = (this.currentKeyIndex + 1) % 9;
-    }, 10000);
   }
 
-  async getHomePageFeatures() {
-    this._sharedService.getNoAuth('/addonplans/get-featured', { roles: ['SP', 'C'] }).toPromise().then((res: any) => {
-      // console.log(res.data);
-      res.data.forEach(item => {
-        if (this.introBannerItems[item.category_id]) {
-          this.introBannerItems[item.category_id].features.push(item);
-        }
-      });
-    });
-  }
-
-  async getPartnersFeatured() {
+  /** need to reinstate after many practitioners buy addonPlan */
+  getHomePageFeatures(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const query = new PartnerSearchFilterQuery({featured: true, count: 7});
-      const path = 'partner/get-all';
-      this._sharedService.postNoAuth(query.json, path).subscribe((res: any) => {
-        if(res.statusCode == 200){
-          const partners = [];
-
-          res.data.data.forEach((data: any) => {
-            partners.push(new Partner(data));
-          });  
-
-          this.partnersFeatured = partners;
-          // this.startCarouselPartners();
-          resolve(true);
-        }else{
-          reject(res.message)
-        }
-      }, error => {
-        console.log(error);
-        reject('There are some error please try after some time.');
-      });
+      this._sharedService.getNoAuth('/addonplans/get-featured', { roles: ['SP', 'C'] }).toPromise().then((res: any) => {
+        res.data.forEach(item => {
+          if (this.introBannerItems[item.category_id]) {
+            this.introBannerItems[item.category_id].features.push(item);
+          }
+        });
+        resolve(true);
+      });  
     });
   }
 
-  private timerCarouselPartner: any;
-  startCarouselPartners() {
-    if(this.timerCarouselPartner){ clearInterval(this.timerCarouselPartner); }
+  /** temporary solution to fill featured practitioners */
+  getPractitionersFeatured() {
+    this._sharedService.getNoAuth('user/get-paid-spc').subscribe((res: any) => {
+      if (res.statusCode === 200) {
+        const users: IUserDetail[] = res.data;
+        const usersMapByCategory: { [k: string]: any[] } = {};
+        for (const key of Object.keys(this.introBannerItems)) {
+          usersMapByCategory[key] = [];
+          for (const u of users) {
+            if (u.services.includes(key)) {
+              usersMapByCategory[key].push(u);
+            }
+          }
+        }
 
-    const target = this.elHost.querySelector('#carousel-partner-1') as HTMLElement;
-    const partners = target.querySelectorAll('.carousel-partner-item');
-    this.timerCarouselPartner = setInterval(() => {
-      // partners.forEach(p => {
-      // });
-      target.scrollBy(1, 0);
-    }, 25);
+        const shuffle = (array: any[]) => {
+          for (let i = array.length - 1; i >= 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
+        };
 
-    const target2 = this.elHost.querySelector('#carousel-partner-2') as HTMLElement;
-    setTimeout(() => {
-      const partner = target2.querySelector('.carousel-partner-item');
-      const wPartner = partner.getBoundingClientRect().width;
-      console.log(wPartner);
-      this.timerCarouselPartner = setInterval(() => {
-        target2.scrollBy({left: wPartner * ((window.innerWidth < 768) ? 2 : 4), behavior: 'smooth'});
-      }, 5000);        
-    }, 1000);
-  };
+        Object.keys(this.introBannerItems).forEach(key => {
+          usersMapByCategory[key] = shuffle(usersMapByCategory[key]);
+          for (const u of usersMapByCategory[key]) {
+            this.introBannerItems[key].features.push({ userId: u });
+            if (this.introBannerItems[key].features.length >= 8) { break; }
+          }
+        });
+      }
+    }, (error) => { console.log(error); });
+  }
 
+  // async getPartnersFeatured() {
+  //   return new Promise((resolve, reject) => {
+  //     const query = new PartnerSearchFilterQuery({ featured: true, count: 7 });
+  //     const path = 'partner/get-all';
+  //     this._sharedService.postNoAuth(query.json, path).subscribe((res: any) => {
+  //       if (res.statusCode == 200) {
+  //         const partners = [];
+
+  //         res.data.data.forEach((data: any) => {
+  //           partners.push(new Partner(data));
+  //         });
+
+  //         this.partnersFeatured = partners;
+  //         // this.startCarouselPartners();
+  //         resolve(true);
+  //       } else {
+  //         reject(res.message);
+  //       }
+  //     }, error => {
+  //       console.log(error);
+  //       reject('There are some error please try after some time.');
+  //     });
+  //   });
+  // }
+  // startCarouselPartners() {
+  //   if (this.timerCarouselPartner) { clearInterval(this.timerCarouselPartner); }
+
+  //   const target = this.elHost.querySelector('#carousel-partner-1') as HTMLElement;
+  //   const partners = target.querySelectorAll('.carousel-partner-item');
+  //   this.timerCarouselPartner = setInterval(() => {
+  //     // partners.forEach(p => {
+  //     // });
+  //     target.scrollBy(1, 0);
+  //   }, 25);
+
+  //   const target2 = this.elHost.querySelector('#carousel-partner-2') as HTMLElement;
+  //   setTimeout(() => {
+  //     const partner = target2.querySelector('.carousel-partner-item');
+  //     const wPartner = partner.getBoundingClientRect().width;
+  //     // console.log(wPartner);
+  //     this.timerCarouselPartner = setInterval(() => {
+  //       target2.scrollBy({ left: wPartner * ((window.innerWidth < 768) ? 2 : 4), behavior: 'smooth' });
+  //     }, 5000);
+  //   }, 1000);
+  // }
 
   switchTab(selectedKey: string) {
     this.currentKeyIndex = this.allIntroBannerKeys.indexOf(selectedKey);
   }
-  findDoctor() {
-    this.lat = 0 + localStorage.getItem('ipLat');
-    this.long = 0 + localStorage.getItem('ipLong');
-    this.router.navigate(['/doctor-filter'], { queryParams: { lat: this.lat, long: this.long } });
-  }
-  questionnaire() {
-    if (this.token) {
-      this.router.navigate(['dashboard/questions/User']);
-    } else {
-      this.router.navigate(['dashboard/questions/User']);
-      // this.router.navigate(['auth/login/u']);
-      // this.toastr.warning("Please login first.")
-    }
-  }
 
-  submit() {
-    // alert("here");
+  // findDoctor() { /** NO NEED */
+  //   this.lat = 0 + this._uService.localStorage.getItem('ipLat');
+  //   this.long = 0 + this._uService.localStorage.getItem('ipLong');
+  //   this.router.navigate(['/doctor-filter'], { queryParams: { lat: this.lat, long: this.long } });
+  // }
 
-    this.submitted = true;
-    const data = JSON.stringify(this.homeForm.value);
+  // questionnaire() { /** NO NEED */
+  //   if (this.token) {
+  //     this.router.navigate(['/personal-match']);
+  //   } else {
+  //     this.router.navigate(['/personal-match']);
+  //     // this.router.navigate(['auth/login/u']);
+  //     // this.toastr.warning("Please login first.")
+  //   }
+  // }
 
-    // this._sharedService.loader('show');
-    this._sharedService.contactus(data).subscribe(
-      (res: any) => {
-        // this._sharedService.loader('hide');
-        if (res.success) {
-          this.toastr.success(res.message);
-          this.homeForm.reset();
-          this.submitted = false;
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error => {
-        this.toastr.error('Please check your email id.');
-        // this._sharedService.loader('hide');
-      }
-    );
-  }
+  // submit() { /** NO NEED */
+  //   // alert("here");
 
-  timer() {
-    const deadline = new Date('June 5, 2020 15:37:25').getTime();
+  //   this.submitted = true;
+  //   const data = JSON.stringify(this.homeForm.value);
 
-    const now = new Date().getTime();
-    const t = deadline - now;
-    const days = Math.floor(t / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((t % (1000 * 60)) / 1000);
+  //   // this._sharedService.loader('show');
+  //   this._sharedService.contactus(data).subscribe(
+  //     (res: any) => {
+  //       // this._sharedService.loader('hide');
+  //       if (res.success) {
+  //         this.toastr.success(res.message);
+  //         this.homeForm.reset();
+  //         this.submitted = false;
+  //       } else {
+  //         this.toastr.error(res.message);
+  //       }
+  //     },
+  //     error => {
+  //       this.toastr.error('Please check your email id.');
+  //       // this._sharedService.loader('hide');
+  //     }
+  //   );
+  // }
 
-    this.days = days;
-    this.hours = hours;
-    this.minutes = minutes;
-    this.seconds = seconds;
-  }
+  // timer() { /** NO NEED */
+  //   const deadline = new Date('June 5, 2020 15:37:25').getTime();
 
-  learnMore() {
-    if (this.token) {
-      this.router.navigate(['dashboard/subscriptionplan']);
-    } else {
-      this.router.navigate(['subscriptionplan']);
-    }
-  }
+  //   const now = new Date().getTime();
+  //   const t = deadline - now;
+  //   const days = Math.floor(t / (1000 * 60 * 60 * 24));
+  //   const hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  //   const minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+  //   const seconds = Math.floor((t % (1000 * 60)) / 1000);
+
+  //   this.days = days;
+  //   this.hours = hours;
+  //   this.minutes = minutes;
+  //   this.seconds = seconds;
+  // }
+
+  // learnMore() { /** NO NEED */
+  //   if (this.token) {
+  //     this.router.navigate(['plans']);
+  //   } else {
+  //     this.router.navigate(['plans']);
+  //   }
+  // }
 
 
   showMenu() {

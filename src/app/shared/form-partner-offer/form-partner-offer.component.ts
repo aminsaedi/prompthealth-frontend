@@ -63,6 +63,8 @@ export class FormPartnerOfferComponent implements OnInit {
         new FormControl(this.data.affiliateLink ? this.data.affiliateLink : '', [Validators.pattern(this.patternURL)]),        
       ]),
     });
+
+    this.onChangeForFree(this.data.isFree);
   }
 
 

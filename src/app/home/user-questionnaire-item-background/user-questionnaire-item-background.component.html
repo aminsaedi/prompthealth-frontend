@@ -1,0 +1,12 @@
+<h4>{{qBackground?.c_question}}</h4>
+
+<div class="mt-4">
+  <form-item-customer-health
+  *ngIf="selections"
+  type="detail"
+  [data]="selected"
+  [col2]="true"
+  [selections]="selections"
+  [controller]="form"
+  ></form-item-customer-health>
+</div>

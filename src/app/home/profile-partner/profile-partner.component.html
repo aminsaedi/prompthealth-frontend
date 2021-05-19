@@ -39,7 +39,7 @@
         <div *ngIf="currentTabIndex == 0">
           <div class="px-4">
             <div class="profile-image-container">
-              <img [src]="profile?.image" [alt]="profile ? profile.name : ''">
+              <img *ngIf="profile" [src]="profile?.image" [alt]="profile ? profile.name : ''">
             </div>
             <h3 class="mt-3 mb-4">{{profile?.name}}</h3>
             <p class="whitespace-prewrap" [ngClass]="{'clamp-4line': isDescriptionClamped}">{{profile?.description}}</p>            
@@ -65,7 +65,7 @@
               </tr>
               <tr *ngIf="profile?.website">
                 <td class="pl-4 text-ph-blue text-center"><i class="fas fa-globe font-big"></i></td>
-                <td class="text-left pl-0"><a [href]="profile.website">{{profile.websiteLabel}}</a></td>
+                <td class="text-left pl-0"><a [href]="profile.website" target="_blank">{{profile.websiteLabel}}</a></td>
               </tr>
             </tbody>
           </table>
@@ -102,10 +102,15 @@
           </div>
   
           <div class="share-menu-container" *ngIf="profile">
-            <share-menu
-            [media]="(profile.productImages && profile.productImages[0]) ? profile.productImages[0].url : null"
-            [description]="profile.description"
-            ></share-menu>
+            <button-share
+            facebook twitter linkedin pinterest email
+            label=""
+            btnClass="btn font-big color-inherit"
+            menuPosition="right"
+            [url]="urlCurrent"
+            [title]="'Check out our favorite product ' + profile?.name" 
+            [text]="profile?.name + ' is offering special deals!'"
+            ></button-share>
           </div>
         </div>
 

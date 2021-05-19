@@ -59,6 +59,12 @@ $colorBlueInactive: #8EB5E2;
   }
 }
 
+.item-count-3 {
+  .stepper-item {
+    flex: 0 0 33.3%;
+  }
+}
+
 .item-count-4{
   .stepper-item{
     flex: 0 0 25%;
