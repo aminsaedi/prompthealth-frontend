@@ -279,14 +279,6 @@ export class SharedService {
   contactus(body) {
     return this.http.post(this.rootUrl + 'user/contactus', body);
   }
-  uploadImage(object) {
-    const headers = this.getAuthorizationHeader();
-    return this.http.post(this.rootUrl + 'upload', object, { headers });
-  }
-  uploadImage1(object) {
-    const headers = this.getAuthorizationHeader();
-    return this.http.post(this.rootUrl + 'upload', object, { headers });
-  }
   sendTop() {
     window.scrollTo(500, 0);
   }

@@ -118,7 +118,7 @@ export class ProfileManagementChildGuard implements CanActivateChild {
 
       case 'my-affiliate':
         /** if user vip, true */
-        if (profile.isVipAffiliateUser) { return true; }
+        if (profile.roles !== 'U') { return true; }
         break;
     }
 

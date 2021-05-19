@@ -1,13 +1,13 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AgmCoreModule } from '@agm/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-import { ProfileManagementRoutingModule } from './profile-mangement-routing.module'
+import { ProfileManagementRoutingModule } from './profile-mangement-routing.module';
 import { WrapperComponent } from './wrapper/wrapper.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { MySubscriptionComponent } from './my-subscription/my-subscription.component';
@@ -58,22 +58,22 @@ import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
     PartnerServiceComponent,
     PartnerGeneralComponent,
     PartnerOfferComponent,
-    
+
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],
   imports: [
-    AgmCoreModule.forRoot(  {
+    AgmCoreModule.forRoot({
       apiKey: 'AIzaSyCbRhC6h9Pp43-5t_Knyrd_ewAdLMIJtCg',
       language: 'en',
       libraries: ['places']
     }),
     ModalModule.forRoot(),
-    NgxPaginationModule,NgxSpinnerModule,
-    SharedModule,NgxDatatableModule,
+    NgxPaginationModule, NgxSpinnerModule,
+    SharedModule, NgxDatatableModule,
     // OwlDateTimeModule, OwlNativeDateTimeModule,
-    CommonModule, ProfileManagementRoutingModule, ReactiveFormsModule, FormsModule,NgbModule ]
-    
+    CommonModule, ProfileManagementRoutingModule, ReactiveFormsModule, FormsModule, NgbModule]
+
 })
-export class ProfileManagementModule {}
+export class ProfileManagementModule { }
