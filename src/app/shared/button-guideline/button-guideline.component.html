@@ -1,0 +1,101 @@
+<button 
+type="button"
+[ngClass]="buttonClass"
+(click)="guidelineModal.show()"
+>{{label}}</button>
+
+<div 
+class="modal fade" 
+bsModal
+id="guidelinemodal"
+#guidelineModal="bs-modal"
+tabindex="-1" 
+role="dialog" 
+aria-labelledby="guidelinemodal" 
+aria-hidden="true"
+>
+  <div 
+  class="modal-dialog modal-dialog-centered" 
+  role="document" 
+  style="margin: auto !important; max-width: 800px;"
+  >
+    <div class="modal-content mk-border">
+      <div class="modal-header">
+        <h5 class="modal-title w-100 text-center text-dark" id="guidelinemodal-label" style="text-indent: 22px;">
+          <span *ngIf="type == 'profile'">Profile Guidelines</span>
+          <span *ngIf="type == 'ambassador'">Ambassador Guidelines</span>
+        </h5>
+        <button type="button" class="close" aria-label="Close" (click)="guidelineModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body p-0">
+        <ng-container *ngIf="type == 'profile'">
+          <div class="p-4 p-md-5">
+            <p class="font-big">
+              We want to ensure you receive the best experience being a registered member of
+              PromptHealth. To do so, we are enforcing profile guidelines to ensure our network remains
+              professional and suitable for our wide range of clients.<br><br>
+              <b>Before setting up your profile, please take a moment to review these guidelines:</b>
+            </p>
+            <ul class="pb-4">
+              <li class="mb-1">
+                Ensure your real first and last names are entered correctly, with no nicknames or
+                symbols.
+              </li>
+              <li class="mb-1">State your professional organization and any certification in order for us to verify you.</li>
+              <li>Please ensure you are fully clothed in any images you upload.</li>
+              <li class="mb-1">
+                Please do not use any profanity or offensive language in your description. If found,
+                PromptHealth reserves the right to suspend your profile.
+              </li>
+              <li class="mb-1">Do not advertise any third-party products. Your profile should only be used to showcase
+              the services you provide as a professional.</li>
+            </ul>
+            <p class="font-big">
+              <b>If you have any questions about creating your profile, please reach out to us at
+              <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a> or at (778) 316-3124.</b>
+            </p>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="type == 'ambassador'">
+          <div class="pt-4 px-4 pt-md-5 px-md-5">
+            <p class="font-big">As a PromptHealth brand ambassador, you will:</p>
+            <ul class="pb-4">
+              <li class="mb-1">Post using resources in our Social Media Kit and tag us (@prompthealth)</li>
+              <li class="mb-1">
+                Be featured on our social media! Create educational video content that you are
+                passionate about (such as an Instagram reel), and tag us when you post it! We will then
+                repost your content featuring you as a registered practitioner which will bring new
+                followers to your account.
+              </li>
+              <li class="mb-1">
+                Share your personal referral link, found on your PromptHealth profile, through different
+                channels (e.g. Instagram, Facebook, LinkedIn, Twitter, WhatsApp, via email, etc.). Each
+                time someone uses your link to sign up, you will receive a credit toward our premium
+                membership plans which you can redeem later on.
+              </li>
+            </ul>
+          </div>
+
+          <div class="sticky-bottom blur py-2 px-4 px-md-4 rounded-15p">
+            <div class="d-flex justify-content-between pb-2">
+              <h4 class="mb-0">Social Media Kit</h4>
+              <button class="btn px-0" (click)="expandBottom()" *ngIf="!isBottomExpanded">
+                <i class="fas fa-chevron-up mr-2 font-regular"></i>
+                More
+              </button>
+              <button class="btn px-0" (click)="shrinkBottom()" *ngIf="isBottomExpanded">
+                <i class="fas fa-chevron-down mr-2 font-regular"></i>
+                Less
+              </button>
+            </div>
+
+            <social-media-kit [expanded]="isBottomExpanded"></social-media-kit>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

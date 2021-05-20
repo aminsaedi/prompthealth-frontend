@@ -7,6 +7,19 @@
 .h-40p{ height: 40px; }
 .top-10p{ top: 10px; }
 
+.max-w-1700 {
+  max-width: 1700px;
+  margin: auto;
+}
+
+.d-1500-none {
+  @media (min-width: 1500px) { display: none!important;}
+}
+
+.d-1500-block {
+  @media (min-width: 1500px) { display: block!important; }
+}
+
 nav{
   transition: transform 400ms;
   &.hide{ transform: translateY(-100%); }

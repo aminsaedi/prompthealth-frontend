@@ -3,14 +3,14 @@
     <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
   </p>
 </ngx-spinner>
-<h3 class="mb-3">
-  Profile
-  <button 
-  *ngIf="profile"
-  class="btn btn-primary pull-right" 
-  (click)="toggleEdit()"
-  >Edit</button>
-</h3>
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+  <h3 class="mb-0 flex-grow-1">Profile</h3>
+  <div class="d-flex justify-content-end flex-grow-1" *ngIf="profile">
+    <!-- <button-guideline class="mr-2"></button-guideline> -->
+    <button class="btn btn-primary" (click)="toggleEdit()">Edit</button>  
+  </div>  
+</div>
 
 <div class="mt-5" *ngIf="profile">
   <form-partner-general

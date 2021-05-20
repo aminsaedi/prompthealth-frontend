@@ -50,8 +50,9 @@ import { FormItemDatetimeComponent } from './form-item-datetime/form-item-dateti
 import { FormItemUploadImageButtonComponent } from './form-item-upload-image-button/form-item-upload-image-button.component';
 import { AddonSelectCategoryComponent } from './addon-select-category/addon-select-category.component';
 import { ButtonShareComponent } from './button-share/button-share.component';
-import { ButtonProfileGuidelineComponent } from './button-profile-guideline/button-profile-guideline.component';
+import { ButtonGuidelineComponent } from './button-guideline/button-guideline.component';
 import { CardPractitionerComponent } from './card-practitioner/card-practitioner.component';
+import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -110,8 +111,9 @@ import { CardPractitionerComponent } from './card-practitioner/card-practitioner
     FormItemUploadImageButtonComponent,
     AddonSelectCategoryComponent,
     ButtonShareComponent,
-    ButtonProfileGuidelineComponent,
+    ButtonGuidelineComponent,
     CardPractitionerComponent,
+    SocialMediaKitComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -153,7 +155,7 @@ import { CardPractitionerComponent } from './card-practitioner/card-practitioner
     FormItemDatetimeComponent,
     FormItemUploadImageButtonComponent,
     ButtonShareComponent,
-    ButtonProfileGuidelineComponent,
+    ButtonGuidelineComponent,
     CardPractitionerComponent,
   ]
 })

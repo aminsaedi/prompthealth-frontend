@@ -1,5 +1,5 @@
 <div class="position-relative overflow-hidden ambassador-container pb-5">
-  <section class="container text-dark position-relative z-index-1">
+  <section class="container text-dark position-relative">
     <ng-container *ngIf="faceType == 'provider'">
       <div class="row align-items-start">
         <div class="col-12 col-md-8">
@@ -23,20 +23,27 @@
             Also, tag us <b>@prompthealth</b> on your social media accounts!<br>
           </p>
 
-          <div 
-          *ngIf="user"
-          class="border rounded-lg px-3 py-2 mb-3 d-flex align-items-center justify-content-end" 
-          style="background: #ffffffcc;" 
-          >
-            <input class="flex-grow-1 input-link" #referralLink
-              [value]="FRONTEND_URL +'/invitation/' + user._id" readonly>
-            <button-share
-            facebook twitter linkedin email
-            label="Share"
-            [url]="FRONTEND_URL +'/invitation/' + user._id"
-            title="Join PromptHealth!"
-            text="Join PromptHealth to take control your health!"
-            ></button-share>
+          <div *ngIf="user" class="mb-4">
+            <div 
+            class="border rounded-lg px-3 py-2 mb-2 d-flex align-items-center justify-content-end" 
+            style="background: #ffffffcc;" 
+            >
+              <input class="flex-grow-1 input-link" #referralLink
+                [value]="FRONTEND_URL +'/invitation/' + user._id" readonly>
+              <button-share
+              facebook twitter linkedin email
+              label="Share"
+              [url]="FRONTEND_URL +'/invitation/' + user._id"
+              title="Join PromptHealth!"
+              text="Join PromptHealth to take control your health!"
+              ></button-share>
+            </div>  
+
+            <button-guideline
+            type="ambassador"
+            label="See guidelines and get Social media kit"
+            buttonClass="btn btn-outline-ph-blue font-regular"
+            ></button-guideline>
           </div>
 
           <div *ngIf="!user">
@@ -52,10 +59,10 @@
           <h4 class="text-dark-blue mb-3">What you get:</h4>
           <div class="mb-md-5">
 
-            <p class="mb-md-2">
+            <p class="mb-2">
               The more engagement your shared referral link gets, the more credits you are awarded. The credits can then be used towards our premium services. 
             </p>
-            <a [routerLink]="'/dashboard/profilemanagement/my-payment'">
+            <a [routerLink]="'/dashboard/profilemanagement/my-payment'" class="btn btn-link px-0 font-regular">
               Check credit balance
             </a>
           </div>
