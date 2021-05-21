@@ -21,6 +21,8 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 export class HeaderComponent implements OnInit {
 
   @ViewChild('signupModal') public signupModal: ModalDirective;
+  @ViewChild('dashboardButton') private dashboardButton: ElementRef;
+
   get onProductPage(){
     return !!this._router.url.match('product');
   }
@@ -292,6 +294,19 @@ export class HeaderComponent implements OnInit {
 
   setPriceType(type: PriceType = null){
     this.priceType = type;
+  }
+
+  public positionDashboardMenuMd = null;
+  toggleDashboardMenuMdVisibility() {
+    this.isDashboardMenuShown = !this.isDashboardMenuShown;
+    if(this.isDashboardMenuShown) {
+      const rect = this.dashboardButton.nativeElement.getBoundingClientRect();
+      const right = (window.innerWidth - rect.right > 30) ? (window.innerWidth - rect.right - 10) : 10
+      this.positionDashboardMenuMd = {
+        right: right + 'px',
+        marginTop: '10px',
+      };
+    }
   }
 }
 

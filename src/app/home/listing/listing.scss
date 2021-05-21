@@ -29,6 +29,10 @@ $colorPaginatorLight: #B7D3F3;
   -webkit-text-fill-color: transparent;
 }
 
+.button-filter-apply {
+  transform: scale(1.2);
+  transform-origin: right;
+}
 .sticky-right{
   position: sticky;
   right: 0;
@@ -168,6 +172,28 @@ a.link-to-personal-match {
     color: white;
     background-color: $colorBlueDark;
     -webkit-text-stroke: 0px;
+  }
+}
+
+.tip-for-apply {
+  transform: translateY(-100%);
+  cursor: pointer;
+  background: #293148;
+  color: white;
+  padding: 7px 10px;
+  width: 200px;
+  right: 15px;
+  border-radius: 5px;
+  font-size: 13px;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 30px;
+    width: 0;
+    height: 0;
+    border: solid 7px transparent;
+    border-top-color: #293148;
   }
 }
 

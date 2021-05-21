@@ -43,10 +43,10 @@
       </div>
 
       <ng-template #logoutblock>
-        <div class="ml-auto d-none d-md-block w-160p position-relative">
+        <div class="ml-auto d-none d-md-block w-160p position-relative" #dashboardButton>
           <dashboard-menu id="dashboardMenuButton" ui="button" buttonDirection="right"
             [styleButton]="{background: '#ffffff33'}" [user]="user"
-            (click)="isDashboardMenuShown = !isDashboardMenuShown"></dashboard-menu>
+            (click)="toggleDashboardMenuMdVisibility()"></dashboard-menu>
           <div class="position-absolute top-10p dashboard-menu-wrapper-md">
           </div>
         </div>
@@ -126,6 +126,7 @@
 
 <dashboard-menu class="d-none d-md-block position-fixed dashboard-menu-wrapper-md" *ngIf="isDashboardMenuShown"
   [@fadeFast] [user]="user" [scrollDetector]="isDashboardMenuShown" [offset]="50"
+  [ngStyle]="positionDashboardMenuMd"
   (detect)="isDashboardMenuShown = false;" (logout)="logout()" (clickOutside)="onClickOutsideOfDashboardMenuMd($event)"
   (close)="isDashboardMenuShown = false"></dashboard-menu>
 

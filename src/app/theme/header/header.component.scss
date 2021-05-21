@@ -44,11 +44,9 @@ nav{
 }
 
 .dashboard-menu-wrapper-md{
-  top: 60px;
-  right: 10px;
   z-index: 10000;
   border-radius: 15px;
-  border: solid 1px #d6d6d6;
+  box-shadow: 0 0 5px #00000033;
   overflow: hidden;
 }
 
@@ -279,8 +277,8 @@ img.brand-sm{
         width: 100%;
         box-sizing: content-box;
         border-radius: 15px 15px 0 0;
-        border: solid 2px #bfbfbf;
-        border-bottom: none;
+        // border: solid 2px #bfbfbf;
+        // border-bottom: none;
         transform: translateX(-2px);
         padding-bottom: 160px;
       }

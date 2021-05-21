@@ -12,10 +12,9 @@ import { Questionnaire, QuestionnaireAnswer, QuestionnaireService } from '../../
 // import { rootEffectsInit } from '@ngrx/effects';
 // import { FitBoundsService } from '@agm/core/services/fit-bounds';
 import { Professional } from '../../models/professional';
-import { slideVerticalAnimation, expandVerticalAnimation } from '../../_helpers/animations';
+import { slideVerticalAnimation, expandVerticalAnimation, fadeAnimation } from '../../_helpers/animations';
 import { getDistanceFromLatLng } from '../../_helpers/latlng-to-distance';
 import { CategoryService, Category } from '../../shared/services/category.service';
-import { slideHorizontalAnimation } from '../../_helpers/animations';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { locations } from 'src/app/_helpers/location-data';
 
@@ -23,7 +22,7 @@ import { locations } from 'src/app/_helpers/location-data';
   selector: 'app-listing',
   templateUrl: './listing.html',
   styleUrls: ['./listing.scss'],
-  animations: [expandVerticalAnimation, slideVerticalAnimation, slideHorizontalAnimation],
+  animations: [expandVerticalAnimation, slideVerticalAnimation, fadeAnimation],
 })
 export class ListingComponent implements OnInit, OnDestroy {
 
@@ -45,7 +44,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('expertFinder') private expertFinder: ElementRef;
-  @ViewChild(AgmMap) private map: AgmMap;
+  @ViewChild('buttonApplyFilter') private buttonApplyFilter: ElementRef;
   public mapHeight = 0;
   public expertFinderHeight = 0;
 
@@ -68,6 +67,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   public isFinderSticked = false;
   public isMapView = false;
   public isMapSizeBig = false;
+  public isTipForApplyFilterHidden = false;
   public filterTarget: Filter = null;
   public currentPage = 1;
   public professionals: Professional[] = null;
@@ -84,6 +84,8 @@ export class ListingComponent implements OnInit, OnDestroy {
   loggedInUser;
   loggedInRole;
   id;
+
+  public styleRightTipForApplyFilter: number = 15;
 
   private sub: any;
   allDoctorList = []; /**todo: can be deleted because new ui doesn't have feature to search by doctor name */
@@ -180,6 +182,14 @@ export class ListingComponent implements OnInit, OnDestroy {
     if(expertFinderHeight != this.expertFinderHeight) {
       this._changeDetector.detectChanges();
     }
+
+    if(!this.isTipForApplyFilterHidden && this.buttonApplyFilter) {
+      const right = window.innerWidth - this.buttonApplyFilter.nativeElement.getBoundingClientRect().right - 7;
+      if(right >= 15 && right != this.styleRightTipForApplyFilter) {
+        this.styleRightTipForApplyFilter = right;
+        this._changeDetector.detectChanges();
+      }          
+    }
   }
 
   calcMapBoundingRect() {
@@ -218,13 +228,13 @@ export class ListingComponent implements OnInit, OnDestroy {
     }
 
     this.searchCenter = (lat & lng) ? { lat, lng, radius: 100 * 1000 } : { lat: null, lng: null, radius: 0 };
-    this.setMapdata((lat && lng) ? { lat, lng, zoom: 10 } : { lat: latDefault, lng: lngDefault, zoom: 3 });
+    this.setMapdata((lat && lng) ? { lat, lng, zoom: 12 } : { lat: latDefault, lng: lngDefault, zoom: 3 });
     this.listingPayload.latLong = `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
 
     if (lat && lng) {
       this.initialLocation.lat = lat;
       this.initialLocation.lng = lng;
-      this.initialLocation.zoom = 10;
+      this.initialLocation.zoom = 12;
       this.initialLocation.radius = 100 * 1000;
       this.initialLocation.isLocationEnabled = true;
 
@@ -283,7 +293,7 @@ export class ListingComponent implements OnInit, OnDestroy {
       description: 'Use our Expart Finder to find a top-rated health care provider near you or offering virtual appointment.',
     });
 
-    let isFirstAccess = true;
+    let isFirstAccess = true; 
     
     // for the route '/practitioners/category/:categoryId'
     // for the route '/practitioners/category/:categoryId/:city'
@@ -313,7 +323,6 @@ export class ListingComponent implements OnInit, OnDestroy {
           this.initialLocation.isLocationEnabled = true;
   
           const f = this.getFilter('location');
-          f.active = true;
           f.data.defaultLatLng = [lat, lng];
   
           this.getAddressFromLocation([lat, lng]).then(address => {
@@ -425,13 +434,13 @@ export class ListingComponent implements OnInit, OnDestroy {
     this.timerMapZoomChange = setTimeout(() => { this.setMapdata({ zoom: e }, false); }, 500);
   }
 
-  private isMapMoved = false;
+  // private isMapMoved = false;
   private mapBounds: google.maps.LatLngBoundsLiteral;
   onChangeMapBounds(e: google.maps.LatLngBounds) {
     this.mapBounds = e.toJSON();
-    setTimeout(() => {
-      this.isMapMoved = true;
-    }, 500);
+    // setTimeout(() => {
+      // this.isMapMoved = true;
+    // }, 500);
   }
 
   onClickSearchInThisArea(){
@@ -445,10 +454,11 @@ export class ListingComponent implements OnInit, OnDestroy {
         
     this.listing(this.listingPayload);
 
+    const f = this.getFilter('location');
+    f.data.latLng = [this.searchCenter.lat, this.searchCenter.lng];
+    f.data.distance = Math.floor(dist / 2);
     this.getAddressFromLocation([this.searchCenter.lat, this.searchCenter.lng]).then((address) => {
-      const f = this.getFilter('location');
       f.data.address = address;
-      f.data.latLng = [this.searchCenter.lat, this.searchCenter.lng];
     });
   }
 
@@ -481,22 +491,22 @@ export class ListingComponent implements OnInit, OnDestroy {
     //    if (updateListing) { this.listing(this.listingPayload, false); }
   }
 
-  async searchInThisArea() {
-    this.searchCenter.lat = this.mapdata.lat;
-    this.searchCenter.lng = this.mapdata.lng;
-    this.searchCenter.radius = this.listingPayload.miles * 1000;
+  // async searchInThisArea() {
+  //   this.searchCenter.lat = this.mapdata.lat;
+  //   this.searchCenter.lng = this.mapdata.lng;
+  //   this.searchCenter.radius = this.listingPayload.miles * 1000;
 
-    try {
-      const address = await this.getAddressFromLocation([this.mapdata.lat, this.mapdata.lng]);
-      const f = this.getFilter('location');
-      f.data.address = address;
-      f.data.latLng = [this.mapdata.lat, this.mapdata.lng];
-      this.updateFilterActiveStatus(f);
-    } catch (err) { console.log('error'); }
+  //   try {
+  //     const address = await this.getAddressFromLocation([this.mapdata.lat, this.mapdata.lng]);
+  //     const f = this.getFilter('location');
+  //     f.data.address = address;
+  //     f.data.latLng = [this.mapdata.lat, this.mapdata.lng];
+  //     this.updateFilterActiveStatus(f);
+  //   } catch (err) { console.log('error'); }
 
-    this.listingPayload.latLong = `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
-    this.listing(this.listingPayload);
-  }
+  //   this.listingPayload.latLong = `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
+  //   this.listing(this.listingPayload);
+  // }
 
 
   /** get filter by id */
@@ -844,7 +854,7 @@ export class ListingComponent implements OnInit, OnDestroy {
         f.options.forEach(option => { if(option.active){ isActive = true; }});
         break;
       case 'location':
-        isActive = (f.data.distance == f.data.distanceMax && (!f.data.latLng)) ? false : true;
+        isActive = (f.data.distance == f.data.distanceMax && (f.data.latLng[0] == f.data.defaultLatLng[0] && f.data.latLng[1] == f.data.defaultLatLng[1])) ? false : true;
         break;
     }
     f.active = isActive;
@@ -880,10 +890,13 @@ export class ListingComponent implements OnInit, OnDestroy {
     const f = this.getFilter('location');
 
     const [lat,lng] = (f.data.latLng) ? f.data.latLng : [this.initialLocation.lat, this.initialLocation.lng];
+    const isLocationChanged = !!(this.listingPayload.latLong != `${lng}, ${lat}`);
+   
     this.listingPayload.latLong = (f.data.latLng)? (lng + ', ' + lat) : '';
     if(f.data.distance) { this.listingPayload.miles = f.data.distance };
     this.searchCenter = {lat: lat, lng: lng, radius: (f.data.latLng ? this.listingPayload.miles * 1000 : 0) };
-    this.setMapdata({lat: lat, lng: lng, zoom: f.data.latLng ? 10 : 3});
+    this.setMapdata({lat: lat, lng: lng});
+    if(isLocationChanged) { this.mapdata.zoom = (f.data.latLng) ? 12 : 3; }
 
     if(listing){
       this.listing(this.listingPayload);
@@ -949,12 +962,14 @@ export class ListingComponent implements OnInit, OnDestroy {
   }
 
   updateFilterAll(){
+    this.isTipForApplyFilterHidden = true;
     this.filters.forEach(f=> {this.updateFilter(f._id, false);});
     this.updateFilterLocation(true);
     this.setFilterTarget(null);
   }
 
   removeFilterAll() {
+    this.isTipForApplyFilterHidden = false;
     this.filters.forEach(f => {
       if (f.range) { 
         f.range.current = f.range.default; 
@@ -966,7 +981,7 @@ export class ListingComponent implements OnInit, OnDestroy {
       }else if(f.type == 'location'){
         f.data.address = f.data.defaultAddress;
         f.data.distance = f.data.distanceMax;
-        f.data.latLng = null;
+        f.data.latLng = f.data.defaultLatLng;
         this.updateFilterLocation(false);
       }
       this.updateFilterActiveStatus(f);
@@ -1013,12 +1028,15 @@ export class ListingComponent implements OnInit, OnDestroy {
   }
 
   scrollToTop() {
-    const rectF = this.expertFinder.nativeElement.getBoundingClientRect();;
-    const rectL = this.host.querySelector('#practitionersContainer').getBoundingClientRect();
-    window.scrollBy(
-      0, 
-      (rectF.top == 0) ? rectF.top - rectF.height + rectL.top : 0,
-    );
+    const practitionersContainer = this.host.querySelector('#practitionersContainer');
+    if(practitionersContainer) {
+      const rectL = practitionersContainer.getBoundingClientRect();
+      const rectF = this.expertFinder.nativeElement.getBoundingClientRect();
+      window.scrollBy(
+        0, 
+        (rectF.top == 0) ? rectF.top - rectF.height + rectL.top : 0,
+      );         
+    }
   }
 
   filterProfessionalsByPage() {

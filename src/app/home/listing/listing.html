@@ -62,6 +62,13 @@
       (changeValue)="onChangeCustomerHealth($event)"
       ></form-item-customer-health>
     </ul>
+    <div class="position-absolute tip-for-apply"
+    *ngIf="isApplyFilterButtonShown && !isTipForApplyFilterHidden"
+    (click)="isTipForApplyFilterHidden = true;"
+    [ngStyle]="{right: styleRightTipForApplyFilter + 'px'}"
+    [@fade]
+    >To apply filter, please tap this button</div>
+
     <ul *ngIf="!isVirtual" class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
       <li *ngFor="let f of filters; let i = index;">
         <button [id]="'filter-' + f._id"
@@ -72,8 +79,8 @@
       <li>
         <button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button>
       </li>
-      <li class="pl-3 sticky-right" *ngIf="isApplyFilterButtonShown"  [@slideHorizontal]>
-        <button class="btn btn-primary py-1" (click)="updateFilterAll()">Apply</button>
+      <li class="pl-4 sticky-right" *ngIf="isApplyFilterButtonShown"  [@fade]>
+        <button class="btn btn-primary py-1 button-filter-apply" (click)="updateFilterAll()" #buttonApplyFilter>Apply</button>
       </li>
     </ul>
     <ul *ngIf="!!isVirtual" class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
@@ -86,8 +93,8 @@
       <li>
         <button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button>
       </li>
-      <li class="pl-3 sticky-right bg-white" *ngIf="isApplyFilterButtonShown"  [@slideHorizontal] >
-        <button class="btn btn-primary py-1" (click)="updateFilterAll()">Apply</button>
+      <li class="pl-3 sticky-right" *ngIf="isApplyFilterButtonShown"  [@fade] >
+        <button class="btn btn-primary py-1 button-filter-apply" (click)="updateFilterAll()" #buttonApplyFilter>Apply</button>
       </li>
     </ul>
 
@@ -203,9 +210,9 @@
         (click)="onClickMap($event)">
   
         <!-- <agm-marker [longitude]="mapdata.lng" [latitude]="mapdata.lat"></agm-marker> -->
-        <agm-circle [radius]="searchCenter.radius" *ngIf="searchCenter.lng && searchCenter.lat"
+        <!-- <agm-circle [radius]="searchCenter.radius" *ngIf="searchCenter.lng && searchCenter.lat"
           [longitude]="searchCenter.lng" [latitude]="searchCenter.lat" [fillColor]="'#3377C5'" [fillOpacity]="0.1"
-          [strokeColor]="'#3377C5'" [strokeOpacity]="1" [strokeWeight]="1"></agm-circle>
+          [strokeColor]="'#3377C5'" [strokeOpacity]="1" [strokeWeight]="1"></agm-circle> -->
  
         <agm-marker *ngFor="let p of (professionals? professionals : []); let i = index;" [longitude]="p.location[0]"
           [latitude]="p.location[1]" [iconUrl]="p.mapIconUrl" [title]="p.mapLabel"

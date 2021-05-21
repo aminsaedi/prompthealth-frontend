@@ -14,12 +14,16 @@ export class ButtonGuidelineComponent implements OnInit {
 
  public isBottomExpanded: boolean = false;
 
-  // @ViewChild('guidelineModal') public guidelineModal: ModalDirective;
+  @ViewChild('guidelineModal') public guidelineModal: ModalDirective;
   
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  openModal() {
+    this.guidelineModal.show();
   }
 
   expandBottom() { this.isBottomExpanded = true; }

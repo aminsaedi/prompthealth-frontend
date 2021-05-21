@@ -59,7 +59,7 @@ export class FilterDropdownLocationComponent implements OnInit {
   }
 
   save() {
-    this.data.distance = this.form.controls.distance.value;
+    this.data.distance = this.data.distanceMax;
 
     const [lat, lng] = [this.form.controls.latitude.value, this.form.controls.longitude.value];
     if(lat && lng){
