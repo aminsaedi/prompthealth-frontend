@@ -32,7 +32,7 @@
 
 <div [scrollDetector]="!!filterTarget" [offset]="100" (detect)="setFilterTarget(null)"></div>
 <div class="intersection-observer" intersectionObserver (changeStatus)="changeStickyStatus($event)"></div>
-<section class="container-fluid mt-5 pt-2 sticky-top blur" id="expertFinder">
+<section class="container-fluid mt-5 pt-2 sticky-top blur" id="expertFinder" #expertFinder>
   <div class="max-w-1200">
     <div class="d-flex align-items-center mb-3">
       <h2 class="text-blue-gradient font-weight-normal mb-0 expert-finder">Expert Finder</h2>
@@ -72,7 +72,7 @@
       <li>
         <button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button>
       </li>
-      <li class="pl-3 sticky-right bg-white" *ngIf="isApplyFilterButtonShown"  [@slideHorizontal]>
+      <li class="pl-3 sticky-right" *ngIf="isApplyFilterButtonShown"  [@slideHorizontal]>
         <button class="btn btn-primary py-1" (click)="updateFilterAll()">Apply</button>
       </li>
     </ul>
@@ -125,10 +125,131 @@
     [multiple]="(filterTarget.type == 'checkbox')? true: false" [options]="filterTarget.options"
     (changeState)="onChangeStateFilterMenu($event)"
   ></filter-dropdown-select>
-
 </div>
 
-<section class="container-fluid bg-lightblue" id="professionalList">
+<section class="bg-lightblue">
+  <div class="container py-3" *ngIf="isVirtual">
+    <ng-container *ngIf="pages.data">
+      <div>
+        <p class="font-italic" *ngIf="pages.data.length > 0">Here are the options we found for you</p>
+        <p class="font-italic font-big no-one-found" *ngIf="pages.data.length == 0">
+          There is no one available in your geographical area with your search criteria right now. <br><br>
+          Be sure to check back as our network is growing everyday!
+        </p>
+      </div>            
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3 py-3" *ngFor="let p of pages.data[pages.current - 1]">
+          <card-practitioner
+          [showDistance]="true"
+          [data]="p"
+          (changeCompareStatus)="updateCompareList()"
+          ></card-practitioner>
+        </div>
+      </div>  
+    </ng-container>
+  </div>
+
+  <div class="d-flex flex-nowrap" *ngIf="!isVirtual">
+    <div 
+    id="practitionersContainer"
+    class="d-flex flex-wrap justify-content-start practitioners-container min-h-100--finder" 
+    [ngClass]="{'hidden min-h-150': isMapSizeBig}"
+    >
+      <ng-container *ngIf="pages.data">
+        <div class="w-100 container-fluid">
+          <p class="font-italic" *ngIf="pages.data.length > 0">Here are the options we found for you</p>
+          <p class="font-italic font-big no-one-found" *ngIf="pages.data.length == 0">
+            There is no one available in your geographical area with your search criteria right now. <br><br>
+            Be sure to check back as our network is growing everyday!
+          </p>
+        </div>
+        <div class="card-container" *ngFor="let p of pages.data[pages.current - 1]">
+          <card-practitioner
+          [showDistance]="true"
+          [data]="p"
+          (changeCompareStatus)="updateCompareList()"
+          ></card-practitioner>
+        </div>
+
+        <div class="d-flex flex-nowrap justify-content-center pt-2 pb-5 w-100">
+          <div class="paginator pre" (click)="changePage(pages.current - 1)"></div>
+          <div *ngFor="let p of pages.data; let i = index" class="paginator point mr-1 active"
+            [ngClass]="{active: (i == pages.current - 1)}" (click)="changePage(i + 1)"></div>
+          <div *ngIf="pages.data && pages.data.length > 1" class="paginator next"
+            (click)="changePage(pages.current + 1)"></div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="!pages.data">
+        <div class="w-100 container-fluid">
+          <p class="opacity-0">Here are the options we found for you</p>
+        </div>
+        <div class="card-container" *ngFor="let i of [0,1,2,3,4,5]">
+          <div class="card rounded-15p">
+            <card-dummy></card-dummy>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="flex-grow-1 sticky-to-finder"
+    [ngStyle]="{top: expertFinderHeight + 'px', height: mapHeight + 'px'}"
+    >
+      <div class="map-container" [ngClass]="{full: isMapSizeBig}">
+        <agm-map
+        [latitude]="mapdata.lat" [longitude]="mapdata.lng" [zoom]="mapdata.zoom" [disableDefaultUI]="false"
+        [zoomControl]="false" (centerChange)="onChangeMapCenter($event)" (zoomChange)="onChangeMapZoom($event)"
+        [gestureHandling]="'greedy'"
+        (boundsChange)="onChangeMapBounds($event)"
+        (click)="onClickMap($event)">
+  
+        <!-- <agm-marker [longitude]="mapdata.lng" [latitude]="mapdata.lat"></agm-marker> -->
+        <agm-circle [radius]="searchCenter.radius" *ngIf="searchCenter.lng && searchCenter.lat"
+          [longitude]="searchCenter.lng" [latitude]="searchCenter.lat" [fillColor]="'#3377C5'" [fillOpacity]="0.1"
+          [strokeColor]="'#3377C5'" [strokeOpacity]="1" [strokeWeight]="1"></agm-circle>
+ 
+        <agm-marker *ngFor="let p of (professionals? professionals : []); let i = index;" [longitude]="p.location[0]"
+          [latitude]="p.location[1]" [iconUrl]="p.mapIconUrl" [title]="p.mapLabel"
+          [zIndex]="(professionals? professionals.length : 100) - i" [visible]="p.isMapIconReady"
+          (markerClick)="onClickMapMarker(infoWindow)">
+          <agm-info-window #infoWindow>
+            <div class="agm-info-window">
+              <card-practitioner
+              [showDistance]="true"
+              [data]="p"
+              (changeCompareStatus)="updateCompareList()"
+              ></card-practitioner>
+            </div>
+          </agm-info-window>
+        </agm-marker>
+      </agm-map>
+      <div class="map-controller d-flex justify-content-between">
+        <button class="btn d-none d-lg-block bg-white font-regular rounded-10p" (click)="toggleMapSize()">
+          <span *ngIf="!isMapSizeBig">
+            <i class="fas fa-chevron-left"></i>
+          </span>
+          <span *ngIf="isMapSizeBig" class="text-nowrap">
+            <i class="fas fa-chevron-right"></i>
+            Show list
+          </span>
+        </button>
+        
+        <button class="btn btn-search-in-this-area bg-white font-regular rounded-10p text-nowrap" (click)="onClickSearchInThisArea()">
+          Search in this area
+        </button>
+
+        <button class="btn font-regular btn-get-location rounded-10p bg-white" [disabled]="isGettingCurrentLocation"
+        (click)="onClickGetLocationButton()" [ngClass]="{active: isGettingCurrentLocation}"><i
+          class="fas fa-crosshairs"></i></button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+
+
+<!-- <section class="container-fluid bg-lightblue" id="professionalList">
   <div class="row align-items-start">
     <div class="col-12 d-md-block pt-5 min-h-100-finder" [ngClass]="listingContainerClass">
       <div class="container-fluid postiion-relative">
@@ -154,7 +275,6 @@
           <p class="font-italic">Here are the options we found for you</p>
           <ul class="professionals list-unstyled row" *ngIf="pages.data">
             <li class="col-12 mb-3" *ngFor="let p of pages.data[pages.current - 1]" [ngClass]="listingItemClass">
-              <!-- todo: create component to reuse this card in google map -->
               <div class="card p-3 text-center border-blue rounded-15p font-small">
                 <div class="img-wrapper mb-3" [ngClass]="{verified: p.isVerified}">
                   <user-image [verifiedUser]="p.isVerified" [image]="p.image" [alt]="p.name" [borderWidthVerified]="3">
@@ -194,65 +314,13 @@
             </li>
           </ul>
 
-          <div class="d-flex flex-nowrap justify-content-center pt-2 pb-5" *ngIf="pages.data">
-            <div class="paginator pre" (click)="changePage(pages.current - 1)"></div>
-            <div *ngFor="let p of pages.data; let i = index" class="paginator point mr-1 active"
-              [ngClass]="{active: (i == pages.current - 1)}" (click)="changePage(i + 1)"></div>
-            <div *ngIf="pages.data && pages.data.length > 1" class="paginator next"
-              (click)="changePage(pages.current + 1)"></div>
-          </div>
+          
         </ng-container>
       </div>
     </div>
     <div class="col-12 col-md-6 d-none d-md-block sticky-to-finder h-100--finder bg-white" *ngIf="!isVirtual"
-      [ngClass]="{'d-none': !isMapView, 'col-lg-9': isMapSizeBig, 'col-lg-3': !isMapSizeBig}">
-      <agm-map [latitude]="mapdata.lat" [longitude]="mapdata.lng" [zoom]="mapdata.zoom" [disableDefaultUI]="false"
-        [zoomControl]="false" (centerChange)="onChangeMapCenter($event)" (zoomChange)="onChangeMapZoom($event)"
-        (click)="onClickMap()">
-
-        <!-- <agm-marker [longitude]="mapdata.lng" [latitude]="mapdata.lat"></agm-marker> -->
-        <agm-circle [radius]="searchCenter.radius" *ngIf="searchCenter.lng && searchCenter.lat"
-          [longitude]="searchCenter.lng" [latitude]="searchCenter.lat" [fillColor]="'#3377C5'" [fillOpacity]="0.1"
-          [strokeColor]="'#3377C5'" [strokeOpacity]="1" [strokeWeight]="1"></agm-circle>
-
-        <agm-marker *ngFor="let p of (professionals? professionals : []); let i = index;" [longitude]="p.location[0]"
-          [latitude]="p.location[1]" [iconUrl]="p.mapIconUrl" [title]="p.mapLabel"
-          [zIndex]="(professionals? professionals.length : 100) - i" [visible]="p.isMapIconReady"
-          (markerClick)="onClickMapMarker(infoWindow)">
-          <agm-info-window #infoWindow>
-            <div class="agm-info-window">
-              <div class="p-3 text-center">
-                <div class="img-wrapper mb-3" [ngClass]="{verified: p.isVerified}">
-                  <user-image [verifiedUser]="p.isVerified" [image]="p.image" [alt]="p.name" [borderWidthVerified]="3">
-                  </user-image>
-                </div>
-                <div class="price-tag bg-tagblue font-weight-bold" *ngIf="p.price">{{p.price}}</div>
-                <!-- <div class="button-compare form-check">
-                  <input type="checkbox" class="form-check-input" [id]="'compare-' + p.id" [(ngModel)]="p.isCheckedForCompare" (change)="updateCompareList()">
-                  <label class="form-check-label" [for]="'compare-' + p.id">Compare</label>
-                </div> -->
-
-                <p class="mb-1 clamp-1line font-weight-bold">{{p.title}}</p>
-                <p class="font-weight-bold font-bigger mb-0 title">
-                  <i class="fas fa-clinic-medical pr-1" *ngIf="p?.isCentre"></i>
-                  {{p.name}}
-                </p>
-                <ul class="d-flex justify-content-center indicators list-unstyled p-0 mt-2 mb-3">
-                  <li><i class="fas fa-video" *ngIf="p.provideVirtual"></i></li>
-                </ul>
-                <star-rate class="my-3" [rate]="p.rating" margin="small" size="small"></star-rate>
-                <p class="mb-2 clamp-1line font-big" *ngIf="!p.isCentre">{{p.organization}}</p>
-                <p class="mb-2 clamp-1line font-big" *ngIf="p.isCentre">{{p.phone}}</p>
-                <p class="mb-3 address">{{p.address}}</p>
-                <div>
-                  <a class="btn border-darkblue text-darkblue rounded-10p" [routerLink]="['/practitioners', p.id]">Check
-                    Profile</a>
-                </div>
-              </div>
-            </div>
-          </agm-info-window>
-        </agm-marker>
-      </agm-map>
+      [ngClass]="{'d-none': !isMapView, 'col-lg-9': isMapSizeBig, 'col-lg-3 col-xl-4': !isMapSizeBig}">
+      
 
       <ul class="map-controller-right list-unstyled mb-0">
         <li>
@@ -273,9 +341,9 @@
     </div>
   </div>
 
-</section>
+</section> -->
 
-<button class="btn switch-ui d-md-none font-biggest text-blue blur" *ngIf="!isVirtual" (click)="toggleView()">
-  <i *ngIf="!isMapView" class="fas fa-map-marked-alt"></i>
-  <i *ngIf="isMapView" class="fas fa-list"></i>
+<button class="btn switch-ui d-lg-none font-regular text-blue rounded-pill bg-blue text-light" *ngIf="!isVirtual" (click)="toggleView()">
+  <span *ngIf="!isMapView"><i class="fas fa-map-marked-alt"></i> <span class="pl-2">Map</span></span>
+  <span *ngIf="isMapView"><i class="fas fa-list"></i> <span class="pl-2">List</span></span>
 </button>

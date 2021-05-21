@@ -35,7 +35,7 @@ import { UserQuestionnaireItemSelectComponent } from "./user-questionnaire-item-
 import { UserQuestionnaireItemBackgroundComponent } from "./user-questionnaire-item-background/user-questionnaire-item-background.component";
 import { UserQuestionnaireItemSelectMultipleComponent } from "./user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component";
 import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
-
+import { SitemapComponent } from "./sitemap/sitemap.component";
 
 const routes: Routes = [
   // {
@@ -121,6 +121,12 @@ const routes: Routes = [
 
   { path: 'practitioners', component: ListingComponent },
   { path: 'practitioners/category/:categoryId', component: ListingComponent },
+  { path: 'practitioners/category', redirectTo: 'practitioners'},
+  { path: 'practitioners/category/:categoryId/:city', component: ListingComponent },
+  { path: 'practitioners/area/:city', component: ListingComponent },
+  { path: 'practitioners/area', redirectTo: 'practitioners' },
+  
+
   { path: 'practitioners/:id', component: DetailComponent }, 
   { path: 'compare-practitioners', component: ListingcompareComponent},
 
@@ -148,6 +154,7 @@ const routes: Routes = [
     canActivate: [AmbassadorProgramGuardGuard],
   },
 
+  { path: 'sitemaps', component: SitemapComponent},
   { path: '404', component: NotFoundComponent },
 ];
 

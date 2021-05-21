@@ -500,13 +500,13 @@ export class Professional implements IProfessional {
       ctx.fillStyle = 'black';
       ctx.font = '14px bold -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
       const wText = ctx.measureText(this.mapLabel).width;
-      c.width = radCircle * 2 + gap + wText + padding + paddingRight;
+      c.width = radCircle * 2 + gap + wText + padding + paddingRight + 2;
       c.height = radCircle * 2 + padding * 2;
 
       ctx.beginPath();
       const x = 10;
       const y = padding + radCircle - hLabel / 2;
-      const w = c.width - 10;
+      const w = c.width - 12;
       const h = hLabel;
       const r = h / 2;
 

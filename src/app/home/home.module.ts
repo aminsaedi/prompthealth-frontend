@@ -51,6 +51,7 @@ import { UserQuestionaireComponent } from "./user-questionaire/user-questionaire
 import { UserQuestionnaireItemGenderComponent } from "./user-questionnaire-item-gender/user-questionnaire-item-gender.component";
 import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
 import { AuthModule } from "../auth/auth.module";
+import { SitemapComponent } from './sitemap/sitemap.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { AuthModule } from "../auth/auth.module";
     UserQuestionnaireItemSelectComponent,
     UserQuestionnaireItemBackgroundComponent,
     UserQuestionnaireItemSelectMultipleComponent,
+    SitemapComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

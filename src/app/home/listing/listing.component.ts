@@ -1,6 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, NgZone, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { MapsAPILoader, MouseEvent } from '@agm/core';
+import { AgmMap, MapsAPILoader } from '@agm/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
@@ -13,10 +13,11 @@ import { Questionnaire, QuestionnaireAnswer, QuestionnaireService } from '../../
 // import { FitBoundsService } from '@agm/core/services/fit-bounds';
 import { Professional } from '../../models/professional';
 import { slideVerticalAnimation, expandVerticalAnimation } from '../../_helpers/animations';
+import { getDistanceFromLatLng } from '../../_helpers/latlng-to-distance';
 import { CategoryService, Category } from '../../shared/services/category.service';
 import { slideHorizontalAnimation } from '../../_helpers/animations';
-import { ifStmt } from '@angular/compiler/src/output/output_ast';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { locations } from 'src/app/_helpers/location-data';
 
 @Component({
   selector: 'app-listing',
@@ -37,10 +38,16 @@ export class ListingComponent implements OnInit, OnDestroy {
     private _maps: MapsAPILoader,
     private _uService: UniversalService,
     private _qService: QuestionnaireService,
+    private _changeDetector: ChangeDetectorRef,
     _el: ElementRef,
   ) {
     this.host = _el.nativeElement;
   }
+
+  @ViewChild('expertFinder') private expertFinder: ElementRef;
+  @ViewChild(AgmMap) private map: AgmMap;
+  public mapHeight = 0;
+  public expertFinderHeight = 0;
 
   @ViewChild('searchGlobal')
   public searchGlobalElementRef: ElementRef;
@@ -55,7 +62,6 @@ export class ListingComponent implements OnInit, OnDestroy {
   public initialLocation: { lat: number, lng: number, zoom: number, radius: number, address: string, isLocationEnabled: boolean } = { lat: 53.89, lng: -111.25, zoom: 3, radius: 0, address: '', isLocationEnabled: false };
 
   public mapInfoWindowPrevious: any = null;
-  private isMapInfoWindowReady = false;
   public isGettingCurrentLocation = false;
   public isGetLocationButtonShown = true;
 
@@ -98,19 +104,19 @@ export class ListingComponent implements OnInit, OnDestroy {
   private timerMapCenterChange: any;
   private timerMapZoomChange: any;
 
-  get listingContainerClass() {
-    let c = '';
-    if (!this.isVirtual) {
-      if (this.isMapView) { c = 'd-none'; } else if (this.isMapSizeBig) { c = 'col-md-6 col-lg-3'; } else { c = 'col-md-6 col-lg-9'; }
-    }
-    return c;
-  }
+  // get listingContainerClass() {
+  //   let c = '';
+  //   if (!this.isVirtual) {
+  //     if (this.isMapView) { c = 'd-none'; } else if (this.isMapSizeBig) { c = 'col-md-6 col-lg-3'; } else { c = 'col-md-6 col-lg-9 col-xl-8'; }
+  //   }
+  //   return c;
+  // }
 
-  get listingItemClass() {
-    let c = '';
-    if (this.isVirtual) { c = 'col-md-6 col-lg-3'; } else if (!this.isMapSizeBig) { c = 'col-lg-4'; }
-    return c;
-  }
+  // get listingItemClass() {
+  //   let c = '';
+  //   if (this.isVirtual) { c = 'col-md-6 col-lg-3'; } else if (!this.isMapSizeBig) { c = 'col-lg-4'; }
+  //   return c;
+  // }
 
   get isMainFilterOn() {
     return (
@@ -168,10 +174,26 @@ export class ListingComponent implements OnInit, OnDestroy {
     this.listing(this.listingPayload);
   }
 
+  ngAfterViewChecked() {
+    const expertFinderHeight = this.expertFinderHeight;
+    this.calcMapBoundingRect();
+    if(expertFinderHeight != this.expertFinderHeight) {
+      this._changeDetector.detectChanges();
+    }
+  }
+
+  calcMapBoundingRect() {
+    this.expertFinderHeight = this.expertFinder.nativeElement.getBoundingClientRect().height;
+    this.mapHeight = window.innerHeight - this.expertFinderHeight;
+    return;
+  }
+
   async ngOnInit() {
     this.AWS_S3 = environment.config.AWS_S3;
     this.serviceSet = await this._catService.getCategoryAsync();
     const ls = this._uService.localStorage;
+
+    this.calcMapBoundingRect(); 
 
     // if options which has to be fetched from server is not set correctly, fetch.
     if (this.filters[3].options.length == 0 || this.filters[4].options.length == 0 || this.filters[4].options.length == 0) {
@@ -264,16 +286,61 @@ export class ListingComponent implements OnInit, OnDestroy {
     let isFirstAccess = true;
     
     // for the route '/practitioners/category/:categoryId'
-    this.route.params.subscribe((params: {categoryId: string}) => {
+    // for the route '/practitioners/category/:categoryId/:city'
+    this.route.params.subscribe((params: {categoryId: string, city: string}) => {
+      let areaDescription = 'near you or offering virtual appointment';
+      
+      if(params.city) {
+        const city = locations[params.city.toLowerCase()];
+        
+        if(!city) {
+          this.router.navigate(['../'], {relativeTo: this.route});
+        }else{
+          areaDescription = 'around ' + params.city.charAt(0).toUpperCase() + params.city.slice(1);
+
+          const [lat, lng] = [city.lat, city.lng];
+          const distance = city.distance;
+          const zoom = city.zoom;
+          this.listingPayload.latLong = `${lng}, ${lat}`;
+          this.listingPayload.miles = distance;
+  
+          this.searchCenter = { lat, lng, radius: distance * 1000 };
+          this.setMapdata({ lat, lng, zoom: zoom });
+          this.initialLocation.lat = lat;
+          this.initialLocation.lng = lng;
+          this.initialLocation.zoom = zoom;
+          this.initialLocation.radius = distance * 1000;
+          this.initialLocation.isLocationEnabled = true;
+  
+          const f = this.getFilter('location');
+          f.active = true;
+          f.data.defaultLatLng = [lat, lng];
+  
+          this.getAddressFromLocation([lat, lng]).then(address => {
+            this.initialLocation.address = address;
+  
+            const f = this.getFilter('location');
+            f.data.defaultAddress = address;
+          }, (error) => {
+            console.log(error);
+          });  
+        }
+      }
+
       if(params.categoryId){
         this.id = params.categoryId;
         this.listingPayload.services = [this.id];
   
         const categoryName = this.getServiceName(params.categoryId);
         this._uService.setMeta(this.router.url, {
-          title: `Find ${categoryName.toLowerCase()} specialist in Canada | PromptHealth`,
-          description: `Use our Expart Finder to find a top-rated ${categoryName.toLowerCase()} specialist near you or offering virtual appointment.`
-        })  
+          title: `Find best ${categoryName.toLowerCase()} specialist ${(areaDescription) ? areaDescription : 'in Canada'} | PromptHealth`,
+          description: `Use our Expart Finder to find a top-rated ${categoryName.toLowerCase()} specialist ${areaDescription}.`
+        });
+      }else {
+        this._uService.setMeta(this.router.url, {
+          title: `Find best health care provider ${(areaDescription) ? areaDescription : 'in Canada'} | PromptHealth`,
+          description: `Use our Expart Finder to find a top-rated health care provider ${areaDescription}.`
+        });
       }
 
       if(!isFirstAccess) {
@@ -310,7 +377,6 @@ export class ListingComponent implements OnInit, OnDestroy {
       // else if(this.type){
       //   this.listingPayload.type = this.type;
       // }
-
       this.listing(this.listingPayload);
     });
   }
@@ -322,8 +388,11 @@ export class ListingComponent implements OnInit, OnDestroy {
       const [lat, lng] = await this.getCurrentLocation();
       this.setMapdata({ lat, lng, zoom: 12 });
     } catch (err) {
-      const message = (err.code === 1) ? 'You need to enable your location in order to see options in your geographical area. Alternatively you can only view virtual options!' : 'Could not get current location';
-      this.toastr.success(message);
+      if(err.code === 1) {
+        this.toastr.success('You need to enable your location in order to see options in your geographical area. Alternatively you can only view virtual options!');
+      }else {
+        this.toastr.error('Could not get current location');        
+      }
     }
 
     this.isGettingCurrentLocation = false;
@@ -339,12 +408,10 @@ export class ListingComponent implements OnInit, OnDestroy {
         this.initialLocation.lat = lat;
         this.initialLocation.lng = lng;
         resolve([lat, lng]);
-      },
-        err => {
-          this.isGetLocationButtonShown = false;
-          reject(err);
-        },
-        { enableHighAccuracy: true, maximumAge: 0, timeout: 1000000 });
+      },err => {
+        console.log(err);
+        reject(err);
+      }, { enableHighAccuracy: true, maximumAge: 0, timeout: 7000 });
     });
   }
 
@@ -358,8 +425,35 @@ export class ListingComponent implements OnInit, OnDestroy {
     this.timerMapZoomChange = setTimeout(() => { this.setMapdata({ zoom: e }, false); }, 500);
   }
 
-  onClickMap() {
-    if (this.mapInfoWindowPrevious && this.mapInfoWindowPrevious.content.isConnected && this.isMapInfoWindowReady) {
+  private isMapMoved = false;
+  private mapBounds: google.maps.LatLngBoundsLiteral;
+  onChangeMapBounds(e: google.maps.LatLngBounds) {
+    this.mapBounds = e.toJSON();
+    setTimeout(() => {
+      this.isMapMoved = true;
+    }, 500);
+  }
+
+  onClickSearchInThisArea(){
+    const b = this.mapBounds;
+    const dist = getDistanceFromLatLng(b.north, b.east, b.south, b.west);
+    this.listingPayload.latLong = (b.east + b.west) / 2 + ', ' + (b.south + b.north) / 2;
+    this.listingPayload.miles = Math.floor(dist / 2);
+    this.searchCenter.lat = (b.north + b.south) / 2;
+    this.searchCenter.lng = (b.east + b.west) / 2;
+    this.searchCenter.radius = dist / 2 * 1000;
+        
+    this.listing(this.listingPayload);
+
+    this.getAddressFromLocation([this.searchCenter.lat, this.searchCenter.lng]).then((address) => {
+      const f = this.getFilter('location');
+      f.data.address = address;
+      f.data.latLng = [this.searchCenter.lat, this.searchCenter.lng];
+    });
+  }
+
+  onClickMap(e: Event) {
+    if((e.target as HTMLElement).closest('.agm-info-window') == null && this.mapInfoWindowPrevious) {
       this.closeMapInfoWindow();
     }
   }
@@ -369,15 +463,13 @@ export class ListingComponent implements OnInit, OnDestroy {
       this.closeMapInfoWindow();
     }
     setTimeout(() => {
-      this.isMapInfoWindowReady = true;
       this.mapInfoWindowPrevious = infoWindow;
-    }, 1000);
+    }, 300);
   }
 
   closeMapInfoWindow() {
     this.mapInfoWindowPrevious.close();
     this.mapInfoWindowPrevious = null;
-    this.isMapInfoWindowReady = false;
   }
 
   setMapdata(data: { lat?: number, lng?: number, zoom?: number }, updateListing: boolean = false) {
@@ -480,7 +572,6 @@ export class ListingComponent implements OnInit, OnDestroy {
     }
     delete filterCopy.customer_health;
 
-    console.log(this.listingPayload);
     if (showLoader) { this._sharedService.loader('show'); }
     const path = 'user/filter';
     this._sharedService.postNoAuth(filterCopy, path).subscribe((res: any) => {
@@ -504,6 +595,7 @@ export class ListingComponent implements OnInit, OnDestroy {
 
         this.filterProfessionalsByPage();
         this.pages.current = 1;
+        setTimeout(()=>{ this.scrollToTop() });
 
         this._sharedService.loader('hide');
       } else {
@@ -699,7 +791,10 @@ export class ListingComponent implements OnInit, OnDestroy {
   }
 
   /** change view map <----> list for small viewport */
-  toggleView() { this.isMapView = !this.isMapView; }
+  toggleView() { 
+    this.isMapView = !this.isMapView; 
+    this.isMapSizeBig = this.isMapView;
+  }
 
   /** change map size for large viewport */
   toggleMapSize() { this.isMapSizeBig = !this.isMapSizeBig; }
@@ -886,7 +981,7 @@ export class ListingComponent implements OnInit, OnDestroy {
 
     if (id == this.id) {
       this.id = null;
-      this.setQueryParams();
+      this.router.navigate(['/practitioners']);
     } else {
       this.listing(this.listingPayload);
     }
@@ -912,11 +1007,18 @@ export class ListingComponent implements OnInit, OnDestroy {
     if (i <= 0) { i = 1; } else if (i > this.pages.data.length) { i = this.pages.data.length; }
     this.pages.current = i;
 
-    setTimeout(() => {
-      const rectF = this.host.querySelector('#expertFinder').getBoundingClientRect();;
-      const rectL = this.host.querySelector('#professionalList').getBoundingClientRect();
-      window.scrollBy(0, rectF.top - rectF.height + rectL.top);
+    setTimeout(() => { 
+      this.scrollToTop();
     });
+  }
+
+  scrollToTop() {
+    const rectF = this.expertFinder.nativeElement.getBoundingClientRect();;
+    const rectL = this.host.querySelector('#practitionersContainer').getBoundingClientRect();
+    window.scrollBy(
+      0, 
+      (rectF.top == 0) ? rectF.top - rectF.height + rectL.top : 0,
+    );
   }
 
   filterProfessionalsByPage() {
