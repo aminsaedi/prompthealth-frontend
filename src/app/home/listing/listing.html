@@ -156,10 +156,10 @@
     </ng-container>
   </div>
 
-  <div class="d-flex flex-nowrap" *ngIf="!isVirtual">
+  <div class="d-flex flex-nowrap align-items-start" *ngIf="!isVirtual">
     <div 
     id="practitionersContainer"
-    class="d-flex flex-wrap justify-content-start practitioners-container min-h-100--finder" 
+    class="d-flex flex-wrap justify-content-start align-items-start practitioners-container" 
     [ngClass]="{'hidden min-h-150': isMapSizeBig}"
     >
       <ng-container *ngIf="pages.data">
