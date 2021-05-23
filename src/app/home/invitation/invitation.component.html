@@ -33,7 +33,7 @@
             Centre</a>
         </div>
         <div class="mb-3">
-          <a [routerLink]="['/auth/registration/p']" [queryParams]="{nextKeyword: 'buyplan'}" class="btn btn-outline-primary w-100 font-regular">Sign up as Partner</a>
+          <a [routerLink]="['/auth/registration/p']" [queryParams]="{nextKeyword: 'buyplan'}" class="btn btn-outline-primary w-100 font-regular">Sign up as Product/Services</a>
         </div>
       </div>
     </div>
@@ -61,9 +61,9 @@
           <button class="btn btn-outline-primary w-100 font-regular" (click)="logoutAndSignup('c')">Sign up as
             Centre</button>
         </div>
-        <!-- <div class="col-12 col-md-5">
-          <button class="btn btn-outline-primary w-100 font-regular" (click)="logoutAndSignup('p')">Sign up as Partner</button>
-        </div>   -->
+        <div class="col-12 col-md-5">
+          <button class="btn btn-outline-primary w-100 font-regular" (click)="logoutAndSignup('p')">Sign up as Products/Services</button>
+        </div>  
       </div>
 
     </ng-template>
@@ -78,7 +78,8 @@
 
 <ng-template #coupon>
   <h4 class="text-center mb-3">
-    Sign up today and take an additional {{couponData.percent_off}}% off any PromptHealth plan
+    <!-- Sign up today and take an additional {{couponData.percent_off}}% off any PromptHealth plan -->
+    Sign up today and we offer you discount coupon.
     <!-- You have a coupon!<br>
     Use it on our great premium plans today -->
   </h4>
