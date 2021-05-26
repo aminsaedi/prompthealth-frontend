@@ -11,6 +11,8 @@ export class QuestionnaireService {
   private personalMatch: QuestionnaireMapPersonalMatch;
   private profileService: QuestionnairesProfileService;
   private profilePractitioner: QuestionnaireMapProfilePractitioner;
+  private sitemap: QuestionnaireMapSitemap;
+
 
   constructor(
     private http: HttpClient,
@@ -42,6 +44,30 @@ export class QuestionnaireService {
       }
     });
     return selected
+  }
+
+  public getSitemap(): Promise<QuestionnaireMapSitemap> {
+    return new Promise( async (resolve, reject) => {
+      if(this.sitemap) {
+        resolve(this.sitemap);
+      }else {
+        try {
+          const qs = await this.getQuestionnaires('SP');
+          const data: QuestionnaireMapSitemap = {typeOfProvider: null};
+          for (const q of qs) {
+            switch(q.slug){
+              case 'providers-are-you':
+                data.typeOfProvider = q;
+                break;
+            }
+          }
+          this.sitemap = data;
+          resolve(data);
+        }catch(err){
+          reject(err);
+        }
+      }
+    });
   }
 
   /** get questionnaire for myService tab in profileManagement */
@@ -150,6 +176,7 @@ export class QuestionnaireService {
     });
   }
 
+  /** get questionnaire for personal match */
   public getPersonalMatch(): Promise<QuestionnaireMapPersonalMatch> {
     return new Promise( async (resolve, reject) => {
       if(this.personalMatch) {
@@ -290,4 +317,8 @@ export type QuestionnairesProfileService = {
   treatmentModality: Questionnaire,
   customerHealth: Questionnaire,
   //service: it's not set here. it will be set in formItemService individually using categoryService.
+}
+
+export type QuestionnaireMapSitemap = {
+  typeOfProvider: Questionnaire,
 }

@@ -14,6 +14,7 @@
     <div class="row my-3 justify-content-center">
       <div class="col-12 col-md-4 mb-5 mb-md-0">
         <div class="mb-2 font-weight-500 text-dark" >Find Health Care Provider</div>
+        <div class="mb-2 font-weight-500 text-dark">By Area</div>
         <ul class="list-unstyled">
           <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/toronto']">Toronto</a></li>
           <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/hamilton']">Hamilton</a></li>
@@ -21,8 +22,13 @@
           <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/victoria']">Victoria</a></li>
           <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/edmonton']">Edmonton</a></li>
           <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/winnipeg']">Winnipeg</a></li>
-          <li class="mb-2"><a class="text-dark" [routerLink]="['/sitemaps']">Find more cities</a></li>
+          <li class="mb-2"><a class="text-dark" [routerLink]="['/sitemaps']">See all {{countCities}} cities</a></li>
         </ul>                
+        <div class="mb-2 font-weight-500 text-dark">By Type Of Provider</div>
+        <ul class="list-unstyled" *ngIf="typeOfProviderListHighlight">
+          <li class="mb-2" *ngFor="let a of typeOfProviderListHighlight"><a class="text-dark" [routerLink]="['/practitioners/type/', a._id]">{{a.item_text}}</a></li>
+          <li class="mb-2"><a class="text-dark" [routerLink]="['/sitemaps']">See all {{countTypeOfProviders}} provider types</a></li>
+        </ul>
 
       </div>
       <div class="col-12 col-sm-7 col-md-4 mb-5 mb-md-0">

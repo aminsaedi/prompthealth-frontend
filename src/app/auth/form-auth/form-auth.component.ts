@@ -46,7 +46,7 @@ export class FormAuthComponent implements OnInit {
       'email': new FormControl('', [Validators.required, Validators.email]),
       'password': new FormControl('', validators.password),
       'confirm_password': new FormControl('', []),
-      'hear_from': new FormControl('', [Validators.required]),
+      'hear_from': new FormControl('', []),
       't_c': new FormControl('', [Validators.requiredTrue]),
     }, { validator: MustMatch('password', 'confirm_password') });
   }

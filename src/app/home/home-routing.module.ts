@@ -121,9 +121,13 @@ const routes: Routes = [
 
   { path: 'practitioners', component: ListingComponent },
   { path: 'practitioners/category/:categoryId', component: ListingComponent },
-  { path: 'practitioners/category', redirectTo: 'practitioners'},
   { path: 'practitioners/category/:categoryId/:city', component: ListingComponent },
+  { path: 'practitioners/type/:typeOfProviderId', component: ListingComponent },
+  { path: 'practitioners/type/:typeOfProviderId/:city', component: ListingComponent },
   { path: 'practitioners/area/:city', component: ListingComponent },
+
+  { path: 'practitioners/category', redirectTo: 'practitioners'},
+  { path: 'practitioners/type', redirectTo: 'practitioners' },
   { path: 'practitioners/area', redirectTo: 'practitioners' },
   
 

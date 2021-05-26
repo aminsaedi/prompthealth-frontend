@@ -55,6 +55,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   public isVirtual = false;
   public serviceSet: Category[];
   public customerHealthSet: QuestionnaireAnswer[];
+  public typeOfProviderSet: QuestionnaireAnswer[];
 
   public mapdata: { lat: number, lng: number, zoom: number } = { lat: 53.89, lng: -111.25, zoom: 3 };
   public searchCenter: { lat: number, lng: number, radius: number } = { lat: 53.89, lng: -111.25, radius: 0 };
@@ -83,7 +84,8 @@ export class ListingComponent implements OnInit, OnDestroy {
   currentAddress = '';
   loggedInUser;
   loggedInRole;
-  id;
+  public id: string; /** category id */
+  public typeOfProviderId: string; /** type of provider id */
 
   public styleRightTipForApplyFilter: number = 15;
 
@@ -143,7 +145,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   }
 
   getServiceName(id: string) {
-    let name = '';
+    let name = null;
     if (this.serviceSet) {
       for (const s of this.serviceSet) {
         if (s._id == id) { name = s.item_text; break; }
@@ -153,6 +155,13 @@ export class ListingComponent implements OnInit, OnDestroy {
         if (name && name.length > 0) { break; }
       }
     }
+
+    if(!name && this.typeOfProviderSet) {
+      for(const s of this.typeOfProviderSet) {
+        if(s._id == id) { name = s.item_text; break; }
+      }
+    }
+    
     return name;
   }
 
@@ -193,8 +202,10 @@ export class ListingComponent implements OnInit, OnDestroy {
   }
 
   calcMapBoundingRect() {
-    this.expertFinderHeight = this.expertFinder.nativeElement.getBoundingClientRect().height;
-    this.mapHeight = window.innerHeight - this.expertFinderHeight;
+    if(!this._uService.isServer){
+      this.expertFinderHeight = this.expertFinder.nativeElement.getBoundingClientRect().height;
+      this.mapHeight = window.innerHeight - this.expertFinderHeight;  
+    }
     return;
   }
 
@@ -297,7 +308,7 @@ export class ListingComponent implements OnInit, OnDestroy {
     
     // for the route '/practitioners/category/:categoryId'
     // for the route '/practitioners/category/:categoryId/:city'
-    this.route.params.subscribe((params: {categoryId: string, city: string}) => {
+    this.route.params.subscribe(async (params: {categoryId: string, city: string, typeOfProviderId: string}) => {
       let areaDescription = 'near you or offering virtual appointment';
       
       if(params.city) {
@@ -336,7 +347,18 @@ export class ListingComponent implements OnInit, OnDestroy {
         }
       }
 
-      if(params.categoryId){
+      if(params.typeOfProviderId) {
+        this.typeOfProviderId = params.typeOfProviderId;
+        this.listingPayload.services = [this.typeOfProviderId];
+        const qs = await this._qService.getProfilePractitioner('SP');
+        this.typeOfProviderSet = qs.typeOfProvider.answers;
+        const typeOfProviderName = this.getServiceName(this.typeOfProviderId);
+
+        this._uService.setMeta(this.router.url, {
+          title: `Find best ${typeOfProviderName.toLowerCase()} ${(areaDescription) ? areaDescription : 'in Canada'} | PromptHealth`,
+          description: `Use our Expart Finder to find a top-rated ${typeOfProviderName.toLowerCase()} ${areaDescription}.`
+        });
+      } else if (params.categoryId) {
         this.id = params.categoryId;
         this.listingPayload.services = [this.id];
   
@@ -345,7 +367,7 @@ export class ListingComponent implements OnInit, OnDestroy {
           title: `Find best ${categoryName.toLowerCase()} specialist ${(areaDescription) ? areaDescription : 'in Canada'} | PromptHealth`,
           description: `Use our Expart Finder to find a top-rated ${categoryName.toLowerCase()} specialist ${areaDescription}.`
         });
-      }else {
+      } else {
         this._uService.setMeta(this.router.url, {
           title: `Find best health care provider ${(areaDescription) ? areaDescription : 'in Canada'} | PromptHealth`,
           description: `Use our Expart Finder to find a top-rated health care provider ${areaDescription}.`
@@ -356,7 +378,6 @@ export class ListingComponent implements OnInit, OnDestroy {
         this.listing(this.listingPayload);
       }
       isFirstAccess = false;
-
     });
     
 
@@ -631,15 +652,15 @@ export class ListingComponent implements OnInit, OnDestroy {
       case 'age_range':
       case 'typical_hours':
       case 'serviceOfferIds':
+      case 'gender':
+      case 'languageId':
+      case 'price_per_hours':
         val = [];
         break;
 
       case 'zipcode':
-      case 'languageId':
       case 'typicalHoursId':
       case 'name':
-      case 'gender':
-      case 'price_per_hours':
         val = '';
         break;
     }
@@ -997,9 +1018,13 @@ export class ListingComponent implements OnInit, OnDestroy {
     if (id == this.id) {
       this.id = null;
       this.router.navigate(['/practitioners']);
+    } else if(id == this.typeOfProviderId) {
+      this.typeOfProviderId = null;
+      this.router.navigate(['/practitioners']);
     } else {
       this.listing(this.listingPayload);
     }
+
   }
   removeKeyword() {
     this.keyword = '';
@@ -1029,7 +1054,7 @@ export class ListingComponent implements OnInit, OnDestroy {
 
   scrollToTop() {
     const practitionersContainer = this.host.querySelector('#practitionersContainer');
-    if(practitionersContainer) {
+    if(practitionersContainer && !this._uService.isServer) {
       const rectL = practitionersContainer.getBoundingClientRect();
       const rectF = this.expertFinder.nativeElement.getBoundingClientRect();
       window.scrollBy(

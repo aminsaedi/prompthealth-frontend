@@ -11,14 +11,28 @@
         class="ml-0 ml-lg-4"
         ></star-rate>
       </div>
+
+      <div class="image-gallery flex-grow-1 d-flex flex-column">
+        <ng-container *ngIf="profile && profile.productImages.length > 0">
+          <div class="image-main flex-grow-1">
+            <img [src]="profile.productImages[imageViewerTarget].url" alt="">
+          </div>
+          <image-row
+          *ngIf="profile.productImages.length > 1"
+          [images]="profile?.productImages"
+          [option]="{col: 5, center: true}"
+          (select)="changeImageViewerTarget($event)"
+          ></image-row>  
+        </ng-container>
+      </div>
       
-      <div class="image-grid flex-grow-1" [ngClass]="'item-count-' + profile?.countProductImages">
+      <!-- <div class="image-grid flex-grow-1" [ngClass]="'item-count-' + profile?.countProductImages">
         <ng-container *ngFor="let imageData of profile?.productImages; let i = index">
           <div class="position-relative" [ngClass]="'item-' + i" (click)="changeImageViewerTarget(i)">
             <img class="rounded-10p" [src]="imageData.url" >
           </div>  
         </ng-container>
-      </div>
+      </div> -->
     </section>
 
     <section class="col-12 col-md-6 col-lg-5 col-xl-4">
@@ -121,9 +135,9 @@
   </div>
 </div>
 
-<image-viewer 
+<!-- <image-viewer 
 *ngIf="imageViewerTarget !== null" 
 [target]="imageViewerTarget" 
 [data]="profile?.productImageViewerData" 
 (close)="changeImageViewerTarget(null)"
-></image-viewer>
+></image-viewer> -->

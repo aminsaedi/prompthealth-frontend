@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Questionnaire, QuestionnaireAnswer, QuestionnaireMapSitemap, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
+import { locations } from 'src/app/_helpers/location-data';
 // import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { ToastrService } from 'ngx-toastr';
 // import { SharedService } from '../../shared/services/shared.service';
@@ -13,14 +15,25 @@ import { Component, OnInit } from '@angular/core';
 export class FooterComponent implements OnInit {
   // email: any;
   constructor(
+    private _qService: QuestionnaireService,
     // private formBuilder: FormBuilder,
     // private _router: Router,
     // private _sharedService: SharedService,
     // private toastr: ToastrService,
   ) { }
 
+  public typeOfProviderListHighlight: QuestionnaireAnswer[]; /** only contains 5 type of providers */
+  public countCities: number = 0;
+  public countTypeOfProviders: number = 0;
   
   ngOnInit() {
+
+    this.countCities = Object.keys(locations).length;
+    
+    this._qService.getSitemap().then(data => { 
+      this.typeOfProviderListHighlight =data.typeOfProvider.answers.slice(0,5);
+      this.countTypeOfProviders = data.typeOfProvider.answers.length;
+    });
   }
 
   // route(path, queryParams) {

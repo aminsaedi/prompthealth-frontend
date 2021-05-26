@@ -17,7 +17,7 @@ export class ProfilePartnerComponent implements OnInit {
   public profile: Partner;
   public currentTabIndex: number = 0;
 
-  public imageViewerTarget = null;
+  public imageViewerTarget = 0;
   public isDescriptionClamped = true;
 
   public urlCurrent: string;
@@ -69,7 +69,7 @@ export class ProfilePartnerComponent implements OnInit {
             this.profile = new Partner(p);
             resolve(true);  
           }
-          else{ reject('Cannot find the partner'); }
+          else{ reject('Cannot find the data'); }
         }
         else { reject(res.message); }
       }, error => {
