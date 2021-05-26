@@ -17,6 +17,7 @@ export class FormItemInputComponent implements OnInit {
   @Input() prepend: string = null;
   @Input() prependIcon: string = null
   @Input() autocomplete: string = 'off';
+  @Input() autocapitalize: string = 'on'
 
   @Input() controller: FormControl;
   @Input() max: number = null;

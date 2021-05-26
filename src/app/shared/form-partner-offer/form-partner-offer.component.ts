@@ -14,11 +14,11 @@ export class FormPartnerOfferComponent implements OnInit {
 
   @Output() submitForm = new EventEmitter<PartnerOfferData>(); /** it does NOT return userID */
 
-  public offers: {id: string, label: string, placeholder: string}[] = [
-    {id: 'couponLink',    label: 'Coupons',        placeholder: 'Coupon name',},
-    {id: 'freeSampleLink',label: 'Free samples',   placeholder: 'https://example.com', },
-    {id: 'trialLink',     label: 'Trials',         placeholder: 'https://example.com', },
-    {id: 'affiliateLink', label: 'Affiliate Link', placeholder: 'https://example.com', }
+  public offers: {id: string, label: string, placeholder: string, autocomplete: string, type: string}[] = [
+    {id: 'couponLink',    label: 'Coupons',        placeholder: 'Coupon name',         autocomplete: null,  type: 'text'},
+    {id: 'freeSampleLink',label: 'Free samples',   placeholder: 'https://example.com', autocomplete: 'url', type: 'url'},
+    {id: 'trialLink',     label: 'Trials',         placeholder: 'https://example.com', autocomplete: 'url', type: 'url'},
+    {id: 'affiliateLink', label: 'Affiliate Link', placeholder: 'https://example.com', autocomplete: 'url', type: 'url'},
   ];
 
   public form: FormGroup;

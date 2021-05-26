@@ -20,9 +20,11 @@
       <label>Email Address <span class="text-danger">*</span></label>
       <form-item-input
       name="email"
+      type="email"
       label="Email Address"
       placeholder="Enter your email"
       autocomplete="email"
+      autocapitalize="off"
       [submitted]="isSubmitted"
       [controller]="f.email"
       ></form-item-input>

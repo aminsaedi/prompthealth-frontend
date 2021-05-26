@@ -64,7 +64,9 @@
       <form-item-input 
       name="email"
       label="Email Address"
-      type="text"
+      type="email"
+      autocapitalize="off"
+      autocomplete="email"
       [controller]="f.email"
       [disabled]="true"
       ></form-item-input>
@@ -80,7 +82,7 @@
       <form-item-input 
       name="phone"
       label="Phone number"
-      type="text"
+      type="tel"
       [controller]="f.phone"
       [submitted]="isSubmitted"
       [disabled]="disabled"

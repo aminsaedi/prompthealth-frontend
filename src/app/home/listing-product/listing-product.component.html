@@ -95,16 +95,16 @@
         </div>
       </div>
 
-      <p class="text-dark font-big font-italic mb-5" style="line-height: 1.5em;">Coming soon...wellness products and services. Please check back soon to explore our featured companies.</p>
+      <!-- <p class="text-dark font-big font-italic mb-5" style="line-height: 1.5em;">Coming soon...wellness products and services. Please check back soon to explore our featured companies.</p> -->
 
-      <!-- <p *ngIf="!partners" class="message-dummy">Here are the options we found for you</p> -->
+      <p *ngIf="!partners" class="message-dummy">Here are the options we found for you</p>
       <ul class="row list-unstyled partners" *ngIf="!partners">
         <li class="col-12 col-md-6 col-xl-4 mb-4" *ngFor="let i of [0,1,2,3]">
           <card-dummy class="rounded-10p"></card-dummy>
         </li>
       </ul>
 
-      <!-- <p *ngIf="partners && partners.length > 0" class="font-italic">Here are the options we found for you</p> -->
+      <p *ngIf="partners && partners.length > 0" class="font-italic">Here are the options we found for you</p>
       <ul class="partners list-unstyled row" *ngIf="partners && partners.length > 0">
         <li *ngFor="let p of partners;"
         class="col-12 col-md-6 col-xl-4 mb-4"
@@ -113,11 +113,11 @@
         </li>
       </ul>
 
-      <!-- <p *ngIf="partners && partners.length == 0" class="font-italic font-big">
+      <p *ngIf="partners && partners.length == 0" class="font-italic font-big">
         There is no one available with your search criteria right now.
         <br><br>
         Be sure to check back as our network is growing everyday!
-      </p> -->
+      </p>
 
       <div class="text-center" *ngIf="countPageTotal > 1">
         <ul class="paginator list-unstyled d-inline-flex flex-nowrap align-items-center">

@@ -59,7 +59,9 @@
     <form-item-input
     name="website"
     label="Signup page" 
-    type="text"
+    type="url"
+    autocomplete="url"
+    autocapitalize="off"
     placeholder="https://example.com"
     [controller]="f.signupURL" 
     [submitted]="isSubmitted" 
@@ -85,7 +87,9 @@
           <form-item-input
           [name]="o.id + 'Text'"
           [label]="o.label" 
-          type="text"
+          autocapitalize="off"
+          [type]="o.type"
+          [autocomplete]="o.autocomplete"
           [placeholder]="o.placeholder"
           [controller]="getFormArray(o.id).controls[1]" 
           [submitted]="isSubmitted"
