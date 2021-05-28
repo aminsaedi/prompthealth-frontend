@@ -233,6 +233,7 @@ export class ListingComponent implements OnInit, OnDestroy {
       catch (err) {
         if (!this._uService.isServer) {
           const message = (err.code === 1) ? 'You need to enable your location in order to see options in your geographical area. Alternatively you can only view virtual options!' : 'Could not get current location';
+          [lat, lng] = [latDefault, lngDefault];
           this.toastr.success(message);  
         }
       }
@@ -875,7 +876,7 @@ export class ListingComponent implements OnInit, OnDestroy {
         f.options.forEach(option => { if(option.active){ isActive = true; }});
         break;
       case 'location':
-        isActive = (f.data.distance == f.data.distanceMax && (f.data.latLng[0] == f.data.defaultLatLng[0] && f.data.latLng[1] == f.data.defaultLatLng[1])) ? false : true;
+        isActive = (f.data.distance == f.data.distanceMax && (f.data.latLng && f.data.defaultLatLng && f.data.latLng[0] == f.data.defaultLatLng[0] && f.data.latLng[1] == f.data.defaultLatLng[1])) ? false : true;
         break;
     }
     f.active = isActive;
