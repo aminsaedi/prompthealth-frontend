@@ -225,15 +225,18 @@ export class ListingComponent implements OnInit, OnDestroy {
     const [latDefault, lngDefault] = [53.89, -111.25];
     const [ipLat, ipLng] = [ls.getItem('ipLat'), ls.getItem('ipLong')];
     let [lat, lng]: [number, number] = [null, null];
-
-    if (ipLat && ipLng) { [lat, lng] = [Number(ipLat), Number(ipLng)]; } else {
+    
+    if (ipLat && ipLng) { 
+      [lat, lng] = [Number(ipLat), Number(ipLng)]; 
+      this.listingPayload.latLong = `${lng}, ${lat}`;
+    } else {
       try { 
         [lat, lng] = await this.getCurrentLocation(); 
+        this.listingPayload.latLong = `${lng}, ${lat}`;
       } 
       catch (err) {
         if (!this._uService.isServer) {
           const message = (err.code === 1) ? 'You need to enable your location in order to see options in your geographical area. Alternatively you can only view virtual options!' : 'Could not get current location';
-          [lat, lng] = [latDefault, lngDefault];
           this.toastr.success(message);  
         }
       }
@@ -241,7 +244,6 @@ export class ListingComponent implements OnInit, OnDestroy {
 
     this.searchCenter = (lat & lng) ? { lat, lng, radius: 100 * 1000 } : { lat: null, lng: null, radius: 0 };
     this.setMapdata((lat && lng) ? { lat, lng, zoom: 12 } : { lat: latDefault, lng: lngDefault, zoom: 3 });
-    this.listingPayload.latLong = `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
 
     if (lat && lng) {
       this.initialLocation.lat = lat;
@@ -390,7 +392,8 @@ export class ListingComponent implements OnInit, OnDestroy {
 
       this.listingPayload.keyword = this.keyword || '';
       this.listingPayload.virtual = this.isVirtual;
-      this.listingPayload.latLong = this.isVirtual ? '' : `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
+      if(this.isVirtual) { this.listingPayload.latLong = ''; }
+      // this.listingPayload.latLong = this.isVirtual ? '' : `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
 
       this.loggedInUser = ls.getItem('loginID');
       this.loggedInRole = ls.getItem('roles');
@@ -914,7 +917,7 @@ export class ListingComponent implements OnInit, OnDestroy {
     const [lat,lng] = (f.data.latLng) ? f.data.latLng : [this.initialLocation.lat, this.initialLocation.lng];
     const isLocationChanged = !!(this.listingPayload.latLong != `${lng}, ${lat}`);
    
-    this.listingPayload.latLong = (f.data.latLng)? (lng + ', ' + lat) : '';
+    this.listingPayload.latLong = (!this.isVirtual && f.data.latLng)? (lng + ', ' + lat) : '';
     if(f.data.distance) { this.listingPayload.miles = f.data.distance };
     this.searchCenter = {lat: lat, lng: lng, radius: (f.data.latLng ? this.listingPayload.miles * 1000 : 0) };
     this.setMapdata({lat: lat, lng: lng});
