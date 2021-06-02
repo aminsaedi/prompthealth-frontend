@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { BehaviorService } from '../../../shared/services/behavior.service';
@@ -37,6 +37,7 @@ export class MyProfileComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _router: Router,
     private _uService: UniversalService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
@@ -59,6 +60,7 @@ export class MyProfileComponent implements OnInit {
         this.profile = res.data;
         this.toastr.success(res.message);
         this.editFields = false;
+        this._changeDetector.detectChanges();
         this._bs.setUserData(res.data);
       } else {
         this.toastr.error(res.message);

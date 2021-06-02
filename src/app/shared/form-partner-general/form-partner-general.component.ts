@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
-import { SharedService } from '../../shared/services/shared.service';
+// import { SharedService } from '../../shared/services/shared.service';
 import { minmax, pattern, validators } from 'src/app/_helpers/form-settings';
 import { IUserDetail } from 'src/app/models/user-detail';
 
@@ -28,15 +28,16 @@ export class FormPartnerGeneralComponent implements OnInit {
   public baseURLImage = environment.config.AWS_S3;
 
   private patternURL = pattern.url;
-  private patternPhone = pattern.phone;
+  // private patternPhone = pattern.phone;
 
   get f(){ return this.form.controls; }
 
 
   constructor(
     private _fb: FormBuilder,
-    private _sharedService: SharedService,
+    // private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -51,19 +52,16 @@ export class FormPartnerGeneralComponent implements OnInit {
         Validators.required,
         Validators.email
       ]),
-
+      displayEmail: new FormControl((this.data.displayEmail ? this.data.displayEmail : ''), validators.displayEmail),
       address: new FormControl((this.data.address ? this.data.address : ''),   []),
       latitude: new FormControl(((this.data.location && this.data.location[1]) ? this.data.location[1] : 0), []),
       longitude: new FormControl(((this.data.location && this.data.location[0]) ? this.data.location[0] : 0), []),
       city: new FormControl((this.data.city ? this.data.city : ''), []),
       state: new FormControl((this.data.state ? this.data.state : ''), []),
       zipcode: new FormControl((this.data.zipcode ? this.data.zipcode : ''), []),
+      placeId: new FormControl((this.data.placeId ? this.data.placeId : ''), []),
       
-      phone: new FormControl((this.data.phone ? this.data.phone : ''), [
-        Validators.pattern(this.patternPhone),
-        Validators.minLength(10),
-        Validators.maxLength(13),
-      ]),
+      phone: new FormControl((this.data.phone ? this.data.phone : ''), validators.phone ),
       website: new FormControl((this.data.website ? this.data.website : ''), [Validators.pattern(this.patternURL)]),
       product_description: new FormControl((this.data.product_description ? this.data.product_description : ''), [
         Validators.required,
@@ -75,6 +73,10 @@ export class FormPartnerGeneralComponent implements OnInit {
 
   onChangeImage(imageURL: string){
     this.changeImage.emit(imageURL);
+  }
+
+  onChangePlace() {
+    this._changeDetector.detectChanges();
   }
 
   onSubmit(){

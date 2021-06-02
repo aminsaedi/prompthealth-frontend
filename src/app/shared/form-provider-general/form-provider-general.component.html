@@ -76,7 +76,8 @@
 
   <div class="row mb-4">
     <label class="col-md-4" for="email">
-      Email Address 
+      Email<br>
+      (No one will see)
       <!-- <span class="text-danger">*</span> -->
     </label>
     <div class="col-md-8">
@@ -88,6 +89,25 @@
       autocapitalize="off"
       [controller]="f.email"
       [disabled]="true"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <label class="col-md-4" for="email">
+      Email to display
+      <!-- <span class="text-danger">*</span> -->
+    </label>
+    <div class="col-md-8">
+      <form-item-input 
+      name="displayEmail"
+      label="Email to display" 
+      type="email"
+      [controller]="f.displayEmail"
+      [submitted]="isSubmitted" 
+      [disabled]="disabled"
+      autocapitalize="off"
+      autocomplete="email"
       ></form-item-input>
     </div>
   </div>

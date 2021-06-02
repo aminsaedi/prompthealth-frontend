@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ProfileManagementService } from '../profile-management.service';
 import { SharedService } from '../../../shared/services/shared.service';
 import { BehaviorService } from '../../../shared/services/behavior.service';
@@ -26,6 +26,7 @@ export class PartnerGeneralComponent implements OnInit {
     private _toastr: ToastrService,
     private _router: Router,
     private _uService: UniversalService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
@@ -58,6 +59,7 @@ export class PartnerGeneralComponent implements OnInit {
         this._toastr.success(res.message);
         this._bs.setUserData(res.data);
         this.isEditing = false;
+        this._changeDetector.detectChanges();
       }else{
         this._toastr.error(res.message);
       }

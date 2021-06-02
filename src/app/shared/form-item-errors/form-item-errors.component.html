@@ -3,7 +3,7 @@
   <li *ngIf="controller.errors.requiredTrue">Please check</li>
   <li *ngIf="controller.errors.minlength">{{label}} too short.</li>
   <li *ngIf="controller.errors.maxlength">{{label}} too long.</li>
-  <li *ngIf="controller.errors.email">{{label}} is invalid.</li>
+  <li *ngIf="controller.errors.email">Invalid email address.</li>
   <li *ngIf="controller.errors.pattern">{{label}} is invalid.</li>
   <li *ngIf="controller.errors.mustMatch">{{label}} is not matched.</li>
   <li *ngIf="controller.errors.requiredCheckboxSelectedAtLeast1">{{label}} needed to be selected at least 1</li>

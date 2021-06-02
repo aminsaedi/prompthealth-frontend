@@ -14,6 +14,7 @@ export interface IUserDetail {
   lname?: string;
   profileImage?: string;
   email?: string;
+  displayEmail?: string;
   address?: string;
   city?: string
   state?: string;

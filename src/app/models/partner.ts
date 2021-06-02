@@ -24,7 +24,7 @@ export interface IPartner extends IProfessional {
 
 export class Partner extends Professional implements IPartner{
 
-  get email() { return this.data.email; }
+  get email() { return this.data.displayEmail; }
   get description() { return this.data.product_description; }
 
   get priceLevel() { return this.data.priceLevel; }

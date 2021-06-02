@@ -144,3 +144,12 @@ $marginTopAfterHeader: 40px;
   right: 8px;
   color: var(--ph-blue);
 }
+
+.google-reviews li {
+  img.user {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    object-fit: cover;
+  }
+}

@@ -152,6 +152,7 @@ export class Professional implements IProfessional {
   get name(){ return (this.firstname + ' ' + this.lastname).trim(); }
   get firstname() { return this.p.firstName || this.p.fname || ''; }
   get lastname() { return this.p.lastName || this.p.lname || ''; }
+  get email() { return this.p.displayEmail || null; }
   get image() { return this._image ? this._baseURLImage + '350x220/' + this._image : this._defaultAvator; }
   get imageFull() { return this._image ? this._baseURLImage + this._image : this._defaultAvator; }
   get imageType(){ return this._imageType; }

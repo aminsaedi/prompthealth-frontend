@@ -129,6 +129,26 @@
         </div>
 
         <div *ngIf="currentTabIndex == 1">
+          <div class="m-2 border rounded-lg" *ngIf="!profile || !(profile.detailByGoogle)">
+            <card-dummy class="bg-white"></card-dummy>
+          </div>
+
+          <ul class="list-unstyled google-reviews" *ngIf="profile && profile.detailByGoogle">
+            <li class="my-2 mx-4" *ngFor="let r of profile?.detailByGoogle.reviews">
+              <div class="d-flex flex-nowrap align-items-start mb-2">
+                <img class="user" [src]="r.profile_photo_url" alt="">
+                <div class="ml-2 mb-1 flex-grow-1">
+                  <span class="font-weight-400">{{r.author_name}}</span><br>
+                  <star-rate [rate]="r.rating" size="small" margin="narrow"></star-rate>
+                </div>
+              </div>
+              <p class="font-small">{{r.text}}</p>
+              <div class="text-right font-small">
+                {{r.relative_time_description}}
+                <img class="badge-google" src="/assets/img/logo-google.png" alt="" width="30">
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
