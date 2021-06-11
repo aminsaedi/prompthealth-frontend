@@ -94,19 +94,20 @@
     <div class="modal-content mk-border">
       <div class="modal-header">
         <h5 class="modal-title w-100 text-center" id="exampleModalLabel" style="text-indent: 56px;">
-          You are about logout and go to sign up page.
+          This plan is not for you.
         </h5>
         <button #signin type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body text-center pb-4">
+        <h6>Would you like to create new account as Product/Service?</h6>
         <div class="row">
           <div class="col-6 text-center">
             <button class="btn btn-sedondary" data-dismiss="modal">Stay this page</button>
           </div>
           <div class="col-6 text-center">
-            <button class="btn btn-ph-blue" data-dismiss="modal" (click)="onLogout()">Logout</button>
+            <button class="btn btn-ph-blue" data-dismiss="modal" (click)="onLogout()">Logout and create new account</button>
           </div>
         </div>
       </div>
@@ -114,9 +115,9 @@
   </div>
 </div>
 
-<!-- <div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{shrink: isCouponShrink}" (click)="expandMessageCoupon()">
+<div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{shrink: isCouponShrink}" (click)="expandMessageCoupon()">
   <div class="mb-2 font-weight-400">You have coupon!</div>
-  <card-coupon [couponCode]="couponCode" style="font-size: 11px;"></card-coupon>
+  <card-coupon [couponData]="couponCode" style="font-size: 11px;"></card-coupon>
 
   <button class="btn btn-shrink" (click)="shrinkMessageCoupon($event)"><i class="fas fa-minus"></i></button>
-</div> -->
+</div>

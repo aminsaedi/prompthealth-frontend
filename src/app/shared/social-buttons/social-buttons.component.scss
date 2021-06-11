@@ -22,14 +22,22 @@ ul li:not(:last-child){
     margin: 15%;
   }
 
+  .svg-clubhouse {
+    width: 80%;
+    height: 80%;
+    margin: 10%;
+  }
+
 
 
   &:first-child{  background: #5d68e1; } 
-  &:nth-child(2){ background: #9d5acc; }
-  &:nth-child(3){ background: #c34fb1; }
-  &:nth-child(4){ background: #d94a93; }
-  &:nth-child(5){ background: #e24f76; }  
-  &:nth-child(6){ background: #e15d5d; }  
+  &:nth-child(2){ background: #7366CB; }
+  &:nth-child(3){ background: #8964B5; }
+  &:nth-child(4){ background: #9F639F; }
+  &:nth-child(5){ background: #B56189; }  
+  &:nth-child(6){ background: #CB5F73; }
+  &:nth-child(7){ background: #E15D5D; }
+
 
   img{ width: 100%; }
 }

@@ -2,15 +2,13 @@
   <div class="container position-relative z-index-1">
     <div class="row justify-content-between align-items-center">
       <div class="col-12 text-center">
-        <h2 class="text-gradient mb-3">Welcome to HealthLoop </h2>
+        <h2 class="text-gradient mb-3">Stay Informed with PromptHealth</h2>
         <h3 class="mb-3">
-          A forum where we come together to engage in meaningful, illuminating conversations
-          on the wins and challenges of the health and wellness industry and the perspective of
-          both health seekers and healthcare providers.
+          Subscribe to receive meaningful, illuminating insight into the wins and challenges of the health and wellness industry. 
         </h3>
-        <div class="mt-5">
+        <!-- <div class="mt-5">
           <a href="https://www.joinclubhouse.com/club/healthloop" target="_blank" class="btn btn-outline-primary px-5 rounded-10p font-regular">Find Us on Clubhouse</a>
-        </div>     
+        </div>      -->
       </div>
       <div class="col-12 col-md-5 my-5">
         <img class="img-fluid" src="/assets/img/clubhouse.png" alt="clubhouse">
@@ -18,10 +16,19 @@
       <div class="col-12 col-md-6 my-5">
         <div class="blur px-3 py-4 rounded-10p">
           <p class="font-weight-400 font-big">
-            Sign-up for a free guide from our masterclass on how you can grow your health and
-            wellness business.
+            Sign-up to receive our newsletter on topics relevant to your health goals.
           </p>
           <form (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <form-item-checkbox-group
+              id="usertype"
+              type="selectbox"
+              label="User type"
+              [controller]="f.userType"
+              [submitted]="isSubmitted"
+              [selections]="[{id: 'default', label: 'Please select your type', value: '', disabled: true}, {id: 'seeker', label: 'Wellness Seeker', value: 'seeker'}, {id: 'provider', label: 'Wellness Provider', value: 'provider'}]"
+              ></form-item-checkbox-group>
+            </div>
             <div class="mb-3">
               <form-item-input
               name="name"

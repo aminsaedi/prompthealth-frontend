@@ -1,4 +1,8 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { IUserDetail } from './models/user-detail';
 import { ScrollTopService } from './scrolltop.service';
 import { SharedService } from './shared/services/shared.service';
 import { UniversalService } from './shared/services/universal.service';
@@ -13,6 +17,9 @@ export class AppComponent implements OnInit {
   constructor(
     private scrollTopService: ScrollTopService,
     private _uService: UniversalService,
+    private _route: ActivatedRoute,
+    private _toastr: ToastrService,
+    private _location: Location,
     ) {
 }
 
@@ -21,6 +28,39 @@ async ngOnInit() {
   if(!this._uService.isServer){
     try { await this.getPosition(); }
     catch(error){ console.log(error); }  
+  }
+
+  this._route.queryParams.subscribe((params: IAppQueryParams) => {
+    const paramsCopy = JSON.parse(JSON.stringify(params));
+
+    if(params && params.action) {
+      switch(params.action) {
+        case 'stripe-success':
+        case 'stripe-cancel': 
+          this.onRedirectFromStripe(paramsCopy);
+          break;
+      }
+    }
+  });
+}
+
+onRedirectFromStripe(params: {[k: string]: any}) {
+  if(!this._uService.isServer) {
+    if(params.action == 'stripe-success') {
+      this._toastr.success('Thank you for subscribing our premium plan!');
+    } else if (params.action == 'stripe-cancel') {
+      this._toastr.error('You haven\'t completed subscribing plan.');
+    }
+  
+    params.action = null;
+    let paramList = [];
+    for (let key in params) {
+      if(params[key]) {
+        paramList.push(key += '=' + params[key]);
+      }
+    }
+    
+    this._location.replaceState(location.pathname,  (paramList.length > 0) ? '?' + paramList.join('&') :'');  
   }
 }
 
@@ -39,4 +79,9 @@ getPosition(): Promise<any> {
   });
 
 }
+}
+
+
+interface IAppQueryParams {
+  action?: 'stripe-cancel' | 'stripe-success';
 }

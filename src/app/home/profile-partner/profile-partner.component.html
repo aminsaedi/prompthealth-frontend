@@ -129,9 +129,11 @@
         </div>
 
         <div *ngIf="currentTabIndex == 1">
-          <div class="m-2 border rounded-lg" *ngIf="!profile || !(profile.detailByGoogle)">
+          <div class="m-2 border rounded-lg" *ngIf="!profile || (profile.isConnectedToGoogle && !(profile.detailByGoogle))">
             <card-dummy class="bg-white"></card-dummy>
           </div>
+
+          <p *ngIf="!!profile && !profile.isConnectedToGoogle" class="mx-4">No review yet</p>
 
           <ul class="list-unstyled google-reviews" *ngIf="profile && profile.detailByGoogle">
             <li class="my-2 mx-4" *ngFor="let r of profile?.detailByGoogle.reviews">

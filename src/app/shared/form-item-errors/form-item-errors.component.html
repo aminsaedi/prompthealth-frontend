@@ -7,6 +7,18 @@
   <li *ngIf="controller.errors.pattern">{{label}} is invalid.</li>
   <li *ngIf="controller.errors.mustMatch">{{label}} is not matched.</li>
   <li *ngIf="controller.errors.requiredCheckboxSelectedAtLeast1">{{label}} needed to be selected at least 1</li>
+  <li *ngIf="controller.errors.matchPatternURL">
+    URL is invalid. Here is sample URL.
+    <ul class="mt-1">
+      <li>http://example.com</li>
+      <li>https://www.example.com</li>
+      <li>www.example.com</li>
+      <li>example.com/</li>
+      <li>this-is.example.com</li>
+      <li>example.com/sample/destination</li>
+      <li>example.com/sample?key1=val1&key2=val2</li>
+    </ul>
+  </li>
   <li *ngIf="controller.errors.matchPatternPassword">
     Password has to contain...
     <ul class="mt-1">

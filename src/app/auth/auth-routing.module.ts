@@ -7,6 +7,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { EnterpriseContactComponent } from './enterprise-contact/enterprise-contact.component';
+import { RegistrationGuard } from './registration.guard';
 
 const routes: Routes = [
   // {
@@ -25,7 +26,7 @@ const routes: Routes = [
   {
     path: 'registration/:type',
     component: RegistrationComponent,
-    canActivate: [RoleGuard]
+    canActivate: [RoleGuard, RegistrationGuard]
   },
   {
     path: 'login',

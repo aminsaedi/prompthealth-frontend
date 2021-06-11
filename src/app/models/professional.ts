@@ -205,6 +205,7 @@ export class Professional implements IProfessional {
   get mapLabel() { return (this.price ? this.price : null); }
   get mapIconUrl() { return (this._mapIconUrl && this._mapIconUrl.length > 0) ? this._mapIconUrl : null; }
   get isMapIconReady() { return this._isMapIconReady; }
+  get isConnectedToGoogle() { return !!this.p.placeId}
 
   get typeOfProvider() {
     const result = [];

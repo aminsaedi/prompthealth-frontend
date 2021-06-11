@@ -49,7 +49,6 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
     private _uService: UniversalService,
   ) { }
 
-
   async ngOnInit() {
     const ls = this._uService.localStorage;
 
@@ -73,8 +72,10 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
 
     if (!this._uService.isServer && ls.getItem('token')) {
       this.isLoggedIn = true;
-      const user = JSON.parse(ls.getItem('user'));
-      this.profile = await this._profileService.getProfileDetail(user);
+      this.profile = JSON.parse(ls.getItem('user'));
+      this.profile = await this._profileService.getProfileDetail(this.profile);
+    } else {
+      this.profile = null;
     }
   }
 
@@ -122,92 +123,35 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
         break;
     }
     return link;
-
   }
 
-  triggerButtonClick() {
+  onClickSignup() {
+    this._uService.sessionStorage.setItem('selectedPlan', JSON.stringify(this.data));
+    this._uService.sessionStorage.setItem('selectedMonthly', this.monthly.toString());
+  }
+
+  async onClickCheckout() {
     if (this.profile.roles == 'U') {
       this._toastr.error('You don\'t need to buy this plan');
-    } else if (this.type == 'basic') {
-      this.checkoutFreePlan();
     } else {
-      this.checkoutDefaultPlan();
-    }
-  }
+      this._sharedService.loader('show');
 
-  checkoutFreePlan() {
-    const payload = {
-      _id: this.profile._id,
-      plan: this.data
-    };
-    this._sharedService.post(payload, 'user/updateProfile').subscribe((res: any) => {
-      if (res.statusCode === 200) {
-        this._toastr.success(res.message);
-        this._router.navigate(['/dashboard/profilemanagement/my-subscription']);
-      } else {
-        this._toastr.error(res.message);
-      }
-    }, err => {
-      console.log(err);
-      this._toastr.error('There are some errors, please try again after some time !', 'Error');
-    });
-  }
-
-  checkoutDefaultPlan() {
-    const savedCoupon = JSON.parse(sessionStorage.getItem('stripe_coupon_code'));
-
-    const payload: IStripeCheckoutData = {
-      cancel_url: location.href,
-      success_url: location.origin + '/dashboard/profilemanagement/my-subscription',
-      userId: this.profile._id,
-      userType: this.profile.roles,
-      email: this.profile.email,
-      plan: this.data,
-      isMonthly: this.monthly,
-      type: 'default',
-    };
-    if (savedCoupon) {
-      payload.coupon = savedCoupon.id;
-      // payload.success_url += '?action=couponused';
-    }
-    this.stripeCheckout(payload);
-  }
-
-  stripeCheckout(payload: IStripeCheckoutData) {
-    const path = `user/checkoutSession`;
-    this._sharedService.loader('show');
-    this._sharedService.post(payload, path).subscribe((res: any) => {
-      // console.log('there we go');
-      if (res.statusCode === 200) {
-        // console.log(res);
-        this._stripeService.changeKey(environment.config.stripeKey);
-
-        if (res.data.type === 'checkout') {
-          this._toastr.success('Checking out...');
-
-          this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
-            console.log('success!');
-          }, error => {
-            this._toastr.error(error);
-            console.log(error);
-          });
+      try { 
+        const result = await this._sharedService.checkoutPlan(this.profile, this.data, 'default', this.monthly); 
+        this._toastr.success(result.message);
+        switch(result.nextAction) {
+          case 'complete':
+            this._router.navigate(['/dashboard/register-product/complete']);
+            break;
+          case 'stripe':
+            //automatically redirect to stripe. nothing to do.
+            break;
         }
-        if (res.data.type === 'portal') {
-          this._toastr.success('You already have this plan. Redirecting to billing portal');
-          console.log(res.data);
-          location.href = res.data.url;
-        }
-
-
-      } else {
-        this._toastr.error(res.message, 'Error');
-        console.log(res);
+      } catch(error){ 
+        this._toastr.error(error); 
+      } finally { 
+        this._sharedService.loader('hide'); 
       }
-
-      this._sharedService.loader('hide');
-    }, (error) => {
-      this._toastr.error(error);
-      this._sharedService.loader('hide');
-    });
+    }
   }
 }

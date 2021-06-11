@@ -70,13 +70,10 @@ const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
       <loc>${baseURL}ambassador-program</loc>
     </url>
     <url>
-      <loc>${baseURL}clubhouse</loc>
-    </url>
-    <url>
       <loc>${baseURL}faq</loc>
     </url>       
     <url>
-      <loc>${baseURL}subscribe-email</loc>
+      <loc>${baseURL}subscribe/newsletter</loc>
     </url>   
     <url>
       <loc>${baseURL}contact-us</loc>

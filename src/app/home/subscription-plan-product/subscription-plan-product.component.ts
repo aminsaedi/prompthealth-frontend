@@ -7,6 +7,7 @@ import { IAddonPlan } from '../../models/addon-plan';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { slideHorizontalAnimation } from '../../_helpers/animations';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { ICouponData } from 'src/app/models/coupon-data';
 
 @Component({
   selector: 'app-subscription-plan-product',
@@ -23,7 +24,7 @@ export class subscriptionPlanProductComponent implements OnInit {
   public addonPlans: IAddonPlan[] = null;
   public userType = '';
 
-  public couponCode = {};
+  public couponCode: ICouponData;
   public isCouponShown = false;
   public isCouponShrink = false;
   
@@ -73,7 +74,8 @@ export class subscriptionPlanProductComponent implements OnInit {
       }
       
       this.couponCode = JSON.parse(this._uService.sessionStorage.getItem('stripe_coupon_code'));
-      if (this.couponCode) {
+      const isCouponApplicable = this._sharedService.isCouponApplicableTo(this.couponCode, 'P');
+      if (isCouponApplicable) {
         setTimeout(() => { this.isCouponShown = true; }, 1000);
       }        
     }

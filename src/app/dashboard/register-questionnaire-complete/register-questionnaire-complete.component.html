@@ -5,27 +5,30 @@
     <img class="d-none d-md-block path-right" src="/assets/img/register-questionnaire-complete-right.png">
 
     <div class="col-md-9 col-lg-6">
-      <h2 class="font-bigger text-title">Congratulations!</h2>
-      <p class="font-big text-subtitle">You’ve successfully signup as a Product/Service</p>    
+      <h2 class="font-bigger text-title">You're all set!</h2>
+      <p class="font-big text-subtitle">
+        Your account has been updated.
+      </p>    
 
       <section class="body position-relative">
         <img class="d-none d-md-block path-left" src="/assets/img/register-questionnaire-complete-left.png">
         <p class="text-body position-relative mr-lg-5">
-          Thank you for joining us in the collaborative effort towards the rapid growth and revolutionization of accessibility to health and wellness services. 
-          <br><br>
-          We look forward to extending the reach of both parties via cross-platform visibility online and additional creative initiatives.
+          Thank you for joining us in the collaborative effort towards revolutionizing accessibility to personalized health and wellness solutions.<br><br>
+          We are excited to have you as part of the PromptHealth community.
         </p>
 
       </section>
 
       <section class="text-md-right mr-lg-5 to-home position-relative">
-        <a class="font-bigger" [routerLink]="routePlan">
-          See Plans
-        </a>
-        <br>
-        <a class="font-bigger" [routerLink]="['/ambassador-program']">
-          See Ambassador Program
-        </a>
+        <div class="d-inline-block text-md-left">
+          <a class="btn btn-outline-primary mb-3" [routerLink]="routePlan">
+            See Plans
+          </a>
+          <br>
+          <a class="btn btn-outline-primary" [routerLink]="['/ambassador-program']">
+            See Ambassador Program
+          </a>  
+        </div>
       </section>
 
     </div>    

@@ -43,13 +43,12 @@
             <div class="mb-2 font-weight-500 text-dark font-big" >For Health Care Provider</div>
             <div class="mb-2"><a class="text-dark" [routerLink]="['/plans']">See plans for practitioner</a></div>  
             <div class="mb-2"><a class="text-dark" [routerLink]="['/plans/product']">Advertise your products</a></div>  
-            <div class="mb-2"><a class="text-dark" [routerLink]="['/clubhouse']">Find us on Clubhouse</a></div>  
             <div><a class="text-dark" [routerLink]="['/ambassador-program']">Ambassador program</a></div>      
           </div>
           <div class="col-12 col-lg-5">
               <div class="mb-2 font-weight-500 text-dark font-big">Support</div>
               <div class="mb-2"><a class="text-dark" [routerLink]="['/faq']">FAQ</a></div>
-              <div><a class="text-dark" [routerLink]="['/subscribe-email/']">Subscription</a></div>
+              <div class="mb-2"><a class="text-dark" [routerLink]="['/subscribe/newsletter']" [queryParams]="{id: 'ft'}">Sign up for newsletters</a></div>  
           </div>
         </div>
       </div>
@@ -74,7 +73,7 @@
 
       <div class="col-12 col-md-6 text-center text-md-right mt-3 mt-md-0">
         <div class="mt-3">
-          <social-buttons></social-buttons>
+          <social-buttons margin="narrow" [size]="35"></social-buttons>
         </div>
       </div>
 

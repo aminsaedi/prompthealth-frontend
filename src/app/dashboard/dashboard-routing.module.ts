@@ -149,7 +149,7 @@ const routes: Routes = [
   {
     path: 'register-product/complete',
     component: RegisterQuestionnaireCompleteComponent,
-    canActivate: [RegisterQuestionnaireCompleteGuard,],
+    // canActivate: [RegisterQuestionnaireCompleteGuard,],
   },
 
   { path: 'subscriptionplan',   redirectTo: '/plans' },

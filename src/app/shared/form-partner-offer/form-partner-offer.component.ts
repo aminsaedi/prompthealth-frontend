@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, FormArray} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
   selector: 'form-partner-offer',
@@ -45,22 +46,22 @@ export class FormPartnerOfferComponent implements OnInit {
       priceLevel: new FormControl((this.data.priceLevel ? this.data.priceLevel : ''), [Validators.required]),
       price1: new FormControl((this.data.price1 ? this.data.price1 : ''), [Validators.pattern(this.patternPrice)]),
       price2: new FormControl((this.data.price2 ? this.data.price2 : ''), [Validators.pattern(this.patternPrice)]),
-      signupURL: new FormControl((this.data.signupURL ? this.data.signupURL : ''), [Validators.pattern(this.patternURL)]),
+      signupURL: new FormControl((this.data.signupURL ? this.data.signupURL : ''), validators.productOfferLink),
       couponLink: new FormArray([
         new FormControl(this.data.couponLink ? true : false),
         new FormControl(this.data.couponLink ? this.data.couponLink : '', []),
       ]),
       freeSampleLink: new FormArray([
         new FormControl(this.data.freeSampleLink ? true : false),
-        new FormControl(this.data.freeSampleLink ? this.data.freeSampleLink : '', [Validators.pattern(this.patternURL)]),        
+        new FormControl(this.data.freeSampleLink ? this.data.freeSampleLink : '', validators.productOfferLink),        
       ]),
       trialLink: new FormArray([
         new FormControl(this.data.trialLink ? true : false),
-        new FormControl(this.data.trialLink ? this.data.trialLink : '', [Validators.pattern(this.patternURL)]),        
+        new FormControl(this.data.trialLink ? this.data.trialLink : '', validators.productOfferLink),        
       ]),
       affiliateLink: new FormArray([
         new FormControl(this.data.affiliateLink ? true : false),
-        new FormControl(this.data.affiliateLink ? this.data.affiliateLink : '', [Validators.pattern(this.patternURL)]),        
+        new FormControl(this.data.affiliateLink ? this.data.affiliateLink : '', validators.productOfferLink),        
       ]),
     });
 

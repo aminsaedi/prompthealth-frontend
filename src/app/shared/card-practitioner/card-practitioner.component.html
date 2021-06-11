@@ -20,9 +20,9 @@
   </ul>
   <star-rate class="my-3" [rate]="p.rating" margin="small" size="small"></star-rate>
   <p class="mb-2 clamp-1line font-big" *ngIf="!p.isCentre">{{p.organization}}</p>
-  <p class="mb-2 clamp-1line font-big" *ngIf="p.isCentre">{{p.phone}}</p>
+  <!-- <p class="mb-2 clamp-1line font-big" *ngIf="p.isCentre">{{p.phone}}</p> -->
   <p class="mb-2 address">{{p.address}}</p>
-  <p class="mb-3" *ngIf="!showDistance && (p.distance !== null || p.distance !== undefined)">
+  <p class="mb-3" *ngIf="showDistance && (p.distance !== null || p.distance !== undefined)">
     <b>
       {{p.distance | number :
       '1.1-2'}}

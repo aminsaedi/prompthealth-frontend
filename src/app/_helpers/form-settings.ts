@@ -10,8 +10,10 @@ export const minmax = {
   professionalOrganizationMax: 200,
   certificationMax: 200,
 }
+
 export const pattern = {
-  url: 'http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?',
+  // url: 'http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?',
+  url: '(http(s)?:\\/\\/)?(www\\.)?([\\w-\\.])+(\\/[\\w-%?=@&+\\.]*)?',
   phone: '^[0-9\\-\\(\\)\\s]+$',
   price: '^[0-9]{1,}(\\.[0-9]{1,2})?$',
   password: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^\\.&\\-]).{8,}'
@@ -86,6 +88,35 @@ const validatorPatternPassword = (): ValidatorFn => {
   }
 }
 
+const validatorPatternURL = (): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    let val: string = formControl.value;
+    let isValueUpdated: boolean = false;
+    let isValueMatched: boolean = false;
+    if(!val) {
+      return null;
+    } else if(!val.match(/^http(s)?:\/\//)) {
+      val = 'http://' + val; 
+      isValueUpdated = true;
+    }
+
+    if(val.match(/^http(s)?:\/\/www/)) {
+      isValueMatched = (val.match(/^http(s)?:\/\/www\.[\w-\.]+(\.\w{2,})([\/\w-%?=@&+#:\.]*)?$/)) ? true : false;
+    } else {
+      isValueMatched = (val.match(/^http(s)?:\/\/[\w-\.]+(\.\w{2,})([\/\w-%?=@&+#:\.]*)?$/)) ? true : false;
+    }
+
+    if(isValueMatched) {
+      if(isValueUpdated) {
+        formControl.setValue(val);
+      }
+      return null;
+    } else {
+      return {'matchPatternURL': true };
+    }
+  }
+}
+
 const validatorFirstNameClient = [Validators.maxLength(minmax.nameMax), Validators.required];
 const validatorLastNameClient = [Validators.maxLength(minmax.nameMax)];
 const validatorNameSP = [Validators.required, Validators.minLength(3), Validators.maxLength(minmax.nameMax)];
@@ -93,7 +124,7 @@ const validatorEmail = [Validators.required, Validators.email];
 const validatorPhone = [Validators.pattern(pattern.phone), Validators.minLength(minmax.phoneMin), Validators.maxLength(minmax.phoneMax)];
 const validatorRequired = [Validators.required];
 const validatorRequiredTrue = [Validators.requiredTrue];
-const validatorUrl = [Validators.pattern(pattern.url)];
+const validatorUrl = [validatorPatternURL()];
 const validatorProfessionalTitle = [Validators.maxLength(minmax.professionalTitleMax)];
 const validatorProfessionalOrganization = [Validators.maxLength(minmax.professionalOrganizationMax)];
 const validatorCertification = [Validators.maxLength(minmax.certificationMax)];
@@ -130,6 +161,8 @@ export const validators = {
   exactPricingRequired: validatorExactPricingRequired,
   businessKind: validatorRequired,
   productDescription: validatorTextarea,
+
+  productOfferLink: validatorUrl,
 
   personalMatchGender: validatorRequired,
   personalMatchAgeRange: validatorRequired,
