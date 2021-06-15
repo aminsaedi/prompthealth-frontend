@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
+import { IUserDetail } from 'src/app/models/user-detail';
+import { PriceType } from 'src/app/theme/header/header.component';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +30,8 @@ export class HeaderStatusService {
    changeLevelMenuSm(i: number){ 
      this.emitHeaderStatus('levelMenuSm', i);
    }
-  
+
+   setPriceType(type: PriceType) {
+     this.emitHeaderStatus('priceType', type);
+   }
 }

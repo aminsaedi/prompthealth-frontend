@@ -28,7 +28,9 @@ export class WrapperComponent implements OnInit, OnDestroy {
 
   @ViewChild('videoPlayer') videoPlayer: ElementRef;
   @ViewChild('tutorialModal') public tutorialModal: ModalDirective;
+  @ViewChild('alertModal') public alertModal: ModalDirective;
 
+  formQuestionnaireCompletedNeverAsk: FormControl;
 
   userInfo;
 
@@ -165,9 +167,21 @@ export class WrapperComponent implements OnInit, OnDestroy {
   ngOnDestroy() { this._managementService.destroyProfileDetail(); }
 
   ngOnInit(): void {
+    
+    this.formQuestionnaireCompletedNeverAsk = new FormControl();
     this.formPhListedLink = new FormControl('', [Validators.required, Validators.pattern(this.patternURL)]);
+
+    this.formQuestionnaireCompletedNeverAsk.valueChanges.subscribe(val => {
+      if(val) {
+        localStorage.setItem('neverAskCompleteRegistration', 'true');
+      } else {
+        localStorage.removeItem('neverAskCompleteRegistration')
+      }
+    });
+
     this.getProfileDetails();
     // this.getSubscriptionPlan('user/get-plans');
+
   }
   async getProfileDetails() {
     this.userInfo = JSON.parse(localStorage.getItem('user'));
@@ -178,11 +192,17 @@ export class WrapperComponent implements OnInit, OnDestroy {
         this.formPhListedLink.setValue(this.profile.phListedLink);
         this.setUserPremiumStatus();
         this.setListing(this.profile);
-      } catch (error) {
+
+        let neverAskCompleteRegistration = localStorage.getItem('neverAskCompleteRegistration');
+        if(this.profile.questionnaireCompleted === false && neverAskCompleteRegistration !== 'true') {
+          this.alertModal.show();
+        }
+      }
+      catch(error){ 
         console.log(error);
       }
-    } else {
-      console.log('cannot fine user data in localstorage');
+    }else{
+      console.log('cannot find user data in localstorage');
     }
 
 

@@ -15,6 +15,7 @@ import { IDefaultPlan } from 'src/app/models/default-plan';
 import { slideHorizontalAnimation } from 'src/app/_helpers/animations';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { ICouponData } from 'src/app/models/coupon-data';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 // declare var jQuery: any;
 
 
@@ -89,9 +90,12 @@ export class SubscriptionPlanComponent implements OnInit {
     private _modalService: NgbModal,
     public catService: CategoryService,
     private _uService: UniversalService,
+    private _headerStatusService: HeaderStatusService,
   ) { }
 
   ngOnInit() {
+    this._headerStatusService.setPriceType('practitioner');
+    
     const ls = this._uService.localStorage;
     const ss = this._uService.sessionStorage;
     this._uService.setMeta(this._router.url, {

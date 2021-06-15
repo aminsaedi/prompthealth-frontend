@@ -72,6 +72,7 @@ export interface IUserDetail {
   website?: string;
   viewCount?: number;
   isVerified?: string; /** Y |  */
+  questionnaireCompleted?: boolean;
   // date_verified?: string;
 
 

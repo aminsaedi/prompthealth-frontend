@@ -14,12 +14,18 @@
       We are looking for organizations in health and wellness that provide products or services and are interested in collaborating with us. 
     </div>
 
-    <div *ngIf="userType != 'P'" class="text-center mt-5">
+    <div class="text-center mt-5">
+      <a class="btn btn-primary rounded-pill text-light" routerLink="../">See plans for Practitioner</a>
+    </div>
+
+
+    <!-- <div *ngIf="userType != 'P'" class="text-center mt-5">
       <ng-container>
+        <a class="btn btn-primary rounded-pill text-light" routerLink="../">See plans for practitioner</a>
         <a *ngIf="userType != ''" class="btn btn-ph-blue text-light font-regular shadow rounded-pill px-4" data-toggle="modal" data-target="#logoutModal">Sign Up Now!</a>
         <a *ngIf="userType == ''" class="btn btn-ph-blue text-light font-regular shadow rounded-pill px-4" [routerLink]="['/auth/registration/p']">Sign Up Now!</a>
       </ng-container>
-    </div>
+    </div> -->
   </div>
 </section>
 <section class="bg-ph-blue py-4 text-light">

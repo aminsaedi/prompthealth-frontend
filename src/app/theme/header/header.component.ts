@@ -310,4 +310,4 @@ export class HeaderComponent implements OnInit {
   }
 }
 
-type PriceType = 'practitioner' | 'product';
+export type PriceType = 'practitioner' | 'product';

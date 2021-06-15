@@ -8,6 +8,7 @@ import { IDefaultPlan } from 'src/app/models/default-plan';
 import { slideHorizontalAnimation } from '../../_helpers/animations';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { ICouponData } from 'src/app/models/coupon-data';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 
 @Component({
   selector: 'app-subscription-plan-product',
@@ -38,6 +39,7 @@ export class subscriptionPlanProductComponent implements OnInit {
     private _sharedService: SharedService,
     private _router: Router,
     private _uService: UniversalService,
+    private _headerStatusService: HeaderStatusService,
     _fb: FormBuilder,
   ) {
     this.form = _fb.group({
@@ -57,6 +59,8 @@ export class subscriptionPlanProductComponent implements OnInit {
 
 
   async ngOnInit() {
+    this._headerStatusService.setPriceType('product');
+    
     this._uService.setMeta(this._router.url, {
       title: 'Plans for product/service | PromptHealth',
       description: 'Join us to get exposed to clients. You can upload your products photos and also show your promotions.',

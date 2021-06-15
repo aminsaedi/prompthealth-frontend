@@ -127,6 +127,7 @@ export class RegisterQuestionnaireComponent implements OnInit {
   async save(): Promise<IUserDetail> {
     return new Promise((resolve, reject) => {
       const data = this._qService.getUser();
+      data.questionnaireCompleted = true;
 
       this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
         this._sharedService.loader('hide');

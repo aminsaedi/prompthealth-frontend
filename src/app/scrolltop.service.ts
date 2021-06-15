@@ -29,7 +29,10 @@ export class ScrollTopService {
             gtag('config', 'UA-192757039-1',{
               'page_path': event.urlAfterRedirects
             });
-            fbq('track', 'PageView');  
+
+            if(!window.location.href.match(/keyword/)){
+              fbq('track', 'PageView');  
+            }            
           }
 
 
