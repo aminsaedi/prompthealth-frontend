@@ -173,7 +173,7 @@ export class Professional implements IProfessional {
   get websiteLabel() { return this.getURLLabel(this.p.website); }
   get bookingUrl() { return this.p.bookingURL || null; }
   get location() { return this.p.location || [null, null]; }
-  get distance() { console.log(this.p.calcDistance); return this.p.calcDistance || null; } /** currently p doesn't have calcDistance field. */
+  get distance() { return this.p.calcDistance || null; } /** currently p doesn't have calcDistance field. */
   get provideVirtual() { return this.p.provideVirtual || false; }
   get videos() { return (this.p.plan && this.p.plan.videoUpload) ? this.p.videos : []; } /** showing videos are available only for premium user */
   get yearsOfExperience() { return this.p.years_of_experience || null; }
