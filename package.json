@@ -10,6 +10,7 @@
     "e2e": "ng e2e",
     "dev:ssr": "ng run wellness-frontend:serve-ssr",
     "serve:ssr": "pm2 delete universal && pm2 start dist/wellness-frontend/server/main.js --name=universal",
+    "serve-staging:ssr": "pm2 start dist/wellness-frontend/server/main.js",
     "build:ssr": "ng build --prod && ng run wellness-frontend:server:production",
     "build-staging:ssr": "ng build --configuration staging && ng run wellness-frontend:server:staging",
     "build-staging": "ng build --configuration staging",
