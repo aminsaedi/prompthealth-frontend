@@ -268,7 +268,7 @@ export class ListingComponent implements OnInit, OnDestroy {
     }
     
     /** init geo location */
-    this.initLocation();
+    await this.initLocation();
 
     /** if personal match exists, reset all filter menu and payload. then set filter menu and payload using personalMatch */
     const data = this._sharedService.getPersonalMatch();
