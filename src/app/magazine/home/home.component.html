@@ -1,0 +1,107 @@
+<section class="container mt-100p">
+  <div class="row">
+    <ng-container *ngFor="let i of [0,1,2, 3]">
+      <div 
+      class="col-12 mb-md-100p"
+      [ngClass]="{'col-md-12 mb-55p': (i == 0), 'col-lg-4 mb-30p': (i != 0)}"
+      >
+        <card-post [size]="(i == 0) ? 'large' : 'medium'"></card-post>
+      </div>
+  
+    </ng-container>
+  </div>
+</section>
+
+<div class="border-bottom"></div>
+
+<section class="container my-100p">
+  <div class="row justify-content-between align-items-center">
+    <div class="d-none d-lg-block col-lg-4 col-xl-5">
+      <p class="opacity-70pc">
+        Want even more content to support you on your health and wellness journey? 
+        Subscribe to the PromptHealth magazine to learn from our experts including fitness advice, recipes, mindfulness tips, and so much more. 
+      </p>  
+    </div>
+    <div class="col-12 col-lg-7 col-xl-6 mb-30p">
+      <h3 class="h4 h3-md text-center mb-15p mb-md-30p">
+        Connect and stay engaged with your wellness community. 
+      </h3>
+      <div class="d-flex flex-column justify-content-stretch flex-md-row justify-content-md-between">
+        <div class="flex-grow-1 mb-20p mb-md-0 mr-md-10p">
+          <form-item-input 
+          class="w-100"
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          placeholder="Your email address..."
+          ></form-item-input>  
+        </div>
+        <button class="btn btn-primary">Subscribe</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-body py-60p">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-7">
+        <h4 class="h4 h3-md text-white">Videos</h4>
+      </div>
+      <div class="col-12 col-md-5">
+        <h4 class="h4 h3-md text-white mb-20p mb-md-30p">Podcast</h4>
+        <ul class="mb-20p mb-md-30p p-0 list-unstyled">
+          <li *ngFor="let i of [0,1,2]" class="d-flex flex-nowrap align-items-stretch card-podcast mb-20p">
+            <div class="eyecatch-container position-relative">
+              <div class="eyecatch-dummy bg-white"></div>
+            </div>
+            <div class="info-container ml-3">
+              <div class="mb-10p text-nowrap body2 color-placeholder">
+                <i class="far fa-calendar mr-1"></i>
+                <span>Apr 22, 2021</span>
+              </div>
+              <h5 class="body1 text-white mb-0">Many people rush through or multitask during meals consuming.</h5>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mt-70p mb-100p">
+  <div class="container">
+    <h4 class="h4 h3-md mb-20p mb-md-30p">Categories</h4>
+  </div>
+
+  <div class="scroll-horizontal-container border-bottom">
+    <ul class="d-flex list-unstyled category-list m-0">
+      <li
+      *ngFor="let i of [0,1,2,3,4,5,6,7,8,9]"
+      class="text-nowrap position-relative"
+      [ngClass]="{active: (i == idxCategoryActive)}"
+      (click)="onTapCategory(i)"
+      >Hormonal Health</li>
+    </ul>
+  </div>
+
+  <div class="container mt-20p mt-lg-40p">
+    <div class="row">
+      <ng-container *ngFor="let i of [0,1,2,3,4,5,6]">
+        <div 
+        class="col-12 col-lg-4 mb-30p mb-lg-50p"
+        [ngClass]="{'col-lg-4': (i < 3), 'col-lg-3': (i>=3) }"
+        >
+          <div class="d-none d-lg-block">
+            <card-post [size]="(i < 3) ? 'medium' : 'small'" [showCategory]="false"></card-post>
+          </div>
+          <div class="d-block d-lg-none">
+            <card-post size="small" [showCategory]="false"></card-post>
+          </div>
+        </div>
+    
+      </ng-container>
+  
+    </div>
+  </div>
+</section>

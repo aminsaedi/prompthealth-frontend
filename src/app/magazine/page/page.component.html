@@ -1,0 +1,72 @@
+<div class="container mt-30p">
+
+  <div class="text-center d-flex align-items-center justify-content-center mb-50p">
+    <i class="fas fa-home mr-2 text-label btn" routerLink="/magazines"></i>
+    <i class="fas fa-chevron-right mr-2 text-label"></i>
+    <a class="mr-2 body2 text-label btn">category name</a>
+    <i class="fas fa-chevron-right mr-2 text-label"></i>
+    <span class="mr-2 body2">page title</span>
+  </div>
+
+  <div class="mb-20p row justify-content-center">
+    <div class="col-12 col-md-12 col-lg-10 col-xl-9 text-center">
+      <div class="eyecatch-container position-relative">
+        <div class="eyecatch-dummy"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-30p">
+    <div class="col-12 col-md-11 col-lg-9 col-xl-8">
+      <div class="row align-items-center body2">
+        <div class="col-12 col-md-4 mb-10p border-md-right">
+          <div class="d-flex align-items-center">
+            <div class="author-dummy mr-2"></div>
+            <span class="opacity-70pc">By Alice Gomstyn</span>
+          </div>  
+        </div>
+        <div class="col-12 col-md-8">
+          <div class="d-flex flex-column flex-md-row flex-nowrap opacity-70pc">
+            <span class="mr-4 mb-10p text-nowrap">
+              <i class="far fa-calendar mr-1"></i>
+              <span>Apr 22, 2021</span>
+            </span>
+            <span class="mr-4 mb-10p text-nowrap">
+              <i class="far fa-hourglass mr-1"></i>
+              <span>9 min read
+              </span>
+            </span>
+            <span class="mb-10p text-nowrap">
+              <i class="far fa-hourglass mr-1"></i>
+              <span>category</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-100p">
+    <div class="col-12 col-md-11 col-lg-9 col-xl-8">
+      <h2 class="h4 h2-md mb-25p text-center">
+        4 surprising health benefits of a home cooked meal
+      </h2>
+
+      <div>
+        <p>
+          Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn't exercise much control over her family's nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night. Her decision paid off in spades: Celine says she's reaped a host of both physical and mental health benefits from cooking at home.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bg-background pt-70p pb-100p">
+  <div class="container">
+    <h4 class="h5 text-center mb-45p">RELATED VIDEOS</h4>
+    <ul class="row list-unstyled m-0 p-0">
+      <li class="col-12 col-lg-4 mb-30p" *ngFor="let i of [0,1,2]">
+        <card-post [showCategory]="false"></card-post>
+      </li>  
+    </ul>
+  </div>
+</div>

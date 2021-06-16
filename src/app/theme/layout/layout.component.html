@@ -1,5 +1,8 @@
 <!-- <ngx-spinner></ngx-spinner> -->
-<app-header [eventKey]="eventKey"></app-header>
+<div class="sticky-top header-container bg-white">
+  <app-header [eventKey]="eventKey" *ngIf="!onMagazine"></app-header>
+  <app-header-magazine *ngIf="onMagazine"></app-header-magazine>    
+</div>
 
 <div class="wrapper">
     <router-outlet appHighlight></router-outlet>

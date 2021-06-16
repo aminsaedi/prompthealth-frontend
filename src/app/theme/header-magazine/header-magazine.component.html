@@ -1,0 +1,42 @@
+<header class="py-5p py-md-15p" [ngClass]="{shadow: isShadowShown}">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <a routerLink="/" class="d-flex flex-nowrap align-items-stretch">
+        <img class="d-lg-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20">
+        <img class="d-none d-lg-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="30">
+        <div class="mx-1 mx-md-3 border-right border-body"></div>
+        <span class="align-self-center text-dark subtitle2">Magazine</span>
+      </a>
+      <nav class="d-flex align-items-center">
+        <ul class="d-none d-lg-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2 text-body">
+          <li class="mx-10p">
+            <a routerLink="/practitioners" class="text-body">News</a>
+          </li>
+          <li class="mx-10p">
+            <a routerLink="/products" class="text-body">Event</a>
+          </li>
+          <li class="mx-10p">
+            <a href="" class="text-body">Videos</a>
+          </li>
+          
+          <li class="mx-10p">
+            <a routerLink="/blogs" class="text-body">Podcasts</a>
+          </li>
+
+          <li class="mx-10p">
+            <a routerLink="/blogs" class="text-body">All categories</a>
+          </li>
+        </ul>
+        <div class="ml-10p ml-md-30p">
+          <a routerLink="/practitioners" class="btn btn-primary">Find practitioners</a>
+        </div>
+        <div class="d-lg-none ml-15p">
+          <button class="btn btn-icon small pr-0" (click)="showMenu()">
+            <!-- <i iconPh="menu" class="large"></i> -->
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>  
+      </nav>
+    </div>
+  </div>
+</header>

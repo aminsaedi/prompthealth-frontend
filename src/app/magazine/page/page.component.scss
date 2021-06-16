@@ -1,0 +1,37 @@
+@import '../temporary';
+
+/// TEMPORARY TODO: DELETE LATER
+:host {
+  color: rgba(41, 49, 72, 1)!important;
+}
+.bg-background {
+  background: rgba(239, 243, 247, 1);
+}
+.text-label {
+  color: rgba(131, 135, 144, 1);
+}
+/// TEMPORARY END
+
+.author,
+.author-dummy {
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  background: black;
+}
+
+.eyecatch-container::after {
+  content: '';
+  display: block;
+  padding-top: 60%;
+}
+
+.eyecatch,
+.eyecatch-dummy{    
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: black;
+  object-fit: cover;
+}

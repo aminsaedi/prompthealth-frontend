@@ -9,6 +9,7 @@ import { DashboardModule } from '../dashboard/dashboard.module';
 // import { SubscriptionPlanComponent } from '../home/subscription-plan/subscription-plan.component';
 import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
 import { ThankuPageComponent } from './thanku-page/thanku-page.component';
+import { MagazineModule } from '../magazine/magazine.module';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: () => HomeModule
+      },
+      {
+        path: 'magazines',
+        loadChildren: () => MagazineModule,
       },
       {
         path: 'auth',

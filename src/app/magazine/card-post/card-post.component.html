@@ -1,0 +1,57 @@
+<div 
+class="card-post"
+[ngClass]="size"
+>
+  <div 
+  class="eyecatch-container position-relative mb-20p"
+  [ngClass]="{'mb-lg-0': sizeL}"
+  >
+    <div class="eyecatch-dummy"></div>
+  </div>
+
+  <div class="info-container">
+    <div 
+    class="stat-container d-flex align-items-center flex-wrap  body2 opacity-70pc"
+    [ngClass]="{'mb-5p mb-md-25p': sizeL, 'mb-10p': (sizeM || sizeS) }"
+    >
+      <div class="mr-2 mb-10p" *ngIf="sizeS">
+        <div class="author-dummy"></div>
+      </div>
+      <span class="mr-2 mb-10p text-nowrap">
+        <i class="far fa-calendar mr-1"></i>
+        <span>Apr 22, 2021</span>
+      </span>
+      <span class="mr-2 mb-10p text-nowrap">
+        <i class="far fa-hourglass mr-1"></i>
+        <span>9 min 
+        <span [ngClass]="{'d-lg-none d-xl-inline': sizeS}"> read</span>
+        </span>
+      </span>
+      <span class="mb-10p text-nowrap" *ngIf="showCategory">
+        <i class="far fa-hourglass mr-1"></i>
+        <span>category</span>
+      </span>
+    </div>
+
+    <div 
+    class="content-container"
+    [ngClass]="{'mb-20p mb-md-35p': sizeL }"
+    >
+      <h3 
+      class="mb-10p" 
+      [ngClass]="{'h4 h2-md mb-md-20p': sizeL, h5: sizeM, h6: sizeS}"
+      >
+        4 surprising health benefits of a home cooked meal
+      </h3>
+      
+      <p [ngClass]="{'clamp-5line': sizeL, 'clamp-3line opacity-80pc': sizeM, 'd-none': sizeS}">
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+      </p>  
+    </div>
+
+    <div class="author-container d-flex align-items-center" *ngIf="!sizeS">
+      <div class="author-dummy mr-2"></div>
+      <p class="m-0 opacity-70pc">By Alice Gomstyn</p>
+    </div>
+  </div>
+</div>
