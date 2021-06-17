@@ -1,1 +1,56 @@
-<p>list works!</p>
+<section class="container mt-100p pb-65p border-bottom border-line">
+
+  <div class="d-flex">
+    <i class="h4 h2-md fas fa-tag text-placeholder mr-3"></i>
+    <div>
+      <h2 class="h4 h2-md">Category Name</h2>
+      <p class="subtitle1 mb-0">A collection of 34 posts</p>
+    </div>
+  </div>
+</section>
+
+<section class="container mt-70p pb-100p border-bottom border-line">
+  <div class="row">
+    <ng-container *ngFor="let p of [0,1,2, 3]; let i = index">
+      <div 
+      class="col-12 mb-md-100p"
+      [ngClass]="{'col-md-12 mb-55p': (i == 0), 'col-lg-4 mb-30p': (i != 0)}"
+      >
+        <card-post [size]="(i == 0) ? 'large' : 'medium'" [showCategory]="false"></card-post>
+      </div>  
+    </ng-container>
+  </div>
+</section>
+
+<section class="container my-100p">
+  <section-subscription></section-subscription>
+</section>
+
+<section class="container my-100p">
+  <div class="row">
+    <ng-container *ngFor="let p of [0,1,2,3,4,5,6,7,8,9,10,11]; let i = index">
+      <div class="col-12 col-md-6 col-lg-3 mb-30p mb-md-55p">
+        <card-post size="small" [showCategory]="false"></card-post>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="d-flex align-items-center justify-content-center paginators">
+    <ng-container *ngFor="let paginatorGroup of paginators; let i = index;">
+      <ng-container *ngFor="let page of paginatorGroup; let j = index">
+        <button 
+        class="btn bg-primary-light mx-2"
+        [ngClass]=" {'bg-primary text-white': (pageCurrent == page), 'bg-primary-light text-primary-dark': (pageCurrent != page)}"
+        (click)="changePageTo(page)"
+        >
+          <span>{{page}}</span>
+        </button>  
+      </ng-container>
+      <i class="fas fa-ellipsis-h text-primary-dark" *ngIf="paginators.length - 1 > i"></i>
+    </ng-container>
+  </div>
+</section>
+
+<section>
+  <section-signup></section-signup>
+</section>

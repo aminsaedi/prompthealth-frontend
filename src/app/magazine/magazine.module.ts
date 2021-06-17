@@ -6,10 +6,16 @@ import { ListComponent } from './list/list.component';
 import { CardPostComponent } from './card-post/card-post.component';
 import { SharedModule } from '../shared/shared.module';
 import { PageComponent } from './page/page.component';
+import { SectionSubscriptionComponent } from './section-subscription/section-subscription.component';
+import { SectionSignupComponent } from './section-signup/section-signup.component';
 
 const routes = [
-  {path: '', component: HomeComponent},
-  {path: ':id', component: PageComponent},
+  {path: '',             component: HomeComponent},
+  {path: 'category/:id', component: ListComponent},
+  {path: 'tag/:id',      component: ListComponent},
+  {path: 'category',     redirectTo: ''},
+  {path: 'tag',          redirectTo: ''},
+  {path: ':id',          component: PageComponent},
 ]
 
 @NgModule({
@@ -17,7 +23,9 @@ const routes = [
     HomeComponent,
     ListComponent,
     CardPostComponent,
-    PageComponent
+    PageComponent,
+    SectionSubscriptionComponent,
+    SectionSignupComponent
   ],
   imports: [
     CommonModule,

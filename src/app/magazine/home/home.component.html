@@ -1,6 +1,6 @@
 <section class="container mt-100p">
   <div class="row">
-    <ng-container *ngFor="let i of [0,1,2, 3]">
+    <ng-container *ngFor="let p of [0,1,2, 3]; let i = index">
       <div 
       class="col-12 mb-md-100p"
       [ngClass]="{'col-md-12 mb-55p': (i == 0), 'col-lg-4 mb-30p': (i != 0)}"
@@ -15,40 +15,43 @@
 <div class="border-bottom"></div>
 
 <section class="container my-100p">
-  <div class="row justify-content-between align-items-center">
-    <div class="d-none d-lg-block col-lg-4 col-xl-5">
-      <p class="opacity-70pc">
-        Want even more content to support you on your health and wellness journey? 
-        Subscribe to the PromptHealth magazine to learn from our experts including fitness advice, recipes, mindfulness tips, and so much more. 
-      </p>  
-    </div>
-    <div class="col-12 col-lg-7 col-xl-6 mb-30p">
-      <h3 class="h4 h3-md text-center mb-15p mb-md-30p">
-        Connect and stay engaged with your wellness community. 
-      </h3>
-      <div class="d-flex flex-column justify-content-stretch flex-md-row justify-content-md-between">
-        <div class="flex-grow-1 mb-20p mb-md-0 mr-md-10p">
-          <form-item-input 
-          class="w-100"
-          type="text"
-          autocomplete="off"
-          autocapitalize="off"
-          placeholder="Your email address..."
-          ></form-item-input>  
-        </div>
-        <button class="btn btn-primary">Subscribe</button>
-      </div>
-    </div>
-  </div>
+  <section-subscription></section-subscription>
 </section>
 
 <section class="bg-body py-60p">
   <div class="container">
     <div class="row">
-      <div class="col-12 col-md-7">
-        <h4 class="h4 h3-md text-white">Videos</h4>
+      <div class="col-12 col-md-6 col-xl-7 d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center mb-20p mb-md-30p">
+          <h4 class="h4 h3-md text-white mb-0">Videos</h4>
+          <a class="text-white subtitle1">All videos</a>
+        </div>
+        <ul class="mb-20p mb-md-30p p-0 list-unstyled videos flex-grow-1" #videosContainer>
+          <li 
+          *ngFor="let v of videos; let i = index" 
+          class="card-video flex-grow-1 w-100 position-relative"
+          >
+            <div class="position-relative eyecatch-container rounded-12p h-100">
+              <div class="eyecatch-dummy bg-dark"></div>
+            </div>
+            <h5 
+            class="title text-light h6 h5-md clamp-2line px-15p mb-15p"
+            [ngClass]="{'h5-lg px-lg-30p': (i == 0), 'subtitle1-lg px-lg-15p': (i > 0)}"
+            >Our neighborhood health story: The cooking class that became so much more</h5>
+          </li>
+        </ul>
+        <div class="d-flex justify-content-center d-lg-none mb-30p">
+          <div *ngFor="let v of videos; let i = index;">
+            <button class="btn p-5p mx-2" (click)="moveVideoCarouselTo(i)">
+              <div 
+              class="paginator-circle" 
+              [ngClass]="{'bg-primary': (idxCurrentCarouselVideo == i), 'bg-line opacity-30pc': (idxCurrentCarouselVideo != i)}"
+              ></div>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="col-12 col-md-5">
+      <div class="col-12 col-md-6 col-xl-5">
         <h4 class="h4 h3-md text-white mb-20p mb-md-30p">Podcast</h4>
         <ul class="mb-20p mb-md-30p p-0 list-unstyled">
           <li *ngFor="let i of [0,1,2]" class="d-flex flex-nowrap align-items-stretch card-podcast mb-20p">
@@ -56,14 +59,20 @@
               <div class="eyecatch-dummy bg-white"></div>
             </div>
             <div class="info-container ml-3">
-              <div class="mb-10p text-nowrap body2 color-placeholder">
+              <div class="mb-10p text-nowrap body2 text-placeholder">
                 <i class="far fa-calendar mr-1"></i>
                 <span>Apr 22, 2021</span>
               </div>
-              <h5 class="body1 text-white mb-0">Many people rush through or multitask during meals consuming.</h5>
+              <h5 class="body1 text-white mb-0 clamp-2line">Many people rush through or multitask during meals consuming.</h5>
             </div>
           </li>
         </ul>
+        <div class="mb-30p">
+          <a class="text-primary subtitle1 on-black">
+            Browse all episodes
+            <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -99,9 +108,11 @@
             <card-post size="small" [showCategory]="false"></card-post>
           </div>
         </div>
-    
       </ng-container>
-  
     </div>
   </div>
+</section>
+
+<section>
+  <section-signup></section-signup>
 </section>

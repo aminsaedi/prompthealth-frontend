@@ -1,0 +1,19 @@
+///TEMPORARY TODO: DELETE LATER
+@import '../temporary';
+
+.bg-primary-dark {
+  background-color: rgba(0, 85, 199, 1);
+}
+
+.text-primary-light {
+  color:rgba(233, 242, 255, 1);
+}
+
+.btn-secondary {
+  padding: 17px 25px;
+  background: rgba(0, 194, 255, 1)!important;
+  &:hover {
+    background: rgba(0, 178, 234, 1)!important;
+  }
+}
+///TEMPORARY END
