@@ -16,11 +16,7 @@ export class HomeComponent implements OnInit {
   private timerCarouselVideo: any = null;
 
   @HostListener('window:resize') onWindowResize() {
-    if(window.innerWidth && window.innerWidth >= 992) {
-      this.stopCarousel();
-    } else {
-      this.startCarousel();
-    }
+    this.initCarousel();
   }
 
   @ViewChild('videosContainer') private videosContainer: ElementRef;
@@ -29,11 +25,19 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.videos = [null, null, null];
-    this.onWindowResize();
+    this.initCarousel();
   }
 
   onTapCategory(i: number) {
     this.idxCategoryActive = i;
+  }
+
+  initCarousel() {
+    if(!window.innerWidth || window.innerWidth >= 992) {
+      this.stopCarousel();
+    } else {
+      this.startCarousel();
+    }
   }
 
   stopCarousel() {
