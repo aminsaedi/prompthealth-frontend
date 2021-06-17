@@ -1,8 +1,17 @@
 <div class="menu-sm bg-background">
   <div class="menu-top py-10p py-md-15p container text-right">
-    <button class="btn btn-close pr-0" (click)="goback()">
-      <i class="fas fa-times"></i>
-    </button>        
+    <div class="d-inline-flex">
+      <div class="ml-10p ml-md-30p">
+        <a routerLink="/practitioners" class="btn btn-primary">Find practitioners</a>
+      </div>
+      <div class="ml-15p">
+        <a class="btn btn-close small pr-0" (click)="goback()">
+          <!-- <i iconPh="menu" class="large"></i> -->
+          <i class="fas fa-times"></i>
+        </a>
+      </div>
+  
+    </div>
   </div>
 
   <div class="d-flex flex-nowrap overflow-hidden mt-60p" #menuSm>

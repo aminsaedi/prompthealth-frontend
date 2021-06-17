@@ -15,7 +15,12 @@
 .bg-background {
   background-color: rgba(239, 243, 247, 1);
 }
-
+.btn.btn-primary {
+  background: rgba(12, 116, 255, 1)!important;
+  &:hover {
+    background: rgba(0, 85, 199, 1)!important;
+  }
+}
 /// TEMPORARY END
 
 .menu-sm {
