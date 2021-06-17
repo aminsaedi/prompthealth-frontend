@@ -38,7 +38,6 @@ export class HeaderMagazineComponent implements OnInit {
   }
   showCategory() {
     this.isCategoryShown = true;
-    this._router.navigate([{outlets: {headerMenu: ['menu-magazine']}}])
   }
   hideCategory() {
     this.isCategoryShown = false;
