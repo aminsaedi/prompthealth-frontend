@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
 
 @Component({
-  selector: 'app-header-menu-sm',
-  templateUrl: './header-menu-sm.component.html',
-  styleUrls: ['./header-menu-sm.component.scss'],
+  selector: 'app-menu-sm',
+  templateUrl: './menu-sm.component.html',
+  styleUrls: ['./menu-sm.component.scss'],
 })
-export class HeaderMenuSmComponent implements OnInit {
+export class MenuSmComponent implements OnInit {
 
   @ViewChild('menuSm') private menuSm: ElementRef;
 

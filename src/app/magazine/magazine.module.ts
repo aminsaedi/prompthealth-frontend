@@ -8,11 +8,11 @@ import { SharedModule } from '../shared/shared.module';
 import { PageComponent } from './page/page.component';
 import { SectionSubscriptionComponent } from './section-subscription/section-subscription.component';
 import { SectionSignupComponent } from './section-signup/section-signup.component';
-import { HeaderMenuSmComponent } from './header-menu-sm/header-menu-sm.component';
+import { MenuSmComponent } from './menu-sm/menu-sm.component';
 
 const routes = [
   {path: '',             component: HomeComponent},
-  {path: 'menu',         component: HeaderMenuSmComponent},
+  {path: 'menu',         component: MenuSmComponent},
   {path: 'category/:id', component: ListComponent},
   {path: 'tag/:id',      component: ListComponent},
   {path: 'category',     redirectTo: ''},
@@ -28,7 +28,7 @@ const routes = [
     PageComponent,
     SectionSubscriptionComponent,
     SectionSignupComponent,
-    HeaderMenuSmComponent
+    MenuSmComponent
   ],
   imports: [
     CommonModule,
