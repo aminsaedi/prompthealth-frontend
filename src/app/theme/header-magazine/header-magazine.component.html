@@ -1,5 +1,6 @@
 <header 
-class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparent" 
+class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparent"
+(clickOutside)="hideCategory()"
 >
   <div class="container">
     <div class="d-flex justify-content-between align-items-center">
@@ -7,41 +8,57 @@ class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparen
         <img class="d-lg-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20">
         <img class="d-none d-lg-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="30">
         <div class="mx-1 mx-md-3 border-right border-body"></div>
-        <span class="align-self-center text-dark subtitle2">Magazine</span>
+        <span class="align-self-center text-dark subtitle2-temp">Magazine</span>
       </a>
       <nav class="d-flex align-items-center">
-        <ul class="d-none d-lg-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2 text-body">
+        <ul class="d-none d-lg-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2-temp text-body">
           <li class="mx-10p">
-            <a routerLink="/practitioners" class="text-body">News</a>
+            <a class="text-body" routerLink="/magazines/category/test">News</a>
           </li>
           <li class="mx-10p">
-            <a routerLink="/products" class="text-body">Event</a>
+            <a class="text-body" routerLink="/magazines/category/test">Event</a>
           </li>
           <li class="mx-10p">
-            <a href="" class="text-body">Videos</a>
+            <a class="text-body" routerLink="/magazines/category/test">Videos</a>
           </li>
           
           <li class="mx-10p">
-            <a routerLink="/blogs" class="text-body">Podcasts</a>
+            <a class="text-body" routerLink="/magazines/category/test">Podcasts</a>
           </li>
 
           <li class="mx-10p">
-            <a routerLink="/blogs" class="text-body">All categories</a>
+            <a class="text-body cursor-pointer" (click)="toggleCategory()">
+              <span>All categories</span>
+              <i class="fas fa-chevron-down icon-show-category ml-2" [ngClass]="{active: isCategoryShown}"></i>
+            </a>
           </li>
         </ul>
         <div class="ml-10p ml-md-30p">
           <a routerLink="/practitioners" class="btn btn-primary">Find practitioners</a>
         </div>
         <div class="d-lg-none ml-15p">
-          <button class="btn btn-icon small pr-0" (click)="showMenu()">
+          <a class="btn btn-icon small pr-0" (click)="showMenu()">
             <!-- <i iconPh="menu" class="large"></i> -->
             <i class="fas fa-bars"></i>
-          </button>
+          </a>
         </div>  
       </nav>
     </div>
   </div>
+  <div class="container d-none d-lg-block overflow-hidden" *ngIf="isCategoryShown" [@expandVertical]>
+    <ul class="row list-unstyled pt-20p mb-0">
+      <li class="col-4 col-lg-3 py-2" *ngFor="let cat of [0,1,2,3,4,5,6,7,8]">
+        <a 
+        class="py-2 subtitle2-temp text-body" 
+        [routerLink]="['/magazines/category', 'test']"
+        (click)="hideCategory()" 
+        >Hormonal Health</a>
+      </li>
+    </ul>
+  </div>
 </header>
+
+
 
 <div class="menu-sm bg-background" *ngIf="isMenuShown" [@fade]>
   <div class="sticky-top menu-top py-10p py-md-15p container text-right">
@@ -54,19 +71,19 @@ class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparen
     <div class="menu-inner">
       <ul class="list-unstyled mb-0 container">
         <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" routerLink="/magazines/category/news" (click)="hideMenu()">News</a>
+          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="hideMenu()">News</a>
         </li>
         <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" (click)="hideMenu()">Event</a>
+          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="hideMenu()">Event</a>
         </li>
         <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" (click)="hideMenu()">Videos</a>
+          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="hideMenu()">Videos</a>
         </li>
         <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" (click)="hideMenu()">Podcasts</a>
+          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="hideMenu()">Podcasts</a>
         </li>
         <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-flex justify-content-between align-items-center" (click)="changeMenuTo(0, 1)">
+          <a class="py-2 text-body subtitle1-temp d-flex justify-content-between align-items-center" (click)="changeMenuTo(0, 1)">
             All categories
             <i class="fas fa-chevron-right"></i>
           </a>
@@ -82,19 +99,10 @@ class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparen
             <span>Back</span>  
           </button>
         </li>
-  
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" routerLink="/magazines/category/news" (click)="hideMenu()">News</a>
-        </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" (click)="hideMenu()">Event</a>
-        </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" (click)="hideMenu()">Videos</a>
-        </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" (click)="hideMenu()">Podcasts</a>
-        </li>
+
+        <li class="py-2" *ngFor="let cat of [0,1,2,3,4,5,6,7,8]">
+          <a class="py-2 text-body subtitle1-temp d-block" (click)="hideMenu()" [routerLink]="['/magazines/category', 'test']">Hormonal Health</a>
+        </li>  
       </ul>
     </div>
   </div>

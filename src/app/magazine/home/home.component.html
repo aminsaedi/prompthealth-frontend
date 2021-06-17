@@ -23,8 +23,8 @@
     <div class="row">
       <div class="col-12 col-md-6 col-xl-7 d-flex flex-column">
         <div class="d-flex justify-content-between align-items-center mb-20p mb-md-30p">
-          <h4 class="h4 h3-md text-white mb-0">Videos</h4>
-          <a class="text-white subtitle1">All videos</a>
+          <h4 class="h4-temp h3-temp-md text-white mb-0">Videos</h4>
+          <a class="text-white subtitle1-temp">All videos</a>
         </div>
         <ul class="mb-20p mb-md-30p p-0 list-unstyled videos flex-grow-1" #videosContainer>
           <li 
@@ -35,8 +35,8 @@
               <div class="eyecatch-dummy bg-dark"></div>
             </div>
             <h5 
-            class="title text-light h6 h5-md clamp-2line px-15p mb-15p"
-            [ngClass]="{'h5-lg px-lg-30p': (i == 0), 'subtitle1-lg px-lg-15p': (i > 0)}"
+            class="title text-light h6-temp h5-temp-md clamp-2line px-15p mb-15p"
+            [ngClass]="{'h5-temp-lg px-lg-30p': (i == 0), 'subtitle1-temp-lg px-lg-15p': (i > 0)}"
             >Our neighborhood health story: The cooking class that became so much more</h5>
           </li>
         </ul>
@@ -52,23 +52,23 @@
         </div>
       </div>
       <div class="col-12 col-md-6 col-xl-5">
-        <h4 class="h4 h3-md text-white mb-20p mb-md-30p">Podcast</h4>
+        <h4 class="h4-temp h3-temp-md text-white mb-20p mb-md-30p">Podcast</h4>
         <ul class="mb-20p mb-md-30p p-0 list-unstyled">
           <li *ngFor="let i of [0,1,2]" class="d-flex flex-nowrap align-items-stretch card-podcast mb-20p">
             <div class="eyecatch-container position-relative">
               <div class="eyecatch-dummy bg-white"></div>
             </div>
             <div class="info-container ml-3">
-              <div class="mb-10p text-nowrap body2 text-placeholder">
+              <div class="mb-10p text-nowrap body2-temp text-placeholder">
                 <i class="far fa-calendar mr-1"></i>
                 <span>Apr 22, 2021</span>
               </div>
-              <h5 class="body1 text-white mb-0 clamp-2line">Many people rush through or multitask during meals consuming.</h5>
+              <h5 class="body1-temp text-white mb-0 clamp-2line">Many people rush through or multitask during meals consuming.</h5>
             </div>
           </li>
         </ul>
         <div class="mb-30p">
-          <a class="text-primary subtitle1 on-black">
+          <a class="text-primary subtitle1-temp on-black">
             Browse all episodes
             <i class="fas fa-arrow-circle-right"></i>
           </a>
@@ -80,14 +80,14 @@
 
 <section class="mt-70p mb-100p">
   <div class="container">
-    <h4 class="h4 h3-md mb-20p mb-md-30p">Categories</h4>
+    <h4 class="h4-temp h3-temp-md mb-20p mb-md-30p">Categories</h4>
   </div>
 
   <div class="scroll-horizontal-container border-bottom">
     <ul class="d-flex list-unstyled category-list m-0">
       <li
       *ngFor="let i of [0,1,2,3,4,5,6,7,8,9]"
-      class="text-nowrap position-relative"
+      class="text-nowrap position-relative body1-temp"
       [ngClass]="{active: (i == idxCategoryActive)}"
       (click)="onTapCategory(i)"
       >Hormonal Health</li>

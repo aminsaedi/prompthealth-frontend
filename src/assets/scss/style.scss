@@ -1,4 +1,5 @@
 @import "mixins";
+.cursor-pointer {cursor: pointer; }
 
 :root{
   --ph-blue: #3377C5;
@@ -709,7 +710,151 @@ textarea.form-control {
 
 
 ///// TEMPORARY TODO: REMOVE THIS AFTER MERGE INTO DESIGN-CHANGE BRANCH
-/** margin and padding from 5px to 50px (step: 5px) */
+$breakpointSm: 576px;
+$breakpointMd: 768px;
+$breakpointLg: 992px;
+$breakpointXl: 1200px;
+
+$colorPrimary: #0C74FF;
+$colorPrimaryDark: #0055C7;
+$colorPrimaryLight: #E9F2FF;
+
+$colorSecondary: #00C2FF;
+$colorSecondaryDark: #00B2EA;
+$colorSecondaryLight: #E8FBFF;
+
+$colorYellow: #FDB813;
+$colorYellowDark: #A47300;
+$colorYellowLight: #FCEBC2;
+
+$colorError: #EA4242;
+$colorErrorDark: #BB1313;
+$colorErrorLight: #FBECEC;
+
+$colorSuccess: #12C132;
+$colorSuccessDark: #079020;
+$colorSuccessLight: #E8F9EB;
+
+/** greyscale */
+$colorGsBlack: #04122D;
+$colorGsBody: #293148;
+$colorGsLabel: #838790;
+$colorGsPlaceholder: #A0A3BD;
+$colorGsLine: #D6D8E7;
+$colorGsBackground: #EFF3F7;
+$colorGsWhite: #FFFFFF;
+
+/** social media */
+$colorGoogle: #db4437;
+$colorGoogleLight: #ea5f54;
+$colorFacebook: #3b5998;
+$colorFacebookLight: #3c6acb;
+$colorTwitter: #1DA1F2;
+$colorLinkedin: #2867B2;
+$colorInstagram: #E1306C;
+$colorTiktok: #69C9D0;
+$colorYoutube: #FF0000;
+
+//fonts (previous design)
+$accentColor: #B7D3F3;
+$primaryColor: #4274BA;
+$primaryColorhover: #5683c2;
+$linkedInColor: #0e76a8;
+$instaColor: #3f729b;
+$secondaryColor: #6d6e71;
+$secondaryColorhover: #525458;
+$themeFont: "Roboto", sans-serif;
+$themeFontSize: 14px;
+$themeLignHeight: 19px;
+$headerHeight: 62px;
+$footerHeight: 170px;
+$p6: 100px;
+$radius: 0.25rem;
+
+$ph-gradient: -webkit-linear-gradient(271.61deg, #5D7DC1 16.86%, #213F7A 101.15%);
+$ph-gradient-light: -webkit-linear-gradient(271.68deg, #21617D -10.74%, #4A7FCA -10.73%, #94B0ED 89.35%);
+@mixin typography($fontSize, $lineHeight, $fontWeight, $letterSpacing) {
+  font-size: $fontSize!important;
+  font-weight: $fontWeight!important;
+  line-height: $lineHeight!important;
+  letter-spacing: $letterSpacing!important;
+}
+
+$fontWeightBold: 700;
+$fontWeightMedium: 500;
+$fontWeightRegular: 400;
+
+.h1-temp { @include typography(60px, 64px, $fontWeightBold, -0.5px); }
+.h2-temp { @include typography(48px, 54px, $fontWeightBold, 0px); }
+.h3-temp { @include typography(34px, 42px, $fontWeightBold, 0.25px); }
+.h4-temp { @include typography(24px, 32px, $fontWeightBold, 0px); }
+.h5-temp { @include typography(20px, 26px, $fontWeightBold, 0.2px); }
+.h6-temp { @include typography(18px, 24px, $fontWeightMedium, 0.2px); }
+.subtitle1-temp { @include typography(16px, 24px, $fontWeightMedium, 0.25px); }
+.subtitle2-temp { @include typography(14px, 18px, $fontWeightMedium, 0.1px); }
+.body1-temp { @include typography(16px, 24px, $fontWeightRegular, 0.1px); }
+.body2-temp { @include typography(14px, 22px, $fontWeightRegular, -0.2px); }
+.body-small-temp { @include typography(13px, 16px, $fontWeightMedium, 0.2px); }
+.caption-temp { @include typography(12px, 16px, $fontWeightRegular, 0.2px); }
+
+@media (min-width: #{$breakpointMd}) {
+  .h1-temp-md { @include typography(60px, 64px, $fontWeightBold, -0.5px); }
+  .h2-temp-md { @include typography(48px, 54px, $fontWeightBold, 0px); }
+  .h3-temp-md { @include typography(34px, 42px, $fontWeightBold, 0.25px); }
+  .h4-temp-md { @include typography(24px, 32px, $fontWeightBold, 0px); }
+  .h5-temp-md { @include typography(20px, 26px, $fontWeightBold, 0.2px); }
+  .h6-temp-md { @include typography(18px, 24px, $fontWeightMedium, 0.2px); }
+  .subtitle1-temp-md { @include typography(16px, 24px, $fontWeightMedium, 0.25px); }
+  .subtitle2-temp-md { @include typography(14px, 18px, $fontWeightMedium, 0.1px); }
+  .body1-temp-md { @include typography(16px, 24px, $fontWeightRegular, 0.1px); }
+  .body2-temp-md { @include typography(14px, 22px, $fontWeightRegular, -0.2px); }
+  .body-small-temp-md { @include typography(13px, 16px, $fontWeightMedium, 0.2px); }
+  .caption-temp-md { @include typography(12px, 16px, $fontWeightRegular, 0.2px); }
+}
+
+
+@mixin clamp($line, $height) {
+  height: $line * $height;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+}
+
+@mixin clampTemplate($i, $prefix: '') {
+  .subtitle2.clamp-#{$prefix}#{$i}line { @include clamp($i, 18px); }
+  .body2.clamp-#{$prefix}#{$i}line { @include clamp($i, 22px); }
+  .body-small.clamp-#{$prefix}#{$i}line { @include clamp($i, 16px); }
+
+  .h4-temp {
+    &.clamp-#{$prefix}#{$i}line { @include clamp($i, 32px); }
+  }
+  .h5-temp { 
+    &.clamp-#{$prefix}#{$i}line{ @include clamp($i, 26px); }
+  }
+  .h6-temp,
+  .body1-temp,
+  .subtitle1-temp { 
+    &.clamp-#{$prefix}#{$i}line { @include clamp($i, 24px);} 
+  }
+}
+
+@for $i from 1 through 5 {
+  @include clampTemplate($i);
+
+  @media (min-width: $breakpointMd) {
+    @include clampTemplate($i, 'md-');
+  }
+
+  @media (min-width: #{$breakpointLg}) {
+    @include clampTemplate($i, 'lg-');
+  }
+
+  @media (min-width: #{$breakpointXl}) {
+    @include clampTemplate($i, 'xl-');
+  }
+}
 
 @for $i from 1 through 20 {
   .mt-#{$i * 5}p,

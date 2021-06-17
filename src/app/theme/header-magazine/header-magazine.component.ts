@@ -1,19 +1,23 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { fadeAnimation } from 'src/app/_helpers/animations';
+import { Router } from '@angular/router';
+import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
 
 @Component({
   selector: 'app-header-magazine',
   templateUrl: './header-magazine.component.html',
   styleUrls: ['./header-magazine.component.scss'],
-  animations: [fadeAnimation],
+  animations: [fadeAnimation, expandVerticalAnimation],
 })
 export class HeaderMagazineComponent implements OnInit {
 
   @ViewChild('menuSm') private menuSm: ElementRef;
   public isMenuShown: boolean = false;
+  public isCategoryShown: boolean = false;
 
-  constructor() { }
+  constructor(
+    private _router: Router,
+  ) { }
 
   ngOnInit(): void {
   }
@@ -23,6 +27,21 @@ export class HeaderMagazineComponent implements OnInit {
   }
   hideMenu() {
     this.isMenuShown = false;
+  }
+
+  toggleCategory() {
+    if(this.isCategoryShown) {
+      this.hideCategory();
+    } else {
+      this.showCategory();
+    }
+  }
+  showCategory() {
+    this.isCategoryShown = true;
+    this._router.navigate([{outlets: {headerMenu: ['menu-magazine']}}])
+  }
+  hideCategory() {
+    this.isCategoryShown = false;
   }
 
   changeMenuTo(from: number, to: number) {

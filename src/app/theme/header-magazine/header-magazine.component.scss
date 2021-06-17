@@ -1,6 +1,4 @@
 /// TEMPORARY TODO: DELTE LATER
-@import '../../magazine/temporary';
-
 .text-body {
   color: rgba(41, 49, 72, 1)!important;
 }
@@ -32,6 +30,14 @@
   }
 }
 
+.icon-show-category {
+  transition: transform 200ms;
+  transform: rotateX(0);
+  &.active {
+    transform: rotateX(180deg)
+  }
+}
+
 .menu-sm {
   position: fixed;
   z-index: 100;
@@ -43,7 +49,6 @@
   .menu-top {
     z-index: 100;
   }
-
 
   .menu-inner {
     flex: 0 0 100%;

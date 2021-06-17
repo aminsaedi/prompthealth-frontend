@@ -12,13 +12,15 @@ import { ThankuPageComponent } from './thanku-page/thanku-page.component';
 import { MagazineModule } from '../magazine/magazine.module';
 
 const routes: Routes = [
+
   {
     path: '',
     component: LayoutComponent,
     children: [
+
       {
         path: '',
-        component: HomeComponent
+        component: HomeComponent,
       },
       {
         path: '',
@@ -37,6 +39,7 @@ const routes: Routes = [
         loadChildren: () => DashboardModule,
         // CanActivate: [AuthGuard]
       },
+
 
       // {
       //   path: 'subscriptionplan',
