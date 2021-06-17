@@ -4,7 +4,7 @@ class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparen
 >
   <div class="container">
     <div class="d-flex justify-content-between align-items-center">
-      <a routerLink="/" class="d-flex flex-nowrap align-items-stretch">
+      <a routerLink="/magazines" class="d-flex flex-nowrap align-items-stretch">
         <img class="d-lg-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20">
         <img class="d-none d-lg-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="30">
         <div class="mx-1 mx-md-3 border-right border-body"></div>
@@ -37,7 +37,8 @@ class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparen
           <a routerLink="/practitioners" class="btn btn-primary">Find practitioners</a>
         </div>
         <div class="d-lg-none ml-15p">
-          <a class="btn btn-icon small pr-0" (click)="showMenu()">
+          <!-- <a class="btn btn-icon small pr-0" (click)="showMenu()"> -->
+          <a class="btn btn-icon small pr-0" routerLink="/magazines/menu">
             <!-- <i iconPh="menu" class="large"></i> -->
             <i class="fas fa-bars"></i>
           </a>
@@ -57,53 +58,3 @@ class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparen
     </ul>
   </div>
 </header>
-
-
-
-<div class="menu-sm bg-background" *ngIf="isMenuShown" [@fade]>
-  <div class="sticky-top menu-top py-10p py-md-15p container text-right">
-    <button class="btn btn-close pr-0" (click)="hideMenu()">
-      <i class="fas fa-times"></i>
-    </button>        
-  </div>
-
-  <div class="d-flex flex-nowrap overflow-hidden" #menuSm>
-    <div class="menu-inner">
-      <ul class="list-unstyled mb-0 container">
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="hideMenu()">News</a>
-        </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="hideMenu()">Event</a>
-        </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="hideMenu()">Videos</a>
-        </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="hideMenu()">Podcasts</a>
-        </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1-temp d-flex justify-content-between align-items-center" (click)="changeMenuTo(0, 1)">
-            All categories
-            <i class="fas fa-chevron-right"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="menu-inner">
-      <ul class="list-unstyled mb-0 container">
-        <li class="py-2">
-          <button class="btn pl-0 text-placeholder" (click)="changeMenuTo(1, 0)">
-            <i class="fas fa-chevron-left mr-2"></i>
-            <span>Back</span>  
-          </button>
-        </li>
-
-        <li class="py-2" *ngFor="let cat of [0,1,2,3,4,5,6,7,8]">
-          <a class="py-2 text-body subtitle1-temp d-block" (click)="hideMenu()" [routerLink]="['/magazines/category', 'test']">Hormonal Health</a>
-        </li>  
-      </ul>
-    </div>
-  </div>
-</div>

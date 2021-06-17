@@ -8,9 +8,11 @@ import { SharedModule } from '../shared/shared.module';
 import { PageComponent } from './page/page.component';
 import { SectionSubscriptionComponent } from './section-subscription/section-subscription.component';
 import { SectionSignupComponent } from './section-signup/section-signup.component';
+import { HeaderMenuSmComponent } from './header-menu-sm/header-menu-sm.component';
 
 const routes = [
   {path: '',             component: HomeComponent},
+  {path: 'menu',         component: HeaderMenuSmComponent},
   {path: 'category/:id', component: ListComponent},
   {path: 'tag/:id',      component: ListComponent},
   {path: 'category',     redirectTo: ''},
@@ -25,7 +27,8 @@ const routes = [
     CardPostComponent,
     PageComponent,
     SectionSubscriptionComponent,
-    SectionSignupComponent
+    SectionSignupComponent,
+    HeaderMenuSmComponent
   ],
   imports: [
     CommonModule,

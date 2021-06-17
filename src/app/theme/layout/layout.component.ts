@@ -32,7 +32,7 @@ export class LayoutComponent {
         this.showFooter = true;
       }
 
-      this.onMagazine = evt.url.match(/magazines/) ? true : false;
+      this.onMagazine = evt.url.match(/magazines|blogs/) ? true : false;
     });
   }
 }
