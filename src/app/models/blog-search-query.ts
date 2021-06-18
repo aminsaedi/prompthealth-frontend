@@ -1,0 +1,55 @@
+import { IBlog } from "./blog";
+
+export interface IBlogSearchQuery {
+  sort?: string; /** default: createdAt (desc only) */
+  limit?: number; /** default: 20 */
+  page?: number; /** start with 1 */
+  frontend?: string; /** if 1, get only data which status is true */
+  categoryId?: string; /** object id for category */
+  search?: string; /** title search */
+  existVideo?: boolean;
+  existPodcast?: boolean;
+}
+
+export class BlogSearchQuery implements IBlogSearchQuery {
+
+  get sort() { return this.data.sort || null; }
+  get limit() { return this.data.limit || null; }
+  get page() { return this.data.page || null; }
+  get frontend() { return this.data.frontend || '1'; }
+  get search() { return this.data.search || null; }
+  get categoryId() { return this.data.categoryId || null; }
+  get existVideo() { return this.data.existVideo || null; }
+  get existPodcast() { return this.data.existPodcast || null; }
+
+  get json() {
+    const data: IBlogSearchQuery = {
+      frontend: this.frontend,
+    };
+    data.limit = this.limit || 12;
+    if(this.sort) { data.sort = this.sort; }
+    if(this.page) { data.page = this.page; }
+    if(this.search) { data.search = this.search; }
+    if(this.categoryId) { data.categoryId = this.categoryId; }
+    if(this.existVideo) { data.existVideo = true; }
+    if(this.existPodcast) { data.existPodcast = true; }
+    return data;
+  }
+
+  get queryParams() {
+    const paramsArray = [];
+    const data = this.json;
+    for(let key in data) {
+      let val = data[key];
+      paramsArray.push(key + '=' + val);
+    }
+    return '?' + paramsArray.join('&');
+  }
+
+  constructor(private data: IBlogSearchQuery = {}) {}
+}
+
+export interface IBlogSearchResult {
+  data: IBlog[],
+  total: number;
+}

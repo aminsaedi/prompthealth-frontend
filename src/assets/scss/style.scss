@@ -822,38 +822,75 @@ $fontWeightRegular: 400;
   -webkit-box-orient: vertical;
 }
 
-@mixin clampTemplate($i, $prefix: '') {
-  .subtitle2.clamp-#{$prefix}#{$i}line { @include clamp($i, 18px); }
-  .body2.clamp-#{$prefix}#{$i}line { @include clamp($i, 22px); }
-  .body-small.clamp-#{$prefix}#{$i}line { @include clamp($i, 16px); }
-
-  .h4-temp {
-    &.clamp-#{$prefix}#{$i}line { @include clamp($i, 32px); }
+@mixin clampTemplate($name, $height) {
+  @for $i from 1 through 5{
+    .#{$name}.clamp-#{$i}line { @include clamp($i, $height); }
   }
-  .h5-temp { 
-    &.clamp-#{$prefix}#{$i}line{ @include clamp($i, 26px); }
+}
+@mixin clampTemplateMd($name, $height) {
+  @for $i from 1 through 5{
+    .#{$name}-md.clamp-#{$i}line {     @include clamp($i, $height); }
   }
-  .h6-temp,
-  .body1-temp,
-  .subtitle1-temp { 
-    &.clamp-#{$prefix}#{$i}line { @include clamp($i, 24px);} 
+}
+@mixin clampTemplateLg($name, $height) {
+  @for $i from 1 through 5{
+    .#{$name}-lg.clamp-#{$i}line {     @include clamp($i, $height); }
+  }
+}
+@mixin clampTemplateXl($name, $height) {
+  @for $i from 1 through 5{
+    .#{$name}-xl.clamp-#{$i}line {     @include clamp($i, $height); }
   }
 }
 
-@for $i from 1 through 5 {
-  @include clampTemplate($i);
+@include clampTemplate(h2-temp, 54px);
+@include clampTemplate(h3-temp, 54px);
+@include clampTemplate(h4-temp, 32px);
+@include clampTemplate(h5-temp, 26px);
+@include clampTemplate(h6-temp, 24px);
+@include clampTemplate(subtitle1-temp, 24px);
+@include clampTemplate(subtitle2-temp, 18px);
+@include clampTemplate(body1-temp, 24px);
+@include clampTemplate(body2-temp, 22px);
+@include clampTemplate(body-small-temp, 16px);
 
-  @media (min-width: $breakpointMd) {
-    @include clampTemplate($i, 'md-');
-  }
+@media (min-width: 768px) {
+  @include clampTemplateMd(h2-temp, 54px);
+  @include clampTemplateMd(h3-temp, 54px);
+  @include clampTemplateMd(h4-temp, 32px);
+  @include clampTemplateMd(h5-temp, 26px);
+  @include clampTemplateMd(h6-temp, 24px);
+  @include clampTemplateMd(subtitle1-temp, 24px);
+  @include clampTemplateMd(subtitle2-temp, 18px);
+  @include clampTemplateMd(body1-temp, 24px);
+  @include clampTemplateMd(body2-temp, 22px);
+  @include clampTemplateMd(body-small-temp, 16px);
+}
 
-  @media (min-width: #{$breakpointLg}) {
-    @include clampTemplate($i, 'lg-');
-  }
+@media (min-width: 992px) {
+  @include clampTemplateLg(h2-temp, 54px);
+  @include clampTemplateLg(h3-temp, 54px);
+  @include clampTemplateLg(h4-temp, 32px);
+  @include clampTemplateLg(h5-temp, 26px);
+  @include clampTemplateLg(h6-temp, 24px);
+  @include clampTemplateLg(subtitle1-temp, 24px);
+  @include clampTemplateLg(subtitle2-temp, 18px);
+  @include clampTemplateLg(body1-temp, 24px);
+  @include clampTemplateLg(body2-temp, 22px);
+  @include clampTemplateLg(body-small-temp, 16px);
+}
 
-  @media (min-width: #{$breakpointXl}) {
-    @include clampTemplate($i, 'xl-');
-  }
+@media (min-width: 1200px) {
+  @include clampTemplateXl(h2-temp, 54px);
+  @include clampTemplateXl(h3-temp, 54px);
+  @include clampTemplateXl(h4-temp, 32px);
+  @include clampTemplateXl(h5-temp, 26px);
+  @include clampTemplateXl(h6-temp, 24px);
+  @include clampTemplateXl(subtitle1-temp, 24px);
+  @include clampTemplateXl(subtitle2-temp, 18px);
+  @include clampTemplateXl(body1-temp, 24px);
+  @include clampTemplateXl(body2-temp, 22px);
+  @include clampTemplateXl(body-small-temp, 16px);
 }
 
 @for $i from 1 through 20 {

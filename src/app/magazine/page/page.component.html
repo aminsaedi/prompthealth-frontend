@@ -1,19 +1,22 @@
 <div class="container mt-30p">
 
   <div class="d-none d-md-flex text-center align-items-center justify-content-center mb-50p">
-    <a class="btn mr-2">
+    <a class="btn mr-2 pr-0">
       <i class="fas fa-home text-label" routerLink="/magazines"></i>
     </a>
+    <ng-container *ngIf="data?.category">
+      <i class="fas fa-chevron-right mr-2 text-label"></i>
+      <a class="mr-2 body2-temp text-label btn">{{data.category}}</a>  
+    </ng-container>
     <i class="fas fa-chevron-right mr-2 text-label"></i>
-    <a class="mr-2 body2-temp text-label btn">category name</a>
-    <i class="fas fa-chevron-right mr-2 text-label"></i>
-    <span class="mr-2 body2-temp btn">page title</span>
+    <span class="mr-2 body2-temp clamp-1line">{{data?.title}}</span>
   </div>
 
   <div class="mb-20p row justify-content-center">
     <div class="col-12 col-md-12 col-lg-10 col-xl-9 text-center">
       <div class="eyecatch-container position-relative">
-        <div class="eyecatch-dummy"></div>
+        <div *ngIf="!data" class="eyecatch-dummy bg-background"></div>
+        <img *ngIf="data" [src]="data.image" class="eyecatch" alt="">
       </div>
     </div>
   </div>
@@ -23,24 +26,24 @@
       <div class="row align-items-center body2-temp">
         <div class="col-12 col-md-4 mb-10p border-md-right">
           <div class="d-flex align-items-center">
-            <div class="author-dummy mr-2"></div>
-            <span class="opacity-70pc">By Alice Gomstyn</span>
+            <img [src]="data?.authorImage" alt="" class="author mr-2">
+            <span class="opacity-70pc">{{data?.author}}</span>
           </div>  
         </div>
         <div class="col-12 col-md-8">
           <div class="d-flex flex-column flex-md-row flex-nowrap opacity-70pc">
             <span class="mr-4 mb-10p text-nowrap">
               <i class="far fa-calendar mr-1"></i>
-              <span>Apr 22, 2021</span>
+              <span>{{data?.createdAt | date:'longDate'}}</span>
             </span>
             <span class="mr-4 mb-10p text-nowrap">
               <i class="far fa-hourglass mr-1"></i>
-              <span>9 min read
+              <span>{{data?.readLength}} min read
               </span>
             </span>
-            <span class="mb-10p text-nowrap">
+            <span class="mb-10p text-nowrap" *ngIf="data?.category">
               <i class="fas fa-tag mr-1"></i>
-              <span>category</span>
+              <span>{{data.category}}</span>
             </span>
           </div>
         </div>
@@ -51,23 +54,20 @@
   <div class="row justify-content-center mb-100p">
     <div class="col-12 col-md-11 col-lg-9 col-xl-8">
       <h2 class="h4-temp h2-temp-md mb-25p text-center">
-        4 surprising health benefits of a home cooked meal
+        {{data?.title}}
       </h2>
 
-      <div class="body1-temp">
-        <p>
-          Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn't exercise much control over her family's nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night. Her decision paid off in spades: Celine says she's reaped a host of both physical and mental health benefits from cooking at home.
-        </p>
+      <div class="body1-temp" [innerHtml]="data?.description">
       </div>
     </div>
   </div>
 </div>
 <div class="bg-background pt-70p pb-100p">
   <div class="container">
-    <h4 class="h5-temp text-center mb-45p">RELATED VIDEOS</h4>
+    <h4 class="h5-temp text-center mb-45p">RELATED POSTS</h4>
     <ul class="row list-unstyled m-0 p-0">
-      <li class="col-12 col-lg-4 mb-30p" *ngFor="let i of [0,1,2]">
-        <card-post [showCategory]="false"></card-post>
+      <li class="col-12 col-lg-4 mb-30p" *ngFor="let data of related">
+        <card-post [showCategory]="false" [data]="data" [option]="{colorLightForDummy: '#eff3f7'}"></card-post>
       </li>  
     </ul>
   </div>

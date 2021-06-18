@@ -17,7 +17,7 @@ const routes = [
   {path: 'tag/:id',      component: ListComponent},
   {path: 'category',     redirectTo: ''},
   {path: 'tag',          redirectTo: ''},
-  {path: ':id',          component: PageComponent},
+  {path: ':slug',        component: PageComponent},
 ]
 
 @NgModule({

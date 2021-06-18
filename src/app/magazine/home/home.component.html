@@ -1,11 +1,11 @@
 <section class="container mt-100p">
   <div class="row">
-    <ng-container *ngFor="let p of [0,1,2, 3]; let i = index">
+    <ng-container *ngFor="let p of latest; let i = index">
       <div 
       class="col-12 mb-md-100p"
       [ngClass]="{'col-md-12 mb-55p': (i == 0), 'col-lg-4 mb-30p': (i != 0)}"
       >
-        <card-post [size]="(i == 0) ? 'large' : 'medium'"></card-post>
+        <card-post [size]="(i == 0) ? 'large' : 'medium'" [data]="p"></card-post>
       </div>
   
     </ng-container>
@@ -32,12 +32,15 @@
           class="card-video flex-grow-1 w-100 position-relative"
           >
             <div class="position-relative eyecatch-container rounded-12p h-100">
-              <div class="eyecatch-dummy bg-dark"></div>
+              <div *ngIf="!v" class="eyecatch-dummy bg-dark"></div>
+              <img *ngIf="v" class="eyecatch" [src]="v.image" alt="">
             </div>
             <h5 
             class="title text-light h6-temp h5-temp-md clamp-2line px-15p mb-15p"
             [ngClass]="{'h5-temp-lg px-lg-30p': (i == 0), 'subtitle1-temp-lg px-lg-15p': (i > 0)}"
-            >Our neighborhood health story: The cooking class that became so much more</h5>
+            >
+              <span *ngIf="v">{{v.title}}</span>
+            </h5>
           </li>
         </ul>
         <div class="d-flex justify-content-center d-lg-none mb-30p">
@@ -54,16 +57,19 @@
       <div class="col-12 col-md-6 col-xl-5">
         <h4 class="h4-temp h3-temp-md text-white mb-20p mb-md-30p">Podcast</h4>
         <ul class="mb-20p mb-md-30p p-0 list-unstyled">
-          <li *ngFor="let i of [0,1,2]" class="d-flex flex-nowrap align-items-stretch card-podcast mb-20p">
+          <li *ngFor="let p of podcasts" class="d-flex flex-nowrap align-items-stretch card-podcast mb-20p">
             <div class="eyecatch-container position-relative">
-              <div class="eyecatch-dummy bg-white"></div>
+              <div *ngIf="!p" class="eyecatch-dummy bg-white"></div>
+              <img *ngIf="p" class="eyecatch" [src]="p.image">
             </div>
             <div class="info-container ml-3">
               <div class="mb-10p text-nowrap body2-temp text-placeholder">
-                <i class="far fa-calendar mr-1"></i>
-                <span>Apr 22, 2021</span>
+                <div *ngIf="p">
+                  <i class="far fa-calendar mr-1"></i>
+                  <span>{{p.createdAt | date}}</span>  
+                </div>
               </div>
-              <h5 class="body1-temp text-white mb-0 clamp-2line">Many people rush through or multitask during meals consuming.</h5>
+              <h5 class="body1-temp text-white mb-0 clamp-2line">{{p.title}}</h5>
             </div>
           </li>
         </ul>
@@ -96,16 +102,16 @@
 
   <div class="container mt-20p mt-lg-40p">
     <div class="row">
-      <ng-container *ngFor="let i of [0,1,2,3,4,5,6]">
+      <ng-container *ngFor="let p of latestByCategory; let i = index;">
         <div 
         class="col-12 col-lg-4 mb-30p mb-lg-50p"
         [ngClass]="{'col-lg-4': (i < 3), 'col-lg-3': (i>=3) }"
         >
           <div class="d-none d-lg-block">
-            <card-post [size]="(i < 3) ? 'medium' : 'small'" [showCategory]="false"></card-post>
+            <card-post [size]="(i < 3) ? 'medium' : 'small'" [showCategory]="false" [data]="p"></card-post>
           </div>
           <div class="d-block d-lg-none">
-            <card-post size="small" [showCategory]="false"></card-post>
+            <card-post size="small" [showCategory]="false" [data]="p"></card-post>
           </div>
         </div>
       </ng-container>
