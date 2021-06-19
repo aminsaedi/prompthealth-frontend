@@ -11,10 +11,11 @@ import { SectionSignupComponent } from './section-signup/section-signup.componen
 import { MenuSmComponent } from './menu-sm/menu-sm.component';
 
 const routes = [
-  {path: '',             component: HomeComponent},
-  {path: 'menu',         component: MenuSmComponent},
-  {path: 'category/:id', component: ListComponent},
-  {path: 'tag/:id',      component: ListComponent},
+  {path: '',               component: HomeComponent},
+  {path: 'menu',           component: MenuSmComponent},
+  {path: 'category/:id',   component: ListComponent},
+  {path: 'tag/:id',        component: ListComponent},
+  {path: 'media-type/:id', component: ListComponent},
   {path: 'category',     redirectTo: ''},
   {path: 'tag',          redirectTo: ''},
   {path: ':slug',        component: PageComponent},

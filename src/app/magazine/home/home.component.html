@@ -31,16 +31,18 @@
           *ngFor="let v of videos; let i = index" 
           class="card-video flex-grow-1 w-100 position-relative"
           >
-            <div class="position-relative eyecatch-container rounded-12p h-100">
-              <div *ngIf="!v" class="eyecatch-dummy bg-dark"></div>
-              <img *ngIf="v" class="eyecatch" [src]="v.image" alt="">
-            </div>
-            <h5 
-            class="title text-light h6-temp h5-temp-md clamp-2line px-15p mb-15p"
-            [ngClass]="{'h5-temp-lg px-lg-30p': (i == 0), 'subtitle1-temp-lg px-lg-15p': (i > 0)}"
-            >
-              <span *ngIf="v">{{v.title}}</span>
-            </h5>
+            <a [routerLink]="['/magazines/' + (v ? v.slug : '') ]">
+              <div class="position-relative eyecatch-container rounded-12p h-100">
+                <div *ngIf="!v" class="eyecatch-dummy bg-dark"></div>
+                <img *ngIf="v" class="eyecatch" [src]="v.image" alt="">
+              </div>
+              <h5
+              class="title text-light h6-temp h5-temp-md clamp-2line px-15p mb-15p"
+              [ngClass]="{'h5-temp-lg px-lg-30p': (i == 0), 'subtitle1-temp-lg px-lg-15p': (i > 0)}"
+              >
+                <span *ngIf="v">{{v.title}}</span>
+              </h5>
+            </a>
           </li>
         </ul>
         <div class="d-flex justify-content-center d-lg-none mb-30p">
@@ -66,7 +68,7 @@
               <div class="mb-10p text-nowrap body2-temp text-placeholder">
                 <div *ngIf="p">
                   <i class="far fa-calendar mr-1"></i>
-                  <span>{{p.createdAt | date}}</span>  
+                  <span>{{p.createdAt | date:'longDate'}}</span>  
                 </div>
               </div>
               <h5 class="body1-temp text-white mb-0 clamp-2line">{{p.title}}</h5>
@@ -92,11 +94,16 @@
   <div class="scroll-horizontal-container border-bottom">
     <ul class="d-flex list-unstyled category-list m-0">
       <li
-      *ngFor="let i of [0,1,2,3,4,5,6,7,8,9]"
+      class="text-nowrap position-relative body1-temp"
+      [ngClass]="{active: (idxCategoryActive === null)}"
+      (click)="onTapCategory()"
+      >All</li>
+      <li
+      *ngFor="let cat of categories; let i = index"
       class="text-nowrap position-relative body1-temp"
       [ngClass]="{active: (i == idxCategoryActive)}"
       (click)="onTapCategory(i)"
-      >Hormonal Health</li>
+      >{{cat.title}}</li>
     </ul>
   </div>
 

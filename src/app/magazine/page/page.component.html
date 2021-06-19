@@ -14,9 +14,18 @@
 
   <div class="mb-20p row justify-content-center">
     <div class="col-12 col-md-12 col-lg-10 col-xl-9 text-center">
-      <div class="eyecatch-container position-relative">
-        <div *ngIf="!data" class="eyecatch-dummy bg-background"></div>
-        <img *ngIf="data" [src]="data.image" class="eyecatch" alt="">
+
+      <div *ngIf="!data" class="eyecatch-container ratio-5--3">
+        <div class="eyecatch-dummy bg-background"></div>
+      </div>
+      <div *ngIf="data?.isEyecatchVideo" class="eyecatch-container ratio-16--9">
+        <div class="eyecatch" [innerHTML]="data.videosEmbedded[0]"></div>
+      </div>
+      <div *ngIf="data?.isEyecatchPodcast" class="eyecatch-container ratio-for-podcast">
+        <div class="eyecatch" [innerHTML]="data.podcastsEmbedded[0]"></div>
+      </div>
+      <div *ngIf="data?.isEyecatchImage" class="eyecatch-container ratio-5--3">
+        <img [src]="data.image" class="eyecatch" alt="">
       </div>
     </div>
   </div>
@@ -57,8 +66,8 @@
         {{data?.title}}
       </h2>
 
-      <div class="body1-temp" [innerHtml]="data?.description">
-      </div>
+      <div class="body1-temp page-content" [innerHTML]="data?.descriptionSanitized"></div>
+       
     </div>
   </div>
 </div>

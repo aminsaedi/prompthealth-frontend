@@ -3,20 +3,20 @@
   <div class="d-flex">
     <i class="h4-temp h2-temp-md fas fa-tag text-placeholder mr-3"></i>
     <div>
-      <h2 class="h4-temp h2-temp-md">Category Name</h2>
-      <p class="subtitle1-temp mb-0">A collection of 34 posts</p>
+      <h2 class="h4-temp h2-temp-md">{{categoryName}}</h2>
+      <p class="subtitle1-temp mb-0">A collection of {{postTotal}} posts</p>
     </div>
   </div>
 </section>
 
 <section class="container mt-70p pb-100p border-bottom border-line">
   <div class="row">
-    <ng-container *ngFor="let p of [0,1,2, 3]; let i = index">
+    <ng-container *ngFor="let p of latest; let i = index">
       <div 
       class="col-12 mb-md-100p"
       [ngClass]="{'col-md-12 mb-55p': (i == 0), 'col-lg-4 mb-30p': (i != 0)}"
       >
-        <card-post [size]="(i == 0) ? 'large' : 'medium'" [showCategory]="false"></card-post>
+        <card-post [size]="(i == 0) ? 'large' : 'medium'" [data]="p" [showCategory]="false"></card-post>
       </div>  
     </ng-container>
   </div>
@@ -28,9 +28,9 @@
 
 <section class="container my-100p">
   <div class="row">
-    <ng-container *ngFor="let p of [0,1,2,3,4,5,6,7,8,9,10,11]; let i = index">
+    <ng-container *ngFor="let p of archive; let i = index">
       <div class="col-12 col-md-6 col-lg-3 mb-30p mb-md-55p">
-        <card-post size="small" [showCategory]="false"></card-post>
+        <card-post size="small" [data]="p" [showCategory]="false"></card-post>
       </div>
     </ng-container>
   </div>

@@ -97,6 +97,13 @@ a.on-black:hover {
   grid-template-rows: 1fr;
   overflow: hidden;
 
+  .card-video {      
+    transition: opacity 180ms;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
   @media (min-width: 992px) {
     grid-template-columns: 5fr 3fr;
     grid-template-rows: 1fr 1fr;
@@ -126,6 +133,7 @@ a.on-black:hover {
     @media (min-width: 992px) {
       content: none;
     }
+
   }
 
   .title {
@@ -133,6 +141,7 @@ a.on-black:hover {
     bottom: 0;
     left: 0;
     width: 100%;
+    text-shadow: 0 0 5px black;
   }
 }
 

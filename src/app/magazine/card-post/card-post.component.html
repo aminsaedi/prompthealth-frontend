@@ -1,4 +1,4 @@
-<a [routerLink]="['/magazines', data.slug]">
+<a [routerLink]="['/magazines/' + (data ? data.slug : '')]">
   <div 
   class="card-post text-body overflow-hidden position-relative"
   [ngClass]="size"
@@ -7,7 +7,7 @@
     class="eyecatch-container position-relative mb-20p"
     [ngClass]="{'mb-lg-0': sizeL}"
     >
-      <div *ngIf="!data" class="eyecatch-dummy bg-placeholder"></div>
+      <div *ngIf="!data" class="eyecatch-dummy bg-background"></div>
       <img *ngIf="data" class="eyecatch" [src]="data.image" alt="">
     </div>
 
@@ -17,17 +17,17 @@
       [ngClass]="{'mb-5p mb-md-25p': sizeL, 'mb-10p': (sizeM || sizeS) }"
       >
         <div class="mr-2 mb-10p" *ngIf="sizeS">
-          <div *ngIf="!data" class="author-dummy bg-placeholder"></div>
+          <div *ngIf="!data" class="author-dummy bg-background"></div>
           <img *ngIf="data" [src]="data.authorImage" alt="" class="author">
         </div>
         <span class="mr-2 mb-10p text-nowrap">
           <i class="far fa-calendar mr-1"></i>
-          <span *ngIf="!data" class="text-placeholder bg-placeholder">Apr 22, 2021</span>
+          <span *ngIf="!data" class="text-placeholder bg-background">Apr 22, 2021</span>
           <span *ngIf="data">{{data.createdAt | date}}</span>
         </span>
         <span class="mr-2 mb-10p text-nowrap">
           <i class="far fa-hourglass mr-1"></i>
-          <span *ngIf="!data" class="text-placeholder bg-placeholder">
+          <span *ngIf="!data" class="text-placeholder bg-background">
             10 min
           </span>
           <span *ngIf="data">
@@ -37,7 +37,7 @@
         </span>
         <span class="mb-10p text-nowrap" *ngIf="showCategory && (!data || data.category)">
           <i class="fas fa-tag mr-1"></i>
-          <span *ngIf="!data" class="text-placeholder bg-placeholder">category</span>
+          <span *ngIf="!data" class="text-placeholder bg-background">category</span>
           <span *ngIf="data">{{data.category}}</span>
         </span>
       </div>
@@ -51,9 +51,9 @@
         [ngClass]="{'h4-temp h2-temp-md clamp-md-3line mb-md-20p': sizeL, 'h5-temp': sizeM, 'h6-temp': sizeS}"
         >
           <div *ngIf="!data">
-            <div><div class="bg-placeholder opacity-70pc" style="height: 0.95em;"></div></div>
-            <div class="mt-2"><div class="bg-placeholder opacity-70pc" style="height: 0.95em;"></div></div>
-            <div *ngIf="sizeL" class="d-none d-md-block mt-2"><div class="bg-placeholder opacity-70pc" style="height: 0.95em;"></div></div>
+            <div><div class="bg-background opacity-70pc" style="height: 0.95em;"></div></div>
+            <div class="mt-2"><div class="bg-background opacity-70pc" style="height: 0.95em;"></div></div>
+            <div *ngIf="sizeL" class="d-none d-md-block mt-2"><div class="bg-background opacity-70pc" style="height: 0.95em;"></div></div>
           </div>
           
           <span *ngIf="data">
@@ -63,11 +63,11 @@
         
         <div class="body1-temp mb-20p" [ngClass]="{'clamp-5line': sizeL, 'clamp-3line opacity-80pc': sizeM, 'd-none': sizeS}">
           <div *ngIf="!data">
-            <div class="bg-placeholder opacity-70pc" style="height: 1em;"></div>
-            <div class="mt-1"><div class="bg-placeholder opacity-70pc" style="height: 1em;"></div></div>
-            <div class="mt-1"><div class="bg-placeholder opacity-70pc" style="height: 1em;"></div></div>
-            <div *ngIf="sizeL" class="d-none d-md-block mt-1"><div class="bg-placeholder opacity-70pc" style="height: 1em;"></div></div>
-            <div *ngIf="sizeL" class="d-none d-md-block mt-1"><div class="bg-placeholder opacity-70pc" style="height: 1em;"></div></div>
+            <div class="bg-background opacity-70pc" style="height: 1em;"></div>
+            <div class="mt-1"><div class="bg-background opacity-70pc" style="height: 1em;"></div></div>
+            <div class="mt-1"><div class="bg-background opacity-70pc" style="height: 1em;"></div></div>
+            <div *ngIf="sizeL" class="d-none d-md-block mt-1"><div class="bg-background opacity-70pc" style="height: 1em;"></div></div>
+            <div *ngIf="sizeL" class="d-none d-md-block mt-1"><div class="bg-background opacity-70pc" style="height: 1em;"></div></div>
           </div>
           
           <p *ngIf="data" class="body1-temp mb-0">{{data.summary}}</p>
@@ -76,10 +76,10 @@
 
       <div class="author-container d-flex align-items-center" *ngIf="!sizeS">
         <img *ngIf="data" [src]="data.authorImage" alt="" class="author mr-2">
-        <div *ngIf="!data" class="author-dummy bg-placeholder mr-2"></div>
+        <div *ngIf="!data" class="author-dummy bg-background mr-2"></div>
 
         <p class="m-0 opacity-70pc body1-temp clamp-1line">
-          <span *ngIf="!data" class="bg-placeholder text-placeholder">By Alice Gomsyn</span>
+          <span *ngIf="!data" class="bg-background text-placeholder">By Alice Gomsyn</span>
           <span *ngIf="data">{{data.author}}</span>
         </p>
       </div>

@@ -1,3 +1,4 @@
+import { SafeHtml } from "@angular/platform-browser";
 import { environment } from "src/environments/environment";
 import { IBlogCategory } from "./blog-category";
 
@@ -28,14 +29,19 @@ export class Blog implements IBlog {
   get slug() { return this.data.slug; }  
   get title() { return this.data.title; }
   get description() { return this.data.description; }
+  get descriptionSanitized() { return this._description; }
   get summary() { return this._summary; }
   get readLength() { return this.data.readLength; }
 
+  get isEyecatchVideo() { return !!(this.videosEmbedded.length > 0); }
+  get isEyecatchPodcast() { return (this.videosEmbedded.length == 0 && this.podcastsEmbedded.length > 0); }
+  get isEyecatchImage() { return (this.videosEmbedded.length == 0 && this.podcastsEmbedded.length == 0 && this.image); }
+  
   get image() { return (this.data.image) ? this.AWS_S3 + this.data.image : '/assets/img/no-image.jpg'; }
-  get videoLinks() { return this.data.videoLinks; }
-  get podcastLinks() { return this.data.podcastLinks; }
-  get fistVideo() { return (this.data.videoLinks && this.data.videoLinks.length > 0) ? this.data.videoLinks[0] : null; }
-  get firstPodcast() { return (this.data.podcastLinks && this.data.podcastLinks.length > 0) ? this.data.podcastLinks[0] : null; }
+  get videoLinks() { return this.data.videoLinks || []; }
+  get podcastLinks() { return this.data.podcastLinks || []; }
+  get videosEmbedded() { return this._videosEmbedded; }
+  get podcastsEmbedded() { return this._podcastsEmbedded; }
 
   get categoryId() { return this.data.categoryId; }
   get category() { return this._category ? this._category.title : null; }
@@ -46,9 +52,15 @@ export class Blog implements IBlog {
   get authorImage() { return 'assets/img/logo-sm-square.png'}
   get createdAt() { return this.data.createdAt; }
 
-  private _summary: string;
-  private _category: IBlogCategory = null;
   private AWS_S3 = environment.config.AWS_S3;
+
+  private _summary: string;
+  private _description: SafeHtml;
+  private _category: IBlogCategory = null;
+
+  private _videosEmbedded: SafeHtml [] = [];
+  private _podcastsEmbedded: SafeHtml [] = [];
+  
   
   constructor(private data: IBlog, categories: IBlogCategory[] = []) {
     this._summary = data.description.replace(/<[^>]*>?/gm, '');
@@ -59,4 +71,17 @@ export class Blog implements IBlog {
       }
     }
   }
+
+  setSanitizedDescription(d: SafeHtml) {
+    this._description = d;
+  }
+
+  addEmbedVideo(v: SafeHtml) {
+    this._videosEmbedded.push(v);
+  }
+
+  addEmbedPodcast(v: SafeHtml) {
+    this._podcastsEmbedded.push(v);
+  }
+
 }

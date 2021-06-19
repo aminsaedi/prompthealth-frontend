@@ -1,4 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Sanitizer } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { EmbedVideoService } from 'ngx-embed-video';
 import { Observable, Subject } from 'rxjs';
 import { Blog, IBlog } from '../models/blog';
 import { IBlogCategory } from '../models/blog-category';
@@ -15,6 +17,41 @@ export class MagazineService {
 
   get categories(): any[] {
     return this.categoryCache;
+  }
+
+  categoryNameOf(catId: string) {
+    let name: string = null;
+    if (this.categoryCache) {
+      for(let cat of this.categoryCache) {
+        if(cat._id == catId) {
+          name = cat.title;
+          break;
+        }
+      }
+    }
+    return name;
+  }
+
+  pageTotalOf(catId: string = null) {
+    let pageTotal: number = null;
+
+    const cat = catId ? catId : 'all';
+    const data = this.postCache.dataPerCategory[cat];
+    if(data) {
+      pageTotal = data.pageTotal;
+    }
+    return pageTotal;
+  }
+
+  postTotalOf(catId: string = null) {
+    let pageTotal: number = null;
+
+    const cat = catId ? catId : 'all';
+    const data = this.postCache.dataPerCategory[cat];
+    if(data) {
+      pageTotal = data.postTotal;
+    }
+    return pageTotal;
   }
 
   postOf(slug: string) {
@@ -50,43 +87,16 @@ export class MagazineService {
     }
   }
 
-  constructor() { 
+  constructor(
+    private _embedService: EmbedVideoService,
+    private _sanitizer: DomSanitizer,
+  ) { 
     this.categoryCache = null;
     this.postCache = {
       dataMapById: {},
       dataPerCategory: {}
     }
   }
-
-  // fetchPosts(params: IBlogSearchQuery = {}): Promise<Blog[]> {
-  //   return new Promise((resolve, reject) => {
-  //     const query = new BlogSearchQuery(params);
-  //     const cat = query.categoryId ? query.categoryId : 'all';
-  //     const data = this.postCache.dataPerCategory[cat].dataPerPage[query.page]
-  //     if(data) {
-  //       resolve(data);
-  //     }else {
-  //       let path = 'blog/get-all' + query.toString();
-  //       this._sharedService.getNoAuth(path).subscribe((res: any) => { 
-
-  //       setTimeout(()=> {
-  //         const data: IBlog[] = [];
-  //         for(let i=0; i<query.limit; i++) {
-  //           data.push(postDummy);
-  //         }
-      
-  //         const posts = [];
-  //         data.forEach(d => {
-  //           posts.push(new Blog(d));
-  //         });
- 
-  //         this.saveCache(posts, 10, query.page, cat);
-  //         resolve(this.postCache.dataPerCategory[cat].dataPerPage[query.page]);
-  
-  //       }, 10000);    
-  //     }
-  //   });
-  // }
 
   saveCache(res: {data: IBlog[], total: number}, page: number, catId: string = null): Blog[] {
     const pageTotal = Math.ceil(res.total / this.countPerPage);
@@ -101,8 +111,7 @@ export class MagazineService {
         }
       }
       if(!idInMap) {
-        console.log(d)
-        this.postCache.dataMapById[d._id] = new Blog(d, this.categoryCache);
+        this.saveCacheSingle(d);
         idInMap = d._id;
       }
       dataPerPage.push(this.postCache.dataMapById[idInMap]);
@@ -110,7 +119,7 @@ export class MagazineService {
 
     const targetCategory = catId ? catId : 'all';
     if(!this.postCache.dataPerCategory[targetCategory]) {
-      this.postCache.dataPerCategory[targetCategory] = { pageTotal: pageTotal, dataPerPage: {} };
+      this.postCache.dataPerCategory[targetCategory] = { pageTotal: pageTotal, postTotal: res.total, dataPerPage: {} };
     }
     this.postCache.dataPerCategory[targetCategory].dataPerPage[page] = dataPerPage;
     return dataPerPage;
@@ -118,7 +127,12 @@ export class MagazineService {
 
   saveCacheSingle(data: IBlog) {
     if(!this.postCache.dataMapById[data._id]) {
-      this.postCache.dataMapById[data._id] = new Blog(data, this.categories);
+      const b = new Blog(data, this.categories);
+      b.videoLinks.forEach(v => { b.addEmbedVideo(this.embedVideo(v)); });
+      b.podcastLinks.forEach(v => { b.addEmbedPodcast(this.embedPodcast(v)); });
+      b.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(b.description));
+
+      this.postCache.dataMapById[data._id] = b;
     }
   }
 
@@ -133,7 +147,19 @@ export class MagazineService {
     }
     return data;
   }
+
+  embedVideo(data: {title: string, url: string}) {
+    const iframe = this._embedService.embed(data.url);
+    iframe.title = data.title;
+    return iframe;
+  }
+
+  embedPodcast(data: {title: string, url: string}) {
+    let iframe = `<iframe src=${data.url} width="100%" height="232" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+    return this._sanitizer.bypassSecurityTrustHtml(iframe);
+  }
 }
+
 type PostCache = {
   dataMapById: {
     [k: string]: Blog;
@@ -141,6 +167,7 @@ type PostCache = {
   dataPerCategory : {
     [k: string] : { // k is categoryId or 'all'
       pageTotal: number,
+      postTotal: number;
       dataPerPage: {
         [k: number]: Blog[] // k is page number
       }

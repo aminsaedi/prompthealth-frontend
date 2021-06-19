@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   public podcasts: Blog[] = null;
 
   public categories: {id: string, item_text: string}[] = null;
-  public idxCategoryActive: number = 0;
+  public idxCategoryActive: number = null;
 
   public carouselStarted: boolean = false;
   public idxCurrentCarouselVideo: number = null;
@@ -79,6 +79,7 @@ export class HomeComponent implements OnInit {
     const latest = this._mService.postsOf(null, 1, 0, 4);
     if (latest) {
       this.latest = latest;
+      this.latestByCategory = this._mService.postsOf(null, 1, 4, 7);
     } else {
       this.latest = this._mService.createDummyArray(4);
       const query = new BlogSearchQuery();
@@ -87,6 +88,7 @@ export class HomeComponent implements OnInit {
         if(res.statusCode === 200) {
           this._mService.saveCache(res.data, 1);
           this.latest = this._mService.postsOf(null, 1, 0, 4);
+          this.latestByCategory = this._mService.postsOf(null, 1, 4, 7);
         }
       });
     }
@@ -127,7 +129,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onTapCategory(i: number) {
+  onTapCategory(i: number = null) {
     this.idxCategoryActive = i;
   }
 
