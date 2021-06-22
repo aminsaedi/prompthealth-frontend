@@ -37,7 +37,7 @@ export class Blog implements IBlog {
   get isEyecatchPodcast() { return (this.videosEmbedded.length == 0 && this.podcastsEmbedded.length > 0); }
   get isEyecatchImage() { return (this.videosEmbedded.length == 0 && this.podcastsEmbedded.length == 0 && this.image); }
   
-  get image() { return (this.data.image) ? this.AWS_S3 + this.data.image : '/assets/img/no-image.jpg'; }
+  get image() { return (this.data.image) ? this.AWS_S3 + this.data.image : '/assets/img/logo-square-primary-light.png'; }
   get videoLinks() { return this.data.videoLinks || []; }
   get podcastLinks() { return this.data.podcastLinks || []; }
   get videosEmbedded() { return this._videosEmbedded; }

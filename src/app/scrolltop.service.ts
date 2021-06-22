@@ -42,7 +42,11 @@ export class ScrollTopService {
               const el = document.querySelector('#addon');
               window.scrollBy(0, el.getBoundingClientRect().top - 100);
             }, timer);
-          } else { window.scroll(0, 0); }
+          } else if (event.url.match(/\/magazines\/(category|tag|media-type)\/.+\/\d/) && !this.isInitial) {
+            const el = document.querySelector('#archive');
+            window.scrollBy(0, el.getBoundingClientRect().top - 100);
+          }
+           else { window.scroll(0, 0); }
         }
       });
     }
