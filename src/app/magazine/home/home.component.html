@@ -100,11 +100,11 @@
       (click)="onTapTag()"
       >All</li>
       <li
-      *ngFor="let cat of tags; let i = index"
+      *ngFor="let tag of tags; let i = index"
       class="btn text-nowrap position-relative body1-temp"
       [ngClass]="{active: (i == idxTagActive)}"
       (click)="onTapTag(i)"
-      >{{cat.title}}</li>
+      >{{tag.title}}</li>
     </ul>
   </div>
 

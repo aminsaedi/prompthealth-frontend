@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
   initTags(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       if (this._mService.categories) {
-        this.tags = this._mService.categories;
+        this.tags = this._mService.tags;
         resolve(true);
       } else {
         const path = `tag/get-all`;

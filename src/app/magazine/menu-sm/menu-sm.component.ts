@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
+import { MagazineService } from '../magazine.service';
 
 @Component({
   selector: 'app-menu-sm',
@@ -20,26 +21,74 @@ export class MenuSmComponent implements OnInit {
     private _location: Location,
     private _router: Router,
     private _sharedService: SharedService,
+    private _mService: MagazineService,
   ) { }
 
   ngOnInit(): void {
-    this.getCategories();
-    this.getTags();
+    this.initTaxonomy();
   }
 
-  getCategories() {
-    this._sharedService.getNoAuth('category/get-categories').subscribe((res: any) => {
-      if (res.statusCode === 200) {
-        this.categories = res.data;
+  initTaxonomy(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      let isTaxonomyReady = true;
+      const promiseAll = [];
+      if(!this._mService.categories) {
+        isTaxonomyReady = false;
+        promiseAll.push(this.initCategories());
+      } else {
+        this.categories = this._mService.categories;
       }
+      if(!this._mService.tags) {
+        isTaxonomyReady = false;
+        promiseAll.push(this.initTags());
+      } else {
+        this.tags = this._mService.tags;
+      }
+
+      if (isTaxonomyReady) {
+        resolve(true);
+      } else {
+        Promise.all(promiseAll).then(() => {
+          resolve(true);
+        })
+      }
+    })
+  }
+
+  initCategories(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const path = `category/get-categories`;
+      this._sharedService.getNoAuth(path).subscribe((res: any) => {
+        if (res.statusCode === 200) {
+          this._mService.saveCacheCategories(res.data);
+          this.categories = this._mService.categories;
+          resolve(true);
+        }else {
+          console.log(res);
+          reject(res.message);
+        }
+      }, (error) => {
+        console.log(error);
+        reject(error);
+      });
     });
   }
 
-  getTags() {
-    this._sharedService.getNoAuth('tag/get-all').subscribe((res: any) => {
-      if(res.statusCode === 200) {
-        this.tags = res.data.data;
-      }
+  initTags(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const path = `tag/get-all`;
+      this._sharedService.getNoAuth(path).subscribe((res: any) => {
+        if (res.statusCode === 200) {
+          this._mService.saveCacheTags(res.data.data);
+          this.tags = this._mService.tags;
+          resolve(true);
+        }else {
+          reject(res.message);
+        }
+      }, (error) => {
+        console.log(error);
+        reject(error);
+      });  
     });
   }
 

@@ -50,7 +50,6 @@ export class BlogSearchQuery implements IBlogSearchQuery {
         paramsArray.push(key + '=' + val);
       }
     }
-    console.log(paramsArray)
     return '?' + paramsArray.join('&');
   }
 

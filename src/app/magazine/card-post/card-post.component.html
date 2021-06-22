@@ -31,14 +31,14 @@
             10 min
           </span>
           <span *ngIf="data">
-            {{data.readLength}} 
+            {{data.readLength}} min
             <span [ngClass]="{'d-lg-none d-xl-inline': sizeS}"> read</span>            
           </span>
         </span>
         <span class="mb-10p text-nowrap" *ngIf="showCategory && (!data || data.category)">
           <i class="fas fa-tag mr-1"></i>
           <span *ngIf="!data" class="color-dummy">category name</span>
-          <span *ngIf="data">{{data.category}}</span>
+          <span *ngIf="data">{{data.catTitle}}</span>
         </span>
       </div>
 
