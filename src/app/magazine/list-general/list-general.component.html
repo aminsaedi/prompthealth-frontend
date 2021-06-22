@@ -1,0 +1,29 @@
+<section class="container mt-70p pb-100p border-bottom border-line">
+  <div class="row">
+    <ng-container *ngIf="latest && latest.length == 0">
+      <p class="subtitle1-temp">No posts found...</p>
+    </ng-container>
+    <ng-container *ngFor="let p of latest; let i = index">
+      <div 
+      class="col-12 mb-md-100p"
+      [ngClass]="{'col-md-12 mb-55p': (i == 0), 'col-lg-4 mb-30p': (i != 0)}"
+      >
+        <card-post [size]="(i == 0) ? 'large' : 'medium'" [data]="p" [showCategory]="false"></card-post>
+      </div>  
+    </ng-container>
+  </div>
+</section>
+
+<section class="container my-100p">
+  <section-subscription></section-subscription>
+</section>
+
+<section class="container mt-100p">
+  <div class="row">
+    <ng-container *ngFor="let p of archive; let i = index">
+      <div class="col-12 col-md-6 col-lg-3 mb-30p mb-md-55p">
+        <card-post size="small" [data]="p" [showCategory]="false"></card-post>
+      </div>
+    </ng-container>
+  </div>
+</section>

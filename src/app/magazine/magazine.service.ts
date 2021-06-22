@@ -11,12 +11,43 @@ import { IBlogCategory } from '../models/blog-category';
 export class MagazineService {
 
   private categoryCache: IBlogCategory[];
+  private tagCache: IBlogCategory[];
   private postCache: PostCache;
 
   private countPerPage = 12;
 
   get categories(): any[] {
     return this.categoryCache;
+  }
+
+  get tags(): any[] {
+    return this.tagCache;
+  };
+
+  taxonomyNameOf(taxonomyId: string) {
+    let name: string = null;
+    if (taxonomyId.match(/video|podcast/)) {
+      name = taxonomyId;
+    } else {
+      name = this.categoryNameOf(taxonomyId);
+      if(!name) {
+        name = this.tagNameOf(taxonomyId);
+      }
+    }
+    return name;
+  }
+
+  tagNameOf(tagId: string) {
+    let name: string = null;
+    if(this.tagCache) {
+      for(let tag of this.tagCache) {
+        if(tag._id == tagId) {
+          name = tag.title;
+          break;
+        }
+      }
+    }
+    return name;
   }
 
   categoryNameOf(catId: string) {
@@ -76,7 +107,6 @@ export class MagazineService {
     if(this.postCache.dataPerCategory[cat] && this.postCache.dataPerCategory[cat].dataPerPage[page]) {
       const posts = [];
       const data = this.postCache.dataPerCategory[cat].dataPerPage[page];
-      console.log(data)
       const max = data.length > from + count ? from + count : data.length;
       for(let i=from; i<max; i++) {
         posts.push(data[i]);
@@ -138,6 +168,10 @@ export class MagazineService {
 
   saveCacheCategories(data: IBlogCategory[]) {
     this.categoryCache = data;
+  }
+
+  saveCacheTags(data: IBlogCategory[]) {
+    this.tagCache = data;
   }
 
   createDummyArray(count: number) {

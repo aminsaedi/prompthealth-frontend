@@ -24,7 +24,7 @@
       <div class="col-12 col-md-6 col-xl-7 d-flex flex-column">
         <div class="d-flex justify-content-between align-items-center mb-20p mb-md-30p">
           <h4 class="h4-temp h3-temp-md text-white mb-0">Videos</h4>
-          <a class="text-white subtitle1-temp">All videos</a>
+          <a class="text-white subtitle1-temp" routerLink="/magazines/media-type/video">All videos</a>
         </div>
         <ul class="mb-20p mb-md-30p p-0 list-unstyled videos flex-grow-1" #videosContainer>
           <li 
@@ -59,24 +59,25 @@
       <div class="col-12 col-md-6 col-xl-5">
         <h4 class="h4-temp h3-temp-md text-white mb-20p mb-md-30p">Podcast</h4>
         <ul class="mb-20p mb-md-30p p-0 list-unstyled">
-          <li *ngFor="let p of podcasts" class="d-flex flex-nowrap align-items-stretch card-podcast mb-20p">
-            <div class="eyecatch-container position-relative">
-              <div *ngIf="!p" class="eyecatch-dummy bg-white"></div>
-              <img *ngIf="p" class="eyecatch" [src]="p.image">
-            </div>
-            <div class="info-container ml-3">
-              <div class="mb-10p text-nowrap body2-temp text-placeholder">
-                <div *ngIf="p">
-                  <i class="far fa-calendar mr-1"></i>
-                  <span>{{p.createdAt | date:'longDate'}}</span>  
-                </div>
+          <li *ngFor="let p of podcasts" class="mb-20p">
+            <a [routerLink]="['/magazines/' + (p ? p.slug : '')]" class="d-flex flex-nowrap align-items-stretch card-podcast">
+              <div class="eyecatch-container position-relative">
+                <img *ngIf="p" class="eyecatch" [src]="p.image">
               </div>
-              <h5 class="body1-temp text-white mb-0 clamp-2line">{{p.title}}</h5>
-            </div>
+              <div class="info-container ml-3">
+                <div class="mb-10p text-nowrap body2-temp text-placeholder">
+                  <div *ngIf="p">
+                    <i class="far fa-calendar mr-1"></i>
+                    <span>{{p.createdAt | date:'longDate'}}</span>
+                  </div>
+                </div>
+                <h5 class="body1-temp text-white mb-0 clamp-2line">{{p?.title}}</h5>
+              </div>
+            </a>
           </li>
         </ul>
         <div class="mb-30p">
-          <a class="text-primary subtitle1-temp on-black">
+          <a class="text-primary subtitle1-temp on-black" routerLink="/magazines/media-type/podcast">
             Browse all episodes
             <i class="fas fa-arrow-circle-right"></i>
           </a>
@@ -88,28 +89,31 @@
 
 <section class="mt-70p mb-100p">
   <div class="container">
-    <h4 class="h4-temp h3-temp-md mb-20p mb-md-30p">Categories</h4>
+    <h4 class="h4-temp h3-temp-md mb-20p mb-md-30p">Topics</h4>
   </div>
 
   <div class="scroll-horizontal-container border-bottom">
-    <ul class="d-flex list-unstyled category-list m-0">
+    <ul class="d-flex list-unstyled tag-list m-0">
       <li
-      class="text-nowrap position-relative body1-temp"
-      [ngClass]="{active: (idxCategoryActive === null)}"
-      (click)="onTapCategory()"
+      class="btn text-nowrap position-relative body1-temp"
+      [ngClass]="{active: (idxTagActive === null)}"
+      (click)="onTapTag()"
       >All</li>
       <li
-      *ngFor="let cat of categories; let i = index"
-      class="text-nowrap position-relative body1-temp"
-      [ngClass]="{active: (i == idxCategoryActive)}"
-      (click)="onTapCategory(i)"
+      *ngFor="let cat of tags; let i = index"
+      class="btn text-nowrap position-relative body1-temp"
+      [ngClass]="{active: (i == idxTagActive)}"
+      (click)="onTapTag(i)"
       >{{cat.title}}</li>
     </ul>
   </div>
 
   <div class="container mt-20p mt-lg-40p">
     <div class="row">
-      <ng-container *ngFor="let p of latestByCategory; let i = index;">
+      <ng-container *ngIf="latestByTag && latestByTag.length == 0">
+        <p class="subtitle1-temp">No posts found...</p>
+      </ng-container>
+      <ng-container *ngFor="let p of latestByTag; let i = index;">
         <div 
         class="col-12 col-lg-4 mb-30p mb-lg-50p"
         [ngClass]="{'col-lg-4': (i < 3), 'col-lg-3': (i>=3) }"

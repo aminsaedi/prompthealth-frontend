@@ -16,12 +16,12 @@ import { MagazineService } from '../magazine.service';
 export class HomeComponent implements OnInit {
 
   public latest: Blog[] = null; 
-  public latestByCategory: Blog[] = null;
+  public latestByTag: Blog[] = null;
   public videos: Blog[] = null;
   public podcasts: Blog[] = null;
 
-  public categories: {id: string, item_text: string}[] = null;
-  public idxCategoryActive: number = null;
+  public tags: {_id: string, title: string}[] = null;
+  public idxTagActive: number = null;
 
   public carouselStarted: boolean = false;
   public idxCurrentCarouselVideo: number = null;
@@ -42,29 +42,29 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      await this.initCategories();
+      await this.initTags();
     } catch(err) {
       this._toastr.error('Something went wrong. Please try again later.');
     }
 
     this.initLatest();
     this.initLatestVideo();
+    this.initLatestPodcast();
   }
 
-  initCategories(): Promise<boolean> {
+  initTags(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       if (this._mService.categories) {
-        this.categories = this._mService.categories;
+        this.tags = this._mService.categories;
         resolve(true);
       } else {
-        const path = `category/get-categories`;
+        const path = `tag/get-all`;
         this._sharedService.getNoAuth(path).subscribe((res: any) => {
           if (res.statusCode === 200) {
-            this._mService.saveCacheCategories(res.data);
-            this.categories = res.data;
+            this._mService.saveCacheTags(res.data.data);
+            this.tags = res.data.data;
             resolve(true);
           }else {
-            console.log(res);
             reject(res.message);
           }
         }, (error) => {
@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
     const latest = this._mService.postsOf(null, 1, 0, 4);
     if (latest) {
       this.latest = latest;
-      this.latestByCategory = this._mService.postsOf(null, 1, 4, 7);
+      this.latestByTag = this._mService.postsOf(null, 1, 4, 7);
     } else {
       this.latest = this._mService.createDummyArray(4);
       const query = new BlogSearchQuery();
@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
         if(res.statusCode === 200) {
           this._mService.saveCache(res.data, 1);
           this.latest = this._mService.postsOf(null, 1, 0, 4);
-          this.latestByCategory = this._mService.postsOf(null, 1, 4, 7);
+          this.latestByTag = this._mService.postsOf(null, 1, 4, 7);
         }
       });
     }
@@ -129,8 +129,25 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onTapCategory(i: number = null) {
-    this.idxCategoryActive = i;
+  onTapTag(i: number = null) {
+    this.idxTagActive = i;
+    const tagId = (i === null) ? 'all' : this.tags[i]._id;
+
+    const latestByTag = this._mService.postsOf(tagId, 1, 0, 7);
+    if (latestByTag) {
+      this.latestByTag = latestByTag;
+    } else {
+      this.latestByTag = this._mService.createDummyArray(7);
+
+      const query = new BlogSearchQuery({tags: (i === null) ? null : [this.tags[i]._id]});
+      const path = `blog/get-all${query.queryParams}`;
+      this._sharedService.getNoAuth(path).subscribe((res: any) => {
+        if(res.statusCode === 200) {
+          this._mService.saveCache(res.data, 1, tagId);
+          this.latestByTag = this._mService.postsOf(tagId, 1, 0, 7);
+        }
+      });
+    }
   }
 
   initCarousel() {

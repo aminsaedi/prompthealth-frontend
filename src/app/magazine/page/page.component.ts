@@ -85,7 +85,7 @@ export class PageComponent implements OnInit {
   }
 
   initRelated() {
-    const catId = this.data.categoryId;
+    const catId = this.data.catId;
     const related = this._mService.postsOf(catId, 1, 0, 3);
     if (related) {
       this.related = related;
@@ -95,7 +95,7 @@ export class PageComponent implements OnInit {
       const path = `blog/get-all${query.queryParams}`;
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
         if(res.statusCode === 200) {
-          this._mService.saveCache(res.data, 1);
+          this._mService.saveCache(res.data, 1, catId);
           this.related = this._mService.postsOf(catId, 1, 0, 3);
         }
       });

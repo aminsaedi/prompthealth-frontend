@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
 
 @Component({
@@ -9,26 +10,47 @@ import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animati
 })
 export class HeaderMagazineComponent implements OnInit {
 
-  public isMenuShown: boolean = false;
-  public isCategoryShown: boolean = false;
+  public categories: any[];
+  public tags: any[];
+
+  public isTagMenuShown: boolean = false;
 
   constructor(
+    private _sharedService: SharedService,
   ) { }
 
   ngOnInit(): void {
+    this.getCategories();
+    this.getTags();
   }
 
-  toggleCategory() {
-    if(this.isCategoryShown) {
-      this.hideCategory();
+  toggleTagMenu() {
+    if(this.isTagMenuShown) {
+      this.hideTagMenu();
     } else {
-      this.showCategory();
+      this.showTagMenu();
     }
   }
-  showCategory() {
-    this.isCategoryShown = true;
+  showTagMenu() {
+    this.isTagMenuShown = true;
   }
-  hideCategory() {
-    this.isCategoryShown = false;
+  hideTagMenu() {
+    this.isTagMenuShown = false;
+  }
+
+  getCategories() {
+    this._sharedService.getNoAuth('category/get-categories').subscribe((res: any) => {
+      if (res.statusCode === 200) {
+        this.categories = res.data;
+      }
+    });
+  }
+
+  getTags() {
+    this._sharedService.getNoAuth('tag/get-all').subscribe((res: any) => {
+      if(res.statusCode === 200) {
+        this.tags = res.data.data;
+      }
+    });
   }
 }

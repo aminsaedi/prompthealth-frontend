@@ -13,7 +13,10 @@ import { MagazineService } from '../magazine.service';
 })
 export class ListComponent implements OnInit {
 
-  public categoryName: string;
+  public taxonomyName: string;
+  private taxonomyType: string;
+
+  public postType: string;
   public latest: Blog[];
   public archive: Blog[];
 
@@ -21,9 +24,6 @@ export class ListComponent implements OnInit {
   public paginators: number[][] = null;
   public pageTotal: number;
   public postTotal: number;
-
-  public videos: any[];
-  public podcasts;
 
   paginatorShown(page: number) {
     if(!this.paginators || this.paginators.length == 0) {
@@ -44,21 +44,47 @@ export class ListComponent implements OnInit {
     private _route: ActivatedRoute,
     private _mService: MagazineService,
     private _sharedService: SharedService,
-    private _embedService: EmbedVideoService,
   ) { }
 
   async ngOnInit() {
-    await this.initCategories();
+    await this.initTaxonomy();
 
-    this._route.params.subscribe((param: {id: 'video' | 'podcast' | string}) => {
-      if (param.id.match(/video|podcast/)) {
-        this.categoryName = param.id;
-      } else {
-        this.categoryName = this._mService.categoryNameOf(param.id);
-      }
-      this.initPosts(param.id);
+    this._route.data.subscribe((data: {taxonomyType: string}) => {
+      this.taxonomyType = data.taxonomyType;
     });
-    
+
+    this._route.params.subscribe((param: {
+      id: 'video' | 'podcast' | string, 
+      page: number,
+    }) => {
+      this.pageCurrent = (param.page) ? param.page : 1;
+      this.taxonomyName = this._mService.taxonomyNameOf(param.id);
+      this.postType = this.taxonomyName.toLowerCase().match(/video|podcast|event|news/) ? this.taxonomyName : 'post';
+      this.initPosts(this.taxonomyType, param.id, this.pageCurrent);
+    });
+  }
+
+  initTaxonomy(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      let isTaxonomyReady = true;
+      const promiseAll = [];
+      if(!this._mService.categories) {
+        isTaxonomyReady = false;
+        promiseAll.push(this.initCategories());
+      }
+      if(!this._mService.tags) {
+        isTaxonomyReady = false;
+        promiseAll.push(this.initTags());
+      }
+
+      if (isTaxonomyReady) {
+        resolve(true);
+      } else {
+        Promise.all(promiseAll).then(() => {
+          resolve(true);
+        })
+      }
+    })
   }
 
   initCategories(): Promise<boolean> {
@@ -83,32 +109,76 @@ export class ListComponent implements OnInit {
     });
   }
 
-  initPosts(id: string) {
+  initTags(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if (this._mService.categories) {
+        resolve(true);
+      } else {
+        const path = `tag/get-all`;
+        this._sharedService.getNoAuth(path).subscribe((res: any) => {
+          if (res.statusCode === 200) {
+            this._mService.saveCacheTags(res.data.data);
+            resolve(true);
+          }else {
+            reject(res.message);
+          }
+        }, (error) => {
+          console.log(error);
+          reject(error);
+        });
+      }  
+    });
+  }
 
+  initPosts(taxonomyType: string, id: string, page: number = 1) {
     const latest = this._mService.postsOf(id, 1, 0, 4);
-    if(latest) {
-        this.setPosts(id, 1);
-      } else {
-      this.latest = this._mService.createDummyArray(4);
-      this.archive = this._mService.createDummyArray(8);
+    this.setPosts(id, page);
 
+    const promiseAll = [];
+    if(!this.latest) {
+      this.latest = this._mService.createDummyArray(4);
+      promiseAll.push(this.fetchPosts(taxonomyType, id, 1));
+    }
+    if(!this.archive) {
+      this.archive = this._mService.createDummyArray((page) == 1 ? 8 : 12);
+      promiseAll.push(this.fetchPosts(taxonomyType, id, page));
+    }
+
+    Promise.all(promiseAll).then(() => {
+      this.setPosts(id, page);
+    });
+  }
+
+  fetchPosts(taxonomyType: string, id: string, page: number = 1): Promise<boolean> {
+    return new Promise((resolve, reject) => {
       const params: IBlogSearchQuery = {};
-      if (id == 'video') {
-        params.existVideo = true;
-      } else if (id == 'podcast') {
-        params.existPodcast = true;
-      } else {
+      if (taxonomyType == 'media') {
+        if (id == 'video') {
+          params.existVideo = true;
+        } else if (id == 'podcast') {
+          params.existPodcast = true;
+        }
+      } else if (taxonomyType == 'tag') {
+        params.tags = [id];
+      } else if (taxonomyType == 'category') {
         params.categoryId = id;
       }
+
+      if(page != 1) {
+        params.page = page;
+      }
       const query = new BlogSearchQuery(params);
+      console.log(page);
+      console.log(query);
       const path = `blog/get-all${query.queryParams}`;
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
         if(res.statusCode === 200) {
-          this._mService.saveCache(res.data, 1, id);
-          this.setPosts(id, 1);
+          console.log(res);
+          this._mService.saveCache(res.data, page, id);
+          resolve(true);
         }
       });
-    }
+    });
   }
 
   setPosts(id: string, page: number = 1) {
@@ -117,15 +187,11 @@ export class ListComponent implements OnInit {
       this.archive = this._mService.postsOf(id, 1, 4, 8);
     } else {
       this.archive = this._mService.postsOf(id, page, 0, 12);
+      console.log(this.archive);
     }
 
     this.pageTotal = this._mService.pageTotalOf(id);
     this.postTotal = this._mService.postTotalOf(id);
-    this.setPaginators();
-  }
-
-  changePageTo(next: number) {
-    this.pageCurrent = next;
     this.setPaginators();
   }
 
@@ -164,5 +230,9 @@ export class ListComponent implements OnInit {
         }
       });
     }
+  }
+
+  changePageTo(next: number) {
+    // this.initPosts(this.categoryId, next);
   }
 }

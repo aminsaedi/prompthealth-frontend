@@ -9,13 +9,15 @@ import { PageComponent } from './page/page.component';
 import { SectionSubscriptionComponent } from './section-subscription/section-subscription.component';
 import { SectionSignupComponent } from './section-signup/section-signup.component';
 import { MenuSmComponent } from './menu-sm/menu-sm.component';
+import { ListGeneralComponent } from './list-general/list-general.component';
 
 const routes = [
   {path: '',               component: HomeComponent},
   {path: 'menu',           component: MenuSmComponent},
-  {path: 'category/:id',   component: ListComponent},
-  {path: 'tag/:id',        component: ListComponent},
-  {path: 'media-type/:id', component: ListComponent},
+  {path: 'category/:id',   component: ListComponent, data: {taxonomyType: 'category'}},
+  {path: 'tag/:id',        component: ListComponent, data: {taxonomyType: 'tag'}},
+  {path: 'media-type/:id', component: ListComponent, data: {taxonomyType: 'media'}},
+  {path: 'media-type/:id/:page', component: ListComponent, data: {taxonomyType: 'media'}},
   {path: 'category',     redirectTo: ''},
   {path: 'tag',          redirectTo: ''},
   {path: ':slug',        component: PageComponent},
@@ -29,7 +31,8 @@ const routes = [
     PageComponent,
     SectionSubscriptionComponent,
     SectionSignupComponent,
-    MenuSmComponent
+    MenuSmComponent,
+    ListGeneralComponent
   ],
   imports: [
     CommonModule,

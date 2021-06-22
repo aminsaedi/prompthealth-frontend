@@ -6,7 +6,7 @@
     </a>
     <ng-container *ngIf="data?.category">
       <i class="fas fa-chevron-right mr-2 text-label"></i>
-      <a class="mr-2 body2-temp text-label btn">{{data.category}}</a>  
+      <a class="mr-2 body2-temp text-label btn" [routerLink]="['/magazines/category', data.catId]">{{data.catTitle}}</a>  
     </ng-container>
     <i class="fas fa-chevron-right mr-2 text-label"></i>
     <span class="mr-2 body2-temp clamp-1line">{{data?.title}}</span>
@@ -52,7 +52,7 @@
             </span>
             <span class="mb-10p text-nowrap" *ngIf="data?.category">
               <i class="fas fa-tag mr-1"></i>
-              <span>{{data.category}}</span>
+              <span>{{data.catTitle}}</span>
             </span>
           </div>
         </div>

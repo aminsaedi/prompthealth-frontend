@@ -2,7 +2,7 @@
   <div class="menu-top py-10p py-md-15p container text-right">
     <div class="d-inline-flex">
       <div class="ml-10p ml-md-30p">
-        <a routerLink="/practitioners" class="btn btn-primary">Find practitioners</a>
+        <a (click)="gonext(['/practitioners'])" class="btn btn-primary cursor-pointer">Find practitioners</a>
       </div>
       <div class="ml-15p w-30p text-right">
         <a class="btn btn-close small pr-0" (click)="goback()">
@@ -17,21 +17,18 @@
   <div class="d-flex flex-nowrap overflow-hidden mt-60p" #menuSm>
     <div class="menu-inner">
       <ul class="list-unstyled mb-0 container">
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="gonext(['/magazines/category/test'])">News</a>
+        <li class="py-2" *ngFor="let cat of categories">
+          <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/category/', cat._id])">{{cat.title}}</a>
         </li>
         <li class="py-2">
-          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="gonext(['/magazines/category/test'])">Event</a>
-        </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1-temp d-block" routerLink="/magazines/category/test" (click)="gonext(['/magazines/category/test'])">Videos</a>
+          <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/category/test'])">Videos</a>
         </li>
         <li class="py-2">
           <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/category/test'])">Podcasts</a>
         </li>
-        <li class="py-2">
+        <li class="py-2" *ngIf="tags && tags.length > 0">
           <a class="py-2 text-body subtitle1-temp d-flex justify-content-between align-items-center" (click)="changeMenuTo(0, 1)">
-            All categories
+            All topics
             <i class="fas fa-chevron-right"></i>
           </a>
         </li>
@@ -47,8 +44,8 @@
           </button>
         </li>
 
-        <li class="py-2" *ngFor="let cat of [0,1,2,3,4,5,6,7,8]">
-          <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/category/test'])">Hormonal Health</a>
+        <li class="py-2" *ngFor="let tag of tags">
+          <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/tag/', tag._id])">{{tag.title}}</a>
         </li>  
       </ul>
     </div>

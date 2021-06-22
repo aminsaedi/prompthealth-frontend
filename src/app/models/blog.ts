@@ -14,7 +14,7 @@ export interface IBlog {
   videoLinks?: {title: string, url: string}[];
   podcastLinks?: {title: string, url: string}[];
 
-  categoryId: string;
+  categoryId?: {_id: string, title: string};
   createdAt: string; /** could be Date? */
 
   tags: {_id: string, title: string}[];
@@ -43,8 +43,10 @@ export class Blog implements IBlog {
   get videosEmbedded() { return this._videosEmbedded; }
   get podcastsEmbedded() { return this._podcastsEmbedded; }
 
-  get categoryId() { return this.data.categoryId; }
-  get category() { return this._category ? this._category.title : null; }
+  // get categoryId() { return this.data.categoryId; }
+  get category() { return this.data.categoryId ? this.data.categoryId : null; }
+  get catTitle() { return this.data.categoryId ? this.data.categoryId.title : null; }
+  get catId() { return this.data.categoryId ? this.data.categoryId._id : null;}
 
   get tags() { return this.data.tags; }
 
@@ -56,20 +58,14 @@ export class Blog implements IBlog {
 
   private _summary: string;
   private _description: SafeHtml;
-  private _category: IBlogCategory = null;
 
   private _videosEmbedded: SafeHtml [] = [];
   private _podcastsEmbedded: SafeHtml [] = [];
   
   
   constructor(private data: IBlog, categories: IBlogCategory[] = []) {
-    this._summary = data.description.replace(/<[^>]*>?/gm, '');
-    for(let cat of categories) {
-      if(cat._id == data.categoryId) {
-        this._category = cat;
-        break;
-      }
-    }
+    const desc = data.description || '';
+    this._summary = desc.replace(/<\/?[^>]+(>|$)/g, '');    
   }
 
   setSanitizedDescription(d: SafeHtml) {
