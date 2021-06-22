@@ -1,6 +1,6 @@
 <!-- <ngx-spinner></ngx-spinner> -->
+<app-header [eventKey]="eventKey" *ngIf="!onMagazine"></app-header>
 <div class="sticky-top header-container bg-white">
-  <app-header [eventKey]="eventKey" *ngIf="!onMagazine"></app-header>
   <app-header-magazine *ngIf="onMagazine"></app-header-magazine>
 </div>
 

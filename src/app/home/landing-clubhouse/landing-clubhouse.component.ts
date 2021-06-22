@@ -74,15 +74,9 @@ export class LandingClubhouseComponent implements OnInit {
 
   ngOnInit(): void {
 		if(!this._uService.isServer){
-			const ref = document.referrer;
-			let res: string;
-			if(!ref || ref.length  == 0) {
-				res = 'direct';
-			} else {
-				res = ref.replace(/http(s)?:\/\//, '').replace(/\/.*$/, '');
-			}
-			console.log(res);
-			this.f.referrer.setValue(res);
+			const ref = this._sharedService.getReferrer();
+			console.log(ref);
+			this.f.referrer.setValue(ref);
 		}
 
 		// this._route.queryParams.subscribe((params: {id: ReferrerId})=>{

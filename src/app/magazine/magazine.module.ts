@@ -10,6 +10,7 @@ import { SectionSubscriptionComponent } from './section-subscription/section-sub
 import { SectionSignupComponent } from './section-signup/section-signup.component';
 import { MenuSmComponent } from './menu-sm/menu-sm.component';
 import { ListGeneralComponent } from './list-general/list-general.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes = [
   {path: '',                      component: HomeComponent},
@@ -38,6 +39,8 @@ const routes = [
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
   ],

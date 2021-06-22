@@ -550,6 +550,17 @@ export class SharedService {
       });
     });
   }
+
+  getReferrer() {
+    const ref = document.referrer;
+    let res: string;
+    if(!ref || ref.length  == 0) {
+      res = 'direct';
+    } else {
+      res = ref.replace(/http(s)?:\/\//, '').replace(/\/.*$/, '');
+    }
+    return res;
+  }
 }
 
 
