@@ -1,14 +1,17 @@
 <section class="container mt-70p mt-md-100p pb-35p pb-md-65p border-bottom border-line">
 
   <div class="d-flex">
-    <i class="h4-temp h2-temp-md fas fa-tag text-placeholder mr-3"></i>
+    <i *ngIf="taxonomyType == 'tag'" class="h4-temp h2-temp-md fas fa-tag text-placeholder mr-3"></i>
+    <i *ngIf="taxonomyType == 'category'" class="far fa-folder h4-temp h2-temp-md text-placeholder mr-3"></i>
+    <i *ngIf="taxonomyType == 'media' && taxonomyName == 'video'" class="fas fa-video h4-temp h2-temp-md text-placeholder mr-3"></i>
+    <i *ngIf="taxonomyType == 'media' && taxonomyName == 'podcast'" class="fas fa-headphones-alt h4-temp h2-temp-md text-placeholder mr-3"></i>
     <div>
-      <h2 class="h4-temp h2-temp-md">{{taxonomyName}}</h2>
+      <h2 class="h4-temp h2-temp-md">{{taxonomyName | titlecase}}</h2>
       <p class="subtitle1-temp mb-0">
         A collection of 
         <span>
           <span>{{postTotal}} {{postType}}</span>
-          <span *ngIf="postTotal > 1">s</span>
+          <span *ngIf="postTotal > 1 && postType !== 'news'">s</span>
         </span>
       </p>
     </div>
@@ -20,7 +23,6 @@
 [archive]="archive"
 [pageCurrent]="pageCurrent"
 [postType]="postType"
-[paginators]="paginators"
 ></list-general>
 
 <div class="d-flex align-items-center justify-content-center paginators mb-100p">
@@ -30,7 +32,6 @@
       [routerLink]="[(page == 1) ? '../' : './' + page]"
       class="btn bg-primary-light mx-2"
       [ngClass]=" {'bg-primary text-white': (pageCurrent == page), 'bg-primary-light text-primary-dark': (pageCurrent != page)}"
-      (click)="changePageTo(page)"
       >
         <span>{{page}}</span>
     </a>  

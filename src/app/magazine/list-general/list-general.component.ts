@@ -12,7 +12,6 @@ export class ListGeneralComponent implements OnInit {
   @Input() archive: Blog[];
   @Input() pageCurrent: number;
   @Input() postType: string; /** video | podcast | news |  event | post */
-  @Input() paginators: number[][];
 
   constructor() { }
 

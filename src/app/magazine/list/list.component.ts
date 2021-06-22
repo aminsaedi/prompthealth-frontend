@@ -13,10 +13,10 @@ import { MagazineService } from '../magazine.service';
 })
 export class ListComponent implements OnInit {
 
-  public taxonomyName: string;
-  private taxonomyType: string;
+  public taxonomyName: string; /** {categoryName} | {tagName} | video | podcast  */
+  public taxonomyType: string; /** media | category | tag */
 
-  public postType: string;
+  public postType: string; /** event | news | video | podcast | post */
   public latest: Blog[];
   public archive: Blog[];
 
@@ -54,7 +54,7 @@ export class ListComponent implements OnInit {
     });
 
     this._route.params.subscribe((param: {
-      id: 'video' | 'podcast' | string, 
+      id: 'video' | 'podcast' | string, /** taxonomyId: video | podcast | {categoryId} | {tagId} */
       page: number,
     }) => {
       this.pageCurrent = (param.page) ? param.page : 1;
@@ -77,7 +77,6 @@ export class ListComponent implements OnInit {
         promiseAll.push(this.initTags());
       }
 
-      console.log(isTaxonomyReady);
       if (isTaxonomyReady) {
         resolve(true);
       } else {
@@ -169,8 +168,6 @@ export class ListComponent implements OnInit {
         params.page = page;
       }
       const query = new BlogSearchQuery(params);
-      console.log(page);
-      console.log(query);
       const path = `blog/get-all${query.queryParams}`;
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
         if(res.statusCode === 200) {
@@ -188,7 +185,6 @@ export class ListComponent implements OnInit {
       this.archive = this._mService.postsOf(id, 1, 4, 8);
     } else {
       this.archive = this._mService.postsOf(id, page, 0, 12);
-      console.log(this.archive);
     }
 
     this.pageTotal = this._mService.pageTotalOf(id);
@@ -231,9 +227,5 @@ export class ListComponent implements OnInit {
         }
       });
     }
-  }
-
-  changePageTo(next: number) {
-    // this.initPosts(this.categoryId, next);
   }
 }

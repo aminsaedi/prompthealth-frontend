@@ -111,7 +111,9 @@
   <div class="container mt-20p mt-lg-40p">
     <div class="row">
       <ng-container *ngIf="latestByTag && latestByTag.length == 0">
-        <p class="subtitle1-temp">No posts found...</p>
+        <div class="col-12">
+          <p class="subtitle1-temp">No posts found...</p>
+        </div>
       </ng-container>
       <ng-container *ngFor="let p of latestByTag; let i = index;">
         <div 

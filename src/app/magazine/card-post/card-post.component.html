@@ -45,7 +45,7 @@
         <div class="mb-10p text-nowrap" *ngIf="!data || (data.tags && data.tags.length > 0)">
           <i class="fas fa-tag"></i>
           <span *ngIf="!data" class="color-dummy ml-1">Hormonal Health</span>
-          <ul *ngIf="data" class="list-unstyled d-inline-flex flex-wrap">
+          <ul *ngIf="data" class="list-unstyled d-inline-flex flex-wrap clamp-1line body2-temp">
             <ng-container *ngFor="let t of data.tags; let i = index">
               <ng-container *ngIf="i < 3">
                 <li class="ml-1">{{t.title}}</li>

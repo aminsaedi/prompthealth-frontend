@@ -1,7 +1,9 @@
 <section class="container mt-70p pb-100p border-bottom border-line">
   <div class="row">
     <ng-container *ngIf="latest && latest.length == 0">
-      <p class="subtitle1-temp">No posts found...</p>
+      <div class="col-12">
+        <p class="subtitle1-temp">No posts found...</p>
+      </div>
     </ng-container>
     <ng-container *ngFor="let p of latest; let i = index">
       <div 
