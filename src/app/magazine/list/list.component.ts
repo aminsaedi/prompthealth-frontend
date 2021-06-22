@@ -77,6 +77,7 @@ export class ListComponent implements OnInit {
         promiseAll.push(this.initTags());
       }
 
+      console.log(isTaxonomyReady);
       if (isTaxonomyReady) {
         resolve(true);
       } else {
@@ -111,7 +112,7 @@ export class ListComponent implements OnInit {
 
   initTags(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      if (this._mService.categories) {
+      if (this._mService.tags) {
         resolve(true);
       } else {
         const path = `tag/get-all`;

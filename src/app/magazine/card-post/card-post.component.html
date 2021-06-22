@@ -13,33 +13,47 @@
 
     <div class="info-container">
       <div 
-      class="stat-container d-flex align-items-center flex-wrap  body2-temp opacity-70pc"
+      class="stat-container  body2-temp opacity-70pc"
       [ngClass]="{'mb-5p mb-md-25p': sizeL, 'mb-10p': (sizeM || sizeS) }"
       >
-        <div class="mr-2 mb-10p" *ngIf="sizeS">
-          <div *ngIf="!data" class="author-dummy color-dummy"></div>
-          <img *ngIf="data" [src]="data.authorImage" alt="" class="author">
+        <div class="d-flex align-items-center flex-wrap">
+          <div class="mr-2 mb-10p" *ngIf="sizeS">
+            <div *ngIf="!data" class="author-dummy color-dummy"></div>
+            <img *ngIf="data" [src]="data.authorImage" alt="" class="author">
+          </div>
+          <span class="mr-2 mb-10p text-nowrap">
+            <i class="far fa-calendar mr-1"></i>
+            <span *ngIf="!data" class="color-dummy">Apr 22, 2035</span>
+            <span *ngIf="data">{{data.createdAt | date}}</span>
+          </span>
+          <span class="mr-2 mb-10p text-nowrap">
+            <i class="far fa-hourglass mr-1"></i>
+            <span *ngIf="!data" class="color-dummy">
+              10 min
+            </span>
+            <span *ngIf="data">
+              {{data.readLength}} min
+              <span [ngClass]="{'d-lg-none d-xl-inline': sizeS}"> read</span>            
+            </span>
+          </span>
+          <span class="mb-10p text-nowrap" *ngIf="showCategory && (!data || data.category)">
+            <i class="far fa-folder mr-1"></i>
+            <span *ngIf="!data" class="color-dummy">News</span>
+            <span *ngIf="data">{{data.catTitle}}</span>
+          </span>
         </div>
-        <span class="mr-2 mb-10p text-nowrap">
-          <i class="far fa-calendar mr-1"></i>
-          <span *ngIf="!data" class="color-dummy">Apr 22, 2035</span>
-          <span *ngIf="data">{{data.createdAt | date}}</span>
-        </span>
-        <span class="mr-2 mb-10p text-nowrap">
-          <i class="far fa-hourglass mr-1"></i>
-          <span *ngIf="!data" class="color-dummy">
-            10 min
-          </span>
-          <span *ngIf="data">
-            {{data.readLength}} min
-            <span [ngClass]="{'d-lg-none d-xl-inline': sizeS}"> read</span>            
-          </span>
-        </span>
-        <span class="mb-10p text-nowrap" *ngIf="showCategory && (!data || data.category)">
-          <i class="fas fa-tag mr-1"></i>
-          <span *ngIf="!data" class="color-dummy">category name</span>
-          <span *ngIf="data">{{data.catTitle}}</span>
-        </span>
+        <div class="mb-10p text-nowrap" *ngIf="!data || (data.tags && data.tags.length > 0)">
+          <i class="fas fa-tag"></i>
+          <span *ngIf="!data" class="color-dummy ml-1">Hormonal Health</span>
+          <ul *ngIf="data" class="list-unstyled d-inline-flex flex-wrap">
+            <ng-container *ngFor="let t of data.tags; let i = index">
+              <ng-container *ngIf="i < 3">
+                <li class="ml-1">{{t.title}}</li>
+                <li *ngIf="i + 1 < data.tags.length && i + 1 < 3" class="ml-1" > / </li>    
+              </ng-container>
+            </ng-container>
+          </ul>
+        </div>
       </div>
 
       <div 

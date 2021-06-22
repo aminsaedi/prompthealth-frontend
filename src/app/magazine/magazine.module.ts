@@ -12,15 +12,17 @@ import { MenuSmComponent } from './menu-sm/menu-sm.component';
 import { ListGeneralComponent } from './list-general/list-general.component';
 
 const routes = [
-  {path: '',               component: HomeComponent},
-  {path: 'menu',           component: MenuSmComponent},
-  {path: 'category/:id',   component: ListComponent, data: {taxonomyType: 'category'}},
-  {path: 'tag/:id',        component: ListComponent, data: {taxonomyType: 'tag'}},
-  {path: 'media-type/:id', component: ListComponent, data: {taxonomyType: 'media'}},
-  {path: 'media-type/:id/:page', component: ListComponent, data: {taxonomyType: 'media'}},
+  {path: '',                      component: HomeComponent},
+  {path: 'menu',                  component: MenuSmComponent},
+  {path: 'category/:id',          component: ListComponent, data: {taxonomyType: 'category'}},
+  {path: 'category/:id/:page',    component: ListComponent, data: {taxonomyType: 'category'}},
+  {path: 'tag/:id',               component: ListComponent, data: {taxonomyType: 'tag'}},
+  {path: 'tag/:id/:page',         component: ListComponent, data: {taxonomyType: 'tag'}},
+  {path: 'media-type/:id',        component: ListComponent, data: {taxonomyType: 'media'}},
+  {path: 'media-type/:id/:page',  component: ListComponent, data: {taxonomyType: 'media'}},
   {path: 'category',     redirectTo: ''},
   {path: 'tag',          redirectTo: ''},
-  {path: ':slug',        component: PageComponent},
+  {path: ':slug',                 component: PageComponent},
 ]
 
 @NgModule({
