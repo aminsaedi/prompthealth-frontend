@@ -62,6 +62,33 @@ export class MagazineService {
     return name;
   }
 
+  getCategoryBySlug(slug: string) {
+    let category: IBlogCategory = null;
+    if(this.categoryCache) {
+      for(let cat of this.categoryCache) {
+        if(cat.slug == slug) {
+          category = cat;
+          break;
+        }
+      }
+    }
+    return category;
+  }
+
+  getTagBySlug(slug: string) {
+    let tag: IBlogCategory = null;
+    if(this.tagCache) {
+      for(let t of this.tagCache) {
+        if(t.slug == slug) {
+          tag = t;
+          break;
+        }
+      }
+    }
+    return tag;
+  }
+
+
   pageTotalOf(catId: string = null) {
     let pageTotal: number = null;
 
@@ -115,6 +142,7 @@ export class MagazineService {
       return null;
     }
   }
+
 
   constructor(
     private _embedService: EmbedVideoService,

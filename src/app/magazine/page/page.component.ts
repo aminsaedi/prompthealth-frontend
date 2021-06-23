@@ -12,9 +12,11 @@ import { MagazineService } from '../magazine.service';
   styleUrls: ['./page.component.scss']
 })
 export class PageComponent implements OnInit {
-
-  get isEvent() { return (this.data && this.data.catTitle && this.data.catTitle.toLowerCase().match(/event/)); }
   
+  get isEvent(): boolean {
+    return !!(this.data && this.data.category && this.data.category.slug.toLowerCase().match('event'));
+  }
+
   public data: Blog;
   public related: Blog[];
 

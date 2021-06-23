@@ -12,19 +12,23 @@ import { MenuSmComponent } from './menu-sm/menu-sm.component';
 import { ListGeneralComponent } from './list-general/list-general.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DetailPostComponent } from './detail-post/detail-post.component';
+import { ListEventComponent } from './list-event/list-event.component';
+import { CardEventComponent } from './card-event/card-event.component';
 
 const routes = [
   {path: '',                      component: HomeComponent},
   {path: 'menu',                  component: MenuSmComponent},
-  {path: 'category/:id',          component: ListComponent, data: {taxonomyType: 'category'}},
-  {path: 'category/:id/:page',    component: ListComponent, data: {taxonomyType: 'category'}},
-  {path: 'tag/:id',               component: ListComponent, data: {taxonomyType: 'tag'}},
-  {path: 'tag/:id/:page',         component: ListComponent, data: {taxonomyType: 'tag'}},
-  {path: 'media-type/:id',        component: ListComponent, data: {taxonomyType: 'media'}},
-  {path: 'media-type/:id/:page',  component: ListComponent, data: {taxonomyType: 'media'}},
+  {path: 'category/:slug',        component: ListComponent, data: {taxonomyType: 'category'}},
+  {path: 'category/:slug/:page',  component: ListComponent, data: {taxonomyType: 'category'}},
+  {path: 'tag/:slug',             component: ListComponent, data: {taxonomyType: 'tag'}},
+  {path: 'tag/:slug/:page',       component: ListComponent, data: {taxonomyType: 'tag'}},
+  {path: 'video',                 component: ListComponent, data: {taxonomyType: 'video'}},
+  {path: 'video/:page',           component: ListComponent, data: {taxonomyType: 'video'}},
+  {path: 'podcast',               component: ListComponent, data: {taxonomyType: 'podcast'}},
+  {path: 'podcast/:page',         component: ListComponent, data: {taxonomyType: 'podcast'}},  
   {path: 'category',     redirectTo: ''},  
   {path: 'tag',          redirectTo: ''},
-  {path: 'media-type',   redirectTo: ''},
+
   {path: '_review/:id',           component: PageComponent, data: {mode: 'review'} },
   {path: ':slug',                 component: PageComponent, data: {mode: 'view'} },
 ];
@@ -40,6 +44,8 @@ const routes = [
     MenuSmComponent,
     ListGeneralComponent,
     DetailPostComponent,
+    ListEventComponent,
+    CardEventComponent,
   ],
   imports: [
     CommonModule,

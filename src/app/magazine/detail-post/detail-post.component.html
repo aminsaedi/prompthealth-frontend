@@ -19,7 +19,7 @@
 <div class="row justify-content-center mb-30p">
   <div 
   class="col-12"
-  [ngClass]="{'col-md-12 col-lg-10 col-xl-9': data?.isEvent, 'col-md-11 col-lg-9 col-xl-8': !data?.isEvent}"
+  [ngClass]="{'col-md-12 col-lg-10 col-xl-9': data?.isEvent, 'col-md-11 col-lg-9 col-xl-8': (!data || !data.isEvent)}"
   >
     <div class="row align-items-center body2-temp">
       <div class="col-12 col-md-4 mb-10p mb-md-0 border-md-right">
@@ -83,31 +83,51 @@
     </div>
 
     <div class="mt-50p d-flex flex-column flex-md-row align-items-stretch justify-content-md-center btn-group-event">
-      <div>
+      <div class="mr-md-25p">
         <button class="btn btn-primary w-100">Join Now</button>
       </div>
 
-      <div class="position-relative ml-md-50p" (clickOutside)="hideCalendarMenu()">
+      <div class="ml-md-25p">
         <button class="btn btn-outline mt-15p mt-md-0 w-100" (click)="toggleCalendarMenu()">Add to calendar</button>
-        <ul [@expandVertical]
-        *ngIf="isCalendarMenuShown" 
-        class="position-absolute list-unstyled overflow-hidden bg-background border border-line shadow mt-2 py-2 rounded menu-calendar w-100"
-        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div 
+*ngIf="isCalendarMenuShown"
+class="modal-view"
+>
+  <div class="modal-drop"
+  (click)="hideCalendarMenu()"
+  ></div>
+  <div class="modal-body">
+
+    <div class="title-container d-flex justify-content-between align-items-center">
+      <span class="h5-temp h4-temp-md mr-3 flex-grow-1">Add to calendar</span>
+      <button class="btn pr-0" (click)="hideCalendarMenu()">
+        <i class="fas fa-times"></i>
+      </button>  
+    </div>
+
+    <div class="content-container">
+      <p class="body1-temp text-body">Please select calendar type</p>
+      <ul class="list-unstyled">
           <li class="mb-2">
-            <button class="btn w-100" (click)="addToCalendar('ical')">iCalendar</button>
+            <button class="btn btn-outline w-100" (click)="addToCalendar('ical')">iCalendar</button>
           </li>
           <li class="mb-2">
-            <button class="btn w-100" (click)="addToCalendar('google')">Google Calendar</button>
+            <button class="btn btn-outline w-100" (click)="addToCalendar('google')">Google Calendar</button>
           </li>
           <li class="mb-2">
-            <button class="btn w-100" (click)="addToCalendar('outlook')">Outlook Calendar</button>
+            <button class="btn btn-outline w-100" (click)="addToCalendar('outlook')">Outlook Calendar</button>
           </li>
           <li class="">
-            <button class="btn w-100" (click)="addToCalendar('yahoo')">Yahoo Calendar</button>
+            <button class="btn btn-outline w-100" (click)="addToCalendar('yahoo')">Yahoo Calendar</button>
           </li>
 
         </ul>
-      </div>
     </div>
+
   </div>
 </div>

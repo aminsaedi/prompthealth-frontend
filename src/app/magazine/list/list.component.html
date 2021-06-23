@@ -3,8 +3,8 @@
   <div class="d-flex">
     <i *ngIf="taxonomyType == 'tag'" class="h4-temp h2-temp-md fas fa-tag text-placeholder mr-3"></i>
     <i *ngIf="taxonomyType == 'category'" class="far fa-folder h4-temp h2-temp-md text-placeholder mr-3"></i>
-    <i *ngIf="taxonomyType == 'media' && taxonomyName == 'video'" class="fas fa-video h4-temp h2-temp-md text-placeholder mr-3"></i>
-    <i *ngIf="taxonomyType == 'media' && taxonomyName == 'podcast'" class="fas fa-headphones-alt h4-temp h2-temp-md text-placeholder mr-3"></i>
+    <i *ngIf="taxonomyType == 'video'" class="fas fa-video h4-temp h2-temp-md text-placeholder mr-3"></i>
+    <i *ngIf="taxonomyType == 'podcast'" class="fas fa-headphones-alt h4-temp h2-temp-md text-placeholder mr-3"></i>
     <div>
       <h2 class="h4-temp h2-temp-md">{{taxonomyName | titlecase}}</h2>
       <p class="subtitle1-temp mb-0">
@@ -19,11 +19,16 @@
 </section>
 
 <list-general
+*ngIf="!isEvent"
 [latest]="latest"
 [archive]="archive"
-[pageCurrent]="pageCurrent"
-[postType]="postType"
 ></list-general>
+
+<list-event
+*ngIf="isEvent"
+[latest]="latest"
+[archive]="archive"
+></list-event>
 
 <div class="d-flex align-items-center justify-content-center paginators mb-100p">
   <ng-container *ngFor="let paginatorGroup of paginators; let i = index;">

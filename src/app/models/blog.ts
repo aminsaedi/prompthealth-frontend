@@ -15,10 +15,10 @@ export interface IBlog {
   videoLinks?: {title: string, url: string}[];
   podcastLinks?: {title: string, url: string}[];
 
-  categoryId?: {_id: string, title: string};
+  categoryId?: IBlogCategory;
+  tags?: IBlogCategory[];
+  
   createdAt: string; /** could be Date? */
-
-  tags: {_id: string, title: string}[];
 
   isDeleted?: boolean; /** not used in frontend */
   status?: boolean;

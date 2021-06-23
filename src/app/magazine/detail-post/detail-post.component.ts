@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Blog } from 'src/app/models/blog';
-import { expandVerticalAnimation } from 'src/app/_helpers/animations';
+import { expandVerticalAnimation, slideVerticalAnimation } from 'src/app/_helpers/animations';
 import { CalendarOptions, GoogleCalendar, ICalendar, OutlookCalendar, YahooCalendar} from 'datebook';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,7 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'detail-post',
   templateUrl: './detail-post.component.html',
   styleUrls: ['./detail-post.component.scss'],
-  animations: [expandVerticalAnimation],
 })
 export class DetailPostComponent implements OnInit {
 

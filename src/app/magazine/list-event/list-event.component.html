@@ -1,0 +1,20 @@
+<section class="container mt-70p pb-100p border-bottom border-line">
+  <detail-post
+  [data]="headliner"
+  [shorten]="true"
+  ></detail-post>
+</section>
+
+<section class="container my-100p">
+  <section-subscription></section-subscription>
+</section>
+
+<section class="container mt-100p" id="archive">
+  <div class="row">
+    <ng-container *ngFor="let p of archive; let i = index">
+      <div class="col-12 mb-30p mb-md-55p">
+        <card-event size="large" [data]="p" [showCategory]="false"></card-event>
+      </div>
+    </ng-container>
+  </div>
+</section>

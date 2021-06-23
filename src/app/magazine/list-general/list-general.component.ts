@@ -10,8 +10,6 @@ export class ListGeneralComponent implements OnInit {
 
   @Input() latest: Blog[];
   @Input() archive: Blog[];
-  @Input() pageCurrent: number;
-  @Input() postType: string; /** video | podcast | news |  event | post */
 
   constructor() { }
 

@@ -27,11 +27,11 @@ export class CardPostComponent implements OnInit {
 
 }
 
-interface ICardPostOption {
+export interface ICardPostOption {
   colorLightForDummy?: string;
 }
 
-class CardPostOption {
+export class CardPostOption {
   
   get colorLightForDummy() { return this.data.colorLightForDummy || 'white'; }
 
