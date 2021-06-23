@@ -19,7 +19,7 @@
 <div class="row justify-content-center mb-30p">
   <div 
   class="col-12"
-  [ngClass]="{'col-md-12 col-lg-10 col-xl-9': data?.isEvent, 'col-md-11 col-lg-9 col-xl-8': (!data || !data.isEvent)}"
+  [ngClass]="{'col-md-12 col-lg-10 col-xl-9': !!(data?.isEvent), 'col-md-11 col-lg-9 col-xl-8': (!data || !data.isEvent)}"
   >
     <div class="row align-items-center body2-temp">
       <div class="col-12 col-md-4 mb-10p mb-md-0 border-md-right">
