@@ -13,8 +13,12 @@ import { MagazineService } from '../magazine.service';
 })
 export class PageComponent implements OnInit {
 
+  get isEvent() { return (this.data && this.data.catTitle && this.data.catTitle.toLowerCase().match(/event/)); }
+  
   public data: Blog;
   public related: Blog[];
+
+  public isReview: boolean = false;
 
   constructor(
     private _mService: MagazineService,
@@ -25,37 +29,17 @@ export class PageComponent implements OnInit {
 
 
   async ngOnInit() {
-    try {
-      await this.initCategories();
-    } catch(err) {
-      this._toastr.error('Something went wrong. Please try again later.');
-    }
-
-    this._route.params.subscribe(async (param: {slug: string}) => {
-      await this.initPost(param.slug);
-      this.initRelated();
+    this._route.data.subscribe(async (data: {mode: 'review' | 'view'}) => {
+      this.isReview = data.mode == 'review' ? true : false;
     });
-  }
 
-  initCategories(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      if (this._mService.categories) {
-        resolve(true);
+    this._route.params.subscribe(async (param: {slug: string, id: string}) => {
+      if(this.isReview) {
+        await this.initPostById(param.id);
       } else {
-        const path = `category/get-categories`;
-        this._sharedService.getNoAuth(path).subscribe((res: any) => {
-          if (res.statusCode === 200) {
-            this._mService.saveCacheCategories(res.data);
-            resolve(true);
-          }else {
-            console.log(res);
-            reject(res.message);
-          }
-        }, (error) => {
-          console.log(error);
-          reject(error);
-        });
-      }  
+        await this.initPost(param.slug);
+        this.initRelated();          
+      }
     });
   }
 
@@ -81,6 +65,17 @@ export class PageComponent implements OnInit {
           reject(err);
         });   
       }
+    });
+  }
+
+  initPostById(id: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const path = `blog/get-by-id/${id}`;
+      this._sharedService.get(path).subscribe((res: any) => {
+        if(res.statusCode === 200) {
+          console.log(res);
+        }
+      });
     });
   }
 

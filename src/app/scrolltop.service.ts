@@ -1,6 +1,6 @@
 
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { Router, NavigationEnd, ActivationStart } from '@angular/router';
+import { Router, NavigationEnd, ActivationStart, NavigationStart } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
@@ -16,12 +16,15 @@ export class ScrollTopService {
   }
 
   private isInitial = true;
+  private urlPrev: string = '';
   private disableAnalytics: boolean = environment.config.disableAnalytics;
 
   setScrollTop() {
     if (isPlatformBrowser(this.platformId)) {
       this.router.events.subscribe((event: NavigationEnd) => {
-        if (event instanceof ActivationStart) { this.isInitial = false; }
+        if (event instanceof ActivationStart) { 
+          this.isInitial = false; 
+        }
 
         if (event instanceof NavigationEnd) {
           /** google analytics */
@@ -35,6 +38,8 @@ export class ScrollTopService {
             }            
           }
 
+          const pathPrev = this.urlPrev.replace(/\?.*$/, '');
+          const pathCurrent = event.url.replace(/\?.*$/, '');
 
           if (event.url.match(/#addon/)) {
             const timer = this.isInitial ? 1000 : 400;
@@ -45,8 +50,11 @@ export class ScrollTopService {
           } else if (event.url.match(/\/magazines\/(category|tag|media-type)\/.+\/\d/) && !this.isInitial) {
             const el = document.querySelector('#archive');
             window.scrollBy(0, el.getBoundingClientRect().top - 100);
+          } else if (pathPrev != pathCurrent) { 
+            window.scroll(0, 0); 
           }
-           else { window.scroll(0, 0); }
+
+          this.urlPrev = event.url;
         }
       });
     }

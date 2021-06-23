@@ -1,7 +1,6 @@
 import { Injectable, Sanitizer } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EmbedVideoService } from 'ngx-embed-video';
-import { Observable, Subject } from 'rxjs';
 import { Blog, IBlog } from '../models/blog';
 import { IBlogCategory } from '../models/blog-category';
 
@@ -67,7 +66,7 @@ export class MagazineService {
     let pageTotal: number = null;
 
     const cat = catId ? catId : 'all';
-    const data = this.postCache.dataPerCategory[cat];
+    const data = this.postCache.dataPerTaxonomy[cat];
     if(data) {
       pageTotal = data.pageTotal;
     }
@@ -78,7 +77,7 @@ export class MagazineService {
     let pageTotal: number = null;
 
     const cat = catId ? catId : 'all';
-    const data = this.postCache.dataPerCategory[cat];
+    const data = this.postCache.dataPerTaxonomy[cat];
     if(data) {
       pageTotal = data.postTotal;
     }
@@ -102,11 +101,11 @@ export class MagazineService {
     }
   }
 
-  postsOf(catId: string = null, page: number = 1, from: number = 0, count: number = this.countPerPage): Blog[] {
+  postsOf(catId: string = null, page: number = 1, from: number = 0, count: number = this.countPerPage, option?: {excluded?: string}): Blog[] {
     const cat = catId ? catId : 'all';
-    if(this.postCache.dataPerCategory[cat] && this.postCache.dataPerCategory[cat].dataPerPage[page]) {
+    if(this.postCache.dataPerTaxonomy[cat] && this.postCache.dataPerTaxonomy[cat].dataPerPage[page]) {
       const posts = [];
-      const data = this.postCache.dataPerCategory[cat].dataPerPage[page];
+      const data = this.postCache.dataPerTaxonomy[cat].dataPerPage[page];
       const max = data.length > from + count ? from + count : data.length;
       for(let i=from; i<max; i++) {
         posts.push(data[i]);
@@ -124,7 +123,7 @@ export class MagazineService {
     this.categoryCache = null;
     this.postCache = {
       dataMapById: {},
-      dataPerCategory: {}
+      dataPerTaxonomy: {}
     }
   }
 
@@ -132,7 +131,7 @@ export class MagazineService {
     const pageTotal = Math.ceil(res.total / this.countPerPage);
     const dataPerPage = [];
 
-    for(let d of res.data) {
+    for(let d of res.data) { 
       let idInMap = null;
       for(let id in this.postCache.dataMapById) {
         if(d._id == id) {
@@ -148,16 +147,16 @@ export class MagazineService {
     }
 
     const targetCategory = catId ? catId : 'all';
-    if(!this.postCache.dataPerCategory[targetCategory]) {
-      this.postCache.dataPerCategory[targetCategory] = { pageTotal: pageTotal, postTotal: res.total, dataPerPage: {} };
+    if(!this.postCache.dataPerTaxonomy[targetCategory]) {
+      this.postCache.dataPerTaxonomy[targetCategory] = { pageTotal: pageTotal, postTotal: res.total, dataPerPage: {} };
     }
-    this.postCache.dataPerCategory[targetCategory].dataPerPage[page] = dataPerPage;
+    this.postCache.dataPerTaxonomy[targetCategory].dataPerPage[page] = dataPerPage;
     return dataPerPage;
   }
 
   saveCacheSingle(data: IBlog) {
     if(!this.postCache.dataMapById[data._id]) {
-      const b = new Blog(data, this.categories);
+      const b = new Blog(data);
       b.videoLinks.forEach(v => { b.addEmbedVideo(this.embedVideo(v)); });
       b.podcastLinks.forEach(v => { b.addEmbedPodcast(this.embedPodcast(v)); });
       b.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(b.description));
@@ -194,21 +193,18 @@ export class MagazineService {
   }
 }
 
-type PostCache = {
+interface PostCache {
   dataMapById: {
     [k: string]: Blog;
   },
-  dataPerCategory : {
+  dataPerTaxonomy : {
     [k: string] : { // k is categoryId or 'all'
-      pageTotal: number,
+      pageTotal: number;
       postTotal: number;
+      filter?: any;
       dataPerPage: {
         [k: number]: Blog[] // k is page number
       }
     };    
   }
 }
-
-
-
-

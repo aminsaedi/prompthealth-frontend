@@ -11,6 +11,7 @@ import { SectionSignupComponent } from './section-signup/section-signup.componen
 import { MenuSmComponent } from './menu-sm/menu-sm.component';
 import { ListGeneralComponent } from './list-general/list-general.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DetailPostComponent } from './detail-post/detail-post.component';
 
 const routes = [
   {path: '',                      component: HomeComponent},
@@ -21,10 +22,12 @@ const routes = [
   {path: 'tag/:id/:page',         component: ListComponent, data: {taxonomyType: 'tag'}},
   {path: 'media-type/:id',        component: ListComponent, data: {taxonomyType: 'media'}},
   {path: 'media-type/:id/:page',  component: ListComponent, data: {taxonomyType: 'media'}},
-  {path: 'category',     redirectTo: ''},
+  {path: 'category',     redirectTo: ''},  
   {path: 'tag',          redirectTo: ''},
-  {path: ':slug',                 component: PageComponent},
-]
+  {path: 'media-type',   redirectTo: ''},
+  {path: '_review/:id',           component: PageComponent, data: {mode: 'review'} },
+  {path: ':slug',                 component: PageComponent, data: {mode: 'view'} },
+];
 
 @NgModule({
   declarations: [
@@ -35,7 +38,8 @@ const routes = [
     SectionSubscriptionComponent,
     SectionSignupComponent,
     MenuSmComponent,
-    ListGeneralComponent
+    ListGeneralComponent,
+    DetailPostComponent,
   ],
   imports: [
     CommonModule,
