@@ -151,6 +151,13 @@ export class WrapperComponent implements OnInit, OnDestroy {
     title: 'Offer',
     link: 'partner-offer',
     active,
+  });
+
+  public myPostsTab = (active) => ({
+    description: 'Add & Edit your posts',
+    title: 'Posts',
+    link: 'my-posts',
+    active,
   })
 
   // tslint:disable-next-line: member-ordering
@@ -282,6 +289,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
         case 'SP':
           if (this.isPremium) {
             this.listing = [
+              this.myPostsTab(true),
               this.performanceTab(true),
               this.profileTab(true),
               this.passwordTab(true),
@@ -299,6 +307,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
 
           } else {
             this.listing = [
+              this.myPostsTab(true),
               this.profileTab(true),
               this.passwordTab(true),
               this.serviceTab(true),
@@ -317,6 +326,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
         case 'C':
           if (this.isPremium) {
             this.listing = [
+              this.myPostsTab(true),
               this.performanceTab(true),
               this.profileTab(true),
               this.passwordTab(true),
@@ -336,6 +346,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
             this.listing.push(this.paymentTab(true));
           } else {
             this.listing = [
+              this.myPostsTab(true),
               this.profileTab(true),
               this.passwordTab(true),
               this.serviceTab(true),
@@ -356,6 +367,7 @@ export class WrapperComponent implements OnInit, OnDestroy {
 
         case 'P':
           this.listing = [
+            this.myPostsTab(true),
             this.partnerProfileTab(true),
             this.passwordTab(true),
             this.partnerServiceTab(true),

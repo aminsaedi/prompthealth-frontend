@@ -36,6 +36,13 @@ export class ProfileManagementChildGuard implements CanActivateChild {
 
     const urls = state.url.split('/');
     const url = urls[urls.length - 1];
+
+    /** for posts */
+    switch (true) {
+      case /my-post/.test(state.url):
+        return true;
+    }
+
     switch (url) {
       case 'my-password':
         /** if user logged in, true */

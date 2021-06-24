@@ -169,5 +169,9 @@ export const validators = {
   
   password: validatorPatternPassword(),
   accredit: validatorRequiredTrue,
+
+
+  /** blog post for users */
+  postTitle: Validators.required,
   
 }
