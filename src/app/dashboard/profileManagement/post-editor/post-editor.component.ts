@@ -4,12 +4,6 @@ import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill'
 import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from 'src/app/_helpers/form-settings';
 
-const parchment = Quill.import('parchment')
-const block = parchment.query('block')
-block.tagName = 'DIV'
-// or class NewBlock extends Block {} NewBlock.tagName = 'DIV'
-Quill.register(block /* or NewBlock */, true)
-
 @Component({
   selector: 'app-post-editor',
   templateUrl: './post-editor.component.html',
