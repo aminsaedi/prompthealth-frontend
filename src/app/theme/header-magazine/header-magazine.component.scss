@@ -24,6 +24,11 @@
 }
 /// TEMPORARY END
 
+.logo-lg {
+  height: 20px;
+  @media (min-width: 1200px) { height: 30px;}
+}
+
 .bg-lg-transparent {
   @media (min-width: 992px) {
     background-color: transparent;

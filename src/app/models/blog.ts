@@ -15,6 +15,10 @@ export interface IBlog {
   videoLinks?: {title: string, url: string}[];
   podcastLinks?: {title: string, url: string}[];
 
+  eventEndTime?: string;
+  eventStartTime?: string;
+  joinEventLink?: string;
+  
   categoryId?: IBlogCategory;
   tags?: IBlogCategory[];
   
@@ -33,16 +37,7 @@ export class Blog implements IBlog {
   get descriptionSanitized() { return this._description; }
   get summary() { return this._summary; }
   get readLength() { return this.data.readLength; } /** UNIT: minute */
-  get timeFormatted(): string {
-    let res: string = '';
-    if(this._time > 60) {
-      const h = Math.ceil(this._time / 60 * 100) / 100;
-      res = h + 'hour' + (h > 1 ? 's' : '');
-    } else {
-      res = this._time + 'min' + (this._time > 1 ? 's' : '');      
-    }
-    return res;
-  } 
+  get readLengthFormatted(): string { return this.getFormattedTime(this.readLength);} 
 
   get isVideo() { return !!(this.videosEmbedded.length > 0); }
   get isPodcast() { return !!(this.podcastsEmbedded.length > 0); }
@@ -106,4 +101,14 @@ export class Blog implements IBlog {
     this._podcastsEmbedded.push(v);
   }
 
+  getFormattedTime(minutes: number) { 
+    let res: string = '';
+    if(minutes >= 60) {
+      const h = Math.ceil(minutes / 60 * 100) / 100;
+      res = h + 'hour' + (h > 1 ? 's' : '');
+    } else {
+      res = minutes + 'min' + (minutes > 1 ? 's' : '');      
+    }
+    return res;
+  }
 }

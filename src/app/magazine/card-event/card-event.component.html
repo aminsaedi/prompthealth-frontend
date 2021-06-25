@@ -51,7 +51,7 @@
                 >
                   <i class="far fa-hourglass mr-1"></i>
                   <span *ngIf="!data" class="color-dummy">2 hours</span>
-                  <span *ngIf="data">{{data.timeFormatted}}</span>
+                  <span *ngIf="data">{{data.event.durationFormatted}}</span>
                 </span>
               
                 <!-- <span *ngIf="showCategory && (!data || data.category)"

@@ -23,7 +23,18 @@ export class DetailPostComponent implements OnInit {
     private _router: Router,
   ) { }
 
+  get urlCurrent() {
+    let url: string = null;
+    if(this.data) { 
+      url = location.href ? location.href : 'https://prompthealth.ca/magazines/' + this.data.slug;
+    }
+    return url;
+  }
+
+
   ngOnInit(): void {
+    const url = location.href ? location.href : 'https://prompthealth.ca/magazines/' + this.data.slug;
+
     this._route.queryParams.subscribe((params: {modal: string}) => {
       if(!this.data && params.modal == 'calendar-menu') {
         this._router.navigate(['./'], {relativeTo: this._route, replaceUrl: true});
@@ -56,7 +67,7 @@ export class DetailPostComponent implements OnInit {
     const calendarOption: CalendarOptions = {
       title: this.data.title,
       location: '',
-      description: 'https://prompthealth.ca/magazines/' + this.data.slug,
+      description: this.data.event.link,
       start: this.data.event.startAt,
       end: this.data.event.endAt,
     }

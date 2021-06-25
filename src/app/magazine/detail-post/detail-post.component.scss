@@ -10,6 +10,10 @@
   border-color: rgba(214, 216, 231, 1);
 }
 
+.text-placeholder {
+  color: rgba(160, 163, 189, 1);
+}
+
 .btn.btn-primary {
   padding: 17px 25px;
   background: rgba(12, 116, 255, 1)!important;
@@ -29,6 +33,13 @@
   }
 }
 
+.fa-facebook-f,
+.fa-twitter,
+.fa-linkedin-in {
+  font-size: 30px;
+}
+
+.fa-twitter
 /// TEMPORARY END
 
 
@@ -109,48 +120,22 @@
   }
 }
 
+.btn-group-social {
+  background: white;
+  border-top: solid 1px rgba(214, 216, 231, 1);
+  @media (min-width: 992px) {
+    background: rgba(239, 243, 247, 1);
+    transform: translateY(-100%);
+    border: none;
+  }
+}
+
 .btn-group-event {
   
   @media (min-width: 768px) {
-    button.btn { width: 200px!important; }
-  }
-}
-
-.modal-view {
-  position: fixed;
-  z-index: 100000;
-  top: -10vh;
-  left: -10vw;
-  width: 120vw;
-  height: 120vh;
-
-  .modal-drop {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.2);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);  
-  }
-
-  .modal-body {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    width: 94vw;
-    max-width: 500px;
-    padding: 15px;
-    background: white;
-    border-radius: 12px;
-
-    @media (min-width: 768px) {
-      padding: 30px 50px;
-    }
-
-    .title-container {
-      margin-bottom: 20px;
+    button.btn, a.btn { 
+      width: 200px!important; 
     }
   }
 }
+
