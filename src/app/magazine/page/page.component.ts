@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Blog } from 'src/app/models/blog';
-import { BlogSearchQuery } from 'src/app/models/blog-search-query';
+import { BlogSearchQuery, IBlogSearchQuery } from 'src/app/models/blog-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { MagazineService } from '../magazine.service';
 
@@ -84,19 +84,58 @@ export class PageComponent implements OnInit {
 
   initRelated() {
     const catId = this.data.catId;
-    const related = this._mService.postsOf(catId, 1, 0, 3);
-    if (related) {
-      this.related = related;
-    } else {
-      this.related = this._mService.createDummyArray(3);
-      const query = new BlogSearchQuery({categoryId: catId});
-      const path = `blog/get-all${query.queryParams}`;
-      this._sharedService.getNoAuth(path).subscribe((res: any) => {
-        if(res.statusCode === 200) {
-          this._mService.saveCache(res.data, 1, catId);
-          this.related = this._mService.postsOf(catId, 1, 0, 3);
+    const catSlug = this.data.category.slug;
+    if(catSlug.match(/event/)) {
+      const related = this._mService.postsOf(catId, 1, 0, 10000);
+      if(related) {
+        this.filterRelatedEvent();
+      } else {
+        this.related = this._mService.createDummyArray(3);
+        const params: IBlogSearchQuery = {
+          count: 10000,
+          page: 1,
+          categoryId: catId
         }
-      });
+        const query = new BlogSearchQuery(params);
+        const path = `blog/get-all${query.queryParams}`;
+        this._sharedService.getNoAuth(path).subscribe((res: any) => {
+          if(res.statusCode === 200) {
+            this._mService.saveCache(res.data, 1, catId);
+            this.filterRelatedEvent();
+          }
+        });
+
+      }
+    } else {
+      const related = this._mService.postsOf(catId, 1, 0, 3);
+      if (related) {
+        this.related = related;
+      } else {
+        this.related = this._mService.createDummyArray(3);
+        const query = new BlogSearchQuery({categoryId: catId});
+        const path = `blog/get-all${query.queryParams}`;
+        this._sharedService.getNoAuth(path).subscribe((res: any) => {
+          if(res.statusCode === 200) {
+            this._mService.saveCache(res.data, 1, catId);
+            this.related = this._mService.postsOf(catId, 1, 0, 3);
+          }
+        });
+      }  
     }
+  }
+
+  filterRelatedEvent() {
+    const posts= this._mService.postsOf(this.data.catId, 1, 0, 10000);
+
+    const now = new Date();
+    const upcoming = posts.filter(b => {
+      return (b.event.endAt.getTime() > now.getTime());
+    });
+
+    const filteredExcludeThePost = upcoming.filter(b => {
+      return b._id != this.data._id;
+    });
+
+    this.related = filteredExcludeThePost.slice(0,3);
   }
 }

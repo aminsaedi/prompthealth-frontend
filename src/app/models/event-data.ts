@@ -18,7 +18,6 @@ export class EventData {
   private _status: string;
 
   constructor(private data: IBlog){
-    console.log(this.data.eventStartTime);
     this._startAt = new Date(this.data.eventStartTime);
     this._endAt = new Date(this.data.eventEndTime);
 
@@ -52,21 +51,42 @@ export class EventData {
     let venue: string = 'virtual';
 
     if(this.data.joinEventLink) {
+      let path = this.data.joinEventLink;
       let host = null;
-      host = this.data.joinEventLink.replace(/http(s)?:\/\/(www\.)?/, '').replace(/\/.*$/, '');
+      host = path.replace(/http(s)?:\/\/(www\.)?/, '').replace(/\/.*$/, '');
 
       const match = host.match(/(eventbrite|zoom|meet)/);
       switch(true) {
         case /eventbrite/.test(host):
           venue = 'Eventbrite';
           break;
+        case /easywebinar/.test(host):
+          venue = 'Easywebinar';
+          break;
+
         case /zoom/.test(host):
           venue = 'Zoom';
           break;
         case /meet\.google/.test(host):
           venue = 'Google Meet';
           break;
-        default: 
+        case /teams/.test(host):
+          venue = 'Teams';
+          break;
+
+        case /clubhouse/.test(host):
+          venue = 'Clubhouse';
+        case /twitter\.com\/i\/spaces/.test(path):
+          venue = 'Spaces';
+          break;
+        case /fb\.me|facebook/.test(host):
+          venue = 'Facebook';
+          break;
+        case /meetup/.test(host):
+          venue = 'Meetup';
+          break;
+
+          default: 
           venue = 'Virtual';
       }
     }

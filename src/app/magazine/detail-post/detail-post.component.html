@@ -26,7 +26,8 @@
         <div class="col-12 col-md-4 mb-10p mb-md-0 border-md-right">
           <div class="d-flex align-items-center">
             <img [src]="data?.authorImage" alt="" class="author mr-2">
-            <span class="opacity-70pc">{{data?.author}}</span>
+            <span *ngIf="!data" class="color-dummy">Author name</span>
+            <span *ngIf="data" class="opacity-70pc">{{data?.author}}</span>
           </div>
         </div>
         <div class="col-12 col-md-8 d-flex justify-content-between flex-column flex-md-row align-items-start align-items-md-center">
@@ -34,14 +35,16 @@
             <div class="d-flex flex-column flex-md-row flex-nowrap opacity-70pc">
               <span class="mr-4 mb-10p mb-md-0 text-nowrap">
                 <i class="far fa-calendar mr-1"></i>
-                <span *ngIf="!data?.isEvent">{{data?.createdAt | date:'longDate'}}</span>
-                <span *ngIf="data?.isEvent">{{data?.event.startAt | date:'MMM d, yyyy hh:mm a'}}</span>
+                <span *ngIf="!data" class="color-dummy">June 25, 2035</span>
+                <span *ngIf="data && !data.isEvent">{{data.createdAt | date:'longDate'}}</span>
+                <span *ngIf="data && data.isEvent">{{data.event.startAt | date:'MMM d, yyyy hh:mm a'}}</span>
               </span>
   
               <span class="mr-4 mb-10p mb-md-0 text-nowrap">
                 <i class="far fa-hourglass mr-1"></i>
-                <span>{{data?.event.durationFormatted}}</span>
-                <span *ngIf="!data?.isEvent"> read</span>
+                <span *ngIf="!data" class="color-dummy">120mins read</span>
+                <span *ngIf="data && !data.isEvent">{{data.readLengthFormatted}} read</span>
+                <span *ngIf="data && data.isEvent">{{data?.event.durationFormatted}}</span>
               </span>
   
               <span *ngIf="data?.isEvent" class="mb-10p mb-md-0 text-nowrap">

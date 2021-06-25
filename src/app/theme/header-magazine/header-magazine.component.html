@@ -14,7 +14,8 @@ class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparen
         <ul class="d-none d-lg-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2-temp text-body">
           <!-- category list -->
           <li class="mx-10p" *ngFor="let cat of categories">
-            <a class="text-body" [routerLink]="['/magazines/category', cat.slug]">{{cat.title}}</a>
+            <a *ngIf="!isCategoryEvent(cat)" class="text-body" [routerLink]="['/magazines/category', cat.slug]">{{cat.title}}</a>
+            <a *ngIf="isCategoryEvent(cat)" class="text-body" [routerLink]="['/magazines/event']">{{cat.title}}</a>
           </li>
 
           <!-- media type list-->

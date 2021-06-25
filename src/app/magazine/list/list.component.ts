@@ -15,16 +15,12 @@ import { MagazineService } from '../magazine.service';
 })
 export class ListComponent implements OnInit {
 
-  get isEvent(): boolean {
-    return !!(this.taxonomySlug && this.taxonomySlug.toLowerCase().match('event'));
-  }
-
   public taxonomyName: string; /** {categoryName} | {tagName} | video | podcast  */
   public taxonomySlug: string;
   public taxonomyId: string /** {categoryId} | {tagId} */
   public taxonomyType: TaxonomyType;
 
-  public postType: string; /** event | news | video | podcast | post */
+  public postType: string; /** news | video | podcast | post */
   public latest: Blog[];
   public archive: Blog[];
 
@@ -154,7 +150,7 @@ export class ListComponent implements OnInit {
   }
 
   initPosts() {
-    this.setPosts(this.taxonomyId, this.pageCurrent, this.isEvent);
+    this.setPosts(this.taxonomyId, this.pageCurrent);
 
     const promiseAll = [];
     if(!this.latest) {
@@ -163,15 +159,19 @@ export class ListComponent implements OnInit {
     }
     if(!this.archive) {
       this.archive = this._mService.createDummyArray((this.pageCurrent) == 1 ? 8 : 12);
-      promiseAll.push(this.fetchPosts(this.taxonomyType, this.taxonomyId, this.pageCurrent));
+
+      if(this.pageCurrent > 1) {
+        promiseAll.push(this.fetchPosts(this.taxonomyType, this.taxonomyId, this.pageCurrent));
+      }
     }
 
     Promise.all(promiseAll).then(() => {
-      this.setPosts(this.taxonomyId, this.pageCurrent, this.isEvent);
+      this.setPosts(this.taxonomyId, this.pageCurrent);
     });
   }
 
   fetchPosts(taxonomyType: TaxonomyType, id: string, page: number = 1): Promise<boolean> {
+    console.log('fetch', taxonomyType, id, page)
     return new Promise((resolve, reject) => {
       const params: IBlogSearchQuery = {};
       if (taxonomyType == 'video') {
@@ -187,11 +187,11 @@ export class ListComponent implements OnInit {
       if(page != 1) {
         params.page = page;
       }
+
       const query = new BlogSearchQuery(params);
       const path = `blog/get-all${query.queryParams}`;
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
         if(res.statusCode === 200) {
-          console.log(res);
           this._mService.saveCache(res.data, page, id);
           resolve(true);
         }
@@ -199,26 +199,17 @@ export class ListComponent implements OnInit {
     });
   }
 
-  setPosts(id: string, page: number = 1, isEvent: boolean) {
-    if(isEvent) {
-      this.latest = this._mService.postsOf(id, 1, 0, 1);
-    } else {
-      this.latest = this._mService.postsOf(id, 1, 0, 4);
-    }
+  setPosts(id: string, page: number = 1) {
+    this.latest = this._mService.postsOf(id, 1, 0, 4);
 
     if(page == 1) {
-      if(isEvent) {
-        this.archive = this._mService.postsOf(id, 1, 1, 11);
-      } else {
-        this.archive = this._mService.postsOf(id, 1, 4, 8);
-      }
+      this.archive = this._mService.postsOf(id, 1, 4, 8);
     } else {
       this.archive = this._mService.postsOf(id, page, 0, 12);
     }
 
     this.pageTotal = this._mService.pageTotalOf(id);
     this.postTotal = this._mService.postTotalOf(id);
-    console.log(this.archive);
   }
 
   setPaginators() {

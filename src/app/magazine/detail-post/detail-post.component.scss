@@ -39,8 +39,13 @@
   font-size: 30px;
 }
 
-.fa-twitter
 /// TEMPORARY END
+
+.color-dummy {
+  background-color: rgba(160, 163, 189, 1);
+  color: rgba(160, 163, 189, 1);
+  opacity: 0.2;
+}  
 
 
 .author,
@@ -125,8 +130,9 @@
   border-top: solid 1px rgba(214, 216, 231, 1);
   @media (min-width: 992px) {
     background: rgba(239, 243, 247, 1);
-    transform: translateY(-100%);
     border: none;
+    bottom: 200px;
+    margin-bottom: -200px;
   }
 }
 

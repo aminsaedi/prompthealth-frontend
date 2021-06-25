@@ -62,6 +62,19 @@ export class MagazineService {
     return name;
   }
 
+  get categoryEvent() {
+    let cat: IBlogCategory = null;
+    if(this.categoryCache) {
+      for (let c of this.categoryCache) {
+        if(c.slug.match(/event/)) {
+          cat = c;
+          break;
+        }
+      }
+    }
+    return cat;
+  }
+
   getCategoryBySlug(slug: string) {
     let category: IBlogCategory = null;
     if(this.categoryCache) {

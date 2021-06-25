@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IBlogCategory } from 'src/app/models/blog-category';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
 
@@ -18,6 +19,10 @@ export class HeaderMagazineComponent implements OnInit {
   constructor(
     private _sharedService: SharedService,
   ) { }
+
+  isCategoryEvent(cat: IBlogCategory) {
+    return !!(cat.slug.match(/event/));
+  } 
 
   ngOnInit(): void {
     this.getCategories();

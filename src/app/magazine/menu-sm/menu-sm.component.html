@@ -18,7 +18,8 @@
     <div class="menu-inner">
       <ul class="list-unstyled mb-0 container">
         <li class="py-2" *ngFor="let cat of categories">
-          <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/category/', cat.slug])">{{cat.title}}</a>
+          <a *ngIf="!isCategoryEvent(cat)" class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/category/', cat.slug])">{{cat.title}}</a>
+          <a *ngIf="isCategoryEvent(cat)" class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/event'])">{{cat.title}}</a>
         </li>
         <li class="py-2">
           <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/video'])">Videos</a>

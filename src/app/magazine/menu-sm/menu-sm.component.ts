@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { IBlogCategory } from 'src/app/models/blog-category';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
 import { MagazineService } from '../magazine.service';
@@ -23,6 +24,10 @@ export class MenuSmComponent implements OnInit {
     private _sharedService: SharedService,
     private _mService: MagazineService,
   ) { }
+
+  isCategoryEvent(cat: IBlogCategory) {
+    return !!(cat.slug.match(/event/));
+  } 
 
   ngOnInit(): void {
     this.initTaxonomy();

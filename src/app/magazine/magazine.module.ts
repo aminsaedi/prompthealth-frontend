@@ -20,14 +20,18 @@ import { CardEventComponent } from './card-event/card-event.component';
 const routes = [
   {path: '',                      component: HomeComponent},
   {path: 'menu',                  component: MenuSmComponent},
-  {path: 'category/:slug',        component: ListComponent, data: {taxonomyType: 'category'}},
-  {path: 'category/:slug/:page',  component: ListComponent, data: {taxonomyType: 'category'}},
-  {path: 'tag/:slug',             component: ListComponent, data: {taxonomyType: 'tag'}},
-  {path: 'tag/:slug/:page',       component: ListComponent, data: {taxonomyType: 'tag'}},
+
+  {path: 'event',                 component: ListEventComponent },
+  {path: 'event/:page',           component: ListEventComponent },
   {path: 'video',                 component: ListComponent, data: {taxonomyType: 'video'}},
   {path: 'video/:page',           component: ListComponent, data: {taxonomyType: 'video'}},
   {path: 'podcast',               component: ListComponent, data: {taxonomyType: 'podcast'}},
   {path: 'podcast/:page',         component: ListComponent, data: {taxonomyType: 'podcast'}},  
+
+  {path: 'category/:slug',        component: ListComponent, data: {taxonomyType: 'category'}},
+  {path: 'category/:slug/:page',  component: ListComponent, data: {taxonomyType: 'category'}},
+  {path: 'tag/:slug',             component: ListComponent, data: {taxonomyType: 'tag'}},
+  {path: 'tag/:slug/:page',       component: ListComponent, data: {taxonomyType: 'tag'}},
   {path: 'category',     redirectTo: ''},  
   {path: 'tag',          redirectTo: ''},
 
