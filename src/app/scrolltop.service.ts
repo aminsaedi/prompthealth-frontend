@@ -47,8 +47,9 @@ export class ScrollTopService {
               const el = document.querySelector('#addon');
               window.scrollBy(0, el.getBoundingClientRect().top - 100);
             }, timer);
-          } else if (event.url.match(/\/magazines\/(category|tag|media-type|event)\/.+\/\d/) && !this.isInitial) {
+          } else if (event.url.match(/\/magazines\/(category|tag|video|podcast|event)(\/.+)?\/\d/) && !this.isInitial) {
             const el = document.querySelector('#archive');
+            console.log('scroll to arhchive');
             window.scrollBy(0, el.getBoundingClientRect().top - 100);
           } else if (pathPrev != pathCurrent) { 
             window.scroll(0, 0); 

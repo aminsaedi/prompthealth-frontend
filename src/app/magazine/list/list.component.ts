@@ -210,6 +210,7 @@ export class ListComponent implements OnInit {
 
     this.pageTotal = this._mService.pageTotalOf(id);
     this.postTotal = this._mService.postTotalOf(id);
+    this.setPaginators();
   }
 
   setPaginators() {

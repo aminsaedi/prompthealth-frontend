@@ -76,6 +76,7 @@ export class EventData {
 
         case /clubhouse/.test(host):
           venue = 'Clubhouse';
+          break;
         case /twitter\.com\/i\/spaces/.test(path):
           venue = 'Spaces';
           break;
