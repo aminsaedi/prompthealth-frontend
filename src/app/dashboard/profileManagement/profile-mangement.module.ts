@@ -6,7 +6,6 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AgmCoreModule } from '@agm/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { QuillModule } from 'ngx-quill';
 
 import 'rxjs';
 
@@ -37,9 +36,6 @@ import { MyPerformanceComponent } from './my-performance/my-performance.componen
 import { PartnerServiceComponent } from './partner-service/partner-service.component';
 import { PartnerGeneralComponent } from './partner-general/partner-general.component';
 import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
-import { MyPostsComponent } from './my-posts/my-posts.component';
-import { MyPostComponent } from './my-post/my-post.component';
-import { PostEditorComponent } from './post-editor/post-editor.component';
 
 @NgModule({
   declarations: [
@@ -65,10 +61,6 @@ import { PostEditorComponent } from './post-editor/post-editor.component';
     PartnerServiceComponent,
     PartnerGeneralComponent,
     PartnerOfferComponent,
-    MyPostsComponent,
-    MyPostComponent,
-    PostEditorComponent,
-
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
@@ -84,23 +76,6 @@ import { PostEditorComponent } from './post-editor/post-editor.component';
     SharedModule, NgxDatatableModule,
     // OwlDateTimeModule, OwlNativeDateTimeModule,
     CommonModule, ProfileManagementRoutingModule, ReactiveFormsModule, FormsModule, NgbModule,
-    QuillModule.forRoot({
-      modules: {
-        toolbar: [
-          ['bold', 'italic', 'underline'],        // toggled buttons
-          ['blockquote'],
-       
-          [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              
-          [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-       
-          ['clean'],                                         // remove formatting button
-       
-          ['link', 'image', 'video']                         // link and image, video
-        ],
-      },
-    }),
   ]
 
 })

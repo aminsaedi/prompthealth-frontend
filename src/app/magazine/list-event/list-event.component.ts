@@ -41,7 +41,7 @@ export class ListEventComponent implements OnInit {
   public paginators: number[][] = null;
   public pageTotal: number;
   public postTotal: number;
-  public countPerPage: number = 2;
+  public countPerPage: number = 12;
   public order: IQueryParams['order'];
   public orderBy: IQueryParams['orderby'];
 

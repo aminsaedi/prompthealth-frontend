@@ -224,7 +224,9 @@ export class MagazineService {
 
   embedVideo(data: {title: string, url: string}) {
     const iframe = this._embedService.embed(data.url);
-    iframe.title = data.title;
+    if(iframe) {
+      iframe.title = data.title;
+    }
     return iframe;
   }
 

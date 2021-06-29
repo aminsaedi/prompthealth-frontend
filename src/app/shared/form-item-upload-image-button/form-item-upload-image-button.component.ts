@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { IUserDetail } from 'src/app/models/user-detail';
@@ -17,10 +17,14 @@ export class FormItemUploadImageButtonComponent implements OnInit {
   @Input() disabled = false;
   @Input() submitted = false;
   @Input() controller: FormControl;
+  @Input() uploadType: 'profile' | 'blogThumbnail' = 'profile';
 
   @Output() changeImage = new EventEmitter<string>();
 
   public baseURLImage = environment.config.AWS_S3;
+  public isUploading: boolean = false;
+
+  @ViewChild('uploadImageSelector') imageSelector: ElementRef;
 
   constructor(
     private _sharedService: SharedService,
@@ -28,7 +32,14 @@ export class FormItemUploadImageButtonComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.uploadType);
+  }
 
+  select() {
+    const el = this.imageSelector.nativeElement as HTMLInputElement;
+    if(el) {
+      el.click();
+    }
   }
 
   async onSelectImage(e: Event){
@@ -43,14 +54,18 @@ export class FormItemUploadImageButtonComponent implements OnInit {
       }
 
       this._sharedService.loader('show');
+      this.isUploading = true;
       try { 
-        const imageURL = await this.uploadImage(image.file, image.filename); 
+        const imageURL = (this.uploadType == 'profile') ? await this.uploadImage(image.file, image.filename) : await this.uploadImageBlog(image.file, image.filename); 
         this.controller.setValue(imageURL);
 
         this.changeImage.emit(imageURL);
       }
       catch(err){ this._toastr.error(err); }
-      finally{ this._sharedService.loader('hide'); }
+      finally{ 
+        this._sharedService.loader('hide'); 
+        this.isUploading = false;
+      }
     }
   }
 
@@ -71,6 +86,26 @@ export class FormItemUploadImageButtonComponent implements OnInit {
       }, error => {
         console.log(error);
           reject('Something went wrong. Please try again.');
+      });
+    });
+  }
+  
+  async uploadImageBlog(file: File | Blob, name: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const uploadImage = new FormData();
+      uploadImage.append('imgLocation', 'blogs');
+      uploadImage.append('images', file, name);
+
+      this._sharedService.imgUpload(uploadImage, 'common/imgUpload').subscribe((res: any) => {
+        if(res.statusCode === 200) {
+          resolve(res.data);
+        } else {
+          console.log(res.message);
+          reject('Something went wrong. Please try again.');
+        }
+      }, error => {
+        console.log(error);
+        reject('Something went wrong. Please try again.');
       });
     });
   }

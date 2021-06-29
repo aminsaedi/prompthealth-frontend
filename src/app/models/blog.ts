@@ -25,12 +25,13 @@ export interface IBlog {
   createdAt: string; /** could be Date? */
 
   isDeleted?: boolean; /** not used in frontend */
-  status?: boolean;
+  status?: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'HIDDEN';
 }
 
 export class Blog implements IBlog {
 
   get _id() { return this.data._id; }
+  get status() { return this.data.status || 'DRAFT'; }
   get slug() { return this.data.slug; }  
   get title() { return this.data.title; }
   get description() { return this.data.description; }
@@ -44,6 +45,7 @@ export class Blog implements IBlog {
   get isEvent() { return (this.catTitle && this.catTitle.toLowerCase().match(/event/)); }
   
   get image() { return (this.data.image) ? this.AWS_S3 + this.data.image : '/assets/img/logo-square-primary-light.png'; }
+  get _image() { return (this.data.image) ? this.data.image : null };
   get videoLinks() { return this.data.videoLinks || []; }
   get podcastLinks() { return this.data.podcastLinks || []; }
   get videosEmbedded() { return this._videosEmbedded; }
@@ -110,5 +112,10 @@ export class Blog implements IBlog {
       res = minutes + 'min' + (minutes > 1 ? 's' : '');      
     }
     return res;
+  }
+
+  /** this is used in post-editor only */
+  hide() {
+    this.data.status = 'HIDDEN';
   }
 }

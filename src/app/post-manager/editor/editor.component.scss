@@ -1,0 +1,80 @@
+/// TEMPORARY TODO: REMOVE LATER
+:host {
+  font-size: 16px;
+  color: rgba(41, 49, 72, 1);
+}
+
+/// TEMPORARY END
+
+/// TEMPORARY TODO: MODIFY WITH NEW HEADER HEIGHT
+  @import '../../../assets/scss/responsive_variables';
+  .h-100--header {
+    height: calc(100vh - #{$headerHeightLoggedin});
+    @media (min-width: 768px) {
+      height: calc(100vh - #{$headerHeightLoggedinMd});
+    }
+    @media (min-width: 992px) {
+      height: calc(100vh - #{$headerHeightLoggedinLg});
+    }
+    @media (min-width: 1200px) {
+      height: calc(100vh - #{$headerHeightLoggedinXl});
+    }
+  }
+///
+
+.editor-container {
+  height: 100%;
+
+  .editor {
+    flex: 0 0 100%;
+    @media (min-width: 992px) {
+      flex: 1 1 auto;
+    }
+  }
+
+  .setting-panel {
+    flex: 0 0 100%;
+    background: white;
+
+    @media (min-width: 768px) {
+      flex: 0 0 350px;
+    }
+
+    transition: transform 300ms;
+    z-index: 10;
+    &.shown {
+      @media (max-width: 991px) {
+        transform: translateX(-100%);
+      }  
+    }
+  }
+}
+
+
+.form-control.form-control-title {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+
+:host::ng-deep {
+  .ql-toolbar {
+    position: fixed;
+    bottom: 50px;
+    background: white;
+    border-radius: 8px;
+    z-index: 10;
+
+    left: 15px;
+    width: calc(100% - 30px);
+    @media (min-width: 768px) {
+      width: 500px;
+      left: 15px;
+    }
+  }
+
+  .ql-container {
+    font-size: 16px;
+  }
+}

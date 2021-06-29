@@ -1,0 +1,192 @@
+<ngx-spinner bdColor="#fff" size="medium" color="#fff">
+  <p style="font-size: 20px; color: white" class="loaderbg">
+    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  </p>
+</ngx-spinner>
+
+
+<form (ngSubmit)="onSubmit()">
+  <div class="h-100--header d-flex flex-column">
+    <section class="border-bottom">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between py-5p">
+          <a routerLink="/dashboard/profilemanagement/my-posts" class="btn">
+            <i class="fas fa-arrow-left"></i>
+          </a>
+
+          <div>
+            <input
+            type="submit"
+            class="btn btn-outline mr-10p"
+            [value]="(f.status.value === 'DRAFT') ? 'Save' : 'Update'"
+            [disabled]="this.isUploading || !this.user"
+            >
+            <button
+            *ngIf="f.status.value === 'DRAFT'"
+            class="btn btn-primary mr-10p"
+            (click)="onSubmit(true)"
+            [disabled]="this.isUploading || !this.user"
+            >Publish</button>
+    
+            <button 
+            class="btn d-lg-none" 
+            [ngClass]="{'btn-secondary': isSettingShown}"
+            (click)="toggleSettingPanel()"
+            >
+              <i class="fas fa-cog"></i>
+            </button>  
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="container-fluid flex-grow-1">
+      <div class="d-flex flex-nowrap editor-container overflow-hidden">
+        <div class="editor pt-15p d-flex flex-column">
+          <div>
+            <input type="text"
+            class="form-control form-control-title h4-temp h2-temp-md"
+            placeholder="Enter Title..."
+            [formControl]="f.title"
+            >
+            <form-item-errors
+            [controller]="f.title"
+            label="Title"
+            [submitted]="isSubmitted"
+            ></form-item-errors>
+          </div>
+  
+          <div class="position-relative flex-grow-1">
+            <quill-editor
+            [styles]="{height: '450px', border: 'none'}"
+            (onEditorChanged)="changedEditor($event)"
+            [(ngModel)]="description"
+            [ngModelOptions]="{standalone:true}"
+            >
+            </quill-editor>  
+          </div>
+        </div>
+  
+        <div 
+        class="setting-panel border-left pt-15p pl-15p"
+        [ngClass]="{shown: isSettingShown}"
+        >
+          <div class="mb-20p">
+            <h6 class="subtitle1-temp">Status</h6>
+            <div class="body1-temp">{{f.status.value | titlecase}}</div>
+            <!-- <ng-multiselect-dropdown
+            placeholder="..."
+            [settings]="dropdownSetting"
+            [data]="statuses"
+            [(ngModel)]="selectedStatus"
+            [ngModelOptions]="{standalone: true}"
+            ></ng-multiselect-dropdown> -->
+          </div>
+          <div class="mb-20p">
+            <h6 class="subtitle1-temp">Category</h6>
+            <ng-multiselect-dropdown
+            placeholder="..."
+            [settings]="dropdownSettingCategories"
+            [data]="categories"
+            [(ngModel)]="selectedCategories"
+            [ngModelOptions]="{standalone: true}"
+            (onSelect)="onSelectCategory($event)"
+            (onDeSelect)="onDeselectCategory()"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+  
+          <div class="mb-20p">
+            <h6 class="subtitle1-temp">Topics</h6>
+            <ng-multiselect-dropdown
+            placeholder="..."
+            [settings]="dropdownSettingTags"
+            [data]="tags"
+            [(ngModel)]="selectedTags"
+            (onSelect)="onChangeTags()"
+            (onDeselectAll)="onChangeTags()"
+            (onDeSelect)="onChangeTags()"
+            [ngModelOptions]="{standalone: true}"
+            ></ng-multiselect-dropdown>
+          </div>
+  
+          <div class="mb-20p">
+            <h6 class="subtitle1-temp">Thumbnail</h6>
+            <ng-multiselect-dropdown
+            placeholder="Thumbnail type..."
+            [settings]="dropdownSetting"
+            [data]="thumbnailTypes"
+            (onSelect)="onSelectThumbnailType($event)"
+            [(ngModel)]="selectedThumbnailType"
+            [ngModelOptions]="{standalone: true}"
+            ></ng-multiselect-dropdown>
+  
+            <div
+            class="mt-15p"
+            [ngClass]="{'d-none': !isSelectedThumbnailType('image')}"
+            >
+              <form-item-upload-image-button
+              #imageSelector
+              label="image"
+              [controller]="f.image"
+              [userid]="user?._id"
+              uploadType="blogThumbnail"
+              (changeImage)="onChangeImage($event)"
+              ></form-item-upload-image-button>
+            </div>
+  
+            <div
+            *ngIf="isSelectedThumbnailType('video')"
+            class="mt-15p"
+            >
+              <form-item-input
+              placeholder="https://youtube..."
+              [controller]="fVideo.url"
+              ></form-item-input>
+            </div>
+  
+            <div
+            *ngIf="isSelectedThumbnailType('podcast')"
+            class="mt-15p"
+            >
+              <form-item-input
+              placeholder="https://spotify..."
+              [controller]="fVideo.url"
+              ></form-item-input>
+            </div>
+          </div>
+ 
+          <div class="mb-20p" *ngIf="isEventShown">
+            <h6 class="subtitle1-temp">Event data</h6>
+            <div class="mb-15p">
+              <div class="subtitle2-temp">Start at</div>
+              <form-item-datetime
+              [controller]="f.eventStartTime"
+              [minDateTime]="minDateTimeEventStart"
+              (changeValue)="onChangeStartDateTime($event)"
+              ></form-item-datetime>
+            </div>
+
+            <div class="mb-15p">
+              <div class="subtitle2-temp">End at</div>
+              <form-item-datetime
+              [controller]="f.eventEndTime"
+              [minDateTime]="minDateTimeEventEnd"
+              (changeValue)="onChangeEndDateTime($event)"
+              ></form-item-datetime>
+            </div>
+            <div class="mb-15p">
+              <div class="subtitle2-temp">Event link</div>
+              <form-item-input
+              label="Link"
+              placeholder="https://..."
+              autocapitalize="off"
+              [controller]="f.joinEventLink"
+              ></form-item-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</form>

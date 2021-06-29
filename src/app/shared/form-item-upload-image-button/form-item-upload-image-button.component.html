@@ -1,6 +1,16 @@
-<button type="button" class="btn px-5 text-blue border-blue font-regular position-relative" *ngIf="!disabled">
+<button 
+*ngIf="!disabled"
+type="button" 
+class="btn px-5 text-blue border-blue font-regular position-relative" 
+[ngClass]="{disabled: isUploading}"
+>
   Upload {{label | titlecase}}
-  <input type="file" class="cursor-pointer" accept="image/jpeg, image/png" (change)="onSelectImage($event)">
+  <input #uploadImageSelector
+  type="file" 
+  class="cursor-pointer" 
+  accept="image/jpeg, image/png" 
+  (change)="onSelectImage($event)"
+  >
 </button>
 <div class="mt-2">
   <img class="preview" *ngIf="controller.value" [src]="baseURLImage + controller.value" [alt]="label">

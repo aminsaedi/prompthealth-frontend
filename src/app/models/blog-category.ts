@@ -2,8 +2,8 @@ export interface IBlogCategory {
   categorytypeId?: string;
   // createdAt: string;
   // isDeleted: boolean;
-  slug: string;
+  slug?: string;
   status?: true
-  title: string;
-  _id: string;
+  title?: string;
+  _id?: string;
 }

@@ -28,6 +28,7 @@ import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
 // import { UserQuestionnaireItemBackgroundComponent } from './user-questionnaire-item-background/user-questionnaire-item-background.component';
 import { RegisterPractitionerGeneralComponent } from './register-practitioner-general/register-practitioner-general.component';
 import { RegisterPractitionerServiceComponent } from './register-practitioner-service/register-practitioner-service.component';
+import { PostManagerModule } from '../post-manager/post-manager.module';
 
 const routes: Routes = [
   // {
@@ -151,6 +152,9 @@ const routes: Routes = [
     component: RegisterQuestionnaireCompleteComponent,
     // canActivate: [RegisterQuestionnaireCompleteGuard,],
   },
+
+  { path: 'my-posts', loadChildren: () => PostManagerModule },
+
 
   { path: 'subscriptionplan',   redirectTo: '/plans' },
   { path: 'questionnaire/u',    redirectTo: '/personal-match/gender' },

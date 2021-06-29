@@ -172,6 +172,12 @@ export const validators = {
 
 
   /** blog post for users */
-  postTitle: Validators.required,
-  
+  publishPostDescription: [Validators.required],
+  publishPostCategory: [Validators.required],
+  publishPostTags: [],
+  savePostTitle: [Validators.required],
+  savePostDescription: [],
+  savePostCategory: [],
+  savePostTags: [],
+  savePostAuthorId: [Validators.required],
 }

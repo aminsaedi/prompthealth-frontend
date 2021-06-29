@@ -79,16 +79,17 @@ export class HomeComponent implements OnInit {
     const latest = this._mService.postsOf(null, 1, 0, 4);
     if (latest) {
       this.latest = latest;
-      this.latestByTag = this._mService.postsOf(null, 1, 4, 7);
+      this.latestByTag = this._mService.postsOf(null, 1, 0, 7);
     } else {
       this.latest = this._mService.createDummyArray(4);
+      this.latestByTag = this._mService.createDummyArray(7);
       const query = new BlogSearchQuery();
       const path = `blog/get-all${query.queryParams}`;
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
         if(res.statusCode === 200) {
           this._mService.saveCache(res.data, 1);
           this.latest = this._mService.postsOf(null, 1, 0, 4);
-          this.latestByTag = this._mService.postsOf(null, 1, 4, 7);
+          this.latestByTag = this._mService.postsOf(null, 1, 0, 7);
         }
       });
     }
