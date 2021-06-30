@@ -4,10 +4,10 @@
   </p>
 </ngx-spinner>
 
-
 <form (ngSubmit)="onSubmit()">
-  <div class="h-100--header d-flex flex-column">
-    <section class="border-bottom">
+  <div class="d-flex flex-column">
+    <div class="intersection-observer" intersectionObserver rootMargin="-50px 0px 0px 0px" (changeStatus)="changeStickyStatus($event)"></div>
+    <section class="border-bottom sticky-top bg-white">
       <div class="container-fluid">
         <div class="d-flex justify-content-between py-5p">
           <a routerLink="/dashboard/profilemanagement/my-posts" class="btn">
@@ -15,6 +15,12 @@
           </a>
 
           <div>
+            <a 
+            *ngIf="post?.slug"
+            [routerLink]="['/magazines', post.slug]"
+            target="_blank"
+            class="btn mr-10p"
+            >View</a>
             <input
             type="submit"
             class="btn btn-outline mr-10p"
@@ -44,7 +50,7 @@
     </section>
   
     <section class="container-fluid flex-grow-1">
-      <div class="d-flex flex-nowrap editor-container overflow-hidden">
+      <div class="d-flex flex-nowrap editor-container">
         <div class="editor pt-15p d-flex flex-column">
           <div>
             <input type="text"
@@ -61,7 +67,7 @@
   
           <div class="position-relative flex-grow-1">
             <quill-editor
-            [styles]="{height: '450px', border: 'none'}"
+            [styles]="{minHeight: '450px', border: 'none', marginBottom: '150px'}"
             (onEditorChanged)="changedEditor($event)"
             [(ngModel)]="description"
             [ngModelOptions]="{standalone:true}"
@@ -77,6 +83,25 @@
           <div class="mb-20p">
             <h6 class="subtitle1-temp">Status</h6>
             <div class="body1-temp">{{statusNameOf(f.status.value)}}</div>
+            <div 
+            *ngIf="f.status.value == 'PENDING'"
+            class="bg-background mt-10p p-2 body-small-temp"
+            >
+              <span class="opacity-70pc">
+                This post is not published yet. 
+                Administrator is reviewing now. Meanwhile, you can edit or change status to draft.
+              </span>
+            </div>
+            <div 
+            *ngIf="f.status.value == 'REJECTED'"
+            class="bg-warning-light text-warning-dark mt-10p p-2 body-small-temp"
+            >
+              <span>
+                This post has been rejected. 
+                Please modify appropriately.
+                If you have question, please contact administrator.
+              </span>
+            </div>
             <button
             *ngIf="f.status.value !== 'DRAFT'"
             type="button"

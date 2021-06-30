@@ -87,9 +87,13 @@ export class FormItemDatetimeComponent implements OnInit {
     this.fTime.valueChanges.subscribe(() => {
       this.updateDateTime(true);
     });
+    // this.controller.valueChanges.subscribe(() => {
+    //   console.log(this.controller.value);
+    // })
 
   }
 
+  /** update controller value by selecting by datetime picker */
   updateDateTime(emit: boolean = false){
     const date: DateData = this.fDate.value;
     const time: TimeData = this.fTime.value;
@@ -100,6 +104,11 @@ export class FormItemDatetimeComponent implements OnInit {
     }
   }
 
+  /** update datetime picker by editing controller value */
+  // updatePicker() {
+
+  // }
+
   getFormattedValue() {
     const date: DateData = this.fDate.value;
     const time: TimeData = this.fTime.value;
@@ -108,7 +117,7 @@ export class FormItemDatetimeComponent implements OnInit {
     return datetime;
   }
 
-  showPicker(){ this.isPickerShown = true; console.log('koko')}
+  showPicker(){ this.isPickerShown = true; }
   hidePicker(){ this.isPickerShown = false; }
 }
 

@@ -3,6 +3,21 @@
   font-size: 16px;
   color: rgba(41, 49, 72, 1);
 }
+.bg-background {
+  background: rgba(239, 243, 247, 1);
+}
+
+.bg-warning {
+  background: rgba(253, 184, 19, 1)
+}
+
+.bg-warning-light {
+  background: rgba(252, 235, 194, 1);
+}
+
+.text-warning-dark {
+  color: rgba(164, 115, 0, 1);
+}
 
 /// TEMPORARY END
 
@@ -23,8 +38,6 @@
 ///
 
 .editor-container {
-  height: 100%;
-
   .editor {
     flex: 0 0 100%;
     @media (min-width: 992px) {
@@ -41,7 +54,7 @@
     }
 
     transition: transform 300ms;
-    z-index: 10;
+    z-index: 5;
     &.shown {
       @media (max-width: 991px) {
         transform: translateX(-100%);

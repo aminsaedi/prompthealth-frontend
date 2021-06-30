@@ -32,7 +32,6 @@ export class FormItemUploadImageButtonComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.uploadType);
   }
 
   select() {

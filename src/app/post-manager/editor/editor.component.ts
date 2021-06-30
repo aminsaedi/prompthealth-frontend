@@ -10,6 +10,7 @@ import { IBlogCategory } from 'src/app/models/blog-category';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { FormItemUploadImageButtonComponent } from 'src/app/shared/form-item-upload-image-button/form-item-upload-image-button.component';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { validators } from 'src/app/_helpers/form-settings';
@@ -70,7 +71,7 @@ export class EditorComponent implements OnInit {
   }
 
   public user: IUserDetail;
-  private post: Blog;
+  public post: Blog;
   public description: any;
 
   public statuses: IBlogCategory[] = [
@@ -133,10 +134,12 @@ export class EditorComponent implements OnInit {
     private _uService: UniversalService,
     private _postsService: PostManagerService,
     private _toastr: ToastrService,
+    private _headerService: HeaderStatusService,
   ) { }
 
   ngOnDestroy() {
     this._postsService.unlockEditor();
+    this._headerService.showHeader();
   }
   async ngOnInit() {
 
@@ -215,20 +218,26 @@ export class EditorComponent implements OnInit {
 
   initPost(id: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const path = 'blog/get-by-id/' + id;
-      this._sharedService.get(path).subscribe((res: any) => {
-        if(res.statusCode === 200) {
-          this._postsService.saveCacheSingle(res.data);
-          this.post = this._postsService.postOf(id);
-          resolve(true);
-        } else {
-          console.log(res.message);
-          reject(res.message);
-        }
-      }, err => {
-        console.log(err);
-        reject(err);
-      })
+      const post = this._postsService.postOf(id);
+      if (post) {
+        this.post = post;
+        resolve(true);
+      } else {
+        const path = 'blog/get-by-id/' + id;
+        this._sharedService.get(path).subscribe((res: any) => {
+          if(res.statusCode === 200) {
+            this._postsService.saveCacheSingle(res.data);
+            this.post = this._postsService.postOf(id);
+            resolve(true);
+          } else {
+            console.log(res.message);
+            reject(res.message);
+          }
+        }, err => {
+          console.log(err);
+          reject(err);
+        })  
+      }
     });
   }
 
@@ -256,19 +265,23 @@ export class EditorComponent implements OnInit {
 
   initTags() {
     return new Promise((resolve, reject) => {
-      const path = `tag/get-all`;
-      this._sharedService.getNoAuth(path).subscribe((res: any) => {
-        if (res.statusCode === 200) {
-          this._postsService.saveCacheTags(res.data.data)
-          resolve(true);
-        }else {
-          console.log(res);
-          reject(res.message);
-        }
-      }, (error) => {
-        console.log(error);
-        reject(error);
-      });
+      if(this._postsService.tags) {
+        resolve(true);
+      } else {
+        const path = `tag/get-all`;
+        this._sharedService.getNoAuth(path).subscribe((res: any) => {
+          if (res.statusCode === 200) {
+            this._postsService.saveCacheTags(res.data.data)
+            resolve(true);
+          }else {
+            console.log(res);
+            reject(res.message);
+          }
+        }, (error) => {
+          console.log(error);
+          reject(error);
+        });
+      }
     });
   }
 
@@ -285,6 +298,7 @@ export class EditorComponent implements OnInit {
 
       if(this.post.category) {
         this.selectedCategories = [this.post.category];
+        this.f.categoryId.setValue(this.post.category._id);
         this.onSelectCategory(this.post.category);
       }
 
@@ -308,11 +322,15 @@ export class EditorComponent implements OnInit {
       }
 
       if(this.post.event.startAt) {
-        this.f.eventStartTime.setValue(this.post.event.startAt);
+        const dt = this.post.event.startAt;
+        const val = `${dt.getFullYear()}-${('0' + (dt.getMonth() + 1)).slice(-2)}-${('0' + dt.getDate()).slice(-2)} ${('0' + dt.getHours()).slice(-2)}:${('0' + dt.getMinutes()).slice(-2)}`
+        this.f.eventStartTime.setValue(val);
       }
 
       if(this.post.event.endAt) {
-        this.f.eventEndTime.setValue(this.post.event.endAt);
+        const dt = this.post.event.endAt;
+        const val = `${dt.getFullYear()}-${('0' + (dt.getMonth() + 1)).slice(-2)}-${('0' + dt.getDate()).slice(-2)} ${('0' + dt.getHours()).slice(-2)}:${('0' + dt.getMinutes()).slice(-2)}`
+        this.f.eventEndTime.setValue(val);
       }
 
       if(this.post.event.eventOn) {
@@ -331,15 +349,24 @@ export class EditorComponent implements OnInit {
       this.f.status.setValue('DRAFT');
     }
 
-    this.form.valueChanges.subscribe(() => {
-      this._postsService.lockEditor();
-    });
+    // wait for all form values are init, and then start checking form values.
+    // if any value is changed, lock editor.
+    setTimeout(() => {
+      this.form.valueChanges.subscribe((e: any) => {
+        this._postsService.lockEditor();
+      });  
+    }, 0);
   }
 
   changedEditor(e: EditorChangeContent | EditorChangeSelection) {
     if('html' in e) {
+      const current = this.f.description.value;
+      const next = e.html;
+
       this.f.description.setValue(e.html);
-      this._postsService.lockEditor();
+      if(current != next) {
+        this._postsService.lockEditor();
+      }
     }
   }
 
@@ -358,7 +385,12 @@ export class EditorComponent implements OnInit {
   }
 
   onSelectCategory(e: IBlogCategory) {
-    this._postsService.lockEditor();
+    const current = this.f.categoryId.value;
+    const next = e._id;
+    if(current != next) {
+      this._postsService.lockEditor();
+    }
+
     if(e.title.toLowerCase().match(/event/)) {
       this.showEventCalendar();
     } else {
@@ -382,16 +414,21 @@ export class EditorComponent implements OnInit {
     this._postsService.lockEditor();
   }
 
-  onChangeStartDateTime (e: Date) {
+  onChangeStartDateTime (start: Date) {
     // this._postsService.lockEditor();
     this.minDateTimeEventEnd = {
-      year: e.getFullYear(),
-      month: e.getMonth() + 1,
-      day: e.getDate(),
-      hour: e.getHours(),
-      minute: e.getMinutes(),
+      year: start.getFullYear(),
+      month: start.getMonth() + 1,
+      day: start.getDate(),
+      hour: start.getHours(),
+      minute: start.getMinutes(),
     }
-    this.f.eventEndTime.setValue(this.f.eventStartTime.value);
+
+    const end = new Date(this.f.eventEndTime.value);
+    if(start.getTime() - end.getTime() > 0) {
+      const val = `${start.getFullYear()}-${('0' + (start.getMonth() + 1)).slice(-2)}-${('0' + start.getDate()).slice(-2)} ${('0' + start.getHours()).slice(-2)}:${('0' + start.getMinutes()).slice(-2)}`
+      this.f.eventEndTime.setValue(val)
+    }
   }
   onChangeEndDateTime(e: Date) {
     // this._postsService.lockEditor();
@@ -407,9 +444,10 @@ export class EditorComponent implements OnInit {
     this._sharedService.put(data, path).subscribe((res: any) => {
       this._sharedService.loader('hide');
       if(res.statusCode === 200) {
-        this._toastr.success('Deleted successfully.');
+        this._toastr.success('Changed status to draft successfully.');
         this.post.draft();
         this.initForm();
+        this._postsService.unlockEditor();
       }
     });
 
@@ -472,6 +510,7 @@ export class EditorComponent implements OnInit {
     data.status = statusNext;
 
     const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
+    console.log('===PAYLOAD====')
     console.log(data);
 
     this.isUploading = true;
@@ -481,11 +520,30 @@ export class EditorComponent implements OnInit {
       this.isUploading = false;
       this._sharedService.loader('hide');
       if(res.statusCode === 200) {
-        this.isSubmitted = false;
+        /** populate category and tag */
+        if(res.data.categoryId) {
+          res.data.categoryId = { _id: res.data.categoryId, title: this._postsService.categoryNameOf(res.data.categoryId) };
+        }
+        if(res.data.tags && res.data.tags.length > 0) {
+          const populated: IBlogCategory[] = [];
+          res.data.tags.forEach((id: string) => {
+            populated.push({ _id: id, title: this._postsService.tagNameOf(id) });
+          });
+          res.data.tags = populated;
+        }
+
+        const isPostNew = (!this.post || !('_id' in this.post));
+        if(isPostNew) {
+          this._postsService.addCache(0, res.data);
+        } else {
+          this._postsService.saveCacheSingle(res.data, true);
+        }
+        this.post = this._postsService.postOf(res.data._id);
+
+        this.initForm();
         this._postsService.unlockEditor();
-        console.log(res);
-        this._postsService.saveCacheSingle(res.data, true);
-        this.post = this._postsService.postOf(this.post._id);
+
+        this.isSubmitted = false;
         this._toastr.success('Updated successfully');  
       } else {
         this._toastr.error(res.message);
@@ -522,10 +580,11 @@ export class EditorComponent implements OnInit {
     // this.f.tags.clearValidators();
     // this.f.tags.setValidators( published ? validators.publishPostTags : validators.savePostTags);
     // this.f.tags.updateValueAndValidity();
-
-
   }
-}
+
+  changeStickyStatus(isSticked: boolean) {
+    if (isSticked) { this._headerService.hideHeader(); } else { this._headerService.showHeader(); }
+  }}
 
 
 interface ISaveQuery {
@@ -598,9 +657,9 @@ class SaveQuery implements ISaveQuery {
       authorId: this.authorId,
       author: this.author,
       readLength: this.readLength,
-      joinEventLink: this.joinEventLink,
+      // joinEventLink: this.joinEventLink,
       description: this.description,
-      image: this.image,
+      // image: this.image,
       videoLinks: this.videoLinks,
       podcastLinks: this.podcastLinks,
       headliner: false,
@@ -610,7 +669,8 @@ class SaveQuery implements ISaveQuery {
     if(this.eventStartTime) { data.eventStartTime = new Date(this.eventStartTime); }
     if(this.eventEndTime) { data.eventEndTime = new Date(this.eventEndTime); }
     if(this.description) { data.description = this.description; }
-    // if(this.joinEventLink) { data.joinEventLink = this.joinEventLink; }
+    if(this.joinEventLink) { data.joinEventLink = this.joinEventLink; }
+    if(this.image) { data.image = this.image; }
 
     return data;
   }

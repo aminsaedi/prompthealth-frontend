@@ -34,6 +34,19 @@ export class PostManagerService {
     return res;
   }
 
+  tagNameOf(tagId: string) {
+    let res: string = null;
+    if(this.tags) {
+      for (let tag of this.tags) {
+        if(tag._id == tagId) {
+          res = tag.title;
+          break;
+        }
+      }
+    }
+    return res;
+  }
+
   statusNameOf(status: Blog['status'] | string) {
     let res: string = null;
     switch(status) {
@@ -115,7 +128,16 @@ export class PostManagerService {
     this._isEditorLocked = false;
   }
 
+  /** add new post into cache list */
+  addCache(at: number = 0, data: IBlog) {
+    this.saveCacheSingle(data);
+    const post = this.postCache.dataMapById[data._id];
+    if(this.postCache.dataAll) {
+      this.postCache.dataAll.splice(at, 0, post);
+    }
+  }
 
+  /** save post list into cache list */
   saveCache(data: IBlog[]) {
     const list: Blog[] = []
     data.forEach(d => {
@@ -126,6 +148,7 @@ export class PostManagerService {
     this.postCache.dataAll = list;
   }
 
+  /** create new cache if the post cache does not exist or if force is true*/
   saveCacheSingle(data: IBlog, force: boolean = false) {
     if(!(data._id in this.postCache.dataMapById) || force) {
       this.postCache.dataMapById[data._id] = new Blog(data);

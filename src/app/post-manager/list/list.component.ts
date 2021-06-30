@@ -128,8 +128,8 @@ export class ListComponent implements OnInit {
     this.posts = this._postsService.postsPerPageOf(this.catIdSelected, this.pageCurrent, this.statusSelected, this.order);
   }
 
-  onChangePage(e: any) {
-    this._router.navigate(['../', e], {relativeTo: this._route});
+  onChangePage(e: {page: number, itemsPerPage: number} ) {
+    this._router.navigate(['../', e.page], {relativeTo: this._route});
   }
 
   onChangeFilterCategory(category: IBlogCategory = null) {
