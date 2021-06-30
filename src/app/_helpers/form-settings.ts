@@ -16,7 +16,8 @@ export const pattern = {
   url: '(http(s)?:\\/\\/)?(www\\.)?([\\w-\\.])+(\\/[\\w-%?=@&+\\.]*)?',
   phone: '^[0-9\\-\\(\\)\\s]+$',
   price: '^[0-9]{1,}(\\.[0-9]{1,2})?$',
-  password: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^\\.&\\-]).{8,}'
+  password: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^\\.&\\-]).{8,}',
+  datetime: '^[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}\\s[0-9]{2}:[0-9]{2}$',
 }
 
 const validatorCheckboxSelectedAtLeast = (minRequired: number = 1): ValidatorFn => {
@@ -83,6 +84,18 @@ const validatorPatternPassword = (): ValidatorFn => {
       return null;
     }else{
       const errors = {'matchPatternPassword': true};
+      return errors;
+    }
+  }
+}
+
+const validatorPatternDateTime = (): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    const regex = new RegExp(pattern.datetime);
+    if(!formControl.value || formControl.value.match(regex)) {
+      return null;
+    } else {
+      const errors = {'matchPatternDateTime': true};
       return errors;
     }
   }
@@ -173,11 +186,16 @@ export const validators = {
 
   /** blog post for users */
   publishPostDescription: [Validators.required],
-  publishPostCategory: [Validators.required],
-  publishPostTags: [],
+  // publishPostCategory: [Validators.required],
+  // publishPostTags: [],
+  publishPostEventTime: [Validators.required, validatorPatternDateTime()], // might need pattern as well
+  publishPostEventLink: [Validators.required, validatorPatternURL()],
   savePostTitle: [Validators.required],
   savePostDescription: [],
-  savePostCategory: [],
-  savePostTags: [],
+  // savePostCategory: [],
+  // savePostTags: [],
+  savePostEventTime: [validatorPatternDateTime()], // might need pattern as well
+  savePostEventLink: [validatorPatternURL()],
+  savePostMediaLink: [validatorPatternURL()], 
   savePostAuthorId: [Validators.required],
 }

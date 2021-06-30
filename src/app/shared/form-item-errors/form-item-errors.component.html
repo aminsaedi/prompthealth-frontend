@@ -7,6 +7,9 @@
   <li *ngIf="controller.errors.pattern">{{label}} is invalid.</li>
   <li *ngIf="controller.errors.mustMatch">{{label}} is not matched.</li>
   <li *ngIf="controller.errors.requiredCheckboxSelectedAtLeast1">{{label}} needed to be selected at least 1</li>
+  <li *ngIf="controller.errors.matchPatternDateTime">
+    Date time is invalid. Please use calendar to select date time.
+  </li>
   <li *ngIf="controller.errors.matchPatternURL">
     URL is invalid. Here is sample URL.
     <ul class="mt-1">

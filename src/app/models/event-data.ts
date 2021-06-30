@@ -18,13 +18,14 @@ export class EventData {
   private _status: string;
 
   constructor(private data: IBlog){
-    this._startAt = new Date(this.data.eventStartTime);
-    this._endAt = new Date(this.data.eventEndTime);
-
+    this._startAt = (this.data.eventStartTime) ?  new Date(this.data.eventStartTime) : null;
+    this._endAt = (this.data.eventEndTime) ? new Date(this.data.eventEndTime) : null;
 
     const now = new Date();
     let status: string;
-    if (this._startAt.getTime() - now.getTime() > 60 * 60 * 1000) {
+    if(!this._startAt || !this._endAt) {
+      status = null;
+    } else if (this._startAt.getTime() - now.getTime() > 60 * 60 * 1000) {
       status = 'upcoming';
     } else if (this._startAt.getTime() - now.getTime() > 0) {
       status = 'open soon';

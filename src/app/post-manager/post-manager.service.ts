@@ -62,10 +62,10 @@ export class PostManagerService {
     return res || null;
   }
 
-  postsPerPageOf(catId: string = null, page: number = 1, status: Blog['status'] | 'ALL' = null) {
+  postsPerPageOf(catId: string = null, page: number = 1, status: Blog['status'] | 'ALL' = null, order: 'asc' | 'desc' = 'desc') {
     const from = this.countPerPage * (page - 1);
     const to = this.countPerPage * page;
-    const postsAll = this.postsAllOf(catId, status);
+    const postsAll = this.postsAllOf(catId, status, order);
     let res: Blog[] = null;
     if(postsAll) {
       res = postsAll.slice(from, to);      
@@ -73,7 +73,7 @@ export class PostManagerService {
     return res;
   }
 
-  postsAllOf(catId: string, status: Blog['status'] | 'ALL' = null) {
+  postsAllOf(catId: string, status: Blog['status'] | 'ALL' = null, order: 'asc' | 'desc' = 'desc') {
     let res: Blog[] = null;
     if(this.postCache.dataAll) {
       res = this.postCache.dataAll.filter(b => {
@@ -92,6 +92,11 @@ export class PostManagerService {
           return b.status != 'HIDDEN';
         }
       });
+      res = res.sort((a,b) => {
+        const timeA = new Date(a.createdAt).getTime();
+        const timeB = new Date(b.createdAt).getTime();
+        return (order == 'asc') ? timeA - timeB : timeB - timeA;
+      })
     }
     return res;
   }
@@ -121,8 +126,8 @@ export class PostManagerService {
     this.postCache.dataAll = list;
   }
 
-  saveCacheSingle(data: IBlog) {
-    if(!(data._id in this.postCache.dataMapById)) {
+  saveCacheSingle(data: IBlog, force: boolean = false) {
+    if(!(data._id in this.postCache.dataMapById) || force) {
       this.postCache.dataMapById[data._id] = new Blog(data);
     }
   }

@@ -118,4 +118,7 @@ export class Blog implements IBlog {
   hide() {
     this.data.status = 'HIDDEN';
   }
+  draft() {
+    this.data.status = 'DRAFT';
+  }
 }

@@ -64,6 +64,10 @@ export class EditorComponent implements OnInit {
     }
     return tag;
   }
+  
+  statusNameOf(status: Blog['status']) {
+    return this._postsService.statusNameOf(status);
+  }
 
   public user: IUserDetail;
   private post: Blog;
@@ -71,9 +75,7 @@ export class EditorComponent implements OnInit {
 
   public statuses: IBlogCategory[] = [
     {_id: 'draft', title: 'Draft'},
-    // {_id: 'review', title: 'Under review'},
     {_id: 'publish', title: 'Publish'},
-    // {_id: 'rejected', title: 'Rejected by admin'},
     {_id: 'archive', title: 'Archive'},
   ];
   public thumbnailTypes: IBlogCategory[] = [
@@ -157,12 +159,12 @@ export class EditorComponent implements OnInit {
       year: now.getFullYear(),
       month: now.getMonth() + 1,
       day: now.getDate(),
-      hour: now.getHours() + 1,
+      hour: now.getHours() + 2,
       minute: 0
     }
 
     this.form = new FormGroup({
-      _id: new FormControl(null),
+      // _id: new FormControl(null),
       status: new FormControl('DRAFT'),
       title: new FormControl('', validators.savePostTitle),
       description: new FormControl(''), // set validator later
@@ -172,21 +174,21 @@ export class EditorComponent implements OnInit {
       author: new FormControl(),
       // headliner: new FormControl(false),
       
-      eventStartTime: new FormControl(),
-      eventEndTime: new FormControl(),
-      joinEventLink: new FormControl(),
+      eventStartTime: new FormControl(), // set validator later
+      eventEndTime: new FormControl(),  // set validator later
+      joinEventLink: new FormControl(null, validators.savePostEventLink),  // set validator later
       
       image: new FormControl(),
       videoLinks: new FormArray([
         new FormGroup({
           title: new FormControl(null),
-          url: new FormControl(null, validators.website),
+          url: new FormControl(null, validators.savePostMediaLink),
         }),
       ]),
       podcastLinks: new FormArray([
         new FormGroup({
           title: new FormControl(null),
-          url: new FormControl(null, validators.website),
+          url: new FormControl(null, validators.savePostMediaLink),
         }),
       ]),
     });
@@ -273,7 +275,7 @@ export class EditorComponent implements OnInit {
   initForm() {
     if(this.post) {
       console.log(this.post);
-      this.f._id.setValue(this.post._id);
+      // this.f._id.setValue(this.post._id);
       this.f.title.setValue(this.post.title);
       this.description = this.post.description;
 
@@ -290,7 +292,7 @@ export class EditorComponent implements OnInit {
         this.selectedTags = this.post.tags;
       }
 
-      if(this.post.image) {
+      if(this.post._image) {
         this.selectedThumbnailType = [this.thumbnailTypes[0]];
         this.f.image.setValue(this.post._image);
       } else if(this.post.videoLinks.length > 0) {
@@ -330,7 +332,6 @@ export class EditorComponent implements OnInit {
     }
 
     this.form.valueChanges.subscribe(() => {
-      console.log('formChanged!')
       this._postsService.lockEditor();
     });
   }
@@ -396,12 +397,29 @@ export class EditorComponent implements OnInit {
     // this._postsService.lockEditor();
   }
 
+  draftPost() {
+    const data = {
+      id: this.post._id,
+      status: 'DRAFT',
+    }
+    const path = '/blog/updateStatus';
+    this._sharedService.loader('show');
+    this._sharedService.put(data, path).subscribe((res: any) => {
+      this._sharedService.loader('hide');
+      if(res.statusCode === 200) {
+        this._toastr.success('Deleted successfully.');
+        this.post.draft();
+        this.initForm();
+      }
+    });
+
+  }
+
   onSubmit(publish: boolean = false) {
     this.isSubmitted = true;
 
     const statusCurrent = this.f.status.value;
     const statusNext = (!publish && statusCurrent == 'DRAFT') ? 'DRAFT' : 'PENDING';
-    this.f.status.setValue(statusNext);
 
     this.f.authorId.setValue( this.user._id );
     this.f.author.setValue( this.user.firstName );
@@ -435,15 +453,27 @@ export class EditorComponent implements OnInit {
       this.fVideo.url.setValue(null);
     }
 
-    this.resetValidators(this.f.status.value == 'PENDING');
+    /** remove unnecessary event data */
+    let catName: string = (this.selectedCategories && this.selectedCategories.length > 0) ? this.selectedCategories[0].title : '';
+    if(!catName.toLowerCase().match('event')) {
+      this.f.eventStartTime.setValue(null);
+      this.f.eventEndTime.setValue(null);
+      this.f.joinEventLink.setValue(null);
+    }
+
+    this.resetValidators(statusNext == 'PENDING');
 
     if(this.form.invalid) {
       this._toastr.error('There are several items that requires your attention.')
-      return;
+      // return;
     }
 
     const data: ISaveQuery = new SaveQuery(this.form.value).toJson();
-    const req =  ('_id' in data) ? this._sharedService.put(data, `blog/update/${data._id}`) : this._sharedService.post(data, 'blog/create');
+    data.status = statusNext;
+
+    const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
+    console.log(data);
+    return;
 
     this.isUploading = true;
 
@@ -455,6 +485,8 @@ export class EditorComponent implements OnInit {
         this.isSubmitted = false;
         this._postsService.unlockEditor();
         console.log(res);
+        this._postsService.saveCacheSingle(res.data, true);
+        this.post = this._postsService.postOf(this.post._id);
         this._toastr.success('Updated successfully');  
       } else {
         this._toastr.error(res.message);
@@ -468,23 +500,37 @@ export class EditorComponent implements OnInit {
   }
 
   resetValidators(published: boolean = false) {
-
     this.f.description.clearValidators();
     this.f.description.setValidators( published ? validators.publishPostDescription : validators.savePostDescription);
     this.f.description.updateValueAndValidity();
 
-    this.f.categoryId.clearValidators();
-    this.f.categoryId.updateValueAndValidity();
+    // this.f.categoryId.clearValidators();
+    // this.f.categoryId.updateValueAndValidity();
 
-    this.f.tags.clearValidators();
-    this.f.tags.setValidators( published ? validators.publishPostTags : validators.savePostTags);
-    this.f.tags.updateValueAndValidity();
+    this.f.eventStartTime.clearValidators();
+    this.f.eventEndTime.clearValidators();
+    this.f.joinEventLink.clearValidators();
+    let catName: string = (this.selectedCategories && this.selectedCategories.length > 0) ? this.selectedCategories[0].title : '';
+    if(catName.toLowerCase().match('event')) {
+      this.f.eventStartTime.setValidators( published ? validators.publishPostEventTime : validators.savePostEventTime);
+      this.f.eventEndTime.setValidators( published ? validators.publishPostEventTime : validators.savePostEventTime);
+      this.f.joinEventLink.setValidators( published ? validators.publishPostEventLink : validators.savePostEventLink);
+      this.f.eventStartTime.updateValueAndValidity();
+      this.f.eventEndTime.updateValueAndValidity();
+      this.f.joinEventLink.updateValueAndValidity();  
+    }
+
+    // this.f.tags.clearValidators();
+    // this.f.tags.setValidators( published ? validators.publishPostTags : validators.savePostTags);
+    // this.f.tags.updateValueAndValidity();
+
+
   }
 }
 
 
 interface ISaveQuery {
-  _id?: string,
+  // _id?: string,
   status: IBlog['status'];
   title: string;
   authorId: string;
@@ -505,11 +551,11 @@ interface ISaveQuery {
     url: string;
   }[];
   podcastLinks?: ISaveQuery['videoLinks'];
+
+  headliner?: boolean;
 }
 
 class SaveQuery implements ISaveQuery {
-
-  get _id() { return this.data._id; }
   get status() { return this.data.status || 'DRAFT'; }
   get title() { return this.data.title || null; }
   get authorId() { return this.data.authorId || null; }
@@ -521,11 +567,11 @@ class SaveQuery implements ISaveQuery {
   
   get eventStartTime() { return this.data.eventStartTime || null; }
   get eventEndTime() { return this.data.eventEndTime || null; }
-  get joinEventLink() { return this.data.joinEventLink || ''; }
+  get joinEventLink() { return this.data.joinEventLink || null; }
   
   get image() { return this.data.image || ''; }
   get videoLinks() { 
-    let res: ISaveQuery['videoLinks'] = null;
+    let res: ISaveQuery['videoLinks'] = [];
     if(this.data.videoLinks && this.data.videoLinks.length > 0) {
       const data = this.data.videoLinks[0];
       if(data.url) {
@@ -535,7 +581,7 @@ class SaveQuery implements ISaveQuery {
     return res;
   }
   get podcastLinks() {
-    let res: ISaveQuery['podcastLinks'] = null;
+    let res: ISaveQuery['podcastLinks'] = [];
     if(this.data.podcastLinks && this.data.podcastLinks.length > 0) {
       const data = this.data.podcastLinks[0];
       if(data.url) {
@@ -555,14 +601,17 @@ class SaveQuery implements ISaveQuery {
       joinEventLink: this.joinEventLink,
       description: this.description,
       image: this.image,
+      videoLinks: this.videoLinks,
+      podcastLinks: this.podcastLinks,
+      headliner: false,
     };
-    if(this._id) { data._id = this._id; }
     if(this.categoryId) { data.categoryId = this.categoryId; }
     if(this.tags) { data.tags = this.tags; }
-    if(this.eventStartTime) { data.eventStartTime = this.eventStartTime; }
-    if(this.eventEndTime) { data.eventEndTime = this.eventEndTime; }
-    if(this.videoLinks) { data.videoLinks = this.videoLinks; }
-    if(this.podcastLinks) { data.podcastLinks = this.podcastLinks; }
+    if(this.eventStartTime) { data.eventStartTime = new Date(this.eventStartTime); }
+    if(this.eventEndTime) { data.eventEndTime = new Date(this.eventEndTime); }
+    if(this.description) { data.description = this.description; }
+    // if(this.joinEventLink) { data.joinEventLink = this.joinEventLink; }
+
     return data;
   }
   constructor(private data: ISaveQuery) {}

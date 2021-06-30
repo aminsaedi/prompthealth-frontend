@@ -21,6 +21,7 @@ export class ListComponent implements OnInit {
   public posts: Blog[];
   public catIdSelected: string = null;
   public statusSelected: Blog['status'] | 'ALL' = null;
+  public order: 'asc' | 'desc' = 'desc';
 
   public postsTotal: number = 0;
   public pageCurrent: number = 1;
@@ -51,7 +52,7 @@ export class ListComponent implements OnInit {
     private _uService: UniversalService,
     private _postsService: PostManagerService,
     private _sharedService: SharedService,
-    private __toastr: ToastrService,
+    private _toastr: ToastrService,
   ) { }
 
   ngOnInit() {
@@ -97,8 +98,8 @@ export class ListComponent implements OnInit {
       this.setPosts();
       resolve(true);
       if(!posts) {
-        const path = 'blog/get-by-author';
-        const query = new BlogSearchQuery({ authorId: this.user._id });
+        const path = 'blog/get-by-author/' + this.user._id;
+        const query = new BlogSearchQuery();
         this._sharedService.get(path + query.queryParams).subscribe((res: any) => {
           if(res.statusCode === 200) {
             console.log(res);
@@ -107,10 +108,12 @@ export class ListComponent implements OnInit {
             resolve(true)
           } else {
             console.log(res.message);
+            this._toastr.error(res.message);
             reject(res.message);
           }
         }, (err) => {
           console.log(err);
+          this._toastr.error(err);
           reject(err);
         });
       }
@@ -119,10 +122,10 @@ export class ListComponent implements OnInit {
 
 
   setPosts() {
-    const postsAll = this._postsService.postsAllOf(this.catIdSelected, this.statusSelected);
+    const postsAll = this._postsService.postsAllOf(this.catIdSelected, this.statusSelected, this.order);
     this.postsTotal = postsAll ? postsAll.length : 0;
 
-    this.posts = this._postsService.postsPerPageOf(this.catIdSelected, this.pageCurrent, this.statusSelected);
+    this.posts = this._postsService.postsPerPageOf(this.catIdSelected, this.pageCurrent, this.statusSelected, this.order);
   }
 
   onChangePage(e: any) {
@@ -139,6 +142,11 @@ export class ListComponent implements OnInit {
     this.setPosts();
   } 
 
+  toggleOrder() {
+    this.order = (this.order == 'asc') ? 'desc' : 'asc';
+    this.setPosts()
+  }
+
 
   hidePost(post: Blog) {
     const data = {
@@ -150,7 +158,7 @@ export class ListComponent implements OnInit {
     this._sharedService.put(data, path).subscribe((res: any) => {
       this._sharedService.loader('hide');
       if(res.statusCode === 200) {
-        this.__toastr.success('Deleted successfully.');
+        this._toastr.success('Deleted successfully.');
         post.hide();
       }
     });

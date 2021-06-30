@@ -18,18 +18,21 @@
             <input
             type="submit"
             class="btn btn-outline mr-10p"
+            [ngClass]="{'btn-primary': f.status.value !== 'DRAFT'}"
             [value]="(f.status.value === 'DRAFT') ? 'Save' : 'Update'"
-            [disabled]="this.isUploading || !this.user"
+            [disabled]="this.isUploading || !this.user || f.status.value === 'HIDDEN'"
             >
             <button
             *ngIf="f.status.value === 'DRAFT'"
             class="btn btn-primary mr-10p"
+            type="button"
             (click)="onSubmit(true)"
             [disabled]="this.isUploading || !this.user"
             >Publish</button>
     
             <button 
             class="btn d-lg-none" 
+            type="button"
             [ngClass]="{'btn-secondary': isSettingShown}"
             (click)="toggleSettingPanel()"
             >
@@ -73,14 +76,13 @@
         >
           <div class="mb-20p">
             <h6 class="subtitle1-temp">Status</h6>
-            <div class="body1-temp">{{f.status.value | titlecase}}</div>
-            <!-- <ng-multiselect-dropdown
-            placeholder="..."
-            [settings]="dropdownSetting"
-            [data]="statuses"
-            [(ngModel)]="selectedStatus"
-            [ngModelOptions]="{standalone: true}"
-            ></ng-multiselect-dropdown> -->
+            <div class="body1-temp">{{statusNameOf(f.status.value)}}</div>
+            <button
+            *ngIf="f.status.value !== 'DRAFT'"
+            type="button"
+            class="btn btn-outline mr-10p px-0"
+            (click)="draftPost()"
+            ><u>Change status to draft</u></button>
           </div>
           <div class="mb-20p">
             <h6 class="subtitle1-temp">Category</h6>
@@ -142,6 +144,7 @@
               <form-item-input
               placeholder="https://youtube..."
               [controller]="fVideo.url"
+              [submitted]="isSubmitted"
               ></form-item-input>
             </div>
   
@@ -151,7 +154,8 @@
             >
               <form-item-input
               placeholder="https://spotify..."
-              [controller]="fVideo.url"
+              [controller]="fPodcast.url"
+              [submitted]="isSubmitted"
               ></form-item-input>
             </div>
           </div>
@@ -165,6 +169,11 @@
               [minDateTime]="minDateTimeEventStart"
               (changeValue)="onChangeStartDateTime($event)"
               ></form-item-datetime>
+              <form-item-errors
+              [controller]="f.eventStartTime"
+              label="Start time"
+              [submitted]="isSubmitted"
+              ></form-item-errors>
             </div>
 
             <div class="mb-15p">
@@ -174,6 +183,11 @@
               [minDateTime]="minDateTimeEventEnd"
               (changeValue)="onChangeEndDateTime($event)"
               ></form-item-datetime>
+              <form-item-errors
+              [controller]="f.eventEndTime"
+              label="End time"
+              [submitted]="isSubmitted"
+              ></form-item-errors>
             </div>
             <div class="mb-15p">
               <div class="subtitle2-temp">Event link</div>
@@ -182,6 +196,7 @@
               placeholder="https://..."
               autocapitalize="off"
               [controller]="f.joinEventLink"
+              [submitted]="isSubmitted"
               ></form-item-input>
             </div>
           </div>

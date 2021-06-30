@@ -10,8 +10,6 @@ export interface IBlogSearchQuery {
   search?: string; /** title search */
   existVideo?: boolean;
   existPodcast?: boolean;
-  authorId?: string; //TEMPORARY
-  draft?: boolean; //TEMPORARY
 }
 
 export class BlogSearchQuery implements IBlogSearchQuery {
@@ -25,8 +23,6 @@ export class BlogSearchQuery implements IBlogSearchQuery {
   get tags() { return this.data.tags || null; }
   get existVideo() { return this.data.existVideo || null; }
   get existPodcast() { return this.data.existPodcast || null; }
-  get authorId() { return this.data.authorId || null;} //TEMPORARY
-  get draft() { return this.data.draft === true || false; } //TEMPORARY
 
   get json() {
     const data: IBlogSearchQuery = {
@@ -40,8 +36,6 @@ export class BlogSearchQuery implements IBlogSearchQuery {
     if(this.tags) { data.tags = this.tags; }
     if(this.existVideo) { data.existVideo = true; }
     if(this.existPodcast) { data.existPodcast = true; }
-    if(this.authorId) { data.authorId = this.authorId; } //TEMPORARY
-    if(this.draft) { data.draft = true; }// TEMPORARY
     return data;
   }
 
