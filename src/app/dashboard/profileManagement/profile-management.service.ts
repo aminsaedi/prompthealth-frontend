@@ -17,7 +17,9 @@ export class ProfileManagementService {
     // private _bs: BehaviorService,
   ) {}
 
-  destroyProfileDetail(){ this.profileDetail = null; }
+  dispose(){ 
+    this.profileDetail = null; 
+  }
 
   /** this is called by header at first access and set the userdata from server in this service. and then someplace will use the data which is stored here */
   getProfileDetail(user: IUserDetail): Promise<IUserDetail>{
