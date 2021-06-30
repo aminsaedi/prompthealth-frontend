@@ -121,6 +121,15 @@ export class PostManagerService {
     }
   }
 
+  dispose() {
+    this.postCache = {
+      dataMapById: {},
+      dataAll: null,
+    }
+    this.categoryCache =null;
+    this.tagCache = null;
+  }
+
   lockEditor() {
     this._isEditorLocked = true;
   }
