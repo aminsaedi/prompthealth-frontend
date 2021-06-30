@@ -37,8 +37,8 @@ export class Blog implements IBlog {
   get description() { return this.data.description; }
   get descriptionSanitized() { return this._description; }
   get summary() { return this._summary; }
-  get readLength() { return this.data.readLength; } /** UNIT: minute */
-  get readLengthFormatted(): string { return this.getFormattedTime(this.readLength);} 
+  get readLength() { return this._readLength; } /** UNIT: minute */
+  get readLengthFormatted(): string { return this.getFormattedTime(this._readLength);} 
 
   get isVideo() { return !!(this.videosEmbedded.length > 0); }
   get isPodcast() { return !!(this.podcastsEmbedded.length > 0); }
@@ -67,7 +67,7 @@ export class Blog implements IBlog {
 
   private AWS_S3 = environment.config.AWS_S3;
 
-  private _time: number;
+  private _readLength: number;
   private _summary: string;
   private _description: SafeHtml;
   private _videosEmbedded: SafeHtml [] = [];
@@ -82,10 +82,10 @@ export class Blog implements IBlog {
 
     /** calculate readLength if it's 0 */
     if(data.readLength > 0) {
-      this._time = data.readLength;
+      this._readLength = data.readLength;
     } else {
       const words = data.title + this._summary;
-      this._time = Math.ceil(words.length / 200);
+      this._readLength = Math.ceil(words.length / 200);
     }
 
     this._eventData = new EventData(data);
