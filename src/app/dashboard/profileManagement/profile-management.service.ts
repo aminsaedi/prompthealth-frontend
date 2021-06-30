@@ -17,9 +17,7 @@ export class ProfileManagementService {
     // private _bs: BehaviorService,
   ) {}
 
-  dispose(){ 
-    this.profileDetail = null; 
-  }
+  destroyProfileDetail(){ this.profileDetail = null; }
 
   /** this is called by header at first access and set the userdata from server in this service. and then someplace will use the data which is stored here */
   getProfileDetail(user: IUserDetail): Promise<IUserDetail>{
@@ -28,10 +26,8 @@ export class ProfileManagementService {
 
     return new Promise((resolve, reject) => {
       if(this.profileDetail && this.profileDetail._id == id){ 
-        console.log('profile from cache');
         resolve(this.profileDetail); 
       }else{
-        console.log('profile from database')
         const path = environment.config.API_URL + ((role == 'p') ? 'partner/get/' : 'user/get-profile/') + id;
         const headers = new HttpHeaders()
           .set('Authorization', localStorage.getItem('token'))

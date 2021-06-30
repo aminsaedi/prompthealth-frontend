@@ -5,7 +5,7 @@
 </ngx-spinner>
 
 <form (ngSubmit)="onSubmit()">
-  <div class="d-flex flex-column" style="height: 100vh">
+  <div class="d-flex flex-column">
     <div class="intersection-observer" intersectionObserver rootMargin="-50px 0px 0px 0px" (changeStatus)="changeStickyStatus($event)"></div>
     <section class="border-bottom sticky-top bg-white">
       <div class="container-fluid">
@@ -50,7 +50,7 @@
     </section>
   
     <section class="container-fluid flex-grow-1">
-      <div class="d-flex flex-nowrap editor-container overflow-hidden">
+      <div class="d-flex flex-nowrap editor-container">
         <div class="editor pt-15p d-flex flex-column">
           <div>
             <input type="text"

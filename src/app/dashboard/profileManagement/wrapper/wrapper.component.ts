@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { SharedService } from '../../../shared/services/shared.service';
 import { ProfileManagementService } from '../profile-management.service';
@@ -11,7 +11,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.scss']
 })
-export class WrapperComponent implements OnInit {
+export class WrapperComponent implements OnInit, OnDestroy {
   constructor(
     private _sharedService: SharedService,
     private _managementService: ProfileManagementService,
@@ -171,6 +171,7 @@ export class WrapperComponent implements OnInit {
     this.favouriteTab(true),
     this.reviewTab(true)
   ];
+  ngOnDestroy() { this._managementService.destroyProfileDetail(); }
 
   ngOnInit(): void {
     

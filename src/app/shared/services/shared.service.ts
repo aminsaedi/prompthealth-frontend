@@ -24,8 +24,6 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { IAddonPlan } from 'src/app/models/addon-plan';
 import { ICouponData } from 'src/app/models/coupon-data';
-import { PostManagerService } from 'src/app/post-manager/post-manager.service';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 
 declare var jQuery: any;
 
@@ -51,8 +49,6 @@ export class SharedService {
     private _bs: BehaviorService,
     private _uService: UniversalService,
     private _stripeService: StripeService,
-    private _postManager: PostManagerService,
-    private _profileManager: ProfileManagementService,
 
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
@@ -61,9 +57,6 @@ export class SharedService {
 
 
   logout(navigate: boolean = true) {
-    this._postManager.dispose();
-    this._profileManager.dispose();
-
     const ls = this._uService.localStorage;
   
     ls.removeItem('token');
