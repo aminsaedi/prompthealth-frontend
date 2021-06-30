@@ -465,7 +465,7 @@ export class EditorComponent implements OnInit {
 
     if(this.form.invalid) {
       this._toastr.error('There are several items that requires your attention.')
-      // return;
+      return;
     }
 
     const data: ISaveQuery = new SaveQuery(this.form.value).toJson();
@@ -473,7 +473,6 @@ export class EditorComponent implements OnInit {
 
     const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
     console.log(data);
-    return;
 
     this.isUploading = true;
 
