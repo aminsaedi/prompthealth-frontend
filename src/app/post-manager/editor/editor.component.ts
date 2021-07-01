@@ -630,8 +630,8 @@ class SaveQuery implements ISaveQuery {
   get tags() { return (this.data.tags && this.data.tags.length > 0) ? this.data.tags : []; }
   // get readLength() { return this.data.readLength || 0; }
   
-  get eventStartTime() { return this.data.eventStartTime || null; }
-  get eventEndTime() { return this.data.eventEndTime || null; }
+  get eventStartTime() { return new Date(this.data.eventStartTime) || null; }
+  get eventEndTime() { return new Date(this.data.eventEndTime) || null; }
   get joinEventLink() { return this.data.joinEventLink || null; }
   
   get image() { return this.data.image || ''; }
