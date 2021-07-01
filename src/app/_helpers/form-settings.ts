@@ -192,7 +192,7 @@ export const validators = {
   publishPostEventLink: [Validators.required, validatorPatternURL()],
   savePostTitle: [Validators.required],
   savePostDescription: [],
-  // savePostCategory: [],
+  savePostCategory: [Validators.required],
   // savePostTags: [],
   savePostEventTime: [validatorPatternDateTime()], // might need pattern as well
   savePostEventLink: [validatorPatternURL()],

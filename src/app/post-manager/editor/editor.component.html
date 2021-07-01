@@ -121,6 +121,7 @@
             (onDeSelect)="onDeselectCategory()"
             >
             </ng-multiselect-dropdown>
+            <form-item-errors [controller]="f.categoryId" [submitted]="isSubmitted" label="Category"></form-item-errors>
           </div>
   
           <div class="mb-20p">

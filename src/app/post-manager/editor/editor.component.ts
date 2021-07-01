@@ -170,8 +170,9 @@ export class EditorComponent implements OnInit {
       // _id: new FormControl(null),
       status: new FormControl('DRAFT'),
       title: new FormControl('', validators.savePostTitle),
+      slug: new FormControl(''),
       description: new FormControl(''), // set validator later
-      categoryId: new FormControl(null),
+      categoryId: new FormControl(null, validators.savePostCategory),
       tags: new FormArray([]),
       authorId: new FormControl(null, validators.savePostAuthorId),
       author: new FormControl(),
@@ -295,6 +296,10 @@ export class EditorComponent implements OnInit {
       this.f.description.setValue(this.post.description);
 
       this.f.status.setValue(this.post.status || 'DRAFT');
+
+      if(this.post.slug) {
+        this.f.slug.setValue(this.post.slug);
+      }
 
       if(this.post.category) {
         this.selectedCategories = [this.post.category];
@@ -593,7 +598,8 @@ interface ISaveQuery {
   title: string;
   authorId: string;
   author: string;
-  
+
+  // slug?: string;
   description?: string;
   categoryId?: string;
   tags?: string[],
@@ -616,11 +622,12 @@ interface ISaveQuery {
 class SaveQuery implements ISaveQuery {
   get status() { return this.data.status || 'DRAFT'; }
   get title() { return this.data.title || null; }
+  // get slug() { return this.data.slug || null; }
   get authorId() { return this.data.authorId || null; }
   get author() { return this.data.author || null; }
   get description() { return this.data.description || ''; }
-  get categoryId() { return this.data.categoryId || null; }
-  get tags() { return (this.data.tags && this.data.tags.length > 0) ? this.data.tags : null; }
+  get categoryId() { return this.data.categoryId || ''; }
+  get tags() { return (this.data.tags && this.data.tags.length > 0) ? this.data.tags : []; }
   // get readLength() { return this.data.readLength || 0; }
   
   get eventStartTime() { return this.data.eventStartTime || null; }
@@ -653,24 +660,32 @@ class SaveQuery implements ISaveQuery {
   toJson() { 
     const data: ISaveQuery = {
       status: this.status,
-      title: this.title,
       authorId: this.authorId,
       author: this.author,
-      // readLength: this.readLength,
-      // joinEventLink: this.joinEventLink,
+
+      title: this.title,
       description: this.description,
-      // image: this.image,
+      
+      categoryId: this.categoryId,
+      tags: this.tags,
+      
+      joinEventLink: this.joinEventLink,
+      eventStartTime: this.eventStartTime,
+      eventEndTime: this.eventEndTime,
+
+      image: this.image,
       videoLinks: this.videoLinks,
       podcastLinks: this.podcastLinks,
       headliner: false,
     };
-    if(this.categoryId) { data.categoryId = this.categoryId; }
-    if(this.tags) { data.tags = this.tags; }
-    if(this.eventStartTime) { data.eventStartTime = new Date(this.eventStartTime); }
-    if(this.eventEndTime) { data.eventEndTime = new Date(this.eventEndTime); }
-    if(this.description) { data.description = this.description; }
-    if(this.joinEventLink) { data.joinEventLink = this.joinEventLink; }
-    if(this.image) { data.image = this.image; }
+    // if(this.slug) { data.slug = this.slug; }
+    // if(this.categoryId) { data.categoryId = this.categoryId; }
+    // if(this.tags) { data.tags = this.tags; }
+    // if(this.eventStartTime) { data.eventStartTime = new Date(this.eventStartTime); }
+    // if(this.eventEndTime) { data.eventEndTime = new Date(this.eventEndTime); }
+    // if(this.description) { data.description = this.description; }
+    // if(this.joinEventLink) { data.joinEventLink = this.joinEventLink; }
+    // if(this.image) { data.image = this.image; }
 
     return data;
   }
