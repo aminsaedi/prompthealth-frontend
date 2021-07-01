@@ -57,7 +57,7 @@ export class PageComponent implements OnInit {
           if(res.statusCode === 200) {
             this._mService.saveCacheSingle(res.data);
             this.data = this._mService.postOf(slug);
-            console.log(res.data);
+
             resolve(true);
           } else {
             console.log(res);

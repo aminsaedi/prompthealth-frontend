@@ -50,6 +50,7 @@ export class Blog implements IBlog {
   get podcastLinks() { return this.data.podcastLinks || []; }
   get videosEmbedded() { return this._videosEmbedded; }
   get podcastsEmbedded() { return this._podcastsEmbedded; }
+  get videoAsThumbnail() { return this._videoAsThumbnail;}
 
   get category() { return this.data.categoryId ? this.data.categoryId : null; }
   get catTitle() { return this.data.categoryId ? this.data.categoryId.title : null; }
@@ -72,6 +73,8 @@ export class Blog implements IBlog {
   private _description: SafeHtml;
   private _videosEmbedded: SafeHtml [] = [];
   private _podcastsEmbedded: SafeHtml [] = [];
+
+  private _videoAsThumbnail: SafeHtml;
 
   private _eventData: EventData;
 
@@ -101,6 +104,10 @@ export class Blog implements IBlog {
 
   addEmbedPodcast(v: SafeHtml) {
     this._podcastsEmbedded.push(v);
+  }
+
+  setEmbedVideoAsThumbnail(v: SafeHtml) {
+    this._videoAsThumbnail = v;
   }
 
   getFormattedTime(minutes: number) { 

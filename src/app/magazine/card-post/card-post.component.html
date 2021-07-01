@@ -8,7 +8,9 @@
     [ngClass]="{'mb-lg-0': sizeL}"
     >
       <div *ngIf="!data" class="eyecatch-dummy color-dummy"></div>
-      <img *ngIf="data" class="eyecatch" [src]="data.image" alt="">
+      <img *ngIf="data && !data.isVideo" class="eyecatch" [src]="data.image" alt="">
+      <div *ngIf="data && data.isVideo" class="eyecatch eyecatch-video overflow-hidden" [innerHTML]="data.videoAsThumbnail"></div>
+
     </div>
 
     <div class="info-container">

@@ -14,6 +14,7 @@ import { FormItemUploadImageButtonComponent } from 'src/app/shared/form-item-upl
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { formatDateTimeDataToString, formatDateToString, formatStringToDate, formatStringToDateTimeData } from 'src/app/_helpers/date-formatter';
 import { validators } from 'src/app/_helpers/form-settings';
 import { PostManagerService } from '../post-manager.service';
 
@@ -290,11 +291,9 @@ export class EditorComponent implements OnInit {
 
   initForm() {
     if(this.post) {
-      console.log(this.post);
-      // this.f._id.setValue(this.post._id);
       this.f.title.setValue(this.post.title);
-      this.description = this.post.description;
 
+      this.description = this.post.description;
       this.f.description.setValue(this.post.description);
 
       this.f.status.setValue(this.post.status || 'DRAFT');
@@ -313,10 +312,7 @@ export class EditorComponent implements OnInit {
         this.selectedTags = this.post.tags;
       }
 
-      if(this.post._image) {
-        this.selectedThumbnailType = [this.thumbnailTypes[0]];
-        this.f.image.setValue(this.post._image);
-      } else if(this.post.videoLinks.length > 0) {
+      if(this.post.videoLinks.length > 0) {
         this.selectedThumbnailType = [this.thumbnailTypes[1]];
         this.fVideo.title.setValue(this.post.videoLinks[0].title);
         this.fVideo.url.setValue(this.post.videoLinks[0].url);
@@ -324,19 +320,23 @@ export class EditorComponent implements OnInit {
         this.selectedThumbnailType = [this.thumbnailTypes[2]];
         this.fPodcast.title.setValue(this.post.podcastLinks[0].title);
         this.fPodcast.url.setValue(this.post.podcastLinks[0].url);
-      } else {
+        if(this.post._image) { this.f.image.setValue(this.post._image) };
+      } else if (this.post._image) {
+        this.selectedThumbnailType = [this.thumbnailTypes[0]];
+        this.f.image.setValue(this.post._image);
+      }  else {
         this.selectedThumbnailType = [];
       }
 
       if(this.post.event.startAt) {
         const dt = this.post.event.startAt;
-        const val = `${dt.getFullYear()}-${('0' + (dt.getMonth() + 1)).slice(-2)}-${('0' + dt.getDate()).slice(-2)} ${('0' + dt.getHours()).slice(-2)}:${('0' + dt.getMinutes()).slice(-2)}`
+        const val = formatDateToString(dt);
         this.f.eventStartTime.setValue(val);
       }
 
       if(this.post.event.endAt) {
         const dt = this.post.event.endAt;
-        const val = `${dt.getFullYear()}-${('0' + (dt.getMonth() + 1)).slice(-2)}-${('0' + dt.getDate()).slice(-2)} ${('0' + dt.getHours()).slice(-2)}:${('0' + dt.getMinutes()).slice(-2)}`
+        const val = formatDateToString(dt);
         this.f.eventEndTime.setValue(val);
       }
 
@@ -412,6 +412,17 @@ export class EditorComponent implements OnInit {
 
   showEventCalendar() {
     this.isEventShown = true;
+    if(!this.f.eventStartTime.value){
+      const dt = this.minDateTimeEventStart;
+      const val = formatDateTimeDataToString(dt);
+      this.f.eventStartTime.setValue(val);
+    }
+
+    if(!this.f.eventEndTime.value) {
+      const dt = this.minDateTimeEventEnd;
+      const val = formatDateTimeDataToString(dt);
+      this.f.eventEndTime.setValue(val);
+    }
   }
   hideEventCalendar() {
     this.isEventShown = false;
@@ -421,25 +432,32 @@ export class EditorComponent implements OnInit {
     this._postsService.lockEditor();
   }
 
-  onChangeStartDateTime (start: Date) {
-    // this._postsService.lockEditor();
-    this.minDateTimeEventEnd = {
-      year: start.getFullYear(),
-      month: start.getMonth() + 1,
-      day: start.getDate(),
-      hour: start.getHours(),
-      minute: start.getMinutes(),
+  onChangeStartDateTime () {
+    const start: Date = formatStringToDate(this.f.eventStartTime.value);
+    const end: Date = formatStringToDate(this.f.eventEndTime.value);
+
+    if(start) {
+      this.minDateTimeEventEnd = {
+        year: start.getFullYear(),
+        month: start.getMonth() + 1,
+        day: start.getDate(),
+        hour: start.getHours(),
+        minute: start.getMinutes(),
+      }  
     }
 
-    const end = new Date(this.f.eventEndTime.value);
-    if(start.getTime() - end.getTime() > 0) {
-      const val = `${start.getFullYear()}-${('0' + (start.getMonth() + 1)).slice(-2)}-${('0' + start.getDate()).slice(-2)} ${('0' + start.getHours()).slice(-2)}:${('0' + start.getMinutes()).slice(-2)}`
-      this.f.eventEndTime.setValue(val)
+    if(start && end && (start.getTime() - end.getTime() > 0)) {
+      start.setHours(start.getHours() + 1);
+      const val = formatDateToString(start);
+      this.f.eventEndTime.setValue(val);
     }
   }
+
   onChangeEndDateTime(e: Date) {
     // this._postsService.lockEditor();
   }
+
+  
 
   draftPost() {
     const data = {
@@ -493,7 +511,6 @@ export class EditorComponent implements OnInit {
       this.fPodcast.title.setValue(null);
       this.fPodcast.url.setValue(null);
     } else if(this.selectedThumbnailType[0]._id === 'podcast') {
-      this.f.image.setValue(null);
       this.fVideo.title.setValue(null);
       this.fVideo.url.setValue(null);
     }
@@ -631,8 +648,8 @@ class SaveQuery implements ISaveQuery {
   get categoryId() { return this.data.categoryId || ''; }
   get tags() { return (this.data.tags && this.data.tags.length > 0) ? this.data.tags : []; }
   
-  get eventStartTime() { return new Date(this.data.eventStartTime) || null; }
-  get eventEndTime() { return new Date(this.data.eventEndTime) || null; }
+  get eventStartTime() { return this.data.eventStartTime ? formatStringToDate(this.data.eventStartTime as string) : null; }
+  get eventEndTime() { return this.data.eventEndTime ? formatStringToDate(this.data.eventEndTime as string) : null; }
   get joinEventLink() { return this.data.joinEventLink || null; }
   
   get image() { return this.data.image || ''; }
@@ -683,3 +700,4 @@ class SaveQuery implements ISaveQuery {
   }
   constructor(private data: ISaveQuery) {}
 }
+

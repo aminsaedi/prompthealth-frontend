@@ -199,6 +199,9 @@ export class MagazineService {
     if(!this.postCache.dataMapById[data._id]) {
       const b = new Blog(data);
       b.videoLinks.forEach(v => { b.addEmbedVideo(this.embedVideo(v)); });
+      if(b.videoLinks && b.videoLinks.length > 0) {
+        b.setEmbedVideoAsThumbnail(this.embedVideoAsThumbnail(b.videoLinks[0]));
+      }
       b.podcastLinks.forEach(v => { b.addEmbedPodcast(this.embedPodcast(v)); });
       b.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(b.description));
 
@@ -229,9 +232,16 @@ export class MagazineService {
     }
     return iframe;
   }
+  embedVideoAsThumbnail(data: {title: string, url: string}) {
+    const iframe = this._embedService.embed(data.url, {query: {control: 0, modestbranding: 1, showinfo: 0}, attr: {width: '100%', height: '100%'}})
+    if(iframe) {
+      iframe.title = data.title;
+    }
+    return iframe;
+  }
 
   embedPodcast(data: {title: string, url: string}) {
-    let iframe = `<iframe src=${data.url} width="100%" height="232" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+    let iframe = `<iframe src="${data.url}" width="100%" height="100%" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
     return this._sanitizer.bypassSecurityTrustHtml(iframe);
   }
 }

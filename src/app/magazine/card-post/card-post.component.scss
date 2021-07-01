@@ -72,6 +72,18 @@
     object-fit: cover;
   }
 
+  ::ng-deep {
+    .eyecatch-video {
+      iframe {
+        position: absolute;
+        width: 100%;
+        height: calc(100% + 120px);
+        top: -60px;
+      }
+    }
+  }
+  
+
   .author,
   .author-dummy {
     width: 35px;

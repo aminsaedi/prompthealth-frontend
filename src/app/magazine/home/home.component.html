@@ -31,11 +31,11 @@
           *ngFor="let v of videos; let i = index" 
           class="card-video flex-grow-1 w-100 position-relative"
           >
+            <div class="position-relative eyecatch-container rounded-12p h-100">
+              <div *ngIf="!v" class="eyecatch-dummy bg-dark"></div>
+              <div *ngIf="v && v.isVideo" class="eyecatch eyecatch-video" [innerHTML]="v.videosEmbedded[0]"></div>
+            </div>
             <a [routerLink]="['/magazines/' + (v ? v.slug : '') ]">
-              <div class="position-relative eyecatch-container rounded-12p h-100">
-                <div *ngIf="!v" class="eyecatch-dummy bg-dark"></div>
-                <img *ngIf="v" class="eyecatch" [src]="v.image" alt="">
-              </div>
               <h5
               class="title text-light h6-temp h5-temp-md clamp-2line px-15p mb-15p"
               [ngClass]="{'h5-temp-lg px-lg-30p': (i == 0), 'subtitle1-temp-lg px-lg-15p': (i > 0)}"

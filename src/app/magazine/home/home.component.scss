@@ -154,9 +154,20 @@ a.on-black:hover {
 
 .eyecatch,
 .eyecatch-dummy{    
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-    object-fit: cover;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+::ng-deep {
+  .eyecatch-video {
+    iframe {
+      position: absolute;
+      width: 100%;
+      height: calc(100% + 120px);
+      top: -60px;
+    }
   }
+}
