@@ -621,7 +621,7 @@ class SaveQuery implements ISaveQuery {
   get description() { return this.data.description || ''; }
   get categoryId() { return this.data.categoryId || null; }
   get tags() { return (this.data.tags && this.data.tags.length > 0) ? this.data.tags : null; }
-  get readLength() { return this.data.readLength || 0; }
+  // get readLength() { return this.data.readLength || 0; }
   
   get eventStartTime() { return this.data.eventStartTime || null; }
   get eventEndTime() { return this.data.eventEndTime || null; }
@@ -656,7 +656,7 @@ class SaveQuery implements ISaveQuery {
       title: this.title,
       authorId: this.authorId,
       author: this.author,
-      readLength: this.readLength,
+      // readLength: this.readLength,
       // joinEventLink: this.joinEventLink,
       description: this.description,
       // image: this.image,
