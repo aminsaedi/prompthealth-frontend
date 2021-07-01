@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { pattern } from 'src/app/_helpers/form-settings';
 import {slideVerticalAnimation } from '../../_helpers/animations';
 
 @Component({
@@ -104,11 +105,6 @@ export class FormItemDatetimeComponent implements OnInit {
     }
   }
 
-  /** update datetime picker by editing controller value */
-  // updatePicker() {
-
-  // }
-
   getFormattedValue() {
     const date: DateData = this.fDate.value;
     const time: TimeData = this.fTime.value;
@@ -117,7 +113,35 @@ export class FormItemDatetimeComponent implements OnInit {
     return datetime;
   }
 
-  showPicker(){ this.isPickerShown = true; }
+  showPicker(){ 
+    if(!this.isPickerShown) {
+      const dt = this.controller.value;
+      if(dt && dt.match(pattern.datetime)) {
+        /** update using current controller value */
+        const dtArray = dt.trim().split(' ');
+        const dArray = dtArray[0].split('-');
+        const tArray = dtArray[1].split(':');
+        const date: DateData = {
+          year: Number(dArray[0]),
+          month: Number(dArray[1]),
+          day: Number(dArray[2]),
+        }
+        const time: TimeData = {
+          hour: Number(tArray[0]),
+          minute: Number(tArray[1]),
+        }
+
+        this.fDate.setValue(date);
+        this.fTime.setValue(time);
+
+      }
+    } 
+
+    this.isPickerShown = true; 
+
+
+
+  }
   hidePicker(){ this.isPickerShown = false; }
 }
 

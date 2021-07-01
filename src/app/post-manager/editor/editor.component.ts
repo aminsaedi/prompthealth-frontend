@@ -1,4 +1,5 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
@@ -129,6 +130,7 @@ export class EditorComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
+    private _location: Location,
     private _sharedService: SharedService,
     private _profileService: ProfileManagementService,
     private _uService: UniversalService,
@@ -540,6 +542,7 @@ export class EditorComponent implements OnInit {
         const isPostNew = (!this.post || !('_id' in this.post));
         if(isPostNew) {
           this._postsService.addCache(0, res.data);
+          this._location.replaceState('/dashboard/my-posts/edit/' + res.data._id);
         } else {
           this._postsService.saveCacheSingle(res.data, true);
         }
@@ -622,13 +625,11 @@ interface ISaveQuery {
 class SaveQuery implements ISaveQuery {
   get status() { return this.data.status || 'DRAFT'; }
   get title() { return this.data.title || null; }
-  // get slug() { return this.data.slug || null; }
   get authorId() { return this.data.authorId || null; }
   get author() { return this.data.author || null; }
   get description() { return this.data.description || ''; }
   get categoryId() { return this.data.categoryId || ''; }
   get tags() { return (this.data.tags && this.data.tags.length > 0) ? this.data.tags : []; }
-  // get readLength() { return this.data.readLength || 0; }
   
   get eventStartTime() { return new Date(this.data.eventStartTime) || null; }
   get eventEndTime() { return new Date(this.data.eventEndTime) || null; }
@@ -678,15 +679,6 @@ class SaveQuery implements ISaveQuery {
       podcastLinks: this.podcastLinks,
       headliner: false,
     };
-    // if(this.slug) { data.slug = this.slug; }
-    // if(this.categoryId) { data.categoryId = this.categoryId; }
-    // if(this.tags) { data.tags = this.tags; }
-    // if(this.eventStartTime) { data.eventStartTime = new Date(this.eventStartTime); }
-    // if(this.eventEndTime) { data.eventEndTime = new Date(this.eventEndTime); }
-    // if(this.description) { data.description = this.description; }
-    // if(this.joinEventLink) { data.joinEventLink = this.joinEventLink; }
-    // if(this.image) { data.image = this.image; }
-
     return data;
   }
   constructor(private data: ISaveQuery) {}

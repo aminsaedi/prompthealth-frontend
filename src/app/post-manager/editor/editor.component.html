@@ -53,19 +53,28 @@
       <div class="d-flex flex-nowrap editor-container overflow-hidden h-100">
         <div class="editor pt-15p d-flex flex-column">
           <div>
+            <div class="pl-15p">
+              <form-item-errors
+              [controller]="f.title"
+              label="Title"
+              [submitted]="isSubmitted"
+              ></form-item-errors>
+            </div>
             <input type="text"
             class="form-control form-control-title h4-temp h2-temp-md"
             placeholder="Enter Title..."
             [formControl]="f.title"
             >
-            <form-item-errors
-            [controller]="f.title"
-            label="Title"
-            [submitted]="isSubmitted"
-            ></form-item-errors>
           </div>
   
           <div class="position-relative flex-grow-1">
+            <div class="pl-15p">
+              <form-item-errors
+              [controller]="f.description"
+              label="Content"
+              [submitted]="isSubmitted"
+              ></form-item-errors>
+            </div>
             <quill-editor
             [styles]="{minHeight: '450px', border: 'none', marginBottom: '150px'}"
             (onEditorChanged)="changedEditor($event)"
