@@ -5,8 +5,8 @@ import '@angular/localize/init';
 import 'zone.js/dist/zone-node';
 
 /** If third party module is not compatible with universal, try to add global variable here */
-// global['MouseEvent'] = {};  
-// global['HTMLElement'] = {};
+global['MouseEvent'] = {};  
+global['HTMLElement'] = {};
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
