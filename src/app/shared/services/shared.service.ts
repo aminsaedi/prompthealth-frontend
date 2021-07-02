@@ -170,6 +170,27 @@ export class SharedService {
     });
   }
 
+  async shrinkImageByFixedWidth(file: File, width: number = 1500): Promise<{ file: Blob, filename: string }> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = (e: any) => {
+        const t = e.target;
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = img.height * width / img.width;
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((b: Blob) => {
+          const filename = Date.now().toString() + '.' + b.type.replace('image/', '');
+          resolve({ file: b, filename });
+        }, file.type);
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+
   async shrinkImageByFixedHeight(file: File, height: number = 100): Promise<{ file: Blob, filename: string }> {
     return new Promise((resolve, reject) => {
       const img = new Image();

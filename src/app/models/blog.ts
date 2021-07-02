@@ -37,6 +37,7 @@ export class Blog implements IBlog {
   get description() { return this.data.description; }
   get descriptionSanitized() { return this._description; }
   get summary() { return this._summary; }
+  get summaryShort() { return this.summary.substring(0, 50); } /** used for sns card */
   get readLength() { return this._readLength; } /** UNIT: minute */
   get readLengthFormatted(): string { return this.getFormattedTime(this._readLength);} 
 
@@ -45,7 +46,7 @@ export class Blog implements IBlog {
   get isEvent() { return (this.catTitle && this.catTitle.toLowerCase().match(/event/)); }
   
   get image() { return (this.data.image) ? this.AWS_S3 + this.data.image : '/assets/img/logo-square-primary-light.png'; }
-  get imageSmall() { return (this.data.image) ? this.AWS_S3 + '350x220/' + this.data.image : '/assets/img/logo-square-primary-light.png';}
+  // get imageSmall() { return (this.data.image) ? this.AWS_S3 + '350x220/' + this.data.image : '/assets/img/logo-square-primary-light.png';}
   get _image() { return (this.data.image) ? this.data.image : null };
   get imageType() {
     let imageType: string = '';

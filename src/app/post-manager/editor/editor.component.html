@@ -167,6 +167,7 @@
               label="image"
               [controller]="f.image"
               [userid]="user?._id"
+              [option]="{shrinkByWidth: true}"
               uploadType="blogThumbnail"
               (changeImage)="onChangeImage($event)"
               ></form-item-upload-image-button>
@@ -203,6 +204,7 @@
               label="image"
               [controller]="f.image"
               [userid]="user?._id"
+              [option]="{shrinkByWidth: true}"
               uploadType="blogThumbnail"
               (changeImage)="onChangeImage($event)"
               ></form-item-upload-image-button>

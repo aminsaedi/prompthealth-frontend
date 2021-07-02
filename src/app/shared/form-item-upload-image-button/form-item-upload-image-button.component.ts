@@ -18,11 +18,13 @@ export class FormItemUploadImageButtonComponent implements OnInit {
   @Input() submitted = false;
   @Input() controller: FormControl;
   @Input() uploadType: 'profile' | 'blogThumbnail' = 'profile';
+  @Input() option: IOptionData = {};
 
   @Output() changeImage = new EventEmitter<string>();
 
   public baseURLImage = environment.config.AWS_S3;
   public isUploading: boolean = false;
+  public _option: OptionData;
 
   @ViewChild('uploadImageSelector') imageSelector: ElementRef;
 
@@ -32,6 +34,7 @@ export class FormItemUploadImageButtonComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this._option = new OptionData(this.option);
   }
 
   select() {
@@ -45,8 +48,14 @@ export class FormItemUploadImageButtonComponent implements OnInit {
     const files = (e.target as HTMLInputElement).files;
     if(files && files.length > 0){
       let image: {file: File | Blob, filename: string};
-      try { image = await this._sharedService.shrinkImage(files[0]); }
-      catch(err){
+      
+      const request = (this._option.shrinkByWidth) ? 
+        this._sharedService.shrinkImageByFixedWidth(files[0], this._option.imageWidthAfterShrink) :
+        this._sharedService.shrinkImage(files[0]);
+
+      try { 
+        image = await request; 
+      } catch(err){
         this.controller.setValue('');
         this._toastr.error('Image size is too big. Please upload image size less than 10MB.');
         return;
@@ -108,6 +117,23 @@ export class FormItemUploadImageButtonComponent implements OnInit {
       });
     });
   }
+}
 
+interface IOptionData {
+  shrinkByWidth?: boolean;
+  shrinkByHeight?: boolean;
+  imageWidthAfterShrink?: number;  /** unit: px  (default 1500px) */
+  imageHeightAfterShrink?: number; /** unit: px  (default 1000px) */
+}
 
+class OptionData implements IOptionData {
+
+  get shrinkByWidth() { return !!(this.data.shrinkByWidth === true); }
+  get shrinkByHeight() { return (!this.shrinkByWidth && !!(this.data.shrinkByHeight === true)); }
+
+  get imageWidthAfterShrink() { return this.data.imageWidthAfterShrink || 1500; }
+  get imageHeightAfterShrink() { return this.data.imageHeightAfterShrink || 1000; }
+
+  constructor(private data: IOptionData = {}) {
+  }
 }
