@@ -50,7 +50,8 @@
   
               <span *ngIf="data?.isEvent" class="mb-10p mb-md-0 text-nowrap">
                 <i class="fas fa-video mr-2"></i>
-                <span>On {{data.event.eventOn | titlecase}}</span>
+                <span *ngIf="data.event.eventOn">On {{data.event.eventOn | titlecase}}</span>
+                <span *ngIf="!data.event.eventOn">Virtual</span>
               </span>
             </div>
             <!-- <div class="mb-10p text-nowrap body2-temp opacity-70pc" *ngIf="!data || (data.tags && data.tags.length > 0)">

@@ -49,7 +49,7 @@ export class EventData {
   }
 
   getVenueFromURL() {
-    let venue: string = 'virtual';
+    let venue: string = null;
 
     if(this.data.joinEventLink) {
       let path = this.data.joinEventLink;
@@ -89,7 +89,7 @@ export class EventData {
           break;
 
           default: 
-          venue = 'Virtual';
+          venue = null;
       }
     }
 
