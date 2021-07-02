@@ -164,7 +164,7 @@ export class ListEventComponent implements OnInit {
     const posts= this._mService.postsOf(this.category._id, 1, 0, 10000);
     this.latest = (posts && posts.length > 0) ? posts[0] : null;
     
-    const archive = posts.slice(1);
+    const archive = posts;
 
     const now = new Date();
     const upcoming = archive.filter(b => {

@@ -25,7 +25,8 @@
       <div class="row align-items-center body2-temp">
         <div class="col-12 col-md-4 mb-10p mb-md-0 border-md-right">
           <div class="d-flex align-items-center">
-            <img [src]="data?.authorImage" alt="" class="author mr-2">
+            <div *ngIf="!data" class="author-dummy color-dummy mr-2"></div>
+            <img *ngIf="data" [src]="data.authorImage" alt="" class="author mr-2">
             <span *ngIf="!data" class="color-dummy">Author name</span>
             <span *ngIf="data" class="opacity-70pc">{{data?.author}}</span>
           </div>
@@ -94,8 +95,12 @@
           <a class="btn btn-primary w-100" [href]="data?.event.link" target="_blank">Join Now</a>
         </div>
   
-        <div class="ml-md-25p">
-          <button class="btn btn-outline mt-15p mt-md-0 w-100" (click)="toggleCalendarMenu()">Add to calendar</button>
+        <div class="mx-md-25p mt-15p mt-md-0 ">
+          <button class="btn btn-outline w-100" (click)="toggleCalendarMenu()">Add to calendar</button>
+        </div>
+
+        <div class="ml-md-25p mt-15p mt-md-0 ">
+          <a class="btn btn-outline w-100" routerLink="/subscribe/newsletter">Subscribe</a>
         </div>
       </div>
     </div>
