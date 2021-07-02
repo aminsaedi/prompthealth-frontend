@@ -27,8 +27,8 @@ rSitemap.get('/products', async (req, res) => {
   res.send(xml);
 });
 
-rSitemap.get('/blogs', async (req, res) => {
-  let xml = await getSitemapBlogs();
+rSitemap.get('/magazines', async (req, res) => {
+  let xml = await getSitemapMagazines();
   res.set('Content-Type', 'text/xml');
   res.send(xml);
 });
@@ -50,7 +50,7 @@ const sitemapRoot = `<?xml version="1.0" encoding="UTF-8"?>
       <loc>${baseURL}sitemap/products</loc>
     </sitemap>
     <sitemap>
-      <loc>${baseURL}sitemap/blogs</loc>
+      <loc>${baseURL}sitemap/magazines</loc>
     </sitemap>        
   </sitemapindex>
 `;
@@ -173,23 +173,42 @@ function getSitemapProducts(): Promise<string> {
   });
 }
 
-function getSitemapBlogs(): Promise<string> {
+function getSitemapMagazines(): Promise<string> {
+  /** paginator is not added in sitemap yet. */
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
       <url>
-        <loc>${baseURL}blogs</loc>
+        <loc>${baseURL}magazines</loc>
       </url>
-  `;
+      <url>
+        <loc>${baseURL}magazines/video</loc>
+      </url>
+      <url>
+        <loc>${baseURL}magazines/podcast</loc>
+      </url>
+      <url>
+        <loc>${baseURL}magazines/event</loc>
+      </url>
+    `;
 
   return new Promise(async (resolve) => {
-    Promise.all([getAllBlogCategoryIds(), getAllBlogEntrySlugs()]).then((vals) => {
-      const categoryIds = vals[0];
-      const entrySlugs = vals[1];
+    Promise.all([getAllBlogCategorySlugs(), getAllBlogTagSlugs(), getAllBlogEntrySlugs()]).then((vals) => {
+      const categorySlugs = vals[0];
+      const tagSlugs = vals[1];
+      const entrySlugs = vals[2];
 
-      categoryIds.forEach(category => {
+      categorySlugs.forEach(category => {
         xml += `
           <url>
-            <loc>${baseURL}blogs/category/${category}</loc>
+            <loc>${baseURL}magazines/category/${category}</loc>
+          </url>
+        `;
+      });
+
+      tagSlugs.forEach(tag => {
+        xml += `
+          <url>
+            <loc>${baseURL}magazines/tag/${tag}</loc>
           </url>
         `;
       });
@@ -197,7 +216,7 @@ function getSitemapBlogs(): Promise<string> {
       entrySlugs.forEach(entry => {
         xml += `
           <url>
-            <loc>${baseURL}blogs/${entry}</loc>
+            <loc>${baseURL}magazines/${entry}</loc>
           </url>
         `;
       });
@@ -281,21 +300,40 @@ function getAllProductIds(): Promise<string[]> {
   });
 }
 
-function getAllBlogCategoryIds(): Promise<string[]> {
+function getAllBlogCategorySlugs(excludeEvent: boolean = true): Promise<string[]> {
   return new Promise((resolve) => {
-    const blogCategoryIds: string[] = []
+    const blogCategorySlugs: string[] = []
     axios.get(apiURL + 'category/get-categories').then(res => {
       if(res.status == 200) {
         for(let d of res.data.data) {
-          blogCategoryIds.push(d._id)
+          if(!d.slug.match(/event/)) {
+            blogCategorySlugs.push(d.slug)
+          }
         }
       }
     }).catch(error => {
       console.log(error);
     }).finally(() => {
-      resolve(blogCategoryIds);
+      resolve(blogCategorySlugs);
     });  
   });
+}
+
+function getAllBlogTagSlugs(): Promise<string[]> {
+  return new Promise((resolve) => {
+    const blogTagSlugs: string[] = [];
+    axios.get(apiURL + 'tag/get-all').then(res => {
+      if(res.status === 200) {
+        for(let d of res.data.data.data) {
+          blogTagSlugs.push(d.slug);
+        }
+      }
+    }).catch(error => {
+      console.log(error);
+    }).finally(() => {
+      resolve(blogTagSlugs);
+    })
+  })
 }
 
 function getAllBlogEntrySlugs(): Promise<string[]> {

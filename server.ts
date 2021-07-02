@@ -86,7 +86,7 @@ export function app() {
           console.log('SSR error. something went wrong: ');
           console.log(err)
         }
-        showMeta(req.originalUrl, html);
+        // showMeta(req.originalUrl, html);
         res.send(html);
       }
     );
