@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as e from 'express';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
@@ -40,6 +41,10 @@ export class EditorComponent implements OnInit {
 
   isSelectedThumbnailType(type: string) {
     return !!(this.selectedThumbnailType.findIndex(item => item._id == type) >= 0);
+  }
+
+  isCategoryEvent(cat: IBlogCategory) {
+    return !!cat.title.toLowerCase().match(/event/)
   }
 
   categoryOf(id: string) {
@@ -310,7 +315,9 @@ export class EditorComponent implements OnInit {
       if(this.post.category) {
         this.selectedCategories = [this.post.category];
         this.f.categoryId.setValue(this.post.category._id);
-        this.onSelectCategory(this.post.category);
+        if(this.post.category && this.isCategoryEvent(this.post.category)) {
+          this.showEventCalendar();
+        }
       }
 
       if(this.post.tags) {
@@ -403,7 +410,17 @@ export class EditorComponent implements OnInit {
       this._postsService.lockEditor();
     }
 
-    if(e.title.toLowerCase().match(/event/)) {
+    if(this.isCategoryEvent(e)) {
+      if(!this.f.eventStartTime.value && !this.f.eventEndTime.value){
+        const dtS = this.minDateTimeEventStart;
+        const valS = formatDateTimeDataToString(dtS);
+        this.f.eventStartTime.setValue(valS);
+
+        const dtE = this.minDateTimeEventEnd;
+        const valE = formatDateTimeDataToString(dtE);
+        this.f.eventEndTime.setValue(valE);
+      }
+
       this.showEventCalendar();
     } else {
       this.hideEventCalendar();
@@ -417,17 +434,6 @@ export class EditorComponent implements OnInit {
 
   showEventCalendar() {
     this.isEventShown = true;
-    if(!this.f.eventStartTime.value){
-      const dt = this.minDateTimeEventStart;
-      const val = formatDateTimeDataToString(dt);
-      this.f.eventStartTime.setValue(val);
-    }
-
-    if(!this.f.eventEndTime.value) {
-      const dt = this.minDateTimeEventEnd;
-      const val = formatDateTimeDataToString(dt);
-      this.f.eventEndTime.setValue(val);
-    }
   }
   hideEventCalendar() {
     this.isEventShown = false;

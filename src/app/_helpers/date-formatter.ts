@@ -9,6 +9,17 @@ export function formatDateToString(data: Date) {
   return _dateFormatter(data.getFullYear(), data.getMonth() + 1, data.getDate(), data.getHours(), data.getMinutes());
 }
 
+export function formatDateTimeDataToDate(data: DateTimeData) {
+  const date = new Date(data.year, data.month - 1, data.day, data.hour, data.minute);
+  return date;
+}
+
+export function formatDateToDateTimeData(data: Date) {
+  const str = formatDateToString(data);
+  const dt = formatStringToDateTimeData(str);
+  return dt;
+}
+
 export function formatStringToDateTimeData(data: string): DateTimeData {
   const dts = _splitDateString(data);
   if(dts && dts.length == 5) {

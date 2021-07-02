@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { formatStringToDateTimeData } from 'src/app/_helpers/date-formatter';
+import { formatDateTimeDataToDate, formatDateToDateTimeData, formatStringToDateTimeData } from 'src/app/_helpers/date-formatter';
 import { pattern } from 'src/app/_helpers/form-settings';
 import {slideVerticalAnimation } from '../../_helpers/animations';
 
@@ -35,46 +35,15 @@ export class FormItemDatetimeComponent implements OnInit {
     const datetime = formatStringToDateTimeData(this.controller.value);
     if(datetime) {
       this.dateTime = datetime;
+    } else if (this.minDateTime) {
+      this.dateTime = this.minDateTime;
     } else {
       const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth() + 1;
-      const day = now.getDate();
-      const hour = now.getHours();
-      const minute = now.getMinutes();
-  
-      let isNowBeforeMinDateTime = true;
-      if(this.minDateTime){
-        if(year < this.minDateTime.year) {}
-        else if(month < this.minDateTime.month) {}
-        else if(day < this.minDateTime.day) {}
-        else if(hour < this.minDateTime.hour) {}
-        else if(minute < this.minDateTime.minute) {}
-        else{
-          isNowBeforeMinDateTime = false;
-        }
-      }
-  
-      this.dateTime = isNowBeforeMinDateTime ? 
-      {
-        year: copy(this.minDateTime, 'year'),
-        month: copy(this.minDateTime, 'month'),
-        day: copy(this.minDateTime, 'day'),
-        hour: copy(this.minDateTime, 'hour'),
-        minute: copy(this.minDateTime, 'minute'),
-      } : 
-      {
-        year: year,
-        month: month,
-        day: day,
-        hour: hour,
-        minute: Math.floor((minute + 14) / 15) * 15,
-      }
+      this.dateTime = formatDateToDateTimeData(now);
     }
 
     this.fDate = new FormControl(this.dateTime);
     this.fTime = new FormControl(this.dateTime);
-    this.updateDateTime();
     
     this.fDate.valueChanges.subscribe(() => {
       this.updateDateTime(true);
@@ -82,28 +51,29 @@ export class FormItemDatetimeComponent implements OnInit {
     this.fTime.valueChanges.subscribe(() => {
       this.updateDateTime(true);
     });
-    // this.controller.valueChanges.subscribe(() => {
-    //   console.log(this.controller.value);
-    // })
 
   }
 
   initDateTimePicker(dt: string) {
     /** update using current controller value */
-    const dtArray = dt.trim().split(' ');
-    const dArray = dtArray[0].split('-');
-    const tArray = dtArray[1].split(':');
-    const date: DateData = {
-      year: Number(dArray[0]),
-      month: Number(dArray[1]),
-      day: Number(dArray[2]),
+    const datetime = formatStringToDateTimeData(dt);
+
+    if (datetime) {
+      this.fDate.setValue({
+        ...datetime
+      });
+      this.fTime.setValue({
+        ...datetime
+      });
+    } else {
+      this.fDate.setValue ({
+        ... this.minDateTime
+      });
+      this.fTime.setValue ({
+        ...this.minDateTime
+      });
     }
-    const time: TimeData = {
-      hour: Number(tArray[0]),
-      minute: Number(tArray[1]),
-    }
-    this.fDate.setValue(date);
-    this.fTime.setValue(time);
+
   }
 
   /** update controller value by selecting by datetime picker */
