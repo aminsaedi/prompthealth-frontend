@@ -49,7 +49,7 @@ export class PageComponent implements OnInit {
           pageType: 'article',
         }
         if(this.data._image) {
-          meta.image = this.data.image;
+          meta.image = this.data.imageSmall;
           meta.imageAlt = this.data.title;
           meta.imageType = this.data.imageType;
         }
