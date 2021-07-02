@@ -45,7 +45,7 @@ export class PageComponent implements OnInit {
 
         const meta: MetaData = {
           title: this.data.title,
-          description: this.data.summaryShort,
+          description: this.data.summary,
           pageType: 'article',
         }
         if(this.data._image) {

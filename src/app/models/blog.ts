@@ -37,7 +37,6 @@ export class Blog implements IBlog {
   get description() { return this.data.description; }
   get descriptionSanitized() { return this._description; }
   get summary() { return this._summary; }
-  get summaryShort() { return this.summary.substring(0, 50); } /** used for sns card */
   get readLength() { return this._readLength; } /** UNIT: minute */
   get readLengthFormatted(): string { return this.getFormattedTime(this._readLength);} 
 
