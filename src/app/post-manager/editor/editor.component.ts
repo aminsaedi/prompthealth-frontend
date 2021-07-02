@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
@@ -131,6 +131,7 @@ export class EditorComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
     private _location: Location,
     private _sharedService: SharedService,
     private _profileService: ProfileManagementService,
@@ -145,7 +146,6 @@ export class EditorComponent implements OnInit {
     this._headerService.showHeader();
   }
   async ngOnInit() {
-
     const userLS = this._uService.localStorage.getItem('user');
     if(userLS) {
       this._profileService.getProfileDetail(JSON.parse(userLS)).then(res => {
@@ -212,6 +212,11 @@ export class EditorComponent implements OnInit {
 
       Promise.all(promiseAll).then(() => {
         this.initForm();
+        
+        this._uService.setMeta(this._router.url, {
+          title: (params.id ? `Edit | ${this.post.title}`  : 'Create new post') + ' | PromptHealth',
+        });
+
       }).catch((err) => {
         console.log(err);
       }).finally(() => {

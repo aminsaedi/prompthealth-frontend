@@ -6,6 +6,7 @@ import { Blog } from 'src/app/models/blog';
 import { IBlogCategory } from 'src/app/models/blog-category';
 import { BlogSearchQuery, IBlogSearchQuery } from 'src/app/models/blog-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { MetaData, UniversalService } from 'src/app/shared/services/universal.service';
 import { MagazineService } from '../magazine.service';
 
 @Component({
@@ -49,6 +50,7 @@ export class ListComponent implements OnInit {
     private _router: Router,
     private _mService: MagazineService,
     private _sharedService: SharedService,
+    private _uService: UniversalService,
   ) { }
 
   async ngOnInit() {
@@ -60,16 +62,21 @@ export class ListComponent implements OnInit {
       slug: string, /** {categorySlug} | {tagSlug} */
       page: number,
     }) => {
+      const meta: MetaData = {};
       this.taxonomySlug = param.slug;
 
       switch(this.taxonomyType) {
         case 'video' : 
           this.taxonomyName = 'video'; 
           this.taxonomyId = 'video';
+          meta.title = 'Videos';
+          meta.description = 'Check out our latest videos';
           break;
         case 'podcast' : 
           this.taxonomyName = 'podcast'; 
           this.taxonomyId = 'podcast';
+          meta.title = 'Podcasts';
+          meta.description = 'Check out our latest podcasts';
           break;
         case 'category' :
           await this.initCategories();
@@ -77,6 +84,8 @@ export class ListComponent implements OnInit {
           if(category) {
             this.taxonomyName = category.title;
             this.taxonomyId = category._id;
+            meta.title = this.taxonomyName;
+            meta.description = 'Check out our latest posts regarding to ' + this.taxonomyName;
           } else {
             console.error('cannot find category');
             this._router.navigate(['/magazines']);
@@ -88,7 +97,9 @@ export class ListComponent implements OnInit {
           const tag = this._mService.getTagBySlug(param.slug);
           if(tag) {
             this.taxonomyName = tag.title;
-            this.taxonomyId = tag._id;            
+            this.taxonomyId = tag._id;
+            meta.title = this.taxonomyName;
+            meta.description = 'Check out our latest posts regarding to ' + this.taxonomyName;
           } else {
             console.error('cannot find tag');
             this._router.navigate(['/magazines']);
@@ -97,9 +108,16 @@ export class ListComponent implements OnInit {
           break;
       }
 
-
       this.pageCurrent = (param.page) ? param.page : 1;
       this.postType = this.taxonomyName.toLowerCase().match(/video|podcast|event|news/) ? this.taxonomyName : 'post';
+
+      if(this.pageCurrent > 1) {
+        meta.title += ` PAGE ${this.pageCurrent}`;
+        meta.description += ` (page ${this.pageCurrent})`;
+      }
+
+      meta.title += ' | PromptHealth Magazines';
+      this._uService.setMeta(this._router.url, meta);
 
       this.initPosts();
     });
@@ -210,6 +228,7 @@ export class ListComponent implements OnInit {
 
     this.pageTotal = this._mService.pageTotalOf(id);
     this.postTotal = this._mService.postTotalOf(id);
+
     this.setPaginators();
   }
 

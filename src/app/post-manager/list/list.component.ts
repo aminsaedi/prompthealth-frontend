@@ -56,6 +56,9 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this._uService.setMeta(this._router.url, {
+      title: 'My posts | PromptHealth',
+    });
     this._route.params.subscribe(async (params: {page: number}) => {
       this.pageCurrent = params.page || 1;
 

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Blog } from 'src/app/models/blog';
 import { BlogSearchQuery, IBlogSearchQuery } from 'src/app/models/blog-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { MetaData, UniversalService } from 'src/app/shared/services/universal.service';
 import { MagazineService } from '../magazine.service';
 
 @Component({
@@ -25,8 +26,9 @@ export class PageComponent implements OnInit {
   constructor(
     private _mService: MagazineService,
     private _sharedService: SharedService,
-    private _toastr: ToastrService,
     private _route: ActivatedRoute,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
 
@@ -40,6 +42,19 @@ export class PageComponent implements OnInit {
         await this.initPostById(param.id);
       } else {
         await this.initPost(param.slug);
+
+        const meta: MetaData = {
+          title: this.data.title,
+          description: this.data.summary,
+          pageType: 'article',
+        }
+        if(this.data._image) {
+          meta.image = this.data.image;
+          meta.imageAlt = this.data.title;
+          meta.imageType = this.data.imageType;
+        }
+        this._uService.setMeta(this._router.url, meta);
+        
         this.initRelated();          
       }
     });

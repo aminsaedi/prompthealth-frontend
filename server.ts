@@ -4,6 +4,10 @@
 import '@angular/localize/init';
 import 'zone.js/dist/zone-node';
 
+/** If third party module is not compatible with universal, try to add global variable here */
+global['MouseEvent'] = {};  
+global['HTMLElement'] = {};
+
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
 import { join } from 'path';
@@ -15,7 +19,7 @@ import * as domino from 'domino';
 import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 import { routerSitemap } from './src/app/app.server.sitemap.module';
- 
+
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
   const server = express();
@@ -29,12 +33,15 @@ export function app() {
 
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
+  /** If third party module is not compatible with universal, try to add global variable above instead of here */
+  /** following variables are working only for this project. */
   const template = join(distFolder, 'index.html');
   const win = domino.createWindow(template)
   global['window'] = win;
   global['document'] = win.document;
   global['navigator'] = win.navigator;
   global['location'] = win.location;
+
 
   // if(server.get('env') == 'production'){
   //   server.set('trust proxy', 1);
@@ -79,7 +86,7 @@ export function app() {
           console.log('SSR error. something went wrong: ');
           console.log(err)
         }
-        // showMeta(req.originalUrl, html);
+        showMeta(req.originalUrl, html);
         res.send(html);
       }
     );
@@ -115,15 +122,15 @@ function showMeta(url: string, html: string) {
   console.log(url);
   console.log(html.match(/<title>(.*)<\/title>/)[1]);
   var meta = [
-    // 'og:title','twitter:title',
-    // 'keyword',
+    'og:title','twitter:title',
+    'keyword',
     'description', 
-    // 'og:description', 'twitter:description',
-    // 'og:site_name', 'twitter:site',
-    // 'og:url',
-    // 'og:type',
-    // 'twitter:card',
-    // 'og:image', 'twitter:image',
+    'og:description', 'twitter:description',
+    'og:site_name', 'twitter:site',
+    'og:url',
+    'og:type',
+    'twitter:card',
+    'og:image', 'twitter:image',
     'robots'
   ];
   meta.forEach(m=>{

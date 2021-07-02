@@ -1,10 +1,12 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { count } from 'rxjs/operators';
 import { Blog, IBlog } from 'src/app/models/blog';
 import { BlogSearchQuery } from 'src/app/models/blog-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
 import { MagazineService } from '../magazine.service';
 
@@ -34,13 +36,21 @@ export class HomeComponent implements OnInit {
   @ViewChild('videosContainer') private videosContainer: ElementRef;
   
   constructor(
+    private _router: Router,
     private _mService: MagazineService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _uService: UniversalService,
   ) { }
 
 
   async ngOnInit() {
+    this._uService.setMeta(this._router.url, {
+      title: 'News & Media | PromptHealth Magazine',
+      description: 'Check out our latest news, podcast, videos and tips regarding to health care services.',
+      pageType: 'blog',
+    });
+
     try {
       await this.initTags();
     } catch(err) {

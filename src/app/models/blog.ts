@@ -46,6 +46,15 @@ export class Blog implements IBlog {
   
   get image() { return (this.data.image) ? this.AWS_S3 + this.data.image : '/assets/img/logo-square-primary-light.png'; }
   get _image() { return (this.data.image) ? this.data.image : null };
+  get imageType() {
+    let imageType: string = '';
+    if(this.data.image) {
+      const regex = /\.(jpe?g|png)$/;
+      const match = this.data.image.match(regex);
+      imageType = match ? ('image/' + match[1]) : '';  
+    }
+    return imageType;
+  }
   get videoLinks() { return this.data.videoLinks || []; }
   get podcastLinks() { return this.data.podcastLinks || []; }
   get videosEmbedded() { return this._videosEmbedded; }

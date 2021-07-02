@@ -33,7 +33,7 @@
           >
             <div class="position-relative eyecatch-container rounded-12p h-100">
               <div *ngIf="!v" class="eyecatch-dummy bg-dark"></div>
-              <div *ngIf="v && v.isVideo" class="eyecatch eyecatch-video" [innerHTML]="v.videosEmbedded[0]"></div>
+              <div *ngIf="v && v.isVideo" class="eyecatch eyecatch-video overflow-hidden" [innerHTML]="v.videosEmbedded[0]"></div>
             </div>
             <a [routerLink]="['/magazines/' + (v ? v.slug : '') ]">
               <h5
