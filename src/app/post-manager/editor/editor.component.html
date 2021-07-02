@@ -178,8 +178,11 @@
             >
               <form-item-input
               placeholder="https://youtube..."
+              label="Video link"
+              type="url"
               [controller]="fVideo.url"
               [submitted]="isSubmitted"
+              autocapitalize="off"
               ></form-item-input>
             </div>
   
@@ -189,8 +192,11 @@
             >
               <form-item-input
               placeholder="https://spotify..."
+              label="Podcast link"
+              type="url"
               [controller]="fPodcast.url"
               [submitted]="isSubmitted"
+              autocapitalize="off"
               ></form-item-input>
 
               <form-item-upload-image-button
@@ -236,6 +242,7 @@
               <div class="subtitle2-temp">Event link</div>
               <form-item-input
               label="Link"
+              type="url"
               placeholder="https://..."
               autocapitalize="off"
               [controller]="f.joinEventLink"

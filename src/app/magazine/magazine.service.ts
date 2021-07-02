@@ -241,7 +241,11 @@ export class MagazineService {
   }
 
   embedPodcast(data: {title: string, url: string}) {
-    let iframe = `<iframe src="${data.url}" width="100%" height="100%" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+    let url = data.url;
+    if (!url.match(/embed/)) {
+      url = url.replace(/spotify\.com/, 'spotify.com/embed');
+    }
+    let iframe = `<iframe src="${url}" width="100%" height="100%" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
     return this._sanitizer.bypassSecurityTrustHtml(iframe);
   }
 }

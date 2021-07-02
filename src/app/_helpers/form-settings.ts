@@ -14,6 +14,8 @@ export const minmax = {
 export const pattern = {
   // url: 'http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?',
   url: '(http(s)?:\\/\\/)?(www\\.)?([\\w-\\.])+(\\/[\\w-%?=@&+\\.]*)?',
+  urlVideo: '^http(s)?:\\/\\/(w{3}\\.)?((youtube|vimeo)\\.com|youtu.be)\/.+',
+  urlPodcast: '^http(s)?:\\/\\/(w{3}\\.)?(open\\.spotify)\\.com\/.+',
   phone: '^[0-9\\-\\(\\)\\s]+$',
   price: '^[0-9]{1,}(\\.[0-9]{1,2})?$',
   password: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^\\.&\\-]).{8,}',
@@ -130,6 +132,7 @@ const validatorPatternURL = (): ValidatorFn => {
   }
 }
 
+
 const validatorFirstNameClient = [Validators.maxLength(minmax.nameMax), Validators.required];
 const validatorLastNameClient = [Validators.maxLength(minmax.nameMax)];
 const validatorNameSP = [Validators.required, Validators.minLength(3), Validators.maxLength(minmax.nameMax)];
@@ -196,6 +199,8 @@ export const validators = {
   // savePostTags: [],
   savePostEventTime: [validatorPatternDateTime()], // might need pattern as well
   savePostEventLink: [validatorPatternURL()],
-  savePostMediaLink: [validatorPatternURL()], 
+  // savePostMediaLink: [validatorPatternURL()], 
   savePostAuthorId: [Validators.required],
+  savePostVideoLink: [Validators.pattern(pattern.urlVideo)],
+  savePostPodcastLink: [Validators.pattern(pattern.urlPodcast)],
 }
