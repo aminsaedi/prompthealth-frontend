@@ -87,8 +87,10 @@ export class EventData {
         case /meetup/.test(host):
           venue = 'Meetup';
           break;
-
-          default: 
+        case /instagram/.test(host):
+          venue = 'Instagram';
+          break;
+        default: 
           venue = null;
       }
     }
