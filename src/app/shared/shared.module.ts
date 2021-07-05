@@ -53,6 +53,7 @@ import { ButtonShareComponent } from './button-share/button-share.component';
 import { ButtonGuidelineComponent } from './button-guideline/button-guideline.component';
 import { CardPractitionerComponent } from './card-practitioner/card-practitioner.component';
 import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.component';
+import { FormSubscribeComponent } from './form-subscribe/form-subscribe.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -114,6 +115,7 @@ import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.co
     ButtonGuidelineComponent,
     CardPractitionerComponent,
     SocialMediaKitComponent,
+    FormSubscribeComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -157,6 +159,7 @@ import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.co
     ButtonShareComponent,
     ButtonGuidelineComponent,
     CardPractitionerComponent,
+    FormSubscribeComponent,
   ]
 })
 export class SharedModule { }

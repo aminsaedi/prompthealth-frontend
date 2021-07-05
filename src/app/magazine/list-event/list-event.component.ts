@@ -43,8 +43,8 @@ export class ListEventComponent implements OnInit {
   public pageTotal: number;
   public postTotal: number;
   public countPerPage: number = 12;
-  public order: IQueryParams['order'];
-  public orderBy: IQueryParams['orderby'];
+  public order: IQueryParams['order'] = 'asc';
+  public orderBy: IQueryParams['orderby'] = 'startAt';
 
   public queryParams: IQueryParams;
   public isDatePickerShown: boolean = false;
@@ -107,7 +107,7 @@ export class ListEventComponent implements OnInit {
       }
 
       this.orderBy = params.orderby || 'startAt';
-      this.order = params.order || 'desc';
+      this.order = params.order || 'asc';
 
       this.isDatePickerShown = !!(params.modal == 'date-picker');
 
@@ -162,7 +162,6 @@ export class ListEventComponent implements OnInit {
 
   filterPosts() {
     const posts= this._mService.postsOf(this.category._id, 1, 0, 10000);
-    this.latest = (posts && posts.length > 0) ? posts[0] : null;
     
     const archive = posts;
 
@@ -170,6 +169,14 @@ export class ListEventComponent implements OnInit {
     const upcoming = archive.filter(b => {
       return (b.event.endAt.getTime() > now.getTime());
     });
+
+    if(upcoming && upcoming.length > 0) {
+      this.latest = upcoming.sort((a,b) => {
+        const valA = a.event.startAt.getTime();
+        const valB = b.event.startAt.getTime();
+        return valA- valB;
+      })[0];  
+    }
 
     const filterByDateRange = upcoming.filter(b => {
       const start = b.event.startAt;

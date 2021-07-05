@@ -1,9 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Blog } from 'src/app/models/blog';
 import { expandVerticalAnimation, slideVerticalAnimation } from 'src/app/_helpers/animations';
 import { CalendarOptions, GoogleCalendar, ICalendar, OutlookCalendar, YahooCalendar} from 'datebook';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormSubscribeComponent } from 'src/app/shared/form-subscribe/form-subscribe.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'detail-post',
@@ -16,11 +18,20 @@ export class DetailPostComponent implements OnInit {
   @Input() shorten: boolean = false;
 
   public isCalendarMenuShown: boolean = false;
+  public isSubscribeMenuShown: boolean = false;
+  public isLoading: boolean = false;
+  public isRedirecting: boolean = false;
+
+  public timeRedirect: number = 5;
+  public timerRedirect: any;
+
+  @ViewChild('formSubscribe') formSubscribe: FormSubscribeComponent
 
   constructor(
     private _location: Location,
     private _route: ActivatedRoute,
     private _router: Router,
+    private _toastr: ToastrService,
   ) { }
 
   get urlCurrent() {
@@ -36,11 +47,12 @@ export class DetailPostComponent implements OnInit {
     const url = location.href ? location.href : 'https://prompthealth.ca/magazines/' + this.data.slug;
 
     this._route.queryParams.subscribe((params: {modal: string}) => {
-      if(!this.data && params.modal == 'calendar-menu') {
+      if(!this.data && (params.modal == 'calendar-menu' || params.modal == 'subscribe-menu')) {
         this._router.navigate(['./'], {relativeTo: this._route, replaceUrl: true});
       }
 
       this.isCalendarMenuShown = (this.data && params.modal == 'calendar-menu');
+      this.isSubscribeMenuShown = (this.data && params.modal == 'subscribe-menu');
     });
   }
 
@@ -59,6 +71,23 @@ export class DetailPostComponent implements OnInit {
   }
   hideCalendarMenu() {
     if(this.isCalendarMenuShown) {
+      this._location.back();
+    }
+  }
+
+  toggleSubscribeMenu() {
+    if (this.isSubscribeMenuShown) {
+      this.hideSubscribeMenu();
+    } else {
+      this.showSubscribeMenu();
+    }
+  }
+
+  showSubscribeMenu() {
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'subscribe-menu'}});
+  }
+  hideSubscribeMenu() {
+    if(this.isSubscribeMenuShown) {
       this._location.back();
     }
   }
@@ -95,6 +124,38 @@ export class DetailPostComponent implements OnInit {
     setTimeout(() => {
       this.hideCalendarMenu();
     }, 200);
+  }
+
+  onSubmitSubscribe() {
+    this.isLoading = true;
+    this.formSubscribe.onSubmit(false);
+  }
+  onSuccessSubscribe() {
+    this.isLoading = false;
+    this._toastr.success('Thank you for subscribe! you are redireced to event page within 5 seconds');
+
+    this.timeRedirect = 5;
+    this.isRedirecting = true;
+
+    this.timerRedirect = setInterval(() => {
+      this.timeRedirect --;
+
+      if (this.timeRedirect <= 0 && location) {
+        this.isRedirecting = false;
+        clearInterval(this.timerRedirect);
+        location.href = this.data.event.link;        
+        // const a = document.createElement('a');
+        // a.href = this.data.event.link;
+        // a.target = "_blank";
+        // document.body.appendChild(a);
+        // a.click();
+        // document.body.removeChild(a);
+      }
+    }, 1000);
+  }
+
+  onErrorSubscribe() {
+    this.isLoading = false;
   }
 
 }

@@ -38,11 +38,11 @@
       </button>
       <button class="btn btn-filter subtitle1-temp ml-10p" (click)="onOrderChanged()">
         <ng-container *ngIf="order != 'asc'">
-          <i class="fas fa-sort-amount-down"></i>
+          <i class="fas fa-sort-amount-up"></i>
           <span *ngIf="!orderBy || orderBy=='startAt'">Latest</span>
         </ng-container>
         <ng-container *ngIf="order == 'asc'">
-          <i class="fas fa-sort-amount-up"></i>
+          <i class="fas fa-sort-amount-down"></i>
           <span *ngIf="orderBy=='startAt'">Closest</span>
         </ng-container>
       </button>
@@ -81,8 +81,7 @@
 </section>
 
 
-
-
+<!-- modal: date picker -->
 <div 
 *ngIf="isDatePickerShown"
 class="modal-view"

@@ -1,0 +1,17 @@
+/// TEMPORARY TODO: REMOVE LATER
+  $colorPrimary: rgba(12, 116, 255, 1);
+/// TEMPORARY END
+
+.selections {
+  z-index: 10;
+  max-height: 200px;
+  overflow: auto;
+  li a {
+    padding: 12px 15px 12px 57px;
+
+    &.active {
+      background-color: $colorPrimary;
+      color: white;
+    }
+  }
+}
