@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { validators } from 'src/app/_helpers/form-settings';
 import { SharedService } from '../services/shared.service';
+import { UniversalService } from '../services/universal.service';
 
 @Component({
   selector: 'form-subscribe',
@@ -56,6 +57,7 @@ export class FormSubscribeComponent implements OnInit {
     _el: ElementRef,
 		private _toastr: ToastrService,
 		private _sharedService: SharedService,
+		private _uService: UniversalService,
   ) { 
     this.host = _el.nativeElement;
   }
@@ -127,6 +129,7 @@ export class FormSubscribeComponent implements OnInit {
 		const path = 'clubhouse/create';
 		this._sharedService.postNoAuth(this.form.value, path).subscribe((res: any) => {
 			if(res.statusCode == 200) {
+				this._uService.localStorage.setItem('subscribed', 'true');
 				if(showSuccessMessage) {
 					this._toastr.success(res.message);
 				}

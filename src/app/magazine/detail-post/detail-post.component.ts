@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormSubscribeComponent } from 'src/app/shared/form-subscribe/form-subscribe.component';
 import { ToastrService } from 'ngx-toastr';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'detail-post',
@@ -25,6 +26,8 @@ export class DetailPostComponent implements OnInit {
   public timeRedirect: number = 5;
   public timerRedirect: any;
 
+  public alreadySubscribed: boolean = false;
+
   @ViewChild('formSubscribe') formSubscribe: FormSubscribeComponent
 
   constructor(
@@ -32,6 +35,7 @@ export class DetailPostComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _toastr: ToastrService,
+    private _uService: UniversalService,
   ) { }
 
   get urlCurrent() {
@@ -44,6 +48,8 @@ export class DetailPostComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.alreadySubscribed = this._uService.localStorage.getItem('subscribed') === 'true' ? true : false;
+
     const url = location.href ? location.href : 'https://prompthealth.ca/magazines/' + this.data.slug;
 
     this._route.queryParams.subscribe((params: {modal: string}) => {
@@ -132,6 +138,7 @@ export class DetailPostComponent implements OnInit {
   }
   onSuccessSubscribe() {
     this.isLoading = false;
+    this.alreadySubscribed = true;
     this._toastr.success('Thank you for subscribe! you are redireced to event page within 5 seconds');
 
     this.timeRedirect = 5;

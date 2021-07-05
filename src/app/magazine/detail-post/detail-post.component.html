@@ -96,7 +96,17 @@
       class="mt-50p mb-30p d-flex flex-column flex-md-row align-items-stretch justify-content-md-center btn-group-event"
       >
         <div class="mr-md-25p">
-          <button (click)="toggleSubscribeMenu()" class="btn btn-primary w-100">Subscribe</button>
+          <button 
+          *ngIf="!alreadySubscribed"
+          (click)="toggleSubscribeMenu()" 
+          class="btn btn-primary w-100"
+          >Subscribe</button>
+          <a 
+          *ngIf="alreadySubscribed"
+          [href]="data?.event.link"
+          target="_blank"
+          class="btn btn-primary w-100"
+          >Join now</a>
         </div>
   
         <div class="mx-md-25p mt-15p mt-md-0 ">
