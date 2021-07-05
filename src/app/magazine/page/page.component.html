@@ -1,15 +1,15 @@
-<div class="container mt-100p mt-md-30p">
-  <div class="d-none d-md-flex text-center align-items-center justify-content-center mb-50p">
-    <a class="btn mr-2 pr-0">
-      <i class="fas fa-home text-label" routerLink="/magazines"></i>
+<div class="container mt-30p">
+  <div class="text-center align-items-center justify-content-center mb-50p">
+    <a class="btn mr-2" routerLink="/magazines">
+      <i class="fas fa-home text-label"></i>
     </a>
     <ng-container *ngIf="data?.category">
       <i class="fas fa-chevron-right mr-2 text-label"></i>
       <a *ngIf="!isEvent" class="mr-2 body2-temp text-label btn" [routerLink]="['/magazines/category', data.category.slug]">{{data.catTitle}}</a>  
       <a *ngIf="isEvent" class="mr-2 body2-temp text-label btn" [routerLink]="['/magazines/event']">{{data.catTitle}}</a>  
     </ng-container>
-    <i class="fas fa-chevron-right mr-2 text-label"></i>
-    <span class="mr-2 body2-temp clamp-1line">{{data?.title}}</span>
+    <i class="d-none d-md-inline fas fa-chevron-right mr-2 text-label"></i>
+    <span class="d-none d-md-inline mr-2 body2-temp clamp-1line btn">{{data?.title}}</span>
   </div>
 
   <div class="mb-100p">
