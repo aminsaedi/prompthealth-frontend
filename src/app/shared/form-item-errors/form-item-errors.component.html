@@ -1,4 +1,4 @@
-<ul class="errors text-danger font-small" *ngIf="controller && controller.invalid && submitted">
+<ul class="errors text-danger font-small" *ngIf="controller && controller.invalid && controller.errors && submitted">
   <li *ngIf="controller.errors.required">{{label}} is required.</li>
   <li *ngIf="controller.errors.requiredTrue">Please check</li>
   <li *ngIf="controller.errors.minlength">{{label}} too short.</li>
@@ -10,6 +10,13 @@
   <li *ngIf="controller.errors.matchPatternDateTime">
     Date time is invalid. Please use calendar to select date time.
   </li>
+  <li *ngIf="controller.errors.eventStartTimeLaterThanNow">
+    Start time must be later than current time.
+  </li>
+  <li *ngIf="controller.errors.endTimeLaterThanStart">
+    End time must be later than start time.
+  </li>
+
   <li *ngIf="controller.errors.matchPatternURL">
     URL is invalid. Here is sample URL.
     <ul class="mt-1">

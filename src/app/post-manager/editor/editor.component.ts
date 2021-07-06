@@ -93,7 +93,7 @@ export class EditorComponent implements OnInit {
     {_id: 'podcast', title: 'Podcast' },
   ];
 
-  private form: FormGroup;
+  public form: FormGroup;
   public selectedCategories: IBlogCategory[] = [];
   public selectedTags: IBlogCategory[] = []
   public selectedStatus: IBlogCategory[] = [];
@@ -187,7 +187,6 @@ export class EditorComponent implements OnInit {
       tags: new FormArray([]),
       authorId: new FormControl(null, validators.savePostAuthorId),
       author: new FormControl(),
-      // headliner: new FormControl(false),
       
       eventStartTime: new FormControl(), // set validator later
       eventEndTime: new FormControl(),  // set validator later
@@ -206,7 +205,7 @@ export class EditorComponent implements OnInit {
           url: new FormControl(null, validators.savePostPodcastLink),
         }),
       ]),
-    });
+    }, validators.savePost );
 
     this._route.params.subscribe((params: {id: string}) => {
       this._sharedService.loader('show');
@@ -578,6 +577,8 @@ export class EditorComponent implements OnInit {
 
     this.resetValidators(statusNext == 'PENDING');
 
+    console.log(this.form);
+
     if(this.form.invalid) {
       this._toastr.error('There are several items that requires your attention.')
       return;
@@ -647,8 +648,8 @@ export class EditorComponent implements OnInit {
     this.f.joinEventLink.clearValidators();
     let catName: string = (this.selectedCategories && this.selectedCategories.length > 0) ? this.selectedCategories[0].title : '';
     if(catName.toLowerCase().match('event')) {
-      this.f.eventStartTime.setValidators( published ? validators.publishPostEventTime : validators.savePostEventTime);
-      this.f.eventEndTime.setValidators( published ? validators.publishPostEventTime : validators.savePostEventTime);
+      this.f.eventStartTime.setValidators( published ? validators.publishPostEventStartTime : validators.savePostEventStartTime);
+      this.f.eventEndTime.setValidators( published ? validators.publishPostEventEndTime : validators.savePostEventEndTime);
       this.f.joinEventLink.setValidators( published ? validators.publishPostEventLink : validators.savePostEventLink);
       this.f.eventStartTime.updateValueAndValidity();
       this.f.eventEndTime.updateValueAndValidity();

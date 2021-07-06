@@ -1,4 +1,5 @@
 import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms"
+import { formatStringToDate } from "./date-formatter"
 
 export const minmax = {
   nameMax: 100,
@@ -103,6 +104,51 @@ const validatorPatternDateTime = (): ValidatorFn => {
   }
 }
 
+const validatorComparePostEventStartTime = (): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    const regex = new RegExp(pattern.datetime);
+    if(formControl.value && formControl.value.match(regex)) {
+      const now = new Date();
+      const start = formatStringToDate(formControl.value);
+
+      if(now.getTime() >= start.getTime()) {
+        return {'eventStartTimeLaterThanNow': true};
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+}
+
+const validatorComparePostEventEndTime = (): ValidatorFn => {
+    return function validate(formGroup: FormGroup) {
+    const regex = new RegExp(pattern.datetime);
+    const fs = formGroup.controls.eventStartTime;
+    const fe = formGroup.controls.eventEndTime;
+    if(fs && fs.value && fs.value.match(regex) && fe && fe.value && fe.value.match(regex)){
+      const errors: any = {};
+
+      const start = formatStringToDate(fs.value);
+      const end = formatStringToDate(fe.value);
+      
+      if(start.getTime() >= end.getTime()) {
+        errors.endTimeLaterThanStart = true;
+      }
+
+      if (Object.keys(errors).length > 0) {
+        return errors;
+      } else {
+        return null;
+      }
+
+    } else {
+      return null;
+    }
+  }
+}
+
 const validatorPatternURL = (): ValidatorFn => {
   return function validate(formControl: FormControl) {
     let val: string = formControl.value;
@@ -189,18 +235,17 @@ export const validators = {
 
   /** blog post for users */
   publishPostDescription: [Validators.required],
-  // publishPostCategory: [Validators.required],
-  // publishPostTags: [],
-  publishPostEventTime: [Validators.required, validatorPatternDateTime()], // might need pattern as well
+  publishPostEventStartTime: [Validators.required, validatorPatternDateTime(), validatorComparePostEventStartTime()],
+  publishPostEventEndTime: [Validators.required, validatorPatternDateTime()],
   publishPostEventLink: [Validators.required, validatorPatternURL()],
   savePostTitle: [Validators.required],
   savePostDescription: [],
   savePostCategory: [Validators.required],
-  // savePostTags: [],
-  savePostEventTime: [validatorPatternDateTime()], // might need pattern as well
+  savePostEventStartTime: [validatorPatternDateTime(), validatorComparePostEventStartTime()],
+  savePostEventEndTime: [validatorPatternDateTime()],
   savePostEventLink: [validatorPatternURL()],
-  // savePostMediaLink: [validatorPatternURL()], 
   savePostAuthorId: [Validators.required],
   savePostVideoLink: [Validators.pattern(pattern.urlVideo)],
   savePostPodcastLink: [Validators.pattern(pattern.urlPodcast)],
+  savePost: [validatorComparePostEventEndTime()], // for formGroup validator
 }
