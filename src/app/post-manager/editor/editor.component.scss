@@ -74,20 +74,39 @@
 :host::ng-deep {
   .ql-toolbar {
     position: fixed;
-    bottom: 50px;
+    padding-bottom: 50px;
     background: white;
-    border-radius: 8px;
     z-index: 3;
 
-    left: 15px;
-    width: calc(100% - 30px);
-    @media (min-width: 768px) {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+
+    border-width: 0;
+    border-top-width: 1px;
+
+    @media (min-width: 992px) {
       width: 500px;
+      bottom: 50px;
       left: 15px;
+      padding-bottom: 8px;
+      border-radius: 8px;
+      border-width: 1px;
+    }
+
+    button {
+      @media (max-width: 991px) {
+        margin: 10px;
+      }
     }
   }
 
   .ql-container {
     font-size: 16px;
+  }
+
+  .sticky-left {
+    position: sticky;
+    left: 0;
   }
 }
