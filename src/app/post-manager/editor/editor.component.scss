@@ -64,10 +64,16 @@
 }
 
 
-.form-control.form-control-title {
-  border: none;
+.contenteditable.title {
   outline: none;
-  box-shadow: none;
+  padding: 0 15px;
+  word-break: break-word;
+  width: 100%;
+}
+
+.contenteditable:empty:before {
+  opacity: 0.6;
+  content: attr(data-placeholder);
 }
 
 

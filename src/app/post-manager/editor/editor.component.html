@@ -60,11 +60,18 @@
               [submitted]="isSubmitted"
               ></form-item-errors>
             </div>
-            <input type="text"
+            <!-- <input type="text"
             class="form-control form-control-title h4-temp h2-temp-md"
             placeholder="Enter Title..."
             [formControl]="f.title"
-            >
+            > -->
+            <div 
+            class="contenteditable title h4-temp h2-temp-md mb-30p"
+            data-placeholder="Enter title..."
+            contenteditable 
+            [formControl]="f.title"
+            (keydown)="onKeydownTitle($event)"
+            ></div>
           </div>
   
           <div class="position-relative flex-grow-1">
@@ -79,6 +86,7 @@
             [styles]="{minHeight: '450px', border: 'none', marginBottom: '180px'}"
             customToolbarPosition="bottom"
             (onEditorChanged)="onEditorChanged($event)"
+            (onEditorCreated)="onEditorCreated($event)"
             [(ngModel)]="description"
             [ngModelOptions]="{standalone:true}"
             >

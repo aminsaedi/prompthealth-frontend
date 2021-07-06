@@ -2,10 +2,10 @@ import { Location } from '@angular/common';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as e from 'express';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
+import Quill from 'quill';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Blog, IBlog } from 'src/app/models/blog';
 import { IBlogCategory } from 'src/app/models/blog-category';
@@ -81,6 +81,7 @@ export class EditorComponent implements OnInit {
   public user: IUserDetail;
   public post: Blog;
   public description: any;
+  public title: any;
 
   public statuses: IBlogCategory[] = [
     {_id: 'draft', title: 'Draft'},
@@ -132,6 +133,8 @@ export class EditorComponent implements OnInit {
     itemsShowLimit: 6,
     allowSearchFilter: true,
   }
+
+  private contentEditor: Quill;
 
   private AWS_S3 = environment.config.AWS_S3;
 
@@ -377,6 +380,19 @@ export class EditorComponent implements OnInit {
         this._postsService.lockEditor();
       });  
     }, 0);
+  }
+
+  onKeydownTitle(e: KeyboardEvent) {
+    if(!e.isComposing && e.key == 'Enter') {
+      e.preventDefault();
+      if(this.contentEditor) {
+        this.contentEditor.focus();
+      }
+    }
+  }
+
+  onEditorCreated(e: Quill) {
+    this.contentEditor = e;
   }
 
   async onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
