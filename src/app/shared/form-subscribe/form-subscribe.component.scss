@@ -1,5 +1,13 @@
 /// TEMPORARY TODO: REMOVE LATER
   $colorPrimary: rgba(12, 116, 255, 1);
+
+  .btn.btn-primary {
+    padding: 17px 25px;
+    background: rgba(12, 116, 255, 1)!important;
+    &:hover {
+      background: rgba(0, 85, 199, 1)!important;
+    }
+  }
 /// TEMPORARY END
 
 .selections {
@@ -13,5 +21,12 @@
       background-color: $colorPrimary;
       color: white;
     }
+  }
+}
+
+.btn-submit {
+  width: 100%;
+  @media (min-width: 768px) {
+    width: auto;
   }
 }
