@@ -77,7 +77,7 @@
             </div>
             <quill-editor
             [styles]="{minHeight: '450px', border: 'none', marginBottom: '150px'}"
-            (onEditorChanged)="changedEditor($event)"
+            (onEditorChanged)="onEditorChanged($event)"
             [(ngModel)]="description"
             [ngModelOptions]="{standalone:true}"
             >

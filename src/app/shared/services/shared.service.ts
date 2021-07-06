@@ -170,7 +170,7 @@ export class SharedService {
     });
   }
 
-  async shrinkImageByFixedWidth(file: File, width: number = 1500): Promise<{ file: Blob, filename: string }> {
+  async shrinkImageByFixedWidth(file: File | Blob, width: number = 1500): Promise<{ file: Blob, filename: string }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = (e: any) => {
@@ -209,6 +209,20 @@ export class SharedService {
       };
       img.src = URL.createObjectURL(file);
     });
+  }
+
+  b64ToBlob(data: string) {
+    const regExContentType = /data:(image\/.+);base64/;
+    const contentType = data.match(regExContentType)[1];
+
+    const byteString = atob(data.split(',')[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: contentType });
   }
 
   imgUpload(body, path) {

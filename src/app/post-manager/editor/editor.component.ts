@@ -17,6 +17,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateTimeDataToString, formatDateToString, formatStringToDate, formatStringToDateTimeData } from 'src/app/_helpers/date-formatter';
 import { validators } from 'src/app/_helpers/form-settings';
+import { environment } from 'src/environments/environment';
 import { PostManagerService } from '../post-manager.service';
 
 @Component({
@@ -131,6 +132,8 @@ export class EditorComponent implements OnInit {
     itemsShowLimit: 6,
     allowSearchFilter: true,
   }
+
+  private AWS_S3 = environment.config.AWS_S3;
 
   @ViewChild('imageSelector') imageSelector: FormItemUploadImageButtonComponent;
 
@@ -377,7 +380,7 @@ export class EditorComponent implements OnInit {
     }, 0);
   }
 
-  changedEditor(e: EditorChangeContent | EditorChangeSelection) {
+  async onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
     if('html' in e) {
       const current = this.f.description.value;
       const next = e.html;
@@ -386,7 +389,48 @@ export class EditorComponent implements OnInit {
       if(current != next) {
         this._postsService.lockEditor();
       }
+
+      if(e.html) {
+        const regExImageBase64 = /<img src="(data:image\/.+;base64,.+)"(\/)?>/
+        const matchImage = e.html.match(regExImageBase64);
+        if(matchImage) {
+          this.onImageSelected(matchImage[1]);
+        }  
+      }
     }
+  }
+
+  // this is fired when user select image in quill editor
+  // shrink image, upload, replace image src from base64 to file link
+  onImageSelected(uri: string): Promise<void>{
+    return new Promise( async (resolve, reject) => {
+      const blob = this._sharedService.b64ToBlob(uri);
+      const shrink = await this._sharedService.shrinkImageByFixedWidth(blob, 840);
+      const path = '/common/imgUpload';
+
+      this._sharedService.loader('show');
+      const formdata = new FormData();
+      formdata.append('imgLocation', 'blogs');
+      formdata.append('images', shrink.file, shrink.filename);
+      this._sharedService.imgUpload(formdata, path).subscribe((res: any) => {
+        this._sharedService.loader('hide');
+        if(res.statusCode === 200) {
+          const url = this.AWS_S3 + res.data;
+          const replaced = this.f.description.value.replace(uri, url);
+          this.description = replaced;
+          resolve();
+        } else {
+          console.log(res.message);
+          this._toastr.error('Something went wrong. Please try again later');
+          reject();
+        }
+      }, error => {
+        this._sharedService.loader('hide');
+        console.log(error);
+        this._toastr.error('Something went wrong. Please try again later');
+        reject();
+      });
+    });
   }
 
   toggleSettingPanel () {
@@ -466,9 +510,7 @@ export class EditorComponent implements OnInit {
 
   onChangeEndDateTime(e: Date) {
     // this._postsService.lockEditor();
-  }
-
-  
+  } 
 
   draftPost() {
     const data = {
