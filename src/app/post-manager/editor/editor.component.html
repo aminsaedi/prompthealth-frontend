@@ -51,7 +51,7 @@
   
     <section class="container-fluid flex-grow-1">
       <div class="d-flex flex-nowrap editor-container overflow-hidden h-100">
-        <div class="editor w-100 pt-15p d-flex flex-column">
+        <div class="editor w-100 d-flex flex-column pt-60p pt-md-15p">
           <div>
             <div class="pl-15p">
               <form-item-errors
@@ -62,7 +62,7 @@
             </div>
 
             <div 
-            class="contenteditable title h4-temp h2-temp-md mb-30p"
+            class="contenteditable title h4-temp h2-temp-md mb-15p mb-md-30p"
             data-placeholder="Enter title..."
             contenteditable 
             [formControl]="f.title"
@@ -71,7 +71,7 @@
             ></div>
           </div>
   
-          <div class="position-relative flex-grow-1">
+          <div class="position-relative flex-grow-">
             <div class="pl-15p">
               <form-item-errors
               [controller]="f.description"
