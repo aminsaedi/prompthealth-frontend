@@ -109,9 +109,11 @@ export class MyBadgeComponent implements OnInit {
     try {
       if (this.data) {
         await this.update();
+        this.isSubmitted = false;
         this._toastr.success('Success! Title / Description updated.');
       } else {
         await this.create();
+        this.isSubmitted = false;
         this._toastr.success('Success! Please wait until your certification is verified.');
       }
     } catch (error) {

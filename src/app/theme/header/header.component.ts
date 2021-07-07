@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 // import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
@@ -45,6 +45,7 @@ export class HeaderComponent implements OnInit {
     public catService: CategoryService,
     private _profileService: ProfileManagementService,
     private _uService: UniversalService,
+    private _changeDetector: ChangeDetectorRef,
     _el: ElementRef
   ) {
     // this.fetchUser();
@@ -107,6 +108,7 @@ export class HeaderComponent implements OnInit {
 
       this._headerStatusService.observeHeaderStatus().subscribe(([key, val]: [string, any]) => {
         this[key] = val;
+        this._changeDetector.detectChanges();
       });
 
       this._bs.getUserData().subscribe((res: any) => {

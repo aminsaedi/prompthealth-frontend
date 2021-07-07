@@ -8,7 +8,7 @@
   </div>
 
   <div class="position-relative mr-1 check-container" *ngIf="type == 'radio'">
-    <i [iconPh]="(controller.value == value ? 'radio-filled' : 'radio1')" 
+    <i [iconPh]="'radiobutton' + (controller.value == value ? '-filled' : '')" 
     class="position-relative"
     [ngClass]="{'text-placeholder': (controller.value != value), 'text-primary': (controller.value == value), 'text-error': !!controller.errors}"
     ></i>

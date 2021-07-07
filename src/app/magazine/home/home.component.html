@@ -66,10 +66,10 @@
               </div>
               <div class="info-container ml-3">
                 <div class="mb-10p text-nowrap body2 text-placeholder">
-                  <div *ngIf="p">
-                    <i class="far fa-calendar mr-1"></i>
-                    <span>{{p.createdAt | date:'longDate'}}</span>
-                  </div>
+                  <span>
+                    <i iconPh="calendar" class="mr-1"></i>
+                    <span>{{p?.createdAt | date:'longDate'}}</span>
+                  </span>
                 </div>
                 <h5 class="body1 text-white mb-0 clamp-2line">{{p?.title}}</h5>
               </div>
@@ -79,7 +79,7 @@
         <div class="mb-30p">
           <a class="text-primary subtitle1 on-black" routerLink="/magazines/podcast">
             Browse all episodes
-            <i class="fas fa-arrow-circle-right"></i>
+            <i iconPh="arrow-right-circle"></i>
           </a>
         </div>
       </div>

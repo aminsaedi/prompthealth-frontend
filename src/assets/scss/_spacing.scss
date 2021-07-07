@@ -4,44 +4,44 @@
   .mt-#{$i * 5}p,
   .my-#{$i * 5}p,
   .m-#{$i * 5}p {
-    margin-top: #{$i * 5}px;
+    margin-top: #{$i * 5}px!important;
   }
   .mb-#{$i * 5}p,
   .my-#{$i * 5}p,
   .m-#{$i * 5}p {
-    margin-bottom: #{$i * 5}px;
+    margin-bottom: #{$i * 5}px!important;
   }
   .ml-#{$i * 5}p,
   .mx-#{$i * 5}p,
   .m-#{$i * 5}p {
-    margin-left: #{$i * 5}px;
+    margin-left: #{$i * 5}px!important;
   }
   .mr-#{$i * 5}p,
   .mx-#{$i * 5}p,
   .m-#{$i * 5}p {
-    margin-right: #{$i * 5}px;
+    margin-right: #{$i * 5}px!important;
   }
 
   @media (min-width: $breakpointSm) {
     .mt-sm-#{$i * 5}p,
     .my-sm-#{$i * 5}p,
     .m-sm-#{$i * 5}p {
-      margin-top: #{$i * 5}px;
+      margin-top: #{$i * 5}px!important;
     }
     .mb-sm-#{$i * 5}p,
     .my-sm-#{$i * 5}p,
     .m-sm-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px;
+      margin-bottom: #{$i * 5}px!important;
     }
     .ml-sm-#{$i * 5}p,
     .mx-sm-#{$i * 5}p,
     .m-sm-#{$i * 5}p {
-      margin-left: #{$i * 5}px;
+      margin-left: #{$i * 5}px!important;
     }
     .mr-sm-#{$i * 5}p,
     .mx-sm-#{$i * 5}p,
     .m-sm-#{$i * 5}p {
-      margin-right: #{$i * 5}px;
+      margin-right: #{$i * 5}px!important;
     }
   }
 
@@ -49,22 +49,22 @@
     .mt-md-#{$i * 5}p,
     .my-md-#{$i * 5}p,
     .m-md-#{$i * 5}p {
-      margin-top: #{$i * 5}px;
+      margin-top: #{$i * 5}px!important;
     }
     .mb-md-#{$i * 5}p,
     .my-md-#{$i * 5}p,
     .m-md-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px;
+      margin-bottom: #{$i * 5}px!important;
     }
     .ml-md-#{$i * 5}p,
     .mx-md-#{$i * 5}p,
     .m-md-#{$i * 5}p {
-      margin-left: #{$i * 5}px;
+      margin-left: #{$i * 5}px!important;
     }
     .mr-md-#{$i * 5}p,
     .mx-md-#{$i * 5}p,
     .m-md-#{$i * 5}p {
-      margin-right: #{$i * 5}px;
+      margin-right: #{$i * 5}px!important;
     }
   }
 
@@ -72,22 +72,22 @@
     .mt-lg-#{$i * 5}p,
     .my-lg-#{$i * 5}p,
     .m-lg-#{$i * 5}p {
-      margin-top: #{$i * 5}px;
+      margin-top: #{$i * 5}px!important;
     }
     .mb-lg-#{$i * 5}p,
     .my-lg-#{$i * 5}p,
     .m-lg-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px;
+      margin-bottom: #{$i * 5}px!important;
     }
     .ml-lg-#{$i * 5}p,
     .mx-lg-#{$i * 5}p,
     .m-lg-#{$i * 5}p {
-      margin-left: #{$i * 5}px;
+      margin-left: #{$i * 5}px!important;
     }
     .mr-lg-#{$i * 5}p,
     .mx-lg-#{$i * 5}p,
     .m-lg-#{$i * 5}p {
-      margin-right: #{$i * 5}px;
+      margin-right: #{$i * 5}px!important;
     }
   }
 
@@ -95,22 +95,22 @@
     .mt-xl-#{$i * 5}p,
     .my-xl-#{$i * 5}p,
     .m-xl-#{$i * 5}p {
-      margin-top: #{$i * 5}px;
+      margin-top: #{$i * 5}px!important;
     }
     .mb-xl-#{$i * 5}p,
     .my-xl-#{$i * 5}p,
     .m-xl-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px;
+      margin-bottom: #{$i * 5}px!important;
     }
     .ml-xl-#{$i * 5}p,
     .mx-xl-#{$i * 5}p,
     .m-xl-#{$i * 5}p {
-      margin-left: #{$i * 5}px;
+      margin-left: #{$i * 5}px!important;
     }
     .mr-xl-#{$i * 5}p,
     .mx-xl-#{$i * 5}p,
     .m-xl-#{$i * 5}p {
-      margin-right: #{$i * 5}px;
+      margin-right: #{$i * 5}px!important;
     }
   }  
 
@@ -120,44 +120,44 @@
   .pt-#{$i * 5}p,
   .py-#{$i * 5}p,
   .p-#{$i * 5}p {
-    padding-top: #{$i * 5}px;
+    padding-top: #{$i * 5}px!important;
   }
   .pb-#{$i * 5}p,
   .py-#{$i * 5}p,
   .p-#{$i * 5}p {
-    padding-bottom: #{$i * 5}px;
+    padding-bottom: #{$i * 5}px!important;
   }
   .pl-#{$i * 5}p,
   .px-#{$i * 5}p,
   .p-#{$i * 5}p {
-    padding-left: #{$i * 5}px;
+    padding-left: #{$i * 5}px!important;
   }
   .pr-#{$i * 5}p,
   .px-#{$i * 5}p,
   .p-#{$i * 5}p {
-    padding-right: #{$i * 5}px;
+    padding-right: #{$i * 5}px!important;
   }
 
   @media (min-width: $breakpointSm) {
     .pt-sm-#{$i * 5}p,
     .py-sm-#{$i * 5}p,
     .p-sm-#{$i * 5}p {
-      padding-top: #{$i * 5}px;
+      padding-top: #{$i * 5}px!important;
     }
     .pb-sm-#{$i * 5}p,
     .py-sm-#{$i * 5}p,
     .p-sm-#{$i * 5}p {
-      padding-bottom: #{$i * 5}px;
+      padding-bottom: #{$i * 5}px!important;
     }
     .pl-sm-#{$i * 5}p,
     .px-sm-#{$i * 5}p,
     .p-sm-#{$i * 5}p {
-      padding-left: #{$i * 5}px;
+      padding-left: #{$i * 5}px!important;
     }
     .pr-sm-#{$i * 5}p,
     .px-sm-#{$i * 5}p,
     .p-sm-#{$i * 5}p {
-      padding-right: #{$i * 5}px;
+      padding-right: #{$i * 5}px!important;
     }
   }
 
@@ -165,22 +165,22 @@
     .pt-md-#{$i * 5}p,
     .py-md-#{$i * 5}p,
     .p-md-#{$i * 5}p {
-      padding-top: #{$i * 5}px;
+      padding-top: #{$i * 5}px!important;
     }
     .pb-md-#{$i * 5}p,
     .py-md-#{$i * 5}p,
     .p-md-#{$i * 5}p {
-      padding-bottom: #{$i * 5}px;
+      padding-bottom: #{$i * 5}px!important;
     }
     .pl-md-#{$i * 5}p,
     .px-md-#{$i * 5}p,
     .p-md-#{$i * 5}p {
-      padding-left: #{$i * 5}px;
+      padding-left: #{$i * 5}px!important;
     }
     .pr-md-#{$i * 5}p,
     .px-md-#{$i * 5}p,
     .p-md-#{$i * 5}p {
-      padding-right: #{$i * 5}px;
+      padding-right: #{$i * 5}px!important;
     }
   }
 
@@ -188,22 +188,22 @@
     .pt-lg-#{$i * 5}p,
     .py-lg-#{$i * 5}p,
     .p-lg-#{$i * 5}p {
-      padding-top: #{$i * 5}px;
+      padding-top: #{$i * 5}px!important;
     }
     .pb-lg-#{$i * 5}p,
     .py-lg-#{$i * 5}p,
     .p-lg-#{$i * 5}p {
-      padding-bottom: #{$i * 5}px;
+      padding-bottom: #{$i * 5}px!important;
     }
     .pl-lg-#{$i * 5}p,
     .px-lg-#{$i * 5}p,
     .p-lg-#{$i * 5}p {
-      padding-left: #{$i * 5}px;
+      padding-left: #{$i * 5}px!important;
     }
     .pr-lg-#{$i * 5}p,
     .px-lg-#{$i * 5}p,
     .p-lg-#{$i * 5}p {
-      padding-right: #{$i * 5}px;
+      padding-right: #{$i * 5}px!important;
     }
   }
 
@@ -211,22 +211,22 @@
     .pt-xl-#{$i * 5}p,
     .py-xl-#{$i * 5}p,
     .p-xl-#{$i * 5}p {
-      padding-top: #{$i * 5}px;
+      padding-top: #{$i * 5}px!important;
     }
     .pb-xl-#{$i * 5}p,
     .py-xl-#{$i * 5}p,
     .p-xl-#{$i * 5}p {
-      padding-bottom: #{$i * 5}px;
+      padding-bottom: #{$i * 5}px!important;
     }
     .pl-xl-#{$i * 5}p,
     .px-xl-#{$i * 5}p,
     .p-xl-#{$i * 5}p {
-      padding-left: #{$i * 5}px;
+      padding-left: #{$i * 5}px!important;
     }
     .pr-xl-#{$i * 5}p,
     .px-xl-#{$i * 5}p,
     .p-xl-#{$i * 5}p {
-      padding-right: #{$i * 5}px;
+      padding-right: #{$i * 5}px!important;
     }
   }  
 }

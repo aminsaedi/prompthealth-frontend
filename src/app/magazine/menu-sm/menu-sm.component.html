@@ -16,21 +16,32 @@
   <div class="d-flex flex-nowrap overflow-hidden mt-60p" #menuSm>
     <div class="menu-inner">
       <ul class="list-unstyled mb-0 container">
-        <li class="py-2" *ngFor="let cat of categories">
-          <a *ngIf="!isCategoryEvent(cat)" class="py-2 text-body subtitle1 d-block" (click)="gonext(['/magazines/category/', cat.slug])">{{cat.title}}</a>
-          <a *ngIf="isCategoryEvent(cat)" class="py-2 text-body subtitle1 d-block" (click)="gonext(['/magazines/event'])">{{cat.title}}</a>
+        <li *ngFor="let cat of categories">
+          <ng-container *ngIf="!isCategoryEvent(cat)">
+            <list-item (onTap)="gonext(['/magazines/category/', cat.slug])" action="arrow-right">
+              <div class="subtitle1">{{cat.title}}</div>
+            </list-item>
+          </ng-container>
+          <ng-container *ngIf="!!isCategoryEvent(cat)">
+            <list-item (onTap)="gonext(['/magazines/category/event'])" action="arrow-right">
+              <div class="subtitle1">{{cat.title}}</div>
+            </list-item>
+          </ng-container>
         </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" (click)="gonext(['/magazines/video'])">Videos</a>
+        <li>
+          <list-item (onTap)="gonext(['/magazines/video'])" action="arrow-right">
+            <div class="subtitle1">Videos</div>
+          </list-item>
         </li>
-        <li class="py-2">
-          <a class="py-2 text-body subtitle1 d-block" (click)="gonext(['/magazines/podcast'])">Podcasts</a>
+        <li>
+          <list-item (onTap)="gonext(['/magazines/podcast'])" action="arrow-right">
+            <div class="subtitle1">Podcasts</div>
+          </list-item>
         </li>
-        <li class="py-2" *ngIf="tags && tags.length > 0">
-          <a class="py-2 text-body subtitle1 d-flex justify-content-between align-items-center" (click)="changeMenuTo(0, 1)">
-            All topics
-            <i iconPh="chevron-right"></i>
-          </a>
+        <li>
+          <list-item (onTap)="changeMenuTo(0,1)" action="chevron-right">
+            <div class="subtitle1">All topics</div>
+          </list-item>
         </li>
       </ul>
     </div>
@@ -44,9 +55,11 @@
           </button>
         </li>
 
-        <li class="py-2" *ngFor="let tag of tags">
-          <a class="py-2 text-body subtitle1 d-block" (click)="gonext(['/magazines/tag/', tag.slug])">{{tag.title}}</a>
-        </li>  
+        <li *ngFor="let tag of tags">
+          <list-item action="arrow-right" (onTap)="gonext(['/magazines/tag/', tag.slug])">
+            <div class="subtitle1">{{tag.title}}</div>
+          </list-item>
+        </li>
       </ul>
     </div>
   </div>

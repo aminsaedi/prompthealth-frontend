@@ -22,6 +22,6 @@ class="d-flex justify-content-end mt-1"
 >
   <form-item-errors class="flex-grow-1" [controller]="controller" [submitted]="submitted" [label]="label"></form-item-errors>
   <span *ngIf="max > 0" class="flex-grow-0 font-small" 
-  [ngClass]="!controller.dirty ? 'text-secondary' : controller.errors ? 'text-danger' : 'text-success'"
+  [ngClass]="!controller.dirty ? 'text-placeholder' : controller.errors ? 'text-danger' : 'text-success'"
   >{{controller.value.length}}/{{max}}</span>
 </div>

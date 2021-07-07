@@ -1,7 +1,5 @@
-<div class="sticky-top header-container bg-white">
-    <app-header [eventKey]="eventKey" *ngIf="!onMagazine"></app-header>
-    <app-header-magazine *ngIf="onMagazine"></app-header-magazine>
-</div>
+<app-header [eventKey]="eventKey" *ngIf="!onMagazine" class="header-container"></app-header>
+<app-header-magazine *ngIf="onMagazine" class="header-container"></app-header-magazine>
 
 <div class="wrapper">
     <router-outlet appHighlight></router-outlet>

@@ -54,9 +54,10 @@
       <ng-container *ngFor="let type of ['facebook', 'twitter', 'linkedin', 'instagram', 'tiktok', 'youtube']">
         <li class="rounded-lg">
           <div class="py-3 text-white text-center subtitle1" [ngClass]="'bg-' + type">
-            <i *ngIf="type != 'tiktok'" class="fab" [ngClass]="'fa-' + type"></i>
-            <img *ngIf="type == 'tiktok'" src="https://s2.svgbox.net/social.svg?ic=tiktok&color=fff">  
-            <span class="ml-2">{{type | titlecase}}</span>
+            <span>
+              <i [iconPh]="type"></i>
+              <span class="ml-2">{{type | titlecase}}</span>  
+            </span>
           </div>
           <div class="py-4 text-center">{{user[type + 'ClickCount'] || 0}}</div>
         </li>

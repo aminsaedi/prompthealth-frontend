@@ -65,8 +65,8 @@
                 <span class="mb-10p text-nowrap">
                   <i iconPh="video-camera" class="mr-1"></i>
                   <span *ngIf="!data" class="color-dummy">On Meet</span>
-                  <span *ngIf="data.event.eventOn">On {{data.event.eventOn | titlecase}}</span>
-                  <span *ngIf="!data.event.eventOn">Virtual</span>
+                  <span *ngIf="data && data.event.eventOn">On {{data.event.eventOn | titlecase}}</span>
+                  <span *ngIf="data && !data.event.eventOn">Virtual</span>
                 </span>
               </div>
               <div *ngIf="sizeL"

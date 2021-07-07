@@ -23,7 +23,7 @@
       </p>
 
       <div *ngIf="!isVerified" class="row-upload-button mb-3" [ngClass]="{'priority-low': !!data}">
-        <button type="button" class="btn px-5 text-blue border-blue font-regular position-relative">
+        <button type="button" class="btn btn-outline position-relative">
           <span *ngIf="!data">Upload</span>
           <span *ngIf="data">Add</span>
           {{type | titlecase}}
@@ -47,11 +47,11 @@
             
             <div *ngIf="targetFileMenu === i" class="file-menu">
               <div class="d-flex align-items-center justify-content-around file-menu-bar">
-                <button class="btn" (click)="onDownload(i)" type="button">
-                  <i class="fas fa-download font-bigger"></i>
+                <button class="btn btn-icon text-body" (click)="onDownload(i)" type="button">
+                  <i iconPh="file-download"></i>
                 </button>
-                <button *ngIf="!isVerified" type="button" class="btn font-bigger" (click)="onRemove(i)">
-                  <i class="fas fa-times"></i>
+                <button *ngIf="!isVerified" type="button" class="btn btn-icon text-danger" (click)="onRemove(i)">
+                  <i iconPh="cross"></i>
                 </button>  
               </div>
             </div>
