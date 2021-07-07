@@ -1,6 +1,6 @@
 /** margin and padding from 5px to 50px (step: 5px) */
 
-@for $i from 1 through 20 {
+@for $i from 0 through 20 {
   .mt-#{$i * 5}p,
   .my-#{$i * 5}p,
   .m-#{$i * 5}p {
@@ -22,101 +22,6 @@
     margin-right: #{$i * 5}px!important;
   }
 
-  @media (min-width: $breakpointSm) {
-    .mt-sm-#{$i * 5}p,
-    .my-sm-#{$i * 5}p,
-    .m-sm-#{$i * 5}p {
-      margin-top: #{$i * 5}px!important;
-    }
-    .mb-sm-#{$i * 5}p,
-    .my-sm-#{$i * 5}p,
-    .m-sm-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px!important;
-    }
-    .ml-sm-#{$i * 5}p,
-    .mx-sm-#{$i * 5}p,
-    .m-sm-#{$i * 5}p {
-      margin-left: #{$i * 5}px!important;
-    }
-    .mr-sm-#{$i * 5}p,
-    .mx-sm-#{$i * 5}p,
-    .m-sm-#{$i * 5}p {
-      margin-right: #{$i * 5}px!important;
-    }
-  }
-
-  @media (min-width: $breakpointMd) {
-    .mt-md-#{$i * 5}p,
-    .my-md-#{$i * 5}p,
-    .m-md-#{$i * 5}p {
-      margin-top: #{$i * 5}px!important;
-    }
-    .mb-md-#{$i * 5}p,
-    .my-md-#{$i * 5}p,
-    .m-md-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px!important;
-    }
-    .ml-md-#{$i * 5}p,
-    .mx-md-#{$i * 5}p,
-    .m-md-#{$i * 5}p {
-      margin-left: #{$i * 5}px!important;
-    }
-    .mr-md-#{$i * 5}p,
-    .mx-md-#{$i * 5}p,
-    .m-md-#{$i * 5}p {
-      margin-right: #{$i * 5}px!important;
-    }
-  }
-
-  @media (min-width: $breakpointLg) {
-    .mt-lg-#{$i * 5}p,
-    .my-lg-#{$i * 5}p,
-    .m-lg-#{$i * 5}p {
-      margin-top: #{$i * 5}px!important;
-    }
-    .mb-lg-#{$i * 5}p,
-    .my-lg-#{$i * 5}p,
-    .m-lg-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px!important;
-    }
-    .ml-lg-#{$i * 5}p,
-    .mx-lg-#{$i * 5}p,
-    .m-lg-#{$i * 5}p {
-      margin-left: #{$i * 5}px!important;
-    }
-    .mr-lg-#{$i * 5}p,
-    .mx-lg-#{$i * 5}p,
-    .m-lg-#{$i * 5}p {
-      margin-right: #{$i * 5}px!important;
-    }
-  }
-
-  @media (min-width: $breakpointXl) {
-    .mt-xl-#{$i * 5}p,
-    .my-xl-#{$i * 5}p,
-    .m-xl-#{$i * 5}p {
-      margin-top: #{$i * 5}px!important;
-    }
-    .mb-xl-#{$i * 5}p,
-    .my-xl-#{$i * 5}p,
-    .m-xl-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px!important;
-    }
-    .ml-xl-#{$i * 5}p,
-    .mx-xl-#{$i * 5}p,
-    .m-xl-#{$i * 5}p {
-      margin-left: #{$i * 5}px!important;
-    }
-    .mr-xl-#{$i * 5}p,
-    .mx-xl-#{$i * 5}p,
-    .m-xl-#{$i * 5}p {
-      margin-right: #{$i * 5}px!important;
-    }
-  }  
-
-
-
-
   .pt-#{$i * 5}p,
   .py-#{$i * 5}p,
   .p-#{$i * 5}p {
@@ -137,8 +42,31 @@
   .p-#{$i * 5}p {
     padding-right: #{$i * 5}px!important;
   }
+}
 
-  @media (min-width: $breakpointSm) {
+@media (min-width: $breakpointSm) {
+  @for $i from 0 through 20 {
+    .mt-sm-#{$i * 5}p,
+    .my-sm-#{$i * 5}p,
+    .m-sm-#{$i * 5}p {
+      margin-top: #{$i * 5}px!important;
+    }
+    .mb-sm-#{$i * 5}p,
+    .my-sm-#{$i * 5}p,
+    .m-sm-#{$i * 5}p {
+      margin-bottom: #{$i * 5}px!important;
+    }
+    .ml-sm-#{$i * 5}p,
+    .mx-sm-#{$i * 5}p,
+    .m-sm-#{$i * 5}p {
+      margin-left: #{$i * 5}px!important;
+    }
+    .mr-sm-#{$i * 5}p,
+    .mx-sm-#{$i * 5}p,
+    .m-sm-#{$i * 5}p {
+      margin-right: #{$i * 5}px!important;
+    }
+
     .pt-sm-#{$i * 5}p,
     .py-sm-#{$i * 5}p,
     .p-sm-#{$i * 5}p {
@@ -160,8 +88,31 @@
       padding-right: #{$i * 5}px!important;
     }
   }
+}
 
-  @media (min-width: $breakpointMd) {
+@media (min-width: $breakpointMd) {
+  @for $i from 0 through 20 {
+    .mt-md-#{$i * 5}p,
+    .my-md-#{$i * 5}p,
+    .m-md-#{$i * 5}p {
+      margin-top: #{$i * 5}px!important;
+    }
+    .mb-md-#{$i * 5}p,
+    .my-md-#{$i * 5}p,
+    .m-md-#{$i * 5}p {
+      margin-bottom: #{$i * 5}px!important;
+    }
+    .ml-md-#{$i * 5}p,
+    .mx-md-#{$i * 5}p,
+    .m-md-#{$i * 5}p {
+      margin-left: #{$i * 5}px!important;
+    }
+    .mr-md-#{$i * 5}p,
+    .mx-md-#{$i * 5}p,
+    .m-md-#{$i * 5}p {
+      margin-right: #{$i * 5}px!important;
+    }
+
     .pt-md-#{$i * 5}p,
     .py-md-#{$i * 5}p,
     .p-md-#{$i * 5}p {
@@ -183,8 +134,31 @@
       padding-right: #{$i * 5}px!important;
     }
   }
+}
 
-  @media (min-width: $breakpointLg) {
+@media (min-width: $breakpointLg) {
+  @for $i from 0 through 20 {
+    .mt-lg-#{$i * 5}p,
+    .my-lg-#{$i * 5}p,
+    .m-lg-#{$i * 5}p {
+      margin-top: #{$i * 5}px!important;
+    }
+    .mb-lg-#{$i * 5}p,
+    .my-lg-#{$i * 5}p,
+    .m-lg-#{$i * 5}p {
+      margin-bottom: #{$i * 5}px!important;
+    }
+    .ml-lg-#{$i * 5}p,
+    .mx-lg-#{$i * 5}p,
+    .m-lg-#{$i * 5}p {
+      margin-left: #{$i * 5}px!important;
+    }
+    .mr-lg-#{$i * 5}p,
+    .mx-lg-#{$i * 5}p,
+    .m-lg-#{$i * 5}p {
+      margin-right: #{$i * 5}px!important;
+    }
+
     .pt-lg-#{$i * 5}p,
     .py-lg-#{$i * 5}p,
     .p-lg-#{$i * 5}p {
@@ -206,8 +180,31 @@
       padding-right: #{$i * 5}px!important;
     }
   }
+}
 
-  @media (min-width: $breakpointXl) {
+@media (min-width: $breakpointXl) {
+  @for $i from 0 through 20 {
+    .mt-xl-#{$i * 5}p,
+    .my-xl-#{$i * 5}p,
+    .m-xl-#{$i * 5}p {
+      margin-top: #{$i * 5}px!important;
+    }
+    .mb-xl-#{$i * 5}p,
+    .my-xl-#{$i * 5}p,
+    .m-xl-#{$i * 5}p {
+      margin-bottom: #{$i * 5}px!important;
+    }
+    .ml-xl-#{$i * 5}p,
+    .mx-xl-#{$i * 5}p,
+    .m-xl-#{$i * 5}p {
+      margin-left: #{$i * 5}px!important;
+    }
+    .mr-xl-#{$i * 5}p,
+    .mx-xl-#{$i * 5}p,
+    .m-xl-#{$i * 5}p {
+      margin-right: #{$i * 5}px!important;
+    }
+
     .pt-xl-#{$i * 5}p,
     .py-xl-#{$i * 5}p,
     .p-xl-#{$i * 5}p {
@@ -230,5 +227,4 @@
     }
   }  
 }
-
   

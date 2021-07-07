@@ -13,8 +13,8 @@
           class="position-absolute px-10p py-5p mt-10p ml-10p rounded-8p"
           [ngClass]="{'bg-white': !data.event.isFinished, 'bg-danger text-light': data.event.isFinished}"
           >
-            <div class="h6-temp text-center">{{data.event.startAt | date:'dd'}}</div>
-            <div class="caption-temp opacity-70pc text-center">{{data.event.startAt | date:'MMM' | uppercase}}</div>
+            <div class="h6 text-center">{{data.event.startAt | date:'dd'}}</div>
+            <div class="caption opacity-70pc text-center">{{data.event.startAt | date:'MMM' | uppercase}}</div>
           </div>
         </div>
       </div>
@@ -24,7 +24,7 @@
       >
         <div class="info-container mt-10p">
           <div 
-          class="stat-container body2-temp opacity-70pc "
+          class="stat-container body2 opacity-70pc "
           [ngClass]="{'mb-5p mb-md-25p': sizeL, 'mb-10p': !sizeL }"
           >
             <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between  ">
@@ -83,7 +83,7 @@
             <!-- <div class="mb-10p text-nowrap" *ngIf="!data || (data.tags && data.tags.length > 0)">
               <i class="fas fa-tag"></i>
               <span *ngIf="!data" class="color-dummy ml-1">Hormonal Health</span>
-              <ul *ngIf="data" class="list-unstyled d-inline-flex flex-wrap clamp-1line body2-temp mb-0">
+              <ul *ngIf="data" class="list-unstyled d-inline-flex flex-wrap clamp-1line body2 mb-0">
                 <ng-container *ngFor="let t of data.tags; let i = index">
                   <ng-container *ngIf="i < 3">
                     <li class="ml-1">{{t.title}}</li>
@@ -95,7 +95,7 @@
           </div>
 
           <h4 
-          class="h6-temp mb-10p"
+          class="h6 mb-10p"
           [ngClass]="{'clamp-2line': !sizeL}"
           >
             <div *ngIf="!data"><div class="color-dummy" style="height: 0.95em;"></div></div>
@@ -103,14 +103,14 @@
           </h4>
 
           <div 
-          class="body1-temp mb-20p"
+          class="body1 mb-20p"
           [ngClass]="{'clamp-2line': sizeL, 'clamp-3line': !sizeL}"
           >
             <div *ngIf="!data">
               <div class="color-dummy" style="height: 1em;"></div>
               <div class="mt-1"><div class="color-dummy" style="height: 1em;"></div></div>  
             </div>
-            <p *ngIf="data" class="body1-temp mb-0 opacity-80pc" [innerHTML]="data.summary"></p>
+            <p *ngIf="data" class="body1 mb-0 opacity-80pc" [innerHTML]="data.summary"></p>
           </div>
 
           <div class="d-flex align-items-center" *ngIf="sizeL">
@@ -125,7 +125,7 @@
             [ngClass]="{'large': sizeL}"
             ></div>
     
-            <p class="m-0 opacity-70pc body1-temp clamp-1line">
+            <p class="m-0 opacity-70pc body1 clamp-1line">
               <span *ngIf="!data" class="color-dummy">By author name</span>
               <span *ngIf="data">{{data.author}}</span>
             </p>
