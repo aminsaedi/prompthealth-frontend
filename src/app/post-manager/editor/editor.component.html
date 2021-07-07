@@ -60,19 +60,13 @@
               [submitted]="isSubmitted"
               ></form-item-errors>
             </div>
-            <!-- <input type="text"
-            class="form-control form-control-title h4-temp h2-temp-md"
-            placeholder="Enter Title..."
-            [formControl]="f.title"
-            > -->
+
             <div 
             class="contenteditable title h4-temp h2-temp-md mb-30p"
             data-placeholder="Enter title..."
             contenteditable 
             [formControl]="f.title"
-            (keydown)="onKeydownTitle($event)"
-            (input)="onInputTitle($event)"
-            (keyup)="onKeyupTitle($event)"
+            (beforeinput)="onBeforeInputTitle($event)"
             ></div>
           </div>
   
