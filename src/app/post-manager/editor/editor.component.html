@@ -71,6 +71,8 @@
             contenteditable 
             [formControl]="f.title"
             (keydown)="onKeydownTitle($event)"
+            (input)="onInputTitle($event)"
+            (keyup)="onKeyupTitle($event)"
             ></div>
           </div>
   

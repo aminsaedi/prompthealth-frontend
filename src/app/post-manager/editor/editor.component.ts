@@ -382,14 +382,31 @@ export class EditorComponent implements OnInit {
     }, 0);
   }
 
+  private moveToContentEditorPrevented = true;
   onKeydownTitle(e: KeyboardEvent) {
-    if(!e.isComposing && e.key == 'Enter') {
+    this.moveToContentEditorPrevented = e.isComposing;
+    if(e.key == 'Enter') {
       e.preventDefault();
-      if(this.contentEditor) {
-        this.contentEditor.focus();
-      }
     }
   }
+
+  onInputTitle(e: InputEvent) {
+    //remove html tag if user use keyboard shortcat to stylize
+    let val = this.f.title.value || '';
+    const regExTag = /<[^>]+>/g;
+    const match = val.match(regExTag);
+    if(match) {
+      val = val.replace(regExTag, '');
+      this.f.title.setValue(val);
+    }
+  }
+
+  onKeyupTitle(e: KeyboardEvent) {
+    if(e.key == 'Enter' && this.contentEditor && !this.moveToContentEditorPrevented) {
+      this.contentEditor.focus();
+    }
+  }
+
 
   onEditorCreated(e: Quill) {
     this.contentEditor = e;
