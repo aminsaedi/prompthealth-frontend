@@ -1,13 +1,13 @@
 <section class="container mt-70p mt-md-100p pb-35p pb-md-65p border-bottom border-line">
 
   <div class="d-flex">
-    <i *ngIf="taxonomyType == 'tag'" class="h4-temp h2-temp-md fas fa-tag text-placeholder mr-3"></i>
-    <i *ngIf="taxonomyType == 'category'" class="far fa-folder h4-temp h2-temp-md text-placeholder mr-3"></i>
-    <i *ngIf="taxonomyType == 'video'" class="fas fa-video h4-temp h2-temp-md text-placeholder mr-3"></i>
-    <i *ngIf="taxonomyType == 'podcast'" class="fas fa-headphones-alt h4-temp h2-temp-md text-placeholder mr-3"></i>
+    <i iconPh="tag-2" *ngIf="taxonomyType == 'tag'" class="h4 h2-md text-placeholder mr-3"></i>
+    <i iconPh="folder" *ngIf="taxonomyType == 'category'" class="h4 h2-md text-placeholder mr-3"></i>
+    <i iconPh="video-camera" *ngIf="taxonomyType == 'video'" class="h4 h2-md text-placeholder mr-3"></i>
+    <i iconPh="volume-high" *ngIf="taxonomyType == 'podcast'" class="h4 h2-md text-placeholder mr-3"></i>
     <div>
-      <h2 class="h4-temp h2-temp-md">{{taxonomyName | titlecase}}</h2>
-      <p class="subtitle1-temp mb-0">
+      <h2 class="h4 h2-md">{{taxonomyName | titlecase}}</h2>
+      <p class="subtitle1 mb-0">
         A collection of 
         <span>
           <span>{{postTotal}} {{postType}}</span>
@@ -22,7 +22,7 @@
   <div class="row">
     <ng-container *ngIf="latest && latest.length == 0">
       <div class="col-12">
-        <p class="subtitle1-temp">No posts found...</p>
+        <p class="subtitle1">No posts found...</p>
       </div>
     </ng-container>
     <ng-container *ngFor="let p of latest; let i = index">
@@ -61,7 +61,10 @@
         <span>{{page}}</span>
     </a>  
     </ng-container>
-    <i class="fas fa-ellipsis-h text-primary-dark" *ngIf="paginators.length - 1 > i"></i>
+    <i iconPh="more-horiz"
+    *ngIf="paginators.length - 1 > i"
+    class="text-primary-dark"
+    ></i>
   </ng-container>
 </div>
 

@@ -35,21 +35,21 @@
                   <div *ngIf="!data" class="author-dummy color-dummy"></div>
                   <img *ngIf="data" [src]="data.authorImage" alt="" class="author">
                 </div>
-                <span
+                <!-- <span
                 class="mb-10p mr-15p text-nowrap"
                 [ngClass]="{'mr-md-25p': sizeL}"
                 >
-                  <i class="far fa-calendar mr-1"></i>
+                  <i iconPh="calendar" class="mr-1"></i>
                   <span *ngIf="!data" class="color-dummy">Apr 22, 2035</span>
                   <span *ngIf="data && !sizeL">{{data.event.startAt | date}}</span>
                   <span *ngIf="data && sizeL">{{data.event.startAt | date:'MMM d, yyyy hh:mm a'}}</span>
-                </span>
+                </span> -->
               
                 <span
                 class="mb-10p mr-15p text-nowrap"
                 [ngClass]="{'mr-md-25p': sizeL}"
                 >
-                  <i class="far fa-hourglass mr-1"></i>
+                  <i iconPh="timer" class="mr-1"></i>
                   <span *ngIf="!data" class="color-dummy">2 hours</span>
                   <span *ngIf="data">{{data.event.durationFormatted}}</span>
                 </span>
@@ -63,7 +63,7 @@
                   <span *ngIf="data">{{data.catTitle}}</span>
                 </span> -->
                 <span class="mb-10p text-nowrap">
-                  <i class="fas fa-video mr-1"></i>
+                  <i iconPh="video-camera" class="mr-1"></i>
                   <span *ngIf="!data" class="color-dummy">On Meet</span>
                   <span *ngIf="data.event.eventOn">On {{data.event.eventOn | titlecase}}</span>
                   <span *ngIf="!data.event.eventOn">Virtual</span>

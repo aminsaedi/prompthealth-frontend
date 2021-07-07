@@ -115,6 +115,8 @@ export class AppComponent implements OnInit {
       } else if (pathPrev != pathCurrent) { 
         window.scroll(0, 0); 
       }
+
+      this.urlPrev = event.url;
     }
   }
 

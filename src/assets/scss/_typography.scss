@@ -98,7 +98,7 @@ caption, .caption { @include typography(12px, 16px, $fontWeightRegular, 0.2px); 
   }
 }
 
-@for $i from 1 through 3 {
+@for $i from 1 through 5 {
   @include clampTemplate($i);
 
   @media (min-width: $breakpointMd) {

@@ -15,7 +15,7 @@
 
     <div class="info-container">
       <div 
-      class="stat-container  body2-temp opacity-70pc"
+      class="stat-container  body2 opacity-70pc"
       [ngClass]="{'mb-5p mb-md-25p': sizeL, 'mb-10p': (sizeM || sizeS) }"
       >
         <div class="d-flex align-items-center flex-wrap">
@@ -24,12 +24,12 @@
             <img *ngIf="data" [src]="data.authorImage" alt="" class="author">
           </div>
           <span class="mb-10p text-nowrap">
-            <i class="far fa-calendar mr-1"></i>
+            <i iconPh="calendar" class="mr-1"></i>
             <span *ngIf="!data" class="color-dummy">Apr 22, 2035</span>
             <span *ngIf="data">{{data.createdAt | date}}</span>
           </span>
           <span class="ml-2 mb-10p text-nowrap">
-            <i class="far fa-hourglass mr-1"></i>
+            <i iconPh="timer" class="mr-1"></i>
             <span *ngIf="!data" class="color-dummy">
               10 min
             </span>
@@ -39,7 +39,7 @@
             </span>
           </span>
           <span class="ml-2 mb-10p text-nowrap" *ngIf="showCategory && (!data || data.category)">
-            <i class="far fa-folder mr-1"></i>
+            <i iconPh="folder" class="mr-1"></i>
             <span *ngIf="!data" class="color-dummy">News</span>
             <span *ngIf="data">{{data.catTitle}}</span>
           </span>
@@ -52,7 +52,7 @@
       >
         <h3 
         class="mb-10p clamp-2line" 
-        [ngClass]="{'h4-temp h2-temp-md clamp-md-3line mb-md-20p': sizeL, 'h5-temp': sizeM, 'h6-temp': sizeS}"
+        [ngClass]="{'h4 h2-md clamp-md-3line mb-md-20p': sizeL, 'h5': sizeM, 'h6': sizeS}"
         >
           <div *ngIf="!data">
             <div><div class="color-dummy" style="height: 0.95em;"></div></div>
@@ -64,7 +64,7 @@
           </span>
         </h3>
         
-        <div class="body1-temp mb-20p" [ngClass]="{'clamp-5line': sizeL, 'clamp-3line opacity-80pc': sizeM, 'd-none': sizeS}">
+        <div class="body1 mb-20p" [ngClass]="{'clamp-5line': sizeL, 'clamp-3line opacity-80pc': sizeM, 'd-none': sizeS}">
           <div *ngIf="!data">
             <div class="color-dummy" style="height: 1em;"></div>
             <div class="mt-1"><div class="color-dummy" style="height: 1em;"></div></div>
@@ -73,7 +73,7 @@
             <div *ngIf="sizeL" class="d-none d-md-block mt-1"><div class="color-dummy" style="height: 1em;"></div></div>
           </div>
           
-          <p *ngIf="data" class="body1-temp mb-0" [innerHTML]="data.summary"></p>
+          <p *ngIf="data" class="body1 mb-0" [innerHTML]="data.summary"></p>
         </div>  
       </div>
 
@@ -81,7 +81,7 @@
         <img *ngIf="data" [src]="data.authorImage" alt="" class="author mr-2">
         <div *ngIf="!data" class="author-dummy color-dummy mr-2"></div>
 
-        <p class="m-0 opacity-70pc body1-temp clamp-1line">
+        <p class="m-0 opacity-70pc body1 clamp-1line">
           <span *ngIf="!data" class="color-dummy">By author name</span>
           <span *ngIf="data">{{data.author}}</span>
         </p>

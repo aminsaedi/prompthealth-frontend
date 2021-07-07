@@ -29,7 +29,7 @@
             <a *ngIf="priceType == 'product'" class="text-body" routerLink="/plans/product" (click)="hideMenu()">Pricing</a>
           </li>
           <li class="mx-10p">
-            <a routerLink="/blogs" class="text-body">Blogs</a>
+            <a routerLink="/magazines" class="text-body">Magazine</a>
           </li>
 
           <li class="mx-10p" *ngIf="!isLoggedIn">
@@ -167,9 +167,9 @@
     </li>
 
     <li>
-      <a routerLink="/blogs" (click)="hideMenu()">
+      <a routerLink="/magazines" (click)="hideMenu()">
         <list-item>
-          <div class="subtitle1 text-primary">Blogs</div>  
+          <div class="subtitle1 text-primary">Magazine</div>  
         </list-item>
         </a>
     </li>
