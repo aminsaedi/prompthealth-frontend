@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
     }
 
     async getBlog() {
-      const query = new BlogSearchQuery({limit: 3});
+      const query = new BlogSearchQuery({count: 3});
       this._sharedService.getNoAuth('/blog/get-all', query.json ).subscribe((res: IResponseData) => {
         if(res.statusCode === 200) {
           const blogs = [];
