@@ -9,6 +9,7 @@ import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { IDefaultPlan } from 'src/app/models/default-plan';
 
 @Component({
   selector: 'app-register-questionnaire',
@@ -80,32 +81,59 @@ export class RegisterQuestionnaireComponent implements OnInit {
     });
 
     this.subscriptionFinish = this._qService.observeFinish().subscribe((isCompleteAll: boolean) => {
-      if(!isCompleteAll){
-        this._toastr.error('You haven\'t enter some sections. Please review from beginning.');
-      }
-      else{ 
-        this._sharedService.loader('show');
-        try{
-          this.save(); 
-          this._router.navigate(['/dashboard/register-product/complete'], {queryParams: {type: this.registerType}});
-          
-        }catch(err){
-          this._toastr.error(err);
-        }finally{
-          this._sharedService.loader('hide');
-        }
-      }
+      this.onQuestionnaireDone(isCompleteAll);
     });
   }
 
-  async save(): Promise<boolean> {
+  async onQuestionnaireDone(isCompleteAll: boolean){
+    if(!isCompleteAll){
+      this._toastr.error('You haven\'t enter some sections. Please review from beginning.');
+    }
+    else{ 
+      this._sharedService.loader('show');
+      try{
+        const user = await this.save();
+        const plan = this.retrieveSelectedPlan();
+        if(plan) {
+          try {
+            const monthly = (this._uService.sessionStorage.getItem('selectedMonthly') === 'true') ? true : false;
+            const result = await this._sharedService.checkoutPlan(user, plan, 'default', monthly);
+            this._toastr.success(result.message);
+            switch(result.nextAction) {
+              case 'complete':
+                this._router.navigate(['/dashboard/register-product/complete']);
+                break;
+              case 'stripe':
+                //automatically redirect to stripe. nothing to do.
+                break;
+            }
+          } catch(error) {
+            this._toastr.error(error);
+          }
+        } else {
+          this._toastr.error('You haven\'t selected plan yet. Please select Plan.');
+          const route = ['/plans'];
+          if(this.userRole == 'P') { route.push('product'); }
+          this._router.navigate(route); 
+        }
+      }catch(err){
+        this._toastr.error(err);
+      }finally{
+        this._sharedService.loader('hide');
+      }
+    }
+  }
+
+  async save(): Promise<IUserDetail> {
     return new Promise((resolve, reject) => {
       const data = this._qService.getUser();
+      data.questionnaireCompleted = true;
+
       this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
         this._sharedService.loader('hide');
         if(res.statusCode == 200){
           this._bsService.setUserData(res.data);
-          resolve(true);
+          resolve(res.data);
         }else{
           reject(res.message);
         }
@@ -125,6 +153,18 @@ export class RegisterQuestionnaireComponent implements OnInit {
       this._headerService.showHeader(); 
     }
   }  
+
+  retrieveSelectedPlan(): IDefaultPlan {
+    let planSelected: IDefaultPlan = null;
+    const planStr = this._uService.sessionStorage.getItem('selectedPlan');
+    if(planStr) {
+      const plan: IDefaultPlan = JSON.parse(planStr);
+      if(plan.userType.includes(this.userRole)) {
+        planSelected = plan;
+      }
+    }
+    return planSelected;
+  }
 }
 
 export type RegisterType = 'product' | 'practitioner';

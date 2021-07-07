@@ -20,7 +20,7 @@ export interface IUserDetail {
   state?: string;
   zipcode?: string;
   location?: number[]; /** [lng, lat] */
-  placeId?: string;
+  placeId?: string; /** google place id */
   
   phone?: string;
 
@@ -72,6 +72,7 @@ export interface IUserDetail {
   website?: string;
   viewCount?: number;
   isVerified?: string; /** Y |  */
+  questionnaireCompleted?: boolean;
   // date_verified?: string;
 
 

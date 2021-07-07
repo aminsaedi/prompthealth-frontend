@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, FormArray} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
   selector: 'form-partner-offer',
@@ -14,11 +15,11 @@ export class FormPartnerOfferComponent implements OnInit {
 
   @Output() submitForm = new EventEmitter<PartnerOfferData>(); /** it does NOT return userID */
 
-  public offers: {id: string, label: string, placeholder: string}[] = [
-    {id: 'couponLink',    label: 'Coupons',        placeholder: 'Coupon name',},
-    {id: 'freeSampleLink',label: 'Free samples',   placeholder: 'https://example.com', },
-    {id: 'trialLink',     label: 'Trials',         placeholder: 'https://example.com', },
-    {id: 'affiliateLink', label: 'Affiliate Link', placeholder: 'https://example.com', }
+  public offers: {id: string, label: string, placeholder: string, autocomplete: string, type: string}[] = [
+    {id: 'couponLink',    label: 'Coupons',        placeholder: 'Coupon name',         autocomplete: null,  type: 'text'},
+    {id: 'freeSampleLink',label: 'Free samples',   placeholder: 'https://example.com', autocomplete: 'url', type: 'url'},
+    {id: 'trialLink',     label: 'Trials',         placeholder: 'https://example.com', autocomplete: 'url', type: 'url'},
+    {id: 'affiliateLink', label: 'Affiliate Link', placeholder: 'https://example.com', autocomplete: 'url', type: 'url'},
   ];
 
   public form: FormGroup;
@@ -45,22 +46,22 @@ export class FormPartnerOfferComponent implements OnInit {
       priceLevel: new FormControl((this.data.priceLevel ? this.data.priceLevel : ''), [Validators.required]),
       price1: new FormControl((this.data.price1 ? this.data.price1 : ''), [Validators.pattern(this.patternPrice)]),
       price2: new FormControl((this.data.price2 ? this.data.price2 : ''), [Validators.pattern(this.patternPrice)]),
-      signupURL: new FormControl((this.data.signupURL ? this.data.signupURL : ''), [Validators.pattern(this.patternURL)]),
+      signupURL: new FormControl((this.data.signupURL ? this.data.signupURL : ''), validators.productOfferLink),
       couponLink: new FormArray([
         new FormControl(this.data.couponLink ? true : false),
         new FormControl(this.data.couponLink ? this.data.couponLink : '', []),
       ]),
       freeSampleLink: new FormArray([
         new FormControl(this.data.freeSampleLink ? true : false),
-        new FormControl(this.data.freeSampleLink ? this.data.freeSampleLink : '', [Validators.pattern(this.patternURL)]),        
+        new FormControl(this.data.freeSampleLink ? this.data.freeSampleLink : '', validators.productOfferLink),        
       ]),
       trialLink: new FormArray([
         new FormControl(this.data.trialLink ? true : false),
-        new FormControl(this.data.trialLink ? this.data.trialLink : '', [Validators.pattern(this.patternURL)]),        
+        new FormControl(this.data.trialLink ? this.data.trialLink : '', validators.productOfferLink),        
       ]),
       affiliateLink: new FormArray([
         new FormControl(this.data.affiliateLink ? true : false),
-        new FormControl(this.data.affiliateLink ? this.data.affiliateLink : '', [Validators.pattern(this.patternURL)]),        
+        new FormControl(this.data.affiliateLink ? this.data.affiliateLink : '', validators.productOfferLink),        
       ]),
     });
 

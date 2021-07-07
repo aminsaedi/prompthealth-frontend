@@ -1,4 +1,4 @@
-<footer class="bg-primary-light pt-70p pb-55p">
+<!-- <footer class="bg-primary-light pt-70p pb-55p">
   <div class="container">
     <section class="row mb-50p">
       <div class="mb-40p mb-lg-0 col-12 col-lg-1 col-xl-2 text-center">
@@ -87,5 +87,87 @@
     </section>
     
   </div>
-</footer>
+</footer> -->
 
+<section class="main-footer py-5">
+  <div class="container">
+    <div class="separator my-3">
+    </div>
+
+    <div class="row my-4 ">
+      <div class="col d-flex justify-content-center">
+        <div style="width: 10rem;">
+          <img class="img-fluid" src="assets/img/logo.png" alt="logo">
+        </div>
+      </div>
+    </div>
+
+    <div class="row my-3 justify-content-start">
+      <div class="col-12 col-md-6 mb-5 mb-md-0">
+        <div class="mb-2 font-weight-500 text-dark font-big" >Find Health Care Provider</div>
+        <div class="row">
+          <div class="col-12 col-md-5">
+            <div class="mb-2 font-weight-500 text-dark">By Area</div>
+            <ul class="list-unstyled">
+              <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/toronto']">Toronto</a></li>
+              <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/hamilton']">Hamilton</a></li>
+              <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/vancouver']">Vancouver</a></li>
+              <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/victoria']">Victoria</a></li>
+              <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/edmonton']">Edmonton</a></li>
+              <li class="mb-2"><a class="text-dark" [routerLink]="['/practitioners/area/winnipeg']">Winnipeg</a></li>
+              <li class="mb-2"><a class="text-dark" [routerLink]="['/sitemaps']">See all {{countCities}} cities</a></li>
+            </ul>                    
+          </div>
+          <div class="col-12 col-md-7">
+            <div class="mb-2 font-weight-500 text-dark">By Type Of Provider</div>
+            <ul class="list-unstyled" *ngIf="typeOfProviderListHighlight">
+              <li class="mb-2" *ngFor="let a of typeOfProviderListHighlight"><a class="text-dark" [routerLink]="['/practitioners/type/', a._id]">{{a.item_text}}</a></li>
+              <li class="mb-2"><a class="text-dark" [routerLink]="['/sitemaps']">See all {{countTypeOfProviders}} provider types</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 mb-5 mb-md-4 mb-lg-0">
+        <div class="row">
+          <div class="col-12 col-lg-7 mb-5 mb-lg-0">
+            <div class="mb-2 font-weight-500 text-dark font-big" >For Health Care Provider</div>
+            <div class="mb-2"><a class="text-dark" [routerLink]="['/plans']">See plans for practitioner</a></div>  
+            <div class="mb-2"><a class="text-dark" [routerLink]="['/plans/product']">Advertise your products</a></div>  
+            <div><a class="text-dark" [routerLink]="['/ambassador-program']">Ambassador program</a></div>      
+          </div>
+          <div class="col-12 col-lg-5">
+              <div class="mb-2 font-weight-500 text-dark font-big">Support</div>
+              <div class="mb-2"><a class="text-dark" [routerLink]="['/faq']">FAQ</a></div>
+              <div class="mb-2"><a class="text-dark" [routerLink]="['/subscribe/newsletter']" [queryParams]="{id: 'ft'}">Sign up for newsletters</a></div>  
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row mt-4">
+      <div class="col-12 col-md-6 align-self-center d-none d-md-block">
+
+        <span class="mb-3">© 2021 Prompthealth</span> |
+        <a class="px-2" [routerLink]="['/contact-us']">Contact us</a> |
+        <a class="px-2" [routerLink]="['/policy/']">Privacy Policy</a> |
+        <a class="" [routerLink]="['/terms']">Terms & Conditions</a>
+      </div>
+      <div class="col-12 col-md-8 align-self-center d-md-none">
+        <div class="mb-3 w-100 text-center">© 2021 Prompthealth</div>
+
+        <a class="d-block text-center w-100" [routerLink]="['/contact-us']">Contact us</a>
+        <a class="d-block text-center w-100" [routerLink]="['/policy/']">Privacy Policy</a>
+        <a class="d-block text-center w-100" [routerLink]="['/terms']">Terms & Conditions</a>
+      </div>
+
+      <div class="col-12 col-md-6 text-center text-md-right mt-3 mt-md-0">
+        <div class="mt-3">
+          <social-buttons margin="narrow" [size]="35"></social-buttons>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

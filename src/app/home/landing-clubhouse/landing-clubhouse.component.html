@@ -2,88 +2,20 @@
   <div class="container position-relative z-index-1">
     <div class="row justify-content-between align-items-center">
       <div class="col-12 text-center">
-        <h2 class="text-gradient mb-3">Welcome to HealthLoop </h2>
-        <h3 class="mb-3">
-          A forum where we come together to engage in meaningful, illuminating conversations
-          on the wins and challenges of the health and wellness industry and the perspective of
-          both health seekers and healthcare providers.
-        </h3>
-        <div class="mt-5">
-          <a href="https://www.joinclubhouse.com/club/healthloop" target="_blank" class="btn btn-outline-primary px-5 rounded-10p font-regular">Find Us on Clubhouse</a>
-        </div>     
+        <h2 class="mb-3 h3-temp h2-temp-md text-primary-dark">
+          Stay informed with<br>
+          PromptHealth’s community!
+        </h2>
       </div>
-      <div class="col-12 col-md-5 my-5">
-        <img class="img-fluid" src="/assets/img/clubhouse.png" alt="clubhouse">
+      <div class="col-12 col-md-5 my-md-70p">
+        <img class="img-fluid" src="/assets/img/newsletter.png" alt="clubhouse">
       </div>
-      <div class="col-12 col-md-6 my-5">
+      <div class="col-12 col-md-6 my-md-70p">
         <div class="blur px-3 py-4 rounded-10p">
-          <p class="font-weight-400 font-big">
-            Sign-up for a free guide from our masterclass on how you can grow your health and
-            wellness business.
+          <p class="body1-temp border-bottom pb-20p mb-20p">
+            Sign up to receive updated information and valuable resources from our health and wellness community
           </p>
-          <form (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-              <form-item-input
-              name="name"
-              label="Name"
-              placeholder="Name"
-              [controller]="f.name"
-              [submitted]="isSubmitted"
-              autocomplete="username"
-              ></form-item-input>
-            </div>
-  
-            <div class="mb-3">
-              <form-item-input
-              name="email"
-              label="Email"
-              type="email"
-              placeholder="Email"
-              [controller]="f.email"
-              [submitted]="isSubmitted"
-              autocomplete="email"
-              ></form-item-input>
-            </div>
-  
-            <div class="mb-3">
-              <form-item-input
-              name="title"
-              label="Professional title"
-              placeholder="Professional Title"
-              [controller]="f.title"
-              [submitted]="isSubmitted"
-              autocomplete="honorific-prefix"
-              ></form-item-input>
-            </div>
-  
-            <div class="position-relative mb-3" (clickOutside)="hideCountryList()">
-              <form-item-input
-              name="region"
-              label="Region"
-              placeholder="Region"
-              [controller]="f.region"
-              prependIcon="fas fa-search"
-              [submitted]="isSubmitted"
-              autocomplete="off"
-              ></form-item-input>
-  
-              <ul class="position-absolute selections list-unstyled border rounded w-100 bg-white" *ngIf="countryList.length > 0">
-                <ng-container *ngFor="let item of countryList; let i = index;" >
-                  <li>
-                    <a 
-                    class="d-block"
-                    [ngClass]="{active: (i == idxCountryFocused)}"
-                    (click)="selectCountry(item)"
-                    >{{item}}</a>
-                  </li>  
-                </ng-container>
-              </ul>
-            </div>
-  
-            <div>
-              <input class="btn btn-primary" type="submit" value="Submit">
-            </div>
-          </form>
+          <form-subscribe [referrer]="referrer"></form-subscribe>
         </div>
       </div>
     </div>

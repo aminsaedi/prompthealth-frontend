@@ -1,0 +1,76 @@
+<form (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <form-item-checkbox-group
+    *ngIf="!_option.hideUserType"
+    id="usertype"
+    type="selectbox"
+    label="User type"
+    [controller]="f.userType"
+    [submitted]="isSubmitted"
+    [selections]="[{id: 'default', label: 'Please select your type', value: '', disabled: true}, {id: 'seeker', label: 'Wellness Seeker', value: 'seeker'}, {id: 'provider', label: 'Wellness Provider', value: 'provider'}]"
+    ></form-item-checkbox-group>
+  </div>
+  <div class="mb-3">
+    <form-item-input
+    name="name"
+    label="Name"
+    placeholder="Name"
+    [controller]="f.name"
+    [submitted]="isSubmitted"
+    autocomplete="username"
+    ></form-item-input>
+  </div>
+
+  <div class="mb-3">
+    <form-item-input
+    name="email"
+    label="Email"
+    type="email"
+    placeholder="Email"
+    [controller]="f.email"
+    [submitted]="isSubmitted"
+    autocomplete="email"
+    autocapitalize="off"
+    ></form-item-input>
+  </div>
+
+  <div class="mb-3">
+    <form-item-input
+    *ngIf="!_option.hideProfessionalTitle"
+    name="title"
+    label="Professional title"
+    placeholder="Professional Title"
+    [controller]="f.title"
+    [submitted]="isSubmitted"
+    autocomplete="honorific-prefix"
+    ></form-item-input>
+  </div>
+
+  <div class="position-relative" (clickOutside)="hideCountryList()">
+    <form-item-input
+    name="region"
+    label="Region"
+    placeholder="Region (Country)"
+    [controller]="f.region"
+    prependIcon="fas fa-search"
+    [submitted]="isSubmitted"
+    autocomplete="off"
+    ></form-item-input>
+
+    <ul class="position-absolute selections list-unstyled border rounded w-100 bg-white" *ngIf="countryList.length > 0">
+      <ng-container *ngFor="let item of countryList; let i = index;" >
+        <li>
+          <a 
+          class="d-block"
+          [ngClass]="{active: (i == idxCountryFocused)}"
+          (click)="selectCountry(item)"
+          >{{item}}</a>
+        </li>  
+      </ng-container>
+    </ul>
+  </div>
+
+  <div class="mt-50p text-right" [ngClass]="{'d-none': !!_option.hideSubmitButton}">
+    <input class="btn btn-primary btn-submit" type="submit" value="Subscribe">
+  </div>
+</form>

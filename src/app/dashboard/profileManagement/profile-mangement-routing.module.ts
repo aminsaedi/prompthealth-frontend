@@ -25,6 +25,7 @@ import { PartnerGeneralComponent } from './partner-general/partner-general.compo
 
 import { ProfileManagementChildGuard } from './profile-management-child.guard';
 import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
+import { PostManagerModule } from 'src/app/post-manager/post-manager.module';
 
 const routes: Routes = [
   {
@@ -116,7 +117,9 @@ const routes: Routes = [
       {
         path: 'partner-offer',
         component: PartnerOfferComponent,
-      }
+      },
+      { path: 'my-posts', loadChildren: () => PostManagerModule },
+
     ]
   },
 ];

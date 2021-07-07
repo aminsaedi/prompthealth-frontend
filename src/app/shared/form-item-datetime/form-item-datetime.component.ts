@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { formatDateTimeDataToDate, formatDateToDateTimeData, formatStringToDateTimeData } from 'src/app/_helpers/date-formatter';
+import { pattern } from 'src/app/_helpers/form-settings';
 import {slideVerticalAnimation } from '../../_helpers/animations';
 
 @Component({
@@ -30,56 +32,18 @@ export class FormItemDatetimeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
-    if(this.controller.value) {
-      const datetime = new Date(this.controller.value);
-      this.dateTime = {
-        year: datetime.getFullYear(),
-        month: datetime.getMonth() + 1,
-        day: datetime.getDate(),
-        hour: datetime.getHours(),
-        minute: datetime.getMinutes(),
-      }
+    const datetime = formatStringToDateTimeData(this.controller.value);
+    if(datetime) {
+      this.dateTime = datetime;
+    } else if (this.minDateTime) {
+      this.dateTime = this.minDateTime;
     } else {
       const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth() + 1;
-      const day = now.getDate();
-      const hour = now.getHours();
-      const minute = now.getMinutes();
-  
-      let isNowBeforeMinDateTime = true;
-      if(this.minDateTime){
-        if(year < this.minDateTime.year) {}
-        else if(month < this.minDateTime.month) {}
-        else if(day < this.minDateTime.day) {}
-        else if(hour < this.minDateTime.hour) {}
-        else if(minute < this.minDateTime.minute) {}
-        else{
-          isNowBeforeMinDateTime = false;
-        }
-      }
-  
-      this.dateTime = isNowBeforeMinDateTime ? 
-      {
-        year: copy(this.minDateTime, 'year'),
-        month: copy(this.minDateTime, 'month'),
-        day: copy(this.minDateTime, 'day'),
-        hour: copy(this.minDateTime, 'hour'),
-        minute: copy(this.minDateTime, 'minute'),
-      } : 
-      {
-        year: year,
-        month: month,
-        day: day,
-        hour: hour,
-        minute: Math.floor((minute + 14) / 15) * 15,
-      }
+      this.dateTime = formatDateToDateTimeData(now);
     }
 
     this.fDate = new FormControl(this.dateTime);
     this.fTime = new FormControl(this.dateTime);
-    this.updateDateTime();
     
     this.fDate.valueChanges.subscribe(() => {
       this.updateDateTime(true);
@@ -90,6 +54,29 @@ export class FormItemDatetimeComponent implements OnInit {
 
   }
 
+  initDateTimePicker(dt: string) {
+    /** update using current controller value */
+    const datetime = formatStringToDateTimeData(dt);
+
+    if (datetime) {
+      this.fDate.setValue({
+        ...datetime
+      });
+      this.fTime.setValue({
+        ...datetime
+      });
+    } else {
+      this.fDate.setValue ({
+        ... this.minDateTime
+      });
+      this.fTime.setValue ({
+        ...this.minDateTime
+      });
+    }
+
+  }
+
+  /** update controller value by selecting by datetime picker */
   updateDateTime(emit: boolean = false){
     const date: DateData = this.fDate.value;
     const time: TimeData = this.fTime.value;
@@ -108,7 +95,12 @@ export class FormItemDatetimeComponent implements OnInit {
     return datetime;
   }
 
-  showPicker(){ this.isPickerShown = true; console.log('koko')}
+  showPicker(){ 
+    if(!this.isPickerShown) {
+      this.initDateTimePicker(this.controller.value);
+    }
+    this.isPickerShown = true; 
+  }
   hidePicker(){ this.isPickerShown = false; }
 }
 

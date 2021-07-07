@@ -1,0 +1,118 @@
+/// TEMPORARY TODO: REMOVE LATER
+:host {
+  font-size: 16px;
+  color: rgba(41, 49, 72, 1);
+}
+.bg-background {
+  background: rgba(239, 243, 247, 1);
+}
+
+.bg-warning {
+  background: rgba(253, 184, 19, 1)
+}
+
+.bg-warning-light {
+  background: rgba(252, 235, 194, 1);
+}
+
+.text-warning-dark {
+  color: rgba(164, 115, 0, 1);
+}
+
+/// TEMPORARY END
+
+/// TEMPORARY TODO: MODIFY WITH NEW HEADER HEIGHT
+  @import '../../../assets/scss/responsive_variables';
+  .h-100--header {
+    height: calc(100vh - #{$headerHeightLoggedin});
+    @media (min-width: 768px) {
+      height: calc(100vh - #{$headerHeightLoggedinMd});
+    }
+    @media (min-width: 992px) {
+      height: calc(100vh - #{$headerHeightLoggedinLg});
+    }
+    @media (min-width: 1200px) {
+      height: calc(100vh - #{$headerHeightLoggedinXl});
+    }
+  }
+///
+
+.editor-container {
+  .editor {
+    flex: 0 0 100%;
+    @media (min-width: 992px) {
+      flex: 1 1 auto;
+    }
+  }
+
+  .setting-panel {
+    flex: 0 0 100%;
+    background: white;
+
+    @media (min-width: 768px) {
+      flex: 0 0 350px;
+    }
+
+    transition: transform 300ms;
+    z-index: 5;
+    &.shown {
+      @media (max-width: 991px) {
+        transform: translateX(-100%);
+      }  
+    }
+  }
+}
+
+
+.contenteditable.title {
+  outline: none;
+  padding: 0 15px;
+  word-break: break-word;
+  width: 100%;
+}
+
+.contenteditable:empty:before {
+  opacity: 0.6;
+  content: attr(data-placeholder);
+}
+
+
+:host::ng-deep {
+  .ql-toolbar {
+    position: fixed;
+    padding-bottom: 50px;
+    background: white;
+    z-index: 3;
+
+    left: 0;
+    bottom: 0;
+    width: 100%;
+
+    border-width: 0;
+    border-top-width: 1px;
+
+    @media (min-width: 992px) {
+      width: 500px;
+      bottom: 50px;
+      left: 15px;
+      padding-bottom: 8px;
+      border-radius: 8px;
+      border-width: 1px;
+    }
+
+    button {
+      @media (max-width: 991px) {
+        margin: 10px;
+      }
+    }
+  }
+
+  .ql-container {
+    font-size: 16px;
+  }
+
+  .sticky-left {
+    position: sticky;
+    left: 0;
+  }
+}

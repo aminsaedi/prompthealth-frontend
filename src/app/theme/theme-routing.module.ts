@@ -9,19 +9,26 @@ import { DashboardModule } from '../dashboard/dashboard.module';
 // import { SubscriptionPlanComponent } from '../home/subscription-plan/subscription-plan.component';
 import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
 import { ThankuPageComponent } from './thanku-page/thanku-page.component';
+import { MagazineModule } from '../magazine/magazine.module';
 
 const routes: Routes = [
+
   {
     path: '',
     component: LayoutComponent,
     children: [
+
       {
         path: '',
-        component: HomeComponent
+        component: HomeComponent,
       },
       {
         path: '',
         loadChildren: () => HomeModule
+      },
+      {
+        path: 'magazines',
+        loadChildren: () => MagazineModule,
       },
       {
         path: 'auth',
@@ -32,6 +39,7 @@ const routes: Routes = [
         loadChildren: () => DashboardModule,
         // CanActivate: [AuthGuard]
       },
+
 
       // {
       //   path: 'subscriptionplan',

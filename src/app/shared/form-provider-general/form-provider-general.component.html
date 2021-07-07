@@ -82,9 +82,11 @@
     </label>
     <div class="col-md-8">
       <form-item-input 
-      name="email"
       label="Email Address"
-      type="text"
+      name="email"
+      type="email"
+      autocomplete="email"
+      autocapitalize="off"
       [controller]="f.email"
       [disabled]="true"
       ></form-item-input>
@@ -119,7 +121,7 @@
       <form-item-input 
       name="phone"
       label="Phone number"
-      type="text"
+      type="tel"
       [controller]="f.phone"
       [submitted]="isSubmitted"
       [disabled]="disabled"
@@ -177,9 +179,11 @@
     </label>
     <div class="col-md-8">
       <form-item-input 
-      name="website"
       label="Website"
-      type="text"
+      name="website"
+      type="url"
+      autocomplete="url"
+      autocapitalize="off"
       [controller]="f.website"
       [submitted]="isSubmitted"
       [disabled]="disabled"
@@ -196,7 +200,9 @@
       <form-item-input 
       name="bookingURL"
       label="Booking URL"
-      type="text"
+      type="url"
+      autocomplete="url"
+      autocapitalize="off"
       [controller]="f.bookingURL"
       [submitted]="isSubmitted"
       [disabled]="disabled"

@@ -27,7 +27,6 @@ export class FormPartnerGeneralComponent implements OnInit {
 
   public baseURLImage = environment.config.AWS_S3;
 
-  private patternURL = pattern.url;
   // private patternPhone = pattern.phone;
 
   get f(){ return this.form.controls; }
@@ -62,7 +61,7 @@ export class FormPartnerGeneralComponent implements OnInit {
       placeId: new FormControl((this.data.placeId ? this.data.placeId : ''), []),
       
       phone: new FormControl((this.data.phone ? this.data.phone : ''), validators.phone ),
-      website: new FormControl((this.data.website ? this.data.website : ''), [Validators.pattern(this.patternURL)]),
+      website: new FormControl((this.data.website ? this.data.website : ''), validators.website),
       product_description: new FormControl((this.data.product_description ? this.data.product_description : ''), [
         Validators.required,
         Validators.maxLength(this.maxTextarea),

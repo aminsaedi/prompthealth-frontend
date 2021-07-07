@@ -37,6 +37,7 @@ class="position-relative d-inline-block selectbox"
 >
   <button 
   class="selected rounded body1" 
+  [ngClass]="{'not-selectable': (idxItemSelected >= 0 && selectionList[idxItemSelected].disabled)}"
   type="button" 
   [attr.disabled]="disabled ? 'disabled' : null"
   (click)="toggleSelectionsVisibility()" 
@@ -49,7 +50,7 @@ class="position-relative d-inline-block selectbox"
   *ngIf="isSelectionsVisible" 
   >
     <li *ngFor="let item of selectionList; let i = index;">
-      <button class="btn btn-text-black subtitle2" [focus]="isItemFocused(i)" (click)="select(i)" type="button"
+      <button class="btn btn-text-black subtitle2" [focus]="isItemFocused(i)" (click)="select(i)" type="button" [ngClass]="{'not-selectable': item.disabled}"
         (keydown)="onKeyDownOnItem($event)">{{item.label}}</button>
     </li>
   </ul>

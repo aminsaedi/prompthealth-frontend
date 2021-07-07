@@ -1,0 +1,54 @@
+<div class="menu-sm bg-background">
+  <div class="menu-top py-10p py-md-15p container text-right">
+    <div class="d-inline-flex">
+      <div class="ml-10p ml-md-30p">
+        <a (click)="gonext(['/practitioners'])" class="btn btn-primary cursor-pointer">Find practitioners</a>
+      </div>
+      <div class="ml-15p w-30p text-right">
+        <a class="btn btn-close small pr-0" (click)="goback()">
+          <!-- <i iconPh="menu" class="large"></i> -->
+          <i class="fas fa-times"></i>
+        </a>
+      </div>
+  
+    </div>
+  </div>
+
+  <div class="d-flex flex-nowrap overflow-hidden mt-60p" #menuSm>
+    <div class="menu-inner">
+      <ul class="list-unstyled mb-0 container">
+        <li class="py-2" *ngFor="let cat of categories">
+          <a *ngIf="!isCategoryEvent(cat)" class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/category/', cat.slug])">{{cat.title}}</a>
+          <a *ngIf="isCategoryEvent(cat)" class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/event'])">{{cat.title}}</a>
+        </li>
+        <li class="py-2">
+          <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/video'])">Videos</a>
+        </li>
+        <li class="py-2">
+          <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/podcast'])">Podcasts</a>
+        </li>
+        <li class="py-2" *ngIf="tags && tags.length > 0">
+          <a class="py-2 text-body subtitle1-temp d-flex justify-content-between align-items-center" (click)="changeMenuTo(0, 1)">
+            All topics
+            <i class="fas fa-chevron-right"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="menu-inner">
+      <ul class="list-unstyled mb-0 container">
+        <li class="py-2">
+          <button class="btn pl-0 text-placeholder" (click)="changeMenuTo(1, 0)">
+            <i class="fas fa-chevron-left mr-2"></i>
+            <span>Back</span>  
+          </button>
+        </li>
+
+        <li class="py-2" *ngFor="let tag of tags">
+          <a class="py-2 text-body subtitle1-temp d-block" (click)="gonext(['/magazines/tag/', tag.slug])">{{tag.title}}</a>
+        </li>  
+      </ul>
+    </div>
+  </div>
+</div>

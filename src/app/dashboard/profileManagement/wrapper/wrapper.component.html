@@ -118,3 +118,55 @@
     </div>
   </div>
 </div>
+
+<div 
+class="modal fade" 
+bsModal
+id="alert"
+#alertModal="bs-modal"
+tabindex="-1" 
+role="dialog" 
+aria-labelledby="alertModal" 
+aria-hidden="true"
+>
+  <div 
+  class="modal-dialog modal-dialog-centered" 
+  role="document" 
+  style="margin: auto !important; max-width: 500px;"
+  >
+    <div class="modal-content mk-border">
+      <div class="modal-header">
+        <h4 class="modal-title w-100 text-center text-dark px-3">
+          You haven't completed questionnaire
+        </h4>
+        <button 
+        type="button" 
+        class="close" 
+        aria-label="Close" 
+        (click)="alertModal.hide()"
+        style="position: absolute; right: 10px; top: 10px;"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center pb-4 px-md-5">
+        <p class="font-big mt-3 mb-5">
+          You can restart questionnaire to complete your profile.
+           <br><br>
+          Would you like to restart?
+        </p>
+        <div class="row text-align justify-content-between px-md-4">
+          <div class="col-6 text-left">
+            <button class="btn btn-outline-primary" (click)="alertModal.hide()">No I stay.</button>
+          </div>
+          <div class="col-6 text-right">
+            <a class="btn btn-primary" [routerLink]="['/dashboard', ((profile?.roles == 'P') ? 'register-product' : 'register-practitioner')]">Yes please.</a>
+          </div>
+          <div class="col text-left mt-3">
+            <form-item-checkbox [controller]="formQuestionnaireCompletedNeverAsk" label="Don't ask again" name="never-ask"></form-item-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -151,7 +151,7 @@
       <div class="row">
         <div class="col-12 col-md-6 col-lg-4 col-xl-3 py-3" *ngFor="let p of pages.data[pages.current - 1]">
           <card-practitioner
-          [showDistance]="true"
+          [showDistance]="!isVirtual"
           [data]="p"
           (changeCompareStatus)="updateCompareList()"
           ></card-practitioner>

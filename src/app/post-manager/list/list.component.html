@@ -1,0 +1,111 @@
+<ngx-spinner bdColor="#fff" size="medium" color="#fff">
+  <p style="font-size: 20px; color: white" class="loaderbg">
+    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  </p>
+</ngx-spinner>
+<!-- 
+<a class="btn btn-secondary" routerLink="../create">Add New Post (in profile management)</a> -->
+
+<div class="d-flex justify-content-between align-items-center mb-35p">
+  <h4 class="mb-0">My Posts ({{postsTotal}})</h4>
+  <a class="btn btn-primary" routerLink="/dashboard/my-posts/create">Add New Post</a>
+</div>
+
+<div class="d-flex justify-content-start flex-column align-items-stretch flex-md-row align-items-center">
+  <div class="d-flex align-items-center mr-0 mr-md-3 mb-10p">
+    <span class="subtitle2-temp mr-15p">Filter: </span>
+    <div class="dropdown flex-grow-1">
+      <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButtonStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span *ngIf="!statusSelected">Normal</span>
+        <span *ngIf="statusSelected && statusSelected != 'ALL'">{{statusNameSelected}}</span>
+        <span *ngIf="statusSelected == 'ALL'">All</span>
+      </button>      
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonStatus">
+        <button class="dropdown-item" (click)="onChangeFilterStatus()">Normal</button>
+        <button
+        *ngFor="let s of statuses" 
+        class="dropdown-item" 
+        (click)="onChangeFilterStatus(s)"
+        >{{statusNameOf(s)}}</button>
+        <button class="dropdown-item" (click)="onChangeFilterStatus('ALL')">All</button>
+      </div>
+    </div>  
+  </div>
+
+  <div class="d-flex align-items-center mr-0 mr-md-3 mb-10p">
+    <span class="subtitle2-temp mr-15p">Category: </span>
+    <div class="dropdown flex-grow-1">
+      <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButtonCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{categoryNameSelected}}
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonCategory">
+        <button class="dropdown-item" (click)="onChangeFilterCategory()">All</button>
+        <button 
+        *ngFor="let c of categories" 
+        class="dropdown-item" 
+        (click)="onChangeFilterCategory(c)"
+        >{{c.title}}</button>
+      </div>
+    </div>  
+  </div>
+  
+  <button class="btn btn-secondary mb-10p" type="button" (click)="toggleOrder()">
+    <span *ngIf="order == 'desc'">
+      <i class="fas fa-sort-amount-down"></i>
+      Latest
+    </span>
+    <span *ngIf="order == 'asc'">
+      <i class="fas fa-sort-amount-up"></i>
+      Oldest
+    </span>
+  </button>
+</div>
+
+<p class="subtitle1-temp mt-50p" *ngIf="posts && posts.length == 0">No posts found...</p>
+<ul class="mt-25p p-0 list-unstyled">
+  <li *ngFor="let p of posts; let i = index" class="mb-15p py-15p border-bottom">
+    <div *ngIf="!p" class="">
+      <card-dummy [showImage]="false"></card-dummy>
+    </div>
+    <div *ngIf="p">
+      <a [routerLink]="['/dashboard/my-posts/edit', p._id]" class="d-flex align-items-start">
+        <span 
+        class="px-2 py-1 mr-5p body-small-temp"
+        [ngClass]="{'text-light bg-danger': (p.status == 'REJECTED'), 'text-body opacity-70pc border': (p.status != 'REJECTED')}"
+        >
+        <i *ngIf="p.status == 'REJECTED'" class="fas fa-exclamation-circle"></i>
+          {{statusNameOf(p.status)}}
+        </span>
+  
+        <h6 class="subtitle1-temp">{{p.title}}</h6>
+      </a>
+  
+      <div class="body-small-temp opacity-70pc d-flex justify-content-end mt-15p">
+        <span
+        *ngIf="p.category"
+        class="pr-10p border-right mr-10p"
+        >{{p.catTitle}}</span>
+        <span>{{p.createdAt | date : 'short'}}</span>
+      </div>
+      <div class="d-flex justify-content-between mt-15p">
+        <div class="d-flex">
+          <a [routerLink]="['/dashboard/my-posts/edit', p._id]" class="btn mr-30p px-0">Edit</a>
+          <a [routerLink]="['/magazines/', p.slug]" target="_blank" class="btn px-0">View</a>  
+        </div>
+        <button class="btn text-danger mr-10p" type="button" (click)="hidePost(p)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </li>
+</ul>
+
+<div *ngIf="postsTotal > countPerPage">
+  <pagination 
+  [totalItems]="postsTotal" 
+  [itemsPerPage]="countPerPage"
+  [directionLinks]="true"
+  [boundaryLinks]="true"
+  (pageChanged)="onChangePage($event)"
+  ></pagination>
+</div>

@@ -56,7 +56,14 @@
       >My Dashboard</a>
     </div>
     <div>
-      <button class="btn btn-text small pl-0 text-nowrap text-danger" (click)="onClickLogout(); onClose();">Logout</button>
+      <a *ngIf="hasProfile()"
+      class="btn font-regular pl-0 py-2 text-nowrap" 
+      (click)="onClose()"  
+      [routerLink]="['/dashboard/profilemanagement/my-posts']"
+      >See my posts</a>
+    </div>
+    <div>
+      <button class="btn font-regular pl-0 py-2 text-nowrap logout" (click)="onClickLogout(); onClose();">Logout</button>
     </div>  
   </div>
 </div>

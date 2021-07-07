@@ -14,6 +14,8 @@ import { IAddonPlan } from '../../models/addon-plan';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { slideHorizontalAnimation } from 'src/app/_helpers/animations';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { ICouponData } from 'src/app/models/coupon-data';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 // declare var jQuery: any;
 
 
@@ -56,7 +58,7 @@ export class SubscriptionPlanComponent implements OnInit {
   public addonNetworker: IAddonPlan;
   public addonSocialite: IAddonPlan;
 
-  public couponCode: string = null;
+  public couponCode: ICouponData = null;
   public isCouponShown = false;
   public isCouponShrink = false;
 
@@ -88,9 +90,12 @@ export class SubscriptionPlanComponent implements OnInit {
     private _modalService: NgbModal,
     public catService: CategoryService,
     private _uService: UniversalService,
+    private _headerStatusService: HeaderStatusService,
   ) { }
 
   ngOnInit() {
+    this._headerStatusService.setPriceType('practitioner');
+    
     const ls = this._uService.localStorage;
     const ss = this._uService.sessionStorage;
     this._uService.setMeta(this._router.url, {
@@ -121,7 +126,15 @@ export class SubscriptionPlanComponent implements OnInit {
 
     if (ss.getItem('stripe_coupon_code')) {
       this.couponCode = JSON.parse(ss.getItem('stripe_coupon_code'));
-      setTimeout(() => { this.isCouponShown = true; }, 1000);
+      let isCouponApplicable = false;
+      for (let role of ['SP', 'C']) {
+        if(this._sharedService.isCouponApplicableTo(this.couponCode, role)){
+          isCouponApplicable = true;
+        }
+      }
+      if(isCouponApplicable) {
+        setTimeout(() => { this.isCouponShown = true; }, 1000);
+      }
     }
   }
 

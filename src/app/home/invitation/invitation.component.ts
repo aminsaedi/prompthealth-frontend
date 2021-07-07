@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ICouponData } from 'src/app/models/coupon-data';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -14,7 +15,7 @@ export class InvitationComponent implements OnInit {
 
   public user: IUserDetail;
   public couponCode: string;
-  public couponData;
+  public couponData: ICouponData;
 
   constructor(
     private _route: ActivatedRoute,
@@ -23,6 +24,10 @@ export class InvitationComponent implements OnInit {
     private _sharedService: SharedService,
     private _uService: UniversalService,
   ) { }
+
+  isApplicableTo(role: string) {
+    return this._sharedService.isCouponApplicableTo(this.couponData, role);
+  }
 
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
@@ -51,7 +56,13 @@ export class InvitationComponent implements OnInit {
 
   logoutAndSignup(role: string) {
     this._sharedService.logout();
-    this._router.navigate(['/auth/registration', role]);
+    this._toaster.success('You are logged out.')
+
+    const route = ['plans'];
+    if(role == 'P') {
+      route.push('product');
+    }
+    this._router.navigate(route);
   }
 }
 

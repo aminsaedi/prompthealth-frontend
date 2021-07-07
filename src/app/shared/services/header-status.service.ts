@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
+import { IUserDetail } from 'src/app/models/user-detail';
+import { PriceType } from 'src/app/theme/header/header.component';
 
 @Injectable({
   providedIn: 'root'
@@ -36,4 +38,7 @@ export class HeaderStatusService {
      this.emitHeaderStatus('isShadowShown', true);
    }
   
+   setPriceType(type: PriceType) {
+     this.emitHeaderStatus('priceType', type);
+   }
 }

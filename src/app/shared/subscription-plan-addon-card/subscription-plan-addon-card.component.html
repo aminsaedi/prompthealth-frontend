@@ -24,16 +24,23 @@
 
   <div class='mt-3 text-center'>
     <!-- if user is not loggedin, go to signin / login page -->
-    <a *ngIf="!isLoggedIn && data?.stripeProductId"
+    <!-- <a *ngIf="!isLoggedIn && data?.stripeProductId"
       class="mt-3 btn btn-more"
       [ngClass]="{'mt-md-0': flexibleButtonPosition}"
       [routerLink]="linkToRegistration"
+      (click)="onClickSingup()"
+    >Get Started</a> -->
+
+    <a *ngIf="!isLoggedIn && data?.stripeProductId"
+      class="mt-3 btn btn-more"
+      [ngClass]="{'mt-md-0': flexibleButtonPosition}"
+      (click)="onClickSignup()"
     >Get Started</a>
 
     <button *ngIf="isLoggedIn && data?.stripeProductId"
       class="mt-3 btn btn-more"
       [ngClass]="{'mt-md-0': flexibleButtonPosition}"
-      (click)="triggerButtonClick()"
+      (click)="onClickCheckout()"
     >Get Started</button>
 
     <!-- for quotation -->

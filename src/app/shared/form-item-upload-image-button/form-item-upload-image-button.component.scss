@@ -5,6 +5,10 @@
   font-size: 16px;
 }
 
+button.disabled {
+  opacity: 0.5;
+}
+
 input[type=file]{
   position: absolute;
   width: 100%;

@@ -35,7 +35,10 @@
               "node_modules/slick-carousel/slick/slick.scss",
               "node_modules/slick-carousel/slick/slick-theme.scss",
               "src/assets/scss/style.scss",
-              "src/assets/icon/ph-v1.1/style.css"
+              "src/assets/icon/ph-v1.1/style.css",
+              "./node_modules/quill/dist/quill.core.css",
+              "./node_modules/quill/dist/quill.bubble.css",
+              "./node_modules/quill/dist/quill.snow.css"
             ],
             "scripts": [
               "src/assets/js/jquery-3.4.1.slim.min.js",
@@ -43,7 +46,8 @@
               "src/assets/js/popper.min.js",
               "src/assets/js/bootstrap.min.js",
               "src/assets/js/main.js",
-              "src/assets/js/eventbrite.js"
+              "src/assets/js/eventbrite.js",
+              "./node_modules/quill/dist/quill.min.js"
             ]
           },
           "configurations": {

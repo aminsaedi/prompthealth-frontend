@@ -178,4 +178,5 @@ export interface CheckboxSelectionItem {
   label: string;
   value: string;
   minmax?: number[];
+  disabled?: boolean;
 }

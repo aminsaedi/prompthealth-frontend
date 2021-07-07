@@ -1,0 +1,48 @@
+/// TEMPORARY TODO: DELTE LATER
+.text-body {
+  color: rgba(41, 49, 72, 1)!important;
+}
+.text-placeholder {
+  color: rgba(160, 163, 189, 1);
+}
+.border-body {
+  border-color: rgba(41, 49, 72, 1)!important;
+}
+.border-line {
+  border-color: rgba(214, 216, 231, 1)!important;
+}
+
+.bg-background {
+  background-color: rgba(239, 243, 247, 1);
+}
+
+.btn.btn-primary {
+  background: rgba(12, 116, 255, 1)!important;
+  &:hover {
+    background: rgba(0, 85, 199, 1)!important;
+  }
+}
+/// TEMPORARY END
+
+.logo-lg {
+  height: 20px;
+  @media (min-width: 1200px) { height: 30px;}
+}
+
+.bg-lg-transparent {
+  @media (min-width: 992px) {
+    background-color: transparent;
+  }
+}
+
+.icon-show-category {
+  transition: transform 200ms;
+  transform: rotateX(0);
+  &.active {
+    transform: rotateX(180deg)
+  }
+}
+
+.w-30p {
+  width: 30px;
+}

@@ -1,4 +1,4 @@
-<ul class="errors text-danger font-small" *ngIf="controller && controller.invalid && submitted">
+<ul class="errors text-danger font-small" *ngIf="controller && controller.invalid && controller.errors && submitted">
   <li *ngIf="controller.errors.required">{{label}} is required.</li>
   <li *ngIf="controller.errors.requiredTrue">Please check</li>
   <li *ngIf="controller.errors.minlength">{{label}} too short.</li>
@@ -8,6 +8,28 @@
   <li *ngIf="controller.errors.mustMatch">{{label}} is not matched.</li>
   <li *ngIf="controller.errors.requiredCheckboxSelectedAtLeast1">{{label}} needed to be selected at least 1</li>
   <li *ngIf="controller.errors.addressSelectedFromSuggestion">Please select address from suggestion</li>
+  <li *ngIf="controller.errors.matchPatternDateTime">
+    Date time is invalid. Please use calendar to select date time.
+  </li>
+  <li *ngIf="controller.errors.eventStartTimeLaterThanNow">
+    Start time must be later than current time.
+  </li>
+  <li *ngIf="controller.errors.endTimeLaterThanStart">
+    End time must be later than start time.
+  </li>
+
+  <li *ngIf="controller.errors.matchPatternURL">
+    URL is invalid. Here is sample URL.
+    <ul class="mt-1">
+      <li>http://example.com</li>
+      <li>https://www.example.com</li>
+      <li>www.example.com</li>
+      <li>example.com/</li>
+      <li>this-is.example.com</li>
+      <li>example.com/sample/destination</li>
+      <li>example.com/sample?key1=val1&key2=val2</li>
+    </ul>
+  </li>
   <li *ngIf="controller.errors.matchPatternPassword">
     Password has to contain...
     <ul class="mt-1">

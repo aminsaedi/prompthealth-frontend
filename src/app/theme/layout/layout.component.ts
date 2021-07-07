@@ -11,6 +11,7 @@ export class LayoutComponent {
 
   public showFooter = false;
   public showItems = true;
+  public onMagazine: boolean = false;
   eventKey = 1;
 
   @HostListener('document:click', ['$event']) clickedOutside($event) {
@@ -30,6 +31,8 @@ export class LayoutComponent {
       } else {
         this.showFooter = true;
       }
+
+      this.onMagazine = evt.url.match(/magazines|blogs/) ? true : false;
     });
   }
 }

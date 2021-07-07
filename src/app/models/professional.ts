@@ -173,7 +173,7 @@ export class Professional implements IProfessional {
   get websiteLabel() { return this.getURLLabel(this.p.website); }
   get bookingUrl() { return this.p.bookingURL || null; }
   get location() { return this.p.location || [null, null]; }
-  get distance() { return this.p.calcDistance; } /** currently p doesn't have calcDistance field. */
+  get distance() { return this.p.calcDistance || null; } /** currently p doesn't have calcDistance field. */
   get provideVirtual() { return this.p.provideVirtual || false; }
   get videos() { return (this.p.plan && this.p.plan.videoUpload) ? this.p.videos : []; } /** showing videos are available only for premium user */
   get yearsOfExperience() { return this.p.years_of_experience || null; }
@@ -205,6 +205,7 @@ export class Professional implements IProfessional {
   get mapLabel() { return (this.price ? this.price : null); }
   get mapIconUrl() { return (this._mapIconUrl && this._mapIconUrl.length > 0) ? this._mapIconUrl : null; }
   get isMapIconReady() { return this._isMapIconReady; }
+  get isConnectedToGoogle() { return !!this.p.placeId}
 
   get typeOfProvider() {
     const result = [];

@@ -1,0 +1,43 @@
+<div class="container mt-30p">
+  <div class="text-center align-items-center justify-content-center mb-50p">
+    <a class="btn mr-2" routerLink="/magazines">
+      <i class="fas fa-home text-label"></i>
+    </a>
+    <ng-container *ngIf="data?.category">
+      <i class="fas fa-chevron-right mr-2 text-label"></i>
+      <a *ngIf="!isEvent" class="mr-2 body2-temp text-label btn" [routerLink]="['/magazines/category', data.category.slug]">{{data.catTitle}}</a>  
+      <a *ngIf="isEvent" class="mr-2 body2-temp text-label btn" [routerLink]="['/magazines/event']">{{data.catTitle}}</a>  
+    </ng-container>
+    <i class="d-none d-md-inline fas fa-chevron-right mr-2 text-label"></i>
+    <span class="d-none d-md-inline mr-2 body2-temp clamp-1line btn">{{data?.title}}</span>
+  </div>
+
+  <div class="mb-100p">
+    <detail-post [data]="data"></detail-post>
+  </div>
+</div>
+  
+<div class="bg-background pt-70p pb-100p">
+  <div class="container">
+    <h4 class="h5-temp text-center mb-45p">
+      <span *ngIf=!isEvent>RELATED POSTS</span>
+      <span *ngIf="isEvent">UPCOMING EVENT</span>
+    </h4>
+    <ul class="row list-unstyled m-0 p-0">
+      <li class="col-12 col-lg-4 mb-30p" *ngFor="let data of related">
+        <card-post
+        *ngIf="!isEvent"
+        [showCategory]="false" 
+        [data]="data" 
+        [option]="{colorLightForDummy: '#eff3f7'}"
+        ></card-post>
+        <card-event
+        *ngIf="isEvent"
+        [showCategory]="false" 
+        [data]="data" 
+        [option]="{colorLightForDummy: '#eff3f7'}"
+        ></card-event>
+      </li>  
+    </ul>
+  </div>
+</div>

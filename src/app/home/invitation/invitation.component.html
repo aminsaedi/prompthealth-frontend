@@ -24,51 +24,45 @@
 
       <div class="col-12 col-md-5 text-center">
         <h5>You are not member yet?</h5>
-        <div class="mb-3">
-          <a [routerLink]="['/auth/registration/sp']" class="btn btn-outline w-100 font-regular">Sign up as
-            Service Provider</a>
+        <div class="mb-3" *ngIf="isApplicableTo('SP') || isApplicableTo('C')">
+          <a routerLink="/plans" class="btn btn-outline-primary w-100 font-regular">Sign up as Practitioner</a>
         </div>
-        <div class="mb-3">
-          <a [routerLink]="['/auth/registration/c']" class="btn btn-outline w-100 font-regular">Sign up as
-            Centre</a>
-        </div>
-        <div class="mb-3">
-          <a [routerLink]="['/auth/registration/p']" [queryParams]="{nextKeyword: 'buyplan'}" class="btn btn-outline w-100 font-regular">Sign up as Product/Service</a>
+        <div class="mb-3" *ngIf="isApplicableTo('P')">
+          <a routerLink="/plans/product" [queryParams]="{nextKeyword: 'buyplan'}" class="btn btn-outline-primary w-100 font-regular">Sign up as Product/Service</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="container my-5" *ngIf="user">
-    <div style="width: 100%; max-width: 400px; margin: 50px auto;">
+  <section class="container" *ngIf="user">
+    <div class="mb-5" style="width: 100%; max-width: 400px; margin: 50px auto;">
       <ng-container *ngTemplateOutlet="coupon"></ng-container>
     </div>
 
-    <div *ngIf="user.roles == 'U'; then messageClient; else messageProfessional"></div>
+    <div *ngIf="(user.roles == 'U' || !isApplicableTo(user.roles)); then messageClient; else messageProfessional"></div>
     <ng-template #messageClient>
 
-      <p class="mt-5 text-center font-big">
-        We don't have any plans for your account type yet.<br>
-        Wanna have professional account? Choose business type and signup!
+      <p class="text-center font-big">
+        This coupon is not applicable for your user type.<br>
+        Would you like to have another account to use the coupon?
       </p>
 
       <div class="row flex-column justify-content-center align-items-center">
-        <div class="col-12 col-md-5 mb-3">
-          <button class="btn btn-outline w-100 font-regular" (click)="logoutAndSignup('sp')">Sign up as Service
-            Provider</button>
+        <div class="col-12 col-md-5 mb-3" *ngIf="isApplicableTo('SP') || isApplicableTo('C')">
+          <button class="btn btn-outline-primary w-100 font-regular" (click)="logoutAndSignup('SP')">Sign up as Practitioner</button>
         </div>
-        <div class="col-12 col-md-5 mb-3">
-          <button class="btn btn-outline w-100 font-regular" (click)="logoutAndSignup('c')">Sign up as
-            Centre</button>
+        <div class="col-12 col-md-5" *ngIf="isApplicableTo('P')">
+          <button class="btn btn-outline-primary w-100 font-regular" (click)="logoutAndSignup('P')">Sign up as Product/Service</button>
         </div>
-        <div class="col-12 col-md-5">
-          <button class="btn btn-outline w-100 font-regular" (click)="logoutAndSignup('p')">Sign up as Product/Service</button>
-        </div>  
+
+        <div class="my-3">OR</div>
+        <ng-container *ngTemplateOutlet="messageProfessional"></ng-container>
+
       </div>
 
     </ng-template>
     <ng-template #messageProfessional>
-      <div class="mt-5 text-center">
+      <div class="text-center">
         <a [routerLink]="[(user.roles == 'P') ? '/plans/product' : '/plans']"
           class="btn btn-outline font-big">See our plans</a>
       </div>

@@ -46,10 +46,10 @@ const routes: Routes = [
     path: "faq",
     component: FAQComponent
   },
-  {
-    path: "subscribe-email",
-    component: SubscriptionComponent
-  },
+  // {
+  //   path: "subscribe-email",
+  //   component: SubscriptionComponent
+  // },
   // {
   //   path: "map",
   //   component: MapComponent
@@ -68,22 +68,13 @@ const routes: Routes = [
   //   path: "loyalty",
   //   component: LoyalityProgramsComponent
   // },
-  {
-    path: "blogs",
-    component: BlogComponent
-  },
-  {
-    path: "blogs/category/:id",
-    component: BlogCategoryComponent
-  },
-  { path: 'blogs/category', redirectTo: '/blogs'},
+  { path: "blogs/:id", redirectTo: '/magazines/:id'},
+  { path: 'blog-detail/:id', redirectTo: '/magazines/:id'},
 
-  {
-    path: "blogs/:id",
-    component: BlogDetailComponent
-  },
-  { path: 'blog-detail/:id', redirectTo: '/blogs/:id'}, /** this id is not objectId. it's slug */
-  { path: 'blog-category/:id', redirectTo: '/blogs/category/:id'},
+  { path: "blogs/category/:id", redirectTo: '/magazines'}, /** catId is deprecated. use slug to show category list. */
+  { path: 'blogs/category', redirectTo: '/magazines'},
+  { path: 'blog-category/:id', redirectTo: '/magazines'}, /** old route */
+  { path: "blogs", redirectTo: '/magazines' },
 
   {
     path: "contact-us",
@@ -150,7 +141,11 @@ const routes: Routes = [
 
   { path: 'invitation', component: InvitationComponent }, /** invitation for webinars */
   { path: 'invitation/:id', component: LandingAmbassadorComponent, data: {type: 'client'}}, /** invitation for clients by ambassador */
-  { path: 'clubhouse', component: LandingClubhouseComponent },
+
+  { path: 'subscribe/newsletter', component: LandingClubhouseComponent },
+  { path: 'subscribe', redirectTo: '/subscribe/newsletter'},
+  { path: 'subscribe-email', redirectTo: '/subscribe/newsletter'},
+  { path: 'clubhouse', redirectTo: '/subscribe/newsletter' },
   { 
     path: 'ambassador-program', 
     component: LandingAmbassadorComponent, 

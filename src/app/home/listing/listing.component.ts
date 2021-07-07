@@ -209,11 +209,10 @@ export class ListingComponent implements OnInit, OnDestroy {
     return;
   }
 
-  async ngOnInit() {
-    this.AWS_S3 = environment.config.AWS_S3;
-    this.serviceSet = await this._catService.getCategoryAsync();
+  async initLocation() {
     const ls = this._uService.localStorage;
 
+    ////// TODO: THIS SECTION MIGHT NOT BE NEEDED ? (CONFLICT WHEN MERGED POST-BY-USERS INTO DESIGN-CHANGE)
     this.calcMapBoundingRect(); 
     this._headerService.hideShadow();
 
@@ -221,6 +220,8 @@ export class ListingComponent implements OnInit, OnDestroy {
     if (this.filters[3].options.length == 0 || this.filters[4].options.length == 0 || this.filters[4].options.length == 0) {
       this.getProfileQuestion();
     }
+    ////// TODO END
+    
     
     /** init geo location */
     const [latDefault, lngDefault] = [53.89, -111.25];
@@ -265,6 +266,22 @@ export class ListingComponent implements OnInit, OnDestroy {
         console.log(error);
       });
     }
+  }
+
+  async ngOnInit() {
+    this.AWS_S3 = environment.config.AWS_S3;
+    this.serviceSet = await this._catService.getCategoryAsync();
+    const ls = this._uService.localStorage;
+
+    this.calcMapBoundingRect(); 
+
+    // if options which has to be fetched from server is not set correctly, fetch.
+    if (this.filters[3].options.length == 0 || this.filters[4].options.length == 0 || this.filters[4].options.length == 0) {
+      this.getProfileQuestion();
+    }
+    
+    /** init geo location */
+    await this.initLocation();
 
     /** if personal match exists, reset all filter menu and payload. then set filter menu and payload using personalMatch */
     const data = this._sharedService.getPersonalMatch();
@@ -393,8 +410,11 @@ export class ListingComponent implements OnInit, OnDestroy {
 
       this.listingPayload.keyword = this.keyword || '';
       this.listingPayload.virtual = this.isVirtual;
-      if(this.isVirtual) { this.listingPayload.latLong = ''; }
-      // this.listingPayload.latLong = this.isVirtual ? '' : `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
+      if(this.isVirtual) { 
+        this.listingPayload.latLong = ''; 
+      } else {
+        this.listingPayload.latLong = `${this.searchCenter.lng}, ${this.searchCenter.lat}`;
+      }
 
       this.loggedInUser = ls.getItem('loginID');
       this.loggedInRole = ls.getItem('roles');

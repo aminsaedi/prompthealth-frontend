@@ -1,0 +1,51 @@
+/// TEMPORARY TODO: DELTE LATER
+.text-body {
+  color: rgba(41, 49, 72, 1)!important;
+}
+.text-placeholder {
+  color: rgba(160, 163, 189, 1);
+}
+.border-body {
+  border-color: rgba(41, 49, 72, 1)!important;
+}
+.border-line {
+  border-color: rgba(214, 216, 231, 1)!important;
+}
+
+.bg-background {
+  background-color: rgba(239, 243, 247, 1);
+}
+.btn.btn-primary {
+  background: rgba(12, 116, 255, 1)!important;
+  &:hover {
+    background: rgba(0, 85, 199, 1)!important;
+  }
+}
+/// TEMPORARY END
+
+.menu-sm {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+
+  .menu-top {
+    position: absolute;
+    transform: translateX(-50%);
+    top: 0;
+    left: 50%;
+    z-index: 100;
+  }
+
+  .menu-inner {
+    flex: 0 0 100%;
+  }
+
+  a{
+    cursor: pointer;
+  }
+}
+
+.w-30p { width: 30px; }

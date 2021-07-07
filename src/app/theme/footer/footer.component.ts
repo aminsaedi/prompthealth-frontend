@@ -27,6 +27,7 @@ export class FooterComponent implements OnInit {
   public countTypeOfProviders: number = 0;
   
   ngOnInit() {
+    console.log('test')
 
     this.countCities = Object.keys(locations).length;
     

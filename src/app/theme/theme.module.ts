@@ -23,9 +23,11 @@ import { ThankuPageComponent } from './thanku-page/thanku-page.component';
 import { environment } from 'src/environments/environment';
 import { DashboardMenuComponent } from './dashboard-menu/dashboard-menu.component';
 import { BannerTopComponent } from './banner-top/banner-top.component';
+import { HeaderMagazineComponent } from './header-magazine/header-magazine.component';
 @NgModule({
   declarations: [
     HeaderComponent,
+    HeaderMagazineComponent,
     FooterComponent,
     LayoutComponent,
     SubscribeComponent,
