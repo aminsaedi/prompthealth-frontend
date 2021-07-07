@@ -394,6 +394,20 @@ export class EditorComponent implements OnInit {
     }
   }
 
+  onInputTitle(e: InputEvent) {
+    let val = this.f.title.value;
+    // for android
+    //// cannot detect insertParagraph sometime on android.
+    //// if new paragraph is inserted, remove it and focus editor.
+    if(val.match(/<div><br><\/div>/)) {
+      val = val.replace(/<div><br><\/div>/, '');
+      this.f.title.setValue(val);
+      if(this.contentEditor) {
+        this.contentEditor.focus();
+      }
+    }
+  }
+
 
   onEditorCreated(e: Quill) {
     this.contentEditor = e;
