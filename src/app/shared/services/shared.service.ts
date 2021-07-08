@@ -26,6 +26,7 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { IAddonPlan } from 'src/app/models/addon-plan';
 import { ICouponData } from 'src/app/models/coupon-data';
+import { ToastrService } from 'ngx-toastr';
 
 declare var jQuery: any;
 
@@ -42,10 +43,7 @@ export class SharedService {
   type: any;
   personalMatch;
   constructor(
-    // private authService: SocialAuthService,
     private _router: Router,
-    private rendererFactory: RendererFactory2,
-    // private _flashMessagesService: FlashMessagesService,
     private spinner: NgxSpinnerService,
     private previousRouteService: PreviousRouteService,
     private _bs: BehaviorService,
@@ -53,6 +51,7 @@ export class SharedService {
     private _stripeService: StripeService,
     private _postManager: PostManagerService,
     private _profileManager: ProfileManagementService,
+    private _toastr: ToastrService,
 
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
@@ -68,17 +67,16 @@ export class SharedService {
   
     ls.removeItem('token');
     ls.removeItem('loginID');
-    // localStorage.removeItem('isPayment');
     ls.removeItem('user');
     ls.removeItem('roles');
     ls.removeItem('isVipAffiliateUser');
-    // this.authService.signOut();
-    this.showAlert('Logout Sucessfully', 'alert-success');
-    this._bs.setUserData({});
 
+    this._bs.setUserData(null);
+    this._toastr.success('Logged out successfully');
+    
     ls.setItem('userType', 'U');
     if (navigate) {
-      this._router.navigate(['/auth/login']);
+      this._router.navigate(['/']);
     }
   }
 

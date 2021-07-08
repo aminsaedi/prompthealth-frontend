@@ -14,7 +14,6 @@ import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { ModalModule } from "ngx-bootstrap/modal";
 
 import {NgxPaginationModule} from 'ngx-pagination';
-import { ScrollTopService } from './scrolltop.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ErrorInterceptor } from './shared/services/error.interceptor';
 import { EmbedVideo } from 'ngx-embed-video';
@@ -33,7 +32,6 @@ import { EmbedVideo } from 'ngx-embed-video';
     EmbedVideo.forRoot()
   ],
   providers: [
-    ScrollTopService,
     BehaviorService,
     CookieService,
     CanonicalLinkService,

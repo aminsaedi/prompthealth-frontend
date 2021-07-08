@@ -86,6 +86,9 @@
 .btn.btn-text-black {
   @include btnText($colorGsBody, $colorGsBlack);
 }
+.btn.btn-text-error {
+  @include btnText($colorError, $colorErrorDark);
+}
 
 
 

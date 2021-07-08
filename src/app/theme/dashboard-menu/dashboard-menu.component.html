@@ -44,26 +44,23 @@
   >
     <div>
       <a *ngIf="hasProfile()" 
-        (click)="onClose()"
-        class="btn btn-text small pl-0 text-nowrap" 
-        [routerLink]="[ ((user.roles == 'P') ? '/products' : '/practitioners'), getId()]"
+        (click)="onClickMenuItem((user.roles == 'P' ? '/products/' : '/practitioners/') + getId())"
+        class="btn btn-text small pl-0 text-nowrap text-body" 
       >See my profile</a>
     </div>
     <div>
-      <a class="btn btn-text small pl-0 text-nowrap" 
-        (click)="onClose()"  
-        [routerLink]="['/dashboard/profilemanagement/']"
+      <a class="btn btn-text small pl-0 text-nowrap text-body" 
+        (click)="onClickMenuItem('/dashboard/profilemanagement/' + (user.roles == 'P' ? 'partner-profile' : 'my-profile'))"  
       >My Dashboard</a>
     </div>
     <div>
       <a *ngIf="hasProfile()"
-      class="btn btn-text small pl-0 py-2 text-nowrap" 
-      (click)="onClose()"  
-      [routerLink]="['/dashboard/profilemanagement/my-posts']"
+      class="btn btn-text small pl-0 py-2 text-nowrap text-body" 
+      (click)="onClickMenuItem('/dashboard/profilemanagement/my-posts')"  
       >See my posts</a>
     </div>
     <div>
-      <button class="btn btn-text small pl-0 py-2 text-nowrap logout" (click)="onClickLogout(); onClose();">Logout</button>
+      <button class="btn btn-text-error small pl-0 py-2 text-nowrap" (click)="onClickLogout();">Logout</button>
     </div>  
   </div>
 </div>

@@ -19,7 +19,7 @@ export class DashboardMenuComponent {
   @Input() styleBody: any = null;
 
   @Output() logout = new EventEmitter<void>();
-  @Output() close = new EventEmitter<void>();
+  @Output() menuSelected = new EventEmitter<string>();
 
   constructor() { }
 
@@ -56,5 +56,5 @@ export class DashboardMenuComponent {
   }
 
   onClickLogout() { this.logout.emit(); }
-  onClose() { this.close.emit(); }
+  onClickMenuItem(goto: string) { this.menuSelected.emit(goto); }
 }

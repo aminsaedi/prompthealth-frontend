@@ -12,15 +12,10 @@ export class LayoutComponent {
   public showFooter = false;
   public showItems = true;
   public onMagazine: boolean = false;
-  eventKey = 1;
-
-  @HostListener('document:click', ['$event']) clickedOutside($event) {
-    this.eventKey += 1;
-  }
 
   constructor(
     private _router: Router,
-    private _sharedService: SharedService) {
+  ) {
 
     this._router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
