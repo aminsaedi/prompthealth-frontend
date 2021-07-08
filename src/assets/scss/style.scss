@@ -469,11 +469,7 @@ textarea.form-control {
   .heightHF-100 {
     min-height: calc(100vh - #{$headerHeight+$footerHeight});
   }
-/*
-  .spacer-top {
-    height: $headerHeight;
-  }
-*/
+
   .heightH-60 {
     min-height: calc(60vh - #{$headerHeight});
   }
@@ -483,58 +479,11 @@ textarea.form-control {
   }
 }
 
-@import "responsive_variables";
-.spacer-top{
-  height: $headerHeight;
-  @media screen and (min-width:  768px){ height: $headerHeightMd; }
-  @media screen and (min-width:  992px){ height: $headerHeightLg; }
-  @media screen and (min-width: 1200px){ height: $headerHeightXl; }
-
-  &.loggedin{
-    height: $headerHeightLoggedin;
-    @media screen and (min-width:  768px){ height: $headerHeightLoggedinMd; }
-    @media screen and (min-width:  992px){ height: $headerHeightLoggedinLg; }
-    @media screen and (min-width: 1200px){ height: $headerHeightLoggedinXl; }
-  }
-}
-
 .max-w-1200{
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
-
-
-//.font-smallest{ font-size: 0.4rem; }
-.font-smaller{ font-size: 0.7em; }
-.font-small{ font-size: 0.8em; }
-.font-regular{ font-size: 1em }
-.font-big{ font-size: 1.2em }
-.font-bigger{ font-size: 1.4em; }
-.font-biggest{ font-size: 1.6em; }
-
-//.font-mg-smallest{ @media screen and (min-width: 768px){ font-size: 0.4em; }}
-//.font-mg-smaller{ @media screen and (min-width: 768px){ font-size: 0.6em; }}
-.font-mg-small, .font-md-small{ @media screen and (min-width: 768px){ font-size: 0.8em; }}
-.font-mg-regular, .font-md-regular{ @media screen and (min-width: 768px){ font-size: 1em; }}
-.font-mg-big, .font-md-big{ @media screen and (min-width: 768px){ font-size: 1.2em; }}
-.font-mg-bigger, .font-md-bigger{ @media screen and (min-width: 768px){ font-size: 1.4em; }}
-.font-mg-biggest, .font-md-biggest{ @media screen and (min-width: 768px){ font-size: 1.6em; }}
-
-.bg-white{ background: white; }
-.rounded-15p{ border-radius: 15px; }
-.rounded-10p{ border-radius: 10px; }
-.btn-ph-blue{
-  background: var(--ph-blue);
-  color: white;
-  &:hover{ color: white; }
-}
-.text-ph-blue { color: var(--ph-blue); }
-.bg-ph-blue{ background: var(--ph-blue); }
-.border-ph-blue { border: solid 1px var(--ph-blue); }
-
-.font-weight-400 { font-weight: 400; }
-.font-weight-500 { font-weight: 500; }
 
 .whitespace-pre{ white-space: pre; }
 .whitespace-prewrap{ white-space: pre-wrap}

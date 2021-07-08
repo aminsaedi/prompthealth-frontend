@@ -1,16 +1,15 @@
 <div class="card card-coupon overflow-hidden" *ngIf="couponData">
-  <div class="d-flex align-items-center">
-    <div class="bg-primary text-light font-bigger card-left">
+  <div class="d-flex align-items-stretch">
+    <div class="bg-primary text-light h6 m-0 card-left">
       <div class="circle"></div>
       <div class="description text-center">
         SAVE <br>
         {{couponData.percent_off}}%!
       </div>
     </div>
-    <div class="bg-white text-center card-right">
-      <h6 class="mb-1">COUPON</h6>
-      <div>{{couponData.id}}</div>
-      <div class="body-small">{{couponData.metadata.message}}</div>
+    <div class="bg-white text-center card-right mt-15p mx-5p">
+      <div class="h6">{{couponData.id}}</div>
+      <div class="caption">{{couponData.metadata.message}}</div>
     </div>
   </div>
 </div>

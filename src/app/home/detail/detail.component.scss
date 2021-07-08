@@ -282,13 +282,6 @@ $imageSize: 100, 130;
   }
 }
 
-.professional-name{
-  height: 42px;
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
 .professional-image{
   width: 100px;
   height: 100px;
@@ -300,13 +293,6 @@ $imageSize: 100, 130;
 .professional-desc{
   white-space: pre-wrap;
   text-align: left;
-  &.clamp{
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    text-align: center;
-  }
 }
 
 .endosement-wrapper:not(:last-child){

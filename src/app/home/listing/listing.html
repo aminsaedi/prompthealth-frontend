@@ -124,13 +124,13 @@
 
 <div (clickOutside)="onClickOutsideOfFilter($event)">
 
-  <filter-dropdown-location class="position-fixed shadow rounded-15p blur filter-dropdown"
+  <filter-dropdown-location class="position-fixed shadow rounded-12p blur filter-dropdown"
     *ngIf="filterTarget && (filterTarget._id == 'location')" [@slideVertical] [ngStyle]="getFilterDropdownPosition()"
     [data]="filterTarget.data" (changeValue)="updateFilterActiveStatus(filterTarget)"
     (changeState)="onChangeStateFilterMenu($event)"
   ></filter-dropdown-location>
 
-  <filter-dropdown-select class="position-fixed shadow rounded-15p blur filter-dropdown"
+  <filter-dropdown-select class="position-fixed shadow rounded-12p blur filter-dropdown"
     *ngIf="filterTarget && (filterTarget.type == 'radio' || filterTarget.type == 'checkbox')" [@slideVertical]
     [ngStyle]="getFilterDropdownPosition()" [target]="filterTarget._id"
     [multiple]="(filterTarget.type == 'checkbox')? true: false" [options]="filterTarget.options"
@@ -196,7 +196,7 @@
           <p class="opacity-0">Here are the options we found for you</p>
         </div>
         <div class="card-container" *ngFor="let i of [0,1,2,3,4,5]">
-          <div class="card rounded-15p">
+          <div class="card rounded-12p">
             <card-dummy></card-dummy>
           </div>
         </div>

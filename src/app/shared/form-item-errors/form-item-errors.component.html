@@ -1,4 +1,4 @@
-<ul class="errors text-danger font-small" *ngIf="controller && controller.invalid && controller.errors && submitted">
+<ul class="errors text-danger body-small" *ngIf="controller && controller.invalid && controller.errors && submitted">
   <li *ngIf="controller.errors.required">{{label}} is required.</li>
   <li *ngIf="controller.errors.requiredTrue">Please check</li>
   <li *ngIf="controller.errors.minlength">{{label}} too short.</li>

@@ -3,9 +3,9 @@
 
 <div class="viewer" *ngIf="itemTarget">
   <div class="main d-flex flex-column">
-    <h3 *ngIf="itemTarget.item_text" class="flex-grow-0 mt-0 mb-3">{{itemTarget.item_text}}</h3>
+    <h3 *ngIf="itemTarget.item_text" class="flex-grow-0 mt-0 mb-3 text-primary-dark">{{itemTarget.item_text}}</h3>
     <div *ngIf="itemTarget.price" class="mb-3 flex-grow-0">
-      <span class="py-1 px-3 rounded price font-regular">
+      <span class="py-1 px-3 body1 text-primary-dark border-primary-dark border rounded-4p">
         {{itemTarget.price | currency:'CAD'}}
       </span>
     </div>

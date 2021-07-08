@@ -34,7 +34,7 @@
       </div>
 
       <div *ngIf="data"  class="row-uploaded-files">
-        <label>Uploaded files</label>
+        <h6>Uploaded files</h6>
         <ul class="list-unstyled d-flex flex-wrap row-uploaded-files uploaded-files mb-3">
           <li *ngFor="let filedata of filesUploaded; let i = index" 
           class="text-center rounded px-1 pt-3 pb-2 position-relative"
@@ -43,7 +43,7 @@
           (clickOutside)="hideFileMenu()"
           >
             <i iconPh="file"></i>
-            <span class="font-small mt-2">{{filedata.name}}</span>
+            <span class="caption mt-2">{{filedata.name}}</span>
             
             <div *ngIf="targetFileMenu === i" class="file-menu">
               <div class="d-flex align-items-center justify-content-around file-menu-bar">
@@ -63,7 +63,7 @@
       <ul *ngIf="files" class="list-unstyled d-flex flex-wrap row-uploading-files file-previews mb-3" [ngClass]="{'priority-low': !!data}">
         <li *ngFor="let file of files; let i = index" class="d-flex align-items-center rounded-pill">
           <i iconPh="file"></i>
-          <span class="font-small">{{file.name}}</span>
+          <span class="caption">{{file.name}}</span>
           <button class="btn btn-icon small" (click)="removeFileBeforeUpload(i)">
             <i iconPh="cross"></i>
           </button>
@@ -74,7 +74,7 @@
         <div class="row-input">
           <div class="mb-3 row">
             <div class="col-md-5 col-lg-4">
-              <label for="titleCertification">
+              <label class="subtitle1" for="titleCertification">
                 Document Name
                 <span *ngIf="!isVerified" class="text-danger"> *</span>
               </label>
@@ -93,7 +93,7 @@
   
           <div class="mb-3 row">
             <div class="col-md-5 col-lg-4">
-              <label for="descriptionCertification">
+              <label class="subtitle1" for="descriptionCertification">
                 Description
                 <span *ngIf="!isVerified" class="text-danger"> *</span>
               </label>
@@ -117,7 +117,7 @@
 
         <div class="row-submit" *ngIf="!isVerified">
           <input class="btn btn-primary mr-4" type="submit" [value]="(data ? 'Update ' : 'Upload ')">
-          <button *ngIf="data" class="btn btn-error font-regular" type="button" (click)="onDelete()">Delete</button>
+          <button *ngIf="data" class="btn btn-error" type="button" (click)="onDelete()">Delete</button>
         </div>  
       </ng-container>
     </section>

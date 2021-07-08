@@ -133,7 +133,7 @@ export class HeaderComponent implements OnInit {
   onClickOutsideOfDashboardMenuMd(e: Event) {
     const target = e.target as HTMLElement;
     const dashboardMenuButton = this.elHost.querySelector('#dashboardMenuButton');
-    if (!dashboardMenuButton.contains(target)) {
+    if (!dashboardMenuButton || !dashboardMenuButton.contains(target)) {
       this.isDashboardMenuShown = false;
     }
   }

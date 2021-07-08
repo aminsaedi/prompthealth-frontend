@@ -75,7 +75,7 @@
         </div>
         <div class="d-flex justify-content-end pt-3">
           <div class="d-flex align-items-center">
-            <div class="mr-3 text-nowrap font-weight-400">Sort by:</div>
+            <div class="mr-3 text-nowrap body1">Sort by:</div>
             <ul class="d-flex flex-nowrap sorts list-unstyled p-0 m-0">
               <li *ngFor="let data of sortData" class="position-relative text-nowrap">
                 <button class="btn btn-text small text-body" 
@@ -93,7 +93,7 @@
       <p *ngIf="!partners" class="opacity-0">Here are the options we found for you</p>
       <ul class="row list-unstyled partners" *ngIf="!partners">
         <li class="col-12 col-md-6 mb-4" *ngFor="let i of [0,1,2,3]">
-          <card-dummy class="rounded-10p border"></card-dummy>
+          <card-dummy class="rounded-12p border"></card-dummy>
         </li>
       </ul>
 

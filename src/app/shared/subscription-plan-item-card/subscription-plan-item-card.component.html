@@ -1,11 +1,11 @@
-<div class="tab shadow font-weight-bold d-flex align-items-center flex-nowrap"
+<div class="tab shadow d-flex align-items-center flex-nowrap h6"
     [class]="isPriceMonthly? 'colorset-' + color : 'colorset-' + color + '-yearly'">
 
     <ng-container *ngIf="type != 'partnerEnterprise'; else tabPartnerEnterprise">
         <div>
             <div *ngIf="price != 0">{{price | currency : 'CAD' : 'symbol-narrow' : '2.0'}}</div>
             <div *ngIf="price == 0">Free</div>
-            <div class="font-small font-weight-normal" *ngIf="discounted"><s>${{priceOriginal}}</s></div>
+            <div class="body2" *ngIf="discounted"><s>${{priceOriginal}}</s></div>
         </div>
         <ng-container *ngIf="price != 0">
             <div class="mx-2">/</div>
@@ -14,7 +14,7 @@
                 <div *ngIf="!monthly">Yearly</div>
             </div>
         </ng-container>
-        <span class="save-annualy font-weight-normal text-center d-inline-block font-italic"
+        <span class="save-annualy body1 text-center d-inline-block font-italic"
             *ngIf="!monthly && type != 'basic' && type != 'partner'">save<br>20%</span>
     </ng-container>
     <ng-template #tabPartnerEnterprise>
@@ -97,7 +97,7 @@
             </li>
             <li>
                 <span class="fa-li"><i iconPh="check-circle" class="large mr-2"></i></span>
-                <div class="font-weight-400">
+                <div class="">
                 Analytics
                 <span class="badge badge-info">Coming Soon!</span>
               </div>

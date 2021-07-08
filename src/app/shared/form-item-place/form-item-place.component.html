@@ -12,13 +12,13 @@
 
 <div class="d-flex justify-content-end mt-1" *ngIf="fPlaceName.errors">
   <form-item-errors class="flex-grow-1" [controller]="fPlaceName" [submitted]="submitted" [label]="label"></form-item-errors>
-  <span *ngIf="max > 0" class="flex-grow-0 font-small" 
+  <span *ngIf="max > 0" class="flex-grow-0 caption" 
   [ngClass]="!fPlaceName.dirty ? 'text-placeholder' : fPlaceName.errors ? 'text-danger' : 'text-success'"
   >{{fPlaceName.value.length}}/{{max}}</span>
 </div>
 
 <div *ngIf="fPlaceId.value" class="mt-3 p-2 border rounded-8p d-flex flex-nowrap align-items-center">
-  <i class="fab fa-google pr-2"></i>
+  <i iconPh="google" class="mr-1"></i>
   <span class="flex-grow-1 body2">Connected with Google Place</span>
   <button *ngIf="!disabled" class="btn btn-error small" (click)="removePlace()" type="button">Remove</button>
 </div>

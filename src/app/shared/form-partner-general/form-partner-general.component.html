@@ -22,15 +22,6 @@
       <span class="text-danger">*</span>
     </label>
     <div class="col-md-8">
-      <!-- <form-item-input 
-      name="firstName"
-      label="Company name" 
-      type="text"
-      [controller]="f.firstName" 
-      [max]="maxName"
-      [submitted]="isSubmitted" 
-      [disabled]="disabled"
-      ></form-item-input>            -->
       <form-item-place
       name="firstName"
       label="Company name"
@@ -42,7 +33,7 @@
       (selectPlace)="onChangePlace()"
       ></form-item-place>
 
-      <div *ngIf="!disabled && !f.placeId.value" class="p-3 bg-lightgrey">
+      <div *ngIf="!disabled && !f.placeId.value" class="p-3 bg-background mt-10p">
         You can connect to Google Business account. To connect, enter business name and select from suggestion.
       </div>
 

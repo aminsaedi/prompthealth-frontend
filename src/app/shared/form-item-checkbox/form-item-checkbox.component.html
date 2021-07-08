@@ -1,5 +1,9 @@
-<div class="d-flex justify-content-start align-items-center">
-  <div class="position-relative mr-1 check-container" *ngIf="type == 'checkbox'">
+<div class="d-flex justify-content-start align-items-start">
+  <div 
+  class="position-relative mr-1 check-container" 
+  style="margin-top: 3px;"
+  *ngIf="type == 'checkbox'"
+  >
     <i [iconPh]="'checkbox' + (!!controller.value ? '-filled' : '')" 
     class="position-relative"
     [ngClass]="{'text-placeholder': !controller.value, 'text-primary': !!controller.value, 'text-error': !!controller.errors}"
@@ -7,7 +11,11 @@
     <input type="checkbox" [id]="name" class="form-check-controller" [formControl]="controller" (change)="onChange()">
   </div>
 
-  <div class="position-relative mr-1 check-container" *ngIf="type == 'radio'">
+  <div 
+  class="position-relative mr-1 check-container" 
+  style="margin-top: 3px;"
+  *ngIf="type == 'radio'"
+  >
     <i [iconPh]="'radiobutton' + (controller.value == value ? '-filled' : '')" 
     class="position-relative"
     [ngClass]="{'text-placeholder': (controller.value != value), 'text-primary': (controller.value == value), 'text-error': !!controller.errors}"

@@ -13,7 +13,7 @@
     <div class="d-flex-column d-wrap ml-for-avoid-image profile-info"
       [ngClass]="{sticked: isTabSticked}"
     >
-      <p *ngIf="userInfo?.title" class="mb-2 overflow-hidden fong-regular font-mg-big" [@expandSubtitle]="(isTabSticked? 'shrink' : 'expand')">{{userInfo?.title}} </p> 
+      <p *ngIf="userInfo?.title" class="mb-2 overflow-hidden subtitle1 h6-md" [@expandSubtitle]="(isTabSticked? 'shrink' : 'expand')">{{userInfo?.title}} </p> 
       <div class="d-flex align-items-start title-wrapper">
         <h3 class='mb-0 overflow-hidden' [@expandTitle]="(isTabSticked? 'shrink' : 'expand')">
           <i class="pr-2" iconPh="home" *ngIf="userInfo?.isCentre"></i>
@@ -95,7 +95,7 @@ class="bg-background p-4"
                   <div class="review-image rounded-circle overflow-hidden mr-3">
                     <img [src]="r.image" [alt]="r.name">
                   </div>
-                  <p class="font-weight-bold mt-3 font-big mb-0">{{r.name}}</p>
+                  <h6 class="mt-3 mb-0">{{r.name}}</h6>
                 </div>
                 <div class="col-md-7 col-lg-9">
                   <star-rate [rate]="r.rate" margin='big'></star-rate>
@@ -117,7 +117,7 @@ class="bg-background p-4"
                     <img [src]="r.profile_photo_url" [alt]="r.author_name">
                   </div>
                   <div class="mt-3">
-                    <p class="font-weight-bold font-big">{{r.author_name}}</p>
+                    <h6>{{r.author_name}}</h6>
                     <star-rate [rate]="r.rating" size='regular' margin="regular"></star-rate>
                   </div>
                 </div>
@@ -139,7 +139,7 @@ class="bg-background p-4"
       <div class="col-12 col-md-5 col-lg-4">
         <div *ngIf="userInfo?.detailByGoogle">
           <!-- <h5 class="text-ph-blue">Google Review</h5> -->
-          <div class="card card-google-place shadow overflow-hidden rounded-10p">
+          <div class="card card-google-place shadow overflow-hidden rounded-12p">
             <div class="image-container">
               <img class="atmosphere" [src]="userInfo?.detailByGoogle?.photos[0].getUrl()" alt="">
               <img class="badge-google" src="/assets/img/logo-google.png" alt="">
@@ -382,8 +382,8 @@ class="bg-background p-4"
               crossorigin="anonymous"
               >
 
-              <h6 class="font-smallest mb-3 professional-name">{{pro.name}}</h6>
-              <p class="professional-desc" [ngClass]="{clamp: !isExpandProfessionals}">{{pro.description}}</p> 
+              <p class="subtitle1 mb-3 clamp-2line">{{pro.name}}</p>
+              <p class="professional-desc" [ngClass]="{'clamp-3line text-center': !isExpandProfessionals}">{{pro.description}}</p> 
               <button class="btn" style="color: inherit;" (click)="toggleExpandProfessionalDesc()">
                 <span *ngIf="!isExpandProfessionals">- show more -</span>
                 <span *ngIf="isExpandProfessionals">- show less -</span>
@@ -461,9 +461,9 @@ class="bg-background p-4"
         <!-- videos-->
         <div class="rounded shadow overflow-hidden pb-3 mb-5">
           <div class="m-3 d-flex align-items-center justify-content-between">
-            <h5 class='m-0'>
+            <h5 class='m-0 d-flex align-items-center'>
               <span class="text-primary">Video</span>
-              <span class="ml-2 font-small" *ngIf="userInfo && userInfo.videos.length>0">{{userInfo.videos.length}}</span>
+              <span class="ml-2 subtitle2" *ngIf="userInfo && userInfo.videos.length>0">{{userInfo.videos.length}}</span>
             </h5> 
             <div *ngIf="userInfo && userInfo.videos.length > 0" class="text-right">
               <button *ngIf="iframe.length > countVideoShown" 
@@ -496,7 +496,7 @@ class="bg-background p-4"
         <!-- endosements -->
         <div class="rounded shadow overflow-hidden mb-5">
           <h6 class="bg-primary text-center m-0 py-3 text-white">Endorsement</h6>
-          <div class="px-3 py-5 font-italic coming-soon-gradient font-bigger font-weight-bold">Coming soon...</div>
+          <div class="px-3 py-5 font-italic coming-soon-gradient h6">Coming soon...</div>
 
           <!-- <card-dummy *ngIf="!userInfo ||!userInfo.endosements"></card-dummy>
           <div class="px-3">

@@ -6,11 +6,11 @@
 <section class="pt-5 pb-5 bg-cover bg-overlay hero">
   <div class="container pt-5 pb-5">
     <div class="row justify-content-center text-center text-light">
-      <h2>
+      <h2 class="h4 h2-md">
         Would you like to advertise your product/service with PromptHealth?
       </h2>
     </div>
-    <div class="text-light text-center font-regular font-md-big mt-4 font-weight-400">
+    <div class="text-light text-center subtitle1 h5-md mt-4">
       We are looking for organizations in health and wellness that provide products or services and are interested in collaborating with us. 
     </div>
 
@@ -28,9 +28,9 @@
     </div> -->
   </div>
 </section>
-<section class="bg-ph-blue py-4 text-light">
+<section class="bg-primary py-4 text-light">
   <div class="container">
-    <div class="font-big font-italic">
+    <div class="h6 font-italic m-0">
       Receive 50% off for a limited time!
     </div>
   </div>
@@ -40,7 +40,7 @@
 <!-- Pricing table -->
 <div class="container my-5 d-md-flex align-items-center">
   <price-range-switcher (change)="changePriceRange($event)"></price-range-switcher>
-  <span class="pt-3 pt-md-0 pl-md-3 pl-lg-5 font-italic text-blue font-big d-block d-md-inline-block">save 20% with yearly subscription</span> 
+  <span class="pt-3 pt-md-0 pl-md-3 pl-lg-5 m-0 font-italic text-primary h6 d-block d-md-inline-block">save 20% with yearly subscription</span> 
   <div class="d-inline-block mt-3 mt-md-0 ml-md-3 ml-lg-5">
     <button-tutorial type="signup-product" label="How To Signup" title="How To signup"></button-tutorial>
   </div> 
@@ -55,7 +55,7 @@
           <div class="separator mt-2"></div>
         </h3>
         <img style="max-width: 100%;" class="mt-5" src="/assets/img/product.png" alt="">
-        <p class="mt-4 font-regular font-md-big">
+        <p class="mt-4 h6-md">
           For health and wellness companies looking to showcase their products orservices to clients. 
           Get exposure and have the opportunity to be endorsed bythe health professionals on our network, 
           further increasing your visibility.
@@ -110,10 +110,10 @@
         <h6>Would you like to create new account as Product/Service?</h6>
         <div class="row">
           <div class="col-6 text-center">
-            <button class="btn btn-sedondary" data-dismiss="modal">Stay this page</button>
+            <button class="btn btn-outline" data-dismiss="modal">Stay this page</button>
           </div>
           <div class="col-6 text-center">
-            <button class="btn btn-ph-blue" data-dismiss="modal" (click)="onLogout()">Logout and create new account</button>
+            <button class="btn btn-primary" data-dismiss="modal" (click)="onLogout()">Logout and create new account</button>
           </div>
         </div>
       </div>
@@ -122,8 +122,12 @@
 </div>
 
 <div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{shrink: isCouponShrink}" (click)="expandMessageCoupon()">
-  <div class="mb-2 font-weight-400">You have coupon!</div>
-  <card-coupon [couponData]="couponCode" style="font-size: 11px;"></card-coupon>
+  <div class="d-flex justify-content-between align-items-center mb-10p">
+    <div class="subtitle1 mb-0">You have coupon!</div>
+    <button class="btn btn-shrink" (click)="shrinkMessageCoupon($event)">
+      <i iconPh="chevron-right" class="large"></i>
+    </button>
+  </div>
+  <card-coupon [couponData]="couponCode"></card-coupon>
 
-  <button class="btn btn-shrink" (click)="shrinkMessageCoupon($event)"><i class="fas fa-minus"></i></button>
 </div>

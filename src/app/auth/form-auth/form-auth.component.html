@@ -78,7 +78,6 @@
 
     <div class="mb-3" *ngIf="authType == 'signup'">
       <form-item-checkbox
-      class="font-small"
       name="t_c"
       label="I agree to the terms of service and privacy policy"
       [controller]="f.t_c"
@@ -98,8 +97,8 @@
       >
     </div>
  
-    <div class="text-right font-small mb-3" *ngIf="authType == 'signin'">
-      <a [routerLink]="['/auth/forgot-password']" class="btn btn-text small pr-0">Forgot Password?</a>
+    <div class="text-right mb-3" *ngIf="authType == 'signin'">
+      <a [routerLink]="['/auth/forgot-password']" class="btn btn-text-black small pr-0">Forgot Password?</a>
     </div>
 
     <div *ngIf="authType == 'signin'">

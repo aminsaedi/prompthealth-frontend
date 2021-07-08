@@ -29,7 +29,7 @@
       <!-- <div class="image-grid flex-grow-1" [ngClass]="'item-count-' + profile?.countProductImages">
         <ng-container *ngFor="let imageData of profile?.productImages; let i = index">
           <div class="position-relative" [ngClass]="'item-' + i" (click)="changeImageViewerTarget(i)">
-            <img class="rounded-10p" [src]="imageData.url" >
+            <img class="rounded-12p" [src]="imageData.url" >
           </div>  
         </ng-container>
       </div> -->
@@ -119,7 +119,7 @@
             <button-share
             facebook twitter linkedin pinterest email
             label=""
-            btnClass="btn font-big color-inherit"
+            btnClass="btn btn-icon color-inherit"
             menuPosition="right"
             [url]="urlCurrent"
             [title]="'Check out our favorite product ' + profile?.name" 
@@ -140,13 +140,13 @@
               <div class="d-flex flex-nowrap align-items-start mb-2">
                 <img class="user" [src]="r.profile_photo_url" alt="">
                 <div class="ml-2 mb-1 flex-grow-1">
-                  <span class="font-weight-400">{{r.author_name}}</span><br>
+                  <span class="subtitle1">{{r.author_name}}</span><br>
                   <star-rate [rate]="r.rating" size="small" margin="narrow"></star-rate>
                 </div>
               </div>
-              <p class="font-small">{{r.text}}</p>
-              <div class="text-right font-small">
-                {{r.relative_time_description}}
+              <p class="body2">{{r.text}}</p>
+              <div class="text-right body-small">
+                <span class="opacity-60pc">{{r.relative_time_description}}</span>
                 <img class="badge-google" src="/assets/img/logo-google.png" alt="" width="30">
               </div>
             </li>
