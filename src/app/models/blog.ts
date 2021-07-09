@@ -2,13 +2,16 @@ import { SafeHtml } from "@angular/platform-browser";
 import { environment } from "src/environments/environment";
 import { IBlogCategory } from "./blog-category";
 import { EventData } from "./event-data";
+import { IUserDetail } from "./user-detail";
 
 export interface IBlog {
   _id: string;
   slug: string;
   title: string;
   description: string;
-  author: string;
+  author: string; // name (used in admin)
+  authorId: string | {firstName: string, lastName: string, profileImage: string, _id: string, createdRole: IUserDetail['roles']};
+
   readLength?: number;
 
   image: string;
@@ -68,8 +71,9 @@ export class Blog implements IBlog {
 
   get tags() { return this.data.tags; }
 
-  get author() { return this.data.author; }
-  get authorImage() { return 'assets/img/logo-sm-square.png'}
+  get author() { return (typeof this.data.authorId != 'string' && this.data.authorId.createdRole != 'SA') ? this.data.authorId.firstName : this.data.author; } //author name
+  get authorId(): string { return (typeof this.data.authorId == 'string') ? this.data.authorId : this.data.authorId._id; }
+  get authorImage() { return (typeof this.data.authorId != 'string' && this.data.authorId.createdRole != 'SA' && this.data.authorId.profileImage) ? this.AWS_S3 + '350x220/' + this.data.authorId.profileImage : 'assets/img/logo-sm-square.png'}
 
   get createdAt() { return this.data.createdAt; }
 

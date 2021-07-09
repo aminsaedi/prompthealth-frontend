@@ -6,7 +6,7 @@ export interface IUserDetail {
   /** general */
   _id?: string;
   userId?: string;
-  roles?: 'U' | 'SP' | 'C' | 'P';
+  roles?: 'U' | 'SP' | 'C' | 'P' | 'SA';
 
   firstName?: string;
   lastName?: string;
