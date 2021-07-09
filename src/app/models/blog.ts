@@ -10,7 +10,7 @@ export interface IBlog {
   title: string;
   description: string;
   author: string; // name (used in admin)
-  authorId: string | {firstName: string, lastName: string, profileImage: string, _id: string, createdRole: IUserDetail['roles']};
+  authorId: string | {firstName: string, lastName: string, profileImage: string, _id: string };
 
   readLength?: number;
 
@@ -24,6 +24,8 @@ export interface IBlog {
   
   categoryId?: IBlogCategory;
   tags?: IBlogCategory[];
+
+  createdRole?: IUserDetail['roles'];
   
   createdAt: string; /** could be Date? */
 
@@ -71,9 +73,9 @@ export class Blog implements IBlog {
 
   get tags() { return this.data.tags; }
 
-  get author() { return (typeof this.data.authorId != 'string' && this.data.authorId.createdRole != 'SA') ? this.data.authorId.firstName : this.data.author; } //author name
+  get author() { return (typeof this.data.authorId != 'string' && this.data.createdRole != 'SA') ? this.data.authorId.firstName : this.data.author; } //author name
   get authorId(): string { return (typeof this.data.authorId == 'string') ? this.data.authorId : this.data.authorId._id; }
-  get authorImage() { return (typeof this.data.authorId != 'string' && this.data.authorId.createdRole != 'SA' && this.data.authorId.profileImage) ? this.AWS_S3 + '350x220/' + this.data.authorId.profileImage : 'assets/img/logo-sm-square.png'}
+  get authorImage() { return (typeof this.data.authorId != 'string' && this.data.createdRole != 'SA' && this.data.authorId.profileImage) ? this.AWS_S3 + '350x220/' + this.data.authorId.profileImage : 'assets/img/logo-sm-square.png'}
 
   get createdAt() { return this.data.createdAt; }
 
