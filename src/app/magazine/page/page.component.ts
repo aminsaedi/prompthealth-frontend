@@ -122,7 +122,7 @@ export class PageComponent implements OnInit {
 
       }
     } else {
-      const related = this._mService.postsOf(catId, 1, 0, 3);
+      const related = this._mService.postsOf(catId, 1, 0, 3, {excluded: this.data._id});
       if (related) {
         this.related = related;
       } else {
@@ -132,7 +132,7 @@ export class PageComponent implements OnInit {
         this._sharedService.getNoAuth(path).subscribe((res: any) => {
           if(res.statusCode === 200) {
             this._mService.saveCache(res.data, 1, catId);
-            this.related = this._mService.postsOf(catId, 1, 0, 3);
+            this.related = this._mService.postsOf(catId, 1, 0, 3, {excluded: this.data._id});
           }
         });
       }  
@@ -151,6 +151,12 @@ export class PageComponent implements OnInit {
       return b._id != this.data._id;
     });
 
-    this.related = filteredExcludeThePost.slice(0,3);
+    const sorted = filteredExcludeThePost.sort((a,b) => {
+      const valA = a.event.startAt.getTime();
+      const valB = b.event.startAt.getTime();
+      return valA - valB;
+    });
+
+    this.related = sorted.slice(0,3);
   }
 }

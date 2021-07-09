@@ -12,6 +12,7 @@
   border-color: rgba($colorPrimary, 0.12);  
 
   &:disabled {
+    background: $colorGsBackground;
     color: $colorGsPlaceholder;
   }
 

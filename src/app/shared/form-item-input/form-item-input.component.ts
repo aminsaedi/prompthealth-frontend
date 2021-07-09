@@ -29,11 +29,13 @@ export class FormItemInputComponent implements OnInit {
   @Output() onChangeValue = new EventEmitter<string>();
 
 
+  public _type: string;
   public _option: FormItemTextfieldOption;
 
   constructor() { }
 
   ngOnInit(): void {
+    this._type = this.type;
     this._option = new FormItemTextfieldOption(this.option);
     this.controller.valueChanges.subscribe(val => {
       this.onChangeValue.emit(val);
@@ -46,6 +48,10 @@ export class FormItemInputComponent implements OnInit {
 
   _onBlur(){
     this.onFocus.emit(false);
+  }
+
+  onClickLock() {
+    this._type = (this._type == 'text') ? 'password' : 'text';
   }
 }
 

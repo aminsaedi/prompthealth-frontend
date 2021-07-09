@@ -10,9 +10,9 @@
   >
 </div>
 
-<div class="d-flex justify-content-end mt-1" *ngIf="fPlaceName.errors">
-  <form-item-errors class="flex-grow-1" [controller]="fPlaceName" [submitted]="submitted" [label]="label"></form-item-errors>
-  <span *ngIf="max > 0" class="flex-grow-0 caption" 
+<div class="d-flex justify-content-end mt-1">
+  <form-item-errors *ngIf="fPlaceName.errors" class="flex-grow-1" [controller]="fPlaceName" [submitted]="submitted" [label]="label"></form-item-errors>
+  <span *ngIf="max > 0 && !disabled" class="flex-grow-0 caption"
   [ngClass]="!fPlaceName.dirty ? 'text-placeholder' : fPlaceName.errors ? 'text-danger' : 'text-success'"
   >{{fPlaceName.value.length}}/{{max}}</span>
 </div>

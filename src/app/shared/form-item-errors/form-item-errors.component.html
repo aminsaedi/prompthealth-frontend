@@ -20,7 +20,7 @@
 
   <li *ngIf="controller.errors.matchPatternURL">
     URL is invalid. Here is sample URL.
-    <ul class="mt-1">
+    <ul class="mt-1 body-small">
       <li>http://example.com</li>
       <li>https://www.example.com</li>
       <li>www.example.com</li>
@@ -32,7 +32,7 @@
   </li>
   <li *ngIf="controller.errors.matchPatternPassword">
     Password has to contain...
-    <ul class="mt-1">
+    <ul class="mt-1 body-small">
       <li>at least 8 characters</li>
       <li>at least 1 number</li>
       <li>at least 1 lowercase character</li>

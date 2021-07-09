@@ -141,14 +141,22 @@ export class MagazineService {
     }
   }
 
-  postsOf(catId: string = null, page: number = 1, from: number = 0, count: number = this.countPerPage, option?: {excluded?: string}): Blog[] {
+  postsOf(catId: string = null, page: number = 1, from: number = 0, count: number = this.countPerPage, option: {excluded?: string} = {}): Blog[] {
     const cat = catId ? catId : 'all';
     if(this.postCache.dataPerTaxonomy[cat] && this.postCache.dataPerTaxonomy[cat].dataPerPage[page]) {
       const posts = [];
       const data = this.postCache.dataPerTaxonomy[cat].dataPerPage[page];
-      const max = data.length > from + count ? from + count : data.length;
-      for(let i=from; i<max; i++) {
-        posts.push(data[i]);
+      const max = data.length > count ? count : data.length;
+
+      let i = from;
+      while(posts.length < max) {
+        const p = data[i];
+        if(option.excluded && option.excluded == p._id) {
+          // do not push the data into posts          
+        } else {
+          posts.push(p);
+        }
+        i++;
       }
       return posts;
     } else {

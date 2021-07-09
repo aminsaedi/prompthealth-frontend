@@ -12,7 +12,7 @@
 
 <div 
 class="d-flex justify-content-end mt-1 caption"
-*ngIf="max || controller.errors"
+*ngIf="(max || controller.errors) && !disabled"
 >
   <form-item-errors class="flex-grow-1" [controller]="controller" [submitted]="submitted" [label]="label"></form-item-errors>
   <span *ngIf="max > 0" class="flex-grow-0" 

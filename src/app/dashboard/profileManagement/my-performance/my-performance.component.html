@@ -55,7 +55,8 @@
         <li class="rounded-lg">
           <div class="py-3 text-white text-center subtitle1" [ngClass]="'bg-' + type">
             <span>
-              <i [iconPh]="type"></i>
+              <i *ngIf="type != 'instagram'" [iconPh]="type"></i>
+              <i *ngIf="type == 'instagram'" iconPh="insta"></i>
               <span class="ml-2">{{type | titlecase}}</span>  
             </span>
           </div>

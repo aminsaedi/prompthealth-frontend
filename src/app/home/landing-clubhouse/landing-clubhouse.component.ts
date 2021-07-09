@@ -27,7 +27,7 @@ export class LandingClubhouseComponent implements OnInit {
 		this._uService.setMeta(this._router.url, {
 			title: 'Newsletter | PromptHealth',
 			description: 'Subscribe to receive meaningful, illuminating insight into the wins and challenges of the health and wellness industry.',
-			image: 'https://prompthealth.ca/assets/img/clubhouse.png',
+			image: 'https://prompthealth.ca/assets/img/newsletter.png',
 			imageAlt: 'newsletter',
 			imageType: 'image/png',
 		});

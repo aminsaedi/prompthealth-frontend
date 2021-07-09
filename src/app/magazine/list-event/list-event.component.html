@@ -47,16 +47,15 @@
         </ng-container>
       </button>
     </div>
-
   </div>
   <div class="row">
-    <ng-container *ngFor="let p of archive; let i = index">
+    <ng-container *ngFor="let p of upcoming; let i = index">
       <div class="col-12 mb-30p mb-md-55p">
         <card-event size="large" [data]="p" [showCategory]="false"></card-event>
       </div>
     </ng-container>
-    <ng-container *ngIf="archive && archive.length == 0">
-      <div class="col-12 mb-30p mb-md-55p subtitle1">No events found...</div>
+    <ng-container *ngIf="upcoming && upcoming.length == 0">
+      <div class="col-12 mb-30p mb-md-55p subtitle1">No upcoming events found...</div>
     </ng-container>
   </div>
 </section>
@@ -71,6 +70,40 @@
       >
         <span>{{page}}</span>
     </a>  
+    </ng-container>
+    <i iconPh="more-horiz" class="text-primary-dark" *ngIf="paginators.length - 1 > i"></i>
+  </ng-container>
+</div>
+
+
+<section class="container mt-50p">
+  <div class="row mb-50p flex-column flex-md-row flex-nowrap justify-content-md-between">
+    <div class="col">
+      <h4 class="h4 mb-0">Past Events</h4>
+    </div>
+  </div>
+  <div class="row">
+    <ng-container *ngFor="let p of archive; let i = index">
+      <div class="col-12 col-md-4 mb-30p mb-md-55p">
+        <card-event size="medium" [data]="p" [showCategory]="false"></card-event>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="archive && archive.length == 0">
+      <div class="col-12 mb-30p mb-md-55p subtitle1">No events found...</div>
+    </ng-container>
+  </div>
+</section>
+
+<div class="d-flex align-items-center justify-content-center paginators mb-100p">
+  <ng-container *ngFor="let paginatorGroup of paginatorsArchive; let i = index;">
+    <ng-container *ngFor="let page of paginatorGroup; let j = index">
+      <a       
+      class="btn bg-primary-light mx-2"
+      [ngClass]=" {'bg-primary text-white': (pageArchiveCurrent == page), 'bg-primary-light text-primary-dark': (pageArchiveCurrent != page)}"
+      (click)="changePageArchive(page)"
+      >
+        <span>{{page}}</span>
+      </a>  
     </ng-container>
     <i iconPh="more-horiz" class="text-primary-dark" *ngIf="paginators.length - 1 > i"></i>
   </ng-container>

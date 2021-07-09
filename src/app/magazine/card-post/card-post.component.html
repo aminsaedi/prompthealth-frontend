@@ -87,7 +87,7 @@
       [ngStyle]="{'pointer-events': (!data || data.authorRole == 'SA' ? 'none' : 'inherit') }"
       [routerLink]="['/',(data?.authorRole == 'P' ? 'products' : 'practitioners'), (data ? data.authorId : '')]"
       >
-        <div class="author-container d-flex align-items-center text-body" *ngIf="!sizeS">
+        <div class="author-container d-flex align-items-center text-body mb-5p" *ngIf="!sizeS">
           <div *ngIf="!data" class="author-dummy color-dummy mr-2"></div>
           <img *ngIf="data" [src]="data.authorImage" alt="" class="author mr-2">
           <p class="m-0 opacity-70pc body1 clamp-1line">
