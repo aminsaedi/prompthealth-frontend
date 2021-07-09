@@ -257,7 +257,7 @@ export class ListEventComponent implements OnInit {
 
     this.upcoming = sorted.slice(offset, offset + this.countPerPage);
 
-    this.postTotal = upcoming.length + (this.latest ? 1 : 0);
+    this.postTotal = upcoming.length;
     this.pageTotal = Math.ceil(sorted.length / this.countPerPage);
     this.setPaginators();
   }

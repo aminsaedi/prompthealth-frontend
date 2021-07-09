@@ -1,3 +1,5 @@
+@import '../../../assets/scss/variables';
+
 .scroll-horizontal-container {
   padding: 0 15px 5px;
   overflow: auto;
@@ -6,13 +8,13 @@
     padding-left: calc((100vw - #{$maxWidth} + 23px) / 2)
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: $breakpointMd) {
     @include paddingLeft(720px);
   }
-  @media (min-width: 992px) {
+  @media (min-width: $breakpointLg) {
     @include paddingLeft(960px);
   }
-  @media (min-width: 1200px) {
+  @media (min-width: $breakpointXl) {
     @include paddingLeft(1150px);
   }
 }
@@ -31,7 +33,7 @@
       width: 100%;
       top: 100%;
       left: 0;
-      border-bottom: solid 1px var(--ph-blue);
+      border-bottom: solid 1px $colorPrimary;
       transition: transform 200ms;
       transform: scaleX(0);
       transform-origin: right;
@@ -43,7 +45,7 @@
   }
 
   li.active{
-    color: var(--ph-blue);
+    color: $colorPrimary;
 
     &::after {
       transform: scaleX(1);
@@ -75,7 +77,7 @@ a.on-black:hover {
     }
   }
 
-  @media (min-width: 992px) {
+  @media (min-width: $breakpointLg) {
     grid-template-columns: 5fr 3fr;
     grid-template-rows: 1fr 1fr;
   
@@ -101,7 +103,7 @@ a.on-black:hover {
     display: block;
     padding-top: 60%;
 
-    @media (min-width: 992px) {
+    @media (min-width: $breakpointLg) {
       content: none;
     }
 

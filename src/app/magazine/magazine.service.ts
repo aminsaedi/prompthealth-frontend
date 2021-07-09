@@ -146,10 +146,9 @@ export class MagazineService {
     if(this.postCache.dataPerTaxonomy[cat] && this.postCache.dataPerTaxonomy[cat].dataPerPage[page]) {
       const posts = [];
       const data = this.postCache.dataPerTaxonomy[cat].dataPerPage[page];
-      const max = data.length > count ? count : data.length;
 
       let i = from;
-      while(posts.length < max) {
+      while(i < data.length && i < from + count) {
         const p = data[i];
         if(option.excluded && option.excluded == p._id) {
           // do not push the data into posts          
