@@ -210,6 +210,7 @@ export const validators = {
   addressClient: [],
   website: validatorUrl,
   bookingURL: validatorUrl,
+  socialLink: [Validators.required, validatorPatternURL()],
   professionalTitle: validatorProfessionalTitle,
   professionalOrganization: validatorProfessionalOrganization,
   certification: validatorCertification,
@@ -229,6 +230,7 @@ export const validators = {
   personalMatchGender: validatorRequired,
   personalMatchAgeRange: validatorRequired,
   
+  passwordOld: [Validators.required],
   password: validatorPatternPassword(),
   accredit: validatorRequiredTrue,
 

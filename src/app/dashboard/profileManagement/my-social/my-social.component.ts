@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
   selector: 'app-my-social',
@@ -18,10 +19,7 @@ export class MySocialComponent implements OnInit {
   public isSubmitted: boolean = false;
   public target: {type: string, link: string} = null;
 
-  public form = new FormControl('', [
-    Validators.pattern("https?://[\\w!\\?/\\+\\-_~=;\\.,\\*&@#\\$%\\(\\)'\\[\\]]+"),
-    Validators.required
-  ]);
+  public form = new FormControl('', validators.socialLink);
   
   constructor(
     private _pService: ProfileManagementService,
@@ -118,12 +116,10 @@ export class MySocialComponent implements OnInit {
       if (res.statusCode === 200) {
         this.profile = res.data;
         this._toastr.success(res.message);
-        // this.editFields = false;
-        // this._bs.setUserData(res.data);
+        this.isSubmitted = false;
       } else {
-        // this.toastr.error(res.message);
+        this._toastr.error(res.message);
       }
-
       this._sharedService.loader('hide');
     }, err => {
       this._sharedService.loader('hide');
