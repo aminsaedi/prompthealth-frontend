@@ -15,7 +15,7 @@
   <div class="d-flex align-items-center mr-0 mr-md-3 mb-10p">
     <span class="subtitle2 mr-15p">Filter: </span>
     <div class="dropdown flex-grow-1">
-      <button class="btn btn-secondary small dropdown-toggle w-100" type="button" id="dropdownMenuButtonStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button class="btn btn-grey small dropdown-toggle w-100" type="button" id="dropdownMenuButtonStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span *ngIf="!statusSelected">Normal</span>
         <span *ngIf="statusSelected && statusSelected != 'ALL'">{{statusNameSelected}}</span>
         <span *ngIf="statusSelected == 'ALL'">All</span>
@@ -35,7 +35,7 @@
   <div class="d-flex align-items-center mr-0 mr-md-3 mb-10p">
     <span class="subtitle2 mr-15p">Category: </span>
     <div class="dropdown flex-grow-1">
-      <button class="btn btn-secondary small dropdown-toggle w-100" type="button" id="dropdownMenuButtonCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button class="btn btn-grey small dropdown-toggle w-100" type="button" id="dropdownMenuButtonCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {{categoryNameSelected}}
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonCategory">
@@ -49,7 +49,7 @@
     </div>  
   </div>
   
-  <button class="btn btn-secondary small mb-10p" type="button" (click)="toggleOrder()">
+  <button class="btn btn-grey small mb-10p" type="button" (click)="toggleOrder()">
     <span *ngIf="order == 'desc'">
       <i iconPh="sort-number"></i>
       Latest

@@ -34,6 +34,9 @@
 .btn.btn-black {
   @include btn($colorGsWhite, $colorGsBlack, $colorGsBody);
 }
+.btn.btn-grey {
+  @include btn($colorGsWhite, $colorGsLabel, $colorGsPlaceholder);
+}
 .btn.btn-google {
   @include btn($colorGsWhite, $colorGoogle, $colorGoogleLight);
 }
