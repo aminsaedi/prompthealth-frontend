@@ -93,15 +93,6 @@ export class HeaderComponent implements OnInit {
     this.setPriceType(role);
   }
 
-  logout() {
-    this._sharedService.logout();
-  }
-
-  logoutSm() {
-    this._location.back();
-    this.logout();
-  }
-
   hideMenuSm() {
     this._location.back();
   }
@@ -140,6 +131,15 @@ export class HeaderComponent implements OnInit {
   onClickDashboardMenuItemMd(goto: string){
     this.isDashboardMenuShown = false;
     this._router.navigate([goto]);
+  }
+  logout() {
+    this.isDashboardMenuShown = false;
+    this._sharedService.logout();
+  }
+
+  logoutSm() {
+    this._location.back();
+    this.logout();
   }
 
   setPriceType(type: UserType | IUserDetail['roles'] = null){

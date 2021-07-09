@@ -21,9 +21,9 @@
           <li class="mx-10p">
             <a routerLink="/products" class="text-body">Products</a>
           </li>
-          <li class="mx-10p">
+          <!-- <li class="mx-10p">
             <a href="" class="text-body">About</a>
-          </li>
+          </li> -->
           <li *ngIf="priceType != null" class="mx-10p">
             <a *ngIf="priceType == 'practitioner'" class="text-body" routerLink="/plans">Pricing</a>
             <a *ngIf="priceType == 'product'" class="text-body" routerLink="/plans/product">Pricing</a>
