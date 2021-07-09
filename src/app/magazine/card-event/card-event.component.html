@@ -33,7 +33,13 @@
                 class="mb-10p mr-15p"
                 >
                   <div *ngIf="!data" class="author-dummy color-dummy"></div>
-                  <img *ngIf="data" [src]="data.authorImage" alt="" class="author">
+                  <a
+                  *ngIf="data"
+                  [ngStyle]="{'pointer-events': (data.authorRole == 'SA' ? 'none' : 'inherit') }"
+                  [routerLink]="['/',(data.authorRole == 'P' ? 'products' : 'practitioners'), data.authorId]"
+                  >
+                    <img [src]="data.authorImage" alt="" class="author">
+                  </a>
                 </div>
                 <!-- <span
                 class="mb-10p mr-15p text-nowrap"
@@ -113,23 +119,32 @@
             <p *ngIf="data" class="body1 mb-0 opacity-80pc" [innerHTML]="data.summary"></p>
           </div>
 
-          <div class="d-flex align-items-center" *ngIf="sizeL">
-            <img *ngIf="data" 
+          <div class="d-flex align-items-center" *ngIf="sizeL && !data">
+            <div
+            class="author-dummy color-dummy mr-2"
+            [ngClass]="{'large': sizeL}"
+            ></div>
+            <p class="m-0 opacity-70pc body1 clamp-1line">
+              <span class="color-dummy">By author name</span>
+            </p>
+          </div>
+
+          <a
+          *ngIf="sizeL && data"
+          class="d-flex align-items-center"
+          [ngStyle]="{'pointer-events': (data.authorRole == 'SA' ? 'none' : 'inherit') }"
+          [routerLink]="['/',(data.authorRole == 'P' ? 'products' : 'practitioners'), data.authorId]"
+          >
+            <img 
             [src]="data.authorImage" 
             class="author mr-2"
             [ngClass]="{'large': sizeL}"
             alt="" 
             >
-            <div *ngIf="!data" 
-            class="author-dummy color-dummy mr-2"
-            [ngClass]="{'large': sizeL}"
-            ></div>
-    
             <p class="m-0 opacity-70pc body1 clamp-1line">
-              <span *ngIf="!data" class="color-dummy">By author name</span>
-              <span *ngIf="data">{{data.author}}</span>
+              <span class="text-body">{{data.author}}</span>
             </p>
-          </div>
+          </a>
         </div>
       </div>
     </div>

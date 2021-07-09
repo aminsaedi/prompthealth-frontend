@@ -24,12 +24,20 @@
     >
       <div class="row align-items-center body2">
         <div class="col-12 col-md-4 mb-10p mb-md-0 border-md-right">
-          <div class="d-flex align-items-center">
-            <div *ngIf="!data" class="author-dummy color-dummy mr-2"></div>
-            <img *ngIf="data" [src]="data.authorImage" alt="" class="author mr-2">
-            <span *ngIf="!data" class="color-dummy">Author name</span>
-            <span *ngIf="data" class="opacity-70pc">{{data?.author}}</span>
+          <div *ngIf="!data" class="d-flex align-items-center">
+            <div class="author-dummy color-dummy mr-2"></div>
+            <span class="color-dummy">Author name</span>            
           </div>
+          <a
+          *ngIf="data"
+          class="d-flex align-items-center"
+          [ngStyle]="{'pointer-events': (!data || data.authorRole == 'SA' ? 'none' : 'inherit') }"
+          [routerLink]="['/',(data?.authorRole == 'P' ? 'products' : 'practitioners'), (data ? data.authorId : '')]"
+          >
+            <img [src]="data.authorImage" alt="" class="author mr-2">
+            <span class="opacity-70pc text-body">{{data?.author}}</span>
+          </a>
+
         </div>
         <div class="col-12 col-md-8 d-flex justify-content-between flex-column flex-md-row align-items-start align-items-md-center">
           <div>
@@ -109,7 +117,7 @@
           >Join now</a>
         </div>
   
-        <div class="mx-md-25p mt-15p mt-md-0 ">
+        <div class="mx-md-25p mt-15p mt-md-0p">
           <button class="btn btn-outline w-100" (click)="toggleCalendarMenu()">Add to calendar</button>
         </div>
 

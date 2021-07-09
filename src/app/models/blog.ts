@@ -75,6 +75,7 @@ export class Blog implements IBlog {
 
   get author() { return (typeof this.data.authorId != 'string' && this.data.createdRole != 'SA') ? this.data.authorId.firstName : this.data.author; } //author name
   get authorId(): string { return (typeof this.data.authorId == 'string') ? this.data.authorId : this.data.authorId._id; }
+  get authorRole(): IBlog['createdRole'] { return this.data.createdRole || null; }
   get authorImage() { return (typeof this.data.authorId != 'string' && this.data.createdRole != 'SA' && this.data.authorId.profileImage) ? this.AWS_S3 + '350x220/' + this.data.authorId.profileImage : 'assets/img/logo-sm-square.png'}
 
   get createdAt() { return this.data.createdAt; }
