@@ -10,6 +10,7 @@ export const minmax = {
   professionalTitleMax: 30,
   professionalOrganizationMax: 200,
   certificationMax: 200,
+  bookingNoteMax: 500
 }
 
 export const pattern = {
@@ -234,6 +235,12 @@ export const validators = {
   password: validatorPatternPassword(),
   accredit: validatorRequiredTrue,
 
+  /** booking form */
+  bookingName: validatorFirstNameClient,
+  bookingEmail: validatorEmail,
+  bookingPhone: [Validators.pattern(pattern.phone), Validators.minLength(minmax.phoneMin), Validators.maxLength(minmax.phoneMax), Validators.required],
+  bookingDateTime: [validatorPatternDateTime(), validatorComparePostEventStartTime(), Validators.required],
+  bookingNote: [Validators.maxLength(minmax.bookingNoteMax)],
 
   /** blog post for users */
   publishPostDescription: [Validators.required],

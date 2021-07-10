@@ -18,7 +18,9 @@ export class FormItemDatetimeComponent implements OnInit {
   @Input() stepMinute: number = 15;
   @Input() stepHour: number = 1;
 
+  @Input() label: string;
   @Input() disabled: boolean = false;
+  @Input() submitted: boolean = false;
 
   public isPickerShown = false;
 

@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { HeaderStatusService } from './shared/services/header-status.service';
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from './shared/services/universal.service';
+import { BehaviorService } from './shared/services/behavior.service';
 
 
 declare let gtag: Function;
@@ -19,6 +20,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private _uService: UniversalService,
+    private _bService: BehaviorService,
     private _router: Router,
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
@@ -31,7 +33,10 @@ export class AppComponent implements OnInit {
   private urlPrev: string = '';
 
   async ngOnInit() {
-    if(!this._uService.isServer){
+    const userStr = this._uService.localStorage.getItem('user');
+    this._bService.setUserData(userStr ?  JSON.parse(userStr) : null);
+
+    if(!this._uService.isServer) {
       this._router.events.subscribe((event: NavigationEnd) => {
         this.onRouteChanged(event);
       });

@@ -16,6 +16,8 @@ import { Subscription } from 'rxjs';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
+import { Location } from '@angular/common';
+import { minmax, validators } from 'src/app/_helpers/form-settings';
 
 
 const expandTitleAnimation = trigger('expandTitle', [
@@ -55,13 +57,13 @@ export class DetailComponent implements OnInit {
     private _bs: BehaviorService,
     private _uService: UniversalService,
     private _qService: QuestionnaireService,
+    private _location: Location,
     el: ElementRef,
   ) { this.host = el.nativeElement; }
 
   get f() { return this.bookingForm.controls; }
 
   @ViewChild('closebutton') closebutton;
-  @ViewChild('loginModal') public loginModal: ModalDirective;
 
   /** for Tab */
   public indexTabItem = 0;
@@ -96,12 +98,16 @@ export class DetailComponent implements OnInit {
   public minDateTime: DateTimeData;
   // public timingSelectedValue = ''; /* used at booking form */
   public submitted = false; /* used for form verification */
+  public maxBookingNote = minmax.bookingNoteMax;
+  public isBookingLoading: boolean = false;
 
   /** for general use */
   public userInfo: Professional = null;
   public isLoggedIn = false;
   private id: number;
   public questionnaires: QuestionnaireMapProfilePractitioner;
+  public isLoginMenuShown = false;
+  public isBookingMenuShown = false;
   private amenities: any[];
   private languageSet: QuestionnaireAnswer[]; /* used to populate languages that the professional can provide */
   private serviceDeliverySet: QuestionnaireAnswer[]; /* used to populate serviceDelivery that the professional can provide */
@@ -141,26 +147,27 @@ export class DetailComponent implements OnInit {
     };
 
 
-    this.bookingForm = this._fb.group({
-      name: new FormControl('', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      phone: new FormControl('', [
-        Validators.required,
-        Validators.minLength(10),
-        Validators.maxLength(12),
-        Validators.pattern(/^[0-9][0-9\-]+[0-9]$/)
-      ]),
-      bookingDateTime: new FormControl('', [Validators.required]),
-      note: new FormControl('', [Validators.maxLength(250)])
+    this.bookingForm = new FormGroup({
+      name: new FormControl('', validators.bookingName),
+      email: new FormControl('', validators.bookingEmail),
+      phone: new FormControl('', validators.bookingPhone),
+      bookingDateTime: new FormControl('', validators.bookingDateTime),
+      note: new FormControl('', validators.bookingNote),
     });
+    console.log(this.bookingForm);
 
-    this.loginSubscription = this._bs.getUserData().subscribe((user: any) => {
-      this.roles = user.roles || '';
-      this.myId = user._id || '';
-      this.isLoggedIn = (user._id) ? true: false; 
+    this.loginSubscription = this._bs.getUserData().subscribe((user: IUserDetail) => {
+      this.roles = user ? user.roles : '';
+      this.myId = user ? user._id : '';
+      this.isLoggedIn = !!user;
     });
 
     // this.category = await this._catService.getCategoryAsync();
+
+    this._route.queryParams.subscribe((params: IQueryParams) => {
+      this.isLoginMenuShown = !!(params.modal == 'login');
+      this.isBookingMenuShown = !!(params.modal == 'booking');
+    });
 
     this._route.params.subscribe(async params => {
       this.id = params.id;
@@ -172,15 +179,7 @@ export class DetailComponent implements OnInit {
         // this.getCategoryServices()
       ];
       Promise.all(promiseAll).then(async () => {
-        // this.userInfo.populate('languages', this.languageSet);
-        // this.userInfo.populate('serviceDelivery', this.serviceDeliverySet);
-        // this.userInfo.populate('availability', this.availabilitySet);
-        // this.userInfo.setAmenities(this.amenities);
-        // this.userInfo.populateService(this.category);
-        // this.userInfo.populate('ageRange', this.ageRangeSet);
-        // this.userInfo.setServiceCategory('typeOfProvider', this.typeOfProvider);
-        // this.userInfo.setServiceCategory('treatmentModality', this.treatmentModality);
-        // this.userInfo.setServiceCategory('healthStatus', this.healthStatus);
+        this.userInfo.setAmenities(this.amenities);
 
         this.questionnaires = await this._qService.getProfilePractitioner(this.userInfo.role as ('SP' | 'C'));
         
@@ -240,34 +239,6 @@ export class DetailComponent implements OnInit {
       });
     });
   }
-
-
-  // getProfileQuestion(): Promise<boolean> {
-  //   return new Promise((resolve, reject) => {
-  //     const path = `questionare/get-profile-questions`;
-  //     this._sharedService.getNoAuth(path).subscribe((res: any) => {
-  //       if (res.statusCode === 200) {
-  //         const questions = res.data;
-  //         questions.forEach((e: any) => {
-  //           console.log(e)
-  //           if (e.question_type === 'service' && e.slug === 'offer-your-services') {
-  //             this.serviceDeliverySet = e.answers;
-  //           }
-  //           if (e.question_type === 'service' && e.slug === 'languages-you-offer') {
-  //             this.languageSet = e.answers;
-  //           }
-  //           if (e.question_type === 'availability') {
-  //             this.availabilitySet = e.answers;
-  //           }
-  //         });
-  //         resolve(true);
-  //       } else { reject(res.message); }
-  //     }, err => {
-  //       console.log(err);
-  //       reject('There are some error please try after some time.');
-  //     });
-  //   });
-  // }
 
   getProducts() {
     this.products = [];
@@ -395,12 +366,12 @@ export class DetailComponent implements OnInit {
     // this.timingSelectedValue = evt.target.value;
   }
 
-  bookApointment() {
+  onSubmitBooking() {
       this.submitted = true;
     if (this.bookingForm.invalid) {
+      this._toastr.error('There are several items that requires your attention');
       return;
     } else {
-        
       const formData = {
         ...this.bookingForm.value,
       };
@@ -409,22 +380,24 @@ export class DetailComponent implements OnInit {
         customerId: this.myId,
         ...formData,
       };
+
       // data.timing = this.timingSelectedValue;
       data.phone = data.phone.toString();
       data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
-      this._sharedService.loader('show');
+      this.isBookingLoading = true;
       const path = `booking/create`;
       this._sharedService.post(data, path).subscribe((res: any) => {
-        this._sharedService.loader('hide');
+        this.isBookingLoading = false;
         if (res.statusCode === 200) {
+          this.submitted = false;
           this._toastr.success(res.message);
-
-          this.closebutton.nativeElement.click();
+          this.hideBookingMenu();
         } else {
-          this._sharedService.showAlert(res.message, 'alert-danger');
+          this._toastr.error(res.message);
         }
       }, (error) => {
-        this._sharedService.loader('hide');
+        this.isBookingLoading = false;
+        this._toastr.error(error);
       });
     }
   }
@@ -500,11 +473,37 @@ export class DetailComponent implements OnInit {
     });
   }
 
-  onChangeLoginState(state: string){
-    if(state == 'done'){
-      this.loginModal.hide();
+  showLoginMenu() {
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'login'}});
+  }
+
+  //TODO: if previous page is not prompthealth, do not location.back().
+  // instead, router.navgate with replaceUrl
+  hideLoginMenu() {
+    if(this.isLoginMenuShown) {
+      this._location.back();
     }
   }
+
+  onChangeLoginState(state: string){
+    if(state == 'done'){
+      this.hideLoginMenu();
+    }
+  }
+
+  showBookingMenu() {
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'booking'}});
+  }
+
+  //TODO: if previous page is not prompthealth, do not location.back().
+  // instead, router.navgate with replaceUrl
+  hideBookingMenu() {
+    if(this.isBookingMenuShown) {
+      this._location.back();
+    }
+  }
+
+
 }
 
 
@@ -556,3 +555,7 @@ const ageRangeSet: QuestionnaireAnswer[] = [
   { _id: '5eb1a4e199957471610e6cda', item_text: 'Adult (18+)' },
   { _id: '5eb1a4e199957471610e6cdb', item_text: 'Senior (>64)' },
 ];
+
+interface IQueryParams {
+  modal: 'login' | 'booking';
+}

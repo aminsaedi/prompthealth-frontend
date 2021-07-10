@@ -32,6 +32,11 @@
   &:focus {
     box-shadow: 0 0 0 1.5px $colorError;
   }
+
+  &:disabled {
+    background: $colorGsBackground;
+    color: $colorGsPlaceholder;
+  }
 }
 
 
@@ -41,5 +46,10 @@
 
   &:focus {
     box-shadow: 0 0 0 1.5px $colorSuccess;
+  }
+
+  &:disabled {
+    background: $colorGsBackground;
+    color: $colorGsPlaceholder;
   }
 }

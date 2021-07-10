@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { environment } from '../../../environments/environment';
 @Injectable()
 export class BehaviorService {
@@ -15,7 +16,9 @@ export class BehaviorService {
     private compareIDs = new BehaviorSubject([]);
     currentCompareIDs = this.compareIDs.asObservable();
 
-    constructor() {}
+    constructor(
+        private _pService: ProfileManagementService,
+    ) {}
 
     changeCompareIds(compareIds) {
         this.compareIDs.next(compareIds)
@@ -60,6 +63,7 @@ export class BehaviorService {
     }
 
     setUserData(data) {
+        this._pService.dispose();
         this.userData.next(data);
     }
 

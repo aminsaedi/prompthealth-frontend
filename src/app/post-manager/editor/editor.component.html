@@ -23,8 +23,8 @@
             >View</a>
             <input
             type="submit"
-            class="btn btn-outline small mr-10p"
-            [ngClass]="{'btn-primary': f.status.value !== 'DRAFT'}"
+            class="btn small mr-10p"
+            [ngClass]="{'btn-primary': f.status.value !== 'DRAFT', 'btn-outline': f.status.value == 'DRAFT'}"
             [value]="(f.status.value === 'DRAFT') ? 'Save' : 'Update'"
             [disabled]="this.isUploading || !this.user || f.status.value === 'HIDDEN'"
             >
@@ -159,7 +159,7 @@
             <button
             *ngIf="f.status.value !== 'DRAFT'"
             type="button"
-            class="btn btn-outline mr-10p px-0"
+            class="btn btn-text-black small mr-10p px-0"
             (click)="draftPost()"
             ><u>Change status to draft</u></button>
           </div>
@@ -261,32 +261,25 @@
             <div class="mb-15p">
               <div class="subtitle2">Start at</div>
               <form-item-datetime
+              label="Start time"
               [controller]="f.eventStartTime"
               [minDateTime]="minDateTimeEventStart"
               (changeValue)="onChangeStartDateTime()"
-              ></form-item-datetime>
-              <form-item-errors
-              [controller]="f.eventStartTime"
-              label="Start time"
               [submitted]="isSubmitted"
-              ></form-item-errors>
+              ></form-item-datetime>
             </div>
 
             <div class="mb-15p">
               <div class="subtitle2">End at</div>
               <form-item-datetime
+              label="End time"
               [controller]="f.eventEndTime"
               [minDateTime]="minDateTimeEventEnd"
               (changeValue)="onChangeEndDateTime($event)"
+              [submitted]="isSubmitted"
               ></form-item-datetime>
               <form-item-errors
-              [controller]="f.eventEndTime"
-              label="End time"
-              [submitted]="isSubmitted"
-              ></form-item-errors>
-              <form-item-errors
               [controller]="form"
-              label="Start time"
               [submitted]="isSubmitted"
               ></form-item-errors>
             </div>

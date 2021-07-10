@@ -1,9 +1,11 @@
 <div (clickOutside)="hidePicker()">
   <form-item-input
+  [label]="label"
   [controller]="controller"
   (click)="showPicker()"
   placeholder="yyyy-mm-dd HH:MM"
   [disabled]="disabled"
+  [submitted]="submitted"
   ></form-item-input>
   
   <div

@@ -17,14 +17,17 @@
         <img [src]="baseURLImage + imageForm.value" [alt]="'product image ' + (i + 1)">
         <button 
         *ngIf="!disabled"
-        class="btn btn-remove" 
+        class="btn btn-icon small btn-remove" 
         type="button" 
         (click)="removeProductImage(i)"
-        ><i class="fas fa-times"></i></button>
+        >
+          <i iconPh="cross"></i>
+        </button>
+
       </li>
     </ng-container>
     <li class="rounded" *ngIf="formImages.length < 5 && !disabled">
-      <i class="fas fa-plus icon-add"></i>
+      <i iconPh="plus" class="icon-add"></i>
       <input type="file" class="cursor-pointer" accept="image/jpeg, image/png" multiple (change)="onSelectProductImages($event)">
     </li>
   </ul>
