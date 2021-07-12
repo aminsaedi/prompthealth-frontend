@@ -7,20 +7,12 @@
       <div class="col-12 col-lg-11 col-xl-10 text-center text-lg-left">
         <div class="row">
           <div class="col-12 col-lg-3">
-            <div class="subtitle1 my-30p mt-lg-0">PromtHealth</div>
+            <div class="subtitle1 my-30p mt-lg-0">Find practitioners</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
-              <li class="mb-3">
-                <a routerLink="" class="body1 text-body">About Us</a>
-              </li>
-              <li class="mb-3">
-                <a routerLink="" class="py-3 body1 text-body">Testimonials</a>
-              </li>
-              <li class="mb-3">
-                <a routerLink="/faq" class="py-3 body1 text-body">FAQ</a>
-              </li>
-              <li class="mb-3">
-                <a routerLink="/contact-us" class="py-3 body1 text-body">Contact Us</a>
-              </li>
+              <li class="mb-3"><a class="body1 text-body" [routerLink]="['/practitioners/area/toronto']">In Toronto</a></li>
+              <li class="mb-3"><a class="body1 text-body" [routerLink]="['/practitioners/area/vancouver']">In Vancouver</a></li>
+              <li class="mb-3" *ngFor="let a of typeOfProviderListHighlight"><a class="body1 text-body" [routerLink]="['/practitioners/type/', a._id]">{{a.item_text}}</a></li>
+              <li class="mb-3"><a class="body1 text-body" [routerLink]="['/sitemaps']">See all cities & types</a></li>
             </ul>
           </div>
 
@@ -43,8 +35,14 @@
           </div>
           
           <div class="col-12 col-lg-3">
-            <div class="subtitle1 my-30p mt-lg-0">Legal</div>
+            <div class="subtitle1 my-30p mt-lg-0">PromptHealth</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
+              <li class="mb-3">
+                <a routerLink="/faq" class="py-3 body1 text-body">FAQ</a>
+              </li>
+              <li class="mb-3">
+                <a routerLink="/contact-us" class="py-3 body1 text-body">Contact Us</a>
+              </li>
               <li class="mb-3">
                 <a routerLink="/terms" class="body1 text-body">Terms & Conditions</a>
               </li>
