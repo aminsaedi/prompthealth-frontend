@@ -86,8 +86,12 @@
 .btn.btn-text {
   @include btnText($colorPrimary, $colorPrimaryDark);
 }
-.btn.btn-text-black {
+.btn.btn-text-black,
+.btn.btn-text-body {
   @include btnText($colorGsBody, $colorGsBlack);
+}
+.btn.btn-text-grey {
+  @include btnText($colorGsLabel, $colorGsPlaceholder);
 }
 .btn.btn-text-error {
   @include btnText($colorError, $colorErrorDark);
@@ -96,9 +100,9 @@
 
 
 /** primary icon button */
-.btn.btn-icon {
+@mixin btnIcon($color) {
   padding: 16.5px;
-  color: $colorPrimary;
+  color: $color;
 
   &.large {
     padding: 21.5px;
@@ -108,7 +112,13 @@
   }
 }
 
-// .btn.btn-text-secondary (if needed)
+.btn.btn-icon {
+  @include btnIcon($colorPrimary)
+}
+
+.btn.btn-icon-grey {
+  @include btnIcon($colorGsPlaceholder);
+}
 
 .btn:disabled {
   opacity: 0.7;

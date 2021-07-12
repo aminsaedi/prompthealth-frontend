@@ -28,7 +28,7 @@
 .text-body { color: $colorGsBody!important; }
 .text-label { color: $colorGsLabel; }
 .text-placeholder { color: $colorGsPlaceholder; }
-// .text-line { color: $colorGsLine; }
+.text-line { color: $colorGsLine; }
 .text-background { color: $colorGsBackground; }
 .text-white
 .text-light { color: $colorGsWhite; }
@@ -110,4 +110,8 @@
 .bg-tiktok { background-color: $colorTiktok!important; }
 .bg-youtube { background-color: $colorYoutube!important; }
 
-
+.color-dummy {
+  background: $colorGsPlaceholder;
+  color: $colorGsPlaceholder;
+  opacity: 0.2;
+}

@@ -10,24 +10,21 @@ import { SharedService } from '../../shared/services/shared.service';
 export class LayoutComponent {
 
   public showFooter = false;
-  public showItems = true;
   public onMagazine: boolean = false;
+  public onSocial: boolean = false;
 
   constructor(
     private _router: Router,
   ) {
 
     this._router.events.subscribe((evt) => {
-      if (!(evt instanceof NavigationEnd)) {
-        return;
+      if (evt instanceof NavigationEnd) {
+        const regexHideFooter = /(dashboard)|(page\/products)|(\/community)/;
+        this.showFooter = !evt.url.match(regexHideFooter);
+  
+        this.onMagazine = evt.url.match(/magazines|blogs/) ? true : false;  
+        this.onSocial = evt.url.match(/community/) ? true : false;
       }
-      if (evt.url.indexOf('dashboard') >= 0 || evt.url.indexOf('page/products') >= 0) {
-        this.showFooter = false;
-      } else {
-        this.showFooter = true;
-      }
-
-      this.onMagazine = evt.url.match(/magazines|blogs/) ? true : false;
     });
   }
 }

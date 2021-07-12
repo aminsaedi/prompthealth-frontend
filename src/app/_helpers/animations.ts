@@ -53,4 +53,16 @@ export const slideHorizontalAnimation = trigger('slideHorizontal', [
   transition(':leave', [
     animate('300ms ease', style({opacity: 0, transform: 'translateX(50px)'})),
   ]),
+]);
+
+/** IN (ngIf false --> true): left --> right */
+/** OUT (ngIf true --> false): right --> left */
+export const slideHorizontalReverseAnimation = trigger('slideHorizontalReverse', [
+  transition(':enter', [
+    style({opacity: 0, transform: 'translateX(-50px)'}),
+    animate('300ms ease', style({opacity: 1, transform: 'translateX(0'})),
+  ]),
+  transition(':leave', [
+    animate('300ms ease', style({opacity: 0, transform: 'translateX(-50px)'})),
+  ]),
 ])

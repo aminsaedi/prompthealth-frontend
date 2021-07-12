@@ -100,7 +100,6 @@ export class HeaderComponent implements OnInit {
     this._router.navigate(['./'], {relativeTo: this._route, queryParams: {menu: 'show'}});
   }
   onClickMenuItemSm(goto: string) {
-    console.log(goto)
     this._router.navigate([goto], {replaceUrl:true});
   }
 

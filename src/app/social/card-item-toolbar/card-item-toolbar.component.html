@@ -1,0 +1,45 @@
+<div class="d-flex justify-content-between">
+  <div class="d-flex flex-nowrap">
+    <button
+    class="btn btn-text-grey small px-0"
+    type="button"
+    (click)="onClickLike($event)"
+    >
+      <i 
+      [iconPh]="'heart' + (isLiked ? '-filled' :'')" 
+      class="large"
+      [ngClass]="{'text-error': data.like}"
+      ></i>
+      <span *ngIf="!isViewSm">Like{{(isLiked ? 'd' : '')}}</span>
+    </button>
+  
+    <button class="btn btn-text-grey small px-0 ml-20p ml-md-30p">
+      <i iconPh="comment" class="large"></i>
+      <span>24</span>
+    </button>
+
+    <button-share
+    [facebook]="'test'"
+    [twitter]="'test'"
+    [linkedin]="'test'"
+    [pinterest]="'test'"
+    [email]="'test'"
+    [label]="isViewSm ? '' : 'Share'"
+    btnClass="btn btn-text-grey small px-0 ml-20p ml-md-30p"
+    ></button-share>
+  </div>
+
+  <div>
+    <button 
+    class="btn btn-text-grey small px-0"
+    (click)="onClickBookmark($event)"
+    >
+      <span>Save{{isBookmarked ? 'd' : ''}}</span>
+      <i 
+      [iconPh]="'bookmark-' + (isBookmarked ? 'minus' : 'plus')"
+      class="large"
+      [ngClass]="{'text-success': isBookmarked}"
+      ></i>
+    </button>
+  </div>
+</div>

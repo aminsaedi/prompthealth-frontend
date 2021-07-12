@@ -58,8 +58,10 @@ export class ButtonShareComponent implements OnInit {
     if(this.email !== null) { this.socials.push(email); }
   }
 
-  onClickButton() {
-
+  onClickButton(e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
+    
     /** if mobile, show native action sheet */
     /** if desktop, show sharePalette */
     /** desktop is not good to use native action sheet, because people don't install social apps in desktop */

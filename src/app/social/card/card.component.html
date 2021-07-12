@@ -1,0 +1,16 @@
+<div 
+class="card rounded-8p bg-white body1 text-body"
+[ngClass]="{'p-20p': !_option.paddingZero, 'overflow-hidden': _option.hideOverflow}"
+>
+  <card-item-header 
+  *ngIf="!_option.hideHeader"
+  class="pb-20p"
+  ></card-item-header>
+  <ng-content></ng-content>
+
+  <div
+  *ngIf="!_option.hideToolbar"
+  class="pt-10p" style="margin-bottom: -5px">
+    <card-item-toolbar></card-item-toolbar>  
+  </div>
+</div>

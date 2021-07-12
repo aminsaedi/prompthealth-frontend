@@ -46,6 +46,7 @@ export class ListItemComponent implements OnInit {
 interface IListItemOption {
   isListClickable?: boolean; /** default: true */
   actionHasOriginalFunction?: boolean; /** default: false */
+  hideBorderBottom?: boolean; /** default: false */
 }
 
 class ListItemOption implements IListItemOption{
@@ -54,8 +55,9 @@ class ListItemOption implements IListItemOption{
 
   get isListClickable() { return this._isListClickable; }
   get actionHasOriginalFunction() { return this._actionHasOriginalFunction; }
+  get hideBorderBottom() { return this.option.hideBorderBottom === true ? true : false; }
 
-  constructor(option: IListItemOption) {
+  constructor(private option: IListItemOption) {
     this._isListClickable = option.isListClickable || true;
     this._actionHasOriginalFunction = option.actionHasOriginalFunction || false;
   }

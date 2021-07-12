@@ -5,7 +5,7 @@
   type="button"
   class="btn-share"
   [ngClass]="btnClass"
-  (click)="onClickButton()"
+  (click)="onClickButton($event)"
   >
     <i class="large" iconPh="share"></i>
     <span *ngIf="label" class="pl-2">{{label}}</span>

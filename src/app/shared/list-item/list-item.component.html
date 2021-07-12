@@ -3,7 +3,10 @@ class="d-flex align-items-center justify-content-between"
 [ngClass]="{'cursor-pointer': _option.isListClickable}"
 (click)="_onTap($event)"
 >
-  <div class="d-flex align-items-center py-20p list-item-inner border-line flex-grow-1">
+  <div 
+  class="d-flex align-items-center py-20p border-bottom border-line flex-grow-1"
+  [ngClass]="{'border-bottom border-line': !_option.hideBorderBottom}"
+  >
     <div *ngIf="leading">
       <i 
       [iconPh]="leading"

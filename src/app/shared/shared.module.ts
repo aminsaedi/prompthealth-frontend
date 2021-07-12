@@ -58,6 +58,7 @@ import { ButtonGuidelineComponent } from './button-guideline/button-guideline.co
 import { CardPractitionerComponent } from './card-practitioner/card-practitioner.component';
 import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.component';
 import { FormSubscribeComponent } from './form-subscribe/form-subscribe.component';
+import { ProfileImageComponent } from './profile-image/profile-image.component';
 
 @NgModule({
   imports: [
@@ -125,6 +126,7 @@ import { FormSubscribeComponent } from './form-subscribe/form-subscribe.componen
     CardPractitionerComponent,
     SocialMediaKitComponent,
     FormSubscribeComponent,
+    ProfileImageComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -172,6 +174,7 @@ import { FormSubscribeComponent } from './form-subscribe/form-subscribe.componen
     ButtonGuidelineComponent,
     CardPractitionerComponent,
     FormSubscribeComponent,
+    ProfileImageComponent,
   ]
 })
 export class SharedModule { }

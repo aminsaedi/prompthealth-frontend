@@ -19,6 +19,9 @@
             <a routerLink="/practitioners" class="text-body">Find Practitioners</a>
           </li>
           <li class="mx-10p">
+            <a routerLink="/community" class="text-body">Community</a>
+          </li>
+          <li class="mx-10p">
             <a routerLink="/products" class="text-body">Products</a>
           </li>
           <!-- <li class="mx-10p">
@@ -76,6 +79,10 @@ class="d-none d-md-block position-fixed dashboard-menu-wrapper-md" *ngIf="isDash
       <div class="container">
         <list-item (onTap)="onClickMenuItemSm('/')">
           <div class="subtitle1 text-primary" >Home</div>  
+        </list-item>
+
+        <list-item (onTap)="onClickMenuItemSm('/community')">
+          <div class="subtitle1 text-primary" >Community</div>  
         </list-item>
 
         <list-item (onTap)="onClickMenuItemSm('/practitioners')">

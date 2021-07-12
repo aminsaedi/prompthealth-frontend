@@ -2188,6 +2188,22 @@ i {
   content: "\e9df";
   margin-left: -1em;
 }
+.icon-star-outline .path1:before {
+  content: "\e9de";
+  opacity: 0;
+}
+.icon-star-outline .path2:before {
+  content: "\e9df";
+  margin-left: -1em;
+}
+.icon-star-filled .path1:before {
+  content: "\e9de";
+  opacity: 1;
+}
+.icon-star-filled .path2:before {
+  content: "\e9df";
+  margin-left: -1em;
+}
 .icon-barchart .path1:before {
   content: "\e9e0";
   opacity: 0.16;
@@ -2582,6 +2598,24 @@ i {
   content: "\ea43";
   margin-left: -1em;
 }
+.icon-heart-outline .path1:before {
+  content: "\ea42";
+  opacity: 0;
+}
+.icon-heart-outline .path2:before {
+  content: "\ea43";
+  margin-left: -1em;
+}
+.icon-heart-filled .path1:before {
+  content: "\ea42";
+  opacity: 1;
+}
+.icon-heart-filled .path2:before {
+  content: "\ea43";
+  margin-left: -1em;
+}
+
+
 .icon-user .path1:before {
   content: "\ea44";
   opacity: 0.16;

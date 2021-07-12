@@ -1,5 +1,6 @@
-<app-header *ngIf="!onMagazine" class="header-container"></app-header>
+<app-header *ngIf="!onMagazine && !onSocial" class="header-container"></app-header>
 <app-header-magazine *ngIf="onMagazine" class="header-container"></app-header-magazine>
+<app-header-social *ngIf="onSocial" class="header-container"></app-header-social>
 
 <div class="wrapper">
     <router-outlet appHighlight></router-outlet>

@@ -21,6 +21,13 @@ export class CategoryService {
   private emitCategoryService(){ this.categoryServiceObserver.next(); }
 
   private subscriptionCat: Subscription;
+
+  iconOf(cat: Category): string {
+    const img = cat.image;
+    const img2 = img.toLowerCase().replace(/_/g, '-').replace('.png', '');
+    return img2
+  }
+
   getCategoryAsync(): Promise<Category[]>{
     return new Promise((resolve, reject) => {
       if(!this.categoryList){

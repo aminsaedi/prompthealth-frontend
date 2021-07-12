@@ -1,3 +1,11 @@
+MESSAGE TO YUKI
+SHOULD CREATE FOLLOWING ICONS IN ICOMOON NEXT TIME
+1) icon-heart-outline
+2) icon-heart-filled
+3) icon-star-outline
+4) icon-star-filled
+
+
 MESSAGE FROM YUKI
 
 EXAMPLE:

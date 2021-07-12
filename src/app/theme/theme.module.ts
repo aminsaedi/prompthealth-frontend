@@ -24,6 +24,7 @@ import { environment } from 'src/environments/environment';
 import { DashboardMenuComponent } from './dashboard-menu/dashboard-menu.component';
 import { BannerTopComponent } from './banner-top/banner-top.component';
 import { HeaderMagazineComponent } from './header-magazine/header-magazine.component';
+import { HeaderSocialComponent } from './header-social/header-social.component';
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -34,6 +35,7 @@ import { HeaderMagazineComponent } from './header-magazine/header-magazine.compo
     ThankuPageComponent,
     DashboardMenuComponent,
     BannerTopComponent,
+    HeaderSocialComponent,
   ],
   providers: [
     AuthService,

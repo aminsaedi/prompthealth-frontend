@@ -1,0 +1,52 @@
+.logo-lg {
+  height: 20px;
+  @media (min-width: 1200px) { height: 30px;}
+}
+
+.bg-lg-white {
+  @media (min-width: 992px) {
+    background-color: white!important;
+  }
+}
+
+.menu-slide-horizontal {
+  position: fixed;
+  z-index: 110;
+  top: 0;
+  left: 0;
+  width: 200vw;
+  height: 110vh;
+  padding-bottom: 10vh;
+
+  .menu-drop {
+    background-color: rgba(0,0,0,0.2);    
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .menu-body {
+    position: relative;
+    background: white;
+    width: 300px;
+    height: 100vh;
+    overflow: auto;
+  }
+}
+
+.notification-count {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 0;
+  right: 0;
+
+  >span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
