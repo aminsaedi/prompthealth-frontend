@@ -629,6 +629,11 @@ export class ListingComponent implements OnInit, OnDestroy {
     delete filterCopy.customer_health;
 
     if (showLoader) { this._sharedService.loader('show'); }
+    this.pages = {
+      current: 1,
+      itemsPerPage: 12,
+      data: null
+    };
     const path = 'user/filter';
     this._sharedService.postNoAuth(filterCopy, path).subscribe((res: any) => {
       if (res.statusCode === 200) {
