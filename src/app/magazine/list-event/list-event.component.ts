@@ -9,6 +9,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { MetaData, UniversalService } from 'src/app/shared/services/universal.service';
 import { MagazineService } from '../magazine.service';
 
+
 @Component({
   selector: 'app-list-event',
   templateUrl: './list-event.component.html',
@@ -36,7 +37,8 @@ export class ListEventComponent implements OnInit {
 
 
   public latest: Blog;
-  public archive: Blog[]
+  public upcoming: Blog[];
+  public archive: Blog[];
   public category: IBlogCategory /** event category data */
   public pageCurrent: number = 1;
   public paginators: number[][] = null;
@@ -45,6 +47,10 @@ export class ListEventComponent implements OnInit {
   public countPerPage: number = 12;
   public order: IQueryParams['order'] = 'asc';
   public orderBy: IQueryParams['orderby'] = 'startAt';
+
+  public pageArchiveCurrent: number = 1;
+  public pageArchiveTotal: number;
+  public paginatorsArchive: number[][] = null;
 
   public queryParams: IQueryParams;
   public isDatePickerShown: boolean = false;
@@ -77,6 +83,9 @@ export class ListEventComponent implements OnInit {
     this.category = this._mService.categoryEvent;
     await this.initPosts();
 
+    this.setHeadliner();
+    this.setArchive();
+
     this._route.params.subscribe( async (params: { page: number }) => {
       this.pageCurrent = params.page || 1;
 
@@ -86,7 +95,7 @@ export class ListEventComponent implements OnInit {
       }
       this._uService.setMeta(this._router.url, meta);
 
-      this.filterPosts();
+      this.setUpcoming();
     });
 
     this._route.queryParams.subscribe((params: IQueryParams) => {
@@ -111,7 +120,13 @@ export class ListEventComponent implements OnInit {
 
       this.isDatePickerShown = !!(params.modal == 'date-picker');
 
-      this.filterPosts();
+      this.setUpcoming();
+
+      const pageArchive = (params.archive && Number(params.archive) > 0) ? Number(params.archive) : 1;
+      if(pageArchive != this.pageArchiveCurrent) {
+        this.pageArchiveCurrent = pageArchive;
+        this.setArchive();
+      }
     }); 
   }
 
@@ -160,13 +175,11 @@ export class ListEventComponent implements OnInit {
     });
   }
 
-  filterPosts() {
+  setHeadliner() {
     const posts= this._mService.postsOf(this.category._id, 1, 0, 10000);
-    
-    const archive = posts;
 
     const now = new Date();
-    const upcoming = archive.filter(b => {
+    const upcoming = posts.filter(b => {
       return (b.event.endAt.getTime() > now.getTime());
     });
 
@@ -177,6 +190,36 @@ export class ListEventComponent implements OnInit {
         return valA- valB;
       })[0];  
     }
+  }
+
+  setArchive() {
+    const posts= this._mService.postsOf(this.category._id, 1, 0, 10000);
+
+    const now = new Date();
+    const archive = posts.filter(b => {
+      return (b.event.endAt.getTime() <= now.getTime());
+    });
+
+    const sorted = archive.sort((a,b) => {
+      const valA = a.event.startAt.getTime();
+      const valB = b.event.startAt.getTime();
+      return valA - valB;
+    });
+
+    const offset = (this.pageArchiveCurrent - 1) * this.countPerPage; 
+    this.archive = sorted.slice(offset, offset + this.countPerPage);
+
+    this.pageArchiveTotal = Math.ceil(archive.length / this.countPerPage);
+    this.setPaginatorsArchive();
+  }
+
+  setUpcoming() {
+    const posts= this._mService.postsOf(this.category._id, 1, 0, 10000);
+
+    const now = new Date();
+    const upcoming = posts.filter(b => {
+      return (b.event.endAt.getTime() > now.getTime());
+    });
 
     const filterByDateRange = upcoming.filter(b => {
       const start = b.event.startAt;
@@ -213,9 +256,9 @@ export class ListEventComponent implements OnInit {
 
     const offset = (this.pageCurrent - 1) * this.countPerPage; 
 
-    this.archive = sorted.slice(offset, offset + this.countPerPage);
+    this.upcoming = sorted.slice(offset, offset + this.countPerPage);
 
-    this.postTotal = upcoming.length + (this.latest ? 1 : 0);
+    this.postTotal = upcoming.length;
     this.pageTotal = Math.ceil(sorted.length / this.countPerPage);
     this.setPaginators();
   }
@@ -262,6 +305,47 @@ export class ListEventComponent implements OnInit {
         }
       });
     }
+  }
+
+  setPaginatorsArchive() {
+    if(!this.pageArchiveTotal || this.pageArchiveTotal <= 1) {
+      this.paginatorsArchive = null;
+    } else {
+      const paginators: {page: number; shown: boolean;}[] = [];
+      for(let i=1; i<=this.pageArchiveTotal; i++) {
+        let shown = false;
+        if(i == 1 || i == this.pageArchiveTotal) { 
+          shown = true; 
+        } else {
+          const dist = (this.pageArchiveCurrent == 1 || this.pageArchiveCurrent == this.pageArchiveTotal) ? 2 : 1;
+          if(Math.abs(i - this.pageArchiveCurrent) > dist) {
+            shown = false;
+          } else {
+            shown = true;
+          }
+        }
+
+        paginators.push({
+          page: i,
+          shown: shown,
+        });
+      }
+
+      this.paginatorsArchive = [[]];
+      paginators.forEach(p => {
+        if(p.shown) {
+          this.paginatorsArchive[this.paginatorsArchive.length - 1].push(p.page);
+        } else {
+          if(this.paginatorsArchive[this.paginatorsArchive.length - 1].length > 0) {
+            this.paginatorsArchive.push([]);
+          }
+        }
+      });
+    }
+  }
+
+  changePageArchive(next: number) {
+    this._router.navigate(['./'], {queryParams: {archive: next}, relativeTo: this._route});
   }
 
   showModal(modal: ModalType) {
@@ -351,4 +435,5 @@ interface IQueryParams {
   dateto: string;
   orderby: 'startAt' ;
   order: 'desc' | 'asc';
+  archive: string; //(page number)
 }
