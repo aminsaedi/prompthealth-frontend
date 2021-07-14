@@ -11,7 +11,6 @@ export class SocialPost extends Blog implements ISocialPost {
   }
 
   get isPost() {
-    console.log(this.isEvent);
     return !this.isEvent && !this.isArticle;
   }
   get isArticle() {

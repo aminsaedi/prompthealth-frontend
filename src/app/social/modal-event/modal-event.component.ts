@@ -1,11 +1,11 @@
-import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SocialPost } from 'src/app/models/social-post';
 import { SocialService } from '../social.service';
 import { CalendarOptions, GoogleCalendar, ICalendar, OutlookCalendar, YahooCalendar} from 'datebook';
 import { FormSubscribeComponent } from 'src/app/shared/form-subscribe/form-subscribe.component';
 import { ToastrService } from 'ngx-toastr';
+import { ModalComponent } from 'src/app/shared/modal/modal.component';
 
 @Component({
   selector: 'modal-event',
@@ -25,42 +25,40 @@ export class ModalEventComponent implements OnInit {
   public timerRedirect: any;
 
   @ViewChild('formSubscribe') formSubscribe: FormSubscribeComponent;
-
+  @ViewChild('modalSubscribe') modalSubscribe: ModalComponent;
+  @ViewChild('modalCalendar') modalCalendar: ModalComponent;
 
   constructor(
-    private _location: Location,
-    private _router: Router,
     private _route: ActivatedRoute,
     private _socialService: SocialService,
     private _toastr: ToastrService,
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {}
 
+  ngAfterViewInit(): void {
     this._route.queryParams.subscribe((params: {modal: string}) => {
       this.post = this._socialService.targetForEventModal;
 
-      if(!this.post || (params.modal != 'calendar-menu' && params.modal != 'subscribe-menu')) {
-        this._router.navigate(['./'], {relativeTo: this._route, replaceUrl: true});
+      if(!this.post) {
+        if(params.modal == 'subscribe-menu') {
+          this.modalSubscribe.goBack();
+        } else if(params.modal == 'calendar-menu') {
+          this.modalCalendar.goBack();
+        }
       }
-
-      this.isCalendarMenuShown = (this.post && params.modal == 'calendar-menu');
-      this.isSubscribeMenuShown = (this.post && params.modal == 'subscribe-menu');
     });
   }
 
+
   hideCalendarMenu() {
-    if(this.isCalendarMenuShown) {
-      this._socialService.disposeTargetForEventModal();
-      this._location.back();
-    }
+    this._socialService.disposeTargetForEventModal();
+    this.modalCalendar.goBack();
   }
 
   hideSubscribeMenu() {
-    if(this.isSubscribeMenuShown) {
-      this._socialService.disposeTargetForEventModal();
-      this._location.back();
-    }
+    this._socialService.disposeTargetForEventModal();
+    this.modalSubscribe.goBack();
   }
 
   addToCalendar(calendarType: string) {

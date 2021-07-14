@@ -1,0 +1,10 @@
+<div class="modal-view" *ngIf="isShown">
+  <div class="modal-drop"
+  (click)="goBack()"
+  ></div>
+  <div class="modal-body"
+  [ngStyle]="bodyStyle"
+  >
+    <ng-content></ng-content>
+  </div>
+</div>

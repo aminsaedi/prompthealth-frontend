@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
 
   public topics: Category[] = [];
   public posts: SocialPost[] = [];
+  public targetPostId: string = null;
 
   public selectedTopicId: string;
   public selectedTaxonomyType: SocialPostTaxonomyType;
@@ -30,8 +31,6 @@ export class HomeComponent implements OnInit {
     private _sharedService: SharedService,
     private _toastr: ToastrService,
   ) { }
-
-  private doneInit = false;
 
   iconOf(topic: Category): string {
     return this._catService.iconOf(topic);
@@ -46,14 +45,11 @@ export class HomeComponent implements OnInit {
       this.selectedTopicId = param.topicId || null;
       this.selectedTaxonomyType = param.taxonomyType || 'all';
 
-      if(this.doneInit) {
-        this.initPosts();
-      } else {
-        this.doneInit = true;
-      }
+      this.initPosts();
     });
 
-    this._route.queryParams.subscribe((param: {}) => {
+    this._route.queryParams.subscribe((param: {post: string}) => {
+      this.targetPostId = param.post || null;
       this.initPosts();
     });
   }
@@ -82,6 +78,14 @@ export class HomeComponent implements OnInit {
         console.log(error);
         this._toastr.error('Something went wrong. Please try again later.');
       });
+    }
+  }
+
+  onClickCardPost(e: Event, p: SocialPost) {
+    if(window.innerWidth < 1200) {
+      e.preventDefault();
+      e.stopPropagation();
+      this._router.navigate(['./'], {queryParams: {post: p._id}, relativeTo: this._route, replaceUrl: (this.targetPostId ? true : false)});
     }
   }
 }
