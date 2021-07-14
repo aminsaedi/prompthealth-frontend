@@ -13,7 +13,6 @@ import { expandVerticalAnimation } from '../_helpers/animations';
 import { Professional } from '../models/professional';
 import { CityId, getLabelByCityId } from '../_helpers/location-data';
 import { BlogSearchQuery, IBlogSearchResult } from '../models/blog-search-query';
-import { IResponseData } from '../models/response-data';
 import { Blog, IBlog } from '../models/blog';
 import { ExpertFinderController } from '../models/expert-finder-controller';
 import { smoothHorizontalScrolling } from './smooth-scroll';
@@ -81,10 +80,10 @@ export class HomeComponent implements OnInit {
 
     async getBlog() {
       const query = new BlogSearchQuery({count: 3});
-      this._sharedService.getNoAuth('/blog/get-all', query.json ).subscribe((res: IResponseData) => {
+      this._sharedService.getNoAuth('/blog/get-all', query.json ).subscribe((res: IBlogSearchResult) => {
         if(res.statusCode === 200) {
           const blogs = [];
-          (res.data as IBlogSearchResult).data.forEach(d => {
+          res.data.data.forEach(d => {
             blogs.push(new Blog(d));
           });
           this.blogs = blogs;

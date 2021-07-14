@@ -1,0 +1,27 @@
+<card>
+  <div *ngIf="post">
+    <card-item-header 
+    *ngIf="!post.isEvent"
+    [post]="post"
+    class="pb-20p"
+    ></card-item-header>  
+  </div>
+
+  <div class="mb-10p">
+    <div
+    *ngIf="shorten"
+    [innerHTML]="post.summary" 
+    [ngClass]="{'show-more-inline': post.isMoreShown}"
+    ></div>
+  
+    <div 
+    *ngIf="!shorten"
+    class="post-content"
+    [innerHTML]="post.descriptionSanitized"
+    ></div>
+  </div> 
+
+  <div class="py-10p">
+    <card-item-toolbar></card-item-toolbar>  
+  </div>
+</card>

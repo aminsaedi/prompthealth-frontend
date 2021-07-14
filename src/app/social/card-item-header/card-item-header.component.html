@@ -1,14 +1,18 @@
 <div class="d-flex justify-content-between">
   <div class="d-flex flex-nowrap">
-    <profile-image></profile-image>
+    <a [routerLink]="['/community', post?.authorId]">
+      <profile-image [image]="post?.authorImage"></profile-image>
+    </a>
     <div class="info-container ml-10p">
-      <h6 class="subtitle2 mb-0">
-        PromptHealth
-
-        <i iconPh="verified" class="text-primary large ml-5p"></i>
-      </h6>
+      <a [routerLink]="['/community', post?.authorId]">
+        <h6 class="subtitle2 mb-0 text-body">
+          {{post?.author}}
+  
+          <i iconPh="verified" class="text-primary large ml-5p"></i>
+        </h6>        
+      </a>
       <div class="body2 text-label">
-        12.07.2021
+        {{post?.createdAt | date:'dd.MM.yyyy'}}
       </div>
     </div>
   </div>

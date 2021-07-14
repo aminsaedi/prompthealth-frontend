@@ -576,3 +576,68 @@ textarea.form-control {
   margin-top: 1px;
   margin-bottom: 1px;
 }
+
+.show-more-inline::after {
+  content: 'show more';
+  font-size: 13px;
+  margin-left: 15px;
+  color: $colorPrimary;
+  border-bottom: solid 1px $colorPrimary;
+  white-space: nowrap;
+}
+
+.post-content {
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto!important;
+    margin: auto;
+  }
+
+  iframe {
+    max-width: 800px;
+    display: block;
+    margin: auto;
+    width: 100%;
+    height: 250px;
+
+    @media (min-width: 768px) {
+      height: 350px;
+    }
+
+    @media (min-width: 992px) {
+      height: 400px;
+    }
+  }
+
+  h1 {
+    /** h5 */
+    font-size: 20px!important;
+    font-weight: 700!important;
+    line-height: 26px!important;
+    letter-spacing: 0.2px!important;
+    @media (min-width: 768px) {
+      /** h3 */
+      font-size: 34px!important;
+      font-weight: 700!important;
+      line-height: 42px!important;
+      letter-spacing: 0.25px!important;    
+    }
+  }
+
+  h2 {
+    /** h6 */
+    font-size: 18px!important;
+    font-weight: 500!important;
+    line-height: 24px!important;
+    letter-spacing: 0.2px!important;
+      
+    @media (min-width: 768px) {
+      /** h4 */
+      font-size: 24px!important;
+      font-weight: 700!important;
+      line-height: 32px!important;
+      letter-spacing: 0!important;
+    }
+  }
+}

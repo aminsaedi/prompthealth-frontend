@@ -1,0 +1,84 @@
+<div class="mb-15p">
+  <card-item-eyecatch [post]="post"></card-item-eyecatch>
+</div>
+
+<div class="d-flex justify-content-between align-items-start">
+  <h2 class="h4 clamp-1line mb-0">{{post.title}}</h2>
+  <button class="btn btn-icon-grey small py-5p">
+    <i iconPh="more-horiz"></i>
+  </button>
+</div>
+
+<div class="d-flex align-items-center justify-content-between my-20p">
+  <a [routerLink]="['/community', post?.authorId]">
+    <h6 class="d-flex align-items-center subtitle2">
+      <profile-image [image]="post.authorImage" size="32"></profile-image>
+      <span class="ml-10p opacity-70pc text-body">{{post.author}}</span>
+      <i iconPh="verified" class="text-primary large ml-5p"></i>
+    </h6>
+  </a>
+
+  <div class="d-flex align-items-center">
+    <div
+    class="status-indicator mr-2"
+    [ngClass]="{'bg-success': !post?.event.isFinished, 'bg-danger': post?.event.isFinished}"
+    ></div>
+    <span class="opacity-70pc body2">{{post?.event.status | titlecase}}</span>  
+  </div>
+</div>
+
+<ul class="list-unstyled mb-30p">
+  <li class="subtitle2 text-label mb-10p">
+    <i iconPh="video-camera"></i>
+    <span>
+      {{post?.event.isVirtual ? 'Online' : 'Offline'}} - 
+      {{post?.event.eventOn ? 'On' : 'Virtual'}}
+      {{post?.event.eventOn | titlecase}}
+    </span>
+  </li>
+  <li class="subtitle2 text-label">
+    <i iconPh="calendar"></i>
+    <span>
+      {{post?.event.startAt | date:'dd/M/yyyy hh:mm a'}} - 
+      {{post?.event.endAt | date:'dd/M/yyyy hh:mm a'}} (your local time)
+    </span>
+  </li>
+</ul>
+
+<div class="d-flex flex-column flex-lg-row align-items-stretch justify-content-lg-center btn-group mb-30p">
+  <div class="mr-lg-25p">
+    <button 
+    *ngIf="!alreadySubscribed"
+    (click)="onClickSubscribeMenu($event)" 
+    class="btn btn-primary w-100"
+    >Subscribe</button>
+    <a 
+    *ngIf="alreadySubscribed"
+    [href]="post?.event.link"
+    target="_blank"
+    class="btn btn-primary w-100"
+    >Join now</a>
+  </div>
+  
+  <div class="mx-lg-25p mt-15p mt-lg-0p">
+    <button class="btn btn-outline w-100" (click)="onClickCalendarMenu($event)">Add to calendar</button>
+  </div>
+</div>
+
+<div class="mb-10p">
+  <div
+  *ngIf="shorten"
+  [innerHTML]="post.summary" 
+  [ngClass]="{'show-more-inline': post.isMoreShown}"
+  ></div>
+
+  <div 
+  *ngIf="!shorten"
+  class="post-content"
+  [innerHTML]="post.descriptionSanitized"
+  ></div>
+</div>
+
+<div class="py-10p border-top border-line">
+  <card-item-toolbar></card-item-toolbar>
+</div>

@@ -13,7 +13,7 @@ import { slideHorizontalReverseAnimation } from 'src/app/_helpers/animations';
 export class HeaderSocialComponent implements OnInit {
 
   public isMenuSmShown: boolean = false; 
-  public categories: Category[] = [];
+  public topics: Category[] = [];
 
   constructor(
     private _router: Router,
@@ -22,8 +22,8 @@ export class HeaderSocialComponent implements OnInit {
     private _catService: CategoryService,
   ) { }
 
-  iconOf(cat: Category): string {
-    return this._catService.iconOf(cat);
+  iconOf(topic: Category): string {
+    return this._catService.iconOf(topic);
   }
 
   ngOnInit(): void {
@@ -34,7 +34,7 @@ export class HeaderSocialComponent implements OnInit {
 
 
     this._catService.getCategoryAsync().then(cats => {
-      this.categories = cats;
+      this.topics = cats;
     });
   }
 

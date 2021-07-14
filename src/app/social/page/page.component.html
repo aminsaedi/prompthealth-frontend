@@ -1,1 +1,17 @@
-<p>page works!</p>
+<div class="bg-background pt-30p pb-100p">
+  <div class="container">
+    <div class="row">
+      <section class="d-none d-xl-block col-xl-3"></section>
+
+      <section class="col-12 col-md-7 col-xl-6">
+        <ng-container *ngIf="post">
+          <card [post]="post" [shorten]="false"></card>  
+        </ng-container>
+      </section>  
+      
+      <section class="d-none d-md-block col-md-5 col-xl-3"></section>
+  
+    </div>
+  </div>
+
+</div>

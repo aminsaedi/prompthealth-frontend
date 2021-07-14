@@ -10,7 +10,10 @@
       class="large"
       [ngClass]="{'text-error': data.like}"
       ></i>
-      <span *ngIf="!isViewSm">Like{{(isLiked ? 'd' : '')}}</span>
+      <span *ngIf="!isViewSm">
+        <span>Like</span>
+        <span [ngClass]="{'opacity-0': !isLiked}">d</span>
+      </span>
     </button>
   
     <button class="btn btn-text-grey small px-0 ml-20p ml-md-30p">
@@ -34,7 +37,10 @@
     class="btn btn-text-grey small px-0"
     (click)="onClickBookmark($event)"
     >
-      <span>Save{{isBookmarked ? 'd' : ''}}</span>
+      <span>
+        <span>Save</span>
+        <span *ngIf="isBookmarked">d</span>
+      </span>
       <i 
       [iconPh]="'bookmark-' + (isBookmarked ? 'minus' : 'plus')"
       class="large"

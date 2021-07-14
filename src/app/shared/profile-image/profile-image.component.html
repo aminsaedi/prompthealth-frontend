@@ -1,3 +1,6 @@
-<div class="profile-image-container">
-  <img *ngIf="image" [src]="image" [ngStyle]="{width: size + 'px'}">
+<div 
+class="profile-image-container" 
+[ngStyle]="{width: size + 'px'}"
+>
+  <img *ngIf="image" [src]="image">
 </div>

@@ -1,19 +1,20 @@
 <div class="bg-background pt-30p pb-100p">
   <div class="container container-xl">
-    <div class="row">
+    <div class="row align-items-start">
+      <!-- left -->
       <section class="col-3 d-none d-xl-block">
-        <div class="mb-20p" *ngIf="categories.length > 0" [@expandVertical]>
+        <div class="mb-20p" *ngIf="topics.length > 0" [@expandVertical]>
           <card [option]="{hideToolbar: true, hideHeader: true, paddingZero: true}">
             <div class="px-20p">
               <list-item
-              *ngFor="let cat of categories; let i = index"
-              [leading]="iconOf(cat)"
+              *ngFor="let topic of topics; let i = index"
+              [leading]="iconOf(topic)"
               leadingClass="text-primary"
               action="chevron-right"
               actionClass="text-primary"
-              [option]="{hideBorderBottom: (i == categories.length - 1)}"
+              [option]="{hideBorderBottom: (i == topics.length - 1)}"
               >
-                <div class="subtitle2">{{cat.item_text}}</div>
+                <div class="subtitle2">{{topic.item_text}}</div>
               </list-item>
             </div>
           </card>
@@ -86,22 +87,30 @@
         </div>
         <div class="body-small text-placeholder mt-10p">©2021 PromptHealth</div>
       </section>
-      <section class="col">
-        <div class="bg-white rounded-12p mb-15p">
-          <card-dummy [showImage]="false"></card-dummy>
-        </div>
 
-        <div class="mb-15p">
-          <a routerLink="test">
+      <!-- main center -->
+      <section class="col-12 col-md-7 col-xl-6">
+        <ng-container *ngFor="let p of posts; let i = index">
+          <div *ngIf="!p" class="mb-15p">
             <card>
-              <div>Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A planning made restaurant dining the easier option.</div>
-            </card>
-          </a>
-        </div>
-        <div>
-          <card-subscribe></card-subscribe>
-        </div>
+              <card-dummy [showImage]="false"></card-dummy>
+            </card>  
+          </div>
+
+          <div *ngIf="p" class="mb-15p">
+            <a [routerLink]="['/community', p.authorId, 'post', p._id]">
+              <card [post]="p"></card>
+            </a>
+          </div>
+
+          <div *ngIf="p && i == 1" class="mb-15p">
+            <card-subscribe></card-subscribe>
+          </div>
+  
+        </ng-container>        
       </section>
+      
+      <!-- right -->
       <section class="d-none d-md-block col-5 col-xl-3">
         <card [option]="{hideToolbar: true, hideHeader: true}">
           <h6 class="subtitle2 pb-15p border-bottom border-line">Top Providers</h6>
@@ -111,3 +120,5 @@
     </div>
   </div>
 </div>
+
+<modal-event></modal-event>

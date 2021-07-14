@@ -1,9 +1,7 @@
-.card {
-  border: none;
-}
+@import '../../../assets/scss/variables';
 
 .eyecatch {
-  margin: -20px -20px 15px;
+  margin: -20px -20px 0;
   width: calc(100% + 40px);
   position: relative;
   border-top-left-radius: 8px;
@@ -13,7 +11,7 @@
   &::after {
     content: '';
     display: block;
-    padding-top: 40%;
+    padding-top: 35%;
   }
 
   img {
@@ -26,6 +24,16 @@
   }
 }
 
-.shadow {
-  box-shadow: rgba(0,0,0,0.05)!important;
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 10px;
+}
+
+.btn-group { 
+  @media (min-width: $breakpointLg) {
+    button.btn, a.btn { 
+      width: 200px!important; 
+    }
+  }
 }

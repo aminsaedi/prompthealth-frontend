@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { SocialPost } from 'src/app/models/social-post';
 
 @Component({
   selector: 'card',
@@ -7,6 +8,8 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CardComponent implements OnInit {
 
+  @Input() post: SocialPost;
+  @Input() shorten: boolean = true;
   @Input() option: IOptionCard;
 
   public _option: OptionCard;

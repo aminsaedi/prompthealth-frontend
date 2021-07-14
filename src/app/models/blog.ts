@@ -86,7 +86,7 @@ export class Blog implements IBlog {
   private AWS_S3 = environment.config.AWS_S3;
 
   private _readLength: number;
-  private _summary: string;
+  protected _summary: string;
   private _description: SafeHtml;
   private _videosEmbedded: SafeHtml [] = [];
   private _podcastsEmbedded: SafeHtml [] = [];

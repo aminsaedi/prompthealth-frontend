@@ -1,4 +1,5 @@
 import { IBlog } from "./blog";
+import { IResponseData } from "./response-data";
 
 export interface IBlogSearchQuery {
   sort?: string; /** default: createdAt (desc only) */
@@ -56,7 +57,9 @@ export class BlogSearchQuery implements IBlogSearchQuery {
   constructor(private data: IBlogSearchQuery = {}) {}
 }
 
-export interface IBlogSearchResult {
-  data: IBlog[],
-  total: number;
+export interface IBlogSearchResult extends IResponseData {
+  data: {
+    data: IBlog[];
+    total: number;  
+  }
 }
