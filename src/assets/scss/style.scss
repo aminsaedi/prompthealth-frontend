@@ -641,3 +641,12 @@ textarea.form-control {
     }
   }
 }
+
+.contenteditable {
+  outline: none;
+  word-break: break-word;
+}
+.contenteditable:empty:before {
+  opacity: 0.6;
+  content: attr(data-placeholder);
+}

@@ -1,4 +1,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
   selector: 'card-item-toolbar',
@@ -18,11 +20,14 @@ export class CardItemToolbarComponent implements OnInit {
 
   public isViewSm: boolean = true;
   public isFormCommentShown = false;
+  
+  public formComment: FormControl;
 
   constructor() { }
 
   ngOnInit(): void {
     this.onWindowResize();
+    this.formComment = new FormControl('', validators.comment);
   }
 
   onClickLike(e: Event) {
@@ -34,7 +39,7 @@ export class CardItemToolbarComponent implements OnInit {
 
   onClickComment(e: Event) {
     this.stopPropagation(e);
-    this.isFormCommentShown = true;
+    this.showFormComment();
   }
 
   onClickBookmark(e: Event) {
@@ -43,6 +48,22 @@ export class CardItemToolbarComponent implements OnInit {
     setTimeout(() => {
       this.data.bookmark = this.data.bookmark == true ? false : true;
     }, 500);
+  }
+
+  onCancelComment() {
+    this.hideFormComment();
+  }
+
+  onSubmitComment() {
+    console.log('form comment submitted');
+  }
+
+  showFormComment() {
+    this.isFormCommentShown = true;
+  }
+
+  hideFormComment() {
+    this.isFormCommentShown = false;
   }
 
   stopPropagation(e: Event) {

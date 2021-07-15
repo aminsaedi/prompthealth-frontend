@@ -1,11 +1,16 @@
-<div class="d-flex">
+<div class="d-flex align-items-start">
   <profile-image size="42"></profile-image>
+
   <div class="ml-10p flex-grow-1">
-    <form-item-input
+    <div
+    class="contenteditable bg-background px-15p py-5p"
+    contenteditable
+    data-placeholder="Write your thought..."
+    [formControl]="controller"
     (click)="stopPropagation($event)"
-    [controller]="form"
-    placeholder="Write a comment..."
-    ></form-item-input>
+    (beforeinput)="onBeforeInput($event)"
+    (input)="onInput($event)"
+    ></div>
 
     <div class="mt-10p d-flex">
       <button 
@@ -13,7 +18,13 @@
       (click)="onClickCancel($event)"
       >Cancel</button>
       
-      <button class="btn btn-text-grey small px-0">Reply</button>
+      <input #submit
+      type="submit"
+      class="btn btn-text-grey small px-0"
+      value="Send"
+      (click)="stopPropagation($event)"
+      [disabled]="controller.invalid"
+      >
     </div>
   </div>
 </div>
