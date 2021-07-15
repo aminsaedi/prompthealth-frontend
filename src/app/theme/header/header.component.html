@@ -9,7 +9,12 @@
       </div>
       <nav>
         <div class="d-md-none">
-          <button class="btn btn-icon small pr-0" (click)="showMenuSm()">
+          <a routerLink="/social" class="btn btn-primary small">
+            <i iconPh="users"></i>
+            <span>Community</span>
+          </a>
+
+          <button class="btn btn-icon small pr-0 ml-10p" (click)="showMenuSm()">
             <i iconPh="menu" class="large"></i>
           </button>
         </div>  
@@ -17,9 +22,6 @@
         <ul class="d-none d-md-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2 text-body">
           <li class="mx-10p">
             <a routerLink="/practitioners" class="text-body">Find Practitioners</a>
-          </li>
-          <li class="mx-10p">
-            <a routerLink="/community" class="text-body">Community</a>
           </li>
           <li class="mx-10p">
             <a routerLink="/products" class="text-body">Products</a>
@@ -46,6 +48,12 @@
             (click)="toggleDashboardMenuMdVisibility()"
             ></dashboard-menu>
           </li>
+          <li class="ml-10p">
+            <a routerLink="/social" class="btn btn-primary small">
+              <i iconPh="users"></i>
+              <span>Community</span>
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -69,7 +77,11 @@ class="d-none d-md-block position-fixed dashboard-menu-wrapper-md" *ngIf="isDash
 <!-- Menu for Small view-->
 <div class="menu-sm bg-primary-light" *ngIf="isMenuSmShown">
   <div class="menu-top py-5p py-md-15p container text-right">
-    <button class="btn btn-icon small close-menu-sm pr-0">
+    <a routerLink="/social" class="btn btn-primary small">
+      <i iconPh="users"></i>
+      <span>Community</span>
+    </a>
+    <button class="btn btn-icon small close-menu-sm pr-0 ml-10p">
       <i class="large" iconPh="cross" (click)="hideMenuSm()"></i>
     </button>  
   </div>
@@ -79,10 +91,6 @@ class="d-none d-md-block position-fixed dashboard-menu-wrapper-md" *ngIf="isDash
       <div class="container">
         <list-item (onTap)="onClickMenuItemSm('/')">
           <div class="subtitle1 text-primary" >Home</div>  
-        </list-item>
-
-        <list-item (onTap)="onClickMenuItemSm('/community')">
-          <div class="subtitle1 text-primary" >Community</div>  
         </list-item>
 
         <list-item (onTap)="onClickMenuItemSm('/practitioners')">
