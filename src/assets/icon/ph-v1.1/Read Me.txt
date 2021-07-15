@@ -4,6 +4,7 @@ SHOULD CREATE FOLLOWING ICONS IN ICOMOON NEXT TIME
 2) icon-heart-filled
 3) icon-star-outline
 4) icon-star-filled
+5) icon-checkbox-square-outline
 
 
 MESSAGE FROM YUKI
