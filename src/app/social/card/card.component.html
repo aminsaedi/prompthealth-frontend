@@ -1,14 +1,22 @@
-<div 
-class="card rounded-8p bg-white body1 text-body shadow"
-[ngClass]="{'px-20p pt-20p': !_option.paddingZero, 'overflow-hidden': _option.hideOverflow}"
->
+<div class="card position-relative rounded-8p bg-white body1 text-body shadow px-20p pt-20p">
 
   <ng-container *ngIf="post">
-    <card-post *ngIf="post.isPost" [post]="post" [shorten]="shorten"></card-post>
-    <card-event *ngIf="post.isEvent" [post]="post" [shorten]="shorten"></card-event>
-    <card-article *ngIf="post.isArticle" [post]="post" [shorten]="shorten"></card-article>
-    <div *ngIf="!shorten">
-      <card-item-comment [post]="post"></card-item-comment>
+    <div *ngIf="!shorten" class="btn-close-container">
+      <button 
+      class="btn btn-icon- rounded-circle blur"
+      (click)="onClickClose($event)"
+      >
+        <i iconPh="cross"></i>
+      </button>
+    </div>
+
+    <div [ngStyle]="{marginTop: (shorten ? '0' : '-50px')}">
+      <card-post *ngIf="post.isPost" [post]="post" [shorten]="shorten"></card-post>
+      <card-event *ngIf="post.isEvent" [post]="post" [shorten]="shorten"></card-event>
+      <card-article *ngIf="post.isArticle" [post]="post" [shorten]="shorten"></card-article>
+      <div *ngIf="!shorten" class="mb-20p">
+        <card-item-comment [post]="post"></card-item-comment>
+      </div>  
     </div>
   </ng-container>
 

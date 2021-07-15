@@ -4,12 +4,12 @@
       <div>
         <a routerLink="/">
           <img class="d-lg-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20">
-          <img class="d-none d-lg-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="30">
+          <img class="d-none d-lg-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="25">
         </a>
       </div>
       <nav>
-        <div class="d-md-none">
-          <a routerLink="/social" class="btn btn-primary small">
+        <div class="d-lg-none">
+          <a routerLink="/community" class="btn btn-primary small">
             <i iconPh="users"></i>
             <span>Community</span>
           </a>
@@ -19,7 +19,7 @@
           </button>
         </div>  
 
-        <ul class="d-none d-md-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2 text-body">
+        <ul class="d-none d-lg-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2 text-body">
           <li class="mx-10p">
             <a routerLink="/practitioners" class="text-body">Find Practitioners</a>
           </li>
@@ -49,7 +49,7 @@
             ></dashboard-menu>
           </li>
           <li class="ml-10p">
-            <a routerLink="/social" class="btn btn-primary small">
+            <a routerLink="/community" class="btn btn-primary small">
               <i iconPh="users"></i>
               <span>Community</span>
             </a>
@@ -61,7 +61,7 @@
 </header>
 
 <dashboard-menu 
-class="d-none d-md-block position-fixed dashboard-menu-wrapper-md" *ngIf="isDashboardMenuShown"
+class="d-none d-lg-block position-fixed dashboard-menu-wrapper-md" *ngIf="isDashboardMenuShown"
 [@fadeFast] 
 [user]="user" 
 [scrollDetector]="isDashboardMenuShown" 
@@ -77,7 +77,7 @@ class="d-none d-md-block position-fixed dashboard-menu-wrapper-md" *ngIf="isDash
 <!-- Menu for Small view-->
 <div class="menu-sm bg-primary-light" *ngIf="isMenuSmShown">
   <div class="menu-top py-5p py-md-15p container text-right">
-    <a routerLink="/social" class="btn btn-primary small">
+    <a routerLink="/community" class="btn btn-primary small">
       <i iconPh="users"></i>
       <span>Community</span>
     </a>

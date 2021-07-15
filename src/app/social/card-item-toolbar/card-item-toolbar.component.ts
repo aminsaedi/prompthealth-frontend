@@ -17,6 +17,7 @@ export class CardItemToolbarComponent implements OnInit {
   }
 
   public isViewSm: boolean = true;
+  public isFormCommentShown = false;
 
   constructor() { }
 
@@ -25,20 +26,28 @@ export class CardItemToolbarComponent implements OnInit {
   }
 
   onClickLike(e: Event) {
-    e.preventDefault();
-    e.stopPropagation();
+    this.stopPropagation(e);
     setTimeout(() => {
       this.data.like = this.data.like == true ? false : true;
     }, 500);
   }
 
+  onClickComment(e: Event) {
+    this.stopPropagation(e);
+    this.isFormCommentShown = true;
+  }
+
   onClickBookmark(e: Event) {
-    e.preventDefault();
-    e.stopPropagation();
+    this.stopPropagation(e);
 
     setTimeout(() => {
       this.data.bookmark = this.data.bookmark == true ? false : true;
     }, 500);
+  }
+
+  stopPropagation(e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
   }
 
 }

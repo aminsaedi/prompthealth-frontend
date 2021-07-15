@@ -23,6 +23,7 @@ import { NgxStripeModule, StripeService } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
 import { CardItemCommentComponent } from './card-item-comment/card-item-comment.component';
 import { ModalCommentComponent } from './modal-comment/modal-comment.component';
+import { FormItemCommentComponent } from './form-item-comment/form-item-comment.component';
 
 
 const routes: Routes = [
@@ -60,7 +61,7 @@ const routes: Routes = [
     CardItemHeaderEventComponent, 
     CardPostComponent, 
     CardItemEyecatchComponent, 
-    CardArticleComponent, CardItemCommentComponent, ModalCommentComponent,
+    CardArticleComponent, CardItemCommentComponent, ModalCommentComponent, FormItemCommentComponent,
   ],
   providers: [
     CategoryService,

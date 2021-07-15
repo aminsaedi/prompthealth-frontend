@@ -76,10 +76,8 @@ export class ListComponent implements OnInit {
   }
 
   onClickCardPost(e: Event, p: SocialPost) {
-    if(window.innerWidth < 1200) {
-      e.preventDefault();
-      e.stopPropagation();
-      this._router.navigate(['./'], {queryParams: {post: p._id}, relativeTo: this._route, replaceUrl: (this.targetPostId ? true : false)});
-    }
+    e.preventDefault();
+    e.stopPropagation();
+    this._router.navigate(['./'], {queryParams: {post: p._id}, relativeTo: this._route, replaceUrl: (this.targetPostId ? true : false)});
   }
 }

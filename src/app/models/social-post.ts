@@ -26,11 +26,16 @@ export class SocialPost extends Blog implements ISocialPost {
   };
 
 
-  _commentsDummy: ISocialComment[];
+  _commentsDummy: SocialComment[];
   constructor(protected data: ISocialPost) {
     super(data);
 
-    this._commentsDummy = commentsDummy
+    const comments = [];
+    commentsDummy.forEach(c => {
+      comments.push(new SocialComment(c));
+    })
+
+    this._commentsDummy = comments;
 
   }
 }
@@ -39,7 +44,7 @@ export interface ISocialComment {
   _id: string;
   content: string;
   like: number;
-  userId: string;
+  userId?: string;
   user?: {
     _id: string;
     profileImage: string;
@@ -47,7 +52,7 @@ export interface ISocialComment {
     lastName: string;
   }
 
-  comments: ISocialComment[]
+  comments: ISocialComment[];
 }
 
 
@@ -60,8 +65,8 @@ const commentsDummy: ISocialComment[] = [
     user: {
       _id: 'user123',
       profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-      firstName: 'Marvin',
-      lastName: 'McKinney',
+      firstName: 'Ida',
+      lastName: 'Webb',
     },
     
     comments: [
@@ -73,8 +78,8 @@ const commentsDummy: ISocialComment[] = [
         user: {
           _id: 'user123',
           profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Marvin',
-          lastName: 'McKinney',
+          firstName: 'Ella',
+          lastName: 'Mcbride',
         },
         
         comments: [{
@@ -85,8 +90,8 @@ const commentsDummy: ISocialComment[] = [
           user: {
             _id: 'user123',
             profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-            firstName: 'Marvin',
-            lastName: 'McKinney',
+            firstName: 'Vanessa',
+            lastName: 'Meyer',
           },
           comments: [],
         }],
@@ -99,10 +104,9 @@ const commentsDummy: ISocialComment[] = [
         user: {
           _id: 'user123',
           profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Marvin',
-          lastName: 'McKinney',
+          firstName: 'Norris',
+          lastName: 'Hunter',
         },
-        
         comments: [],
       }
     ]
@@ -115,8 +119,8 @@ const commentsDummy: ISocialComment[] = [
     user: {
       _id: 'user123',
       profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-      firstName: 'Marvin',
-      lastName: 'McKinney',
+      firstName: 'Ollie',
+      lastName: 'Fowler',
     },
     
     comments: [
@@ -128,8 +132,8 @@ const commentsDummy: ISocialComment[] = [
         user: {
           _id: 'user123',
           profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Marvin',
-          lastName: 'McKinney',
+          firstName: 'Andrew',
+          lastName: 'Lamb',
         },
         
         comments: [],
@@ -142,8 +146,8 @@ const commentsDummy: ISocialComment[] = [
         user: {
           _id: 'user123',
           profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Marvin',
-          lastName: 'McKinney',
+          firstName: 'Beatrice',
+          lastName: 'Menzie',
         },
         
         comments: [],
@@ -158,8 +162,8 @@ const commentsDummy: ISocialComment[] = [
     user: {
       _id: 'user123',
       profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-      firstName: 'Marvin',
-      lastName: 'McKinney',
+      firstName: 'Daphne',
+      lastName: 'Aguilar',
     },
     
     comments: [
@@ -171,8 +175,8 @@ const commentsDummy: ISocialComment[] = [
         user: {
           _id: 'user123',
           profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Marvin',
-          lastName: 'McKinney',
+          firstName: 'Kayla',
+          lastName: 'Oliver',
         },
         
         comments: [],
@@ -185,12 +189,31 @@ const commentsDummy: ISocialComment[] = [
         user: {
           _id: 'user123',
           profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Marvin',
-          lastName: 'McKinney',
+          firstName: 'Beatrice',
+          lastName: 'Row',
         },
         
         comments: [],
       }
     ]
   }
-]
+];
+
+class SocialComment implements ISocialComment {
+
+  get _id() { return this.data._id; }
+  get content() { return this.data.content; }
+  get like() { return this.data.like; }
+  get user() { return this.data.user || null; }
+  get comments() { return this._comments; }
+
+  private _comments: SocialComment[] = [];
+
+  constructor(private data: ISocialComment, public level: number = 0, public replyTo: ISocialComment['user'] = null) {
+    const levelNext = level + 1;
+
+    data.comments.forEach(c => {
+      this._comments.push(new SocialComment(c, levelNext, data.user));
+    });
+  }
+}

@@ -11,10 +11,12 @@ import { validators } from 'src/app/_helpers/form-settings';
 export class CardItemCommentComponent implements OnInit {
 
   @Input() post: SocialPost;
+  @Input() nested: boolean = false;
 
   public form: FormControl;
   public formReply: FormControl;
   public targetCommentIdForReply: string;
+
 
   constructor() { }
 
@@ -27,4 +29,5 @@ export class CardItemCommentComponent implements OnInit {
     this.formReply.setValue(null);
     this.targetCommentIdForReply = c._id;
   }
+
 }

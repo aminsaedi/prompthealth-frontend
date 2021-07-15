@@ -16,7 +16,10 @@
       </span>
     </button>
   
-    <button class="btn btn-text-grey small px-0 ml-20p ml-md-30p">
+    <button 
+    class="btn btn-text-grey small px-0 ml-20p ml-md-30p"
+    (click)="onClickComment($event)"
+    >
       <i iconPh="comment" class="large"></i>
       <span>24</span>
     </button>
@@ -48,4 +51,8 @@
       ></i>
     </button>
   </div>
+</div>
+
+<div class="mt-10p" *ngIf="isFormCommentShown">
+  <form-item-comment></form-item-comment>
 </div>

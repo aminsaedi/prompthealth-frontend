@@ -1,4 +1,6 @@
+import { Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SocialPost } from 'src/app/models/social-post';
 
 @Component({
@@ -10,30 +12,36 @@ export class CardComponent implements OnInit {
 
   @Input() post: SocialPost;
   @Input() shorten: boolean = true;
-  @Input() option: IOptionCard;
 
-  public _option: OptionCard;
-
-  constructor() { }
+  constructor(
+    private _router: Router,
+    private _location: Location,
+  ) { }
 
   ngOnInit(): void {
-    this._option = new OptionCard(this.option);
   }
 
-}
+  onClickClose(e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
 
-interface IOptionCard {
-  paddingZero?: boolean; //default: false
-  hideToolbar?: boolean; // default: false
-  hideHeader?: boolean; //default: false
-  hideOverflow?: boolean; // default: false
-}
+    const state = this._location.getState() as any;
+    if(state.navigationId == 1) {
+      const [path, query] = this._location.path().split('?');
+      const queryParams: any = {};
 
-class OptionCard {
-  get paddingZero() { return  this.data.paddingZero === true ? true : false; }
-  get hideToolbar() { return this.data.hideToolbar === true ? true : false; }
-  get hideHeader() { return this.data.hideHeader === true ? true : false; }
-  get hideOverflow() { return this.data.hideOverflow === true ? true : false; }
-
-  constructor(private data: IOptionCard = {}) {}
+      if(query) {
+        const array = query.split('&');
+        array.forEach(s => {
+          const array = s.split('=');
+          queryParams[array[0]] = array[1] || null
+        });
+      }
+    
+      queryParams.post = null;
+      this._router.navigate([path], {queryParams: queryParams, replaceUrl: true});
+    } else {
+      this._location.back();
+    }  
+  }
 }

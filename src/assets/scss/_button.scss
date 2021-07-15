@@ -120,6 +120,10 @@
   @include btnIcon($colorGsPlaceholder);
 }
 
+.btn.btn-icon-body {
+  @include btnIcon($colorGsBody);
+}
+
 .btn:disabled {
   opacity: 0.7;
 }
