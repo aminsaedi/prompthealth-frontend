@@ -12,6 +12,7 @@ export type IconName =
 'trend-up'|
 'send'|
 'checkbox-square'|
+'checkbox-square-outline'|
 'airplay'|
 'forward-15'|
 'comment-2-question'|
@@ -80,6 +81,7 @@ export type IconName =
 'log-out'|
 'undo-2'|
 'heart'|
+'heart-filled'|
 'zoom-in'|
 'globe'|
 'comment-2-plus'|

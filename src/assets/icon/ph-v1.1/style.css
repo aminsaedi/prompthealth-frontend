@@ -1440,6 +1440,9 @@ i {
   content: "\e921";
   margin-left: -1em;
 }
+.icon-checkbox-square-outline:before {
+  content: "\e921";
+}
 .icon-home .path1:before {
   content: "\e922";
   opacity: 0.16;
@@ -2582,6 +2585,15 @@ i {
   content: "\ea43";
   margin-left: -1em;
 }
+.icon-heart-filled .path1:before {
+  content: "\ea42";
+  opacity: 1;
+}
+.icon-heart-filled .path2:before {
+  content: "\ea43";
+  margin-left: -1em;
+}
+
 .icon-user .path1:before {
   content: "\ea44";
   opacity: 0.16;
