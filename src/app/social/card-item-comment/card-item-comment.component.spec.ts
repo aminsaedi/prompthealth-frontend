@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeaderSocialComponent } from './header-social.component';
+import { CardItemCommentComponent } from './card-item-comment.component';
 
-describe('HeaderSocialComponent', () => {
-  let component: HeaderSocialComponent;
-  let fixture: ComponentFixture<HeaderSocialComponent>;
+describe('CardItemCommentComponent', () => {
+  let component: CardItemCommentComponent;
+  let fixture: ComponentFixture<CardItemCommentComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeaderSocialComponent ]
+      declarations: [ CardItemCommentComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HeaderSocialComponent);
+    fixture = TestBed.createComponent(CardItemCommentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

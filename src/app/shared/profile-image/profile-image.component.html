@@ -3,4 +3,9 @@ class="profile-image-container"
 [ngStyle]="{width: size + 'px'}"
 >
   <img *ngIf="image" [src]="image">
+  <i *ngIf="!image" 
+  [iconPh]="_option.dummyIcon"
+  [ngClass]="_option.dummyClass"
+  [ngStyle]="{fontSize: _option.dummySize + 'px'}"
+  ></i>
 </div>

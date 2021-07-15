@@ -28,7 +28,7 @@ const routes: Routes = [
         loadChildren: () => HomeModule
       },
 
-      { path: 'community', loadChildren: () => SocialModule },
+      // { path: 'community', loadChildren: () => SocialModule },
       
       {
         path: 'magazines',

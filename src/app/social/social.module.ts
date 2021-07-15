@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from './home/home.component';
-import { RouterModule } from '@angular/router';
+import { ListComponent } from './list/list.component';
+import { RouterModule, Routes } from '@angular/router';
 import { PageComponent } from './page/page.component';
 import { CardItemToolbarComponent } from './card-item-toolbar/card-item-toolbar.component';
 import { CardItemHeaderComponent } from './card-item-header/card-item-header.component';
@@ -14,13 +14,31 @@ import { CardItemHeaderEventComponent } from './card-item-header-event/card-item
 import { CardPostComponent } from './card-post/card-post.component';
 import { CardItemEyecatchComponent } from './card-item-eyecatch/card-item-eyecatch.component';
 import { CardArticleComponent } from './card-article/card-article.component';
+import { HomeComponent } from './home/home.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HeaderComponent } from './header/header.component';
+import { SharedService } from '../shared/services/shared.service';
+import { CategoryService } from '../shared/services/category.service';
+import { NgxStripeModule, StripeService } from 'ngx-stripe';
+import { environment } from 'src/environments/environment';
+import { CardItemCommentComponent } from './card-item-comment/card-item-comment.component';
+import { ModalCommentComponent } from './modal-comment/modal-comment.component';
 
-const routes = [
-  { path: '', component: HomeComponent },
+
+const routes: Routes = [
+  { path: '', component: HomeComponent, children: [
+
+    { path: 'feed',     component: ListComponent },
+    { path: 'article',  component: ListComponent },
+    { path: 'media',    component: ListComponent },
+    { path: 'event',    component: ListComponent },
+    { path: 'feed/:topicId',     component: ListComponent },
+    { path: 'article/:topicId',  component: ListComponent },
+    { path: 'media/:topicId',    component: ListComponent },
+    { path: 'event/:topicId',    component: ListComponent },
+    { path: '', redirectTo: 'feed', },
+  ]},
   
-  { path: 'type/:taxonomyType', component: HomeComponent },
-  { path: 'type/:taxonomyType/:topicId', component: HomeComponent },
-  { path: 'type', redirectTo: '' },
 
   { path: ':userid' },
   { path: ':userid/post/:postid', component: PageComponent },
@@ -28,13 +46,33 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, PageComponent, CardItemToolbarComponent, CardItemHeaderComponent, CardComponent, CardSubscribeComponent, CardEventComponent, ModalEventComponent, CardItemHeaderEventComponent, CardPostComponent, CardItemEyecatchComponent, CardArticleComponent],
+  declarations: [
+    HomeComponent,
+    HeaderComponent,
+    ListComponent, 
+    PageComponent, 
+    CardItemToolbarComponent, 
+    CardItemHeaderComponent, 
+    CardComponent, 
+    CardSubscribeComponent, 
+    CardEventComponent, 
+    ModalEventComponent, 
+    CardItemHeaderEventComponent, 
+    CardPostComponent, 
+    CardItemEyecatchComponent, 
+    CardArticleComponent, CardItemCommentComponent, ModalCommentComponent,
+  ],
+  providers: [
+    CategoryService,
+    StripeService,
+  ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
     SharedModule,
-  ], exports: [
-    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxStripeModule.forRoot(environment.config.stripeKey),
+    RouterModule.forChild(routes),
   ]
 })
 export class SocialModule { }

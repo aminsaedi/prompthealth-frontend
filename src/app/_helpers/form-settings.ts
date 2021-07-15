@@ -257,4 +257,7 @@ export const validators = {
   savePostVideoLink: [Validators.pattern(pattern.urlVideo)],
   savePostPodcastLink: [Validators.pattern(pattern.urlPodcast)],
   savePost: [validatorComparePostEventEndTime()], // for formGroup validator
+
+  /** social */
+  comment: [Validators.required],
 }

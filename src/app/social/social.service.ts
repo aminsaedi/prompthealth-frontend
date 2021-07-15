@@ -127,7 +127,7 @@ export class SocialService {
   }
 
   postsOf(
-    taxonomy: SocialPostTaxonomyType = 'all', 
+    taxonomy: SocialPostTaxonomyType = 'feed', 
     page: number = 1,
     from: number = 0, 
     count: number = this.countPerPage, 
@@ -154,7 +154,7 @@ export class SocialService {
   setTargetForEventModal(data: SocialPost) { this._targetForEventModal = data; }
   disposeTargetForEventModal(){ this._targetForEventModal = null; }
 
-  saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'all'): SocialPost[] {
+  saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'feed'): SocialPost[] {
     if(!this.postCache.dataPerTaxonomy[taxonomy].data) {
       this.postCache.dataPerTaxonomy[taxonomy].data = [];
     }
@@ -238,7 +238,7 @@ interface IPostCache {
     [k: string]: SocialPost;
   },
   dataPerTaxonomy : {
-    all: IPostsPerTaxonomy;
+    feed: IPostsPerTaxonomy;
     article: IPostsPerTaxonomy;
     event: IPostsPerTaxonomy;
     media: IPostsPerTaxonomy;
@@ -252,7 +252,7 @@ class PostCache implements IPostCache {
   constructor() {
     this.dataMap = {};
     this.dataPerTaxonomy = {
-      all:     {filter: null, data: null,},
+      feed:     {filter: null, data: null,},
       article: {filter: null, data: null,},
       event:   {filter: null, data: null,},
       media:   {filter: null, data: null,},
@@ -267,4 +267,4 @@ interface IPostsPerTaxonomy {
   };
 }
 
-export type SocialPostTaxonomyType = 'article' | 'event' | 'media' | 'all';
+export type SocialPostTaxonomyType = 'feed' | 'article' | 'event' | 'media';

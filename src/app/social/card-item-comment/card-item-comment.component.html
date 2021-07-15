@@ -1,0 +1,56 @@
+<div class="d-flex">
+  <profile-image size="42"></profile-image>
+  <div class="ml-10p flex-grow-1">
+    <form-item-input
+    [controller]="form"
+    placeholder="Write a comment..."
+    ></form-item-input>
+  </div>
+</div>
+
+<div>
+  <div *ngFor="let c of post.comments">
+    <ng-container *ngTemplateOutlet="comment; context:{$implicit:c}"></ng-container>
+  </div>
+</div>
+
+<ng-template #comment let-data>
+  <div class="d-flex mt-20p">
+    <profile-image size="42" [image]="data.user.profileImage"></profile-image>
+    <div class="ml-10p flex-grow-1">
+      <div class="mb-20p rounded-8p px-15p pt-15p pb-5p d-inline-block bg-background">
+        <h6 class="subtitle2">{{data.user.firstName}} {{data.user.lastName}}</h6>
+        <p class="body2 mb-5p">{{data.content}}</p>
+        <div class="d-flex">
+          <button
+          class="btn btn-text-grey small px-0"
+          type="button"
+          >
+            <i [iconPh]="'heart'"></i>
+            <span *ngIf="data.like > 0" class="ml-5p">{{data.like}}</span>
+          </button>
+          <button 
+          class="ml-20p btn btn-text-grey small px-0"
+          (click)="onClickReply(data)"
+          >Reply</button>
+        </div>
+      </div>
+
+      <div 
+      *ngIf="targetCommentIdForReply == data._id"
+      class="mt-10p d-flex">
+        <profile-image></profile-image>
+        <div class="ml-10p flex-grow-1">
+          <form-item-input
+          [controller]="formReply"
+          placeholder="Write a reply..."
+          ></form-item-input>  
+        </div>
+      </div>
+
+      <ng-container *ngFor="let c of data.comments">
+        <ng-content *ngTemplateOutlet="comment; context:{$implicit: c}"></ng-content>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

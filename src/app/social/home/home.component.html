@@ -1,3 +1,5 @@
+<header-social></header-social>
+
 <div class="bg-background pt-30p pb-100p">
   <div class="container container-xl">
     <div class="row align-items-start">
@@ -90,24 +92,7 @@
 
       <!-- main center -->
       <section class="col-12 col-md-7 col-xl-6">
-        <ng-container *ngFor="let p of posts; let i = index">
-          <div *ngIf="!p" class="mb-15p">
-            <card>
-              <card-dummy [showImage]="false"></card-dummy>
-            </card>  
-          </div>
-
-          <div *ngIf="p" class="mb-15p">
-            <a [routerLink]="['/community', p.authorId, 'post', p._id]">
-              <card [post]="p" (click)="onClickCardPost($event, p)" [shorten]="(targetPostId != p._id)"></card>
-            </a>
-          </div>
-
-          <div *ngIf="p && i == 1" class="mb-15p">
-            <card-subscribe></card-subscribe>
-          </div>
-  
-        </ng-container>        
+        <router-outlet></router-outlet>        
       </section>
       
       <!-- right -->
@@ -120,5 +105,3 @@
     </div>
   </div>
 </div>
-
-<modal-event></modal-event>

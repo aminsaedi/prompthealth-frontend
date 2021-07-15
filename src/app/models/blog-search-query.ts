@@ -54,7 +54,7 @@ export class BlogSearchQuery implements IBlogSearchQuery {
     return '?' + paramsArray.join('&');
   }
 
-  constructor(private data: IBlogSearchQuery = {}) {}
+  constructor(protected data: IBlogSearchQuery = {}) {}
 }
 
 export interface IBlogSearchResult extends IResponseData {

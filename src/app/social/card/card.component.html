@@ -7,6 +7,9 @@ class="card rounded-8p bg-white body1 text-body shadow"
     <card-post *ngIf="post.isPost" [post]="post" [shorten]="shorten"></card-post>
     <card-event *ngIf="post.isEvent" [post]="post" [shorten]="shorten"></card-event>
     <card-article *ngIf="post.isArticle" [post]="post" [shorten]="shorten"></card-article>
+    <div *ngIf="!shorten">
+      <card-item-comment [post]="post"></card-item-comment>
+    </div>
   </ng-container>
 
   <ng-content></ng-content>

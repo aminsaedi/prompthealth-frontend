@@ -11,7 +11,6 @@ export class LayoutComponent {
 
   public showFooter = false;
   public onMagazine: boolean = false;
-  public onSocial: boolean = false;
 
   constructor(
     private _router: Router,
@@ -23,7 +22,6 @@ export class LayoutComponent {
         this.showFooter = !evt.url.match(regexHideFooter);
   
         this.onMagazine = evt.url.match(/magazines|blogs/) ? true : false;  
-        this.onSocial = evt.url.match(/community/) ? true : false;
       }
     });
   }
