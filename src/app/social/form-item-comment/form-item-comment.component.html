@@ -13,7 +13,8 @@
     ></div>
 
     <div class="mt-10p d-flex">
-      <button 
+      <button
+      *ngIf="!_option.hideCancel"
       class="btn btn-text-grey small px-0 mr-20p"
       (click)="onClickCancel($event)"
       >Cancel</button>

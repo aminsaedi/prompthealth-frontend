@@ -9,10 +9,10 @@ import { validators } from 'src/app/_helpers/form-settings';
 })
 export class CardItemToolbarComponent implements OnInit {
 
-  get isLiked() { return this.data.like; }
-  get isBookmarked() { return this.data.bookmark; }
+  get isLiked() { return this.post.like; }
+  get isBookmarked() { return this.post.bookmark; }
 
-  @Input() data: any = {};
+  @Input() post: any = {};
 
   @HostListener('window:resize') onWindowResize() {
     this.isViewSm = (window && window.innerWidth >= 768) ? false : true;
@@ -33,36 +33,36 @@ export class CardItemToolbarComponent implements OnInit {
   onClickLike(e: Event) {
     this.stopPropagation(e);
     setTimeout(() => {
-      this.data.like = this.data.like == true ? false : true;
+      this.post.like = this.post.like == true ? false : true;
     }, 500);
   }
 
   onClickComment(e: Event) {
     this.stopPropagation(e);
-    this.showFormComment();
+    if(this.isFormCommentShown) {
+      this.hideComment();
+    } else {
+      this.showComment();
+    }
   }
 
   onClickBookmark(e: Event) {
     this.stopPropagation(e);
 
     setTimeout(() => {
-      this.data.bookmark = this.data.bookmark == true ? false : true;
+      this.post.bookmark = this.post.bookmark == true ? false : true;
     }, 500);
-  }
-
-  onCancelComment() {
-    this.hideFormComment();
   }
 
   onSubmitComment() {
     console.log('form comment submitted');
   }
 
-  showFormComment() {
+  showComment() {
     this.isFormCommentShown = true;
   }
 
-  hideFormComment() {
+  hideComment() {
     this.isFormCommentShown = false;
   }
 

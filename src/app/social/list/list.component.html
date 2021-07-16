@@ -1,8 +1,8 @@
 <ng-container *ngFor="let p of posts; let i = index">
   <div *ngIf="!p" class="mb-15p">
-    <card>
+    <div class="p-20p bg-white rounded-8p">
       <card-dummy [showImage]="false"></card-dummy>
-    </card>  
+    </div>  
   </div>
 
   <div *ngIf="p" class="mb-15p">

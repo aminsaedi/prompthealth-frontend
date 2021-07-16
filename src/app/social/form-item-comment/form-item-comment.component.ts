@@ -9,8 +9,12 @@ import { FormControl } from '@angular/forms';
 export class FormItemCommentComponent implements OnInit {
 
   @Input() controller: FormControl;
+  @Input() option: IFormCommentOption = {};
+
   @Output() onCancel = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<void>();
+
+  public _option: FormCommentOption;
 
   @ViewChild('submit') private buttonSubmit: ElementRef;
 
@@ -20,6 +24,8 @@ export class FormItemCommentComponent implements OnInit {
     if(!this.controller) {
       console.error('Error! controller required');
     }
+  
+    this._option = new FormCommentOption(this.option);
   }
 
   onBeforeInput(e: InputEvent) {
@@ -64,4 +70,15 @@ export class FormItemCommentComponent implements OnInit {
     e.stopPropagation();
   }
 
+}
+
+
+interface IFormCommentOption {
+  hideCancel?: boolean;
+}
+
+class FormCommentOption implements IFormCommentOption {
+  get hideCancel() { return !!(this.data.hideCancel === true) }
+
+  constructor(private data: IFormCommentOption) {}
 }

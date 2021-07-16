@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SocialPost } from 'src/app/models/social-post';
 
 @Component({
-  selector: 'card-post',
-  templateUrl: './card-post.component.html',
-  styleUrls: ['./card-post.component.scss']
+  selector: 'card-item-post',
+  templateUrl: './card-item-post.component.html',
+  styleUrls: ['./card-item-post.component.scss']
 })
-export class CardPostComponent implements OnInit {
+export class CardItemPostComponent implements OnInit {
 
   @Input() post: SocialPost;
   @Input() shorten: boolean = true;

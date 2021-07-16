@@ -8,12 +8,12 @@ import { CardItemHeaderComponent } from './card-item-header/card-item-header.com
 import { CardComponent } from './card/card.component';
 import { SharedModule } from '../shared/shared.module';
 import { CardSubscribeComponent } from './card-subscribe/card-subscribe.component';
-import { CardEventComponent } from './card-event/card-event.component';
+import { CardItemEventComponent } from './card-item-event/card-item-event.component';
 import { ModalEventComponent } from './modal-event/modal-event.component';
 import { CardItemHeaderEventComponent } from './card-item-header-event/card-item-header-event.component';
-import { CardPostComponent } from './card-post/card-post.component';
+import { CardItemPostComponent } from './card-item-post/card-item-post.component';
 import { CardItemEyecatchComponent } from './card-item-eyecatch/card-item-eyecatch.component';
-import { CardArticleComponent } from './card-article/card-article.component';
+import { CardItemArticleComponent } from './card-item-article/card-item-article.component';
 import { HomeComponent } from './home/home.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './header/header.component';
@@ -24,6 +24,7 @@ import { CardItemCommentComponent } from './card-item-comment/card-item-comment.
 import { ModalCommentComponent } from './modal-comment/modal-comment.component';
 import { FormItemCommentComponent } from './form-item-comment/form-item-comment.component';
 import { CardNewPostComponent } from './card-new-post/card-new-post.component';
+import { QuillModule } from 'ngx-quill';
 
 
 const routes: Routes = [
@@ -56,12 +57,16 @@ const routes: Routes = [
     CardItemHeaderComponent, 
     CardComponent, 
     CardSubscribeComponent, 
-    CardEventComponent, 
+    CardItemEventComponent, 
     ModalEventComponent, 
     CardItemHeaderEventComponent, 
-    CardPostComponent, 
+    CardItemPostComponent, 
     CardItemEyecatchComponent, 
-    CardArticleComponent, CardItemCommentComponent, ModalCommentComponent, FormItemCommentComponent, CardNewPostComponent,
+    CardItemArticleComponent, 
+    CardItemCommentComponent, 
+    ModalCommentComponent, 
+    FormItemCommentComponent, 
+    CardNewPostComponent,
   ],
   providers: [
     CategoryService,
@@ -74,6 +79,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     NgxStripeModule.forRoot(environment.config.stripeKey),
     RouterModule.forChild(routes),
+    QuillModule.forRoot(),
   ]
 })
 export class SocialModule { }

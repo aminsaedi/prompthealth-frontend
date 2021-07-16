@@ -8,7 +8,7 @@
       <i 
       [iconPh]="'heart' + (isLiked ? '-filled' :'')" 
       class="large"
-      [ngClass]="{'text-error': data.like}"
+      [ngClass]="{'text-error': post.like}"
       ></i>
       <span *ngIf="!isViewSm">
         <span>Like</span>
@@ -54,9 +54,11 @@
 </div>
 
 <div class="mt-10p" *ngIf="isFormCommentShown">
-    <form-item-comment
-    [controller]="formComment"
-    (onCancel)="onCancelComment()"
-    (onSubmit)="onSubmitComment()"
-    ></form-item-comment>  
+  <form-item-comment
+  [controller]="formComment"
+  [option]="{hideCancel: true}"
+  (onSubmit)="onSubmitComment()"
+  ></form-item-comment>  
+
+  <card-item-comment [post]="post"></card-item-comment>
 </div>

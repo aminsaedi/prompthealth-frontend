@@ -5,11 +5,11 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
 
 @Component({
-  selector: 'card-event',
-  templateUrl: './card-event.component.html',
-  styleUrls: ['./card-event.component.scss']
+  selector: 'card-item-event',
+  templateUrl: './card-item-event.component.html',
+  styleUrls: ['./card-item-event.component.scss']
 })
-export class CardEventComponent implements OnInit {
+export class CardItemEventComponent implements OnInit {
 
   @Input() post: SocialPost;
   @Input() shorten: boolean = true;

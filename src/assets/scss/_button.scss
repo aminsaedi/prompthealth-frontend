@@ -123,6 +123,10 @@
 .btn.btn-icon-body {
   @include btnIcon($colorGsBody);
 }
+.btn.btn-icon-white {
+  @include btnIcon(white);
+}
+
 
 .btn:disabled {
   opacity: 0.7;

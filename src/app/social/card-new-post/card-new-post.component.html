@@ -1,34 +1,70 @@
 <div class="card rounded-8p bg-white shadow body1 text-body mb-15p">
   <div class="d-flex p-20p border-bottom border-line">
     <profile-image></profile-image>
-    <div
-    class="contenteditable px-15p py-10p rounded-8p"
-    contenteditable
-    data-placeholder="What's on your mind"
-    ></div>
+    <div class="flex-grow-1">
+      <quill-editor
+      [styles]="{minHeight: '48px', border: 'none'}"
+      placeholder="What's on your mind"
+      ></quill-editor>  
+    </div>
   </div>
 
-  <div class="d-flex px-20p pt-10p justify-content-between">
-    <div class="d-flex flex-wrap">
-      <button class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p">
-        <i iconPh="image-3"></i>
-        <span class="d-none d-lg-inline">Media</span>
-      </button>
-  
-      <button class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p">
-        <i iconPh="mic"></i>
-        <span class="d-none d-lg-inline">Voice</span>
-      </button>
-  
-      <button class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p">
-        <i iconPh="calendar"></i>
-        <span class="d-none d-lg-inline">Event</span>
-      </button>
-  
-      <button class="btn btn-text-grey border-lg-line small mb-10p px-0 px-lg-10p">
-        <i iconPh="note-text"></i>
-        <span class="d-none d-lg-inline">Article</span>
+  <div *ngIf="imagePreview" class="p-20p">
+    <div class="position-relative d-inline-block overflow-hidden rounded-4p">
+      <img [src]="imagePreview" alt="" height="100" width="auto">
+      <button 
+      class="btn btn-icon-body small blur p-5p btn-remove-image"
+      (click)="onClickButtonRemoveMedia()"
+      >
+        <i iconPh="cross"></i>
       </button>  
+    </div>
+  </div>  
+
+  <div class="d-flex px-20p pt-10p justify-content-between">
+    <div class="d-lg-flex">
+      <div class="d-flex">
+        <div>
+          <button 
+          class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p"
+          (click)="onClickButtonMedia()"
+          >
+            <i iconPh="image-3"></i>
+            <span class="d-none d-lg-inline">Media</span>
+          </button>
+          <input #inputMedia
+          class="position-absolute d-none"
+          type="file" 
+          accept="image/jpeg, image/png" 
+          (change)="onSelectMedia($event)"
+          >
+        </div>     
+    
+        <button class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p">
+          <i iconPh="mic"></i>
+          <span class="d-none d-lg-inline">Voice</span>
+        </button>
+
+        <button 
+        class="btn small d-lg-none mb-10p px-0"
+        [ngClass]="{'btn-text-grey': !isMoreShown, 'btn-text': isMoreShown}"
+        (click)="onClickButtonMore()"
+        >
+          <i iconPh="more-horiz"></i>
+        </button>  
+      </div>
+
+      <div class="d-lg-flex" [ngClass]="{'d-none': !isMoreShown, 'd-flex': isMoreShown}">
+        <button class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p">
+          <i iconPh="calendar"></i>
+          <span>Event</span>
+        </button>
+      
+        <button class="btn btn-text-grey border-lg-line small mb-10p px-0 px-lg-10p">
+          <i iconPh="note-text"></i>
+          <span>Article</span>
+        </button>  
+      </div>  
     </div>
 
     <div>
