@@ -54,10 +54,9 @@
 </div>
 
 <div class="mt-10p" *ngIf="isFormCommentShown">
-  <form (ngSubmit)="onSubmitComment()">
     <form-item-comment
     [controller]="formComment"
     (onCancel)="onCancelComment()"
+    (onSubmit)="onSubmitComment()"
     ></form-item-comment>  
-  </form>
 </div>

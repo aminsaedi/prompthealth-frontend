@@ -10,6 +10,7 @@ export class FormItemCommentComponent implements OnInit {
 
   @Input() controller: FormControl;
   @Output() onCancel = new EventEmitter<void>();
+  @Output() onSubmit = new EventEmitter<void>();
 
   @ViewChild('submit') private buttonSubmit: ElementRef;
 
@@ -50,6 +51,12 @@ export class FormItemCommentComponent implements OnInit {
   onClickCancel(e: Event) {
     this.stopPropagation(e);
     this.onCancel.emit();
+  }
+
+  onClickSubmit(e: Event) {
+    this.stopPropagation(e);
+    console.log(this.controller.invalid)
+    this.onSubmit.emit();
   }
 
   stopPropagation(e: Event) {

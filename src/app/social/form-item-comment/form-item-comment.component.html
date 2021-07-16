@@ -3,7 +3,7 @@
 
   <div class="ml-10p flex-grow-1">
     <div
-    class="contenteditable bg-background px-15p py-5p"
+    class="contenteditable bg-background px-15p py-10p rounded-8p"
     contenteditable
     data-placeholder="Write your thought..."
     [formControl]="controller"
@@ -22,7 +22,7 @@
       type="submit"
       class="btn btn-text-grey small px-0"
       value="Send"
-      (click)="stopPropagation($event)"
+      (click)="onClickSubmit($event)"
       [disabled]="controller.invalid"
       >
     </div>

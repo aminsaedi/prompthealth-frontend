@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute, ActivationStart } from '@angular/router';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from '../../shared/services/shared.service';
 
 @Component({
@@ -12,16 +13,51 @@ export class LayoutComponent {
   public showFooter = false;
   public onMagazine: boolean = false;
 
+  private isInitial = true;
+  private urlPrev: string = '';
+
+
   constructor(
     private _router: Router,
+    private _headerService: HeaderStatusService,
   ) {
 
-    this._router.events.subscribe((evt) => {
-      if (evt instanceof NavigationEnd) {
+    this._router.events.subscribe((event) => {
+      if (event instanceof ActivationStart) { 
+        this.isInitial = false; 
+        this._headerService.showShadow();
+      }
+
+      if (event instanceof NavigationEnd) {
         const regexHideFooter = /(dashboard)|(page\/products)|(\/community)/;
-        this.showFooter = !evt.url.match(regexHideFooter);
+        this.showFooter = !event.url.match(regexHideFooter);
   
-        this.onMagazine = evt.url.match(/magazines|blogs/) ? true : false;  
+        this.onMagazine = event.url.match(/magazines|blogs/) ? true : false;  
+
+        if(event.url != '/' && event.url != '/auth/login') {
+          setTimeout(()=> {
+            this._headerService.showShadow();
+          }, 0);
+        }
+  
+        const pathPrev = this.urlPrev.replace(/\?.*$/, '');
+        const pathCurrent = event.url.replace(/\?.*$/, '');
+  
+        if (event.url.match(/#addon/)) {
+          const timer = this.isInitial ? 1000 : 400;
+          setTimeout(() => {
+            const el = document.querySelector('#addon');
+            window.scrollBy(0, el.getBoundingClientRect().top - 100);
+          }, timer);
+        } else if (event.url.match(/\/magazines\/(category|tag|video|podcast|event)(\/.+)?\/\d/) && !this.isInitial) {
+          const el = document.querySelector('#archive');
+          window.scrollBy(0, el.getBoundingClientRect().top - 100);
+        } else if (pathPrev != pathCurrent) {
+          window.scroll(0, 0); 
+        }
+  
+        this.urlPrev = event.url;
+
       }
     });
   }

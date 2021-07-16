@@ -68,6 +68,10 @@
 .border-white,
 .border-light { border-color: $colorGsWhite!important; }
 
+@media (min-width:$breakpointLg) {
+  .border-lg-line { border-color: $colorGsLine!important; }
+}
+
 
 /** background color */
 .bg-primary { background-color: $colorPrimary!important; }

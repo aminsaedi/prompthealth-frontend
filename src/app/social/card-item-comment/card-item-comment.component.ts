@@ -11,23 +11,45 @@ import { validators } from 'src/app/_helpers/form-settings';
 export class CardItemCommentComponent implements OnInit {
 
   @Input() post: SocialPost;
-  @Input() nested: boolean = false;
 
   public form: FormControl;
-  public formReply: FormControl;
   public targetCommentIdForReply: string;
+  public targetCommentIdsForShow: string[] = [];
 
+  isReplyOpened(commentId: string) {
+    return (this.targetCommentIdsForShow.includes(commentId));
+  }
 
   constructor() { }
 
   ngOnInit(): void {
     this.form = new FormControl('', validators.comment);
-    this.formReply = new FormControl('', validators.comment);
   }
 
   onClickReply(c: ISocialComment) {
-    this.formReply.setValue(null);
     this.targetCommentIdForReply = c._id;
+  }
+
+  onCancelReply() {
+    this.targetCommentIdForReply = null;
+    this.form.setValue(null);
+  }
+
+  onSubmitReply() {
+    console.log('reply submitted');
+  }
+
+  onClickShowReply(commentId: string) {
+    if(!this.isReplyOpened(commentId)) {
+      this.targetCommentIdsForShow.push(commentId);
+    }
+  }
+
+  onClickHideReply(commentId: string) {
+    const index = this.targetCommentIdsForShow.indexOf(commentId);
+    if(index >= 0) {
+      this.targetCommentIdsForShow.splice(index,1);
+    }
   }
 
 }

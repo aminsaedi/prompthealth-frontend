@@ -60,6 +60,7 @@ import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.co
 import { FormSubscribeComponent } from './form-subscribe/form-subscribe.component';
 import { ProfileImageComponent } from './profile-image/profile-image.component';
 import { ModalComponent } from './modal/modal.component';
+import { ContenteditableValueAccessor } from './contenteditable.directive';
 
 @NgModule({
   imports: [
@@ -129,6 +130,7 @@ import { ModalComponent } from './modal/modal.component';
     FormSubscribeComponent,
     ProfileImageComponent,
     ModalComponent,
+    ContenteditableValueAccessor,
   ],
   exports: [
     UserSidebarComponent,
@@ -178,6 +180,7 @@ import { ModalComponent } from './modal/modal.component';
     FormSubscribeComponent,
     ProfileImageComponent,
     ModalComponent,
+    ContenteditableValueAccessor,
   ]
 })
 export class SharedModule { }

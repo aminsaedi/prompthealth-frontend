@@ -11,7 +11,6 @@ import { SharedModule } from '../shared/shared.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PaginationModule, PaginationConfig } from 'ngx-bootstrap/pagination';
 import { GuardIfPostNotSavedGuard } from './guard-if-post-not-saved.guard';
-import { ContenteditableValueAccessor } from './contenteditable.directive';
 
 
 const routes: Routes = [
@@ -22,7 +21,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [ListComponent, EditorComponent, ContenteditableValueAccessor],
+  declarations: [ListComponent, EditorComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

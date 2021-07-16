@@ -17,13 +17,13 @@ import { CardArticleComponent } from './card-article/card-article.component';
 import { HomeComponent } from './home/home.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './header/header.component';
-import { SharedService } from '../shared/services/shared.service';
 import { CategoryService } from '../shared/services/category.service';
 import { NgxStripeModule, StripeService } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
 import { CardItemCommentComponent } from './card-item-comment/card-item-comment.component';
 import { ModalCommentComponent } from './modal-comment/modal-comment.component';
 import { FormItemCommentComponent } from './form-item-comment/form-item-comment.component';
+import { CardNewPostComponent } from './card-new-post/card-new-post.component';
 
 
 const routes: Routes = [
@@ -61,7 +61,7 @@ const routes: Routes = [
     CardItemHeaderEventComponent, 
     CardPostComponent, 
     CardItemEyecatchComponent, 
-    CardArticleComponent, CardItemCommentComponent, ModalCommentComponent, FormItemCommentComponent,
+    CardArticleComponent, CardItemCommentComponent, ModalCommentComponent, FormItemCommentComponent, CardNewPostComponent,
   ],
   providers: [
     CategoryService,

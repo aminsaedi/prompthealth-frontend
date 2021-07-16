@@ -207,6 +207,8 @@ class SocialComment implements ISocialComment {
   get user() { return this.data.user || null; }
   get comments() { return this._comments; }
 
+  get hasChild() { return (this._comments.length > 0); }
+
   private _comments: SocialComment[] = [];
 
   constructor(private data: ISocialComment, public level: number = 0, public replyTo: ISocialComment['user'] = null) {

@@ -31,19 +31,35 @@
 
       <div 
       *ngIf="targetCommentIdForReply == data._id"
-      class="mt-10p d-flex"
+      class="mt-10p"
       >
-        <profile-image></profile-image>
-        <div class="ml-10p flex-grow-1">
-          <form-item-input
-          [controller]="formReply"
-          placeholder="Write a reply..."
-          ></form-item-input>  
-        </div>
+        <form-item-comment
+        [controller]="form"
+        (onCancel)="onCancelReply()"
+        (onSubmit)="onSubmitReply()"
+        ></form-item-comment>
+      </div>
+
+      <div *ngIf="data.hasChild">
+        <button *ngIf="!isReplyOpened(data._id)"
+        class="btn btn-text small px-0"
+        (click)="onClickShowReply(data._id)"
+        >
+        <i iconPh="chevron-down"></i>
+        <span>Show replies</span>
+        </button>
+
+        <button *ngIf="isReplyOpened(data._id)"
+        class="btn btn-text small px-0"
+        (click)="onClickHideReply(data._id)"
+        >
+        <i iconPh="chevron-up"></i>
+        <span>Hide replies</span>
+        </button>
       </div>
     </div>
   </div>
-  <ng-container *ngIf="nested">
+  <ng-container *ngIf="isReplyOpened(data._id)">
     <ng-container *ngFor="let c of data.comments">
       <ng-content *ngTemplateOutlet="comment; context:{$implicit:c}"></ng-content>
     </ng-container>  

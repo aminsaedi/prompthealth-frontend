@@ -25,12 +25,9 @@ export class AppComponent implements OnInit {
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
     private _location: Location,
-    private _headerService: HeaderStatusService,
   ) {}
 
-  private isInitial = true;
   private disableAnalytics: boolean = environment.config.disableAnalytics;
-  private urlPrev: string = '';
 
   async ngOnInit() {
     const userStr = this._uService.localStorage.getItem('user');
@@ -80,13 +77,7 @@ export class AppComponent implements OnInit {
   }
 
   onRouteChanged(event: NavigationEnd | ActivationStart) {
-    if (event instanceof ActivationStart) { 
-      this.isInitial = false; 
-      this._headerService.showShadow();
-    }
-
     if (event instanceof NavigationEnd) {
-
       /** google analytics */
       if(!this.disableAnalytics){
         gtag('config', 'UA-192757039-1',{
@@ -96,31 +87,7 @@ export class AppComponent implements OnInit {
         if(!window.location.href.match(/keyword/)){
           fbq('track', 'PageView');  
         } 
-      }
-
-      if(event.url != '/' && event.url != '/auth/login') {
-        setTimeout(()=> {
-          this._headerService.showShadow();
-        }, 0);
-      }
-
-      const pathPrev = this.urlPrev.replace(/\?.*$/, '');
-      const pathCurrent = event.url.replace(/\?.*$/, '');
-
-      if (event.url.match(/#addon/)) {
-        const timer = this.isInitial ? 1000 : 400;
-        setTimeout(() => {
-          const el = document.querySelector('#addon');
-          window.scrollBy(0, el.getBoundingClientRect().top - 100);
-        }, timer);
-      } else if (event.url.match(/\/magazines\/(category|tag|video|podcast|event)(\/.+)?\/\d/) && !this.isInitial) {
-        const el = document.querySelector('#archive');
-        window.scrollBy(0, el.getBoundingClientRect().top - 100);
-      } else if (pathPrev != pathCurrent) { 
-        window.scroll(0, 0); 
-      }
-
-      this.urlPrev = event.url;
+      }      
     }
   }
 
