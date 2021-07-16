@@ -6,9 +6,7 @@
   </div>
 
   <div *ngIf="p" class="mb-15p">
-    <a [routerLink]="['/community', p.authorId, 'post', p._id]">
-      <card [post]="p" (click)="onClickCardPost($event, p)" [shorten]="(targetPostId != p._id)"></card>
-    </a>
+    <card [post]="p" [shorten]="(targetPostId != p._id)"></card>
   </div>
 
   <div *ngIf="p && i == 1" class="mb-15p">

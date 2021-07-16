@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SocialPost } from 'src/app/models/social-post';
 import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar.component';
 
@@ -18,6 +18,7 @@ export class CardComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private _route: ActivatedRoute,
     private _location: Location,
   ) { }
 
@@ -30,10 +31,7 @@ export class CardComponent implements OnInit {
     }
   }
 
-  onClickClose(e: Event) {
-    e.preventDefault();
-    e.stopPropagation();
-
+  onClickClose() {
     const state = this._location.getState() as any;
     if(state.navigationId == 1) {
       const [path, query] = this._location.path().split('?');
@@ -52,5 +50,17 @@ export class CardComponent implements OnInit {
     } else {
       this._location.back();
     }  
+  }
+
+  onClickContent() {
+    const query = location ? location.search : '';
+
+    this._router.navigate(
+      ['./'], {
+        queryParams: { post: this.post._id }, 
+        relativeTo: this._route, 
+        replaceUrl: !!query.match('post')
+      }
+    );
   }
 }
