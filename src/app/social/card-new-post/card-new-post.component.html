@@ -106,7 +106,7 @@ id="voice-recorder"
 
     <div class="d-flex align-items-center">
       <button 
-      *ngIf="!audioData" 
+      *ngIf="!!audioData" 
       class="btn btn-play-control"
       (click)="togglePlayingState()"
       >
@@ -120,17 +120,23 @@ id="voice-recorder"
         <div class="voice-progress done"
         [ngStyle]="{width: percentVoicePlayCurrent + '%'}"
         ></div>
-        <span class="label-voice-duration-current">{{timeVoicePlayCurrent / 1000 | duration}}</span>
-        <span class="label-voice-duration">{{3756 | duration}}</span>
-        <audio class="d-none" #voicePlayer>
-          <source [src]="audioData?.url" type="audio/wav">
-        </audio>    
+        <ng-container *ngIf="audioData">
+          <span class="label-voice-duration-current">{{timeVoicePlayCurrent / 1000 | duration}}</span>
+          <span class="label-voice-duration">{{audioData.duration | duration}}</span>
+          <audio 
+          #voicePlayer
+          class="d-none"
+          >
+            <source [src]="safeResourceUrlOf(audioData.url)" type="audio/wav">
+          </audio>      
+        </ng-container>
       </div>
       <button
+      *ngIf="audioData"
       class="btn btn-icon-error small"
       (click)="disposeVoice()"
       >
-      <i iconPh="trash" class="large"></i>
+        <i iconPh="trash" class="large"></i>
       </button>
     </div>
 

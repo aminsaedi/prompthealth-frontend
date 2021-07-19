@@ -102,29 +102,44 @@ export class CardNewPostComponent implements OnInit {
       this.playVoice();
     } else {
       this.pauseVoice();
-    }
+    }  
   }
 
   private intervalPlayVoice: any;
   playVoice() {
-    this.isVoicePlaying = true;
-    this.intervalPlayVoice = setInterval(() => {
-      this.timeVoicePlayCurrent += 100;
-      const duration = 34.256584 * 1000;
-      this.percentVoicePlayCurrent = this.timeVoicePlayCurrent / duration * 100;
-      if(this.timeVoicePlayCurrent >= duration) {
-        clearInterval(this.intervalPlayVoice);
-        this.pauseVoice();
-      }
-    }, 100);
+    const el = this.voicePlayer.nativeElement as HTMLAudioElement;
+    if(el) {
+      el.play();
+      this.isVoicePlaying = true;
+      this.intervalPlayVoice = setInterval(() => {
+        this.timeVoicePlayCurrent += 100;
+        const duration = this.audioData.duration * 1000;
+        this.percentVoicePlayCurrent = this.timeVoicePlayCurrent / duration * 100;
+        if(this.timeVoicePlayCurrent >= duration) {
+          this.timeVoicePlayCurrent = duration * 1000;
+          this.percentVoicePlayCurrent = 100;
+          clearInterval(this.intervalPlayVoice);
+          this.stopVoice();
+        }
+      }, 100);  
+    }
   }
   pauseVoice() {
-    this.isVoicePlaying = false;
-    clearInterval(this.intervalPlayVoice);
+    const el = this.voicePlayer.nativeElement as HTMLAudioElement;
+    if(el) {
+      el.pause();
+      this.isVoicePlaying = false;
+      clearInterval(this.intervalPlayVoice);
+    }
   }
 
   stopVoice() {
-    
+    const el = this.voicePlayer.nativeElement as HTMLAudioElement;
+    if(el) {
+      this.isVoicePlaying = false;
+      this.timeVoicePlayCurrent = 0;
+      this.percentVoicePlayCurrent = 0;
+    }
   }
 
   async toggleRecordingState() {
@@ -181,16 +196,18 @@ export class CardNewPostComponent implements OnInit {
   disposeVoice() {
     this.audioData = null;
     this.timeVoicePlayCurrent = 0;
+    this.percentVoicePlayCurrent = 0;
   }
 }
 
 class AudioData{
-  public url: SafeResourceUrl = null;
+  public url: string = null;
   public blob: Blob = null;
   public duration: number = null;
   public durationFormatted: string = null;
   
   constructor(blob: Blob) {
+    console.log(blob);
     this.url = URL.createObjectURL(blob);
     this.blob = blob;
     getBlobDuration(blob).then((duration) => {
