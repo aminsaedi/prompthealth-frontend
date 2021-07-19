@@ -11,6 +11,8 @@ export class ModalComponent implements OnInit {
 
   @Input() bodyStyle: any;
   @Input() id: string;
+  // @Input() bodyClass: any;
+  @Input() option: IModalOption = {};
 
   constructor(
     private _route: ActivatedRoute,
@@ -20,8 +22,11 @@ export class ModalComponent implements OnInit {
 
   public isShown: boolean = false;
   public queryParams: {[k: string]: string};
+  public _option: ModalOption;
 
   ngOnInit(): void {
+    this._option = new ModalOption(this.option);
+
     this._route.queryParams.subscribe((params: {modal: string}) => {
       this.queryParams = {...params};
       this.isShown = (params.modal && params.modal.length > 0 && params.modal == this.id) ? true : false;
@@ -44,4 +49,14 @@ export class ModalComponent implements OnInit {
     this._router.navigate(['./'], {queryParams: this.queryParams, replaceUrl: true, relativeTo: this._route});
   }
 
+}
+
+interface IModalOption {
+  expandedSm?: boolean;
+}
+
+class ModalOption implements IModalOption {
+
+  get expandedSm() { return !!(this.data.expandedSm === true); }
+  constructor(private data: IModalOption) {}
 }

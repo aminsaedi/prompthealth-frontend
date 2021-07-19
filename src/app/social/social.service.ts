@@ -150,6 +150,10 @@ export class SocialService {
     }
   }
 
+  dispose() {
+    this.postCache = new PostCache();
+  }
+
   get targetForEventModal() { return this._targetForEventModal; }
   setTargetForEventModal(data: SocialPost) { this._targetForEventModal = data; }
   disposeTargetForEventModal(){ this._targetForEventModal = null; }

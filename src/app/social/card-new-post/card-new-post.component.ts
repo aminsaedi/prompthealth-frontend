@@ -1,5 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
 
@@ -18,9 +20,12 @@ export class CardNewPostComponent implements OnInit {
 
   private form: FormGroup;
   @ViewChild('inputMedia') private inputMedia: ElementRef;
+  @ViewChild('modalVoiceRecorder') private modalVoiceRecorder: ModalComponent;
 
   constructor(
     private _sharedService: SharedService,
+    private _router: Router,
+    private _route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -33,7 +38,7 @@ export class CardNewPostComponent implements OnInit {
 
   onClickButtonMedia() {
     const el = this.inputMedia.nativeElement as HTMLInputElement;
-    if(el) {
+    if(el && !this.imagePreview) {
       el.click();
     }
   }
@@ -63,6 +68,22 @@ export class CardNewPostComponent implements OnInit {
     this.imagePreview = null;
     this.f.media.setValue('');
   }
+
+  onClickButtonVoice() {
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'voice-recorder'}});
+  }
+
+  cancelVoiceRecord() {
+    this.modalVoiceRecorder.goBack();
+  }
+
+  // onClickButtonEvent() {
+  //   this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'new-event'}})
+  // }
+
+  // onClickButtonArticle() {
+  //   this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'new-article'}});
+  // }
 
   onClickButtonMore() {
     this.isMoreShown = !this.isMoreShown;

@@ -1,5 +1,16 @@
 @import '../../../assets/scss/color';
 
+header {
+  transition-property: transform;
+  transition-duration: 400ms;
+
+  &.hide {
+    transform: translateY(-100%);
+  }  
+}
+
+
+
 .logo-lg {
   height: 20px;
   @media (min-width: 1200px) { height: 30px;}

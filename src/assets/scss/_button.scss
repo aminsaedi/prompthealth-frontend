@@ -72,6 +72,10 @@
   @include btnOutline($colorError, $colorGsWhite);
 }
 
+.btn.btn-outline-grey {
+  @include btnOutline($colorGsLabel, $colorGsWhite);
+}
+
 // .btn.btn-outline-secondary (if needed)
 
 @mixin btnText($color, $colorHover) {

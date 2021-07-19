@@ -21,13 +21,19 @@ import { CategoryService } from '../shared/services/category.service';
 import { NgxStripeModule, StripeService } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
 import { CardItemCommentComponent } from './card-item-comment/card-item-comment.component';
-import { ModalCommentComponent } from './modal-comment/modal-comment.component';
 import { FormItemCommentComponent } from './form-item-comment/form-item-comment.component';
 import { CardNewPostComponent } from './card-new-post/card-new-post.component';
 import { QuillModule } from 'ngx-quill';
+import { EditorComponent } from './editor/editor.component';
+import { BaseComponent } from './base/base.component';
+import { GuardIfEditorLockedGuard } from './guard-if-editor-locked.guard';
 
 
 const routes: Routes = [
+  { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canDeactivate: [GuardIfEditorLockedGuard] },
+  { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canDeactivate: [GuardIfEditorLockedGuard] },
+  { path: 'create', redirectTo: 'create/article' },
+
   { path: '', component: HomeComponent, children: [
 
     { path: 'feed',     component: ListComponent },
@@ -40,7 +46,6 @@ const routes: Routes = [
     { path: 'event/:topicId',    component: ListComponent },
     { path: '', redirectTo: 'feed', },
   ]},
-  
 
   { path: ':userid' },
   { path: ':userid/post/:postid', component: PageComponent },
@@ -64,9 +69,10 @@ const routes: Routes = [
     CardItemEyecatchComponent, 
     CardItemArticleComponent, 
     CardItemCommentComponent, 
-    ModalCommentComponent, 
     FormItemCommentComponent, 
-    CardNewPostComponent,
+    CardNewPostComponent, 
+    EditorComponent,
+    BaseComponent,
   ],
   providers: [
     CategoryService,

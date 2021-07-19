@@ -40,31 +40,41 @@
           >
         </div>     
     
-        <button class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p">
+        <button 
+        class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p"
+        (click)="onClickButtonVoice()"
+        >
           <i iconPh="mic"></i>
           <span class="d-none d-lg-inline">Voice</span>
         </button>
 
         <button 
-        class="btn small d-lg-none mb-10p px-0"
-        [ngClass]="{'btn-text-grey': !isMoreShown, 'btn-text': isMoreShown}"
+        class="btn small d-lg-none mb-10p"
+        [ngClass]="{'btn-text-grey': !isMoreShown, 'btn-grey': isMoreShown}"
         (click)="onClickButtonMore()"
         >
-          <i iconPh="more-horiz"></i>
+        <i iconPh="more-horiz"></i>
+        <span>More</span>
         </button>  
       </div>
 
       <div class="d-lg-flex" [ngClass]="{'d-none': !isMoreShown, 'd-flex': isMoreShown}">
-        <button class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p">
+        <a 
+        class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p"
+        routerLink="/community/create/event"
+        >
           <i iconPh="calendar"></i>
           <span>Event</span>
-        </button>
+        </a>
       
-        <button class="btn btn-text-grey border-lg-line small mb-10p px-0 px-lg-10p">
+        <a 
+        class="btn btn-text-grey border-lg-line small mb-10p px-0 px-lg-10p"
+        routerLink="/community/create/article"
+        >
           <i iconPh="note-text"></i>
           <span>Article</span>
-        </button>  
-      </div>  
+        </a>  
+      </div>
     </div>
 
     <div>
@@ -73,3 +83,37 @@
 
   </div>
 </div>
+
+<modal
+id="voice-recorder"
+#modalVoiceRecorder
+>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <!-- <button class="btn pl-0 btn-icon" (click)="cancelVoiceRecord()">
+      <i iconPh="chevron-left"></i>
+    </button>  
+
+    <button class="btn pr-0 btn-icon" (click)="hideSubscribeMenu()">
+      <i iconPh="cross"></i>
+    </button>   -->
+  </div>
+
+  <div class="content-container">
+    <div class="voice-progress-bar">
+      <div class="voice-progress"></div>
+      <div class="voice-progress done"></div>
+    </div>
+
+    <div class="mt-70p d-flex justify-content-between">
+      <div></div>
+      <button class="btn ">
+        <i iconPh="play" style="font-size: 30px;"></i>
+      </button>
+      <button class="btn btn-primary small">Done</button>
+    </div>
+
+  </div>
+
+
+
+</modal>

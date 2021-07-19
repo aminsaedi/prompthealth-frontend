@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { slideHorizontalReverseAnimation } from 'src/app/_helpers/animations';
 
 @Component({
@@ -12,7 +13,9 @@ import { slideHorizontalReverseAnimation } from 'src/app/_helpers/animations';
 })
 export class HeaderComponent implements OnInit {
 
+  public isHeaderShown: boolean = true;
   public isMenuSmShown: boolean = false; 
+
   public topics: Category[] = [];
 
   constructor(
@@ -20,6 +23,8 @@ export class HeaderComponent implements OnInit {
     private _route: ActivatedRoute,
     private _location: Location,
     private _catService: CategoryService,
+    private _headerService: HeaderStatusService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   isActiveTaxonomy(type: string) {
@@ -32,10 +37,14 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._headerService.observeHeaderStatus().subscribe(([key, val]: [string, any]) => {
+      this[key] = val;
+      this._changeDetector.detectChanges();
+    });
+
     this._route.queryParams.subscribe((param: {menu: 'show'}) => {
       this.isMenuSmShown = (param.menu == 'show') ? true : false;
     });
-
 
     this._catService.getCategoryAsync().then(cats => {
       this.topics = cats;

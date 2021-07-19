@@ -2,8 +2,10 @@
   <div class="modal-drop"
   (click)="goBack()"
   ></div>
-  <div class="modal-body"
+  <div 
+  class="modal-body"
   [ngStyle]="bodyStyle"
+  [ngClass]="{'expanded-sm': _option.expandedSm}"
   >
     <ng-content></ng-content>
   </div>

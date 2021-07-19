@@ -3,7 +3,10 @@
 </div>
 
 <div class="d-flex justify-content-between align-items-start">
-  <h2 class="h4 clamp-1line mb-0">{{post.title}}</h2>
+  <h2
+  class="h4 mb-0"
+  [ngClass]="{'clamp-1line': shorten}"
+  >{{post.title}}</h2>
   <button class="btn btn-icon-grey small py-5p">
     <i iconPh="more-horiz"></i>
   </button>
@@ -63,18 +66,4 @@
   <div class="mx-lg-25p mt-15p mt-lg-0p">
     <button class="btn btn-outline w-100" (click)="onClickCalendarMenu($event)">Add to calendar</button>
   </div>
-</div>
-
-<div class="mb-10p">
-  <div
-  *ngIf="shorten"
-  [innerHTML]="post.summary" 
-  [ngClass]="{'show-more-inline': post.isMoreShown}"
-  ></div>
-
-  <div 
-  *ngIf="!shorten"
-  class="post-content"
-  [innerHTML]="post.descriptionSanitized"
-  ></div>
 </div>

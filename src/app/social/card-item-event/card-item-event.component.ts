@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -14,9 +14,7 @@ export class CardItemEventComponent implements OnInit {
   @Input() post: SocialPost;
   @Input() shorten: boolean = true;
 
-
   public alreadySubscribed: boolean = false;
-
 
   constructor(
     private _route: ActivatedRoute,
@@ -24,6 +22,8 @@ export class CardItemEventComponent implements OnInit {
     private _uService: UniversalService,
     private _socialService: SocialService,
   ) { }
+
+
 
   ngOnInit(): void {
     this._route.queryParams.subscribe(() => {

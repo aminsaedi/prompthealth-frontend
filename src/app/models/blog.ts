@@ -99,7 +99,7 @@ export class Blog implements IBlog {
   constructor(protected data: IBlog) {
     const desc = data.description || '';
     this._summary = desc.replace(/<\/?[^>]+(>|$)/g, '').replace(/\s{2,}/, " ");
-
+    
     /** calculate readLength if it's 0 */
     if(data.readLength > 0) {
       this._readLength = data.readLength;

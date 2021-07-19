@@ -37,19 +37,7 @@
 
 </div>
 
-<h2 class="h4 clamp-1line">{{post.title}}</h2>
-
-
-<div class="mb-10p">
-  <div
-  *ngIf="shorten"
-  [innerHTML]="post.summary" 
-  [ngClass]="{'show-more-inline': post.isMoreShown}"
-  ></div>
-
-  <div 
-  *ngIf="!shorten"
-  class="post-content"
-  [innerHTML]="post.descriptionSanitized"
-  ></div>
-</div>
+<h2 
+class="h4"
+[ngClass]="{'clamp-1line': shorten}"
+>{{post.title}}</h2>

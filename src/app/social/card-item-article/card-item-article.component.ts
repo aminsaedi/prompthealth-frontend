@@ -10,6 +10,7 @@ export class CardItemArticleComponent implements OnInit {
 
   @Input() post: SocialPost;
   @Input() shorten: boolean = true;
+
   constructor() { }
 
   ngOnInit(): void {

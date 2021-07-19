@@ -1,0 +1,12 @@
+@import '../../../assets/scss/variables';
+
+.modal-view .modal-body.expanded-sm {
+  @media (max-width: $breakpointMd - 1) {
+    width: 100vw;
+    height: 100%;
+    max-height: none;
+    padding: calc(10vh + 15px) 15px;
+    background: #ffffffed;
+    backdrop-filter: blur(20px);
+  }
+}

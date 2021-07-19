@@ -6,18 +6,4 @@
     class="pb-20p"
     ></card-item-header>  
   </div>
-
-  <div class="mb-10p">
-    <div
-    *ngIf="shorten"
-    [innerHTML]="post.summary" 
-    [ngClass]="{'show-more-inline': post.isMoreShown}"
-    ></div>
-  
-    <div 
-    *ngIf="!shorten"
-    class="post-content"
-    [innerHTML]="post.descriptionSanitized"
-    ></div>
-  </div> 
 </card>
