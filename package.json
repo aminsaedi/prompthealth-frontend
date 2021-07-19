@@ -49,6 +49,7 @@
     "datebook": "^6.5.6",
     "domino": "^2.1.6",
     "express": "^4.15.2",
+    "get-blob-duration": "^1.2.0",
     "google-libphonenumber": "^3.2.7",
     "google-maps-ng2": "^1.0.10",
     "helmet": "^4.6.0",

@@ -6,6 +6,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
 import * as RecordRTC from 'recordrtc';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import getBlobDuration from 'get-blob-duration';
 
 
 @Component({
@@ -17,12 +18,14 @@ export class CardNewPostComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
+  safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustResourceUrl(url); }
+
   public isMoreShown: boolean = false;
   public imagePreview: string | ArrayBuffer;
 
   public isVoiceRecording: boolean = false;
   public recorder: any;
-  public url: SafeResourceUrl;
+  public audioData: AudioData = null;
 
   private form: FormGroup;
   @ViewChild('inputMedia') private inputMedia: ElementRef;
@@ -84,14 +87,6 @@ export class CardNewPostComponent implements OnInit {
     this.modalVoiceRecorder.goBack();
   }
 
-  // onClickButtonEvent() {
-  //   this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'new-event'}})
-  // }
-
-  // onClickButtonArticle() {
-  //   this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'new-article'}});
-  // }
-
   onClickButtonMore() {
     this.isMoreShown = !this.isMoreShown;
   }
@@ -109,6 +104,8 @@ export class CardNewPostComponent implements OnInit {
 
     if(stateNext == 'start') {
       this.recorder.record();
+      this.audioData = null;
+
       this.isVoiceRecording = true;
     } else {
       this.recorder.stop(this.processRecording.bind(this));
@@ -140,11 +137,21 @@ export class CardNewPostComponent implements OnInit {
     });
   }
 
-  processRecording(blob) {
-    this.url = this._sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(blob));
+  processRecording(blob: Blob) {
+    this.audioData = new AudioData(blob);
   }
+}
 
-
-  getUserMedia() {
+class AudioData{
+  public url: SafeResourceUrl = null;
+  public blob: Blob = null;
+  public duration: number = null;
+  
+  constructor(blob: Blob) {
+    this.url = URL.createObjectURL(blob);
+    this.blob = blob;
+    getBlobDuration(blob).then((duration) => {
+      this.duration = duration;
+    });
   }
 }

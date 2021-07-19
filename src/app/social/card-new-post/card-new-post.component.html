@@ -103,12 +103,18 @@ id="voice-recorder"
     <div class="mb-60p d-flex justify-content-center">
       <profile-image size="80" class="inline-block"></profile-image>
     </div>
-    <div 
-    class="voice-progress-bar"
-    [ngClass]="{recording: isVoiceRecording}"
-    >
-      <div class="voice-progress"></div>
-      <div class="voice-progress done"></div>
+
+    <div class="d-flex">
+      <button *ngIf="audioData">
+        
+      </button>
+      <div
+      class="voice-progress-bar flex-grow-1"
+      [ngClass]="{recording: isVoiceRecording}"
+      >
+        <div class="voice-progress"></div>
+        <div class="voice-progress done"></div>
+      </div>
     </div>
 
     <div class="mt-70p text-right position-relative">
@@ -122,8 +128,8 @@ id="voice-recorder"
       <button class="btn btn-primary small">Done</button>
     </div>
 
-    <audio *ngIf="url" controls="">
-      <source [src]="url" type="audio/wav">
+    <audio *ngIf="audioData?.url" controls="">
+      <source [src]="audioData.url" type="audio/wav">
     </audio>
 
   </div>
