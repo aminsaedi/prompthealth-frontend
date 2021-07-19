@@ -104,34 +104,47 @@ id="voice-recorder"
       <profile-image size="80" class="inline-block"></profile-image>
     </div>
 
-    <div class="d-flex">
-      <button *ngIf="audioData">
-        
+    <div class="d-flex align-items-center">
+      <button 
+      *ngIf="!audioData" 
+      class="btn btn-play-control"
+      (click)="togglePlayingState()"
+      >
+        <i [iconPh]="isVoicePlaying ? 'pause' : 'play'"></i>
       </button>
       <div
-      class="voice-progress-bar flex-grow-1"
+      class="voice-progress-bar flex-grow-1 mx-15p"
       [ngClass]="{recording: isVoiceRecording}"
       >
         <div class="voice-progress"></div>
-        <div class="voice-progress done"></div>
+        <div class="voice-progress done"
+        [ngStyle]="{width: percentVoicePlayCurrent + '%'}"
+        ></div>
+        <span class="label-voice-duration-current">{{timeVoicePlayCurrent / 1000 | duration}}</span>
+        <span class="label-voice-duration">{{3756 | duration}}</span>
+        <audio class="d-none" #voicePlayer>
+          <source [src]="audioData?.url" type="audio/wav">
+        </audio>    
       </div>
+      <button
+      class="btn btn-icon-error small"
+      (click)="disposeVoice()"
+      >
+      <i iconPh="trash" class="large"></i>
+      </button>
     </div>
 
-    <div class="mt-70p text-right position-relative">
-      <button 
+    <div class="mt-80p text-right position-relative">
+      <button
       class="btn btn-record-control" 
       (click)="toggleRecordingState()"
+      [ngClass]="{disabled: audioData}"
       >
         <i *ngIf="!isVoiceRecording" iconPh="play"></i>
         <i *ngIf="isVoiceRecording" iconPh="stop"></i>
       </button>
       <button class="btn btn-primary small">Done</button>
     </div>
-
-    <audio *ngIf="audioData?.url" controls="">
-      <source [src]="audioData.url" type="audio/wav">
-    </audio>
-
   </div>
 
 

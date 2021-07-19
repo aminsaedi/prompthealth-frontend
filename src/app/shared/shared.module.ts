@@ -61,6 +61,7 @@ import { FormSubscribeComponent } from './form-subscribe/form-subscribe.componen
 import { ProfileImageComponent } from './profile-image/profile-image.component';
 import { ModalComponent } from './modal/modal.component';
 import { ContenteditableValueAccessor } from './contenteditable.directive';
+import { DurationPipe } from './pipes/duration.pipe';
 
 @NgModule({
   imports: [
@@ -131,6 +132,7 @@ import { ContenteditableValueAccessor } from './contenteditable.directive';
     ProfileImageComponent,
     ModalComponent,
     ContenteditableValueAccessor,
+    DurationPipe,
   ],
   exports: [
     UserSidebarComponent,
@@ -181,6 +183,7 @@ import { ContenteditableValueAccessor } from './contenteditable.directive';
     ProfileImageComponent,
     ModalComponent,
     ContenteditableValueAccessor,
+    DurationPipe,
   ]
 })
 export class SharedModule { }

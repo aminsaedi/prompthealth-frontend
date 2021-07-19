@@ -24,11 +24,16 @@ export class CardNewPostComponent implements OnInit {
   public imagePreview: string | ArrayBuffer;
 
   public isVoiceRecording: boolean = false;
+  public isVoicePlaying: boolean = false;
+  public timeVoicePlayCurrent: number = 0; //unit: ms;
+  public percentVoicePlayCurrent: number = 0;
   public recorder: any;
   public audioData: AudioData = null;
 
+
   private form: FormGroup;
   @ViewChild('inputMedia') private inputMedia: ElementRef;
+  @ViewChild('voicePlayer') private voicePlayer: ElementRef;
   @ViewChild('modalVoiceRecorder') private modalVoiceRecorder: ModalComponent;
 
   constructor(
@@ -91,6 +96,37 @@ export class CardNewPostComponent implements OnInit {
     this.isMoreShown = !this.isMoreShown;
   }
 
+
+  togglePlayingState() {
+    if(!this.isVoicePlaying) {
+      this.playVoice();
+    } else {
+      this.pauseVoice();
+    }
+  }
+
+  private intervalPlayVoice: any;
+  playVoice() {
+    this.isVoicePlaying = true;
+    this.intervalPlayVoice = setInterval(() => {
+      this.timeVoicePlayCurrent += 100;
+      const duration = 34.256584 * 1000;
+      this.percentVoicePlayCurrent = this.timeVoicePlayCurrent / duration * 100;
+      if(this.timeVoicePlayCurrent >= duration) {
+        clearInterval(this.intervalPlayVoice);
+        this.pauseVoice();
+      }
+    }, 100);
+  }
+  pauseVoice() {
+    this.isVoicePlaying = false;
+    clearInterval(this.intervalPlayVoice);
+  }
+
+  stopVoice() {
+    
+  }
+
   async toggleRecordingState() {
     const stateNext = this.isVoiceRecording ? 'stop' : 'start';
     if(!this.recorder) {
@@ -139,6 +175,12 @@ export class CardNewPostComponent implements OnInit {
 
   processRecording(blob: Blob) {
     this.audioData = new AudioData(blob);
+    this.timeVoicePlayCurrent = 0;
+  }
+
+  disposeVoice() {
+    this.audioData = null;
+    this.timeVoicePlayCurrent = 0;
   }
 }
 
@@ -146,6 +188,7 @@ class AudioData{
   public url: SafeResourceUrl = null;
   public blob: Blob = null;
   public duration: number = null;
+  public durationFormatted: string = null;
   
   constructor(blob: Blob) {
     this.url = URL.createObjectURL(blob);

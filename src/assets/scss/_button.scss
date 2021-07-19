@@ -123,10 +123,14 @@
 .btn.btn-icon-grey {
   @include btnIcon($colorGsPlaceholder);
 }
-
 .btn.btn-icon-body {
   @include btnIcon($colorGsBody);
 }
+.btn.btn-icon-error {
+  @include btnIcon($colorError);
+}
+
+
 .btn.btn-icon-white {
   @include btnIcon(white);
 }
