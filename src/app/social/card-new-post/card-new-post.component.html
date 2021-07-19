@@ -122,6 +122,10 @@ id="voice-recorder"
       <button class="btn btn-primary small">Done</button>
     </div>
 
+    <audio *ngIf="url" controls="">
+      <source [src]="url" type="audio/wav">
+    </audio>
+
   </div>
 
 

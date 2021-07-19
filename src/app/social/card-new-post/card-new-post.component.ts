@@ -5,6 +5,7 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
 import * as RecordRTC from 'recordrtc';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class CardNewPostComponent implements OnInit {
 
   public isVoiceRecording: boolean = false;
   public recorder: any;
-  public url: string;
+  public url: SafeResourceUrl;
 
   private form: FormGroup;
   @ViewChild('inputMedia') private inputMedia: ElementRef;
@@ -31,6 +32,7 @@ export class CardNewPostComponent implements OnInit {
     private _sharedService: SharedService,
     private _router: Router,
     private _route: ActivatedRoute,
+    private _sanitizer: DomSanitizer,
   ) { }
 
   ngOnInit(): void {
@@ -124,7 +126,7 @@ export class CardNewPostComponent implements OnInit {
           const options = {
             mimeType: "audio/wav",
             numberOfAudioChannels: 1,
-            sampleRate: 16000,
+            sampleRate: 44100,
           };
           const StereoAudioRecorder = RecordRTC.StereoAudioRecorder;
           this.recorder = new StereoAudioRecorder(stream, options);
@@ -139,7 +141,7 @@ export class CardNewPostComponent implements OnInit {
   }
 
   processRecording(blob) {
-    this.url = URL.createObjectURL(blob);
+    this.url = this._sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(blob));
   }
 
 
