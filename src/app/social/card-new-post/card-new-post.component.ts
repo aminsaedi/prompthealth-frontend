@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
+import * as RecordRTC from 'recordrtc';
 
 
 @Component({
@@ -17,6 +18,10 @@ export class CardNewPostComponent implements OnInit {
 
   public isMoreShown: boolean = false;
   public imagePreview: string | ArrayBuffer;
+
+  public isVoiceRecording: boolean = false;
+  public recorder: any;
+  public url: string;
 
   private form: FormGroup;
   @ViewChild('inputMedia') private inputMedia: ElementRef;
@@ -89,4 +94,55 @@ export class CardNewPostComponent implements OnInit {
     this.isMoreShown = !this.isMoreShown;
   }
 
+  async toggleRecordingState() {
+    const stateNext = this.isVoiceRecording ? 'stop' : 'start';
+    if(!this.recorder) {
+      try {
+        await this.initRecorder(); 
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    }
+
+    if(stateNext == 'start') {
+      this.recorder.record();
+      this.isVoiceRecording = true;
+    } else {
+      this.recorder.stop(this.processRecording.bind(this));
+      this.isVoiceRecording = false;
+    }
+  }
+
+  initRecorder(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      navigator.mediaDevices.getUserMedia({
+        video: false,
+        audio: true
+      }).then(
+        (stream) => {
+          const options = {
+            mimeType: "audio/wav",
+            numberOfAudioChannels: 1,
+            sampleRate: 16000,
+          };
+          const StereoAudioRecorder = RecordRTC.StereoAudioRecorder;
+          this.recorder = new StereoAudioRecorder(stream, options);
+          resolve(true);
+        }, 
+        (error) => {
+          console.log('cannot init recorder');
+          reject(error);
+        }
+      );
+    });
+  }
+
+  processRecording(blob) {
+    this.url = URL.createObjectURL(blob);
+  }
+
+
+  getUserMedia() {
+  }
 }

@@ -86,6 +86,7 @@
 
 <modal
 id="voice-recorder"
+[option]="{disableCloseByClickingDrop: true}"
 #modalVoiceRecorder
 >
   <div class="title-container d-flex justify-content-between align-items-center">
@@ -99,15 +100,24 @@ id="voice-recorder"
   </div>
 
   <div class="content-container">
-    <div class="voice-progress-bar">
+    <div class="mb-60p d-flex justify-content-center">
+      <profile-image size="80" class="inline-block"></profile-image>
+    </div>
+    <div 
+    class="voice-progress-bar"
+    [ngClass]="{recording: isVoiceRecording}"
+    >
       <div class="voice-progress"></div>
       <div class="voice-progress done"></div>
     </div>
 
-    <div class="mt-70p d-flex justify-content-between">
-      <div></div>
-      <button class="btn ">
-        <i iconPh="play" style="font-size: 30px;"></i>
+    <div class="mt-70p text-right position-relative">
+      <button 
+      class="btn btn-record-control" 
+      (click)="toggleRecordingState()"
+      >
+        <i *ngIf="!isVoiceRecording" iconPh="play"></i>
+        <i *ngIf="isVoiceRecording" iconPh="stop"></i>
       </button>
       <button class="btn btn-primary small">Done</button>
     </div>

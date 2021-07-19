@@ -10,3 +10,7 @@
     backdrop-filter: blur(20px);
   }
 }
+
+.disable-user-action {
+  pointer-events: none;
+}

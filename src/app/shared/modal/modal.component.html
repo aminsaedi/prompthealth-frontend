@@ -1,5 +1,7 @@
 <div class="modal-view" *ngIf="isShown">
-  <div class="modal-drop"
+  <div 
+  class="modal-drop"
+  [ngClass]="{'disable-user-action': _option.disableCloseByClickingDrop}"
   (click)="goBack()"
   ></div>
   <div 

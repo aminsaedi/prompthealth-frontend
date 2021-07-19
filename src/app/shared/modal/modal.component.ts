@@ -53,10 +53,13 @@ export class ModalComponent implements OnInit {
 
 interface IModalOption {
   expandedSm?: boolean;
+  disableCloseByClickingDrop? : boolean;
 }
 
 class ModalOption implements IModalOption {
 
   get expandedSm() { return !!(this.data.expandedSm === true); }
+  get disableCloseByClickingDrop() { return !!(this.data.disableCloseByClickingDrop === true); }
+
   constructor(private data: IModalOption) {}
 }
