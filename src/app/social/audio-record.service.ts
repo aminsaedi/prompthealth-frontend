@@ -14,6 +14,9 @@ export class AudioRecordService {
   private _recordingDone = new Subject<RecordedAudioOutput>();
   private _recordingFailed = new Subject<string>();
   private _recordingStarted = new Subject<void>();
+  private _timerRecording = new Subject<number>();
+  private secondsMaxRecordingTime = 65;
+  private secondsRemainingRecordingTime: number = this.secondsMaxRecordingTime;
 
 
   recordingDone(): Observable<RecordedAudioOutput> {
@@ -22,6 +25,9 @@ export class AudioRecordService {
 
   recordingStarted(): Observable<void> {
     return this._recordingStarted.asObservable();
+  }
+  timerRecording(): Observable<number> {
+    return this._timerRecording.asObservable();
   }
   recordingFailed(): Observable<string> {
     return this._recordingFailed.asObservable();
@@ -42,11 +48,11 @@ export class AudioRecordService {
         let message = 'Cannot start recording. Please allow to use microphone.';
         this._recordingFailed.next(message);
       });
-
   }
 
   cancelRecording() {
     this.stopMedia();
+    this.stopTimer();
   }
 
   private record() {
@@ -58,6 +64,7 @@ export class AudioRecordService {
 
     this.recorder.record();
     this._recordingStarted.next();
+    this.startTimer();
   }
 
 
@@ -66,12 +73,35 @@ export class AudioRecordService {
       this.recorder.stop((blob) => {
         const mp3Name = encodeURIComponent('audio_' + new Date().getTime() + '.mp3');
         this.stopMedia();
+        this.stopTimer();
         this._recordingDone.next({ blob: blob, title: mp3Name });
       }, () => {
         this.stopMedia();
+        this.stopTimer();
         this._recordingFailed.next();
       });
     }
+  }
+
+  private _intervalTimer: any;
+  private startTimer() {
+    this._timerRecording.next(this.secondsRemainingRecordingTime);
+    this._intervalTimer = setInterval(() => {
+      this.secondsRemainingRecordingTime -= 1;
+      this._timerRecording.next(this.secondsRemainingRecordingTime);
+      if(this.secondsRemainingRecordingTime <= 0) {
+        this.stopRecording();
+      }
+    }, 1000);
+  }
+
+  // private pauseTimer() {
+  //   clearInterval(this._intervalTimer);
+  // }
+
+  private stopTimer() {
+    clearInterval(this._intervalTimer);
+    this.secondsRemainingRecordingTime = this.secondsMaxRecordingTime;
   }
 
   private stopMedia() {

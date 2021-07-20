@@ -1,0 +1,66 @@
+@import '../../../assets/scss/variables';
+
+.audio-player.theme-default {
+  padding: 20px;  
+
+
+}
+
+.audio-player {
+  padding: 20px 20px 40px;
+  background: $colorPrimaryDark;
+
+  .btn-play-control {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    background: $colorGsWhite;
+    i {
+      position: absolute;
+      color: $colorPrimaryDark;
+      font-size: 18px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .label-audio-duration-current {
+    position: absolute;
+    margin-top: 10px;
+    top: 100%;
+    left: 0;
+  }
+  .label-audio-duration {
+    position: absolute;
+    margin-top: 10px;
+    top: 100%;
+    right: 0;
+  }
+
+
+  .audio-progress-bar{
+    position: relative;
+    height: 30px;
+
+    [class^=bar] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('/assets/img/social/audio-progress.png');
+      background-position: left center;
+      background-size: auto 100%;
+
+      &.bar-overlay {
+        width: 0%;
+        background-image: url('/assets/img/social/audio-progress-done.png');
+        animation-duration: 1.2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+    }
+  }
+}

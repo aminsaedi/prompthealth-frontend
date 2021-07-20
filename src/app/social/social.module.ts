@@ -27,6 +27,7 @@ import { QuillModule } from 'ngx-quill';
 import { EditorComponent } from './editor/editor.component';
 import { BaseComponent } from './base/base.component';
 import { GuardIfEditorLockedGuard } from './guard-if-editor-locked.guard';
+import { AudioPlayerComponent } from './audio-player/audio-player.component';
 
 
 const routes: Routes = [
@@ -73,6 +74,7 @@ const routes: Routes = [
     CardNewPostComponent, 
     EditorComponent,
     BaseComponent,
+    AudioPlayerComponent,
   ],
   providers: [
     CategoryService,
