@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
@@ -7,6 +7,8 @@ import { validators } from 'src/app/_helpers/form-settings';
 import * as RecordRTC from 'recordrtc';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import getBlobDuration from 'get-blob-duration';
+import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -18,29 +20,32 @@ export class CardNewPostComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
-  safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustResourceUrl(url); }
+  safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
 
   public isMoreShown: boolean = false;
   public imagePreview: string | ArrayBuffer;
 
-  public isVoiceRecording: boolean = false;
-  public isVoicePlaying: boolean = false;
-  public timeVoicePlayCurrent: number = 0; //unit: ms;
-  public percentVoicePlayCurrent: number = 0;
+  public isAudioRecording: boolean = false;
+  public isAudioPlaying: boolean = false;
+  public timeAudioPlayCurrent: number = 0; //unit: ms;
+  public percentAudioPlayCurrent: number = 0;
   public recorder: any;
   public audioData: AudioData = null;
 
 
   private form: FormGroup;
   @ViewChild('inputMedia') private inputMedia: ElementRef;
-  @ViewChild('voicePlayer') private voicePlayer: ElementRef;
-  @ViewChild('modalVoiceRecorder') private modalVoiceRecorder: ModalComponent;
+  @ViewChild('audioPlayer') private audioPlayer: ElementRef;
+  @ViewChild('modalAudioRecorder') private modalAudioRecorder: ModalComponent;
 
   constructor(
     private _sharedService: SharedService,
     private _router: Router,
     private _route: ActivatedRoute,
+    private _toastr: ToastrService,
     private _sanitizer: DomSanitizer,
+    private _audioRecorder: AudioRecordService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -48,6 +53,18 @@ export class CardNewPostComponent implements OnInit {
       description: new FormControl('', validators.publishPostDescription),
       authorId: new FormControl(null, validators.savePostAuthorId),
       media: new FormControl(),
+    });
+
+    this._audioRecorder.recordingFailed().subscribe((message) => {
+      this.onAudioRecordingFaild(message);
+    });
+
+    this._audioRecorder.recordingStarted().subscribe((data) => {
+      this.onAudioRecordingStarted();
+    })
+
+    this._audioRecorder.recordingDone().subscribe((data) => {
+      this.onAudioRecordingDone(data);
     });
   }
 
@@ -84,12 +101,12 @@ export class CardNewPostComponent implements OnInit {
     this.f.media.setValue('');
   }
 
-  onClickButtonVoice() {
-    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'voice-recorder'}});
+  onClickButtonAudio() {
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'audio-recorder'}});
   }
 
-  cancelVoiceRecord() {
-    this.modalVoiceRecorder.goBack();
+  cancelAudioRecord() {
+    this.modalAudioRecorder.goBack();
   }
 
   onClickButtonMore() {
@@ -97,120 +114,108 @@ export class CardNewPostComponent implements OnInit {
   }
 
 
-  togglePlayingState() {
-    if(!this.isVoicePlaying) {
-      this.playVoice();
+  /** AUDIO RECORDER / PLAYER START */
+  toggleAudioPlayerState() {
+    if(!this.isAudioPlaying) {
+      this.playAudioPlayer();
     } else {
-      this.pauseVoice();
+      this.pauseAudioPlayer();
     }  
   }
 
-  private intervalPlayVoice: any;
-  playVoice() {
-    const el = this.voicePlayer.nativeElement as HTMLAudioElement;
+  private intervalPlayAudio: any;
+  playAudioPlayer() {
+    const el = this.audioPlayer.nativeElement as HTMLAudioElement;
     if(el) {
       el.play();
-      this.isVoicePlaying = true;
-      this.intervalPlayVoice = setInterval(() => {
-        this.timeVoicePlayCurrent += 100;
+      this.isAudioPlaying = true;
+      this.intervalPlayAudio = setInterval(() => {
+        this.timeAudioPlayCurrent += 100;
         const duration = this.audioData.duration * 1000;
-        this.percentVoicePlayCurrent = this.timeVoicePlayCurrent / duration * 100;
-        if(this.timeVoicePlayCurrent >= duration) {
-          this.timeVoicePlayCurrent = duration * 1000;
-          this.percentVoicePlayCurrent = 100;
-          clearInterval(this.intervalPlayVoice);
-          this.stopVoice();
+        this.percentAudioPlayCurrent = this.timeAudioPlayCurrent / duration * 100;
+        if(this.timeAudioPlayCurrent >= duration) {
+          this.timeAudioPlayCurrent = duration * 1000;
+          this.percentAudioPlayCurrent = 100;
+          clearInterval(this.intervalPlayAudio);
+          this.stopAudioPlayer();
         }
       }, 100);  
     }
   }
-  pauseVoice() {
-    const el = this.voicePlayer.nativeElement as HTMLAudioElement;
+  pauseAudioPlayer() {
+    const el = this.audioPlayer.nativeElement as HTMLAudioElement;
     if(el) {
       el.pause();
-      this.isVoicePlaying = false;
-      clearInterval(this.intervalPlayVoice);
+      this.isAudioPlaying = false;
+      clearInterval(this.intervalPlayAudio);
     }
   }
 
-  stopVoice() {
-    const el = this.voicePlayer.nativeElement as HTMLAudioElement;
+  stopAudioPlayer() {
+    const el = this.audioPlayer.nativeElement as HTMLAudioElement;
     if(el) {
-      this.isVoicePlaying = false;
-      this.timeVoicePlayCurrent = 0;
-      this.percentVoicePlayCurrent = 0;
+      this.isAudioPlaying = false;
+      this.timeAudioPlayCurrent = 0;
+      this.percentAudioPlayCurrent = 0;
     }
   }
 
-  async toggleRecordingState() {
-    const stateNext = this.isVoiceRecording ? 'stop' : 'start';
-    if(!this.recorder) {
-      try {
-        await this.initRecorder(); 
-      } catch (error) {
-        console.log(error);
-        return;
-      }
-    }
+  async toggleAudioRecorderState() {
+    const stateNext = this.isAudioRecording ? 'stop' : 'start';
 
     if(stateNext == 'start') {
-      this.recorder.record();
-      this.audioData = null;
-
-      this.isVoiceRecording = true;
+      this.startAudioRecording();
     } else {
-      this.recorder.stop(this.processRecording.bind(this));
-      this.isVoiceRecording = false;
+      this.stopAudioRecording();
     }
   }
 
-  initRecorder(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      navigator.mediaDevices.getUserMedia({
-        video: false,
-        audio: true
-      }).then(
-        (stream) => {
-          const options = {
-            mimeType: "audio/wav",
-            numberOfAudioChannels: 1,
-            sampleRate: 44100,
-          };
-          const StereoAudioRecorder = RecordRTC.StereoAudioRecorder;
-          this.recorder = new StereoAudioRecorder(stream, options);
-          resolve(true);
-        }, 
-        (error) => {
-          console.log('cannot init recorder');
-          reject(error);
-        }
-      );
-    });
+  startAudioRecording() {
+    this._audioRecorder.startRecording();
   }
 
-  processRecording(blob: Blob) {
-    this.audioData = new AudioData(blob);
-    this.timeVoicePlayCurrent = 0;
+  stopAudioRecording() {
+    this._audioRecorder.stopRecording();
   }
 
-  disposeVoice() {
+  onAudioRecordingFaild(message: string) {
+    console.log('audio recording failed')
+    this.isAudioRecording = false;
+    this._changeDetector.detectChanges();
+    this._toastr.error(message);
+  }
+
+  onAudioRecordingStarted() {
+    this.isAudioRecording = true;
+    this._changeDetector.detectChanges();
+  }
+
+  onAudioRecordingDone(data: RecordedAudioOutput) {
+    this.isAudioRecording = false;
+    this.audioData = new AudioData(data);
+    this._changeDetector.detectChanges();
+  }
+
+  disposeAudio() {
     this.audioData = null;
-    this.timeVoicePlayCurrent = 0;
-    this.percentVoicePlayCurrent = 0;
+    this.timeAudioPlayCurrent = 0;
+    this.percentAudioPlayCurrent = 0;
   }
+  /** VOICE RECORDER END */
 }
 
 class AudioData{
   public url: string = null;
+  public name: string = null;
   public blob: Blob = null;
   public duration: number = null;
   public durationFormatted: string = null;
   
-  constructor(blob: Blob) {
-    console.log(blob);
-    this.url = URL.createObjectURL(blob);
-    this.blob = blob;
-    getBlobDuration(blob).then((duration) => {
+  constructor(data: RecordedAudioOutput) {
+    this.url = URL.createObjectURL(data.blob);
+    this.name = data.title;
+    this.blob = data.blob;
+    getBlobDuration(data.blob).then((duration) => {
       this.duration = duration;
     });
   }

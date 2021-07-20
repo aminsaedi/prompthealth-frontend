@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from '../_helpers/form-settings';
+import * as RecordRTC from 'recordrtc';
 
 @Injectable({
   providedIn: 'root'
