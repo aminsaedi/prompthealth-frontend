@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+// import { ToastrService } from 'ngx-toastr';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { SharedService } from './shared.service';
 
@@ -11,7 +11,7 @@ export class CategoryService {
   public categoryList: Category[];
 
   constructor(
-    private toastr: ToastrService,
+    // private toastr: ToastrService,
     private _sharedService: SharedService,
   ) {
     this.getCategoryServices();
@@ -58,7 +58,7 @@ export class CategoryService {
       }
     }, (error) => {
       console.error(error);
-      this.toastr.error('There are some error please try after some time.');
+      // this.toastr.error('There are some error please try after some time.');
     });
   }
 }

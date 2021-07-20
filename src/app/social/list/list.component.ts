@@ -20,6 +20,8 @@ export class ListComponent implements OnInit {
   public selectedTopicId: string;
   public selectedTaxonomyType: SocialPostTaxonomyType;
 
+  private initDone: boolean = false;
+
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -35,12 +37,15 @@ export class ListComponent implements OnInit {
       this.selectedTopicId = param.topicId || null;
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
 
-      this.initPosts();
+      if(this.initDone) {
+        this.initPosts();
+      }
     });
 
     this._route.queryParams.subscribe((param: {post: string}) => {
       this.targetPostId = param.post || null;
       this.initPosts();
+      this.initDone = true;
     });
   }
 
