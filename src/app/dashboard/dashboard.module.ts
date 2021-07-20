@@ -89,7 +89,7 @@ import { RegisterPractitionerServiceComponent } from './register-practitioner-se
   imports: [
     AutocompleteLibModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCbRhC6h9Pp43-5t_Knyrd_ewAdLMIJtCg',
+      apiKey: 'AIzaSyDDfIO3nUUgAA_QCs2XTv2xvd8t9-0oYDs',
       language: 'en',
       libraries: ['places']
     }),
