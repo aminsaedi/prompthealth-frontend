@@ -28,6 +28,7 @@ export class CardNewPostComponent implements OnInit {
   public isAudioRecording: boolean = false;
   public isAudioPlaying: boolean = false;
   public timeAudioPlayCurrent: number = 0; //unit: ms;
+  public timeAudioRecordingRemaining: number = 0; //unit: s;
   public percentAudioPlayCurrent: number = 0;
   public recorder: any;
   public audioData: AudioData = null;
@@ -61,6 +62,10 @@ export class CardNewPostComponent implements OnInit {
 
     this._audioRecorder.recordingStarted().subscribe((data) => {
       this.onAudioRecordingStarted();
+    });
+
+    this._audioRecorder.timerRecording().subscribe((seconds) => {
+      this.onTimerAudioRecordingChanged(seconds);
     })
 
     this._audioRecorder.recordingDone().subscribe((data) => {
@@ -187,6 +192,11 @@ export class CardNewPostComponent implements OnInit {
 
   onAudioRecordingStarted() {
     this.isAudioRecording = true;
+    this._changeDetector.detectChanges();
+  }
+
+  onTimerAudioRecordingChanged(seconds: number) {
+    this.timeAudioRecordingRemaining = seconds;
     this._changeDetector.detectChanges();
   }
 

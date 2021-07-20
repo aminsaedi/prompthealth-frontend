@@ -130,6 +130,14 @@ id="audio-recorder"
             <source [src]="safeResourceUrlOf(audioData.url)" type="audio/wav">
           </audio>      
         </ng-container>
+        <ng-container *ngIf="isAudioRecording">
+          <span 
+            class="label-audio-duration subtitle2"
+            [ngClass]="(timeAudioRecordingRemaining > 60 ? 'text-label' : 'text-error')"
+          >
+            {{timeAudioRecordingRemaining | duration}}
+          </span>
+        </ng-container>
       </div>
       <button
       *ngIf="audioData"

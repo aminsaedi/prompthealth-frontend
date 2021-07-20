@@ -54,9 +54,9 @@
 
 .btn-record-control {
   position: absolute;
-  top: 50%;
+  bottom: -5px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   width: 56px;
   height: 56px;
   border-radius: 56px;
@@ -79,6 +79,7 @@
 
 .audio-progress-bar{
   position: relative;
+  margin: 6px 0;
   height: 30px;
   .audio-progress {
     position: absolute;
