@@ -24,14 +24,16 @@ export class CardNewPostComponent implements OnInit {
 
   public isMoreShown: boolean = false;
   public imagePreview: string | ArrayBuffer;
+  public audioSaved: AudioData =  null;
 
+  /** AUDIO RECORDER START */
   public isAudioRecording: boolean = false;
   public isAudioPlaying: boolean = false;
   public timeAudioPlayCurrent: number = 0; //unit: ms;
   public percentAudioPlayCurrent: number = 0;
   public recorder: any;
   public audioData: AudioData = null;
-
+  /** AUDIO RECORDER END */
 
   private form: FormGroup;
   @ViewChild('inputMedia') private inputMedia: ElementRef;
@@ -53,6 +55,7 @@ export class CardNewPostComponent implements OnInit {
       description: new FormControl('', validators.publishPostDescription),
       authorId: new FormControl(null, validators.savePostAuthorId),
       media: new FormControl(),
+      voice: new FormControl(),
     });
 
     this._audioRecorder.recordingFailed().subscribe((message) => {
@@ -70,7 +73,7 @@ export class CardNewPostComponent implements OnInit {
 
   onClickButtonMedia() {
     const el = this.inputMedia.nativeElement as HTMLInputElement;
-    if(el && !this.imagePreview) {
+    if(el) {
       el.click();
     }
   }
@@ -102,10 +105,21 @@ export class CardNewPostComponent implements OnInit {
   }
 
   onClickButtonAudio() {
+    this.audioData = this.audioSaved ? this.audioSaved.copy() : null;
     this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'audio-recorder'}});
   }
 
+  onClickButtonRemoveAudio() {
+    this.audioSaved = null;
+    this.f.audio.setValue('');
+  }
+
   cancelAudioRecord() {
+    this.modalAudioRecorder.goBack();
+  }
+  saveAudioRecord() {
+    this.f.voice.setValue(this.audioData.blob);
+    this.audioSaved = this.audioData.copy();
     this.modalAudioRecorder.goBack();
   }
 
@@ -218,5 +232,9 @@ class AudioData{
     getBlobDuration(data.blob).then((duration) => {
       this.duration = duration;
     });
+  }
+
+  copy() {
+    return new AudioData({blob: this.blob, title: this.name});
   }
 }

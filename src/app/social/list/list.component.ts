@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BlogSearchQuery, IBlogSearchQuery, IBlogSearchResult } from 'src/app/models/blog-search-query';
@@ -17,10 +17,23 @@ export class ListComponent implements OnInit {
   public posts: SocialPost[] = [];
   public targetPostId: string = null;
 
+  public countPerPage: number = 12;
   public selectedTopicId: string;
   public selectedTaxonomyType: SocialPostTaxonomyType;
 
+  public isLoading: boolean = false;
+  public isMorePosts: boolean = true;
+
   private initDone: boolean = false;
+
+  @HostListener('window:scroll', ['$event']) onWindowScroll(e: Event) {
+    if(!this.isLoading && this.isMorePosts && document.body) {
+      const startLoad = !!(document.body.scrollHeight < window.scrollY + window.innerHeight * 2);
+      if(startLoad) {
+        this.initPosts();
+      }
+    }
+  }
 
   constructor(
     private _route: ActivatedRoute,
@@ -39,14 +52,21 @@ export class ListComponent implements OnInit {
 
       if(this.initDone) {
         this.initPosts();
+
+        
       }
     });
 
     this._route.queryParams.subscribe((param: {post: string}) => {
       this.targetPostId = param.post || null;
-      this.initPosts();
-      this.initDone = true;
+    
+      if(this.initDone) {
+        this.initPosts();
+      }
     });
+
+    this.initPosts();
+    this.initDone = true;
   }
 
   initPosts() {
@@ -54,9 +74,8 @@ export class ListComponent implements OnInit {
     if(!!posts) {
       this.posts = posts;
     } else {
-      this.posts = this._socialService.createDummyArray(3);
 
-      const params: IBlogSearchQuery = {count: 24};
+      const params: IBlogSearchQuery = {count: this.countPerPage};
       if(this.selectedTopicId) { params.tags = [this.selectedTopicId] };
       if(this.selectedTaxonomyType == 'media') {
       } else if (this.selectedTaxonomyType == 'event') {
@@ -65,19 +84,39 @@ export class ListComponent implements OnInit {
 
       const query = new BlogSearchQuery(params);
       const path = `blog/get-all${query.queryParams}`;
+      this.isLoading = true;
       this._sharedService.getNoAuth(path).subscribe((res: ISocialPostResult) => {
+        this.isLoading = false;
         if (res.statusCode === 200) {
           this._socialService.saveCache(res.data.data);
           this.posts = this._socialService.postsOf(this.selectedTaxonomyType);
+          this.isMorePosts = !!(this.posts.length < res.data.total);
+
         } else {
           console.log(res.message);
           this._toastr.error(res.message);
         }
       }, error => {
         console.log(error);
+        this.isLoading = false;
+        this.isMorePosts = false;
         this._toastr.error('Something went wrong. Please try again later.');
       });
     }
+  }
+
+  fetchPosts(params: IBlogSearchQuery) {
+    const query = new BlogSearchQuery(params);
+    const path = `blog/get-all${query.queryParams}`;
+    this.isLoading = true;
+    this._sharedService.getNoAuth(path).subscribe((res: ISocialPostResult) => {
+      this.isLoading = false;
+      if(res.statusCode === 200) {
+        this._socialService.saveCache(res.data.data);
+
+      }
+    });
+
   }
 
   onClickCardPost(e: Event, p: SocialPost) {

@@ -1,10 +1,4 @@
 <ng-container *ngFor="let p of posts; let i = index">
-  <div *ngIf="!p" class="mb-15p">
-    <div class="p-20p bg-white rounded-8p">
-      <card-dummy [showImage]="false"></card-dummy>
-    </div>  
-  </div>
-
   <div *ngIf="p" class="mb-15p">
     <card [post]="p" [shorten]="(targetPostId != p._id)"></card>
   </div>
@@ -12,7 +6,18 @@
   <div *ngIf="p && i == 1" class="mb-15p">
     <card-subscribe></card-subscribe>
   </div>
-
 </ng-container>        
 
+<div class="mt-50p loader-container">
+  <div
+  *ngIf="isLoading" 
+  class="d-inline-flex loader"
+  >
+    <div class="bar-1"></div>
+    <div class="bar-2"></div>
+    <div class="bar-1"></div>
+    <div class="bar-2"></div>
+    <div class="bar-1"></div>
+  </div>
+</div>
 <modal-event></modal-event>

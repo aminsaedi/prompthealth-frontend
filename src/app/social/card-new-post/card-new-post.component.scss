@@ -17,11 +17,24 @@
   }
 }
 
-.btn-remove-image {
+.btn-remove-media {
   position: absolute;
   top: 5px;
   right: 5px;
 }
+
+.preview-file {
+  padding: 30px 40px;
+
+  i.icon-file-type {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+
 
 .btn-play-control {
   position: relative;
