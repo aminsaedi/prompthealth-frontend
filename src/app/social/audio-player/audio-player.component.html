@@ -1,0 +1,42 @@
+<div 
+class="audio-player"
+[ngStyle]="audioStyle"
+[ngClass]="audioClass"
+>
+  <div class="d-flex align-items-center">
+    <button
+      class="btn btn-play-control"
+      (click)="toggleAudioPlayerState()"
+    >
+      <i [iconPh]="isAudioPlaying ? 'pause' : 'play'"></i>
+    </button>
+
+    <div
+    class="audio-progress-bar flex-grow-1 mx-15p"
+    [ngClass]="{recording: isAudioRecording}"
+    >
+      <div class="bar"></div>
+      <div class="bar-overlay"
+      [ngStyle]="{width: percentAudioPlayCurrent + '%'}"
+      ></div>
+      <ng-container *ngIf="audioData">
+        <span class="label-audio-duration-current subtitle2 text-label">{{timeAudioPlayCurrent / 1000 | duration}}</span>
+        <span class="label-audio-duration subtitle2 text-label">{{audioData.duration | duration}}</span>
+        <audio 
+        #audioPlayer
+        class="d-none"
+        >
+          <source [src]="safeResourceUrlOf(audioData.url)" type="audio/wav">
+        </audio>      
+      </ng-container>
+      <ng-container *ngIf="isAudioRecording">
+        <span 
+          class="label-audio-duration subtitle2"
+          [ngClass]="(timeAudioRecordingRemaining > 60 ? 'text-label' : 'text-error')"
+        >
+          {{timeAudioRecordingRemaining | duration}}
+        </span>
+      </ng-container>
+    </div>
+  </div>
+</div>
