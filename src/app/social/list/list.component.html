@@ -1,10 +1,10 @@
 <ng-container *ngFor="let p of posts; let i = index">
   <div *ngIf="p" class="mb-15p">
-    <card [post]="p" [shorten]="(targetPostId != p._id)"></card>
+    <card [post]="p" [shorten]="(targetPostId != p._id)" class="pointer-events: initial;"></card>
   </div>
 
   <div *ngIf="p && i == 1" class="mb-15p">
-    <card-subscribe></card-subscribe>
+      <card-subscribe></card-subscribe>
   </div>
 </ng-container>        
 

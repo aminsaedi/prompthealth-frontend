@@ -13,7 +13,7 @@ export class SocialService {
   private postCache: PostCache;
   private _targetForEventModal: SocialPost;
 
-  private countPerPage = 24;
+  private countPerPage = 3;
 
   get categories(): any[] {
     return this.categoryCache;
@@ -22,6 +22,7 @@ export class SocialService {
   get tags(): any[] {
     return this.tagCache;
   };
+
 
   constructor(
     private _embedService: EmbedVideoService,
@@ -178,7 +179,6 @@ export class SocialService {
 
       this.postCache.dataPerTaxonomy[taxonomy].data.push(this.postCache.dataMap[idInMap]);
     }
-
     return this.postCache.dataPerTaxonomy[taxonomy].data;
   }
 

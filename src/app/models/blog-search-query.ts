@@ -17,7 +17,7 @@ export class BlogSearchQuery implements IBlogSearchQuery {
 
   get sort() { return this.data.sort || null; }
   get count() { return this.data.count || null; }
-  get page() { return this.data.page || null; }
+  get page() { return this.data.page || 1; }
   get frontend() { return this.data.frontend || '1'; }
   get search() { return this.data.search || null; }
   get categoryId() { return this.data.categoryId || null; }

@@ -17,7 +17,7 @@ export class ListComponent implements OnInit {
   public posts: SocialPost[] = [];
   public targetPostId: string = null;
 
-  public countPerPage: number = 12;
+  public countPerPage: number = 3;
   public selectedTopicId: string;
   public selectedTaxonomyType: SocialPostTaxonomyType;
 
@@ -30,7 +30,12 @@ export class ListComponent implements OnInit {
     if(!this.isLoading && this.isMorePosts && document.body) {
       const startLoad = !!(document.body.scrollHeight < window.scrollY + window.innerHeight * 2);
       if(startLoad) {
-        this.initPosts();
+        console.log('startLoad');
+        this.isLoading = true;
+        
+        const page = Math.floor(this.posts.length / this.countPerPage) + 1 
+        const params: IBlogSearchQuery = {page: page, count: this.countPerPage};
+        this.fetchPosts(params);
       }
     }
   }
@@ -52,8 +57,6 @@ export class ListComponent implements OnInit {
 
       if(this.initDone) {
         this.initPosts();
-
-        
       }
     });
 
@@ -82,26 +85,7 @@ export class ListComponent implements OnInit {
         
       }
 
-      const query = new BlogSearchQuery(params);
-      const path = `blog/get-all${query.queryParams}`;
-      this.isLoading = true;
-      this._sharedService.getNoAuth(path).subscribe((res: ISocialPostResult) => {
-        this.isLoading = false;
-        if (res.statusCode === 200) {
-          this._socialService.saveCache(res.data.data);
-          this.posts = this._socialService.postsOf(this.selectedTaxonomyType);
-          this.isMorePosts = !!(this.posts.length < res.data.total);
-
-        } else {
-          console.log(res.message);
-          this._toastr.error(res.message);
-        }
-      }, error => {
-        console.log(error);
-        this.isLoading = false;
-        this.isMorePosts = false;
-        this._toastr.error('Something went wrong. Please try again later.');
-      });
+      this.fetchPosts(params);
     }
   }
 
@@ -113,10 +97,25 @@ export class ListComponent implements OnInit {
       this.isLoading = false;
       if(res.statusCode === 200) {
         this._socialService.saveCache(res.data.data);
+        const posts = this._socialService.postsOf(this.selectedTaxonomyType, query.page);
+        if(!this.posts) {
+          this.posts = [];
+        }
+        posts.forEach(p => {
+          this.posts.push(p);
+        });
+        this.isMorePosts = !!(this.posts.length < res.data.total);
 
+      } else {
+        console.log(res.message);
+        this._toastr.error(res.message);
       }
+    }, error => {
+      console.log(error);
+      this.isLoading = false;
+      this.isMorePosts = false;
+      this._toastr.error('Something went wrong. Please try again later.');
     });
-
   }
 
   onClickCardPost(e: Event, p: SocialPost) {
