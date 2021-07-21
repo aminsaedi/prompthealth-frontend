@@ -1,13 +1,9 @@
 @import '../../../assets/scss/variables';
 
-.audio-player.theme-default {
-  padding: 20px;  
-
-
-}
 
 .audio-player {
-  padding: 20px 20px 40px;
+  padding: 20px 20px 45px;
+  border-radius: 8px;
   background: $colorPrimaryDark;
 
   .btn-play-control {
@@ -31,12 +27,14 @@
     margin-top: 10px;
     top: 100%;
     left: 0;
+    color: $colorGsWhite;
   }
   .label-audio-duration {
     position: absolute;
     margin-top: 10px;
     top: 100%;
     right: 0;
+    color: $colorGsWhite;
   }
 
 
@@ -49,14 +47,16 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
-      background-image: url('/assets/img/social/audio-progress.png');
-      background-position: left center;
-      background-size: auto 100%;
+      height: 30px;
+      opacity: 0.3;
+
+      background-color: white;
+      mask-image: url('/assets/img/social/audio-progress.svg');
+      mask-size: 110px 30px;
 
       &.bar-overlay {
         width: 0%;
-        background-image: url('/assets/img/social/audio-progress-done.png');
+        opacity: 1;
         animation-duration: 1.2s;
         animation-iteration-count: infinite;
         animation-timing-function: linear;
