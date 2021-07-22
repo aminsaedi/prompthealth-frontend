@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EmbedVideoService } from 'ngx-embed-video';
 import { IBlogCategory } from '../models/blog-category';
+import { Professional } from '../models/professional';
 import { ISocialPost, SocialPost } from '../models/social-post';
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,8 @@ export class SocialService {
   private categoryCache: IBlogCategory[];
   private tagCache: IBlogCategory[];
   private postCache: PostCache;
-  private _targetForEventModal: SocialPost;
-
-  private countPerPage = 3;
+  private _targetForEventModal: SocialPost = null;
+  private _selectedProfile: Professional = null;
 
   get categories(): any[] {
     return this.categoryCache;
@@ -22,6 +22,9 @@ export class SocialService {
   get tags(): any[] {
     return this.tagCache;
   };
+
+  get selectedProfile() { return this._selectedProfile; }
+  setProfile(p: Professional) { this._selectedProfile = p; }
 
 
   constructor(
@@ -128,27 +131,25 @@ export class SocialService {
   }
 
   postsOf(
-    taxonomy: SocialPostTaxonomyType = 'feed', 
-    page: number = 1,
-    from: number = 0, 
-    count: number = this.countPerPage, 
+    taxonomy: SocialPostTaxonomyType = 'feed',
+    offset: number = 0, 
+    count: number = 100000000, 
   ): SocialPost[] {
     if(this.postCache.dataPerTaxonomy[taxonomy] && this.postCache.dataPerTaxonomy[taxonomy].data) {
-      const posts = [];
       const data = this.postCache.dataPerTaxonomy[taxonomy].data;
+ 
+      let from = offset;
+      let to = offset + count;
+      return data.slice(from, to);
 
-      let _from = (page - 1) * count + from;
-      let _to = _from + count;
-      if(_to >= data.length) { _to = data.length; }
-
-      for(let i = _from; i < _to; i++) {
-        posts.push(data[i]);
-      }
-
-      return posts;
     } else {
       return null;
     }
+  }
+
+  profileOf(userId: string): IProfileWithPosts {
+    const profile = this.postCache.dataPerTaxonomy.users[userId];
+    return profile ? profile : null;
   }
 
   dispose() {
@@ -163,6 +164,8 @@ export class SocialService {
     if(!this.postCache.dataPerTaxonomy[taxonomy].data) {
       this.postCache.dataPerTaxonomy[taxonomy].data = [];
     }
+
+    const returnData = [];
     
     for(let d of data) {
       let idInMap = null;
@@ -177,9 +180,10 @@ export class SocialService {
         idInMap = d._id;
       }
 
-      this.postCache.dataPerTaxonomy[taxonomy].data.push(this.postCache.dataMap[idInMap]);
+      this.postCache.dataPerTaxonomy[taxonomy].data.push(this.postOf(idInMap));
+      returnData.push(this.postOf(idInMap));
     }
-    return this.postCache.dataPerTaxonomy[taxonomy].data;
+    return returnData;
   }
 
   saveCacheSingle(data: ISocialPost) {
@@ -246,6 +250,7 @@ interface IPostCache {
     article: IPostsPerTaxonomy;
     event: IPostsPerTaxonomy;
     media: IPostsPerTaxonomy;
+    users: {[k: string]: IProfileWithPosts}
   }
 }
 
@@ -256,10 +261,11 @@ class PostCache implements IPostCache {
   constructor() {
     this.dataMap = {};
     this.dataPerTaxonomy = {
-      feed:     {filter: null, data: null,},
+      feed:    {filter: null, data: null,},
       article: {filter: null, data: null,},
       event:   {filter: null, data: null,},
       media:   {filter: null, data: null,},
+      users: {},
     }
   }
 }
@@ -269,6 +275,11 @@ interface IPostsPerTaxonomy {
   filter?: {
     topic?: string;
   };
+}
+
+interface IProfileWithPosts {
+  userdata: Professional,
+  postdata: SocialPost[]
 }
 
 export type SocialPostTaxonomyType = 'feed' | 'article' | 'event' | 'media';

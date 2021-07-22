@@ -1,28 +1,26 @@
+@import '../../../assets/scss/variables';
+
 :host{ 
     white-space: nowrap; 
-    color: #EFCA2E
+    color: $colorYellow;
 }
 
 .star-container{
     display: inline-block;
     height: 1em;
-
+    
     font-size: 20px;
     &.simple{ font-size: 18px;}
     &.size-s{  font-size: 16px; }
     &.size-l{  font-size: 24px; }
 }
-
-.fa-star, .fa-dollar-sign{
+    
+.icon-star, .icon-dollar{
     font-size: 1em;
-
+    
     &.inactive{
-        color: #DCDCDC;
+        color: $colorGsPlaceholder;
     }
-}
-
-.fa-dollar-sign{
-    -webkit-text-stroke: 1px;
-}
+}    
 
 .rate{ font-size: 16px; }

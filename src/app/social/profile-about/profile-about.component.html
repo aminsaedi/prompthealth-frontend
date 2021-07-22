@@ -1,0 +1,96 @@
+<ng-container *ngIf="!profile">
+  <loader></loader>
+</ng-container>
+
+<div 
+*ngIf="profile"
+class="position-relative rounded-8p bg-white p-20p body1 text-body"
+>
+  <p class="pb-20p mb-30p border-bottom border-line">
+    {{profile.description}}
+  </p>
+
+  <div class="row">
+    <div class="col-12 col-lg-6">
+      <div class="mb-20p">
+        <h6>Fees:</h6>
+        <p>Standard Hourly Fees: $49</p>
+      </div>
+
+      <div class="mb-20p">
+        <h6>Age Group:</h6>
+        <form-item-checkbox-group
+        id="age_range"
+        label="Age range"
+        [data]="profile.age_range"
+        [disabled]="true"
+        [option]="{showInlineWhenDisabled: true}"
+        ></form-item-checkbox-group>
+      </div>
+      
+      <div class="mb-20p">
+        <h6>Organization:</h6>
+        <p>{{profile.organization}}</p>
+      </div>
+
+      <div class="mb-20p">
+        <h6>Certification:</h6>
+        <p>{{profile.certification}}</p>
+      </div>
+
+      <div class="mb-20p">
+        <h6>Language:</h6>
+        <form-item-checkbox-group
+        *ngIf="questionnaires"
+        id="languages"
+        label="Languages"
+        [data]="profile.languagesId"
+        [selectionsByQuestionnaire]="questionnaires?.language"
+        [disabled]="true"
+        ></form-item-checkbox-group>  
+      </div>
+
+      <div class="mb-20p">
+        <h6>Experience:</h6>
+        <form-item-checkbox-group
+        id="years_of_experience"
+        label="Experience"
+        [data]="profile.yearsOfExperience"
+        [disabled]="true"
+        ></form-item-checkbox-group>  
+      </div>
+
+
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="bg-background rounded-8p p-20p">
+        <h6>Contact</h6>
+
+        <div 
+        *ngIf="profile.address"
+        class="mb-25p"
+        >
+          <i iconPh="pin" class="text-placeholder large"></i>
+          <p>{{profile.address}}</p>
+        </div>
+        
+        <div 
+        *ngIf="profile.phone" 
+        class="mb-25p"
+        >
+          <i iconPh="call-calling" class="text-placeholder large"></i>
+          <p>{{profile.phone}}</p>
+        </div>
+  
+        <div *ngIf="profile.website">
+          <i iconPh="laptop" class="text-placeholder large"></i>
+          <p class="clamp-1line body1" style="word-break: break-all">
+            <a [href]="profile.website" target="_blank">{{profile.websiteLabel}}</a>
+          </p>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+</div>

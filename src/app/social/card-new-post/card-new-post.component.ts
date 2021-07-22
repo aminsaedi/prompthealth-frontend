@@ -9,6 +9,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import getBlobDuration from 'get-blob-duration';
 import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service';
 import { ToastrService } from 'ngx-toastr';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 
 
 @Component({
@@ -19,6 +21,8 @@ import { ToastrService } from 'ngx-toastr';
 export class CardNewPostComponent implements OnInit {
 
   get f() { return this.form.controls; }
+
+  get userImage() { return this._profileService.getProfileImage(); }
 
   safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
 
@@ -47,6 +51,7 @@ export class CardNewPostComponent implements OnInit {
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
     private _sanitizer: DomSanitizer,
+    private _profileService: ProfileManagementService,
     private _audioRecorder: AudioRecordService,
     private _changeDetector: ChangeDetectorRef,
   ) { }

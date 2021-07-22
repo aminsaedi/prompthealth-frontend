@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { ChildActivationStart, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { IUserDetail } from 'src/app/models/user-detail';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
@@ -12,17 +14,21 @@ import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 })
 export class HomeComponent implements OnInit {
 
-  public topics: Category[] = [];
+  get topics() { return this._catService.categoryList; }
+
+
+  public isPopState: boolean = false;
+  public onProfile: boolean = false;
   public urlPrev: {
     path: string,
     query: string,
-    full: string
+    full: string,
+    onProfile: boolean,
   };
 
   constructor(
     private _catService: CategoryService,
     private _router: Router,
-    private _uService: UniversalService,
   ) { }
 
   iconOf(topic: Category): string {
@@ -30,27 +36,59 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._catService.getCategoryAsync().then(cats => {
-      this.topics = cats;
-    });
+    this.urlPrev = this.getURLset({onProfile: true});
+    ///cannot get if onProfile or not. 
+    ///if user is on top page and go to profile page, scroll is not triggered.
+    ///no solution for this.
 
     this._router.events.subscribe(e => {
+      if(e instanceof NavigationStart) {
+        this.isPopState = !!(e.navigationTrigger ==  'popstate');
+      }
+
+      if(e instanceof ChildActivationStart) {
+        this.onProfile = !!(e.snapshot.routeConfig && e.snapshot.routeConfig.path == ':userid');
+      }
+
       if(e instanceof NavigationEnd) {
-        //TODO: scroll to appropreate position
+        const urlCurrent = this.getURLset({onProfile: this.onProfile});
+        if(this.isPopState) {
+          //do not scroll
+        } else if(urlCurrent.onProfile) {
+          if(!this.urlPrev.onProfile) {
+            this.scrollToTop();
+          } else {
+            //do not scroll
+          }
+        } else if(urlCurrent.path != this.urlPrev.path) {          
+            console.log('scroll!!')
+            this.scrollToTop();
+        }
+
+        this.urlPrev = this.getURLset({onProfile: this.onProfile});
       }
     });
-
-    this.setUrlPrev();
   }
 
-  setUrlPrev() {
+  scrollToTop() {
+    window.scroll(0,0);
+  }
+
+  getURLset(data: {onProfile: boolean}) {
+    const urlset = {
+      path: null,
+      query: null,
+      full: null,
+      onProfile: data.onProfile,
+    };
+
     if(location) {
-      this.urlPrev = {
-        path: location.pathname,
-        query: location.search,
-        full: location.pathname + location.search
-      }
-    }   
+      urlset.path = location.pathname,
+      urlset.query = location.search,
+      urlset.full = location.pathname + location.search
+    }  
+
+    return urlset;
   }
 
 }

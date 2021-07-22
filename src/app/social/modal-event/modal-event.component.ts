@@ -16,7 +16,7 @@ export class ModalEventComponent implements OnInit {
 
   public isCalendarMenuShown: boolean = false;
   public isSubscribeMenuShown: boolean = false;
-  public post: SocialPost;
+  public post: SocialPost = null;
 
   public isLoading: boolean = false;
   public isRedirecting: boolean = false;

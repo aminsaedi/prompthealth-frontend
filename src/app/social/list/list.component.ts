@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -5,16 +6,18 @@ import { BlogSearchQuery, IBlogSearchQuery, IBlogSearchResult } from 'src/app/mo
 import { SocialPost } from 'src/app/models/social-post';
 import { ISocialPostResult } from 'src/app/models/social-post-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { slideVerticalAnimation } from 'src/app/_helpers/animations';
 import { SocialPostTaxonomyType, SocialService } from '../social.service';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
+  animations: [slideVerticalAnimation],
 })
 export class ListComponent implements OnInit {
 
-  public posts: SocialPost[] = [];
+  public posts: SocialPost[] = null;
   public targetPostId: string = null;
 
   public countPerPage: number = 3;
@@ -26,7 +29,7 @@ export class ListComponent implements OnInit {
 
   private initDone: boolean = false;
 
-  @HostListener('window:scroll', ['$event']) onWindowScroll(e: Event) {
+  @HostListener('window:scroll', ['$event']) async onWindowScroll(e: Event) {
     if(!this.isLoading && this.isMorePosts && document.body) {
       const startLoad = !!(document.body.scrollHeight < window.scrollY + window.innerHeight * 2);
       if(startLoad) {
@@ -35,7 +38,10 @@ export class ListComponent implements OnInit {
         
         const page = Math.floor(this.posts.length / this.countPerPage) + 1 
         const params: IBlogSearchQuery = {page: page, count: this.countPerPage};
-        this.fetchPosts(params);
+        const postsFetched = await this.fetchPosts(params);
+        postsFetched.forEach(p => {
+          this.posts.push(p);
+        });
       }
     }
   }
@@ -43,6 +49,7 @@ export class ListComponent implements OnInit {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _location: Location,
     private _socialService: SocialService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
@@ -51,6 +58,13 @@ export class ListComponent implements OnInit {
 
 
   ngOnInit(): void {
+    const match = this._location.path().match(/community\/(feed|article|media|event)/);
+    if(match) {
+      this.selectedTaxonomyType = match[1] as SocialPostTaxonomyType;
+    } else {
+      this.selectedTaxonomyType = 'feed';
+    }
+
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTopicId = param.topicId || null;
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
@@ -72,7 +86,7 @@ export class ListComponent implements OnInit {
     this.initDone = true;
   }
 
-  initPosts() {
+  async initPosts() {
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
     if(!!posts) {
       this.posts = posts;
@@ -85,36 +99,36 @@ export class ListComponent implements OnInit {
         
       }
 
-      this.fetchPosts(params);
+      try {
+        this.posts = await this.fetchPosts(params); 
+      } catch (error) {
+        this.posts = [];
+      }
     }
   }
 
-  fetchPosts(params: IBlogSearchQuery) {
-    const query = new BlogSearchQuery(params);
-    const path = `blog/get-all${query.queryParams}`;
-    this.isLoading = true;
-    this._sharedService.getNoAuth(path).subscribe((res: ISocialPostResult) => {
-      this.isLoading = false;
-      if(res.statusCode === 200) {
-        this._socialService.saveCache(res.data.data);
-        const posts = this._socialService.postsOf(this.selectedTaxonomyType, query.page);
-        if(!this.posts) {
-          this.posts = [];
+  fetchPosts(params: IBlogSearchQuery): Promise<SocialPost[]> {
+    return new Promise((resolve, reject) => {
+      const query = new BlogSearchQuery(params);
+      const path = `blog/get-all${query.queryParams}`;
+      this.isLoading = true;
+      this._sharedService.getNoAuth(path).subscribe((res: ISocialPostResult) => {
+        this.isLoading = false;
+        if(res.statusCode === 200) {
+          const posts = this._socialService.saveCache(res.data.data);
+          const count = posts.length + (this.posts ? this.posts.length : 0);
+          this.isMorePosts = (count >= res.data.total) ? false : true;
+          resolve(posts);
+        } else {
+          this.isMorePosts = false;
+          reject(res.message)
         }
-        posts.forEach(p => {
-          this.posts.push(p);
-        });
-        this.isMorePosts = !!(this.posts.length < res.data.total);
-
-      } else {
-        console.log(res.message);
-        this._toastr.error(res.message);
-      }
-    }, error => {
-      console.log(error);
-      this.isLoading = false;
-      this.isMorePosts = false;
-      this._toastr.error('Something went wrong. Please try again later.');
+      }, error => {
+        this.isLoading = false;
+        this.isMorePosts = false;
+        console.log(error);
+        reject('Something went wrong. Please try again later');
+      });
     });
   }
 

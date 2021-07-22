@@ -24,7 +24,10 @@ export class FormItemCheckboxGroupComponent implements OnInit {
 
   @Input() responsive = false; /** this is used for selectbox */
 
+  @Input() option: IOptionCheckboxGroup = {};
+
   public selectionList: CheckboxSelectionItem[];
+  public _option: OptionCheckboxGroup;
 
   /** for selectbox */
   public isSelectionsVisible: boolean = false;
@@ -37,6 +40,8 @@ export class FormItemCheckboxGroupComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this._option = new OptionCheckboxGroup(this.option);
+
     if(this.selectionsByQuestionnaire) {
       this.selections = [];
       this.selectionsByQuestionnaire.answers.forEach(a => {
@@ -179,4 +184,20 @@ export interface CheckboxSelectionItem {
   value: string;
   minmax?: number[];
   disabled?: boolean;
+}
+
+interface IOptionCheckboxGroup {
+  showInlineWhenDisabled?: boolean;
+  showInlineSubWhenDisabled?: boolean;
+  showBlockWithZeroMarginWhenDisabled?: boolean;
+  inlineSeparator?: string;
+}
+
+class OptionCheckboxGroup implements IOptionCheckboxGroup {
+  get showInlineWhenDisabled() { return this.data.showInlineWhenDisabled === true ? true : false; }
+  get showInlineSubWhenDisabled() { return this.data.showInlineSubWhenDisabled === true ? true : false; }
+  get showBlockWithZeroMarginWhenDisabled() {return this.data.showBlockWithZeroMarginWhenDisabled === true ? true : false; }
+  get inlineSeparator() { return this.data.inlineSeparator || ', '; }
+
+  constructor(private data: IOptionCheckboxGroup = {}) {}
 }

@@ -1,4 +1,4 @@
-import { trigger, transition, animate, style, query } from '@angular/animations';
+import { trigger, transition, animate, style, query, animateChild, group } from '@angular/animations';
 import { translate } from '@angular/localize/src/utils';
 
 export const fadeAnimation = trigger('fade', [
@@ -65,4 +65,56 @@ export const slideHorizontalReverseAnimation = trigger('slideHorizontalReverse',
   transition(':leave', [
     animate('300ms ease', style({opacity: 0, transform: 'translateX(-50px)'})),
   ]),
-])
+]);
+
+export const slideInSocialProfileChildRouteAnimation = trigger('socialProfileChildRouteAnimation', [
+  /** slide to left */
+  transition('1=>2, 1=>3, 1=>4, 1=>5, 1=>6, 2=>3, 2=>4, 2=>5, 2=>6, 3=>4, 3=>5, 3=>6, 4=>5, 4=>6, 5=>6', [
+    style({position: 'relative', height: '100vh', overflow: 'hidden'}),
+    query(':enter, :leave', [
+      style({
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%'
+      })
+    ]),
+    query(':enter', [
+      style({left: '100%'}),
+    ]),
+    query(':leave', animateChild()),
+    group([
+      query(':leave', [
+        animate('300ms ease-out', style({left: '-100%'})),
+      ]),
+      query(':enter', [
+        animate('300ms ease-out', style({left: 0})),
+      ]),
+    ]),
+    query(':enter', animateChild()),
+  ]),
+  transition('6=>5, 6=>4, 6=>3, 6=>2, 6=>1, 5=>4, 5=>3, 5=>2, 5=>1, 4=>3, 4=>2, 4=>1, 3=>2, 3=>1, 2=>1', [
+    style({position: 'relative', height: '100vh', overflow: 'hidden'}),
+    query(':enter, :leave', [
+      style({
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%'
+      })
+    ]),
+    query(':enter', [
+      style({left: '-100%'}),
+    ]),
+    query(':leave', animateChild()),
+    group([
+      query(':leave', [
+        animate('300ms ease-out', style({left: '100%'})),
+      ]),
+      query(':enter', [
+        animate('300ms ease-out', style({left: 0})),
+      ]),
+    ]),
+    query(':enter', animateChild()),
+  ]),
+]);

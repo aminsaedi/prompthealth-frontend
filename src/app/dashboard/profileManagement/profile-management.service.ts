@@ -3,14 +3,44 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 // import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from '../../models/user-detail';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileManagementService {
 
-  private profileDetail: IUserDetail;
+  private profileDetail: IUserDetail = null;
+  private AWS_S3 = environment.config.AWS_S3;
 
+  getProfile() { return this.profileDetail; }
+
+  getProfileImage(returnDefaultImageIfEmpty: boolean = false) {
+    if (this.profileDetail && this.profileDetail.profileImage) {
+      return this.AWS_S3 + this.profileDetail.profileImage;
+    } else if (returnDefaultImageIfEmpty){
+      return '/assets/img/no-image.jpg';
+    } else {
+      return null;
+    }
+  }
+
+  getFullName(returnDefaultNameIfEmpty: boolean = true) {
+    if(this.profileDetail && (this.profileDetail.firstName || this.profileDetail.lastName)) {
+      const nameArray = [];
+      if(this.profileDetail.firstName && this.profileDetail.firstName.length > 0) {
+        nameArray.push(this.profileDetail.firstName);
+      }
+      if(this.profileDetail.lastName && this.profileDetail.lastName.length > 0) {
+        nameArray.push(this.profileDetail.lastName);
+      }
+      return nameArray.join(' ');
+    } else if(returnDefaultNameIfEmpty) {
+      return 'No Name';
+    } else {
+      return null;
+    }
+  }
 
   constructor( 
     private http: HttpClient,

@@ -38,8 +38,16 @@ style="z-index: 100;"
             <div class="ml-xl-5p d-none d-xl-block">
               <ng-container *ngTemplateOutlet="notification"></ng-container>
             </div>
-            <div class="ml-xl-15p d-none d-xl-block">
-              <profile-image size="40"></profile-image>
+            <div class="ml-xl-15p d-none d-xl-block" (clickOutside)="hideUserMenu()">
+              <profile-image 
+              size="40" 
+              [image]="userImage"
+              (click)="showUserMenu()"
+              ></profile-image>
+              <div class="position-absolute p-20p bg-white rounded-8p" *ngIf="isUserMenuShown">
+                <a [routerLink]="['/community', user._id]">See my profile</a>
+                <a routerLink="/dashboard/profilemanagement">Dashboard</a>
+              </div>
             </div>
             <button class="btn btn-icon-grey small d-none d-xl-inline-block ml-xl-15p pr-0">
               <i iconPh="more-horiz" class="large"></i>
@@ -70,8 +78,8 @@ style="z-index: 100;"
   <div class="menu-body">
     <div class="container d-flex justify-content-between align-items-center py-20p border-bottom">
       <div class="d-flex align-items-center">
-        <profile-image size="40"></profile-image>
-        <div class="subtitle2 ml-10p">Hannah Matthews</div>
+        <profile-image size="40" [image]="userImage"></profile-image>
+        <div class="subtitle2 ml-10p">{{userName}}</div>
       </div>
       <ng-container *ngTemplateOutlet="notification"></ng-container>
     </div>

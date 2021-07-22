@@ -22,6 +22,13 @@
     }
   }
 
+  .btn-replay {
+    background: rgba($colorGsBlack, 0.8);
+    i {
+      color: $colorGsWhite;
+    }
+  }
+
   .label-audio-duration-current {
     position: absolute;
     margin-top: 10px;

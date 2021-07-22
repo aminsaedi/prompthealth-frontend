@@ -79,6 +79,10 @@ export class AudioPlayerComponent implements OnInit {
     }
   }
 
+  onClickReplay() {
+    this.player.currentTime = 0;
+  }
+
   onPlayerReady() {
     this.isPlayerReady = true;
   }

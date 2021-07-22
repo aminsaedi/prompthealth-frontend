@@ -1,23 +1,22 @@
+<card-new-post></card-new-post>
+
 <ng-container *ngFor="let p of posts; let i = index">
-  <div *ngIf="p" class="mb-15p">
+  <div class="mb-15p" [@slideVertical]>
     <card [post]="p" [shorten]="(targetPostId != p._id)" class="pointer-events: initial;"></card>
   </div>
 
   <div *ngIf="p && i == 1" class="mb-15p">
       <card-subscribe></card-subscribe>
   </div>
-</ng-container>        
+</ng-container>
 
-<div class="mt-50p loader-container">
-  <div
-  *ngIf="isLoading" 
-  class="d-inline-flex loader"
-  >
-    <div class="bar-1"></div>
-    <div class="bar-2"></div>
-    <div class="bar-1"></div>
-    <div class="bar-2"></div>
-    <div class="bar-1"></div>
+<ng-container *ngIf="posts && posts.length == 0">
+  <div class="mb-15p subtitle1 text-body">
+    No contents found...<br>
+    Please try again later.
   </div>
-</div>
-<modal-event></modal-event>
+</ng-container>
+
+<ng-container *ngIf="isLoading">
+  <loader></loader>
+</ng-container>

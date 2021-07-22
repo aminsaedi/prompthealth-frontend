@@ -3,7 +3,7 @@
       <div class="row align-items-stretch">
         <!-- left -->
         <section class="col-3 d-none d-xl-block">
-          <div class="mb-20p" *ngIf="topics.length > 0" [@expandVertical]>
+          <div class="mb-20p" *ngIf="topics" [@expandVertical]>
             <div class="bg-white rounded-8p px-20p">
               <list-item
               *ngFor="let topic of topics; let i = index"
@@ -85,8 +85,6 @@
   
         <!-- main center -->
         <section class="col-12 col-md-7 col-xl-6">
-          <card-new-post></card-new-post>
-          <audio-player></audio-player>
           <router-outlet></router-outlet>        
         </section>
         

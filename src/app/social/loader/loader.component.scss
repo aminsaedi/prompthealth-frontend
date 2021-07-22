@@ -1,0 +1,38 @@
+@import '../../../assets/scss/variables';
+
+.loader-container {
+  position: relative;
+  height: 200px;
+
+  .loader {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    >div {
+      width: 3px;
+      height: 10px;
+      background: $colorGsPlaceholder;
+      margin: 0 2px;
+      animation-name: loader-bar;
+      // animation-timing-function:cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation-duration: 400ms;
+    }
+  
+    .bar-1 {
+      animation-direction: alternate;
+    }
+  
+    .bar-2 {
+      animation-direction: alternate-reverse;
+    }
+  }  
+}
+
+@keyframes loader-bar {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(2); }
+}

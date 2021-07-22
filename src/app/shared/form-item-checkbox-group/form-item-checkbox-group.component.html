@@ -1,8 +1,12 @@
-<ul class="checkbox-group" *ngIf="type != 'selectbox'">
+<ul 
+*ngIf="type != 'selectbox'"
+class="checkbox-group" 
+[ngClass]="{inline: _option.showInlineWhenDisabled}"
+>
   <ng-container *ngFor="let item of selectionList; let i = index">
     <ng-container *ngIf="disabled">
-      <li *ngIf="type == 'checkbox' && data?.includes(item.value)">{{item.label}}</li>
-      <li *ngIf="type == 'radio' && item.value == controller.value">{{item.label}}</li>  
+      <li *ngIf="type == 'checkbox' && data?.includes(item.value)" [attr.data-separator]="_option.inlineSeparator">{{item.label}}</li>
+      <li *ngIf="type == 'radio' && item.value == controller.value" [attr.data-separator]="_option.inlineSeparator">{{item.label}}</li>  
     </ng-container>
     <ng-container *ngIf="!disabled">
       <li *ngIf="type == 'checkbox'">

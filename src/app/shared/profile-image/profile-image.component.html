@@ -1,6 +1,6 @@
 <div 
 class="profile-image-container" 
-[ngStyle]="{width: size + 'px'}"
+[ngStyle]="{width: size + 'px', borderRadius: radius + 'px'}"
 >
   <img *ngIf="image" [src]="image">
   <i *ngIf="!image" 

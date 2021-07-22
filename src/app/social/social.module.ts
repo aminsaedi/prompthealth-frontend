@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListComponent } from './list/list.component';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, Route } from '@angular/router';
 import { PageComponent } from './page/page.component';
 import { CardItemToolbarComponent } from './card-item-toolbar/card-item-toolbar.component';
 import { CardItemHeaderComponent } from './card-item-header/card-item-header.component';
@@ -28,6 +28,11 @@ import { EditorComponent } from './editor/editor.component';
 import { BaseComponent } from './base/base.component';
 import { GuardIfEditorLockedGuard } from './guard-if-editor-locked.guard';
 import { AudioPlayerComponent } from './audio-player/audio-player.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ProfileAboutComponent } from './profile-about/profile-about.component';
+import { LoaderComponent } from './loader/loader.component';
+import { ProfileReviewComponent } from './profile-review/profile-review.component';
+import { ProfileServiceComponent } from './profile-service/profile-service.component';
 
 
 const routes: Routes = [
@@ -45,13 +50,22 @@ const routes: Routes = [
     { path: 'article/:topicId',  component: ListComponent },
     { path: 'media/:topicId',    component: ListComponent },
     { path: 'event/:topicId',    component: ListComponent },
-    { path: '', redirectTo: 'feed', },
+
+    { path: ':userid', component: ProfileComponent, children: [
+      { path: '', component: ProfileAboutComponent, data: {order:1} } ,
+      { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
+      { path: 'review', component: ProfileReviewComponent, data: {order:3} },
+    ] },
+
+    { path: ':userid/post', pathMatch: 'full', redirectTo: ':userid/home' },
+    { path: ':userid', pathMatch: 'full', redirectTo: ':userid/home' },
+
+    { path: '', pathMatch: 'full', redirectTo: 'feed', },
   ]},
 
-  { path: ':userid' },
   { path: ':userid/post/:postid', component: PageComponent },
-  { path: ':userid/post', redirectTo: ':userid' },
 ];
+
 
 @NgModule({
   declarations: [
@@ -75,6 +89,11 @@ const routes: Routes = [
     EditorComponent,
     BaseComponent,
     AudioPlayerComponent,
+    ProfileComponent,
+    ProfileAboutComponent,
+    LoaderComponent,
+    ProfileReviewComponent,
+    ProfileServiceComponent,
   ],
   providers: [
     CategoryService,

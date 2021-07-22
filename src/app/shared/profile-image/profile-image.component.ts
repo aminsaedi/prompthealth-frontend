@@ -10,6 +10,7 @@ export class ProfileImageComponent implements OnInit {
 
   @Input() image: string;
   @Input() size: number = 40; // unit: px
+  @Input() radius: number = 8; //unit: px
   @Input() option: IProfileImageOption = {}
 
   public _option: ProfileImageOption;

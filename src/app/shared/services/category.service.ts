@@ -24,7 +24,6 @@ export class CategoryService {
   private subscriptionCat: Subscription;
 
 
-
   iconOf(cat: Category): string {
     const img = cat.image;
     const img2 = img.toLowerCase().replace(/_/g, '-').replace('.png', '');
@@ -34,8 +33,9 @@ export class CategoryService {
   getCategoryAsync(): Promise<Category[]>{
     return new Promise((resolve, reject) => {
       if(!this.categoryList){
+        console.log('getCategoryAsync')
         this.subscriptionCat = this.observeCategoryService().subscribe(() => {
-          this.subscriptionCat.unsubscribe();
+          // this.subscriptionCat.unsubscribe();
           resolve(this.categoryList)
         });
       }else{ 

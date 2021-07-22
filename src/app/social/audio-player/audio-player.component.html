@@ -26,6 +26,14 @@ class="audio-player"
         </span>   
       </ng-container>
     </div>
+
+    <button
+    *ngIf="currentTime > 0"
+    class="btn btn-play-control btn-replay"
+    (click)="onClickReplay()"
+    >
+      <i iconPh="replay"></i>
+    </button>
   </div>
 </div>
 

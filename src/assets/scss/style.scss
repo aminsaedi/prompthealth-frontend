@@ -670,3 +670,30 @@ textarea.form-control {
   color: $colorGsPlaceholder;
   content: attr(data-placeholder);
 }
+
+[class^=image-container-] {
+  position: relative;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  &::after {
+    content: '';
+    display: block;
+    position: relative;
+  }
+}
+.image-container-30pc::after {
+  padding-top: 30%;
+}
+.image-container-33pc::after {
+  padding-top: 33%;
+}
+.image-container-35pc::after {
+  padding-top: 35%;
+}

@@ -3,19 +3,31 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
 [ngClass]="{'shadow': !shorten}"
 >
 
-  <div *ngIf="!shorten" class="btn-close-container">
+  <!-- <div *ngIf="!shorten" class="btn-close-container">
     <button 
     class="btn btn-icon- rounded-circle blur"
     (click)="onClickClose()"
     >
       <i iconPh="cross"></i>
     </button>
-  </div>
+  </div> -->
 
-  <div 
-  [ngStyle]="{marginTop: (shorten ? '0' : '-50px')}"
-  (click)="onClickContent()"
-  >
+  <ng-container *ngIf="isContentGradientShown">
+    <a [routerLink]="['/community', post.authorId, 'post', post._id]" class="text-body">
+      <ng-container *ngTemplateOutlet="clickableArea"></ng-container>
+    </a>
+  </ng-container>
+  <ng-container *ngIf="!isContentGradientShown">
+    <ng-container *ngTemplateOutlet="clickableArea"></ng-container>
+  </ng-container>
+
+  <div class="py-10p border-top border-line">
+    <card-item-toolbar #toolbar [post]="post"></card-item-toolbar>
+  </div>    
+</div>
+
+<ng-template #clickableArea>
+  <div>
     <card-item-post *ngIf="post.isPost" [post]="post" [shorten]="shorten"></card-item-post>
     <card-item-event *ngIf="post.isEvent" [post]="post" [shorten]="shorten"></card-item-event>
     <card-item-article *ngIf="post.isArticle" [post]="post" [shorten]="shorten"></card-item-article>
@@ -28,8 +40,4 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
       ></div>
     </div>
   </div>
-
-  <div class="py-10p border-top border-line">
-    <card-item-toolbar #toolbar [post]="post"></card-item-toolbar>
-  </div>    
-</div>
+</ng-template>

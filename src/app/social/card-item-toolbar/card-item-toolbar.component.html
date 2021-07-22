@@ -53,12 +53,14 @@
   </div>
 </div>
 
-<div class="mt-10p" *ngIf="isFormCommentShown">
-  <form-item-comment
-  [controller]="formComment"
-  [option]="{hideCancel: true}"
-  (onSubmit)="onSubmitComment()"
-  ></form-item-comment>  
+<div *ngIf="isFormCommentShown" [@expandVertical]>
+  <div class="pt-10p">
+    <form-item-comment
+    [controller]="formComment"
+    [option]="{hideCancel: true}"
+    (onSubmit)="onSubmitComment()"
+    ></form-item-comment>    
+  </div>
 
   <card-item-comment [post]="post"></card-item-comment>
 </div>

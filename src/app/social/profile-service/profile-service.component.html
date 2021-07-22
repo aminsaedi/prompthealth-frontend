@@ -1,0 +1,38 @@
+<ng-container *ngIf="!profile">
+  <loader></loader>
+</ng-container>
+
+<div 
+*ngIf="profile"
+class="position-relative rounded-8p bg-white p-20p body1 text-body"
+>
+  <div class="mb-30p">
+    <h6>Type of Provider:</h6>
+    <form-item-checkbox-group
+    *ngIf="questionnaires"
+    id="type_of_provider"
+    label="Type of provider"
+    [data]="profile.allServiceId"
+    [selectionsByQuestionnaire]="questionnaires.typeOfProvider"
+    [disabled]="true"
+    [option]="{showInlineWhenDisabled: true, inlineSeparator: ' / '}"
+    ></form-item-checkbox-group>
+  </div>
+
+  <div class="mb-30p">
+    <h6>Treatment Modalities:</h6>
+    <form-item-checkbox-group
+    *ngIf="questionnaires"
+    id="type_of_provider"
+    label="Type of provider"
+    [data]="profile.allServiceId"
+    [selectionsByQuestionnaire]="questionnaires.treatmentModality"
+    [disabled]="true"
+    [option]="{showInlineWhenDisabled: true, inlineSeparator: ' / '}"
+    ></form-item-checkbox-group>
+  </div>
+
+  <div class="mb-20p">
+
+  </div>
+</div>

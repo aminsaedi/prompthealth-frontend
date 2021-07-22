@@ -1,11 +1,13 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
   selector: 'card-item-toolbar',
   templateUrl: './card-item-toolbar.component.html',
-  styleUrls: ['./card-item-toolbar.component.scss']
+  styleUrls: ['./card-item-toolbar.component.scss'],
+  animations: [expandVerticalAnimation],
 })
 export class CardItemToolbarComponent implements OnInit {
 

@@ -1,0 +1,149 @@
+<div class="position-relative rounded-8p bg-white body1 text-body">
+  <div class="position-relative">
+    <div class="image-container-33pc">
+      <img src="" alt="">
+    </div>
+  </div>
+
+  <div class="px-10p px-lg-30p pt-15p">
+    <div class="d-none d-lg-flex mb-30p">
+      <div style="margin-top: -45px;">
+        <profile-image 
+        [size]="90"
+        [radius]="25"
+        [image]="profile?.image"
+        ></profile-image>
+      </div>
+  
+      <div class="flex-grow-1 ml-20p">
+        <h5>
+          {{profile?.name}}
+          <i 
+          *ngIf="profile?.isVerified"
+          iconPh="verified" 
+          class="text-primary"
+          ></i>
+        </h5>
+        <div class="subtitle2 text-label">{{profile?.title}}</div>
+      </div>
+  
+      <div class="text-right">
+        <h5 class="text-primary-dark">$49/hr</h5>
+        <star-rate 
+        [rate]="4"
+        margin="small"
+        [showActiveOnly]="false"
+        ></star-rate>
+      </div>
+    </div>
+
+    <div class="d-lg-none">
+      <div class="d-flex">
+        <div style="margin-top: -35px;">
+          <profile-image
+          [size]="70"
+          [radius]="15"
+          [image]="profile?.image"
+          ></profile-image>  
+        </div>
+        <div class="flex-grow-1 ml-15p">
+          <h6>
+            {{profile?.name}}
+            <i 
+            *ngIf="profile?.isVerified"
+            iconPh="verified" 
+            class="text-primary"
+            ></i>
+          </h6>
+        </div>
+      </div>
+
+      <div class="d-flex mt-20p mb-5p">
+        <star-rate 
+        [rate]="4"
+        margin="small"
+        [showActiveOnly]="false"
+        ></star-rate>
+        <h5 class="text-primary-dark ml-15p mb-0">$49/hr</h5>
+      </div>
+      <h6 class="mb-25p">{{profile?.title}}</h6>
+    </div>
+
+    <div class="d-flex">
+      <button class="btn btn-primary px-lg-70p">Book now</button>
+      <button class="btn btn-outline ml-10p">Follow</button>
+      <button class="btn btn-icon-grey small ml-10p">
+        <i iconPh="bell-plus" style="font-size: 30px"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="overflow-auto mt-45p px-20p px-lg-30p">
+    <div class="d-flex profile-menu">
+      <a 
+      [routerLink]="['/community', profileId]" 
+      class="btn small px-0 py-20p subtitle1 mr-30p" 
+      #rlah="routerLinkActive"
+      routerLinkActive
+      [routerLinkActiveOptions]="{exact: true}"
+      [ngClass]="rlah.isActive ? 'btn-text active' : 'btn-text-grey'"
+      >Home</a>
+
+      <a 
+      [routerLink]="['/community', profileId, 'service']" 
+      class="btn small px-0 py-20p subtitle1 mr-30p" 
+      #rlas="routerLinkActive" 
+      routerLinkActive 
+      [ngClass]="rlas.isActive ? 'btn-text active' : 'btn-text-grey'"
+      >Service</a>
+     
+      <a 
+      [routerLink]="['/community', profileId, 'feed']" 
+      class="btn small px-0 py-20p subtitle1 mr-30p" 
+      #rlaf="routerLinkActive" 
+      routerLinkActive 
+      [ngClass]="rlaf.isActive ? 'btn-text active' : 'btn-text-grey'"
+      >Feed</a>
+      
+      <a 
+      [routerLink]="['/community', profileId, 'article']" 
+      class="btn small px-0 py-20p subtitle1 mr-30p" 
+      #rlaa="routerLinkActive" 
+      routerLinkActive 
+      [ngClass]="rlaa.isActive ? 'btn-text active' : 'btn-text-grey'"
+      >Articles</a>
+      
+      <a 
+      [routerLink]="['/community', profileId, 'media']" 
+      class="btn small px-0 py-20p subtitle1 mr-30p" 
+      #rlam="routerLinkActive" 
+      routerLinkActive 
+      [ngClass]="rlam.isActive ? 'btn-text active' : 'btn-text-grey'"
+      >Media</a>
+      
+      <a 
+      [routerLink]="['/community', profileId, 'event']" 
+      class="btn small px-0 py-20p subtitle1 mr-30p" 
+      #rlae="routerLinkActive" 
+      routerLinkActive 
+      [ngClass]="rlae.isActive ? 'btn-text active' : 'btn-text-grey'"
+      >Events</a>
+      
+      <div class="pr-20p pr-lg-30p">
+        <a 
+        [routerLink]="['/community', profileId, 'review']" 
+        class="btn small px-0 py-20p subtitle1" 
+        #rlar="routerLinkActive" 
+        routerLinkActive 
+        [ngClass]="rlar.isActive ? 'btn-text active' : 'btn-text-grey'"
+        >Review</a></div>
+    </div>
+  </div>
+</div>
+
+<div 
+class="mt-20p"
+[@socialProfileChildRouteAnimation]="prepareRoute(outlet)"
+>
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>

@@ -1,5 +1,18 @@
 @import "../../../assets/scss/variables";
 
+.checkbox-group.inline {
+    display: block;
+    li {
+        display: inline-block;
+        margin: 0;
+        &:not(:last-child)::after {
+            content: attr(data-separator);
+            white-space: pre;
+        }
+    }
+}
+
+
 .selectbox.active{ z-index: 15; }
 
 .selected{
