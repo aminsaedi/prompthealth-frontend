@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SocialService } from '../social.service';
 
 @Component({
   selector: 'app-profile-review',
@@ -7,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileReviewComponent implements OnInit {
 
-  constructor() { }
+  get profile() { return this._socialService.selectedProfile; }
+  get sizeS() { return !!(!window || window.innerWidth < 768); }
+  constructor(
+    private _socialService: SocialService,
+  ) { }
 
   ngOnInit(): void {
   }

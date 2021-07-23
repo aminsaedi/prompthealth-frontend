@@ -5,10 +5,21 @@
     li {
         display: inline-block;
         margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+
         &:not(:last-child)::after {
             content: attr(data-separator);
             white-space: pre;
         }
+    }
+}
+
+
+.checkbox-group.block-with-zero-margin {
+    >li {
+      margin: 0;
+      flex: 0 0 100%;
     }
 }
 

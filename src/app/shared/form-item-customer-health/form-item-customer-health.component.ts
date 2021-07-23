@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { IOptionCheckboxGroup, OptionCheckboxGroup } from '../form-item-checkbox-group/form-item-checkbox-group.component';
 import { QuestionnaireAnswer } from '../services/questionnaire.service';
 
 @Component({
@@ -17,17 +18,21 @@ export class FormItemCustomerHealthComponent implements OnInit {
   @Input() selections: QuestionnaireAnswer[];
   @Input() controller: FormGroup = new FormGroup({});
   @Input() submitted = false;
+  @Input() option: IOptionCheckboxGroup = {};
 
   @Output() changeValue = new EventEmitter<string[]>();
   @Output() changeValueForTracking = new EventEmitter<string[]>();
 
   public selectionList: CustomerHealthSelectionItem[];
+  public _option: OptionCheckboxGroup;
 
   getFormArray(name: string){ return this.controller.controls[name] as FormArray; }
 
   constructor() { }
 
   ngOnInit(): void {
+    this._option = new OptionCheckboxGroup(this.option);
+
     this.controller.setControl('root', new FormArray([]));
     
     const selections: CustomerHealthSelectionItem[] = [];

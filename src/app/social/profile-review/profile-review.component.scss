@@ -1,0 +1,44 @@
+@import '../../../assets/scss/variables';
+
+ul.charts {
+  li {
+    .bar-container {
+      height: 10px;
+      [class^=bar] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+      }
+
+      .bar {
+        width: 100%;
+        background: $colorGsLine;
+      }
+
+      .bar-overlay {
+        width: 0;
+      }
+    }
+
+    &:first-child .bar-overlay {
+      background: $colorYellow;
+    }
+  
+    &:nth-child(2) .bar-overlay {
+      background: $colorYellow;
+    }
+  
+    &:nth-child(3) .bar-overlay {
+      background: #F5901C;
+    }
+  
+    &:nth-child(4) .bar-overlay {
+      background: #F06C3B;
+    };
+  
+    &:nth-child(5) .bar-overlay {
+      background: #FC4A33;
+    }
+  }
+}

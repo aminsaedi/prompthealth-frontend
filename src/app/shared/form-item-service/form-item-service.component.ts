@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { IOptionCheckboxGroup, OptionCheckboxGroup } from '../form-item-checkbox-group/form-item-checkbox-group.component';
 import { Category, CategoryService } from '../services/category.service';
 
 @Component({
@@ -14,10 +15,13 @@ export class FormItemServiceComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() submitted: boolean = false;
   @Input() controller: FormGroup = new FormGroup({});
+  @Input() option: IOptionCheckboxGroup = {};
+
 
   @Output() changeValue = new EventEmitter<string[]>();
 
   public categories: Category[];
+  public _option: OptionCheckboxGroup;
 
   getFormArray(name: string){ return this.controller.controls[name] as FormArray; }
 
@@ -26,6 +30,8 @@ export class FormItemServiceComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this._option = new OptionCheckboxGroup(this.option);
+
     this.controller.setControl('root', new FormArray([]));
 
     const cats = await this._catService.getCategoryAsync();

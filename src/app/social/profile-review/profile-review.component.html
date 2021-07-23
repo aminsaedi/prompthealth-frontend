@@ -1,1 +1,160 @@
-<p>profile-review works!</p>
+<ng-container *ngIf="!(profile)">
+  <loader></loader>
+</ng-container>
+
+<div 
+*ngIf="profile"
+class="position-relative rounded-8p bg-white p-20p body1 text-body"
+>
+  <div class="d-flex align-items-center justify-content-between">
+    <h3>4.7</h3>
+    <div class="d-flex align-items-center">
+      <div class="mx-15p mx-lg-30p">
+        <star-rate 
+        [rate]="4.3" 
+        [showActiveOnly]="false"
+        [margin]="sizeS ? 'small' : 'regular'"
+        [size]="sizeS ? 'small' : 'big'"
+        ></star-rate>
+      </div>
+      <div class="body2 body1-md text-label">1315 reviews</div>  
+    </div>
+  </div>
+
+  <ul class="charts list-unstyled mt-30p">
+    <li class="d-flex align-items-center my-10p my-lg-15p">
+      <span class="text-label">5</span>
+      <div class="bar-container position-relative flex-grow-1 mx-10p mx-lg-20p rounded-4p overflow-hidden">
+        <div class="bar"></div>
+        <div class="bar-overlay" style="width: 60%"></div>
+      </div>
+      <span class="text-label">60%</span>
+    </li>
+    <li class="d-flex align-items-center my-10p my-lg-15p">
+      <span class="text-label">5</span>
+      <div class="bar-container position-relative flex-grow-1 mx-10p mx-lg-20p rounded-4p overflow-hidden">
+        <div class="bar"></div>
+        <div class="bar-overlay" style="width: 60%"></div>
+      </div>
+      <span class="text-label">60%</span>
+    </li>
+    <li class="d-flex align-items-center my-10p my-lg-15p">
+      <span class="text-label">5</span>
+      <div class="bar-container position-relative flex-grow-1 mx-10p mx-lg-20p rounded-4p overflow-hidden">
+        <div class="bar"></div>
+        <div class="bar-overlay" style="width: 60%"></div>
+      </div>
+      <span class="text-label">60%</span>
+    </li>
+    <li class="d-flex align-items-center my-10p my-lg-15p">
+      <span class="text-label">5</span>
+      <div class="bar-container position-relative flex-grow-1 mx-10p mx-lg-20p rounded-4p overflow-hidden">
+        <div class="bar"></div>
+        <div class="bar-overlay" style="width: 60%"></div>
+      </div>
+      <span class="text-label">60%</span>
+    </li>
+    <li class="d-flex align-items-center my-10p my-lg-15p">
+      <span class="text-label">5</span>
+      <div class="bar-container position-relative flex-grow-1 mx-10p mx-lg-20p rounded-4p overflow-hidden">
+        <div class="bar"></div>
+        <div class="bar-overlay" style="width: 60%"></div>
+      </div>
+      <span class="text-label">60%</span>
+    </li>
+  </ul>
+
+  <ul class="mt-50p list-unstyled">
+    <li class="mb-20p mb-lg-30p">
+      <div class="d-flex">
+        <profile-image size="42"></profile-image>
+        <div>
+          <h6 class="subtitle1">Leslie Alexander</h6>
+          <div class="d-flex align-items-center">
+            <star-rate
+            [rate]="4.3"
+            [showActiveOnly]="false"
+            [margin]="sizeS ? 'small' : 'regular'"
+            [size]="sizeS ? 'small' : 'big'"
+            ></star-rate>
+            <div class="text-label body-small ml-10p">April 28, 2021</div>
+          </div>
+        </div>
+      </div>
+      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
+    </li>
+    <li class="mb-20p">
+      <div class="d-flex">
+        <profile-image size="42"></profile-image>
+        <div>
+          <h6 class="subtitle1">Leslie Alexander</h6>
+          <div class="d-flex align-items-center">
+            <star-rate
+            [rate]="4.3"
+            [showActiveOnly]="false"
+            [margin]="sizeS ? 'small' : 'regular'"
+            [size]="sizeS ? 'small' : 'big'"
+            ></star-rate>
+            <div class="text-label body-small ml-10p">April 28, 2021</div>
+          </div>
+        </div>
+      </div>
+      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
+    </li>
+    <li class="mb-20p">
+      <div class="d-flex">
+        <profile-image size="42"></profile-image>
+        <div>
+          <h6 class="subtitle1">Leslie Alexander</h6>
+          <div class="d-flex align-items-center">
+            <star-rate
+            [rate]="4.3"
+            [showActiveOnly]="false"
+            [margin]="sizeS ? 'small' : 'regular'"
+            [size]="sizeS ? 'small' : 'big'"
+            ></star-rate>
+            <div class="text-label body-small ml-10p">April 28, 2021</div>
+          </div>
+        </div>
+      </div>
+      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
+    </li>
+    <li class="mb-20p">
+      <div class="d-flex">
+        <profile-image size="42"></profile-image>
+        <div>
+          <h6 class="subtitle1">Leslie Alexander</h6>
+          <div class="d-flex align-items-center">
+            <star-rate
+            [rate]="4.3"
+            [showActiveOnly]="false"
+            [margin]="sizeS ? 'small' : 'regular'"
+            [size]="sizeS ? 'small' : 'big'"
+            ></star-rate>
+            <div class="text-label body-small ml-10p">April 28, 2021</div>
+          </div>
+        </div>
+      </div>
+      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
+    </li>
+    <li class="mb-20p">
+      <div class="d-flex">
+        <profile-image size="42"></profile-image>
+        <div>
+          <h6 class="subtitle1">Leslie Alexander</h6>
+          <div class="d-flex align-items-center">
+            <star-rate
+            [rate]="4.3"
+            [showActiveOnly]="false"
+            [margin]="sizeS ? 'small' : 'regular'"
+            [size]="sizeS ? 'small' : 'big'"
+            ></star-rate>
+            <div class="text-label body-small ml-10p">April 28, 2021</div>
+          </div>
+        </div>
+      </div>
+      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
+    </li>
+  </ul>
+
+</div>

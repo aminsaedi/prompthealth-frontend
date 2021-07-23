@@ -3,44 +3,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 // import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from '../../models/user-detail';
-import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Profile } from 'src/app/models/profile';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileManagementService {
 
-  private profileDetail: IUserDetail = null;
-  private AWS_S3 = environment.config.AWS_S3;
+  private _user: IUserDetail = null;
+  private _profile: Profile = null;
 
-  getProfile() { return this.profileDetail; }
-
-  getProfileImage(returnDefaultImageIfEmpty: boolean = false) {
-    if (this.profileDetail && this.profileDetail.profileImage) {
-      return this.AWS_S3 + this.profileDetail.profileImage;
-    } else if (returnDefaultImageIfEmpty){
-      return '/assets/img/no-image.jpg';
-    } else {
-      return null;
-    }
-  }
-
-  getFullName(returnDefaultNameIfEmpty: boolean = true) {
-    if(this.profileDetail && (this.profileDetail.firstName || this.profileDetail.lastName)) {
-      const nameArray = [];
-      if(this.profileDetail.firstName && this.profileDetail.firstName.length > 0) {
-        nameArray.push(this.profileDetail.firstName);
-      }
-      if(this.profileDetail.lastName && this.profileDetail.lastName.length > 0) {
-        nameArray.push(this.profileDetail.lastName);
-      }
-      return nameArray.join(' ');
-    } else if(returnDefaultNameIfEmpty) {
-      return 'No Name';
-    } else {
-      return null;
-    }
-  }
+  get profile(): Profile { return this._profile; }
+  get user(): IUserDetail { return this._user; }
 
   constructor( 
     private http: HttpClient,
@@ -48,7 +22,8 @@ export class ProfileManagementService {
   ) {}
 
   dispose(){ 
-    this.profileDetail = null; 
+    this._user = null; 
+    this._profile = null;
   }
 
   /** this is called by header at first access and set the userdata from server in this service. and then someplace will use the data which is stored here */
@@ -57,8 +32,8 @@ export class ProfileManagementService {
     const role = user.roles.toLowerCase();
 
     return new Promise((resolve, reject) => {
-      if(this.profileDetail && this.profileDetail._id == id){ 
-        resolve(this.profileDetail); 
+      if(this._user && this._user._id == id){ 
+        resolve(this._user); 
       }else{
         const path = environment.config.API_URL + ((role == 'p') ? 'partner/get/' : 'user/get-profile/') + id;
         const headers = new HttpHeaders()
@@ -67,9 +42,10 @@ export class ProfileManagementService {
 
         this.http.get( path, {headers} ).subscribe((res: any)=>{
           if(res.statusCode === 200 && res.data.length > 0){
-            this.profileDetail = res.data[0];
+            this._user = res.data[0];
+            this._profile = new Profile(this._user);
             // this._bs.setUserVerifiedStatus(this.profileDetail.verifiedBadge);
-            resolve(this.profileDetail);
+            resolve(this._user);
           }
           else{ 
             checkAccessToken(res);

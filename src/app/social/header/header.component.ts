@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { Profile } from 'src/app/models/profile';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
@@ -20,12 +21,10 @@ export class HeaderComponent implements OnInit {
   public isMenuSmShown: boolean = false; 
   public isUserMenuShown: boolean = false;
 
-  // public topics: Category[] = [];
-
   get topics() { return this._catService.categoryList; }
-  get userImage() { return this._profileService.getProfileImage(); }
-  get userName() { return this._profileService.getFullName(); }
-  get user() { return this._profileService.getProfile(); }
+  get userImage() { return this.user ? this.user.profileImage : ''; }
+  get userName() { return this.user ? this.user.name : ''; }
+  get user() { return this._profileService.profile; }
 
 
   constructor(

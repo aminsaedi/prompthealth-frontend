@@ -9,6 +9,7 @@ import { IconName } from 'src/app/models/icon-ph';
 export class ProfileImageComponent implements OnInit {
 
   @Input() image: string;
+  @Input() alt: string = '';
   @Input() size: number = 40; // unit: px
   @Input() radius: number = 8; //unit: px
   @Input() option: IProfileImageOption = {}

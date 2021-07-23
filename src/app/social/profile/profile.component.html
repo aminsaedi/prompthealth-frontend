@@ -1,7 +1,7 @@
-<div class="position-relative rounded-8p bg-white body1 text-body">
+<div class="position-relative rounded-8p bg-white body1 text-body overflow-hidden">
   <div class="position-relative">
     <div class="image-container-33pc">
-      <img src="" alt="">
+      <img *ngIf="profile" [src]="profile?.banner" alt="">
     </div>
   </div>
 
@@ -30,7 +30,7 @@
       <div class="text-right">
         <h5 class="text-primary-dark">$49/hr</h5>
         <star-rate 
-        [rate]="4"
+        [rate]="profile?.rating"
         margin="small"
         [showActiveOnly]="false"
         ></star-rate>
@@ -80,54 +80,36 @@
 
   <div class="overflow-auto mt-45p px-20p px-lg-30p">
     <div class="d-flex profile-menu">
-      <a 
-      [routerLink]="['/community', profileId]" 
-      class="btn small px-0 py-20p subtitle1 mr-30p" 
-      #rlah="routerLinkActive"
-      routerLinkActive
-      [routerLinkActiveOptions]="{exact: true}"
-      [ngClass]="rlah.isActive ? 'btn-text active' : 'btn-text-grey'"
-      >Home</a>
+      <div class="pr-30p pr-lg-40p">
+        <a
+        [routerLink]="['/community', profileId]"
+        class="btn small px-0 py-20p subtitle1"
+        #rlah="routerLinkActive"
+        routerLinkActive
+        [routerLinkActiveOptions]="{exact: true}"
+        [ngClass]="rlah.isActive ? 'btn-text active' : 'btn-text-grey'"
+        >Home</a>
+      </div>
 
-      <a 
-      [routerLink]="['/community', profileId, 'service']" 
-      class="btn small px-0 py-20p subtitle1 mr-30p" 
-      #rlas="routerLinkActive" 
-      routerLinkActive 
-      [ngClass]="rlas.isActive ? 'btn-text active' : 'btn-text-grey'"
-      >Service</a>
+      <div class="pr-30p pr-lg-40p">
+        <a
+        [routerLink]="['/community', profileId, 'service']"
+        class="btn small px-0 py-20p subtitle1"
+        #rlas="routerLinkActive"
+        routerLinkActive
+        [ngClass]="rlas.isActive ? 'btn-text active' : 'btn-text-grey'"
+        >Service</a>
+      </div>
      
-      <a 
-      [routerLink]="['/community', profileId, 'feed']" 
-      class="btn small px-0 py-20p subtitle1 mr-30p" 
-      #rlaf="routerLinkActive" 
-      routerLinkActive 
-      [ngClass]="rlaf.isActive ? 'btn-text active' : 'btn-text-grey'"
-      >Feed</a>
-      
-      <a 
-      [routerLink]="['/community', profileId, 'article']" 
-      class="btn small px-0 py-20p subtitle1 mr-30p" 
-      #rlaa="routerLinkActive" 
-      routerLinkActive 
-      [ngClass]="rlaa.isActive ? 'btn-text active' : 'btn-text-grey'"
-      >Articles</a>
-      
-      <a 
-      [routerLink]="['/community', profileId, 'media']" 
-      class="btn small px-0 py-20p subtitle1 mr-30p" 
-      #rlam="routerLinkActive" 
-      routerLinkActive 
-      [ngClass]="rlam.isActive ? 'btn-text active' : 'btn-text-grey'"
-      >Media</a>
-      
-      <a 
-      [routerLink]="['/community', profileId, 'event']" 
-      class="btn small px-0 py-20p subtitle1 mr-30p" 
-      #rlae="routerLinkActive" 
-      routerLinkActive 
-      [ngClass]="rlae.isActive ? 'btn-text active' : 'btn-text-grey'"
-      >Events</a>
+      <div class="pr-30p pr-lg-40p">
+        <a
+        [routerLink]="['/community', profileId, 'feed']"
+        class="btn small px-0 py-20p subtitle1"
+        #rlaf="routerLinkActive"
+        routerLinkActive
+        [ngClass]="rlaf.isActive ? 'btn-text active' : 'btn-text-grey'"
+        >Feed</a>
+      </div>
       
       <div class="pr-20p pr-lg-30p">
         <a 

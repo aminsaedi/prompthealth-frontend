@@ -1,5 +1,6 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute, ActivationStart } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from '../../shared/services/shared.service';
 
@@ -8,7 +9,7 @@ import { SharedService } from '../../shared/services/shared.service';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css']
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnDestroy, OnInit {
 
   public showFooter = false;
   public onMagazine: boolean = false;
@@ -16,13 +17,19 @@ export class LayoutComponent {
   private isInitial = true;
   private urlPrev: string = '';
 
+  private routerEventSubscription: Subscription;
 
   constructor(
     private _router: Router,
     private _headerService: HeaderStatusService,
-  ) {
+  ) {  }
 
-    this._router.events.subscribe((event) => {
+  ngOnDestroy() {
+    this.routerEventSubscription.unsubscribe();
+  }
+
+  ngOnInit() {
+    this.routerEventSubscription = this._router.events.subscribe((event) => {
       if (event instanceof ActivationStart) { 
         this.isInitial = false; 
         this._headerService.showShadow();

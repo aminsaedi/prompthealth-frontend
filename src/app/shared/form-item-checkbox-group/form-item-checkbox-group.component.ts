@@ -186,17 +186,23 @@ export interface CheckboxSelectionItem {
   disabled?: boolean;
 }
 
-interface IOptionCheckboxGroup {
+export interface IOptionCheckboxGroup {
   showInlineWhenDisabled?: boolean;
   showInlineSubWhenDisabled?: boolean;
   showBlockWithZeroMarginWhenDisabled?: boolean;
+  showBlockSubWithZeroMarginWhenDisabled?: boolean;
+  removeIndentSub?: boolean;
+  fontSmallSub?: boolean;
   inlineSeparator?: string;
 }
 
-class OptionCheckboxGroup implements IOptionCheckboxGroup {
+export class OptionCheckboxGroup implements IOptionCheckboxGroup {
   get showInlineWhenDisabled() { return this.data.showInlineWhenDisabled === true ? true : false; }
   get showInlineSubWhenDisabled() { return this.data.showInlineSubWhenDisabled === true ? true : false; }
   get showBlockWithZeroMarginWhenDisabled() {return this.data.showBlockWithZeroMarginWhenDisabled === true ? true : false; }
+  get showBlockSubWithZeroMarginWhenDisabled() {return this.data.showBlockSubWithZeroMarginWhenDisabled === true ? true : false; }
+  get removeIndentSub(){ return this.data.removeIndentSub === true ? true : false; }
+  get fontSmallSub() {return this.data.fontSmallSub === true ? true : false; }
   get inlineSeparator() { return this.data.inlineSeparator || ', '; }
 
   constructor(private data: IOptionCheckboxGroup = {}) {}

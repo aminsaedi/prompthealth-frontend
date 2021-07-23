@@ -2,7 +2,12 @@
 class="profile-image-container" 
 [ngStyle]="{width: size + 'px', borderRadius: radius + 'px'}"
 >
-  <img *ngIf="image" [src]="image">
+  <img 
+  *ngIf="image" 
+  [src]="image"
+  [alt]="alt" 
+  crossorigin="anonymous"
+  >
   <i *ngIf="!image" 
   [iconPh]="_option.dummyIcon"
   [ngClass]="_option.dummyClass"

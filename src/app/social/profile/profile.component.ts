@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { Professional } from 'src/app/models/professional';
-import { IGetProfileResult, IResponseData } from 'src/app/models/response-data';
+import { IGetProfileResult } from 'src/app/models/response-data';
 import { SocialPost } from 'src/app/models/social-post';
+import { IUserDetail } from 'src/app/models/user-detail';
+import { QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../social.service';
@@ -22,10 +24,10 @@ export class ProfileComponent implements OnInit {
   get sizeS() { return (!window || window.innerWidth < 768) ? true : false; }
 
   constructor(
-    private _router: Router,
     private _route: ActivatedRoute,
     private _sharedService: SharedService,
     private _socialService: SocialService,
+    private _qService: QuestionnaireService,
   ) { }
 
   ngOnInit(): void {
@@ -40,11 +42,27 @@ export class ProfileComponent implements OnInit {
     if(profile) {
       this.profile = profile.userdata;
     } else {
-      this.fetchProfile(this.profileId).then(p => {
-        this.profile = p;
-        this._socialService.setProfile(p);
+      const promiseAll: [Promise<Professional>, Promise<void>] = [
+        this.fetchProfile(this.profileId),
+        this.getQuestionnaire(),
+      ];
+
+      Promise.all(promiseAll).then((vals) => {
+        this.profile = vals[0];
+        this._socialService.setProfile(this.profile);
       });
     }
+  }
+
+  getQuestionnaire(type: IUserDetail['roles'] = 'SP'): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._qService.getProfilePractitioner(type).then(() => {
+        resolve();
+      }, error => {
+        console.log(error);
+        reject();
+      });  
+    });
   }
 
   fetchProfile(id: string): Promise<Professional> {
@@ -53,8 +71,8 @@ export class ProfileComponent implements OnInit {
       this._sharedService.getNoAuth(path).subscribe((res: IGetProfileResult) => {
         if(res.statusCode === 200) {
           const p = res.data[0];
-          const profile = new Professional(p._id, p);
-          resolve(profile);
+          const professional = new Professional(p._id, p);
+          resolve(professional);
         } else {
           console.log(res.message);
           reject();

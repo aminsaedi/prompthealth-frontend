@@ -22,7 +22,7 @@ export class CardNewPostComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
-  get userImage() { return this._profileService.getProfileImage(); }
+  get userImage() { return this._profileService.user ? this._profileService.user.profileImage : null; }
 
   safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
 

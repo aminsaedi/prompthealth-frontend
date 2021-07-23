@@ -1,7 +1,7 @@
 <ul 
 *ngIf="type != 'selectbox'"
 class="checkbox-group" 
-[ngClass]="{inline: _option.showInlineWhenDisabled}"
+[ngClass]="{inline: _option.showInlineWhenDisabled, 'block-with-zero-margin': _option.showBlockWithZeroMarginWhenDisabled}"
 >
   <ng-container *ngFor="let item of selectionList; let i = index">
     <ng-container *ngIf="disabled">

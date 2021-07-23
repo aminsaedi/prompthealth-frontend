@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChildActivationStart, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { IUserDetail } from 'src/app/models/user-detail';
+import { Subscription } from 'rxjs';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
@@ -26,6 +25,8 @@ export class HomeComponent implements OnInit {
     onProfile: boolean,
   };
 
+  private routerEventSubscription: Subscription; 
+
   constructor(
     private _catService: CategoryService,
     private _router: Router,
@@ -35,13 +36,16 @@ export class HomeComponent implements OnInit {
     return this._catService.iconOf(topic);
   }
 
+  ngOnDestroy() {
+    this.routerEventSubscription.unsubscribe();
+  }
   ngOnInit(): void {
     this.urlPrev = this.getURLset({onProfile: true});
     ///cannot get if onProfile or not. 
     ///if user is on top page and go to profile page, scroll is not triggered.
     ///no solution for this.
 
-    this._router.events.subscribe(e => {
+    this.routerEventSubscription = this._router.events.subscribe(e => {
       if(e instanceof NavigationStart) {
         this.isPopState = !!(e.navigationTrigger ==  'popstate');
       }

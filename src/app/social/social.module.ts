@@ -33,6 +33,7 @@ import { ProfileAboutComponent } from './profile-about/profile-about.component';
 import { LoaderComponent } from './loader/loader.component';
 import { ProfileReviewComponent } from './profile-review/profile-review.component';
 import { ProfileServiceComponent } from './profile-service/profile-service.component';
+import { ProfileFeedComponent } from './profile-feed/profile-feed.component';
 
 
 const routes: Routes = [
@@ -52,9 +53,10 @@ const routes: Routes = [
     { path: 'event/:topicId',    component: ListComponent },
 
     { path: ':userid', component: ProfileComponent, children: [
-      { path: '', component: ProfileAboutComponent, data: {order:1} } ,
+      { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
       { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
-      { path: 'review', component: ProfileReviewComponent, data: {order:3} },
+      { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
+      { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
     ] },
 
     { path: ':userid/post', pathMatch: 'full', redirectTo: ':userid/home' },
@@ -94,6 +96,7 @@ const routes: Routes = [
     LoaderComponent,
     ProfileReviewComponent,
     ProfileServiceComponent,
+    ProfileFeedComponent,
   ],
   providers: [
     CategoryService,

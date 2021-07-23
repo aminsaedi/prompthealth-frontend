@@ -1,110 +1,195 @@
-import { environment } from 'src/environments/environment';
-import { QuestionnaireAnswer } from '../shared/services/questionnaire.service';
-import { Category } from '../shared/services/category.service';
 import { SocialLinkData } from '../shared/social-buttons/social-buttons.component';
 import { ImageData, ImageGroupData, ImageViewerData } from '../shared/image-viewer/image-viewer.component';
 import { IUserDetail, IVideo } from './user-detail';
-import { MapsAPILoader } from '@agm/core';
+import { IProfile, Profile } from './profile';
+import { ReviewData } from './review-data';
 
-export interface IProfessional {
-  id: string;
+export interface IProfessional extends IProfile {
+  id: IProfessional['_id']; /** old name (changed to _id) */
 
-  // general info
-  name: string;  /** firstname + lastname */
-  firstname: string;
-  image: string; /** profile image small size */
-  imageType: string /** profile image file type */
-  imageFull: string; /** profile image original size */
+  image: IProfessional['profileImage']; /** profile image small size (if not set, return default avator) */
+  imageFull: IProfessional['profileImageFull']; /** profile image original size (if not set, return default avator) */
+  imageType: IProfessional['profileImageType'] /** profile image file type (same as profileImageType) */
+  coverImage: string;
+  banner: string; // old name (changed to coverImage)
+
+  emailToDisplay: string
+
+  title: string;
   description: string; /** practicePhilosophy | description of professionals belonging at the center */
-  role: string;
   phone: string;
-  address: string;
-  city: string;
-  state: string;
-  rating: string | number;
-  provideVirtual: boolean;
-  isCentre: boolean;
-  isVerified: boolean; /** verified for badge */
-  isApproved: boolean; /** approved to be listed */
+  address: IUserDetail['address'];
+  state: IUserDetail['state'];
+  city: IUserDetail['city'];
+  distance: number;
+  location: number[]; /** [long, lat] */
+  mapLabel: string;
+  mapIconUrl: any;
 
-  // used in listingComponent
   price: string; /** lower price ex: null | $150 / hr */
   priceFull: string; /** price range or exact price ex: N/A | $150 - 250 / hr */
-  location: number[]; /** [long, lat] */
-  distance: number;
-  mapLabel: string;
-  mapIcon?: any;
-  isCheckedForCompare: boolean;
-  isMapIconReady: boolean;
-
-  // used in detailComponent
-  banner: string; /** not used yet */
-  title: string;
-  ageRange: string[];
+  website: string;
+  websiteLabel: string;
+  bookingUrl: string;
   organization: string;
   certification: string;
   yearsOfExperience: string;
-  typeOfProvider: string[]; /** ex: homeopath / dentist / neuropsychologist */
-  languages: string[];
-  treatmentModality: string[]; /** ex: laser treatments / tai chi */
-  service: string[]; /** ex: medical care / preventative health */
-  serviceDelivery: string[]; /** ex: service / exercise training / direct billing */
-  healthStatus: string[]; /** not used currently */
+
+  socialLink: {isAvailable: boolean, data: SocialLinkData};
+  videos: IVideo[];
+  detailByGoogle: google.maps.places.PlaceResult;
   professionals: Professional[];
+  rating: number;
+  reviews: any[];
+  reviewData: ReviewData;
 
   amenity: ImageViewerData; /** all amenities data */
   amenityPreview: ImageGroupData[]; /** first 3 amenities for preview */
   product: ImageViewerData; /** all products data */
   productPreview: ImageGroupData[]; /** first 3 products for preview */
 
-  website: string;
-  websiteLabel: string;
-  bookingUrl: string;
-  socialLink: {isAvailable: boolean, data: SocialLinkData};
-  videos: IVideo[];
-  endosements: any[];
-  reviews: any[];
-  detailByGoogle: google.maps.places.PlaceResult;
+  isMapIconReady: boolean;
+  isCentre: boolean;
+  isProvider: boolean;
+  isApproved: boolean; /** approved to be listed */
+  isVerified: boolean; /** verified for badge */
+  isVirtualAvailable: boolean;
+  provideVirtual: boolean; // old name (changed to isVirtualAvailable)
+  isConnectedToGoogle: boolean;
+  isCheckedForCompare: boolean;
 
-  // not used anywhere yet
-  gender: string;
+  languageIds: string[];
+  ageRangeIds: string[];
+  availabilityIds: string[];
+  serviceDeliveryIds: string[];
+  serviceIds: string[];
+  age_range: string[] /** old name (changed to ageRangeIds) */
+  languagesId: string[]; /** old name (changed to languageIds) */
+  allServiceId: string[]; /** old name (changed to serviceIds */
+  serviceOfferIds: string[]; /** old name (changed to serviceDeliveryIds) */
 
-  allServiceId: string[]; /** internal usage only. */
+  dataComparable: any; /** data for compare page (used in old design) */
 }
 
-/**
- * Professional data
- * fetched from api 'user/filter' | 'user/get'
- * used in ListingComponent / DetailComponent
-*/
-export class Professional implements IProfessional {
+export class Professional extends Profile implements IProfessional{
 
-  protected _baseURLImage = environment.config.AWS_S3;
   protected _defaultAvator = '/assets/img/no-image.jpg';
   protected _defaultBanner = '/assets/img/professional-banner.png';
 
+  get id() { return this._id; }
+
+  get image() { return this.profileImage.length > 0 ? this.profileImage : this._defaultAvator; } // if profile image is not set, return default image
+  get imageFull() { return this.profileImageFull.length > 0 ? this.profileImageFull : this._defaultAvator; }
+  get imageType(){ return this.profileImageType; }
+  get coverImage() { return this._defaultBanner; }
+  get banner() { return this.coverImage; }
+
+  get emailToDisplay() { return this.p.displayEmail; }
+
+  get title() { return this.p.professional_title || null; }
+  get description() { return this.p.product_description || this.p.description || ''; }
+  get phone() { return this._phone; }
+  get address() { return (!this.p.hideAddress && this.p.address && this.p.address.length > 0) ? this.p.address : null; }
+  get state() { return this.p.state; }
+  get city() { return this.p.city; }
+  get location() { return this.p.location || [null, null]; }
+  get distance() { return this.p.calcDistance || null; }
+  get mapLabel() { return (this.price ? this.price : null); }
+  get mapIconUrl() { return (this._mapIconUrl && this._mapIconUrl.length > 0) ? this._mapIconUrl : null; }
+
+  get price() { return (this._priceRange.length >= 1) ? `$${this._priceRange[0]}+ / hr` : null; }
+  get priceFull() { return (this._priceRange.length === 0) ? 'N/A' : '$' + this._priceRange.join(' - '); }
+  get website() { return this.p.website; }
+  get websiteLabel() { return this.getURLLabel(this.p.website); }
+  get bookingUrl() { return this.p.bookingURL || null; }
+  get organization() { return this.p.professional_organization || null; }
+  get certification() { return this.p.certification; }
+  get yearsOfExperience() { return this.p.years_of_experience || null; }
+
+  get socialLink() { return this._socialLink; }
+  get videos() { return (this.p.plan && this.p.plan.videoUpload) ? this.p.videos : []; } 
+  get detailByGoogle(){ return this._detailByGoogle || null; }
+  get professionals() { return (this.p.plan && this.p.plan.ListOfProviders) ? this._professionals : []; }
+  get rating() { return Math.round(this.p.ratingAvg * 10) / 10; }
+  get reviews() { return this._reviewData.data; }
+  get reviewData() { return this._reviewData; }
+
+  get amenity() {
+    return (this._amenities && this._amenities.imageGroups.length > 0 && this.p.plan && this.p.plan.ListAmenities) ? this._amenities : {imageGroups: []};
+  }
+
+  get amenityPreview() {
+    const result = [];
+    if (this._amenities && this._amenities.imageGroups.length > 0 && this.p.plan && this.p.plan.ListAmenities) {
+      this._amenities.imageGroups.forEach(a => { a.images.forEach(image => { result.push(image); }); });
+    }
+    return (result.length > 3) ? result.slice(0, 3) : result;
+  }
+
+  get product() {
+    return (this._products && this._products.imageGroups.length > 0 && this.p.plan && this.p.plan.ListProductsOption) ? this._products : {imageGroups: []};
+  }
+
+  get productPreview() {
+    const result = [];
+    if (this._products && this._products.imageGroups.length > 0 && this.p.plan && this.p.plan.ListProductsOption) {
+      this._products.imageGroups.forEach(p => { result.push(p.images[0]); });
+    }
+    return (result.length > 3) ? result.slice(0, 3) : result;
+  }
+
+  get isMapIconReady() { return this._isMapIconReady; }
+  get isCentre() { return !!(this.role == 'C'); }
+  get isProvider() { return !!(this.role == 'SP'); }
+  get isApproved() { return this.p.isApproved; }
+  get isVerified() { return this.p.verifiedBadge || false; }
+  get isVirtualAvailable() { return this.p.provideVirtual || false; }
+  get provideVirtual() { return this.isVirtualAvailable; }
+  get isConnectedToGoogle() { return !!this.p.placeId}
+  get isCheckedForCompare() { return this._isCheckedForCompared; }
+  set isCheckedForCompare(checked: boolean) { this._isCheckedForCompared = checked; }
+
+  get languageIds() { return this.p.languages || []; }
+  get ageRangeIds() { return this.p.age_range || []; }
+  get availabilityIds() { return this.p.typical_hours || []; }
+  get serviceIds() { return this.p.services || []; }
+  get serviceDeliveryIds() { return this.p.serviceOfferIds || []; }
+  get age_range() { return this.ageRangeIds; }
+  get languagesId() { return this.languageIds; }
+  get allServiceId() { return this.serviceIds || []; }
+  get serviceOfferIds() { return this.serviceDeliveryIds; };
+
+
   get dataComparable(): any {
     const serviceType = [], serviceOffering = [];
-    this._service.forEach(c => { serviceType.push(c.item_text); });
-    this._serviceDelivery.forEach(c => { serviceOffering.push(c.item_text); });
+    // this._service.forEach(c => { serviceType.push(c.item_text); });
+    // this._serviceDelivery.forEach(c => { serviceOffering.push(c.item_text); });
 
     return {
       userId: this._id,
       userData: this.p,
       ans: this.ans,
-      serviceData: this._typeOfProvider,
-      treatmentModalities: this._treatmentModality,
+      // serviceData: this._typeOfProvider,
+      // treatmentModalities: this._treatmentModality,
       serviceType,
       serviceOffering
     };
   } /** for compatibility with old compare page */
 
-  private _id: string;
-  private _image: string;
-  private _imageType: string;
+
+
+  uncheckForCompare() { this._isCheckedForCompared = false; }
+
+  getURLLabel(url: string = ''){
+    let label = ''
+    const match = url.match(/https?:\/\/(?:www\.)?([^/]+)/);
+    if(url && match){ label = match[1]; }
+    return label;
+  }
+
   private _phone: string;
-  private _ratingAvg: number;
-  private _reviews: Review[] = [];
+  private _reviewData: ReviewData;
+
   private _priceRange: number[] = [];
   private _professionals: Professional[] = [];
   private _amenities: ImageViewerData;
@@ -112,23 +197,6 @@ export class Professional implements IProfessional {
 
   private _isCheckedForCompared = false;
 
-  protected _languagesId: string[] = [];
-  protected _ageRangeId: string[] = [];
-  protected _availabilityId: string[] = [];
-  protected _serviceDeliveryId: string[] = [];
-
-  private _languages: { id: string, item_text: string }[] = [];
-  private _ageRange: { id: string, item_text: string }[] = [];
-  private _availability: { id: string, item_text: string }[] = [];
-
-  protected _typeOfProvider: ServiceCategory[] = [];
-  protected _treatmentModality: ServiceCategory[] = []; 
-  protected _service: ServiceCategory[] = []; 
-  protected _healthStatus: ServiceCategory[] = [];
-  private _serviceDelivery: ServiceCategory[] = [];  
-
-  private _banner: string; // todo: implement correctly. currently, this property not used.
-  private _endosements: any[]; // todo: impliment correctly. currently, this property not used;
   private _socialLink: { isAvailable: boolean, data: SocialLinkData } = {
     isAvailable: false,
     data: {
@@ -142,174 +210,11 @@ export class Professional implements IProfessional {
   };
 
   private _detailByGoogle: google.maps.places.PlaceResult;
-
-  // protected _allServiceId: string[];
-
   private _mapIconUrl: string;
   private _isMapIconReady = false;
 
-  get id() { return this._id; }
-  get name(){ return (this.firstname + ' ' + this.lastname).trim(); }
-  get firstname() { return this.p.firstName || this.p.fname || ''; }
-  get lastname() { return this.p.lastName || this.p.lname || ''; }
-  get email() { return this.p.displayEmail || null; }
-  get image() { return this._image ? this._baseURLImage + '350x220/' + this._image : this._defaultAvator; }
-  get imageFull() { return this._image ? this._baseURLImage + this._image : this._defaultAvator; }
-  get imageType(){ return this._imageType; }
-  get banner() { return this._banner ? this._baseURLImage + this._banner : this._defaultBanner; }
-  get isVerified() { return this.p.verifiedBadge || false; } /* could be only premium account */
-  get role() { return this.p.roles; }
-  get description() { return this.p.product_description || this.p.description || null; }
-  get phone() { return this._phone; }
-  get reviews() { return this._reviews; }
-  get rating() { return this._ratingAvg; }
-  get price() { return (this._priceRange.length >= 1) ? `$${this._priceRange[0]}+ / hr` : null; }
-  get priceFull() { return (this._priceRange.length === 0) ? 'N/A' : '$' + this._priceRange.join(' - '); }
-  get gender() { return this.p.gender || null; }
-  get address() { return (!this.p.hideAddress && this.p.address && this.p.address.length > 0) ? this.p.address : null; }
-  get city() { return this.p.city; }
-  get state() { return this.p.state; }
-  get website() { return this.p.website; }
-  get websiteLabel() { return this.getURLLabel(this.p.website); }
-  get bookingUrl() { return this.p.bookingURL || null; }
-  get location() { return this.p.location || [null, null]; }
-  get distance() { return this.p.calcDistance || null; } /** currently p doesn't have calcDistance field. */
-  get provideVirtual() { return this.p.provideVirtual || false; }
-  get videos() { return (this.p.plan && this.p.plan.videoUpload) ? this.p.videos : []; } /** showing videos are available only for premium user */
-  get yearsOfExperience() { return this.p.years_of_experience || null; }
-  get languages() {
-    const languages = [];
-    this._languages.forEach(l => { languages.push(l.item_text); });
-    return languages;
-  }
-  get languagesId() { return this.p.languages || []; }
-  get ageRange() {
-    const ageRange = [];
-    this._ageRange.forEach(a => { ageRange.push(a.item_text); });
-    return ageRange;
-  }
-  get age_range() { return this.p.age_range;  }
-  get availability() {
-    const result = [];
-    this._availability.forEach(a => { result.push(a.item_text); });
-    return result;
-  }
-  get isCentre() { return !!(this.role.toLowerCase().match(/c/)); }
-  get isApproved() { return this.p.isApproved; }
-  get endosements() { return this._endosements; }
-  get organization() { return this.p.professional_organization || null; }
-  get certification() { return this.p.certification; }
-  get title() { return this.p.professional_title || null; }
-  get professionals() { return (this.p.plan && this.p.plan.ListOfProviders) ? this._professionals : []; } /** showing professional is only for premium user */
-
-  get mapLabel() { return (this.price ? this.price : null); }
-  get mapIconUrl() { return (this._mapIconUrl && this._mapIconUrl.length > 0) ? this._mapIconUrl : null; }
-  get isMapIconReady() { return this._isMapIconReady; }
-  get isConnectedToGoogle() { return !!this.p.placeId}
-
-  get typeOfProvider() {
-    const result = [];
-    if (this._typeOfProvider) { this._typeOfProvider.forEach(o => { result.push(o.item_text); }); }
-    return result;
-  }
-
-  get treatmentModality() {
-    const result = [];
-    if (this._treatmentModality) { this._treatmentModality.forEach(o => { result.push(o.item_text); }); }
-    return result;
-  }
-
-  /** [ mainCategoryString, subCategoryString[] ] [] */
-  get service() {
-    const result = [];
-    if (this._service) {
-      this._service.forEach(o => {
-        const cat = [];
-        cat.push(o.item_text);
-        if (o.hasSubAns) {
-          const catSub = [];
-          o.subAnsData.forEach(sub => { catSub.push(sub.item_text); });
-          cat.push(catSub);
-        }
-        result.push(cat);
-      });
-    }
-    return result;
-  }
-
-  get serviceDelivery() {
-    const result = [];
-    if (this._serviceDelivery) { this._serviceDelivery.forEach(o => { result.push(o.item_text); }); }
-    return result;
-  }
-
-  get amenity() { /** showing amenity is only for premium feature */
-    return (this._amenities && this._amenities.imageGroups.length > 0 && this.p.plan && this.p.plan.ListAmenities) ? this._amenities : {imageGroups: []};
-  }
-
-  get amenityPreview() { /** showing amenity is only for premium feature */
-    const result = [];
-    if (this._amenities && this._amenities.imageGroups.length > 0 && this.p.plan && this.p.plan.ListAmenities) {
-      this._amenities.imageGroups.forEach(a => { a.images.forEach(image => { result.push(image); }); });
-    }
-    return (result.length > 3) ? result.slice(0, 3) : result;
-  }
-
-  get product() { /** showing product is only for premium feature */
-    return (this._products && this._products.imageGroups.length > 0 && this.p.plan && this.p.plan.ListProductsOption) ? this._products : {imageGroups: []};
-  }
-
-  get productPreview() { /** showing product is only for premium feature */
-    const result = [];
-    if (this._products && this._products.imageGroups.length > 0 && this.p.plan && this.p.plan.ListProductsOption) {
-      this._products.imageGroups.forEach(p => { result.push(p.images[0]); });
-    }
-    return (result.length > 3) ? result.slice(0, 3) : result;
-  }
-
-  get healthStatus() {
-    const result = [];
-    if (this._healthStatus) { this._healthStatus.forEach(o => { result.push(o.item_text); }); }
-    return result;
-
-  }
-  // get customerHealth() {
-  //   const array = this.p.customer_health.concat(this.p.services); /** customer_health was contained in services before */
-  //   return array;
-  // }
-
-  get allServiceId() { return this.p.services || []; }
-  get serviceOfferIds() { return this.p.serviceOfferIds || []};
-
-  get socialLink() { return this._socialLink; }
-
-  get detailByGoogle(){ return this._detailByGoogle || null; }
-
-
-  get isCheckedForCompare() { return this._isCheckedForCompared; }
-  set isCheckedForCompare(checked: boolean) { this._isCheckedForCompared = checked; }
-  uncheckForCompare() { this._isCheckedForCompared = false; }
-
-  getURLLabel(url: string = ''){
-    let label = ''
-    const match = url.match(/https?:\/\/(?:www\.)?([^/]+)/);
-    if(url && match){ label = match[1]; }
-    return label;
-  }
-
-  constructor(id: string, private p: IUserDetail, private ans?: any) {
-    this._id = id;
-
-    const image = (p.profileImage && p.profileImage.length > 0) ? p.profileImage : (p.image && typeof(p.image) == 'string' && p.image.length > 0) ? p.image: null;
-    this._image = image ? image + '?ver=1.0.2' : null;
-    let imageType = '';
-    if(image) {
-      const regex = /\.(jpe?g|png)$/;
-      const match = image.match(regex);
-      imageType = match ? ('image/' + match[1]) : '';  
-    }
-    this._imageType = imageType;
-    this._banner = null;
+  constructor(id: string, protected p: IUserDetail, private ans?: any) {
+    super({...p, _id: id});
 
     let phone: string;
     if (!p.phone) {
@@ -323,8 +228,6 @@ export class Professional implements IProfessional {
     }
     this._phone = phone;
 
-    this._ratingAvg = p.ratingAvg ? Number(p.ratingAvg) : 0;
-
     let priceRange: string = p.exactPricing ? p.exactPricing.toString() : (p.price_per_hours || '');
     priceRange = priceRange.replace('<', '0 -');
     const priceArray: string[] = priceRange ? priceRange.replace('$', '').split('-') : [];
@@ -332,15 +235,6 @@ export class Professional implements IProfessional {
       const p = Number(price.trim());
       if (p >= 0) { this._priceRange.push(p); }
     });
-
-    this._languagesId = p.languages || [];
-    this._availabilityId = p.typical_hours || [];
-    this._ageRangeId = p.age_range || [];
-    this._ageRange = [];
-    this._serviceDeliveryId = p.serviceOfferIds || [];
-
-    // this._healthStatus = p.serviceCategories || [];
-    // this._allServiceId = p.services || [];
 
     if (p.socialLinks && p.socialLinks.length > 0 && ((p.plan && p.plan.name !== 'Basic') || p.isVipAffiliateUser)) {
       this._socialLink.isAvailable = true;
@@ -350,46 +244,7 @@ export class Professional implements IProfessional {
     }
   }
 
-  populate(type: 'languages' | 'availability' | 'ageRange' | 'serviceDelivery', dataSet: QuestionnaireAnswer[]) {
-    this['_' + type] = [];
-    dataSet.forEach(a => {
-      for (let i = 0; i < this['_' + type + 'Id'].length; i++) {
-        const id = this['_' + type + 'Id'][i];
-        if (id == a._id) {
-          this['_' + type].push({ id, item_text: a.item_text });
-          break;
-        }
-      }
-    });
-  }
-  populateService(dataSet: Category[]) {
-    const service = [];
-    dataSet.forEach(c => {
-      if (this.allServiceId.indexOf(c._id) > -1) {
-        const subCat = [];
-        c.subCategory.forEach(cSub => {
-          if (this.allServiceId.indexOf(cSub._id) > -1) {
-            subCat.push({
-              _id: cSub._id,
-              item_text: cSub.item_text,
-              isSubAns: true
-            });
-          }
-        });
-        service.push({
-          _id: c._id,
-          item_text: c.item_text,
-          isSubAns: false,
-          hasSubAns: true,
-          subAnsData: subCat
-        });
-      }
-    });
-    this._service = service;
-  }
-
-  setServiceCategory(name: string, data: ServiceCategory[]) { this['_' + name] = data; }
-  setEndosements(endosements: any[]) { this._endosements = endosements; }
+  
   setProfessionals(professionals: Professional[]) { professionals.forEach(p => { this._professionals.push(p); }); }
 
   setAmenities(amenities: any[]) {
@@ -398,7 +253,7 @@ export class Professional implements IProfessional {
       const images: ImageData[] = [];
       amenity.images.forEach((image: string) => {
         images.push({
-          url: this._baseURLImage + image,
+          url: this._s3 + image,
           name: amenity.defaultamenityId.item_text
         });
       });
@@ -418,7 +273,7 @@ export class Professional implements IProfessional {
       p.images.forEach((image: string) => {
         images.push({
           name: p.title,
-          url: this._baseURLImage + image,
+          url: this._s3 + image,
           desc: p.description
         });
       });
@@ -433,17 +288,18 @@ export class Professional implements IProfessional {
     this._products = {imageGroups: ps};
   }
 
-  setReviews(reviews: any[]) {
+  setReviews(data: any[]) {
     this.p.ratingBy.forEach((r0: any) => {
-      for (const r1 of reviews) {
+      const populated = [];
+      for (const r1 of data) {
         if (r1._id == r0.bookingId) {
           const name = [];
           if (r1.customerId.firstName) { name.push(r1.customerId.firstName); }
           if (r1.customerId.lastName) { name.push(r1.customerId.lastName); }
 
-          this._reviews.push({
+          populated.push({
             name: (name.length > 0) ? name.join(' ') : 'Anonymous',
-            image: (r1.customerId.profileImage) ? this._baseURLImage + '350x220/' + r1.customerId.profileImage : '/assets/img/no-image.jpg',
+            image: (r1.customerId.profileImage) ? this._s3 + '350x220/' + r1.customerId.profileImage : '/assets/img/no-image.jpg',
             rate: r1.rating,
             review: r1.review,
             createdAt: r0.createdAt,
@@ -451,8 +307,8 @@ export class Professional implements IProfessional {
           break;
         }
       }
+      this._reviewData = new ReviewData(populated);
     });
-    this.sortReviewBy(0);
   }
 
   async setGoogleReviews(): Promise<google.maps.places.PlaceResult>{
@@ -476,14 +332,6 @@ export class Professional implements IProfessional {
         });  
       }
     });
-  }
-
-  sortReviewBy(i: number) {
-    switch (i) {
-      case 0: this._reviews.sort((a, b) => b.rate - a.rate); break; /** rate desc */
-      case 1: this._reviews.sort((a, b) => a.rate - b.rate); break; /** rate asc */
-      case 2: this._reviews.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()); break; /** date desc */
-    }
   }
 
   async setMapIcon() {
@@ -571,7 +419,7 @@ export class Professional implements IProfessional {
     });
 
     img.crossOrigin = '';
-    img.src = this._image ? this.image : '/assets/img/logo-sm.png';
+    img.src = this.profileImage ? this.profileImage : '/assets/img/logo-sm.png';
   }
 }
 export interface ServiceCategory {
@@ -587,13 +435,4 @@ export interface ServiceCategory {
   hasSubAns?: boolean;
   subAnsData?: ServiceCategory[];
 
-}
-
-
-export interface Review {
-  name: string;
-  image: string;
-  rate: number;
-  review: string;
-  createdAt: Date;
 }

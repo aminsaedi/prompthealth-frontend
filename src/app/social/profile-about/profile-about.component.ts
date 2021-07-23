@@ -11,8 +11,7 @@ import { SocialService } from '../social.service';
 export class ProfileAboutComponent implements OnInit {
 
   get profile() { return this._socialService.selectedProfile; }
-
-  public questionnaires: QuestionnaireMapProfilePractitioner;
+  get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
 
   constructor(
     private _socialService: SocialService,
@@ -20,10 +19,6 @@ export class ProfileAboutComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this._qService.getProfilePractitioner('SP').then(d => {
-      this.questionnaires = d;
-    });
-
   }
 
 }

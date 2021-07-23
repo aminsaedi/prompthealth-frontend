@@ -1,15 +1,28 @@
-<ul class="list-unstyled checkbox-group-root" *ngIf="disabled">
+<ul 
+*ngIf="disabled"
+class="list-unstyled checkbox-group-root"
+[ngClass]="{inline: _option.showInlineWhenDisabled, 'block-with-zero-margin': _option.showBlockWithZeroMarginWhenDisabled}"
+>
   <ng-container *ngFor="let cat of categories; let i = index;">
-    <li class="root" *ngIf="getFormArray('root').controls[i].value">
+    <li 
+    *ngIf="getFormArray('root').controls[i].value"
+    class="root"
+    [attr.data-separator]="_option.inlineSeparator"
+    >
       <span>{{cat.item_text}}</span>
 
       <ul 
       *ngIf="getFormArray('root').controls[i].value"
-      class="checkbox-group-sub pl-3 list-unstyled"
-      [ngClass]="{col2: col2}"
+      class="checkbox-group-sub list-unstyled"
+      [ngClass]="{col2: col2, inline: _option.showInlineSubWhenDisabled, 'block-with-zero-margin': _option.showBlockSubWithZeroMarginWhenDisabled, 'pl-3': !_option.removeIndentSub, 'body2': _option.fontSmallSub}"
       >
         <ng-container *ngFor="let sub of cat.subCategory; let j = index;">
-          <li class="sub" [ngClass]="{col2: col2}" *ngIf="getFormArray(cat._id).controls[j].value">
+          <li 
+          *ngIf="getFormArray(cat._id).controls[j].value"
+          class="sub" 
+          [ngClass]="{col2: col2}" 
+          [attr.data-separator]="_option.inlineSeparator"
+          >
             <span>{{sub.item_text}}</span>
           </li>
         </ng-container>

@@ -189,7 +189,6 @@ export class DetailComponent implements OnInit {
           this.iframe.push(ytIframeHtml);
         });    
 
-        this.getEndosements();
         this.getProducts();
         this.getReviews();
 
@@ -357,7 +356,7 @@ export class DetailComponent implements OnInit {
   }
 
   getEndosements() {
-    this.userInfo.setEndosements(endosementsDummy);
+    // this.userInfo.setEndosements(endosementsDummy);
     // todo: access to api and get real data
   }
 
@@ -453,7 +452,7 @@ export class DetailComponent implements OnInit {
 
   sortReviewsBy(i: number) {
     this.indexSortReviews = i;
-    this.userInfo.sortReviewBy(i);
+    // this.userInfo.sortReviewBy(i);
   }
 
   toggleExpandProfessionalDesc() { this.isExpandProfessionals = !this.isExpandProfessionals; }

@@ -596,9 +596,6 @@ export class ListingComponent implements OnInit, OnDestroy {
             this.setFilterOptions('language', element);
             if (this.professionals && this.professionals.length > 0) {
               const languageSet = this.getFilter('language').options;
-              if (this.professionals && this.professionals.length > 0) {
-                this.professionals.forEach((p: Professional) => { p.populate('languages', languageSet); });
-              }
             }
           }
           if (element.question_type === 'availability') {
@@ -645,7 +642,6 @@ export class ListingComponent implements OnInit, OnDestroy {
           if(!this._uService.isServer){
             professional.setMapIcon();            
           }
-          if (languageSet && languageSet.length > 0) { professional.populate('languages', languageSet); }
           professionals.push(professional);
         });
 
@@ -795,7 +791,6 @@ export class ListingComponent implements OnInit, OnDestroy {
               case 'your-offerings': categories.serviceOffering.push(e); break;
             }
           });
-          Object.keys(categories).forEach((k, i) => { p.setServiceCategory(k, categories[k]); });
           resolve(true);
         } else { reject('server error'); }
       },

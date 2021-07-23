@@ -210,7 +210,7 @@ class="bg-background p-4"
             [disabled]="true"
             ></form-item-checkbox-group>
           </div>
-          <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.ageRange.join(', ')}}</p>
+          <!-- <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.ageRange.join(', ')}}</p> -->
         </div>
         <div class="row mb-5" *ngIf="!userInfo?.isCentre">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-primary subtitle1">Professional organization</div>
@@ -232,7 +232,7 @@ class="bg-background p-4"
             [disabled]="true"
             ></form-item-checkbox-group>
           </div>
-          <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.languages.join(', ')}}</p>
+          <!-- <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.languages.join(', ')}}</p> -->
         </div>
         <div class="row mb-5">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-primary subtitle1">Years Of Experience</div>
@@ -356,12 +356,12 @@ class="bg-background p-4"
           </div>
         </div>
 
-        <div class="row bg-primary-light pt-5 pb-0" *ngIf="userInfo?.availability && userInfo.availability.length>0">
+        <!-- <div class="row bg-primary-light pt-5 pb-0" *ngIf="userInfo?.availability && userInfo.availability.length>0">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-primary subtitle1">Availability:</div>
           <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.availability">{{item}}</li>
           </ul>
-        </div>
+        </div> -->
         
         <!-- <div class="row bg-primary-light rounded-bottom pt-5 pb-0" *ngIf="userInfo?.isCentre">
           <div class="col-12 col-lg-4 mb-2 mb-lg-0 text-primary subtitle1">Product:</div>
@@ -425,10 +425,10 @@ class="bg-background p-4"
                   <td class="pr-0"><i iconPh="pin" class="large"></i></td>
                   <td class="text-left">{{userInfo.address}}</td>
                 </tr>
-                <tr *ngIf="userInfo?.email">
+                <tr *ngIf="userInfo?.emailToDisplay">
                   <td class="pr-0"><i iconPh="email" class="large"></i></td>
                   <td class="text-left">
-                    <a [href]="'mailto:' + userInfo.email">{{userInfo.email}}</a>
+                    <a [href]="'mailto:' + userInfo.emailToDisplay">{{userInfo.emailToDisplay}}</a>
                   </td>
                 </tr>
                 <tr *ngIf="userInfo?.phone">
