@@ -87,6 +87,7 @@
         #rlah="routerLinkActive"
         routerLinkActive
         [routerLinkActiveOptions]="{exact: true}"
+        [replaceUrl]="true"
         [ngClass]="rlah.isActive ? 'btn-text active' : 'btn-text-grey'"
         >Home</a>
       </div>
@@ -97,6 +98,7 @@
         class="btn small px-0 py-20p subtitle1"
         #rlas="routerLinkActive"
         routerLinkActive
+        [replaceUrl]="true"
         [ngClass]="rlas.isActive ? 'btn-text active' : 'btn-text-grey'"
         >Service</a>
       </div>
@@ -107,6 +109,7 @@
         class="btn small px-0 py-20p subtitle1"
         #rlaf="routerLinkActive"
         routerLinkActive
+        [replaceUrl]="true"
         [ngClass]="rlaf.isActive ? 'btn-text active' : 'btn-text-grey'"
         >Feed</a>
       </div>
@@ -117,6 +120,7 @@
         class="btn small px-0 py-20p subtitle1" 
         #rlar="routerLinkActive" 
         routerLinkActive 
+        [replaceUrl]="true"
         [ngClass]="rlar.isActive ? 'btn-text active' : 'btn-text-grey'"
         >Review</a></div>
     </div>

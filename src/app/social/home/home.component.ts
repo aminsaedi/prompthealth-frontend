@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChildActivationStart, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, ChildActivationStart, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -18,11 +18,14 @@ export class HomeComponent implements OnInit {
 
   public isPopState: boolean = false;
   public onProfile: boolean = false;
+
+  public countChildActivationStart: number = 0;
+  public routeChangedWithinProfile: boolean = false;
+  
   public urlPrev: {
     path: string,
     query: string,
     full: string,
-    onProfile: boolean,
   };
 
   private routerEventSubscription: Subscription; 
@@ -37,39 +40,46 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    console.log('destroy')
     this.routerEventSubscription.unsubscribe();
   }
   ngOnInit(): void {
-    this.urlPrev = this.getURLset({onProfile: true});
-    ///cannot get if onProfile or not. 
-    ///if user is on top page and go to profile page, scroll is not triggered.
-    ///no solution for this.
+    this.urlPrev = this.getURLset();
+    console.log('init');
 
     this.routerEventSubscription = this._router.events.subscribe(e => {
+      // console.log(location.pathname)
+
       if(e instanceof NavigationStart) {
         this.isPopState = !!(e.navigationTrigger ==  'popstate');
       }
 
       if(e instanceof ChildActivationStart) {
+        this.countChildActivationStart ++;
         this.onProfile = !!(e.snapshot.routeConfig && e.snapshot.routeConfig.path == ':userid');
       }
 
       if(e instanceof NavigationEnd) {
-        const urlCurrent = this.getURLset({onProfile: this.onProfile});
+        const urlCurrent = this.getURLset();
+        const routeChangedWithinProfile = !!(this.countChildActivationStart == 1 && this.onProfile);
+
         if(this.isPopState) {
           //do not scroll
-        } else if(urlCurrent.onProfile) {
-          if(!this.urlPrev.onProfile) {
-            this.scrollToTop();
-          } else {
-            //do not scroll
-          }
-        } else if(urlCurrent.path != this.urlPrev.path) {          
-            console.log('scroll!!')
-            this.scrollToTop();
+          console.log('popState');
+        } else if(routeChangedWithinProfile) {
+          //do not scroll
+          console.log('routeChangedWithinProfile');
+        } else if(urlCurrent.path == this.urlPrev.path) {          
+          console.log('pathNotChanged');
+        } else {
+          this.scrollToTop();
+          console.log('scrollToTop');
         }
 
-        this.urlPrev = this.getURLset({onProfile: this.onProfile});
+        this.urlPrev = this.getURLset();
+
+        this.onProfile = false;
+        this.countChildActivationStart = 0;
       }
     });
   }
@@ -78,12 +88,11 @@ export class HomeComponent implements OnInit {
     window.scroll(0,0);
   }
 
-  getURLset(data: {onProfile: boolean}) {
+  getURLset() {
     const urlset = {
       path: null,
       query: null,
       full: null,
-      onProfile: data.onProfile,
     };
 
     if(location) {

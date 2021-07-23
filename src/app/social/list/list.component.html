@@ -1,7 +1,10 @@
 <card-new-post></card-new-post>
 
 <ng-container *ngFor="let p of posts; let i = index">
-  <div class="mb-15p" [@slideVertical]>
+  <div 
+  class="mb-15p" 
+  [@slideVertical]
+  >
     <card [post]="p" [shorten]="(targetPostId != p._id)" class="pointer-events: initial;"></card>
   </div>
 
