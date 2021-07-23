@@ -63,7 +63,8 @@ header {
   .menu-body {
     position: relative;
     background: white;
-    width: 300px;
+    width: 320px;
+    max-width: calc(100vw - 10px);
     height: 100vh;
     overflow: auto;
   }

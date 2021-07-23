@@ -11,6 +11,7 @@ import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { Profile } from 'src/app/models/profile';
 
 
 @Component({
@@ -22,7 +23,9 @@ export class CardNewPostComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
-  get userImage() { return this._profileService.user ? this._profileService.user.profileImage : null; }
+  get userImage(): string { return this.user ? this.user.profileImage : ''; }
+  get user(): Profile { return this._profileService.profile; }
+
 
   safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
 

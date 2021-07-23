@@ -37,7 +37,6 @@ import { ProfileFeedComponent } from './profile-feed/profile-feed.component';
 
 
 const routes: Routes = [
-
   { path: '', component: BaseComponent, children: [
     { path: 'profile/:userid', component: ProfileComponent, children: [
       { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
@@ -46,13 +45,19 @@ const routes: Routes = [
       { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
     ] },
 
-    { path: ':taxonomyType', component: ListComponent },
-    { path: ':taxonomyType/:topiId', component: ListComponent },
+    { path: 'profile/:userid/post/:postid', component: PageComponent },
+    { path: 'profile/:userid/post', pathMatch: 'full', redirectTo: 'profile/:userid/' },
 
     { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create', redirectTo: 'create/article' },
-  
+
+    { path: '', component: HomeComponent, children: [
+      { path: ':taxonomyType', component: ListComponent },
+      { path: ':taxonomyType/:topiId', component: ListComponent },  
+    ]},
+
+    { path: '', pathMatch: 'full', redirectTo: 'feed', },
 
     // { path: 'feed',     component: ListComponent },
     // { path: 'article',  component: ListComponent },
@@ -69,14 +74,8 @@ const routes: Routes = [
     //   { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
     //   { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
     // ] },
-
-    { path: ':userid/post', pathMatch: 'full', redirectTo: ':userid/' },
-    { path: ':userid', pathMatch: 'full', redirectTo: ':userid/' },
-
-    { path: '', pathMatch: 'full', redirectTo: 'feed', },
   ]},
 
-  { path: ':userid/post/:postid', component: PageComponent },
 ];
 
 

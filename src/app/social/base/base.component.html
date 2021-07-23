@@ -1,6 +1,24 @@
-<header-social></header-social>
-<div class="bg-background pt-30p pb-100p">
-  <router-outlet></router-outlet>
+<div 
+class="bg-background"
+style="min-height: 100vh;"
+>
+  <header-social></header-social>
+  <div class="pt-30p pb-100p">
+    <router-outlet></router-outlet>
+  </div>  
 </div>
 
 <modal-event></modal-event>
+
+<modal id="user-menu" #modalUserMenu>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">{{userName}}</span>
+    <button class="btn pr-0 btn-icon" (click)="hideUserMenu()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+    <p class="body1 mb-25p">Please select calendar type</p>
+  </div>
+</modal>

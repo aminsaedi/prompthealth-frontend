@@ -24,8 +24,9 @@ export class HeaderComponent implements OnInit {
   get topics() { return this._catService.categoryList; }
   get userImage() { return this.user ? this.user.profileImage : ''; }
   get userName() { return this.user ? this.user.name : ''; }
-  get user() { return this._profileService.profile; }
+  get user(): Profile { return this._profileService.profile; }
 
+  get sizeS(): boolean { return (!window || window.innerWidth < 768); }
 
   constructor(
     private _router: Router,
@@ -78,11 +79,11 @@ export class HeaderComponent implements OnInit {
 
   showUserMenu() {
     if(this.user && !this.isUserMenuShown) {
-      this.isUserMenuShown = true;
+      const [path, queryParams] = this._getPathAndQueryParams();
+      queryParams.modal = 'user-menu';
+
+      this._router.navigate([path], {queryParams: queryParams});
     }
-  }
-  hideUserMenu() {
-    this.isUserMenuShown = false;
   }
 
   _getPathAndQueryParams() {

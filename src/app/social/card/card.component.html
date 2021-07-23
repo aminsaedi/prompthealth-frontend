@@ -13,7 +13,7 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
   </div> -->
 
   <ng-container *ngIf="isContentGradientShown">
-    <a [routerLink]="['/community', post.authorId, 'post', post._id]" class="text-body">
+    <a [routerLink]="['/community/profile', post.authorId, 'post', post._id]" class="text-body">
       <ng-container *ngTemplateOutlet="clickableArea"></ng-container>
     </a>
   </ng-container>
