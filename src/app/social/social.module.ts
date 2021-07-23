@@ -37,30 +37,41 @@ import { ProfileFeedComponent } from './profile-feed/profile-feed.component';
 
 
 const routes: Routes = [
-  { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canDeactivate: [GuardIfEditorLockedGuard] },
-  { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canDeactivate: [GuardIfEditorLockedGuard] },
-  { path: 'create', redirectTo: 'create/article' },
 
-  { path: '', component: HomeComponent, children: [
-
-    { path: 'feed',     component: ListComponent },
-    { path: 'article',  component: ListComponent },
-    { path: 'media',    component: ListComponent },
-    { path: 'event',    component: ListComponent },
-    { path: 'feed/:topicId',     component: ListComponent },
-    { path: 'article/:topicId',  component: ListComponent },
-    { path: 'media/:topicId',    component: ListComponent },
-    { path: 'event/:topicId',    component: ListComponent },
-
-    { path: ':userid', component: ProfileComponent, children: [
+  { path: '', component: BaseComponent, children: [
+    { path: 'profile/:userid', component: ProfileComponent, children: [
       { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
       { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
       { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
       { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
     ] },
 
-    { path: ':userid/post', pathMatch: 'full', redirectTo: ':userid/home' },
-    { path: ':userid', pathMatch: 'full', redirectTo: ':userid/home' },
+    { path: ':taxonomyType', component: ListComponent },
+    { path: ':taxonomyType/:topiId', component: ListComponent },
+
+    { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canDeactivate: [GuardIfEditorLockedGuard] },
+    { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canDeactivate: [GuardIfEditorLockedGuard] },
+    { path: 'create', redirectTo: 'create/article' },
+  
+
+    // { path: 'feed',     component: ListComponent },
+    // { path: 'article',  component: ListComponent },
+    // { path: 'media',    component: ListComponent },
+    // { path: 'event',    component: ListComponent },
+    // { path: 'feed/:topicId',     component: ListComponent },
+    // { path: 'article/:topicId',  component: ListComponent },
+    // { path: 'media/:topicId',    component: ListComponent },
+    // { path: 'event/:topicId',    component: ListComponent },
+
+    // { path: ':userid', component: ProfileComponent, children: [
+    //   { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
+    //   { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
+    //   { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
+    //   { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
+    // ] },
+
+    { path: ':userid/post', pathMatch: 'full', redirectTo: ':userid/' },
+    { path: ':userid', pathMatch: 'full', redirectTo: ':userid/' },
 
     { path: '', pathMatch: 'full', redirectTo: 'feed', },
   ]},
