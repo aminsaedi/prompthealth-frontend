@@ -26,7 +26,7 @@ import { BlogCategoryComponent } from './blog-category/blog-category.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 import { subscriptionPlanProductComponent } from './subscription-plan-product/subscription-plan-product.component';
-import { SharedModule } from '../shared/shared.module'; 
+import { SharedModule } from '../shared/shared.module';
 import { NgxSocialShareModule } from 'ngx-social-share';
 import { GetFeaturedTabComponent } from './get-featured-tab/get-featured-tab.component';
 import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
@@ -103,7 +103,7 @@ import { SitemapComponent } from './sitemap/sitemap.component';
     NgxSpinnerModule,
     AutocompleteLibModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCbRhC6h9Pp43-5t_Knyrd_ewAdLMIJtCg',
+      apiKey: 'AIzaSyDDfIO3nUUgAA_QCs2XTv2xvd8t9-0oYDs',
       libraries: ['places']
     }),
     CommonModule,
