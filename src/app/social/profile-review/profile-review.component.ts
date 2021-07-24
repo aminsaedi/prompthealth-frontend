@@ -9,7 +9,7 @@ import { SocialService } from '../social.service';
 export class ProfileReviewComponent implements OnInit {
 
   get profile() { return this._socialService.selectedProfile; }
-  get sizeS() { return !!(!window || window.innerWidth < 768); }
+  
   constructor(
     private _socialService: SocialService,
   ) { }

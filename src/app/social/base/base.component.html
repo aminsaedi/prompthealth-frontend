@@ -10,15 +10,63 @@ style="min-height: 100vh;"
 
 <modal-event></modal-event>
 
-<modal id="user-menu" #modalUserMenu>
+<modal 
+id="user-menu" 
+#modalUserMenu
+>
   <div class="title-container d-flex justify-content-between align-items-center">
-    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">{{userName}}</span>
-    <button class="btn pr-0 btn-icon" (click)="hideUserMenu()">
+    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Hello, {{userName}}</span>
+    <button class="btn pr-0 btn-icon" (click)="modalUserMenu.hide()">
       <i iconPh="cross"></i>
     </button>  
   </div>
 
   <div class="content-container">
-    <p class="body1 mb-25p">Please select calendar type</p>
+    <div>
+      <a 
+      class="btn btn-text-body px-0"
+      (click)="onClickUserMenuItem(['/community/profile', userId])"
+      >
+      <i iconPh="user"></i>
+      <span>See my profile</span>
+    </a>
+    </div>
+    <div>
+      <a
+      class="btn btn-text-body px-0"
+      (click)="onClickUserMenuItem(['/dashboard/profilemanagement', (userRole == 'P' ? 'partner-profile' : 'my-profile')])"
+      >
+      <i iconPh="edit-3"></i>
+      <span>Edit my profile</span>
+    </a>  
+    </div>
+    <div>
+      <a
+      class="btn btn-text-error px-0"
+      (click)="onClickUserMenuItemLogout()"
+      >
+      <i iconPh="alert-circle"></i>
+      <span>Logout</span>
+    </a>  
+    </div>
+
   </div>
 </modal>
+
+
+<modal 
+id="login-menu" 
+#modalLoginMenu
+>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Login</span>
+    <button class="btn pr-0 btn-icon" (click)="modalUserMenu.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+    <form-auth [staySamePage]="true" (changeState)="onChangeLoginState($event)"></form-auth>
+  </div>
+</modal>
+

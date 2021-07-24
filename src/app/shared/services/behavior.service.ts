@@ -63,7 +63,7 @@ export class BehaviorService {
     }
 
     setUserData(data) {
-        this._pService.dispose();
+        // this._pService.dispose();
         this.userData.next(data);
     }
 

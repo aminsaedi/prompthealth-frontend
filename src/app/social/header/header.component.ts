@@ -1,11 +1,12 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { Subscription } from 'rxjs';
+import { LoginStatusType, ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Profile } from 'src/app/models/profile';
-import { IUserDetail } from 'src/app/models/user-detail';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { slideHorizontalReverseAnimation } from 'src/app/_helpers/animations';
 
@@ -23,8 +24,9 @@ export class HeaderComponent implements OnInit {
 
   get topics() { return this._catService.categoryList; }
   get userImage() { return this.user ? this.user.profileImage : ''; }
-  get userName() { return this.user ? this.user.name : ''; }
+  get userName() { return this.user ? this.user.name : '(No Name)'; }
   get user(): Profile { return this._profileService.profile; }
+
 
   get sizeS(): boolean { return (!window || window.innerWidth < 768); }
 
@@ -36,6 +38,7 @@ export class HeaderComponent implements OnInit {
     private _headerService: HeaderStatusService,
     private _changeDetector: ChangeDetectorRef,
     private _profileService: ProfileManagementService,
+    private _modalService: ModalService,
     private _uService: UniversalService,
   ) { }
 
@@ -62,7 +65,7 @@ export class HeaderComponent implements OnInit {
   hideMenuSm() {
     const state = this._location.getState() as any;
     if(state.navigationId == 1) {
-      const [path, queryParams] = this._getPathAndQueryParams();
+      const [path, queryParams] = this._modalService.currentPathAndQueryParams;
       queryParams.menu = null;
       this._router.navigate([path], {queryParams: queryParams, replaceUrl: true});
     } else {
@@ -71,33 +74,22 @@ export class HeaderComponent implements OnInit {
   }
 
   showMenuSm() {
-    const [path, queryParams] = this._getPathAndQueryParams();
+    const [path, queryParams] = this._modalService.currentPathAndQueryParams;
     queryParams.menu = 'show';
 
     this._router.navigate([path], {queryParams: queryParams});
   }
 
-  showUserMenu() {
-    if(this.user && !this.isUserMenuShown) {
-      const [path, queryParams] = this._getPathAndQueryParams();
-      queryParams.modal = 'user-menu';
+  // showModal(id: string) {
+  //   this._modalService.show(id);
+  // }
 
-      this._router.navigate([path], {queryParams: queryParams});
+  onClickProfileIcon() {
+    if(this.user) {
+      this._modalService.show('user-menu');
+    } else {
+      this._modalService.show('login-menu');
     }
   }
 
-  _getPathAndQueryParams() {
-    const [path, query] = this._location.path().split('?');
-    const queryParams: any = {};
-
-    if(query) {
-      const array = query.split('&');
-      array.forEach(s => {
-        const array = s.split('=');
-        queryParams[array[0]] = array[1] || null
-      });
-    }
-
-    return [path, queryParams];
-  }
 }

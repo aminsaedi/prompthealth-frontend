@@ -35,14 +35,15 @@ style="z-index: 100;"
             <button class="btn btn-icon-grey small ml-15p d-none d-xl-block">
               <i iconPh="search" class="large"></i>
             </button>
-            <div class="ml-5p d-none d-xl-block">
+            <div *ngIf="user" class="ml-5p d-none d-xl-block">
               <ng-container *ngTemplateOutlet="notification"></ng-container>
             </div>
             <div class="ml-xl-15p">
               <profile-image 
+              class="cursor-pointer"
               [size]="sizeS ? 35 : 40"
               [image]="userImage"
-              (click)="showUserMenu()"
+              (click)="onClickProfileIcon()"
               ></profile-image>
             </div>
             <button class="btn btn-icon-grey small d-none d-xl-inline-block ml-15p pr-0">
@@ -61,7 +62,6 @@ style="z-index: 100;"
       <a routerLink="/community/event" class="btn small px-0 pt-20p pb-5p subtitle1" #rla3="routerLinkActive" routerLinkActive [ngClass]="rla3.isActive ? 'btn-text active' : 'btn-text-grey'">Event</a>
     </div>  
   </div>
-
 </header>
 
 <div class="menu-slide-horizontal"
@@ -82,7 +82,9 @@ style="z-index: 100;"
         <button class="btn btn-icon-grey small mx-10p">
           <i iconPh="search" class="large"></i>
         </button>
-        <ng-container *ngTemplateOutlet="notification"></ng-container>
+        <ng-container *ngIf="user">
+          <ng-container *ngTemplateOutlet="notification"></ng-container>
+        </ng-container>
       </div>
     </div>
     <div class="container">

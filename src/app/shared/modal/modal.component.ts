@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ModalService } from '../services/modal.service';
 
 @Component({
   selector: 'modal',
@@ -18,37 +19,41 @@ export class ModalComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _location: Location,
+    private _modalService: ModalService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   public isShown: boolean = false;
-  public queryParams: {[k: string]: string};
   public _option: ModalOption;
 
   ngOnInit(): void {
     this._option = new ModalOption(this.option);
 
     this._route.queryParams.subscribe((params: {modal: string}) => {
-      this.queryParams = {...params};
       this.isShown = (params.modal && params.modal.length > 0 && params.modal == this.id) ? true : false;
+      this._changeDetector.detectChanges();
+      // console.log('modalComponent. id: ', this.id, ': status: ', this.isShown ? 'shown' : 'hidden');
     });
+  }
+
+  hide(goNext: boolean = false, routeNext: string[] = null) {
+    this._modalService.hide(goNext, routeNext);
   }
 
   goBack() {
     const state = this._location.getState() as any;
     if(state.navigationId == 1) {
-    
-      this.queryParams.modal = null;
-      this._router.navigate(['./'], {queryParams: this.queryParams, replaceUrl: true, relativeTo: this._route});
+      this.goNext();
     } else {
       this._location.back();
     }
   }
 
   goNext() {
-    this.queryParams.modal = null;
-    this._router.navigate(['./'], {queryParams: this.queryParams, replaceUrl: true, relativeTo: this._route});
+    const [path, queryParams] = this._modalService.currentPathAndQueryParams;
+    queryParams.modal = null;
+    this._router.navigate([path], {queryParams: queryParams, replaceUrl: true});
   }
-
 }
 
 interface IModalOption {

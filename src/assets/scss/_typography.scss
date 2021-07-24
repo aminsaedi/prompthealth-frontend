@@ -71,6 +71,37 @@ caption, .caption { @include typography(12px, 16px, $fontWeightRegular, 0.2px); 
 }
 
 
+@media (min-width: #{$breakpointLg}) {
+  .h1-lg { @include typography(60px, 64px, $fontWeightBold, -0.5px); }
+  .h2-lg { @include typography(48px, 54px, $fontWeightBold, 0px); }
+  .h3-lg { @include typography(34px, 42px, $fontWeightBold, 0.25px); }
+  .h4-lg { @include typography(24px, 32px, $fontWeightBold, 0px); }
+  .h5-lg { @include typography(20px, 26px, $fontWeightBold, 0.2px); }
+  .h6-lg { @include typography(18px, 24px, $fontWeightMedium, 0.2px); }
+  .subtitle1-lg { @include typography(16px, 24px, $fontWeightMedium, 0.25px); }
+  .subtitle2-lg { @include typography(14px, 18px, $fontWeightMedium, 0.1px); }
+  .body1-lg { @include typography(16px, 24px, $fontWeightRegular, 0.1px); }
+  .body2-lg { @include typography(14px, 22px, $fontWeightRegular, -0.2px); }
+  .body-small-lg { @include typography(13px, 16px, $fontWeightMedium, 0.2px); }
+  .caption-lg { @include typography(12px, 16px, $fontWeightRegular, 0.2px); }
+}
+
+@media (min-width: #{$breakpointXl}) {
+  .h1-xl { @include typography(60px, 64px, $fontWeightBold, -0.5px); }
+  .h2-xl { @include typography(48px, 54px, $fontWeightBold, 0px); }
+  .h3-xl { @include typography(34px, 42px, $fontWeightBold, 0.25px); }
+  .h4-xl { @include typography(24px, 32px, $fontWeightBold, 0px); }
+  .h5-xl { @include typography(20px, 26px, $fontWeightBold, 0.2px); }
+  .h6-xl { @include typography(18px, 24px, $fontWeightMedium, 0.2px); }
+  .subtitle1-xl { @include typography(16px, 24px, $fontWeightMedium, 0.25px); }
+  .subtitle2-xl { @include typography(14px, 18px, $fontWeightMedium, 0.1px); }
+  .body1-xl { @include typography(16px, 24px, $fontWeightRegular, 0.1px); }
+  .body2-xl { @include typography(14px, 22px, $fontWeightRegular, -0.2px); }
+  .body-small-xl { @include typography(13px, 16px, $fontWeightMedium, 0.2px); }
+  .caption-xl { @include typography(12px, 16px, $fontWeightRegular, 0.2px); }
+}
+
+
 @mixin clamp($line, $height) {
   height: $line * $height;
   display: -webkit-box;

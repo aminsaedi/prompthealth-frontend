@@ -87,7 +87,8 @@
     <div class="mb-2">
       <input 
       class="btn btn-success w-100"
-      type="submit" 
+      type="submit"
+      [disabled]="isLoading"
       [value]="(authType == 'signin') ? 'Sign In' : 'Sign Up'"
       >
     </div>

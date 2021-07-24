@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, ChildActivationStart, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalService } from 'src/app/shared/services/modal.service';
+import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
   selector: 'app-base',
@@ -11,13 +12,14 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 })
 export class BaseComponent implements OnInit {
 
+  get userId() { return this.user ? this.user._id : ''; }
+  get userRole() { return this.user ? this.user.role : 'U'; }
   get userName() { return this.user ? this.user.name : ''; }
   get user() { return this._profileService.profile; }
 
+
   private isPopState: boolean = false;
-  private onProfile: boolean = false;
-  private countChildActivationStart: number = 0;
-  private routerEventSubscription: Subscription; 
+  private subscriptionRouterEvent: Subscription; 
   
   private urlPrev: {
     path: string,
@@ -25,41 +27,31 @@ export class BaseComponent implements OnInit {
     full: string,
   };
 
-  @ViewChild('modalUserMenu') private modalUserMenu: ModalComponent;
 
   constructor(
     private _router: Router,
-    private _route: ActivatedRoute,
     private _profileService: ProfileManagementService,
+    private _sharedService: SharedService,
+    private _modalService: ModalService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnDestroy() {
-    console.log('socialBase.destroy')
-    this.routerEventSubscription.unsubscribe();
+    this.subscriptionRouterEvent.unsubscribe();
   }
 
   ngOnInit(): void {
+
     this.urlPrev = this.getURLset();
-    console.log('socialBase.init');
 
-    this._route.queryParams.subscribe((param: {modal: string}) => {
-      console.log(param.modal);
-    });
-
-    this.routerEventSubscription = this._router.events.subscribe(e => {
+    this.subscriptionRouterEvent = this._router.events.subscribe(e => {
 
       if(e instanceof NavigationStart) {
         this.isPopState = !!(e.navigationTrigger ==  'popstate');
       }
 
-      if(e instanceof ChildActivationStart) {
-        this.countChildActivationStart ++;
-        this.onProfile = !!(e.snapshot.routeConfig && e.snapshot.routeConfig.path == ':userid');
-      }
-
       if(e instanceof NavigationEnd) {
         const urlCurrent = this.getURLset();
-        const routeChangedWithinProfile = !!(this.countChildActivationStart == 1 && this.onProfile);
 
         if(this.isPopState) {
           //do not scroll
@@ -67,7 +59,7 @@ export class BaseComponent implements OnInit {
         } else if(urlCurrent.path.match(/community\/profile\/\w+\/post/)) {
           this.scrollToTop();
           console.log('scrollToTop (on post single page)');
-        } else if(routeChangedWithinProfile) {
+        } else if(urlCurrent.path.match('profile') && this.urlPrev.path.match('profile')) {
           //do not scroll
           console.log('routeChangedWithinProfile');
         } else if(urlCurrent.path == this.urlPrev.path) {
@@ -78,9 +70,6 @@ export class BaseComponent implements OnInit {
         }
 
         this.urlPrev = this.getURLset();
-
-        this.onProfile = false;
-        this.countChildActivationStart = 0;
       }
     });
   }
@@ -105,7 +94,18 @@ export class BaseComponent implements OnInit {
     return urlset;
   }
 
-  hideUserMenu() {
-    this.modalUserMenu.goBack();
+  onClickUserMenuItem(route: string[]) {
+    this._modalService.hide(true, route);
+  }
+
+  onClickUserMenuItemLogout() {
+    this._sharedService.logout(false);
+    this._modalService.hide();
+  }
+
+  onChangeLoginState(state: 'start'|'done') {
+    if(state == 'done') {
+      this._modalService.hide();        
+    }
   }
 }

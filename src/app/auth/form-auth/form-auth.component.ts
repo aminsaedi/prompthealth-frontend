@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SocialAuthService } from 'angularx-social-login';
@@ -10,6 +10,7 @@ import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
 import { MustMatch } from '../../_helpers/must-match.validator';
 import { validators } from 'src/app/_helpers/form-settings';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 
 @Component({
   selector: 'form-auth',
@@ -23,17 +24,19 @@ export class FormAuthComponent implements OnInit {
   @Input() staySamePage: boolean = false;
   @Input() nextPage: string = null;
   @Input() nextPageKeyword: string = null;
-  @Output() changeState = new EventEmitter<string>();
+  @Output() changeState = new EventEmitter<'start'|'done'>();
 
   get f(){ return this.form.controls}
   public form: FormGroup;
   public isSubmitted = false;
+  public isLoading = false;
 
   constructor(
     private _fb: FormBuilder,
     private _router: Router,
     private _authService: SocialAuthService,
     private _sharedService: SharedService,
+    private _profileService: ProfileManagementService,
     private _bs: BehaviorService,
     private _toastr: ToastrService,
   ) { }
@@ -78,10 +81,11 @@ export class FormAuthComponent implements OnInit {
       }
 
       this._sharedService.loader('show');
+      this.isLoading = true;
       this.changeState.emit('start');
-
       this._sharedService.socialRegister(data).subscribe((res: any) => {
         this._sharedService.loader('hide');
+        this.isLoading = false;
 
         if(res.statusCode === 200) {
           this.afterLogin(res.data);
@@ -92,6 +96,7 @@ export class FormAuthComponent implements OnInit {
         console.log(error);
         this._toastr.error(error);
         this._sharedService.loader('hide');  
+        this.isLoading = false;
       });
     });
   }
@@ -117,11 +122,15 @@ export class FormAuthComponent implements OnInit {
     }
 
     this._sharedService.loader('show');
+    this.isLoading = true;
+
     this.changeState.emit('start');
 
     const subscription = (this.authType == 'signin') ? this._sharedService.login(data) : this._sharedService.register(data);
     subscription.subscribe((res: any) => {
       this._sharedService.loader('hide');
+      this.isLoading = false;
+
       if(res.statusCode == 200){
         this.afterLogin(res.data);
       }else{
@@ -131,6 +140,7 @@ export class FormAuthComponent implements OnInit {
       console.log(error);
       this._toastr.error(error);
       this._sharedService.loader('hide');
+      this.isLoading = false;
     });
 
   }
@@ -144,6 +154,8 @@ export class FormAuthComponent implements OnInit {
     this._sharedService.addCookie('loginID', userinfo._id);
     this._sharedService.addCookie('isVipAffiliateUser', userinfo.isVipAffiliateUser);
     this._sharedService.addCookieObject('user', userinfo);
+    
+    this._profileService.getProfileDetail(userinfo);
 
     this._bs.setUserData(userinfo);
 

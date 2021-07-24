@@ -2,12 +2,9 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivationStart, NavigationEnd, Router, ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { HeaderStatusService } from './shared/services/header-status.service';
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from './shared/services/universal.service';
 import { BehaviorService } from './shared/services/behavior.service';
-import { ProfileManagementService } from './dashboard/profileManagement/profile-management.service';
-
 
 declare let gtag: Function;
 declare let fbq: Function;
@@ -26,21 +23,11 @@ export class AppComponent implements OnInit {
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
     private _location: Location,
-    private _profileService: ProfileManagementService,
   ) {}
 
   private disableAnalytics: boolean = environment.config.disableAnalytics;
 
   async ngOnInit() {
-    const userStr = this._uService.localStorage.getItem('user');
-    this._bService.setUserData(userStr ?  JSON.parse(userStr) : null);
-
-    if(userStr) {
-      const user = JSON.parse(userStr);
-      this._profileService.getProfileDetail(user);
-    }
-
-
     if(!this._uService.isServer) {
       this._router.events.subscribe((event: NavigationEnd) => {
         this.onRouteChanged(event);

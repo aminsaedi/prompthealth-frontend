@@ -1,4 +1,4 @@
-<card-new-post></card-new-post>
+<card-new-post *ngIf="isEligibleToPost"></card-new-post>
 
 <ng-container *ngFor="let p of posts; let i = index">
   <div 

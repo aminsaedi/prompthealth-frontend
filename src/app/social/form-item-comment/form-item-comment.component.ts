@@ -1,5 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
 
 @Component({
   selector: 'form-item-comment',
@@ -14,11 +16,18 @@ export class FormItemCommentComponent implements OnInit {
   @Output() onCancel = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<void>();
 
+
+  get userImage() { return this.user ? this.user.profileImage : ''; }
+  get user() { return this._profileService.profile; }
+
   public _option: FormCommentOption;
 
   @ViewChild('submit') private buttonSubmit: ElementRef;
 
-  constructor() { }
+  constructor(
+    private _profileService: ProfileManagementService,
+    private _modalService: ModalService,
+  ) { }
 
   ngOnInit(): void {
     if(!this.controller) {
@@ -63,6 +72,10 @@ export class FormItemCommentComponent implements OnInit {
     this.stopPropagation(e);
     console.log(this.controller.invalid)
     this.onSubmit.emit();
+  }
+
+  onClickButtonLogin() {
+    this._modalService.show('login-menu');
   }
 
   stopPropagation(e: Event) {

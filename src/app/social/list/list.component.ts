@@ -2,20 +2,24 @@ import { Location } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { BlogSearchQuery, IBlogSearchQuery, IBlogSearchResult } from 'src/app/models/blog-search-query';
 import { SocialPost } from 'src/app/models/social-post';
 import { ISocialPostResult } from 'src/app/models/social-post-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { slideVerticalAnimation } from 'src/app/_helpers/animations';
+import { expandVerticalAnimation, slideVerticalAnimation } from 'src/app/_helpers/animations';
 import { SocialPostTaxonomyType, SocialService } from '../social.service';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  animations: [slideVerticalAnimation],
+  animations: [slideVerticalAnimation, expandVerticalAnimation],
 })
 export class ListComponent implements OnInit {
+
+  get isEligibleToPost() { return (this.user && this.user.role != 'U');}
+  get user() { return this._profileService.profile; }
 
   public posts: SocialPost[] = null;
   public targetPostId: string = null;
@@ -53,8 +57,8 @@ export class ListComponent implements OnInit {
     private _socialService: SocialService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _profileService: ProfileManagementService,
   ) { }
-
 
 
   ngOnInit(): void {
@@ -86,7 +90,7 @@ export class ListComponent implements OnInit {
     this.initDone = true;
   }
 
-  async initPosts() {
+  async initPosts() {    
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
     if(!!posts) {
       this.posts = posts;
