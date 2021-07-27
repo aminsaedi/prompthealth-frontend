@@ -33,6 +33,16 @@ export const slideVerticalAnimation = trigger('slideVertical', [
   ])
 ]);
 
+export const slideVerticalReverseAnimation = trigger('slideVerticalReverse', [
+  transition(':enter', [
+    style({ display: 'block', opacity: 0, transform: 'translateY(-50px)'}),
+    animate('300ms ease', style({opacity: 1, transform: 'translateY(0)'}))
+  ]),
+  transition(':leave', [
+    animate('300ms ease', style({opacity: 0, transform: 'translateY(-50px)'}))
+  ])
+]);
+
 export const expandVerticalAnimation = trigger('expandVertical', [
   transition(':enter', [
     style({ display: 'block', height: 0, opacity: 0 }),
@@ -70,7 +80,7 @@ export const slideHorizontalReverseAnimation = trigger('slideHorizontalReverse',
 export const slideInSocialProfileChildRouteAnimation = trigger('socialProfileChildRouteAnimation', [
   /** slide to left */
   transition('1=>2, 1=>3, 1=>4, 1=>5, 1=>6, 2=>3, 2=>4, 2=>5, 2=>6, 3=>4, 3=>5, 3=>6, 4=>5, 4=>6, 5=>6', [
-    style({position: 'relative', height: '100vh', overflow: 'hidden'}),
+    style({position: 'relative', height: '100vh'}),
     query(':enter, :leave', [
       style({
         position: 'absolute',
@@ -94,7 +104,7 @@ export const slideInSocialProfileChildRouteAnimation = trigger('socialProfileChi
     query(':enter', animateChild(), {optional: true}),
   ]),
   transition('6=>5, 6=>4, 6=>3, 6=>2, 6=>1, 5=>4, 5=>3, 5=>2, 5=>1, 4=>3, 4=>2, 4=>1, 3=>2, 3=>1, 2=>1', [
-    style({position: 'relative', height: '100vh', overflow: 'hidden'}),
+    style({position: 'relative', height: '100vh'}),
     query(':enter, :leave', [
       style({
         position: 'absolute',

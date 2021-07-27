@@ -1,0 +1,42 @@
+<div class="bg-white rounded-8p position-relative">
+  <div class="d-flex justify-content-between align-items-center border-bottom border-line flex-nowrap py-10p px-20p">
+    <div class="subtitle2 text-placeholder">Notification</div>
+    <button class="btn btn-text small px-0 text-nowrap">Mark all as read</button>
+  </div>
+
+  <ul class="list-unstyled py-5p px-20p my-0">
+    <li class="my-15p d-flex align-items-start justify-content-between">
+      <div class="d-flex align-items-start">
+        <profile-image [size]="42"></profile-image>
+        <div class="mx-10p">
+          <div class="subtitle2 text-nowrap">Marvin McKinney</div>
+          <div class="body2 text-label text-nowrap">Share your video</div>
+        </div>  
+      </div>
+      <div>
+        <div class="d-flex align-items-center">
+          <span class="body-small text-label text-nowrap" style="line-height: 18px;">2h ago</span>
+          <div class="indicator ml-10p"></div>
+        </div>  
+      </div>
+    </li>
+    <li class="my-15p d-flex align-items-start justify-content-between">
+      <div class="d-flex align-items-start">
+        <profile-image [size]="42"></profile-image>
+        <div class="mx-10p">
+          <div class="subtitle2 text-nowrap">Marvin McKinney</div>
+          <div class="body2 text-label text-nowrap">Share your video</div>
+        </div>  
+      </div>
+      <div>
+        <div class="d-flex align-items-center">
+          <span class="body-small text-label text-nowrap" style="line-height: 18px;">2h ago</span>
+          <div class="indicator ml-10p"></div>
+        </div>  
+      </div>
+    </li>
+  </ul>
+
+  <ng-content></ng-content>
+
+</div>

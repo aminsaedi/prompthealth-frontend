@@ -11,8 +11,6 @@ import { SocialService } from '../social.service';
 })
 export class ProfileReviewComponent implements OnInit {
 
-  // get profile() { return this._socialService.selectedProfile; }
-
   public profile: Professional;
   public googleReviews: google.maps.places.PlaceResult;
   private subscription: Subscription;

@@ -9,7 +9,7 @@
       *ngIf="getFormArray('root').controls[i].value"
       [attr.data-separator]="_option.inlineSeparator"
       >
-        <span>{{item.label}}</span>
+        <span class="body1">{{item.label}}</span>
   
         <ul 
         *ngIf="getFormArray('root').controls[i].value && item.child"

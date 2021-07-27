@@ -1,32 +1,35 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, SimpleChanges } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { LoginStatusType, ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Profile } from 'src/app/models/profile';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { slideHorizontalReverseAnimation } from 'src/app/_helpers/animations';
+import { fadeAnimation, slideHorizontalReverseAnimation, slideVerticalReverseAnimation } from 'src/app/_helpers/animations';
 
 @Component({
   selector: 'header-social',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  animations: [slideHorizontalReverseAnimation],
+  animations: [slideHorizontalReverseAnimation, slideVerticalReverseAnimation, fadeAnimation],
 })
 export class HeaderComponent implements OnInit {
 
   public isHeaderShown: boolean = true;
-  public isMenuSmShown: boolean = false; 
+  public isMenuMobileShown: boolean = false; 
   public isUserMenuShown: boolean = false;
+  public isMenuSearchShown: boolean = false;
+  public isNotificationSummaryShown: boolean = false;
+
+  public formSearch: FormControl;
 
   get topics() { return this._catService.categoryList; }
   get userImage() { return this.user ? this.user.profileImage : ''; }
   get userName() { return this.user ? this.user.name : '(No Name)'; }
   get user(): Profile { return this._profileService.profile; }
-
 
   get sizeS(): boolean { return (!window || window.innerWidth < 768); }
 
@@ -52,17 +55,20 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.formSearch = new FormControl();
+    
     this._headerService.observeHeaderStatus().subscribe(([key, val]: [string, any]) => {
       this[key] = val;
       this._changeDetector.detectChanges();
     });
 
-    this._route.queryParams.subscribe((param: {menu: 'show'}) => {
-      this.isMenuSmShown = (param.menu == 'show') ? true : false;
+    this._route.queryParams.subscribe((param: {menu: 'mobile' | 'search'}) => {
+      this.isMenuMobileShown = (param.menu == 'mobile') ? true : false;
+      this.isMenuSearchShown = (param.menu == 'search') ? true : false;
     });
   }
 
-  hideMenuSm() {
+  hideMenu() {
     const state = this._location.getState() as any;
     if(state.navigationId == 1) {
       const [path, queryParams] = this._modalService.currentPathAndQueryParams;
@@ -73,16 +79,12 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  showMenuSm() {
+  showMenu(id: 'mobile' | 'search') {
     const [path, queryParams] = this._modalService.currentPathAndQueryParams;
-    queryParams.menu = 'show';
-
+    queryParams.menu = id;
     this._router.navigate([path], {queryParams: queryParams});
   }
 
-  // showModal(id: string) {
-  //   this._modalService.show(id);
-  // }
 
   onClickProfileIcon() {
     if(this.user) {
@@ -92,4 +94,33 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  onClickButtonMore() {
+    this._modalService.show('more-menu');
+  }
+
+  navigateTo(route: string[], replaceUrl: boolean = false) {
+    this._router.navigate(route, {replaceUrl: replaceUrl});
+  }
+
+  toggleNotificationSummary() {
+    if (this.isNotificationSummaryShown) {
+      this.hideNotificationSummary();
+    } else {
+      this.showNotificationSummary();
+    }
+  }
+
+  showNotificationSummary() {
+    this.isNotificationSummaryShown = true;
+  }
+  hideNotificationSummary() {
+    this.isNotificationSummaryShown = false;
+  }
+
+  changeTopics(topic: Category) {
+    const path = this._location.path();
+    const match = path.match('/community/(feed|article|media|event)');
+    const taxonomyType = match ? match[1] : 'feed';
+    this._router.navigate(['/community', taxonomyType, topic._id], {replaceUrl: true});
+  }
 }

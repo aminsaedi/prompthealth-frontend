@@ -52,7 +52,6 @@ export class ListComponent implements OnInit {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _location: Location,
     private _socialService: SocialService,
     private _sharedService: SharedService,
     private _profileService: ProfileManagementService,
@@ -63,6 +62,7 @@ export class ListComponent implements OnInit {
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTopicId = param.topicId || null;
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
+      console.log(this.selectedTaxonomyType);
 
       if(this.initDone) {
         this.initPosts();
@@ -114,7 +114,7 @@ export class ListComponent implements OnInit {
       this._sharedService.getNoAuth(path).subscribe((res: ISocialPostResult) => {
         this.isLoading = false;
         if(res.statusCode === 200) {
-          const posts = this._socialService.saveCache(res.data.data);
+          const posts = this._socialService.saveCache(res.data.data, this.selectedTaxonomyType);
           const count = posts.length + (this.posts ? this.posts.length : 0);
           this.isMorePosts = (count >= res.data.total) ? false : true;
           resolve(posts);

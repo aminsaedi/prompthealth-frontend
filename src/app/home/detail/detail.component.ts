@@ -136,8 +136,6 @@ export class DetailComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const now = new Date();
-    // this.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 9, 0, 0);
-    // this.minDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
     this.minDateTime = {
       year: now.getFullYear(), 
       month: now.getMonth() + 1, 

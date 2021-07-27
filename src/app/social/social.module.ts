@@ -37,6 +37,8 @@ import { ProfileFeedComponent } from './profile-feed/profile-feed.component';
 import { AuthModule } from '../auth/auth.module';
 import { GuardIfNotEligbleToCreatePostGuard } from './guard-if-not-eligble-to-create-post.guard';
 import { AgmCoreModule } from '@agm/core';
+import { NotificationComponent } from './notification/notification.component';
+import { CardNotificationComponent } from './card-notification/card-notification.component';
 
 
 const routes: Routes = [
@@ -47,6 +49,8 @@ const routes: Routes = [
     { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create', redirectTo: 'create/article' },
+
+    { path: 'notification', component: NotificationComponent},
 
     { path: '', component: HomeComponent, children: [
       { path: 'profile/:userid', component: ProfileComponent, children: [
@@ -95,6 +99,8 @@ const routes: Routes = [
     ProfileReviewComponent,
     ProfileServiceComponent,
     ProfileFeedComponent,
+    NotificationComponent,
+    CardNotificationComponent,
   ],
   providers: [
     CategoryService,

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Professional } from 'src/app/models/professional';
+import { SocialService } from '../social.service';
 
 @Component({
   selector: 'app-profile-feed',
@@ -7,9 +10,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileFeedComponent implements OnInit {
 
-  constructor() { }
+  public profile: Professional;
+  private subscription: Subscription;
+
+  constructor(
+    private _socialService: SocialService,
+  ) { }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
   ngOnInit(): void {
+    const profile = this._socialService.selectedProfile;
+    this.onProfileChanged(profile);
+
+    this.subscription = this._socialService.selectedProfileChanged().subscribe(p => {
+      this.onProfileChanged(p);
+    });
+  }
+
+  onProfileChanged(p: Professional) {
+    this.profile = p;
   }
 
 }

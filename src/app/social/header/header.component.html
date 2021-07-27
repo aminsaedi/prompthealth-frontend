@@ -9,7 +9,7 @@ style="z-index: 100;"
         <div class="d-flex align-items-center">
           <button 
           class="btn btn-icon-grey small pl-0 d-xl-none"
-          (click)="showMenuSm()"
+          (click)="showMenu('mobile')"
           >
             <i iconPh="menu" class="large"></i>
           </button>
@@ -32,11 +32,39 @@ style="z-index: 100;"
           </div>
           <div class="d-flex flex-row-reverse flex-xl-row align-items-center">
             <a class="btn btn-primary small ml-15p ml-xl-0p" routerLink="/practitioners">Find practitioners</a>
-            <button class="btn btn-icon-grey small ml-15p d-none d-md-block">
+            <button 
+            class="btn btn-icon-grey small ml-15p d-none d-md-block"
+            (click)="showMenu('search')"
+            >
               <i iconPh="search" class="large"></i>
             </button>
-            <div *ngIf="user" class="ml-5p d-none d-xl-block">
-              <ng-container *ngTemplateOutlet="notification"></ng-container>
+            <div 
+            *ngIf="user" 
+            class="ml-5p d-none d-xl-block position-relative"
+            (clickOutside)="hideNotificationSummary()"
+            >
+              <button 
+              class="btn btn-icon-grey small position-relative"
+              (click)="toggleNotificationSummary()"
+              >
+                <ng-container *ngTemplateOutlet="notification"></ng-container>
+              </button>
+
+              <div 
+              *ngIf="isNotificationSummaryShown"
+              class="notification-summary-container shadow"
+              [@fade]
+              >
+                <card-notification>
+                  <div class="text-center px-20p py-10p border-top border-line">
+                    <a
+                    class="btn btn-text small"
+                    routerLink="/community/notification"
+                    (click)="hideNotificationSummary()"
+                    >View all</a>
+                  </div>
+                </card-notification>
+              </div>
             </div>
             <div class="ml-xl-15p">
               <profile-image 
@@ -52,7 +80,10 @@ style="z-index: 100;"
               (click)="onClickProfileIcon()"
               >Login</button>
             </div>
-            <button class="btn btn-icon-grey small d-none d-xl-inline-block ml-15p pr-0">
+            <button 
+            class="btn btn-icon-grey small d-none d-xl-inline-block ml-15p pr-0"
+            (click)="onClickButtonMore()"
+            >
               <i iconPh="more-horiz" class="large"></i>
             </button>
           </div>
@@ -67,18 +98,21 @@ style="z-index: 100;"
       <a routerLink="/community/media" class="btn small px-0 py-5p subtitle1 mr-20p" #rla4="routerLinkActive" routerLinkActive [ngClass]="(rla4.isActive ? 'btn-text active' : 'btn-text-grey')">Media</a>
       <a routerLink="/community/event" class="btn small px-0 py-5p subtitle1" #rla3="routerLinkActive" routerLinkActive [ngClass]="rla3.isActive ? 'btn-text active' : 'btn-text-grey'">Event</a>
     </div>  
-    <button class="btn btn-icon-grey small pr-0 pb-5p mt-5p">
+    <button 
+    class="btn btn-icon-grey small pr-0 pb-5p mt-5p"
+    (click)="showMenu('search')"
+    >
       <i iconPh="search" class="large"></i>
     </button>
   </div>
 </header>
 
 <div class="menu-slide-horizontal"
-*ngIf="isMenuSmShown"
+*ngIf="isMenuMobileShown"
 [@slideHorizontalReverse]
 >
   <div class="menu-drop"
-  (click)="hideMenuSm()"
+  (click)="hideMenu()"
   ></div>
   <div class="menu-body">
     <div class="container d-flex justify-content-between align-items-center py-20p border-bottom">
@@ -87,11 +121,15 @@ style="z-index: 100;"
         <div class="subtitle2 ml-10p">{{userName}}</div>
       </div>
 
-      <div class="text-nowrap">
-        <ng-container *ngIf="user">
+      <ng-container *ngIf="user">
+        <button 
+        class="btn btn-icon-grey small position-relative"
+        (click)="navigateTo(['/community/notification'], true)"
+        >
           <ng-container *ngTemplateOutlet="notification"></ng-container>
-        </ng-container>
-      </div>
+        </button>
+      </ng-container>
+
     </div>
     <div class="container">
       <list-item
@@ -100,6 +138,7 @@ style="z-index: 100;"
       leadingClass="text-primary"
       action="chevron-right"
       actionClass="text-primary"
+      (onTap)="changeTopics(topic)"
       >
         <div class="subtitle2">{{topic.item_text}}</div>
       </list-item>  
@@ -118,12 +157,34 @@ style="z-index: 100;"
   </div>
 </div>
 
+<div 
+*ngIf="isMenuSearchShown"
+class="menu-slide-vertical"
+[@slideVerticalReverse]
+>
+  <div 
+  class="menu-drop"
+  (click)="hideMenu()"
+  ></div>
+  <div class="menu-body">
+    <div class="container py-15p">
+      <form-item-input
+      name="search"
+      prependIcon="search"
+      type="text"
+      placeholder="Search..."
+      [controller]="formSearch"
+      [option]="{transparent: true}"
+      ></form-item-input>
+    </div>
+  </div>
+
+</div>
+
 
 <ng-template #notification>
-  <button class="btn btn-icon-grey small position-relative">
-    <i iconPh="bell" class="large"></i>
-    <div class="notification-count bg-error text-white body-small rounded-4p">
-      <span>2</span>
-    </div>
-  </button>  
+  <i iconPh="bell" class="large"></i>
+  <div class="notification-count bg-error text-white body-small rounded-4p">
+    <span>2</span>
+  </div>
 </ng-template>

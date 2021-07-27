@@ -12,13 +12,11 @@
       </div>
     </section>
     <section class="col-12 col-md-10 col-xl-8">
-      <ng-container *ngIf="post">
-        <card 
-        [post]="post" 
-        [shorten]="false"
-        [option]="{openCommentsOnInit: true, showLinkToDetail: false}"
-        ></card>  
-      </ng-container>
+      <card-notification>
+        <div class="text-center py-30p">
+          <button class="btn btn-text-grey small">Load more activities</button>
+        </div>
+      </card-notification>
     </section>        
   </div>
 </div>

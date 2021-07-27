@@ -1,1 +1,8 @@
-<p>profile-feed works!</p>
+<ng-container *ngIf="!(profile)">
+  <loader></loader>
+</ng-container>
+
+<div 
+*ngIf="profile"
+class="position-relative rounded-8p bg-white p-20p p-lg-30p body1 text-body"
+></div>

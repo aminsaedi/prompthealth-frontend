@@ -1,0 +1,8 @@
+@import "../../../assets/scss/variables";
+
+.indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 10px;
+  background: $colorError;
+}

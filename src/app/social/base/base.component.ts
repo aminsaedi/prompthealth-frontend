@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
@@ -27,13 +27,11 @@ export class BaseComponent implements OnInit {
     full: string,
   };
 
-
   constructor(
     private _router: Router,
     private _profileService: ProfileManagementService,
     private _sharedService: SharedService,
     private _modalService: ModalService,
-    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnDestroy() {
@@ -41,7 +39,8 @@ export class BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.scrollToTop();
+    
     this.urlPrev = this.getURLset();
 
     this.subscriptionRouterEvent = this._router.events.subscribe(e => {
@@ -55,7 +54,9 @@ export class BaseComponent implements OnInit {
 
         // if url has fragment (#), scroll-to-fragment is controlled by another component (ex: cardComponent)
         if(urlCurrent.path.match(/community\/(feed|article|media|event)/)){
-          this.scrollToTop();
+          if(this.urlPrev.path != urlCurrent.path) {
+            this.scrollToTop();
+          }
         } else if(this.isPopState) {
           //do not scroll
           console.log('popState');
@@ -78,7 +79,6 @@ export class BaseComponent implements OnInit {
   }
 
   scrollToTop(behavior: ScrollToOptions['behavior'] = 'auto') {
-    console.log(behavior);
     window.scrollTo({top: 0, left: 0, behavior: behavior});
   }
 

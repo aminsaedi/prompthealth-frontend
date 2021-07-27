@@ -60,7 +60,7 @@ id="login-menu"
 >
   <div class="title-container d-flex justify-content-between align-items-center">
     <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Login</span>
-    <button class="btn pr-0 btn-icon" (click)="modalUserMenu.hide()">
+    <button class="btn pr-0 btn-icon" (click)="modalLoginMenu.hide()">
       <i iconPh="cross"></i>
     </button>  
   </div>
@@ -70,3 +70,18 @@ id="login-menu"
   </div>
 </modal>
 
+
+<modal
+id="more-menu"
+#modalMoreMenu
+>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">What items should be added?</span>
+    <button class="btn pr-0 btn-icon" (click)="modalMoreMenu.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+  </div>
+</modal>

@@ -29,6 +29,8 @@ export class LayoutComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
+    this.scrollToTop();
+
     this.routerEventSubscription = this._router.events.subscribe((event) => {
       if (event instanceof ActivationStart) { 
         this.isInitial = false; 
@@ -60,12 +62,16 @@ export class LayoutComponent implements OnDestroy, OnInit {
           const el = document.querySelector('#archive');
           window.scrollBy(0, el.getBoundingClientRect().top - 100);
         } else if (pathPrev != pathCurrent) {
-          window.scroll(0, 0); 
+          this.scrollToTop()
         }
   
         this.urlPrev = event.url;
 
       }
     });
+  }
+
+  scrollToTop() {
+    window.scroll(0, 0);
   }
 }

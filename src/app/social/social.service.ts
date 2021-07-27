@@ -213,6 +213,7 @@ export class SocialService {
       this.postCache.dataPerTaxonomy[taxonomy].data.push(this.postOf(idInMap));
       returnData.push(this.postOf(idInMap));
     }
+
     return returnData;
   }
 

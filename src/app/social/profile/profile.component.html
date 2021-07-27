@@ -70,9 +70,12 @@
     </div>
 
     <div class="d-flex">
-      <button class="btn btn-primary px-lg-70p">Book now</button>
+      <button class="btn btn-primary px-lg-70p" (click)="onClickBook()">
+        <span *ngIf="user">Book now</span>
+        <span *ngIf=!user>Login to book</span>
+      </button>
       <button class="btn btn-outline ml-10p">Follow</button>
-      <button class="btn btn-icon-grey small ml-10p">
+      <button *ngIf="user" class="btn btn-icon-grey small ml-10p">
         <i iconPh="bell-plus" style="font-size: 30px"></i>
       </button>
     </div>
@@ -128,8 +131,104 @@
 </div>
 
 <div 
-class="mt-20p"
+class="mt-20p overflow-hidden rounded-8p"
 [@socialProfileChildRouteAnimation]="prepareRoute(outlet)"
 >
   <router-outlet #outlet="outlet"></router-outlet>
 </div>
+
+<modal
+id="booking"
+#modalBooking
+>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Request appointment</span>
+    <button class="btn pr-0 btn-icon" (click)="modalBooking.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container" style="padding-bottom: 160px;">
+    <form (ngSubmit)="onSubmitBooking()">
+      <div class="mb-10p">
+        <label class="subtitle1">
+          Patient Name
+          <span class="text-danger">*</span>
+        </label>
+        <form-item-input
+        type="text"
+        name="name"
+        label="Patient Name"
+        placeholder="Patient name"
+        [submitted]="submittedFormBooking"
+        [controller]="f.name"
+        ></form-item-input>
+      </div>
+
+      <div class="mb-10p">
+        <label class="subtitle1">
+          Email address
+          <span class="text-danger">*</span>
+        </label>
+        <form-item-input
+        type="email"
+        name="email"
+        label="Email"
+        placeholder="Your email"
+        [submitted]="submittedFormBooking"
+        [controller]="f.email"
+        ></form-item-input>
+      </div>
+
+      <div class="mb-10p">
+        <label class="subtitle1">
+          Phone
+          <span class="text-danger">*</span>
+        </label>
+        <form-item-input
+        type="tel"
+        name="phone"
+        label="Phone number"
+        placeholder="Your phone number"
+        [submitted]="submittedFormBooking"
+        [controller]="f.phone"
+        ></form-item-input>
+      </div>
+
+      <div class="mb-10p">
+        <label class="subtitle1">
+          Date & Time
+          <span class="text-danger">*</span>
+        </label>
+        <form-item-datetime 
+        label="Date & time"
+        [controller]="f.bookingDateTime" 
+        [submitted]="submittedFormBooking"
+        [minDateTime]="minDateTime"
+        ></form-item-datetime>
+      </div>
+
+      <div class="mb-10p">
+        <label class="subtitle1">
+          Notes
+        </label>
+        <form-item-textarea
+        name="note"
+        label="Notes"
+        placeholder="Your request"
+        [controller]="f.note"
+        [submitted]="submittedFormBooking"
+        [max]="maxBookingNote"
+        ></form-item-textarea>
+      </div>
+
+      <div class="text-right">
+        <button 
+        type="submit" 
+        class="btn btn-primary" 
+        [disabled]="isBookingLoading"
+        >Save</button>
+      </div>
+    </form>
+  </div>
+</modal>
