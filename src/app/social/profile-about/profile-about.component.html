@@ -60,6 +60,37 @@ class="position-relative rounded-8p bg-white p-20p body1 text-body"
         ></form-item-checkbox-group>  
       </div>
 
+      <div class="mb-20p">
+        <h6>Amenity:</h6>
+        <image-row [images]="profile.amenityPreview" [option]="{col: 3}"></image-row>
+        <button 
+        *ngIf="profile.amenityPreview.length > 0"
+        class="btn btn-text small px-0" 
+        (click)="openAmenityViewer()"
+        >Show detail</button>
+        <image-viewer
+        *ngIf="isAmenityViewerShown"
+        [data]="profile.amenity"
+        (close)="closeAmenityViewer()"
+        ></image-viewer>
+      </div>
+
+      <div class="mb-20p">
+        <h6>Product:</h6>
+        <image-row [images]="profile.productPreview" [option]="{col: 3}"></image-row>
+        <button 
+        *ngIf="profile.productPreview.length > 0"
+        class="btn btn-text small px-0" 
+        (click)="openProductViewer()" 
+        >Show detail</button>
+        <image-viewer
+        *ngIf="isProductViewerShown"
+        [data]="profile.product"
+        (close)="closeProductViewer()"
+        ></image-viewer>
+      </div>
+
+
 
     </div>
 
@@ -79,7 +110,7 @@ class="position-relative rounded-8p bg-white p-20p body1 text-body"
         *ngIf="profile.phone" 
         class="mb-25p"
         >
-          <i iconPh="call-calling" class="text-placeholder large"></i>
+          <i iconPh="smartphone" class="text-placeholder large"></i>
           <p>{{profile.phone}}</p>
         </div>
   

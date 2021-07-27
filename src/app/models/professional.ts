@@ -69,6 +69,10 @@ export interface IProfessional extends IProfile {
   serviceOfferIds: string[]; /** old name (changed to serviceDeliveryIds) */
 
   dataComparable: any; /** data for compare page (used in old design) */
+
+  triedFetchingGoogleReviews: boolean;
+  triedFetchingAmenity: boolean;
+  triedFetchingProduct: boolean;
 }
 
 export class Professional extends Profile implements IProfessional{
@@ -176,6 +180,9 @@ export class Professional extends Profile implements IProfessional{
     };
   } /** for compatibility with old compare page */
 
+  get triedFetchingAmenity() { return this._triedFetchingAmenity; }
+  get triedFetchingProduct() { return this._triedFetchingProduct;}
+  get triedFetchingGoogleReviews() { return this._triedFetchingGoogleReviews; }
 
 
   uncheckForCompare() { this._isCheckedForCompared = false; }
@@ -213,6 +220,10 @@ export class Professional extends Profile implements IProfessional{
   private _mapIconUrl: string;
   private _isMapIconReady = false;
 
+  private _triedFetchingGoogleReviews = false;
+  private _triedFetchingAmenity = false;
+  private _triedFetchingProduct = false;
+
   constructor(id: string, protected p: IUserDetail, private ans?: any) {
     super({...p, _id: id});
 
@@ -243,6 +254,9 @@ export class Professional extends Profile implements IProfessional{
       });
     }
   }
+
+  markAsTriedFetchingAmenity() { this._triedFetchingAmenity = true; }
+  markAsTriedFetchingProduct() { this._triedFetchingProduct = true; }
 
   
   setProfessionals(professionals: Professional[]) { professionals.forEach(p => { this._professionals.push(p); }); }
@@ -313,10 +327,10 @@ export class Professional extends Profile implements IProfessional{
 
   async setGoogleReviews(): Promise<google.maps.places.PlaceResult>{
     return new Promise( async (resolve, reject) => {
-
       if(this._detailByGoogle){ resolve(this._detailByGoogle); }
       else if(!this.p.placeId) { resolve(null); }
       else {
+        this._triedFetchingGoogleReviews = true;
         const map = new google.maps.Map(document.createElement('div'));
         const service = new google.maps.places.PlacesService(map);
         service.getDetails({
@@ -329,7 +343,7 @@ export class Professional extends Profile implements IProfessional{
           }else{
             reject(status);
           }
-        });  
+        });
       }
     });
   }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EmbedVideoService } from 'ngx-embed-video';
+import { Observable, Subject } from 'rxjs';
 import { IBlogCategory } from '../models/blog-category';
 import { Professional } from '../models/professional';
 import { ISocialPost, SocialPost } from '../models/social-post';
@@ -24,8 +25,18 @@ export class SocialService {
   };
 
   get selectedProfile() { return this._selectedProfile; }
-  setProfile(p: Professional) { this._selectedProfile = p; }
-
+  private _selectedProfileChanged = new Subject<Professional>();
+  selectedProfileChanged(): Observable<Professional> {
+    return this._selectedProfileChanged.asObservable();
+  }
+  setProfile(p: Professional) { 
+    this._selectedProfile = p; 
+    this._selectedProfileChanged.next(p);
+  }
+  disposeProfile() { 
+    this._selectedProfile = null; 
+    this._selectedProfileChanged.next(null);
+  }
 
   constructor(
     private _embedService: EmbedVideoService,
@@ -130,6 +141,20 @@ export class SocialService {
     }
   }
 
+  postOfSlug(slug: string) {
+    const data = this.postCache.dataMap;
+    let result = null;
+    if(!!data) {
+      for(let id in data) {
+        if(data[id].slug == slug) {
+          result = data[id];
+          break;
+        }
+      }
+    }
+    return result;
+  }
+
   postsOf(
     taxonomy: SocialPostTaxonomyType = 'feed',
     offset: number = 0, 
@@ -147,9 +172,14 @@ export class SocialService {
     }
   }
 
-  profileOf(userId: string): IProfileWithPosts {
+  postsOfUser(userId: string): SocialPost[] {
+    const data = this.postCache.dataPerTaxonomy.users[userId];
+    return data ? data.postdata : null;
+  }
+
+  profileOf(userId: string): Professional {
     const profile = this.postCache.dataPerTaxonomy.users[userId];
-    return profile ? profile : null;
+    return profile ? profile.userdata : null;
   }
 
   dispose() {
@@ -197,6 +227,16 @@ export class SocialService {
       b.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(b.description));
 
       this.postCache.dataMap[data._id] = b;
+    }
+  }
+
+  saveCacheProfile(data: Professional) {
+    console.log(data);
+    if(!this.postCache.dataPerTaxonomy.users[data._id]) {
+      this.postCache.dataPerTaxonomy.users[data._id] = {
+        userdata: data,
+        postdata: null,
+      }
     }
   }
 

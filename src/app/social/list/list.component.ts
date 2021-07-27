@@ -1,20 +1,20 @@
-import { Location } from '@angular/common';
+import { Location, ViewportScroller } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { BlogSearchQuery, IBlogSearchQuery, IBlogSearchResult } from 'src/app/models/blog-search-query';
+import { BlogSearchQuery, IBlogSearchQuery } from 'src/app/models/blog-search-query';
 import { SocialPost } from 'src/app/models/social-post';
 import { ISocialPostResult } from 'src/app/models/social-post-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { expandVerticalAnimation, slideVerticalAnimation } from 'src/app/_helpers/animations';
+import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
 import { SocialPostTaxonomyType, SocialService } from '../social.service';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  animations: [slideVerticalAnimation, expandVerticalAnimation],
+  animations: [expandVerticalAnimation, fadeAnimation],
 })
 export class ListComponent implements OnInit {
 
@@ -24,7 +24,7 @@ export class ListComponent implements OnInit {
   public posts: SocialPost[] = null;
   public targetPostId: string = null;
 
-  public countPerPage: number = 3;
+  public countPerPage: number = 20;
   public selectedTopicId: string;
   public selectedTaxonomyType: SocialPostTaxonomyType;
 
@@ -34,13 +34,13 @@ export class ListComponent implements OnInit {
   private initDone: boolean = false;
 
   @HostListener('window:scroll', ['$event']) async onWindowScroll(e: Event) {
-    if(!this.isLoading && this.isMorePosts && document.body) {
+    if(!this.isLoading && this.isMorePosts && document.body && this.posts && this.posts.length > 0) {
       const startLoad = !!(document.body.scrollHeight < window.scrollY + window.innerHeight * 2);
       if(startLoad) {
         console.log('startLoad');
         this.isLoading = true;
         
-        const page = Math.floor(this.posts.length / this.countPerPage) + 1 
+        const page = Math.ceil(this.posts.length / this.countPerPage) + 1 
         const params: IBlogSearchQuery = {page: page, count: this.countPerPage};
         const postsFetched = await this.fetchPosts(params);
         postsFetched.forEach(p => {
@@ -56,10 +56,8 @@ export class ListComponent implements OnInit {
     private _location: Location,
     private _socialService: SocialService,
     private _sharedService: SharedService,
-    private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
   ) { }
-
 
   ngOnInit(): void {
     const match = this._location.path().match(/community\/(feed|article|media|event)/);
@@ -94,6 +92,7 @@ export class ListComponent implements OnInit {
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
     if(!!posts) {
       this.posts = posts;
+      console.log('set posts from cache')
     } else {
 
       const params: IBlogSearchQuery = {count: this.countPerPage};

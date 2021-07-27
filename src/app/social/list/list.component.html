@@ -3,9 +3,14 @@
 <ng-container *ngFor="let p of posts; let i = index">
   <div 
   class="mb-15p" 
-  [@slideVertical]
+  [@fade]
   >
-    <card [post]="p" [shorten]="(targetPostId != p._id)" class="pointer-events: initial;"></card>
+    <card 
+    class="pointer-events: initial;"
+    [post]="p" 
+    [shorten]="(targetPostId != p._id)"
+    [option]="{showLinkToDetail: (p.isEvent || p.isArticle)}"
+    ></card>
   </div>
 
   <div *ngIf="p && i == 1" class="mb-15p">

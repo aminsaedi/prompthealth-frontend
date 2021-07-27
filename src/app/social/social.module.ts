@@ -36,11 +36,12 @@ import { ProfileServiceComponent } from './profile-service/profile-service.compo
 import { ProfileFeedComponent } from './profile-feed/profile-feed.component';
 import { AuthModule } from '../auth/auth.module';
 import { GuardIfNotEligbleToCreatePostGuard } from './guard-if-not-eligble-to-create-post.guard';
+import { AgmCoreModule } from '@agm/core';
 
 
 const routes: Routes = [
   { path: '', component: BaseComponent, children: [
-    { path: 'profile/:userid/post/:postid', component: PageComponent },
+    { path: 'profile/:userid/post/:slug', component: PageComponent },
     { path: 'profile/:userid/post', pathMatch: 'full', redirectTo: 'profile/:userid/' },
 
     { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
@@ -105,6 +106,10 @@ const routes: Routes = [
     FormsModule,
     AuthModule,
     ReactiveFormsModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCbRhC6h9Pp43-5t_Knyrd_ewAdLMIJtCg',
+      libraries: ['places']
+    }),
     NgxStripeModule.forRoot(environment.config.stripeKey),
     RouterModule.forChild(routes),
     QuillModule.forRoot(),

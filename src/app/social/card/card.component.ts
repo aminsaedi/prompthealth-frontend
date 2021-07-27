@@ -1,7 +1,7 @@
-import { Location } from '@angular/common';
+import { Location, ViewportScroller } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
 import { SocialPost } from 'src/app/models/social-post';
 import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar.component';
 
@@ -24,11 +24,10 @@ export class CardComponent implements OnInit {
   @ViewChild('content') private content: ElementRef;
 
   constructor(
-    private _router: Router,
     private _route: ActivatedRoute,
-    private _location: Location,
-    private _sanitizer: DomSanitizer,
+    private _viewportScroller: ViewportScroller,
     private _changeDetector: ChangeDetectorRef,
+    private _location: Location,
   ) { }
 
   ngAfterViewInit() {
@@ -40,6 +39,16 @@ export class CardComponent implements OnInit {
     }
 
     this._changeDetector.detectChanges();
+
+    this._route.fragment.pipe( first() ).subscribe(fragment => {
+      if(fragment && fragment == this.post._id) {
+        console.log('fragment for card position detected.' + fragment);
+        setTimeout(() => {
+          this._viewportScroller.scrollToAnchor('card-' + fragment);  
+        });
+      }
+    });
+  
   }
 
   ngOnInit(): void {
@@ -56,47 +65,20 @@ export class CardComponent implements OnInit {
     }
   }
 
-  // onClickClose() {
-  //   const state = this._location.getState() as any;
-  //   if(state.navigationId == 1) {
-  //     const [path, query] = this._location.path().split('?');
-  //     const queryParams: any = {};
-
-  //     if(query) {
-  //       const array = query.split('&');
-  //       array.forEach(s => {
-  //         const array = s.split('=');
-  //         queryParams[array[0]] = array[1] || null
-  //       });
-  //     }
-    
-  //     queryParams.post = null;
-  //     this._router.navigate([path], {queryParams: queryParams, replaceUrl: true});
-  //   } else {
-  //     this._location.back();
-  //   }  
-  // }
-
-  // onClickContent() {
-  //   const query = location ? location.search : '';
-
-  //   this._router.navigate(
-  //     ['./'], {
-  //       queryParams: { post: this.post._id }, 
-  //       relativeTo: this._route, 
-  //       replaceUrl: !!query.match('post')
-  //     }
-  //   );
-  // }
+  markCurrentPosition() {
+    this._location.replaceState(this._location.path() + '#' + this.post._id);
+  }
 }
 
 interface ICardOption {
   openCommentsOnInit?: boolean;
+  showLinkToDetail?: boolean;
 }
 
 class CardOption implements ICardOption{
  
   get openCommentsOnInit() { return this.data.openCommentsOnInit === true ? true: false; }
+  get showLinkToDetail() { return this.data.showLinkToDetail === false ? false : true; }
 
   constructor(private data: ICardOption = {}) {}
 }

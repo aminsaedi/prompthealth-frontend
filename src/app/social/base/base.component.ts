@@ -53,6 +53,7 @@ export class BaseComponent implements OnInit {
       if(e instanceof NavigationEnd) {
         const urlCurrent = this.getURLset();
 
+        // if url has fragment (#), scroll-to-fragment is controlled by another component (ex: cardComponent)
         if(this.isPopState) {
           //do not scroll
           console.log('popState');

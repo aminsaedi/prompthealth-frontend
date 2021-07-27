@@ -38,9 +38,11 @@ export class ProfileComponent implements OnInit {
   }
 
   initProfile() {
+    this._socialService.disposeProfile();
     const profile = this._socialService.profileOf(this.profileId);
     if(profile) {
-      this.profile = profile.userdata;
+      this.profile = profile;
+      this._socialService.setProfile(this.profile);
     } else {
       const promiseAll: [Promise<Professional>, Promise<void>] = [
         this.fetchProfile(this.profileId),
@@ -72,6 +74,7 @@ export class ProfileComponent implements OnInit {
         if(res.statusCode === 200) {
           const p = res.data[0];
           const professional = new Professional(p._id, p);
+          this._socialService.saveCacheProfile(professional);
           resolve(professional);
         } else {
           console.log(res.message);
@@ -81,12 +84,6 @@ export class ProfileComponent implements OnInit {
         console.log(error);
         reject();
       });
-    });
-  }
-
-  fetchPosts(): Promise<SocialPost[]> {
-    return new Promise((resolve, reject) => {
-
     });
   }
 

@@ -2,22 +2,18 @@
 class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
 [ngClass]="{'shadow': !shorten}"
 >
+  <a [id]="'card-' + post._id" style="top: -100px; position: absolute;"></a>
 
-  <!-- <div *ngIf="!shorten" class="btn-close-container">
-    <button 
-    class="btn btn-icon- rounded-circle blur"
-    (click)="onClickClose()"
+  <ng-container *ngIf="_option.showLinkToDetail">
+    <a 
+    [routerLink]="['/community/profile', post.authorId, 'post', post.slug]" 
+    class="text-body"
+    (click)="markCurrentPosition()"
     >
-      <i iconPh="cross"></i>
-    </button>
-  </div> -->
-
-  <ng-container *ngIf="isContentGradientShown">
-    <a [routerLink]="['/community/profile', post.authorId, 'post', post._id]" class="text-body">
       <ng-container *ngTemplateOutlet="clickableArea"></ng-container>
     </a>
   </ng-container>
-  <ng-container *ngIf="!isContentGradientShown">
+  <ng-container *ngIf="!_option.showLinkToDetail">
     <ng-container *ngTemplateOutlet="clickableArea"></ng-container>
   </ng-container>
 

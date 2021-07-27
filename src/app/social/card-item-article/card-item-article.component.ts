@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { SocialPost } from 'src/app/models/social-post';
 
@@ -11,9 +12,15 @@ export class CardItemArticleComponent implements OnInit {
   @Input() post: SocialPost;
   @Input() shorten: boolean = true;
 
-  constructor() { }
+  constructor(
+    private _location: Location
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  markCurrentPosition() {
+    this._location.replaceState(this._location.path() + '#' + this.post._id);
   }
 
 }

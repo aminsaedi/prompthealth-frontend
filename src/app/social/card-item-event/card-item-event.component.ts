@@ -1,6 +1,8 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocialPost } from 'src/app/models/social-post';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
 
@@ -19,6 +21,7 @@ export class CardItemEventComponent implements OnInit {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _location: Location,
     private _uService: UniversalService,
     private _socialService: SocialService,
   ) { }
@@ -53,5 +56,9 @@ export class CardItemEventComponent implements OnInit {
 
   showSubscribeMenu() {
     this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'subscribe-menu'}});
+  }
+
+  markCurrentPosition() {
+    this._location.replaceState(this._location.path() + '#' + this.post._id);
   }
 }

@@ -1,12 +1,23 @@
 <div class="bg-background pt-30p pb-100p">
   <div class="container">
-    <div class="row justify-content-center">
-      <section class="col-12 col-md-9 col-xl-9">
+    <div class="row align-items-start">
+      <section class="col-12 col-md-2 col-xl-2 sticky-top" style="top: 100px;">
+        <div class="text-md-right">
+          <button 
+          class="btn btn-text-small btn-body" 
+          (click)="goback()"
+          >
+            <i iconPh="arrow-left"></i>
+            <span>Back</span>
+          </button>
+        </div>
+      </section>
+      <section class="col-12 col-md-10 col-xl-8">
         <ng-container *ngIf="post">
           <card 
           [post]="post" 
           [shorten]="false"
-          [option]="{openCommentsOnInit: true}"
+          [option]="{openCommentsOnInit: true, showLinkToDetail: false}"
           ></card>  
         </ng-container>
       </section>        

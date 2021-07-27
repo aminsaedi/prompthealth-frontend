@@ -6,175 +6,85 @@
 *ngIf="profile"
 class="position-relative rounded-8p bg-white p-20p p-lg-30p body1 text-body"
 >
-  <div class="d-flex flex-column flex-lg-row-reverse align-items-lg-center">
-    <div class="d-flex align-items-center justify-content-between flex-lg-column ml-lg-60p mr-lg-30p">
-      <h3 class="h1-lg">4.7</h3>
-      <div class="text-right text-lg-center">
-        <div>
-          <star-rate
-          [rate]="4.3"
-          [showActiveOnly]="false"
-          margin="small"
-          size="big"
-          ></star-rate>
+  <div *ngIf="googleReviews">
+    <div class="d-flex flex-column flex-lg-row-reverse align-items-lg-center">
+      <div class="d-flex align-items-center justify-content-between flex-lg-column ml-lg-60p mr-lg-30p">
+        <h3 class="h1-lg">{{googleReviews.rating}}</h3>
+        <div class="text-right text-lg-center">
+          <div>
+            <star-rate
+            [rate]="googleReviews.rating"
+            [showActiveOnly]="false"
+            margin="small"
+            size="big"
+            ></star-rate>
+          </div>
+          <div class="body2 body1-md text-label mt-lg-20p">1315 reviews</div>
         </div>
-        <div class="body2 body1-md text-label mt-lg-20p">1315 reviews</div>
       </div>
+      <ul class="charts list-unstyled mt-30p mt-lg-0p flex-grow-1">
+        <li class="d-flex align-items-center my-10p">
+          <span class="text-label">5</span>
+          <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
+            <div class="bar"></div>
+            <div class="bar-overlay" style="width: 60%"></div>
+          </div>
+          <span class="text-label text-right" style="flex: 0 0 40px;">100%</span>
+        </li>
+        <li class="d-flex align-items-center my-10p">
+          <span class="text-label">5</span>
+          <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
+            <div class="bar"></div>
+            <div class="bar-overlay" style="width: 60%"></div>
+          </div>
+          <span class="text-label text-right" style="flex: 0 0 40px;">25%</span>
+        </li>
+        <li class="d-flex align-items-center my-10p">
+          <span class="text-label">5</span>
+          <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
+            <div class="bar"></div>
+            <div class="bar-overlay" style="width: 60%"></div>
+          </div>
+          <span class="text-label text-right" style="flex: 0 0 40px;">30%</span>
+        </li>
+        <li class="d-flex align-items-center my-10p">
+          <span class="text-label">5</span>
+          <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
+            <div class="bar"></div>
+            <div class="bar-overlay" style="width: 60%"></div>
+          </div>
+          <span class="text-label text-right" style="flex: 0 0 40px;">82%</span>
+        </li>
+        <li class="d-flex align-items-center my-10p">
+          <span class="text-label">5</span>
+          <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
+            <div class="bar"></div>
+            <div class="bar-overlay" style="width: 60%"></div>
+          </div>
+          <span class="text-label text-right" style="flex: 0 0 40px;">0%</span>
+        </li>
+      </ul>
     </div>
-    <ul class="charts list-unstyled mt-30p mt-lg-0p flex-grow-1">
-      <li class="d-flex align-items-center my-10p">
-        <span class="text-label">5</span>
-        <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
-          <div class="bar"></div>
-          <div class="bar-overlay" style="width: 60%"></div>
+    <ul class="mt-50p list-unstyled">
+      <li class="mb-20p mb-lg-30p" *ngFor="let review of googleReviews.reviews">
+        <div class="d-flex">
+          <profile-image size="42" [image]="review.profile_photo_url"></profile-image>
+          <div class="ml-10p">
+            <h6 class="subtitle1">{{review.author_name}}</h6>
+            <div class="d-flex align-items-center">
+              <star-rate
+              [rate]="review.rating"
+              [showActiveOnly]="false"
+              margin="small"
+              size="small"
+              ></star-rate>
+              <div class="text-label body-small ml-10p">{{review.relative_time_description}}</div>
+            </div>
+          </div>
         </div>
-        <span class="text-label text-right" style="flex: 0 0 40px;">100%</span>
-      </li>
-      <li class="d-flex align-items-center my-10p">
-        <span class="text-label">5</span>
-        <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
-          <div class="bar"></div>
-          <div class="bar-overlay" style="width: 60%"></div>
-        </div>
-        <span class="text-label text-right" style="flex: 0 0 40px;">25%</span>
-      </li>
-      <li class="d-flex align-items-center my-10p">
-        <span class="text-label">5</span>
-        <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
-          <div class="bar"></div>
-          <div class="bar-overlay" style="width: 60%"></div>
-        </div>
-        <span class="text-label text-right" style="flex: 0 0 40px;">30%</span>
-      </li>
-      <li class="d-flex align-items-center my-10p">
-        <span class="text-label">5</span>
-        <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
-          <div class="bar"></div>
-          <div class="bar-overlay" style="width: 60%"></div>
-        </div>
-        <span class="text-label text-right" style="flex: 0 0 40px;">82%</span>
-      </li>
-      <li class="d-flex align-items-center my-10p">
-        <span class="text-label">5</span>
-        <div class="bar-container position-relative flex-grow-1 ml-20p mr-10p rounded-4p overflow-hidden">
-          <div class="bar"></div>
-          <div class="bar-overlay" style="width: 60%"></div>
-        </div>
-        <span class="text-label text-right" style="flex: 0 0 40px;">0%</span>
+        <p class="body2 mt-10p">{{review.text}}</p>
       </li>
     </ul>
   </div>
-
-  <ul class="mt-50p list-unstyled">
-    <li class="mb-20p mb-lg-30p">
-      <div class="d-flex">
-        <profile-image size="42"></profile-image>
-        <div>
-          <h6 class="subtitle1">Leslie Alexander</h6>
-          <div class="d-flex align-items-center">
-            <star-rate
-            [rate]="4.3"
-            [showActiveOnly]="false"
-            margin="small"
-            size="small"
-            ></star-rate>
-            <div class="text-label body-small ml-10p">April 28, 2021</div>
-          </div>
-        </div>
-      </div>
-      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
-    </li>
-    <li class="mb-20p mb-lg-30p">
-      <div class="d-flex">
-        <profile-image size="42"></profile-image>
-        <div>
-          <h6 class="subtitle1">Leslie Alexander</h6>
-          <div class="d-flex align-items-center">
-            <star-rate
-            [rate]="4.3"
-            [showActiveOnly]="false"
-            margin="small"
-            size="small"
-            ></star-rate>
-            <div class="text-label body-small ml-10p">April 28, 2021</div>
-          </div>
-        </div>
-      </div>
-      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
-    </li>
-    <li class="mb-20p mb-lg-30p">
-      <div class="d-flex">
-        <profile-image size="42"></profile-image>
-        <div>
-          <h6 class="subtitle1">Leslie Alexander</h6>
-          <div class="d-flex align-items-center">
-            <star-rate
-            [rate]="4.3"
-            [showActiveOnly]="false"
-            margin="small"
-            size="small"
-            ></star-rate>
-            <div class="text-label body-small ml-10p">April 28, 2021</div>
-          </div>
-        </div>
-      </div>
-      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
-    </li>
-    <li class="mb-20p mb-lg-30p">
-      <div class="d-flex">
-        <profile-image size="42"></profile-image>
-        <div>
-          <h6 class="subtitle1">Leslie Alexander</h6>
-          <div class="d-flex align-items-center">
-            <star-rate
-            [rate]="4.3"
-            [showActiveOnly]="false"
-            margin="small"
-            size="small"
-            ></star-rate>
-            <div class="text-label body-small ml-10p">April 28, 2021</div>
-          </div>
-        </div>
-      </div>
-      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
-    </li>
-    <li class="mb-20p mb-lg-30p">
-      <div class="d-flex">
-        <profile-image size="42"></profile-image>
-        <div>
-          <h6 class="subtitle1">Leslie Alexander</h6>
-          <div class="d-flex align-items-center">
-            <star-rate
-            [rate]="4.3"
-            [showActiveOnly]="false"
-            margin="small"
-            size="small"
-            ></star-rate>
-            <div class="text-label body-small ml-10p">April 28, 2021</div>
-          </div>
-        </div>
-      </div>
-      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
-    </li>
-    <li class="mb-20p mb-lg-30p">
-      <div class="d-flex">
-        <profile-image size="42"></profile-image>
-        <div>
-          <h6 class="subtitle1">Leslie Alexander</h6>
-          <div class="d-flex align-items-center">
-            <star-rate
-            [rate]="4.3"
-            [showActiveOnly]="false"
-            margin="small"
-            size="small"
-            ></star-rate>
-            <div class="text-label body-small ml-10p">April 28, 2021</div>
-          </div>
-        </div>
-      </div>
-      <p class="body2 mt-10p">About a month and a half ago, the app started being wired. Videos and reals are just digitized static about 60% of the time. I've tried updating and deleting and reinstalling.</p>        
-    </li>
-
-  </ul>
 
 </div>

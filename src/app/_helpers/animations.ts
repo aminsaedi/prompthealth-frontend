@@ -78,20 +78,20 @@ export const slideInSocialProfileChildRouteAnimation = trigger('socialProfileChi
         left: 0,
         width: '100%'
       })
-    ]),
+    ], {optional: true}),
     query(':enter', [
       style({left: '100%'}),
-    ]),
-    query(':leave', animateChild()),
+    ], {optional: true}),
+    query(':leave', animateChild(), {optional: true}),
     group([
       query(':leave', [
         animate('300ms ease-out', style({left: '-100%'})),
-      ]),
+      ], {optional: true}),
       query(':enter', [
         animate('300ms ease-out', style({left: 0})),
-      ]),
+      ], {optional: true}),
     ]),
-    query(':enter', animateChild()),
+    query(':enter', animateChild(), {optional: true}),
   ]),
   transition('6=>5, 6=>4, 6=>3, 6=>2, 6=>1, 5=>4, 5=>3, 5=>2, 5=>1, 4=>3, 4=>2, 4=>1, 3=>2, 3=>1, 2=>1', [
     style({position: 'relative', height: '100vh', overflow: 'hidden'}),
@@ -102,19 +102,19 @@ export const slideInSocialProfileChildRouteAnimation = trigger('socialProfileChi
         left: 0,
         width: '100%'
       })
-    ]),
+    ], {optional: true}),
     query(':enter', [
       style({left: '-100%'}),
-    ]),
-    query(':leave', animateChild()),
+    ], {optional: true}),
+    query(':leave', animateChild(), {optional: true}),
     group([
       query(':leave', [
         animate('300ms ease-out', style({left: '100%'})),
-      ]),
+      ], {optional: true}),
       query(':enter', [
         animate('300ms ease-out', style({left: 0})),
-      ]),
+      ], {optional: true}),
     ]),
-    query(':enter', animateChild()),
+    query(':enter', animateChild(), {optional: true}),
   ]),
 ]);

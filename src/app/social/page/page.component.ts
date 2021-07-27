@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocialPost } from 'src/app/models/social-post';
@@ -14,20 +15,21 @@ export class PageComponent implements OnInit {
   public post: SocialPost;
 
   private userId: string;
-  private postId: string;
+  private slug: string;
 
   constructor(
-    private _router: Router,
     private _route: ActivatedRoute,
+    private _router: Router,
+    private _location: Location,
     private _socialService: SocialService,
     private _sharedService: SharedService,
   ) { }
 
   ngOnInit(): void {
 
-    this._route.params.subscribe((param: {userid: string, postid: string}) => {
+    this._route.params.subscribe((param: {userid: string, slug: string}) => {
       this.userId = param.userid;
-      this.postId = param.postid;
+      this.slug = param.slug;
 
       this.initPost();
     }); 
@@ -35,16 +37,16 @@ export class PageComponent implements OnInit {
 
   initPost() {
     return new Promise((resolve, reject) => {
-      const post = this._socialService.postOf(this.postId);
+      const post = this._socialService.postOfSlug(this.slug);
       if(post) {
         this.post = post;
         resolve(true);
       } else {
-        const path = `blog/get-by-slug/${this.postId}`;
+        const path = `blog/get-by-slug/${this.slug}`;
         this._sharedService.getNoAuth(path).subscribe((res: any) => {
           if(res.statusCode === 200) {
             this._socialService.saveCacheSingle(res.data);
-            this.post = this._socialService.postOf(this.postId);
+            this.post = this._socialService.postOfSlug(this.slug);
 
             resolve(true);
           } else {
@@ -60,4 +62,12 @@ export class PageComponent implements OnInit {
     });
   }
 
+  goback() {
+    const state = this._location.getState() as any;
+    if(state.navigationId == 1) {
+      this._router.navigate(['/community/feed']);
+    } else {
+      this._location.back();
+    }
+  }
 }
