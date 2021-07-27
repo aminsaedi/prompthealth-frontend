@@ -2,7 +2,11 @@
 class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
 [ngClass]="{'shadow': !shorten}"
 >
-  <a [id]="'card-' + post._id" style="top: -100px; position: absolute;"></a>
+  <a 
+  [id]="'card-' + post._id" 
+  #anchor
+  style="top: -100px; position: absolute;"
+  ></a>
 
   <ng-container *ngIf="_option.showLinkToDetail">
     <a 

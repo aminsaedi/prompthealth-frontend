@@ -1,8 +1,9 @@
-import { Location, ViewportScroller } from '@angular/common';
+import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { SocialPost } from 'src/app/models/social-post';
+import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar.component';
 
 @Component({
@@ -22,10 +23,10 @@ export class CardComponent implements OnInit {
 
   @ViewChild('toolbar') private toolbar: CardItemToolbarComponent;
   @ViewChild('content') private content: ElementRef;
+  @ViewChild('anchor') private anchor: ElementRef;
 
   constructor(
     private _route: ActivatedRoute,
-    private _viewportScroller: ViewportScroller,
     private _changeDetector: ChangeDetectorRef,
     private _location: Location,
   ) { }
@@ -41,10 +42,12 @@ export class CardComponent implements OnInit {
     this._changeDetector.detectChanges();
 
     this._route.fragment.pipe( first() ).subscribe(fragment => {
-      if(fragment && fragment == this.post._id) {
-        console.log('fragment for card position detected.' + fragment);
+      if(fragment && fragment == this.post._id && this.anchor && this.anchor.nativeElement) {
+        const el: HTMLAnchorElement = this.anchor.nativeElement;
+        const elTop = el.getBoundingClientRect().top;
+
         setTimeout(() => {
-          this._viewportScroller.scrollToAnchor('card-' + fragment);  
+          smoothWindowScrollTo(elTop);
         });
       }
     });

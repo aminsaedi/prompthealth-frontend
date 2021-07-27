@@ -43,39 +43,12 @@ a {
 }
 
 
-ui-switch{
-  .switch{
-    &:not(.checked){
-      background-color: $primaryColor !important;
-    }
-  }
-}
-
 .form-control.is-invalid {
   padding-right: 30px !important;
 }
 
 .overflow-wrap{
   overflow-wrap: anywhere !important;
-}
-
-
-// bootstarp classes
-.rounded-right {
-  border-top-right-radius: $radius !important;
-  border-bottom-right-radius: $radius !important;
-}
-.rounded-left {
-  border-top-left-radius: $radius !important;
-  border-bottom-left-radius: $radius !important;
-}
-// bootstarp classes end
-
-input.InputElement{
-  &::placeholder{
-    
-    opacity: 1 !important;
-  }
 }
 
 .pull-right {
@@ -86,17 +59,6 @@ input.InputElement{
   color: gold;
 }
 
-.fa,
-.far,
-.fab {
-  > span {
-    font-family: $themeFont;
-    margin-left: 8px;
-    font-weight: 400;
-    display: inline-block;
-  }
-}
-
 body {
   color: $colorGsBody;
   font-family: $themeFont;
@@ -104,16 +66,16 @@ body {
   line-height: $themeLignHeight;
   letter-spacing: 1px;
   font-weight: 300;
-  &::-webkit-scrollbar {
-    width: 7px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #f8f9fa;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 20px;
-    background-color: $primaryColor;
-  }
+  // &::-webkit-scrollbar {
+  //   width: 7px;
+  // }
+  // &::-webkit-scrollbar-track {
+  //   background-color: #f8f9fa;
+  // }
+  // &::-webkit-scrollbar-thumb {
+  //   border-radius: 20px;
+  //   background-color: $primaryColor;
+  // }
 }
 
 label {
@@ -121,10 +83,6 @@ label {
   font-size: 13px;
 }
 
-.object-fit-contain {
-  object-fit: contain !important;
-  object-position: center !important;
-}
 
 .p-6 {
   padding: $p6 !important;

@@ -1,7 +1,6 @@
-import { Location, ViewportScroller } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { BlogSearchQuery, IBlogSearchQuery } from 'src/app/models/blog-search-query';
 import { SocialPost } from 'src/app/models/social-post';
@@ -57,16 +56,10 @@ export class ListComponent implements OnInit {
     private _socialService: SocialService,
     private _sharedService: SharedService,
     private _profileService: ProfileManagementService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
-    const match = this._location.path().match(/community\/(feed|article|media|event)/);
-    if(match) {
-      this.selectedTaxonomyType = match[1] as SocialPostTaxonomyType;
-    } else {
-      this.selectedTaxonomyType = 'feed';
-    }
-
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTopicId = param.topicId || null;
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
@@ -91,8 +84,11 @@ export class ListComponent implements OnInit {
   async initPosts() {    
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
     if(!!posts) {
-      this.posts = posts;
-      console.log('set posts from cache')
+      setTimeout(() => {
+        this.posts = posts;
+        this._changeDetector.detectChanges();
+        console.log('set posts from cache')
+      }, 100);
     } else {
 
       const params: IBlogSearchQuery = {count: this.countPerPage};

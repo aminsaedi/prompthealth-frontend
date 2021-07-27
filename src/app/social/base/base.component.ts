@@ -54,7 +54,9 @@ export class BaseComponent implements OnInit {
         const urlCurrent = this.getURLset();
 
         // if url has fragment (#), scroll-to-fragment is controlled by another component (ex: cardComponent)
-        if(this.isPopState) {
+        if(urlCurrent.path.match(/community\/(feed|article|media|event)/)){
+          this.scrollToTop();
+        } else if(this.isPopState) {
           //do not scroll
           console.log('popState');
         } else if(urlCurrent.path.match(/community\/profile\/\w+\/post/)) {
@@ -75,8 +77,9 @@ export class BaseComponent implements OnInit {
     });
   }
 
-  scrollToTop() {
-    window.scroll(0,0);
+  scrollToTop(behavior: ScrollToOptions['behavior'] = 'auto') {
+    console.log(behavior);
+    window.scrollTo({top: 0, left: 0, behavior: behavior});
   }
 
   getURLset() {
