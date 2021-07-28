@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 import { SharedService } from '../shared/services/shared.service';
 import { HeaderStatusService } from '../shared/services/header-status.service';
 import { environment } from 'src/environments/environment';
-// import { Partner } from '../models/partner';
-// import { PartnerSearchFilterQuery } from '../models/partner-search-filter-query';
 import { UniversalService } from '../shared/services/universal.service';
 import { Category, CategoryService } from '../shared/services/category.service';
 import { IUserDetail } from '../models/user-detail';
