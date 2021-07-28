@@ -1,14 +1,14 @@
 <div 
 class="card rounded-8p bg-white shadow body1 text-body mb-15p"
 scrollDetector
-offset="50"
+offset="200"
 (detect)="onScrollDetected()"
 >
   <div class="d-flex p-20p border-bottom border-line">
     <profile-image [image]="userImage"></profile-image>
     <div class="flex-grow-1 ml-10p">
       <quill-editor
-      [styles]="{minHeight: '48px', border: 'none'}"
+      [styles]="{minHeight: '48px', border: 'none', fontSize: '16px'}"
       placeholder="What's on your mind"
       (onFocus)="onQuillEditorFocused()"
       ></quill-editor>  
