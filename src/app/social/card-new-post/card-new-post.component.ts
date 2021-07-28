@@ -45,8 +45,6 @@ export class CardNewPostComponent implements OnInit {
   @ViewChild('inputMedia') private inputMedia: ElementRef;
   @ViewChild('audioPlayer') private audioPlayer: ElementRef;
   @ViewChild('modalAudioRecorder') private modalAudioRecorder: ModalComponent;
-  @ViewChild('editorBlur') private editorBlur: ElementRef;
-
 
   constructor(
     private _sharedService: SharedService,
@@ -139,18 +137,6 @@ export class CardNewPostComponent implements OnInit {
   onClickButtonMore() {
     this.isMoreShown = !this.isMoreShown;
   }
-
-  onQuillEditorFocused() {
-    this.isEditorFocused = true;
-  }
-
-  onScrollDetected() {
-    if(this.isEditorFocused && this.editorBlur && this.editorBlur.nativeElement) {
-      this.isEditorFocused = false;
-      (this.editorBlur.nativeElement as HTMLDivElement).focus();
-    }
-  }
-
 
   /** AUDIO RECORDER / PLAYER START */
   toggleAudioPlayerState() {
