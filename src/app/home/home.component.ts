@@ -98,7 +98,9 @@ export class HomeComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-      this.elExpertFinderScrollHorizontal.nativeElement.scrollTo({left: 10000});
+      if(!this._uService.isServer) {
+        this.elExpertFinderScrollHorizontal.nativeElement.scrollTo({left: 10000});
+      }
     }
 
     onEnterExpertFinder(isLeaving: boolean) {

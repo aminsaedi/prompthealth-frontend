@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute, ActivationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SharedService } from '../../shared/services/shared.service';
 
 @Component({
@@ -22,6 +23,7 @@ export class LayoutComponent implements OnDestroy, OnInit {
   constructor(
     private _router: Router,
     private _headerService: HeaderStatusService,
+    private _uService: UniversalService,
   ) {  }
 
   ngOnDestroy() {
@@ -29,7 +31,9 @@ export class LayoutComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.scrollToTop();
+    if(!this._uService.isServer) {
+      this.scrollToTop();
+    }
 
     this.routerEventSubscription = this._router.events.subscribe((event) => {
       if (event instanceof ActivationStart) { 

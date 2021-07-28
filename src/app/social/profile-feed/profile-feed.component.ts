@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Professional } from 'src/app/models/professional';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
 
 @Component({
