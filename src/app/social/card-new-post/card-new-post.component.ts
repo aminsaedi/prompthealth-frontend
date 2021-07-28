@@ -27,6 +27,7 @@ export class CardNewPostComponent implements OnInit {
   safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
 
   public isMoreShown: boolean = false;
+  public isEditorFocused: boolean = false;
   public imagePreview: string | ArrayBuffer;
   public audioSaved: AudioData =  null;
 
@@ -45,6 +46,7 @@ export class CardNewPostComponent implements OnInit {
   @ViewChild('audioPlayer') private audioPlayer: ElementRef;
   @ViewChild('modalAudioRecorder') private modalAudioRecorder: ModalComponent;
   @ViewChild('editorBlur') private editorBlur: ElementRef;
+
 
   constructor(
     private _sharedService: SharedService,
@@ -138,8 +140,13 @@ export class CardNewPostComponent implements OnInit {
     this.isMoreShown = !this.isMoreShown;
   }
 
-  blurEditor() {
-    if(this.editorBlur && this.editorBlur.nativeElement) {
+  onQuillEditorFocused() {
+    this.isEditorFocused = true;
+  }
+
+  onScrollDetected() {
+    if(this.isEditorFocused && this.editorBlur && this.editorBlur.nativeElement) {
+      this.isEditorFocused = false;
       (this.editorBlur.nativeElement as HTMLDivElement).focus();
     }
   }
