@@ -4,12 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
-import * as RecordRTC from 'recordrtc';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import getBlobDuration from 'get-blob-duration';
 import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service';
 import { ToastrService } from 'ngx-toastr';
-import { UniversalService } from 'src/app/shared/services/universal.service';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Profile } from 'src/app/models/profile';
 
@@ -25,7 +23,6 @@ export class CardNewPostComponent implements OnInit {
 
   get userImage(): string { return this.user ? this.user.profileImage : ''; }
   get user(): Profile { return this._profileService.profile; }
-
 
   safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
 
@@ -47,6 +44,7 @@ export class CardNewPostComponent implements OnInit {
   @ViewChild('inputMedia') private inputMedia: ElementRef;
   @ViewChild('audioPlayer') private audioPlayer: ElementRef;
   @ViewChild('modalAudioRecorder') private modalAudioRecorder: ModalComponent;
+  @ViewChild('editorBlur') private editorBlur: ElementRef;
 
   constructor(
     private _sharedService: SharedService,
@@ -138,6 +136,12 @@ export class CardNewPostComponent implements OnInit {
 
   onClickButtonMore() {
     this.isMoreShown = !this.isMoreShown;
+  }
+
+  blurEditor() {
+    if(this.editorBlur && this.editorBlur.nativeElement) {
+      (this.editorBlur.nativeElement as HTMLDivElement).focus();
+    }
   }
 
 

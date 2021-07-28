@@ -139,7 +139,9 @@ class="mt-20p overflow-hidden rounded-8p"
 
 <modal
 id="booking"
+[bodyStyle]="{'padding-bottom': 0}"
 #modalBooking
+
 >
   <div class="title-container d-flex justify-content-between align-items-center">
     <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Request appointment</span>
@@ -148,7 +150,7 @@ id="booking"
     </button>  
   </div>
 
-  <div class="content-container" style="padding-bottom: 160px;">
+  <div class="content-container">
     <form (ngSubmit)="onSubmitBooking()">
       <div class="mb-10p">
         <label class="subtitle1">
@@ -222,7 +224,7 @@ id="booking"
         ></form-item-textarea>
       </div>
 
-      <div class="text-right">
+      <div class="text-right sticky-bottom blur pt-10p pb-50p">
         <button 
         type="submit" 
         class="btn btn-primary" 

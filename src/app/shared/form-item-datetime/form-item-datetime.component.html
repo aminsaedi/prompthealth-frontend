@@ -7,11 +7,12 @@
   [disabled]="disabled"
   [submitted]="submitted"
   ></form-item-input>
+  <div #formBlur tabindex="-1"></div>
   
   <div
   *ngIf="isPickerShown" 
-  [@slideVertical]
-  class="d-flex p-3 mt-2 flex-column align-items-center position-absolute bg-white datetime-picker orverflow-hidden rounded-lg">
+  [@expandVertical]
+  class="d-flex p-3 mt-2 flex-column align-items-center bg-white datetime-picker orverflow-hidden rounded-lg">
     <ngb-datepicker 
     [formControl]="fDate" 
     [minDate]="minDateTime" 
