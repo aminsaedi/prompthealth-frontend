@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { EmbedVideoService } from 'ngx-embed-video';
 import { Observable, Subject } from 'rxjs';
 import { IBlogCategory } from '../models/blog-category';
 import { Professional } from '../models/professional';
@@ -39,7 +38,6 @@ export class SocialService {
   }
 
   constructor(
-    private _embedService: EmbedVideoService,
     private _sanitizer: DomSanitizer,
   ) { 
     this.categoryCache = null;
@@ -220,11 +218,11 @@ export class SocialService {
   saveCacheSingle(data: ISocialPost) {
     if(!this.postCache.dataMap[data._id]) {
       const b = new SocialPost(data);
-      b.videoLinks.forEach(v => { b.addEmbedVideo(this.embedVideo(v)); });
-      if(b.videoLinks && b.videoLinks.length > 0) {
-        b.setEmbedVideoAsThumbnail(this.embedVideoAsThumbnail(b.videoLinks[0]));
-      }
-      b.podcastLinks.forEach(v => { b.addEmbedPodcast(this.embedPodcast(v)); });
+      // b.videoLinks.forEach(v => { b.addEmbedVideo(this.embedVideo(v)); });
+      // if(b.videoLinks && b.videoLinks.length > 0) {
+      //   b.setEmbedVideoAsThumbnail(this.embedVideoAsThumbnail(b.videoLinks[0]));
+      // }
+      // b.podcastLinks.forEach(v => { b.addEmbedPodcast(this.embedPodcast(v)); });
       b.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(b.description));
 
       this.postCache.dataMap[data._id] = b;
@@ -255,30 +253,6 @@ export class SocialService {
       data.push(null);
     }
     return data;
-  }
-
-  embedVideo(data: {title: string, url: string}) {
-    const iframe = this._embedService.embed(data.url);
-    if(iframe) {
-      iframe.title = data.title;
-    }
-    return iframe;
-  }
-  embedVideoAsThumbnail(data: {title: string, url: string}) {
-    const iframe = this._embedService.embed(data.url, {query: {control: 0, modestbranding: 1, showinfo: 0}, attr: {width: '100%', height: '100%'}})
-    if(iframe) {
-      iframe.title = data.title;
-    }
-    return iframe;
-  }
-
-  embedPodcast(data: {title: string, url: string}) {
-    let url = data.url;
-    if (!url.match(/embed/)) {
-      url = url.replace(/spotify\.com/, 'spotify.com/embed');
-    }
-    let iframe = `<iframe src="${url}" width="100%" height="100%" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
-    return this._sanitizer.bypassSecurityTrustHtml(iframe);
   }
 }
 

@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-base',
@@ -32,6 +33,7 @@ export class BaseComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _sharedService: SharedService,
     private _modalService: ModalService,
+    private _uService: UniversalService,
   ) { }
 
   ngOnDestroy() {
@@ -39,7 +41,9 @@ export class BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.scrollToTop();
+    if(!this._uService.isServer) {
+      this.scrollToTop();
+    }
     
     this.urlPrev = this.getURLset();
 
