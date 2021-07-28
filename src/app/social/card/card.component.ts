@@ -45,6 +45,7 @@ export class CardComponent implements OnInit {
       if(fragment && fragment == this.post._id && this.anchor && this.anchor.nativeElement) {
         const el: HTMLAnchorElement = this.anchor.nativeElement;
         const elTop = el.getBoundingClientRect().top;
+        this._location.replaceState(this._location.path());
 
         setTimeout(() => {
           smoothWindowScrollTo(elTop);

@@ -45,6 +45,7 @@ export class CardNewPostComponent implements OnInit {
   @ViewChild('inputMedia') private inputMedia: ElementRef;
   @ViewChild('audioPlayer') private audioPlayer: ElementRef;
   @ViewChild('modalAudioRecorder') private modalAudioRecorder: ModalComponent;
+  @ViewChild('editor') private editor: ElementRef;
 
   constructor(
     private _sharedService: SharedService,
@@ -136,6 +137,20 @@ export class CardNewPostComponent implements OnInit {
 
   onClickButtonMore() {
     this.isMoreShown = !this.isMoreShown;
+  }
+
+  focusEditor() {
+    if(!this.isEditorFocused) {
+      this.isEditorFocused = true;
+    }
+  }
+
+  blurEditor() {
+    if(this.isEditorFocused && this.editor && this.editor.nativeElement) {
+      const editor = this.editor.nativeElement.querySelector('.ql-editor') as HTMLDivElement;
+      editor.blur();
+      this.isEditorFocused = false;
+    }
   }
 
   /** AUDIO RECORDER / PLAYER START */

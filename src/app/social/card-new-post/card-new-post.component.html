@@ -1,10 +1,25 @@
-<div class="card rounded-8p bg-white shadow body1 text-body mb-15p">
+<div 
+*ngIf="isEditorFocused"
+class="overlay"
+(click)="blurEditor()"
+></div>
+
+<div 
+class="card rounded-8p bg-white shadow body1 text-body mb-15p"
+[ngClass]="{focused: isEditorFocused}"
+>
   <div class="d-flex p-20p border-bottom border-line">
     <profile-image [image]="userImage"></profile-image>
-    <div class="flex-grow-1 ml-10p">
+    <div class="flex-grow-1 ml-10p"
+    scrollDetector
+    offset="200"
+    (detect)="blurEditor()"
+    #editor
+    >
       <quill-editor
       [styles]="{minHeight: '48px', border: 'none', fontSize: '16px'}"
       placeholder="What's on your mind"
+      (click)="focusEditor()"
       ></quill-editor>  
     </div>
   </div>
