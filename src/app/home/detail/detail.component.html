@@ -4,44 +4,33 @@
   </p>
 </ngx-spinner>
 
-<div class="container-fluid banner position-relative" 
-  [style]="(userInfo? 'background-image: url(' + userInfo?.banner + ')': '')"
-></div>
+<div class="container-fluid banner position-relative"
+  [style]="(userInfo? 'background-image: url(' + userInfo?.banner + ')': '')"></div>
 <div class='intersection-observer' intersectionObserver (changeStatus)="changeStickyStatusTabbar($event)"></div>
 <div class="container-fluid borderb-grey sticky-top bg-white">
   <div class="max-w-1200 position-relative tabbar" [ngClass]="{sticked: isTabSticked}">
-    <div class="d-flex-column d-wrap ml-for-avoid-image profile-info"
-      [ngClass]="{sticked: isTabSticked}"
-    >
-      <p *ngIf="userInfo?.title" class="mb-2 overflow-hidden fong-regular font-mg-big" [@expandSubtitle]="(isTabSticked? 'shrink' : 'expand')">{{userInfo?.title}} </p> 
+    <div class="d-flex-column d-wrap ml-for-avoid-image profile-info" [ngClass]="{sticked: isTabSticked}">
+      <p *ngIf="userInfo?.title" class="mb-2 overflow-hidden fong-regular font-mg-big"
+        [@expandSubtitle]="(isTabSticked? 'shrink' : 'expand')">{{userInfo?.title}} </p>
       <div class="d-flex align-items-start title-wrapper">
         <i class="fas fa-clinic-medical pr-2" *ngIf="userInfo?.isCentre"></i>
         <h3 class='mb-0 font-big font-mg-biggest overflow-hidden' [@expandTitle]="(isTabSticked? 'shrink' : 'expand')">
           {{userInfo?.name | titlecase}}
-        <i class="fas fa-video px-1" *ngIf="userInfo && userInfo.provideVirtual"></i>
-      </h3>  
+          <i class="fas fa-video px-1" *ngIf="userInfo && userInfo.provideVirtual"></i>
+        </h3>
       </div>
     </div>
 
     <div class="profile-image rounded-circle" [ngClass]="{verified: userInfo?.isVerified}">
-      <user-image
-      [image]="userInfo?.image"
-      [alt]="userInfo?.name"
-      [verifiedUser]="userInfo?.isVerified"
-      shadowVerified="0 0 5px #307dd6"
-      badgeSize="35"
-      ></user-image>
+      <user-image [image]="userInfo?.image" [alt]="userInfo?.name" [verifiedUser]="userInfo?.isVerified"
+        shadowVerified="0 0 5px #307dd6" badgeSize="35"></user-image>
     </div>
     <ul class="p-0 mb-0 ml-for-avoid-image list-unstyled d-inline-flex align-items-center position-relative">
-      <li class='text-blue text-center tab-item flex-grow-0 flex-shrink-0 py-3' 
-        [ngClass]='{active: (indexTabItem == 0)}'
-        (click)="changeTabTo(0)"
-      >About</li>
-      <li class='text-blue text-center tab-item flex-grow-0 flex-shrink-0 py-3' 
-        [ngClass]='{active: (indexTabItem == 1)}'
-        (click)='changeTabTo(1)'
-      >Reviews</li>
-  
+      <li class='text-blue text-center tab-item flex-grow-0 flex-shrink-0 py-3'
+        [ngClass]='{active: (indexTabItem == 0)}' (click)="changeTabTo(0)">About</li>
+      <li class='text-blue text-center tab-item flex-grow-0 flex-shrink-0 py-3'
+        [ngClass]='{active: (indexTabItem == 1)}' (click)='changeTabTo(1)'>Reviews</li>
+
       <li class='ml-2 ml-md-5'>
         <star-rate class="d-none d-md-block" [rate]="(userInfo? userInfo.rating : 0)"></star-rate>
         <star-rate class="d-md-none" [rate]="(userInfo? userInfo.rating : 0)" [simple]="true"></star-rate>
@@ -51,121 +40,116 @@
   </div>
 </div>
 
-<section *ngIf="myId == userInfo?.id && userInfo.isApproved === false"
-class="container-fluid bg-grey p-4"
->
-  <p class="font-italic mb-0 max-w-1200">Your profile is been reviewed by our administrator and won't be shown in listing just yet.</p>
+<section *ngIf="myId == userInfo?.id && userInfo.isApproved === false" class="container-fluid bg-grey p-4">
+  <p class="font-italic mb-0 max-w-1200">Your profile is been reviewed by our administrator and won't be shown in
+    listing just yet.</p>
 </section>
 
 <!-- section review -->
 <section class="container bg-white mt-5 mt-md-6" *ngIf="indexTabItem == 1">
-    <div class="row justify-content-between my-5">
-      <div class="col-12 col-md-6 col-lg-7">
-        <div *ngIf="userInfo">
-          <ng-container *ngIf="userInfo.reviews.length > 0">
-            <star-rate [rate]="((userInfo)? userInfo.rating : 0)" margin='big'></star-rate>
-            <span class='text-blue pl-4'>({{userInfo.reviews.length}})</span>
-          </ng-container>
+  <div class="row justify-content-between my-5">
+    <div class="col-12 col-md-6 col-lg-7">
+      <div *ngIf="userInfo">
+        <ng-container *ngIf="userInfo.reviews.length > 0">
+          <star-rate [rate]="((userInfo)? userInfo.rating : 0)" margin='big'></star-rate>
+          <span class='text-blue pl-4'>({{userInfo.reviews.length}})</span>
+        </ng-container>
 
-          <span *ngIf="userInfo.reviews.length == 0 && !userInfo.detailByGoogle" class="text-blue pl-4">No review yet</span>
-        </div>
-
-        <div *ngIf="userInfo && userInfo.reviews.length > 0">
-          <div class="my-5">
-            <ul class="review-controller list-unstyled d-inline-flex mb-3">
-              <li class="btn text-blue mr-2 mr-md-4 font-regular "
-                (click)="sortReviewsBy(0)" 
-                [ngClass]="{active: indexSortReviews == 0}"
-              >Highest Rated</li>
-              <li class="btn text-blue mr-2 mr-md-4 font-regular"
-                (click)="sortReviewsBy(1)" 
-                [ngClass]="{active: indexSortReviews == 1}" 
-              >Lowest Rated</li>
-              <li class="btn text-blue font-regular"
-                (click)="sortReviewsBy(2)" 
-                [ngClass]="{active: indexSortReviews == 2}"
-              >Most Recent</li>
-            </ul>
-        
-            <ul class="reviews p-0 m-0 list-unstyled">
-              <li class="d-md-flex flex-md-nowrap p-3 p-md-4 mb-4" *ngFor="let r of userInfo.reviews">
-                <div class="mb-3 mb-md-0 col-md-5 col-lg-3 d-flex">
-                  <div class="review-image rounded-circle overflow-hidden mr-3">
-                    <img [src]="r.image" [alt]="r.name">
-                  </div>
-                  <p class="font-weight-bold mt-3 font-big mb-0">{{r.name}}</p>
-                </div>
-                <div class="col-md-7 col-lg-9">
-                  <star-rate [rate]="r.rate" margin='big'></star-rate>
-                  <div class="borderb-grey pt-2"></div>
-                  <p class='pt-3 pb-0'>{{r.review}}</p>
-                  <div>{{r.createdAt | date:'longDate'}}</div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div *ngIf="userInfo?.detailByGoogle">
-          <div class="mb-5">
-            <ul class="list-unstyled reviews p-0 m-0">
-              <li class="p-3 p-md-4 mb-4" *ngFor="let r of userInfo.detailByGoogle.reviews">
-                <div class="mb-3 d-flex">
-                  <div class="review-image rounded-circle overflow-hidden mr-3">
-                    <img [src]="r.profile_photo_url" [alt]="r.author_name">
-                  </div>
-                  <div class="mt-3">
-                    <p class="font-weight-bold font-big">{{r.author_name}}</p>
-                    <star-rate [rate]="r.rating" size='regular' margin="regular"></star-rate>
-                  </div>
-                </div>
-                <div class="">
-                  <div class="borderb-grey pt-2"></div>
-                  <p class='pt-3 pb-0'>{{r.text}}</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <span>{{r.relative_time_description}}</span>
-                    <img class="badge-google" src="/assets/img/logo-google.png" alt="" width="30">
-                  </div>
-                </div>
-              </li>
-            </ul>
-  
-          </div>
-        </div>
-    
+        <span *ngIf="userInfo.reviews.length == 0 && !userInfo.detailByGoogle" class="text-blue pl-4">No review
+          yet</span>
       </div>
-      <div class="col-12 col-md-5 col-lg-4">
-        <div *ngIf="userInfo?.detailByGoogle">
-          <!-- <h5 class="text-ph-blue">Google Review</h5> -->
-          <div class="card card-google-place shadow overflow-hidden rounded-10p">
-            <div class="image-container">
-              <img class="atmosphere" [src]="userInfo?.detailByGoogle?.photos[0].getUrl()" alt="">
-              <img class="badge-google" src="/assets/img/logo-google.png" alt="">
-            </div>
-            <div class="py-3 px-3 ">
-              <h5>{{userInfo.name}}</h5>
-              <div>
-                <star-rate [rate]="userInfo.detailByGoogle.rating" size="small"></star-rate>
-              </div>
-            </div>
-            <table class="table table-borderless table-hover px-2">
-              <tbody>
-                <tr>
-                  <td class="pr-0"><i class="fas fa-map-marker-alt"></i></td>
-                  <td>{{userInfo.address}}</td>
-                </tr>
-                <tr>
-                  <td class="pr-0"><i class="fas fa-phone"></i></td>
-                  <td>{{userInfo.phone}}</td>
-                </tr>
-                <tr>
-                  <td class="pr-0"><i class="fas fa-compass color-card-icon"></i></td>
-                  <td><a class="url" [href]="userInfo.detailByGoogle.url" target="_blank">{{userInfo.getURLLabel(userInfo.detailByGoogle.url)}}</a></td>
-                </tr>
-              </tbody>
-            </table>
 
-            <!-- <ul class="list-unstyled google-reviews">
+      <div *ngIf="userInfo && userInfo.reviews.length > 0">
+        <div class="my-5">
+          <ul class="review-controller list-unstyled d-inline-flex mb-3">
+            <li class="btn text-blue mr-2 mr-md-4 font-regular " (click)="sortReviewsBy(0)"
+              [ngClass]="{active: indexSortReviews == 0}">Highest Rated</li>
+            <li class="btn text-blue mr-2 mr-md-4 font-regular" (click)="sortReviewsBy(1)"
+              [ngClass]="{active: indexSortReviews == 1}">Lowest Rated</li>
+            <li class="btn text-blue font-regular" (click)="sortReviewsBy(2)"
+              [ngClass]="{active: indexSortReviews == 2}">Most Recent</li>
+          </ul>
+
+          <ul class="reviews p-0 m-0 list-unstyled">
+            <li class="d-md-flex flex-md-nowrap p-3 p-md-4 mb-4" *ngFor="let r of userInfo.reviews">
+              <div class="mb-3 mb-md-0 col-md-5 col-lg-3 d-flex">
+                <div class="review-image rounded-circle overflow-hidden mr-3">
+                  <img [src]="r.image" [alt]="r.name">
+                </div>
+                <p class="font-weight-bold mt-3 font-big mb-0">{{r.name}}</p>
+              </div>
+              <div class="col-md-7 col-lg-9">
+                <star-rate [rate]="r.rate" margin='big'></star-rate>
+                <div class="borderb-grey pt-2"></div>
+                <p class='pt-3 pb-0'>{{r.review}}</p>
+                <div>{{r.createdAt | date:'longDate'}}</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div *ngIf="userInfo?.detailByGoogle">
+        <div class="mb-5">
+          <ul class="list-unstyled reviews p-0 m-0">
+            <li class="p-3 p-md-4 mb-4" *ngFor="let r of userInfo.detailByGoogle.reviews">
+              <div class="mb-3 d-flex">
+                <div class="review-image rounded-circle overflow-hidden mr-3">
+                  <img [src]="r.profile_photo_url" [alt]="r.author_name">
+                </div>
+                <div class="mt-3">
+                  <p class="font-weight-bold font-big">{{r.author_name}}</p>
+                  <star-rate [rate]="r.rating" size='regular' margin="regular"></star-rate>
+                </div>
+              </div>
+              <div class="">
+                <div class="borderb-grey pt-2"></div>
+                <p class='pt-3 pb-0'>{{r.text}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span>{{r.relative_time_description}}</span>
+                  <img class="badge-google" src="/assets/img/logo-google.png" alt="" width="30">
+                </div>
+              </div>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="col-12 col-md-5 col-lg-4">
+      <div *ngIf="userInfo?.detailByGoogle">
+        <!-- <h5 class="text-ph-blue">Google Review</h5> -->
+        <div class="card card-google-place shadow overflow-hidden rounded-10p">
+          <div class="image-container">
+            <img class="atmosphere" [src]="userInfo?.detailByGoogle?.photos[0].getUrl()" alt="">
+            <img class="badge-google" src="/assets/img/logo-google.png" alt="">
+          </div>
+          <div class="py-3 px-3 ">
+            <h5>{{userInfo.name}}</h5>
+            <div>
+              <star-rate [rate]="userInfo.detailByGoogle.rating" size="small"></star-rate>
+            </div>
+          </div>
+          <table class="table table-borderless table-hover px-2">
+            <tbody>
+              <tr>
+                <td class="pr-0"><i class="fas fa-map-marker-alt"></i></td>
+                <td>{{userInfo.address}}</td>
+              </tr>
+              <tr>
+                <td class="pr-0"><i class="fas fa-phone"></i></td>
+                <td>{{userInfo.phone}}</td>
+              </tr>
+              <tr>
+                <td class="pr-0"><i class="fas fa-compass color-card-icon"></i></td>
+                <td><a class="url" [href]="userInfo.detailByGoogle.url"
+                    target="_blank">{{userInfo.getURLLabel(userInfo.detailByGoogle.url)}}</a></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- <ul class="list-unstyled google-reviews">
               <li class="m-2" *ngFor="let r of userInfo.detailByGoogle.reviews">
                 <div class="d-flex flex-nowrap align-items-start mb-2">
                   <img class="user" [src]="r.profile_photo_url" alt="">
@@ -179,10 +163,10 @@ class="container-fluid bg-grey p-4"
               </li>
             </ul> -->
 
-          </div>  
         </div>
       </div>
     </div>
+  </div>
 </section>
 
 <!-- section about -->
@@ -192,7 +176,7 @@ class="container-fluid bg-grey p-4"
     <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
       <!-- main column -->
       <div class="col-md-6 col-lg-7">
-  
+
         <!-- basic section -->
         <div class="row mb-5" *ngIf="userInfo && userInfo.description">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Practice Philosophy:</div>
@@ -201,12 +185,8 @@ class="container-fluid bg-grey p-4"
         <div class="row mb-5">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Specialty Age Group</div>
           <div class="col-12 col-lg-8">
-            <form-item-checkbox-group
-            id="age_range"
-            label="Age range"
-            [data]="userInfo?.age_range"
-            [disabled]="true"
-            ></form-item-checkbox-group>
+            <form-item-checkbox-group id="age_range" label="Age range" [data]="userInfo?.age_range" [disabled]="true">
+            </form-item-checkbox-group>
           </div>
           <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.ageRange.join(', ')}}</p>
         </div>
@@ -221,27 +201,17 @@ class="container-fluid bg-grey p-4"
         <div class="row mb-5">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Language</div>
           <div class="col-12 col-lg-8">
-            <form-item-checkbox-group
-            *ngIf="questionnaires"
-            id="languages"
-            label="Languages"
-            [data]="userInfo?.languagesId"
-            [selectionsByQuestionnaire]="questionnaires.language"
-            [disabled]="true"
-            ></form-item-checkbox-group>
+            <form-item-checkbox-group *ngIf="questionnaires" id="languages" label="Languages"
+              [data]="userInfo?.languagesId" [selectionsByQuestionnaire]="questionnaires.language" [disabled]="true">
+            </form-item-checkbox-group>
           </div>
           <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.languages.join(', ')}}</p>
         </div>
         <div class="row mb-5">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Years Of Experience</div>
           <div class="col-12 col-lg-8">
-            <form-item-checkbox-group
-            *ngIf="userInfo"
-            id="years_of_experience"
-            label="Years of experience"
-            [data]="userInfo.yearsOfExperience"
-            [disabled]="true"
-            ></form-item-checkbox-group>  
+            <form-item-checkbox-group *ngIf="userInfo" id="years_of_experience" label="Years of experience"
+              [data]="userInfo.yearsOfExperience" [disabled]="true"></form-item-checkbox-group>
           </div>
           <!-- <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.yearsOfExperience}}</p> -->
         </div>
@@ -251,11 +221,8 @@ class="container-fluid bg-grey p-4"
           <div class="col-12 col-lg-8">
             <image-row [images]="userInfo.amenityPreview" [option]="{col: 3}"></image-row>
             <button class="btn text-blue border-blue rounded" (click)="openAmenityViewer()">Show detail</button>
-            <image-viewer
-            *ngIf="isAmenityViewerShown"
-            [data]="userInfo.amenity"
-            (close)="closeAmenityViewer()"
-            ></image-viewer>
+            <image-viewer *ngIf="isAmenityViewerShown" [data]="userInfo.amenity" (close)="closeAmenityViewer()">
+            </image-viewer>
           </div>
         </div>
 
@@ -264,44 +231,31 @@ class="container-fluid bg-grey p-4"
           <div class="col-12 col-lg-8">
             <image-row [images]="userInfo.productPreview" [option]="{col: 3}"></image-row>
             <button class="btn text-blue border-blue rounded" (click)="openProductViewer()">Show detail</button>
-            <image-viewer
-            *ngIf="isProductViewerShown"
-            [data]="userInfo.product"
-            (close)="closeProductViewer()"
-            ></image-viewer>
+            <image-viewer *ngIf="isProductViewerShown" [data]="userInfo.product" (close)="closeProductViewer()">
+            </image-viewer>
           </div>
         </div>
 
-  
+
         <!-- blue section -->
         <div class="row bg-lightblue rounded-top pt-5 pb-0 mt-5">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Type of Provider:</div>
           <div class="col-12 col-lg-8">
-            <form-item-checkbox-group
-            *ngIf="questionnaires"
-            id="type_of_provider"
-            label="Type of provider"
-            [data]="userInfo?.allServiceId"
-            [selectionsByQuestionnaire]="questionnaires.typeOfProvider"
-            [disabled]="true"
-            ></form-item-checkbox-group>
+            <form-item-checkbox-group *ngIf="questionnaires" id="type_of_provider" label="Type of provider"
+              [data]="userInfo?.allServiceId" [selectionsByQuestionnaire]="questionnaires.typeOfProvider"
+              [disabled]="true"></form-item-checkbox-group>
           </div>
           <!-- <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.typeOfProvider">{{item}}</li>
           </ul> -->
         </div>
-        
+
         <div class="row bg-lightblue pt-5 pb-0">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Treatment Modalities: </div>
           <div class="col-12 col-lg-8">
-            <form-item-checkbox-group
-            *ngIf="questionnaires"
-            id="treatment_modality"
-            label="Treatment modality"
-            [data]="userInfo?.allServiceId"
-            [selectionsByQuestionnaire]="questionnaires.treatmentModality"
-            [disabled]="true"
-            ></form-item-checkbox-group>  
+            <form-item-checkbox-group *ngIf="questionnaires" id="treatment_modality" label="Treatment modality"
+              [data]="userInfo?.allServiceId" [selectionsByQuestionnaire]="questionnaires.treatmentModality"
+              [disabled]="true"></form-item-checkbox-group>
           </div>
           <!-- <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.treatmentModality">{{item}}</li>
@@ -311,46 +265,34 @@ class="container-fluid bg-grey p-4"
         <div class="row bg-lightblue pt-5 pb-0">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Health Status: </div>
           <div class="col-12 col-lg-8">
-            <form-item-customer-health
-            *ngIf="questionnaires"
-            type="detail"
-            [data]="userInfo?.allServiceId"
-            [selections]="questionnaires.customerHealth.answers"
-            [disabled]="true"
-            ></form-item-customer-health>  
+            <form-item-customer-health *ngIf="questionnaires" type="detail" [data]="userInfo?.allServiceId"
+              [selections]="questionnaires.customerHealth.answers" [disabled]="true"></form-item-customer-health>
           </div>
           <!-- <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.healthStatus">{{item}}</li>
           </ul> -->
         </div>
 
-        
+
         <div class="row bg-lightblue pt-5 pb-0">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Service Delivery:</div>
           <div class="col-12 col-lg-8">
-            <form-item-checkbox-group
-            *ngIf="questionnaires"
-            id="service_delivery"
-            label="Service delivery"
-            [data]="userInfo?.serviceOfferIds"
-            [selectionsByQuestionnaire]="questionnaires.serviceDelivery"
-            [disabled]="true"
-            ></form-item-checkbox-group>  
+            <form-item-checkbox-group *ngIf="questionnaires" id="service_delivery" label="Service delivery"
+              [data]="userInfo?.serviceOfferIds" [selectionsByQuestionnaire]="questionnaires.serviceDelivery"
+              [disabled]="true"></form-item-checkbox-group>
           </div>
           <!-- <ul class="col-12 col-lg-8 mb-0 list-unstyled d-flex flex-wrap">
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.serviceDelivery">{{item}}</li>
           </ul> -->
-          <p class="font-small col-12 mb-0 " *ngIf="userInfo?.provideVirtual">**Virtual/Online services may not be available to all locations. Please inquire the service provider for confirmation.</p>
+          <p class="font-small col-12 mb-0 " *ngIf="userInfo?.provideVirtual">**Virtual/Online services may not be
+            available to all locations. Please inquire the service provider for confirmation.</p>
         </div>
 
         <div class="row bg-lightblue pt-5 pb-0">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-blue">Services:</div>
           <div class="col-12 col-lg-8">
-            <form-item-service
-            *ngIf="questionnaires"
-            [data]="userInfo?.allServiceId"
-            [disabled]="true"
-            ></form-item-service>  
+            <form-item-service *ngIf="questionnaires" [data]="userInfo?.allServiceId" [disabled]="true">
+            </form-item-service>
           </div>
         </div>
 
@@ -360,58 +302,53 @@ class="container-fluid bg-grey p-4"
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.availability">{{item}}</li>
           </ul>
         </div>
-        
+
         <!-- <div class="row bg-lightblue rounded-bottom pt-5 pb-0" *ngIf="userInfo?.isCentre">
           <div class="col-12 col-lg-4 mb-2 mb-lg-0 text-blue">Product:</div>
           <p class="col-12 col-lg-8 mb-0">{{userInfo?.product}}</p>
         </div> -->
         <div class="row bg-lightblue rounded-bottom pt-5 mb-5"></div>
-  
+
         <!-- professionals at centre-->
         <div *ngIf="userInfo?.isCentre && userInfo.professionals && userInfo.professionals.length > 0">
-          <div class="row bg-grey rounded-top py-4 mt-5 justify-content-start justify-content-md-between align-items-center">
+          <div
+            class="row bg-grey rounded-top py-4 mt-5 justify-content-start justify-content-md-between align-items-center">
             <div class="col text-blue font-big font-md-bigger">Meet our professionals</div>
           </div>
           <ul class='list-unstyled row text-center bg-grey py-4 mb-0'>
             <li class='col-12 col-md-6 mb-5' *ngFor="let pro of userInfo.professionals; let i = index;">
-              <img class="professional-image rounded-circle overflow-hidden" 
-              [src]="pro.image" 
-              [alt]="pro.name"
-              crossorigin="anonymous"
-              >
+              <img class="professional-image rounded-circle overflow-hidden" [src]="pro.image" [alt]="pro.name"
+                crossorigin="anonymous">
 
               <h6 class="font-smallest mb-3 professional-name">{{pro.name}}</h6>
-              <p class="professional-desc" [ngClass]="{clamp: !isExpandProfessionals}">{{pro.description}}</p> 
+              <p class="professional-desc" [ngClass]="{clamp: !isExpandProfessionals}">{{pro.description}}</p>
               <button class="btn" style="color: inherit;" (click)="toggleExpandProfessionalDesc()">
                 <span *ngIf="!isExpandProfessionals">- show more -</span>
                 <span *ngIf="isExpandProfessionals">- show less -</span>
-              </button> 
+              </button>
             </li>
-            <li class="col-12 col-md-6 mb-5" *ngIf="isGettingProfessional"><card-dummy class="bg-white"></card-dummy></li>
-            <li class="col-12 col-md-6 mb-5" *ngIf="isGettingProfessional"><card-dummy class="bg-white"></card-dummy></li>
+            <li class="col-12 col-md-6 mb-5" *ngIf="isGettingProfessional">
+              <card-dummy class="bg-white"></card-dummy>
+            </li>
+            <li class="col-12 col-md-6 mb-5" *ngIf="isGettingProfessional">
+              <card-dummy class="bg-white"></card-dummy>
+            </li>
           </ul>
           <div class="bg-grey row pb-4 rounded-bottom mb-5">
             <div class="col text-center">
               <button class="btn border-blue text-blue"
-              *ngIf="userInfo && userInfo.professionals && userInfo.professionals.length > 0 && isProfessionalsMoreExist"
-              type="button"
-              (click)="getProfessionals()"
-              >Explore More</button>  
+                *ngIf="userInfo && userInfo.professionals && userInfo.professionals.length > 0 && isProfessionalsMoreExist"
+                type="button" (click)="getProfessionals()">Explore More</button>
             </div>
           </div>
         </div>
       </div>
-  
+
       <!-- side column -->
       <div class="col-md-5 col-lg-4">
         <div class="text-center mb-4" *ngIf="userInfo?.socialLink.isAvailable">
-          <social-buttons 
-          class="d-inline-block" 
-          [data]="userInfo.socialLink.data" 
-          [size]="32" 
-          [margin]="'narrow'"
-          (clickButton)="countupSocial($event)"
-          ></social-buttons>
+          <social-buttons class="d-inline-block" [data]="userInfo.socialLink.data" [size]="32" [margin]="'narrow'"
+            (clickButton)="countupSocial($event)"></social-buttons>
         </div>
         <!-- contact info-->
         <div class="rounded shadow text-center pb-3 overflow-hidden mb-5">
@@ -446,35 +383,33 @@ class="container-fluid bg-grey p-4"
               </tbody>
             </table>
             <ng-container *ngIf="userInfo && isLoggedIn">
-              <a *ngIf="userInfo.bookingUrl" class="btn border-blue text-blue px-5" [href]="userInfo.bookingUrl" target="_blank">Book</a>
-              <button *ngIf="!userInfo.bookingUrl" class="btn border-blue text-blue px-5" type="button" data-toggle="modal" data-target="#bookingmodal">Book</button>
+              <a *ngIf="userInfo.bookingUrl" class="btn border-blue text-blue px-5" (click)="incBookingCount()">Book</a>
+              <button *ngIf="!userInfo.bookingUrl" class="btn border-blue text-blue px-5" type="button"
+                data-toggle="modal" data-target="#bookingmodal">Book</button>
             </ng-container>
-            
+
             <div class="blur-contact" *ngIf="!isLoggedIn">
-              <button class="btn btn-outline-primary px-5 font-regular" type="button" (click)="loginModal.show()">Login to See Information</button>  
+              <button class="btn btn-outline-primary px-5 font-regular" type="button" (click)="loginModal.show()">Login
+                to See Information</button>
             </div>
           </div>
         </div>
-  
+
         <!-- videos-->
         <div class="rounded shadow overflow-hidden pb-3 mb-5">
           <div class="m-3 d-flex align-items-center justify-content-between">
             <h5 class='m-0'>
               <span class="text-blue">Video</span>
-              <span class="ml-2 font-small" *ngIf="userInfo && userInfo.videos.length>0">{{userInfo.videos.length}}</span>
-            </h5> 
+              <span class="ml-2 font-small"
+                *ngIf="userInfo && userInfo.videos.length>0">{{userInfo.videos.length}}</span>
+            </h5>
             <div *ngIf="userInfo && userInfo.videos.length > 0" class="text-right">
-              <button *ngIf="iframe.length > countVideoShown" 
-                (click)="showMoreVideo()"
-                class="btn border-blue text-blue font-small" 
-                type="button"
-              >Load more videos</button>
+              <button *ngIf="iframe.length > countVideoShown" (click)="showMoreVideo()"
+                class="btn border-blue text-blue font-small" type="button">Load more videos</button>
 
               <button *ngIf="iframe.length <= countVideoShown && iframe.length > defaultVideoCount"
-                (click)="showLessVideo()"
-                class="btn border-blue text-blue font-small" 
-                type="button"
-              >Show less videos</button>
+                (click)="showLessVideo()" class="btn border-blue text-blue font-small" type="button">Show less
+                videos</button>
             </div>
           </div>
 
@@ -490,7 +425,7 @@ class="container-fluid bg-grey p-4"
             <p *ngIf="userInfo.videos.length == 0" class="m-0">No videos</p>
           </div>
         </div>
-      
+
         <!-- endosements -->
         <div class="rounded shadow overflow-hidden mb-5">
           <div class="card-title font-big font-md-regular text-center m-0">Endorsement</div>
@@ -521,35 +456,15 @@ class="container-fluid bg-grey p-4"
 </section>
 
 <!-- Modal login -->
-<div
-  class="modal fade"
-  bsModal
-  #loginModal="bs-modal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="messagemodal"
-  aria-hidden="true"
->
-  <div
-    class="modal-dialog"
-    role="document"
-    style="margin: auto !important;width:100%"
-  >
+<div class="modal fade" bsModal #loginModal="bs-modal" tabindex="-1" role="dialog" aria-labelledby="messagemodal"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document" style="margin: auto !important;width:100%">
     <div class="modal-content mk-border position-relative">
       <div class="modal-header">
         <h5 class="modal-title w-100 text-center">
-          <img
-            src="assets/img/logo.png"
-            class="mb-3"
-            style="max-width: 220px;"
-          />
+          <img src="assets/img/logo.png" class="mb-3" style="max-width: 220px;" />
         </h5>
-        <button
-          type="button"
-          class="close position-absolute"
-          (click)="loginModal.hide()"
-          aria-label="Close"
-        >
+        <button type="button" class="close position-absolute" (click)="loginModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -562,31 +477,15 @@ class="container-fluid bg-grey p-4"
 
 
 <!-- Modal Booking -->
-<div
-  class="modal fade"
-  id="bookingmodal"
-  data-backdrop="static" role="dialog"
-  role="dialog"
-  aria-labelledby="bookingmodal"
-  aria-hidden="true"
->
-  <div
-    class="modal-dialog"
-    role="document"
-    style="margin: auto !important;width:100%"
-  >
+<div class="modal fade" id="bookingmodal" data-backdrop="static" role="dialog" role="dialog"
+  aria-labelledby="bookingmodal" aria-hidden="true">
+  <div class="modal-dialog" role="document" style="margin: auto !important;width:100%">
     <div class="modal-content mk-border position-relative">
       <div class="modal-header">
         <h5 class="modal-title w-100 text-center">
           Booking
         </h5>
-        <button
-          type="button"
-          #closebutton
-          class="close position-absolute"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" #closebutton class="close position-absolute" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -596,44 +495,31 @@ class="container-fluid bg-grey p-4"
 
             <div class="col-md-12 mb-3">
               <label>Name <span class="text-danger">*</span></label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="name"
-                placeholder="Enter Your Name"
-              />
-              <div *ngIf="submitted && f.name.invalid"  class="error-msg">
-                <small *ngIf="f.name.errors.required"   class="text-danger">Name is required</small>
-                <small *ngIf="f.name.errors.maxlength"  class="text-danger">Name too long</small>
-                <small *ngIf="f.name.errors.pattern"    class="text-danger">Invalid name</small>
+              <input type="text" class="form-control" formControlName="name" placeholder="Enter Your Name" />
+              <div *ngIf="submitted && f.name.invalid" class="error-msg">
+                <small *ngIf="f.name.errors.required" class="text-danger">Name is required</small>
+                <small *ngIf="f.name.errors.maxlength" class="text-danger">Name too long</small>
+                <small *ngIf="f.name.errors.pattern" class="text-danger">Invalid name</small>
               </div>
             </div>
             <div class="col-md-12 mb-3">
               <label>Email Address <span class="text-danger">*</span></label>
-              <input
-                type="email"
-                class="form-control"
-                formControlName="email"
-                placeholder="Enter Your Email Address"
-              />
+              <input type="email" class="form-control" formControlName="email" placeholder="Enter Your Email Address" />
               <div *ngIf="submitted && f.email.invalid" class="error-msg">
-                <small *ngIf="f.email.errors.required"  class="text-danger">Email is required</small>
-                <small *ngIf="f.email.errors.email"     class="text-danger">Email must be a valid email address</small>
+                <small *ngIf="f.email.errors.required" class="text-danger">Email is required</small>
+                <small *ngIf="f.email.errors.email" class="text-danger">Email must be a valid email address</small>
               </div>
             </div>
             <div class="col-md-12 mb-3">
               <label>Phone <span class="text-danger">*</span></label>
-              <input
-                type="tel"
-                formControlName="phone"
-                class="form-control"
-                placeholder="Enter Your Phone Number"
-              />
+              <input type="tel" formControlName="phone" class="form-control" placeholder="Enter Your Phone Number" />
               <div *ngIf="submitted && f.phone.invalid" class="error-msg">
-                <small *ngIf="f.phone.errors.required"  class="text-danger">Phone number is required</small>
-                <small *ngIf="f.phone.errors.pattern"   class="text-danger">Phone number invalid</small>
-                <small *ngIf="!f.phone.errors.pattern && f.phone.errors.minlength" class="text-danger">Phone number too short</small>
-                <small *ngIf="!f.phone.errors.pattern && f.phone.errors.maxlength" class="text-danger">Phone number too long</small>
+                <small *ngIf="f.phone.errors.required" class="text-danger">Phone number is required</small>
+                <small *ngIf="f.phone.errors.pattern" class="text-danger">Phone number invalid</small>
+                <small *ngIf="!f.phone.errors.pattern && f.phone.errors.minlength" class="text-danger">Phone number too
+                  short</small>
+                <small *ngIf="!f.phone.errors.pattern && f.phone.errors.maxlength" class="text-danger">Phone number too
+                  long</small>
               </div>
             </div>
             <!-- <div class="col-md-12 mb-3">
@@ -664,24 +550,18 @@ class="container-fluid bg-grey p-4"
             </div>
             <div class="col-md-12 mb-3">
               <label>Notes</label>
-              <textarea
-                class="form-control"
-                type="text"
-                formControlName="note"
-              ></textarea>
+              <textarea class="form-control" type="text" formControlName="note"></textarea>
               <div *ngIf="submitted && f.note.invalid" class="error-msg">
-                <small *ngIf="f.note.errors.maxlength"  class="text-danger">Please enter within 250 characters</small>
+                <small *ngIf="f.note.errors.maxlength" class="text-danger">Please enter within 250 characters</small>
               </div>
             </div>
 
             <div class="col-md-12 text-right">
               <button type="submit" class="btn btn-primary">Save</button>
-          </div>
+            </div>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-                    

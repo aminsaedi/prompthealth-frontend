@@ -133,8 +133,8 @@ export class DetailComponent implements OnInit {
     // this.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 9, 0, 0);
     // this.minDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
     this.minDateTime = {
-      year: now.getFullYear(), 
-      month: now.getMonth() + 1, 
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
       day: now.getDate() + 1,
       hour: 9,
       minute: 0
@@ -157,7 +157,7 @@ export class DetailComponent implements OnInit {
     this.loginSubscription = this._bs.getUserData().subscribe((user: any) => {
       this.roles = user.roles || '';
       this.myId = user._id || '';
-      this.isLoggedIn = (user._id) ? true: false; 
+      this.isLoggedIn = (user._id) ? true : false;
     });
 
     // this.category = await this._catService.getCategoryAsync();
@@ -183,12 +183,12 @@ export class DetailComponent implements OnInit {
         // this.userInfo.setServiceCategory('healthStatus', this.healthStatus);
 
         this.questionnaires = await this._qService.getProfilePractitioner(this.userInfo.role as ('SP' | 'C'));
-        
+
         this.userInfo.videos.forEach(v => {
           const ytIframeHtml = this._embedService.embed(v.url);
           ytIframeHtml.title = v.title;
           this.iframe.push(ytIframeHtml);
-        });    
+        });
 
         this.getEndosements();
         this.getProducts();
@@ -205,7 +205,7 @@ export class DetailComponent implements OnInit {
           pageType: 'article',
           image: this.userInfo.imageFull,
           imageType: this.userInfo.imageType,
-          imageAlt: this.userInfo.name,  
+          imageAlt: this.userInfo.name,
         });
       })
         .catch(err => {
@@ -219,7 +219,15 @@ export class DetailComponent implements OnInit {
       // this.getProfileQuestion();
     });
   }
+  async incBookingCount() {
+    this._sharedService.post({ _id: this.userInfo.id }, '/booking/gain-booking-count').subscribe(res => {
+      console.log(res);
+    }, err => {
+      console.error(err);
+    });
+    window.open(this.userInfo.bookingUrl, '_blank');
 
+  }
   getUserProfile(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const path = `user/get-profile/${this.id}`;
@@ -396,11 +404,11 @@ export class DetailComponent implements OnInit {
   }
 
   bookApointment() {
-      this.submitted = true;
+    this.submitted = true;
     if (this.bookingForm.invalid) {
       return;
     } else {
-        
+
       const formData = {
         ...this.bookingForm.value,
       };
@@ -465,15 +473,15 @@ export class DetailComponent implements OnInit {
   }
 
   changeTabTo(i: number) {
-    if(this.userInfo){
+    if (this.userInfo) {
       this.indexTabItem = i;
       const banner = this.host.querySelector('.banner');
       const rect = banner.getBoundingClientRect();
       window.scrollBy({ top: rect.top + rect.height, left: 0, behavior: 'smooth' });
-  
-      this._map.load().then(()=>{
+
+      this._map.load().then(() => {
         this.userInfo.setGoogleReviews();
-      });  
+      });
     }
   }
 
@@ -500,8 +508,8 @@ export class DetailComponent implements OnInit {
     });
   }
 
-  onChangeLoginState(state: string){
-    if(state == 'done'){
+  onChangeLoginState(state: string) {
+    if (state == 'done') {
       this.loginModal.hide();
     }
   }
