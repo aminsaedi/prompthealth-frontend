@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
@@ -16,14 +16,14 @@ export class CardItemEventComponent implements OnInit {
   @Input() post: SocialPost;
   @Input() shorten: boolean = true;
 
+  @Output() onClickButton = new EventEmitter<string>();
+
   public alreadySubscribed: boolean = false;
 
   constructor(
     private _route: ActivatedRoute,
-    private _router: Router,
     private _location: Location,
     private _uService: UniversalService,
-    private _socialService: SocialService,
   ) { }
 
 
@@ -34,28 +34,10 @@ export class CardItemEventComponent implements OnInit {
     });
   }
 
-  onClickCalendarMenu(e: Event) {
-    e.preventDefault();
+  _onClickButton(e: Event, buttonName: string) {
     e.stopPropagation();
-
-    this._socialService.setTargetForEventModal(this.post);
-    this.showCalendarMenu();
-  }
-
-  showCalendarMenu() {
-    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'calendar-menu'}});
-  }
-
-  onClickSubscribeMenu(e: Event) {
     e.preventDefault();
-    e.stopPropagation();
-
-    this._socialService.setTargetForEventModal(this.post);
-    this.showSubscribeMenu();
-  }
-
-  showSubscribeMenu() {
-    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'subscribe-menu'}});
+    this.onClickButton.emit(buttonName);
   }
 
   markCurrentPosition() {

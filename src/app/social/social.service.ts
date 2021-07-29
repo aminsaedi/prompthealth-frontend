@@ -12,7 +12,6 @@ export class SocialService {
   private categoryCache: IBlogCategory[];
   private tagCache: IBlogCategory[];
   private postCache: PostCache;
-  private _targetForEventModal: SocialPost = null;
   private _selectedProfile: Professional = null;
 
   get categories(): any[] {
@@ -183,10 +182,6 @@ export class SocialService {
   dispose() {
     this.postCache = new PostCache();
   }
-
-  get targetForEventModal() { return this._targetForEventModal; }
-  setTargetForEventModal(data: SocialPost) { this._targetForEventModal = data; }
-  disposeTargetForEventModal(){ this._targetForEventModal = null; }
 
   saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'feed'): SocialPost[] {
     if(!this.postCache.dataPerTaxonomy[taxonomy].data) {

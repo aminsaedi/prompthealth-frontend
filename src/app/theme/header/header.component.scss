@@ -24,7 +24,7 @@ header {
   overflow: hidden;
 }
 
-.modal-view.modal-user-type-menu{
+modal#user-type-menu{
   .image-container{
     width: 50%;
     top: 0;
@@ -75,13 +75,5 @@ header {
     flex: 0 0 100%;
     height: calc(100vh - 60px);
     overflow: auto;
-  }
-
-  dashboard-menu {
-    position: fixed;
-    bottom:-100px;
-    width: 100%;
-    padding-bottom: 100px;
-    background: white;
   }
 }

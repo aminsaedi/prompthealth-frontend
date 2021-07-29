@@ -1,9 +1,9 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute, ActivationStart } from '@angular/router';
+import { Location } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, NavigationEnd, ActivationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { SharedService } from '../../shared/services/shared.service';
 
 @Component({
   selector: 'app-layout',
@@ -13,7 +13,6 @@ import { SharedService } from '../../shared/services/shared.service';
 export class LayoutComponent implements OnDestroy, OnInit {
 
   public showFooter = false;
-  public onMagazine: boolean = false;
 
   private isInitial = true;
   private urlPrev: string = '';
@@ -22,6 +21,7 @@ export class LayoutComponent implements OnDestroy, OnInit {
 
   constructor(
     private _router: Router,
+    private _location: Location,
     private _headerService: HeaderStatusService,
     private _uService: UniversalService,
   ) {  }
@@ -35,6 +35,8 @@ export class LayoutComponent implements OnDestroy, OnInit {
       this.scrollToTop();
     }
 
+    this.checkFooterStatus();
+
     this.routerEventSubscription = this._router.events.subscribe((event) => {
       if (event instanceof ActivationStart) { 
         this.isInitial = false; 
@@ -42,10 +44,7 @@ export class LayoutComponent implements OnDestroy, OnInit {
       }
 
       if (event instanceof NavigationEnd) {
-        const regexHideFooter = /(dashboard)|(page\/products)|(\/community)/;
-        this.showFooter = !event.url.match(regexHideFooter);
-  
-        this.onMagazine = event.url.match(/magazines|blogs/) ? true : false;  
+        this.checkFooterStatus();
 
         if(event.url != '/' && event.url != '/auth/login') {
           setTimeout(()=> {
@@ -73,6 +72,11 @@ export class LayoutComponent implements OnDestroy, OnInit {
 
       }
     });
+  }
+
+  checkFooterStatus() {
+    const regexHideFooter = /(dashboard)/;
+    this.showFooter = !this._location.path().match(regexHideFooter);
   }
 
   scrollToTop() {

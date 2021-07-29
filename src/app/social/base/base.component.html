@@ -27,19 +27,29 @@ id="user-menu"
       class="btn btn-text-body px-0"
       (click)="onClickUserMenuItem(['/community/profile', userId])"
       >
-      <i iconPh="user"></i>
-      <span>See my profile</span>
-    </a>
+        <i iconPh="user"></i>
+        <span>See my profile</span>
+      </a>
     </div>
     <div>
       <a
       class="btn btn-text-body px-0"
       (click)="onClickUserMenuItem(['/dashboard/profilemanagement', (userRole == 'P' ? 'partner-profile' : 'my-profile')])"
       >
-      <i iconPh="edit-3"></i>
-      <span>Edit my profile</span>
-    </a>  
+        <i iconPh="edit-3"></i>
+        <span>Edit my profile</span>
+      </a>  
     </div>
+    <div>
+      <a
+      class="btn btn-text-body px-0"
+      (click)="onClickUserMenuItem(['/community/draft'])"
+      >
+        <i iconPh="note-text"></i>
+        <span>See my drafts</span>
+      </a>  
+    </div>
+
     <div>
       <a
       class="btn btn-text-error px-0"
@@ -84,4 +94,40 @@ id="more-menu"
 
   <div class="content-container">
   </div>
+</modal>
+
+<modal
+id="post-menu"
+#modalPostMenu
+>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <div class="d-flex">
+      <profile-image [image]="postForModal?.authorImage"></profile-image>
+      <div class="mx-3">
+        <span class="subtitle2 text-label">{{postForModal?.author}}</span>
+        <span class="h5 h4-md mb-0 flex-grow-1 clamp-1line">{{postForModal?.title}}</span>
+      </div>
+    </div>
+    <button class="btn pr-0 btn-icon" (click)="modalPostMenu.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+    <ul class="list-unstyled">
+      <li>
+        <button class="btn btn-text-body px-0">Report as spam</button>
+      </li>
+      <li>
+        <button class="btn btn-text-body px-0">Mark as not interested</button>
+      </li>
+    </ul>
+  </div>
+</modal>
+
+<modal
+id="subscirbe-menu"
+#modalSubscribeMenu
+>
+
 </modal>

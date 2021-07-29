@@ -30,8 +30,9 @@
     height: 100%;
     opacity: 0;
   }
-  
-  .cover-image-placeholder {
+    
+  .cover-image-placeholder,
+  .cover-image-loader {
     position: absolute;
     top: 50%;
     left: 50%;

@@ -12,11 +12,18 @@ export class ModalService {
     private _location: Location,
   ) { }
 
+  private _data: any
+  get data() { return this._data; }
+
   get currentPathAndQueryParams():[string, Params] { return this._getPathAndQueryParams();}
 
-  public show(id: string) {
+  public show(id: string, data?: any) {
     const [path, queryParams] = this._getPathAndQueryParams();
     queryParams.modal = id;
+    if(data) {
+      queryParams['modal-data'] = data._id;
+    }
+    this._data = data;
     this._router.navigate([path], {queryParams: queryParams});
   }
 
@@ -29,6 +36,7 @@ export class ModalService {
   }
 
   private goBack() {
+    this._data = null;
     const state = this._location.getState() as any;
     if(state.navigationId == 1) {
       this.goNext();
@@ -38,11 +46,13 @@ export class ModalService {
   }
 
   private goNext(routeNext: string[] = null) {
+    this._data = null;
     if(routeNext) {
       this._router.navigate(routeNext, {replaceUrl: true});
     } else {
       const [path, queryParams] = this._getPathAndQueryParams();
       queryParams.modal = null;
+      queryParams['modal-data'] = null;
       this._router.navigate([path], {queryParams: queryParams, replaceUrl: true});  
     }
   }

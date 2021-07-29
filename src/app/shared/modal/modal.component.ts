@@ -29,9 +29,19 @@ export class ModalComponent implements OnInit {
   ngOnInit(): void {
     this._option = new ModalOption(this.option);
 
-    this._route.queryParams.subscribe((params: {modal: string}) => {
-      this.isShown = (params.modal && params.modal.length > 0 && params.modal == this.id) ? true : false;
-      this._changeDetector.detectChanges();
+    this._route.queryParams.subscribe((params: {modal: string, 'modal-data': string}) => {
+      let isShown: boolean = !!(params.modal && params.modal == this.id);
+      if(isShown && params['modal-data']) {
+        const data = this._modalService.data;
+        if(!data || params['modal-data'] != data._id) {
+          this._modalService.hide();
+          isShown = false;
+        }
+      }
+
+      this.isShown = isShown;
+      this._changeDetector.detectChanges();  
+
       // console.log('modalComponent. id: ', this.id, ': status: ', this.isShown ? 'shown' : 'hidden');
     });
   }

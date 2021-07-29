@@ -88,9 +88,9 @@ export class HeaderComponent implements OnInit {
 
   onClickProfileIcon() {
     if(this.user) {
-      this._modalService.show('user-menu');
+      this._modalService.show('user-menu', this.user);
     } else {
-      this._modalService.show('login-menu');
+      this._modalService.show('login-menu', this.user);
     }
   }
 

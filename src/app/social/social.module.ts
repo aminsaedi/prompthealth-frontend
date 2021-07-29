@@ -4,13 +4,11 @@ import { ListComponent } from './list/list.component';
 import { RouterModule, Routes, Route } from '@angular/router';
 import { PageComponent } from './page/page.component';
 import { CardItemToolbarComponent } from './card-item-toolbar/card-item-toolbar.component';
-import { CardItemHeaderComponent } from './card-item-header/card-item-header.component';
 import { CardComponent } from './card/card.component';
 import { SharedModule } from '../shared/shared.module';
 import { CardSubscribeComponent } from './card-subscribe/card-subscribe.component';
 import { CardItemEventComponent } from './card-item-event/card-item-event.component';
 import { ModalEventComponent } from './modal-event/modal-event.component';
-import { CardItemHeaderEventComponent } from './card-item-header-event/card-item-header-event.component';
 import { CardItemPostComponent } from './card-item-post/card-item-post.component';
 import { CardItemEyecatchComponent } from './card-item-eyecatch/card-item-eyecatch.component';
 import { CardItemArticleComponent } from './card-item-article/card-item-article.component';
@@ -39,6 +37,7 @@ import { GuardIfNotEligbleToCreatePostGuard } from './guard-if-not-eligble-to-cr
 import { AgmCoreModule } from '@agm/core';
 import { NotificationComponent } from './notification/notification.component';
 import { CardNotificationComponent } from './card-notification/card-notification.component';
+import { DraftComponent } from './draft/draft.component';
 
 
 const routes: Routes = [
@@ -49,6 +48,7 @@ const routes: Routes = [
     { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create', redirectTo: 'create/article' },
+    { path: 'draft', component: DraftComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
 
     { path: 'notification', component: NotificationComponent},
 
@@ -78,12 +78,10 @@ const routes: Routes = [
     ListComponent, 
     PageComponent, 
     CardItemToolbarComponent, 
-    CardItemHeaderComponent, 
     CardComponent, 
     CardSubscribeComponent, 
     CardItemEventComponent, 
     ModalEventComponent, 
-    CardItemHeaderEventComponent, 
     CardItemPostComponent, 
     CardItemEyecatchComponent, 
     CardItemArticleComponent, 
@@ -101,6 +99,7 @@ const routes: Routes = [
     ProfileFeedComponent,
     NotificationComponent,
     CardNotificationComponent,
+    DraftComponent,
   ],
   providers: [
     CategoryService,

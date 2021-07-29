@@ -1,9 +1,9 @@
 
 <!-- modal: subscribe-menu -->
-<modal [bodyStyle]="{'max-width': '600px'}" id="subscribe-menu" #modalSubscribe>
+<modal [bodyStyle]="{'max-width': '600px'}" id="subscribe-menu" #modalSubscribeMenu>
   <div class="title-container d-flex justify-content-between align-items-center">
     <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Subscribe</span>
-    <button class="btn pr-0 btn-icon" (click)="hideSubscribeMenu()">
+    <button class="btn pr-0 btn-icon" (click)="modalSubscribeMenu.hide()">
       <i iconPh="cross"></i>
     </button>  
   </div>
@@ -22,10 +22,7 @@
       (onError)="onErrorSubscribe()"
       ></form-subscribe>
     </div>
-    <div 
-    class="text-center"
-    *ngIf="post"
-    >
+    <div class="text-center">
       <div class="d-flex justify-content-between mt-45p">
         <a
         class="btn btn-text-black flex-shrink-1 mr-15p px-0 text-left"
@@ -47,20 +44,17 @@
   </div>
 </modal>
 
-<modal id="calendar-menu" #modalCalendar> 
+<modal id="calendar-menu" #modalCalendarMenu> 
   <div class="title-container d-flex justify-content-between align-items-center">
     <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Add to calendar</span>
-    <button class="btn pr-0 btn-icon" (click)="hideCalendarMenu()">
+    <button class="btn pr-0 btn-icon" (click)="modalCalendarMenu.hide()">
       <i iconPh="cross"></i>
     </button>  
   </div>
 
   <div class="content-container">
     <p class="body1 mb-25p">Please select calendar type</p>
-    <ul 
-    class="list-unstyled"
-    *ngIf="post"
-    >
+    <ul class="list-unstyled">
       <li class="mb-15p">
         <button class="btn btn-outline w-100" (click)="addToCalendar('ical')">iCalendar</button>
       </li>

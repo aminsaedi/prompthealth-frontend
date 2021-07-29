@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { SocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -18,6 +19,7 @@ export class BaseComponent implements OnInit {
   get userName() { return this.user ? this.user.name : ''; }
   get user() { return this._profileService.profile; }
 
+  get postForModal() { return this._modalService.data as SocialPost; }
 
   private isPopState: boolean = false;
   private subscriptionRouterEvent: Subscription; 

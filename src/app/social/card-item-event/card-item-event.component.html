@@ -7,7 +7,10 @@
   class="h4 mb-0"
   [ngClass]="{'clamp-1line': shorten}"
   >{{post.title}}</h2>
-  <button class="btn btn-icon-grey small py-5p">
+  <button 
+  class="btn btn-icon-grey small py-5p"
+  (click)="_onClickButton($event, 'post-menu')"
+  >
     <i iconPh="more-horiz"></i>
   </button>
 </div>
@@ -55,7 +58,7 @@
   <div class="mr-lg-25p">
     <button 
     *ngIf="!alreadySubscribed"
-    (click)="onClickSubscribeMenu($event)" 
+    (click)="_onClickButton($event, 'subscribe-menu')" 
     class="btn btn-primary w-100"
     >Subscribe</button>
     <a 
@@ -67,6 +70,6 @@
   </div>
   
   <div class="mx-lg-25p mt-15p mt-lg-0p">
-    <button class="btn btn-outline w-100" (click)="onClickCalendarMenu($event)">Add to calendar</button>
+    <button class="btn btn-outline w-100" (click)="_onClickButton($event, 'calendar-menu')">Add to calendar</button>
   </div>
 </div>

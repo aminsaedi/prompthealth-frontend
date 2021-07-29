@@ -6,6 +6,7 @@ import { CalendarOptions, GoogleCalendar, ICalendar, OutlookCalendar, YahooCalen
 import { FormSubscribeComponent } from 'src/app/shared/form-subscribe/form-subscribe.component';
 import { ToastrService } from 'ngx-toastr';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalService } from 'src/app/shared/services/modal.service';
 
 @Component({
   selector: 'modal-event',
@@ -14,9 +15,10 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 })
 export class ModalEventComponent implements OnInit {
 
+  get post() { return this._modalService.data as SocialPost; }
+
   public isCalendarMenuShown: boolean = false;
   public isSubscribeMenuShown: boolean = false;
-  public post: SocialPost = null;
 
   public isLoading: boolean = false;
   public isRedirecting: boolean = false;
@@ -25,41 +27,15 @@ export class ModalEventComponent implements OnInit {
   public timerRedirect: any;
 
   @ViewChild('formSubscribe') formSubscribe: FormSubscribeComponent;
-  @ViewChild('modalSubscribe') modalSubscribe: ModalComponent;
-  @ViewChild('modalCalendar') modalCalendar: ModalComponent;
+  @ViewChild('modalSubscribeMenu') modalSubscribeMenu: ModalComponent;
+  @ViewChild('modalCalendarMenu') modalCalendarMenu: ModalComponent;
 
   constructor(
-    private _route: ActivatedRoute,
-    private _socialService: SocialService,
     private _toastr: ToastrService,
+    private _modalService: ModalService,
   ) { }
 
   ngOnInit() {}
-
-  ngAfterViewInit(): void {
-    this._route.queryParams.subscribe((params: {modal: string}) => {
-      this.post = this._socialService.targetForEventModal;
-
-      if(!this.post) {
-        if(params.modal == 'subscribe-menu') {
-          this.modalSubscribe.goBack();
-        } else if(params.modal == 'calendar-menu') {
-          this.modalCalendar.goBack();
-        }
-      }
-    });
-  }
-
-
-  hideCalendarMenu() {
-    this._socialService.disposeTargetForEventModal();
-    this.modalCalendar.goBack();
-  }
-
-  hideSubscribeMenu() {
-    this._socialService.disposeTargetForEventModal();
-    this.modalSubscribe.goBack();
-  }
 
   addToCalendar(calendarType: string) {
     const calendarOption: CalendarOptions = {
@@ -91,7 +67,7 @@ export class ModalEventComponent implements OnInit {
     }
 
     setTimeout(() => {
-      this.hideCalendarMenu();
+      this.modalCalendarMenu.hide();
     }, 200);
   }
 
@@ -115,7 +91,7 @@ export class ModalEventComponent implements OnInit {
         this.isRedirecting = false;
         clearInterval(this.timerRedirect);
         location.href = this.post.event.link;
-        this.hideSubscribeMenu();
+        this.modalSubscribeMenu.hide();
       }
     }, 1000);
   }

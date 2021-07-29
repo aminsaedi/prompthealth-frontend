@@ -1,177 +1,214 @@
-<div class="container-fluid container-md">
-  <div class="row justify-content-center">
-    <div class="col-12 col-lg-9 col-xl-8">
-      <div class="bg-white pt-15p px-15p pt-md-20p px-md-20p editor-container">
-        <div class="d-flex justify-content-between align-items-center mb-20p">
-          <h5 class="mb-0">
-            <span *ngIf="isEvent">Create an event</span>
-            <span *ngIf="isArticle">Write an article</span>
-          </h5>
-          <button 
-          class="btn btn-text-body small px-0"
-          (click)="onClickCancel()"
-          >Cancel</button>
-        </div>
-        <div class="cover-image-container cursor-pointer overflow-hidden">
-          <div *ngIf="imagePreview">
-            <img [src]="imagePreview" class="cover-image">
+<form (ngSubmit)="publish()">
+  <div class="container-fluid container-md">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-9 col-xl-8">
+        <div class="bg-white pt-15p px-15p pt-md-20p px-md-20p editor-container">
+          <div class="d-flex justify-content-between align-items-center mb-20p">
+            <h5 class="mb-0">
+              <span *ngIf="isEvent">Create an event</span>
+              <span *ngIf="isArticle">Write an article</span>
+            </h5>
             <button 
-            class="btn btn-icon-body small blur p-5p btn-remove-image"
-            (click)="onClickButtonRemoveMedia()"
-            >
-              <i iconPh="cross"></i>
-            </button>  
+            class="btn btn-text-body small px-0"
+            type="button"
+            (click)="onClickCancel()"
+            >Cancel</button>
           </div>
-          
-          <div *ngIf="!imagePreview">
-            <div class="text-placeholder text-center cover-image-placeholder">
-              <div>
-                <i iconPh="image-3" style="font-size: 50px;"></i>
-              </div>
-              <span class="subtitle1 mt-15p">
-                Add cover image
-              </span>
+          <div class="cover-image-container cursor-pointer overflow-hidden">
+            <div *ngIf="imagePreview">
+              <img [src]="imagePreview" class="cover-image">
+              <button 
+              class="btn btn-icon-body small blur p-5p btn-remove-image"
+              (click)="onClickButtonRemoveMedia()"
+              >
+                <i iconPh="cross"></i>
+              </button>  
             </div>
-              
-            <input #inputMedia
-            type="file"
-            accept="image/jpeg, image/png"
-            (change)="onSelectMedia($event)"
-            >
-          </div>  
-        </div>        
-      
-        <div class="mt-15p">
-          <label class="subtitle2 text-label">
-            <span *ngIf="isEvent">Event name</span>
-            <span *ngIf="isArticle">Main title</span>
-          </label>
-          <div 
-          class="form-control title contenteditable body1"
-          contenteditable
-          ></div>
-        </div>
-          
-        <div class="mt-15p" *ngIf="isEvent">
-          <div class="row">
-            <div class="col-12 col-md">
-              <label class="subtitle2 text-label">Start at</label>
-              <form-item-datetime
-              label="Start time"
-              [controller]="f.eventStartTime"
-              [minDateTime]="minDateTimeEventStart"
-              (changeValue)="onChangeStartDateTime()"
-              [submitted]="isSubmitted"
-              ></form-item-datetime>
+            
+            <div *ngIf="isUploadingImage" class="cover-image-loader">
+              <loader></loader>
             </div>
-            <div class="col-12 mt-15p col-md mt-md-0p">
-              <label class="subtitle2 text-label">End at</label>
-              <form-item-datetime
-              label="End time"
-              [controller]="f.eventEndTime"
-              [minDateTime]="minDateTimeEventEnd"
-              (changeValue)="onChangeEndDateTime($event)"
-              [submitted]="isSubmitted"
-              ></form-item-datetime>
-            </div>
-          </div>
-        </div>
-          
-        <div class="mt-15p">
-          <div class="intersection-observer" intersectionObserver (changeStatus)="changeStickyStatus($event)"></div>
-          <label class="subtitle2 text-label">Description</label>
-          <div 
-          class="form-control description"
-            [ngClass]="(isArticle ? 'rich' : 'simple')"
-          >
-            <quill-editor
-            [styles]="{minHeight: (isArticle ? '360px' : '72px'), border: 'none'}"
-            placeholder="Type..."
-            [formControl]="f.description"
-            >
-              <div quill-editor-toolbar class="sticky-top">
-                <div class="d-md-none sticky-left">
-                  <span class="ql-formats d-flex flex-nowrap">
-                    <button class="ql-image" title="Add image"></button>
-                    <button class="ql-video" title="Add video"></button>
-                    <button class="ql-link" title="Add link"></button>
-                  </span>
-                </div>
 
-                <div class="d-flex flex-nowrap flex-md-wrap ">
-                  <span class="ql-formats d-flex flex-nowrap">
-                    <button class="ql-bold" title="Bold"></button>
-                    <button class="ql-italic" title="Italic"></button>
-                    <button class="ql-underline" title="Underline"></button>
-                    <button class="ql-clean" title="Reset"></button>
-                  </span>
-    
-                  <span class="ql-formats d-flex flex-nowrap">
-                    <button class="ql-header" value="1" title="Header1"></button>
-                    <button class="ql-header" value="2" title="Header2"></button>
-                  </span>
-  
-                  <span class="ql-formats d-flex flex-nowrap">
-                    <button class="ql-list" value="bullet" title="List bullet"></button>
-                    <button class="ql-list" value="ordered" title="List ordered"></button>
-                  </span>
-    
-                  <span class="ql-formats flex-nowrap d-none d-lg-flex">
-                    <select class="ql-color" title="Text color"></select>
-                    <select class="ql-background" title="Background color"></select>
-                  </span>
-    
-                  <span class="ql-formats flex-nowrap d-none d-md-flex">
-                    <button class="ql-image" title="Add image"></button>
-                    <button class="ql-video" title="Add video"></button>
-                    <button class="ql-link" title="Add link"></button>
-                  </span>  
+            <div *ngIf="!imagePreview">
+              <div class="text-placeholder text-center cover-image-placeholder">
+                <div>
+                  <i iconPh="image-3" style="font-size: 50px;"></i>
                 </div>
+                <span class="subtitle1 mt-15p">
+                  Add cover image
+                </span>
               </div>
-            </quill-editor>  
-          </div>
-        </div>
-          
-        <ng-container *ngIf="isEvent">
+                
+              <input #inputMedia
+              type="file"
+              accept="image/jpeg, image/png"
+              (change)="onSelectMedia($event)"
+              >
+            </div>  
+          </div>        
+        
           <div class="mt-15p">
-            <label class="subtitle2 text-label">Registration or broadcast link</label>
-            <form-item-input
-            label="Link"
-            type="url"
-            placeholder="https://..."
-            autocapitalize="off"
-            [controller]="f.joinEventLink"
-            [submitted]="isSubmitted"
-            ></form-item-input>
-          </div>
-          
-          <div class="mt-15p">
-            <form-item-checkbox
-            name="online-event"
-            [controller]="formCheckboxOnlineEvent"
-            label="This is an online event"
-            ></form-item-checkbox>
+            <label class="subtitle2 text-label">
+              <span *ngIf="isEvent">Event name</span>
+              <span *ngIf="isArticle">Main title</span>
+            </label>
+            <div 
+            class="form-control title contenteditable body1"
+            contenteditable
+            [formControl]="f.title"
+            (beforeinput)="onBeforeInputTitle($event)"
+            (input)="onInputTitle($event)"
+            ></div>
+            <div class="mt-10p">
+              <form-item-errors
+              label="Title"
+              [controller]="f.title"
+              [submitted]="isSubmitted"
+              ></form-item-errors>
+            </div>
           </div>
             
-          <div class="mt-15p" *ngIf="!formCheckboxOnlineEvent.value">
-            <label class="subtitle2 text-label">Address</label>
-            <form-item-input
-            label="Address"
-            type="text"
-            placeholder="Type address..."
-            autocapitalize="off"
-            [controller]="f.address"
-            [submitted]="isSubmitted"
-            ></form-item-input>
+          <div class="mt-15p" *ngIf="isEvent">
+            <div class="row">
+              <div class="col-12 col-md">
+                <label class="subtitle2 text-label">Start at</label>
+                <form-item-datetime
+                label="Start time"
+                [controller]="f.eventStartTime"
+                [minDateTime]="minDateTimeEventStart"
+                (changeValue)="onChangeStartDateTime()"
+                [submitted]="isSubmitted"
+                ></form-item-datetime>
+              </div>
+              <div class="col-12 mt-15p col-md mt-md-0p">
+                <label class="subtitle2 text-label">End at</label>
+                <form-item-datetime
+                label="End time"
+                [controller]="f.eventEndTime"
+                [minDateTime]="minDateTimeEventEnd"
+                (changeValue)="onChangeEndDateTime($event)"
+                [submitted]="isSubmitted"
+                ></form-item-datetime>
+              </div>
+            </div>
           </div>
-        </ng-container>
+            
+          <div class="mt-15p">
+            <div class="intersection-observer" intersectionObserver (changeStatus)="changeStickyStatus($event)"></div>
+            <label class="subtitle2 text-label">Description</label>
+            <div 
+            class="form-control description"
+              [ngClass]="(isArticle ? 'rich' : 'simple')"
+            >
+              <quill-editor
+              [styles]="{minHeight: (isArticle ? '360px' : '72px'), border: 'none'}"
+              placeholder="Type..."
+              [formControl]="f.description"
+              >
+                <div quill-editor-toolbar class="sticky-top">
+                  <div class="d-md-none sticky-left">
+                    <span class="ql-formats d-flex flex-nowrap">
+                      <button class="ql-image" title="Add image"></button>
+                      <button class="ql-video" title="Add video"></button>
+                      <button class="ql-link" title="Add link"></button>
+                    </span>
+                  </div>
 
-        <div class="mt-25p text-right sticky-bottom pb-30p button-bottom-group blur">
-          <input type="submit" class="btn btn-primary" value="Create">
+                  <div class="d-flex flex-nowrap flex-md-wrap ">
+                    <span class="ql-formats d-flex flex-nowrap">
+                      <button class="ql-bold" title="Bold"></button>
+                      <button class="ql-italic" title="Italic"></button>
+                      <button class="ql-underline" title="Underline"></button>
+                      <button class="ql-clean" title="Reset"></button>
+                    </span>
+      
+                    <span class="ql-formats d-flex flex-nowrap">
+                      <button class="ql-header" value="1" title="Header1"></button>
+                      <button class="ql-header" value="2" title="Header2"></button>
+                    </span>
+    
+                    <span class="ql-formats d-flex flex-nowrap">
+                      <button class="ql-list" value="bullet" title="List bullet"></button>
+                      <button class="ql-list" value="ordered" title="List ordered"></button>
+                    </span>
+      
+                    <span class="ql-formats flex-nowrap d-none d-lg-flex">
+                      <select class="ql-color" title="Text color"></select>
+                      <select class="ql-background" title="Background color"></select>
+                    </span>
+      
+                    <span class="ql-formats flex-nowrap d-none d-md-flex">
+                      <button class="ql-image" title="Add image"></button>
+                      <button class="ql-video" title="Add video"></button>
+                      <button class="ql-link" title="Add link"></button>
+                    </span>  
+                  </div>
+                </div>
+              </quill-editor>  
+            </div>
+            <div class="mt-10p">
+              <form-item-errors
+              label="Description"
+              [controller]="f.description"
+              [submitted]="isSubmitted"
+              ></form-item-errors>
+            </div>
+          </div>
+            
+          <ng-container *ngIf="isEvent">
+            <div class="mt-15p">
+              <label class="subtitle2 text-label">Registration or broadcast link</label>
+              <form-item-input
+              label="Link"
+              type="url"
+              placeholder="https://..."
+              autocapitalize="off"
+              [controller]="f.joinEventLink"
+              [submitted]="isSubmitted"
+              ></form-item-input>
+            </div>
+            
+            <div class="mt-15p">
+              <form-item-checkbox
+              name="online-event"
+              [controller]="formCheckboxOnlineEvent"
+              label="This is an online event"
+              ></form-item-checkbox>
+            </div>
+              
+            <div class="mt-15p" *ngIf="!formCheckboxOnlineEvent.value">
+              <label class="subtitle2 text-label">Address</label>
+              <form-item-input
+              label="Address"
+              type="text"
+              placeholder="Type address..."
+              autocapitalize="off"
+              [controller]="f.address"
+              [submitted]="isSubmitted"
+              ></form-item-input>
+            </div>
+          </ng-container>
+
+          <div class="mt-25p text-right sticky-bottom pb-30p button-bottom-group blur">
+            <div class="d-flex justify-content-between">
+              <button
+              type="button"
+              class="btn btn-outline"
+              (click)="saveAsDraft()"
+              >
+                <span *ngIf="f.status.value == 'DRAFT'">Save as draft</span>
+                <span *ngIf="f.status.value != 'DRAFT'">Make private</span>
+              </button>
+
+              <input 
+              type="submit" 
+              class="btn btn-primary" 
+              [value]="f.status.value == 'DRAFT' ? 'Publish' : 'Update'"
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-
+</form>

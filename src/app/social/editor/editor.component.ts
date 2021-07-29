@@ -6,13 +6,14 @@ import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
 import Quill from 'quill';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ISocialPost } from 'src/app/models/social-post';
 import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { formatDateToString, formatStringToDate } from 'src/app/_helpers/date-formatter';
 import { validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
-import { EditorService, SocialEditorType } from '../editor.service';
+import { EditorService, ISaveQuery, SaveQuery, SocialEditorType } from '../editor.service';
 
 @Component({
   selector: 'app-editor',
@@ -37,6 +38,8 @@ export class EditorComponent implements OnInit {
   public formCheckboxOnlineEvent: FormControl;
   public editorType: SocialEditorType = null;
 
+  public isUploadingImage: boolean = true;
+
   private contentEditor: Quill;
 
   public isSubmitted: boolean = false;
@@ -51,13 +54,13 @@ export class EditorComponent implements OnInit {
 
   constructor(
     private _sharedService: SharedService,
-    private _profileService: ProfileManagementService,
-    private _toastr: ToastrService,
     private _location: Location,
     private _router: Router,
     private _route: ActivatedRoute,
     private _editorService: EditorService,
+    private _profileService: ProfileManagementService,
     private _headerService: HeaderStatusService,
+    private _toastr: ToastrService,
   ) { }
 
   ngOnDestroy() {
@@ -66,9 +69,13 @@ export class EditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this._route.data.subscribe((data: {type: SocialEditorType}) => {
       this.editorType = data.type || null;
-      this._editorService.init(this.editorType);
+      this._editorService.init(
+        this.editorType, 
+        this._profileService.profile,
+      );
     });
 
     const now = new Date();
@@ -201,14 +208,61 @@ export class EditorComponent implements OnInit {
     // this._postsService.lockEditor();
   } 
 
-    /** trigger when filter is sticked to top */
-    changeStickyStatus(isSticked: boolean) {
-      if (isSticked) { 
-        this._headerService.hideHeader(); 
-      } else { 
-        this._headerService.showHeader(); 
-      }
+  /** trigger when editor tool bar is sticked to top */
+  changeStickyStatus(isSticked: boolean) {
+    if (isSticked) { 
+      this._headerService.hideHeader(); 
+    } else { 
+      this._headerService.showHeader(); 
     }
+  }
+
+  saveAsDraft() {
+    this.save('DRAFT');
+  }
+
+  publish() {
+    this.save('APPROVED')
+  }
+
+  save(status: ISocialPost['status']) {
+    this.isSubmitted = true;
+
+    const form = this._editorService.form;   
+    const publish = status == 'DRAFT' ? false : true;
+
+    this._editorService.validate(publish);
+    console.log(form)
+    if(form.invalid) {
+      this._toastr.error('There are several items that require your attention.');
+      return;
+    }
+
+    const data: ISaveQuery = new SaveQuery(form.value).toJson();
+    data.status = status;
+
+    // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
+    const req =  this._sharedService.post(data, 'blog/create');
+    console.log('===PAYLOAD====')
+    console.log(data);
+
+    this.isUploading = true;
+
+    req.subscribe((res: any) => {
+      this.isUploading = false;
+      if(res.statusCode === 200) {
+        this.isSubmitted = false;
+        this._toastr.success('Updated successfully');  
+      } else {
+        this._toastr.error(res.message);
+      }
+    }, (err) => {
+      this.isUploading = false;
+      console.log(err);
+      this._toastr.error(err);
+    });
+
+  }
   
 }
 
