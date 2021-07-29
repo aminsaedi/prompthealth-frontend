@@ -25,6 +25,7 @@ import { EnterpriseContactComponent } from './enterprise-contact/enterprise-cont
 // import { NgxCarouselModule } from 'ngx-carousel';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { FormAuthComponent } from './form-auth/form-auth.component';
+import { environment } from 'src/environments/environment';
 // import { AppleLoginProvider } from './apple.provider';
 // import { environment } from 'src/environments/environment';
 
@@ -65,8 +66,7 @@ import { FormAuthComponent } from './form-auth/form-auth.component';
         },
         {
           id: FacebookLoginProvider.PROVIDER_ID,
-          // provider: new FacebookLoginProvider('561602290896109'),
-          provider: new FacebookLoginProvider('2053494228293760'),
+          provider: new FacebookLoginProvider(environment.config.FACEBOOK_APP_ID),
         }
         // {
         //   id: AppleLoginProvider.PROVIDER_ID,
