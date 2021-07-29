@@ -383,8 +383,7 @@
               </tbody>
             </table>
             <ng-container *ngIf="userInfo && isLoggedIn">
-              <a *ngIf="userInfo.bookingUrl" class="btn border-blue text-blue px-5" [href]="userInfo.bookingUrl"
-                (click)="incBookingCount()" target="_blank">Book</a>
+              <a *ngIf="userInfo.bookingUrl" class="btn border-blue text-blue px-5" (click)="incBookingCount()">Book</a>
               <button *ngIf="!userInfo.bookingUrl" class="btn border-blue text-blue px-5" type="button"
                 data-toggle="modal" data-target="#bookingmodal">Book</button>
             </ng-container>

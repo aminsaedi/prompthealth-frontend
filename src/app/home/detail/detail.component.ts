@@ -219,8 +219,14 @@ export class DetailComponent implements OnInit {
       // this.getProfileQuestion();
     });
   }
-  incBookingCount() {
-    this._sharedService.post({ _id: this.userInfo.id }, '/booking/gain-booking-count');
+  async incBookingCount() {
+    this._sharedService.post({ _id: this.userInfo.id }, '/booking/gain-booking-count').subscribe(res => {
+      console.log(res);
+    }, err => {
+      console.error(err);
+    });
+    window.open(this.userInfo.bookingUrl, '_blank');
+
   }
   getUserProfile(): Promise<boolean> {
     return new Promise((resolve, reject) => {
