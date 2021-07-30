@@ -212,14 +212,21 @@
 
 .app-feature-controller {
   position: absolute;
-  bottom: 0;
+  bottom: 15%;
   width: 100%;
   @media (max-width: 340px) {
     display: none!important;
   }
 
+  @media (max-height: 800px) {
+    bottom: 10%;
+  }
+  @media (max-height: 700px) {
+    bottom: 0;
+  }
+
   li {
-    margin-right: 5px;
+    margin-right: 10px;
     &:last-child {
       margin-right: 0;
     }
