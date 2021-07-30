@@ -43,6 +43,16 @@ export const slideVerticalReverseAnimation = trigger('slideVerticalReverse', [
   ])
 ]);
 
+export const expandAllAnimation = trigger('expandAll', [
+  transition(':enter', [
+    style({ display: 'block', height: 0, width: 0, opacity: 0 }),
+    animate('300ms ease', style({ height: '*', width: '*', opacity: 1 }))
+  ]),
+  transition(':leave', [
+    animate('300ms ease', style({ height: '0', width: '0', opacity: 0 }))
+  ])
+]);
+
 export const expandVerticalAnimation = trigger('expandVertical', [
   transition(':enter', [
     style({ display: 'block', height: 0, opacity: 0 }),

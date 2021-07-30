@@ -240,26 +240,36 @@
 </section>
 <!-- testimonial end-->
 
-<!-- app start-->
-<section class="container my-100p">
-  <div class="row align-items-center">
-    <div class="col-12 col-lg-6 col-xl-5">
-      <h2 class="mb-20p">
-        <span class="text-primary">+476</span> 
-        providers. <br>
-        Conncect together.
-      </h2>
-      <p class="mb-50p">
-        <span class="opacity-70pc">
-          Find trusted local health practitioners based on your personalized health needs.
-          <br>
-          PromptHealth is the 
-        </span>
-        <span class="text-primary">#1</span>
-        <span class="opacity-70pc"> app to assist you on your journey in finding wellness solutions.</span>
-      </p>
+<!-- #app -->
+<section class="my-100p">
+  <div class="container text-center">
+    <h2 class="h4 h2-md">
+      <span class="text-primary">+476</span> 
+      providers. <br>
+      Conncect together.
+    </h2>
+    <p class="mb-50p">
+      <span class="opacity-70pc">
+        Find trusted local health practitioners based on your personalized health needs.
+        <br>
+        PromptHealth is the 
+      </span>
+      <span class="text-primary">#1</span>
+      <span class="opacity-70pc"> app to assist you on your journey in finding wellness solutions.</span>
+    </p>  
+  </div>
 
-      <div class="d-flex d-md-inline-flex justify-content-start align-items-center flex-nowrap">
+  <div class="position-relative app-sticky-section-container">
+    <!-- <div class="intersection-observer" intersectionObserver rootMargin="-500px 0px 10000px 0px" (changeStatus)="onIntersectAppFeature($event)"></div> -->
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-0" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 0)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-1" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 1)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-2" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 2)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-3" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 3)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-4" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 4)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-5" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 5)"></div>
+    <div class="intersection-observer" style="top: calc(100% - 100vh + 80px); "></div>
+    <div class="mt-30p mt-md-50p sticky-top app-sticky-section container-md">
+      <div class="d-flex justify-content-center align-items-center flex-nowrap">
         <a href="https://apps.apple.com/ca/app/prompthealth/id1532951934" target="_blank" class="mr-md-3">
           <img class="badge-appstore-top" src="/assets/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
             alt="Download on app store">
@@ -271,11 +281,91 @@
         </a>
       </div>
 
-    </div>
-    <div class="col mt-30p mt-md-50p mt-lg-0">
-      <div class="circle-for-app circle-primary">
-        <img class="image-app" src="assets/img/app-iphone.png" alt="PromptHealth app is available on App Store and Google Play">
+      <div 
+      class="d-flex align-items-start justify-content-center app-features-container"
+      [ngClass]="{'focus-left': isAppFeatureLeftSelected, 'focus-right': isAppFeatureRightSelected}"
+      >
+        <ul class="list-unstyled app-features mr-md-50p mr-xl-90p text-right">
+          <li
+          *ngFor="let item of appFeatureItems[0]; let i = index;"
+          class="mb-15p p-10p p-md-20p mb-lg-30p mx-lg-15p rounded-12p"
+          [ngClass]="{'active bg-white': isAppFeatureSelected(i)}"
+          (click)="onClickAppFeatureItem(i)"
+          >
+            <div>
+              <i 
+              [iconPh]="item.icon"
+              [ngClass]="{'text-primary': isAppFeatureSelected(i)}"
+              ></i>
+            </div>
+
+            <div 
+            *ngIf="(sizeL || isAppFeatureSelected(i))"
+            [@expandVertical]
+            >
+              <div class="content">
+                <h5 class="mb-10p">{{item.title}}</h5>
+                <p
+                *ngIf="isAppFeatureSelected(i)" 
+                [@expandVertical]
+                class="text-label mb-0"
+                >{{item.content}}</p>    
+              </div>
+            </div>  
+          </li>
+        </ul>
+        <div class="image-app-container">
+          <div class="d-none d-lg-block">
+            <div class="circle-for-app circle-border"></div>
+            <div class="circle-for-app inner circle-border"></div>  
+          </div>
+          <img class="mobile-body position-relative" src="assets/img/mobile-body.png" alt="PromptHealth app is available on App Store and Google Play">
+        </div>
+
+        <ul class="list-unstyled app-features ml-md-50p ml-xl-90p">
+          <li
+          *ngFor="let item of appFeatureItems[1]; let i = index;"
+          class="mb-15p p-10p p-md-20p mb-lg-30p mx-lg-15p rounded-12p"
+          [ngClass]="{'active bg-white': isAppFeatureSelected(i + 3)}"
+          (click)="onClickAppFeatureItem(i+3)"
+          >
+            <div>
+              <i 
+              [iconPh]="item.icon"
+              [ngClass]="{'text-primary': isAppFeatureSelected(i + 3)}"
+              ></i>
+            </div>
+            
+            <div 
+            *ngIf="(sizeL || isAppFeatureSelected(i + 3))"
+            [@expandVertical]
+            >
+              <div class="content">
+                <h5 class="mb-10p">{{item.title}}</h5>
+                <p 
+                *ngIf="isAppFeatureSelected(i + 3)" 
+                [@expandVertical]
+                class="text-label mb-0"
+                >{{item.content}}</p>    
+              </div>
+            </div>  
+          </li>
+        </ul>
       </div>
+      <ul class="d-md-none list-unstyled d-flex justify-content-center app-feature-controller">
+        <ng-container *ngFor="let group of appFeatureItems; let i = index;">
+          <li *ngFor="let item of group; let j = index;">
+            <button 
+            class="btn small"
+            [ngClass]="isAppFeatureSelected(i * 3 + j) ? 'btn-icon' : 'btn-icon-grey'"
+            (click)="onClickAppFeatureItem(i * 3 + j)"
+            >
+              <i [iconPh]="item.icon"></i>
+            </button>
+          </li>
+        </ng-container>
+
+      </ul>
     </div>
   </div>
 </section>

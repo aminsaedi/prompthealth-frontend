@@ -160,6 +160,10 @@ i {
   content: "\ec79";
   margin-left: -1em;
 }
+.icon-shield-check-outline:before {
+  content: "\ec79";
+}
+
 .icon-fingerprint .path1:before {
   content: "\ec7a";
   opacity: 0.16;
@@ -1671,6 +1675,10 @@ i {
   content: "\e95b";
   margin-left: -1em;
 }
+.icon-tags-2-outline:before {
+  content: "\e95b";
+}
+
 .icon-planet .path1:before {
   content: "\e95c";
   opacity: 0.16;
@@ -1686,6 +1694,9 @@ i {
 .icon-book-open .path2:before {
   content: "\e95f";
   margin-left: -1em;
+}
+.icon-book-open-outline:before {
+  content: "\e95f";
 }
 .icon-glasses-vr .path1:before {
   content: "\e960";
@@ -2725,6 +2736,9 @@ i {
   content: "\ea5f";
   margin-left: -1em;
 }
+.icon-users-outline:before {
+  content: "\ea5f";
+}
 .icon-clock-zzz .path1:before {
   content: "\ea60";
   opacity: 0.16;
@@ -3502,6 +3516,12 @@ i {
   content: "\eb25";
   margin-left: -1em;
 }
+.icon-verified-outline:before {
+  content: "\eb25";
+}
+
+
+
 .icon-captions .path1:before {
   content: "\eb26";
   opacity: 0.16;

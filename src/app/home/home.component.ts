@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from '../shared/services/shared.service';
 import { HeaderStatusService } from '../shared/services/header-status.service';
@@ -7,13 +7,14 @@ import { UniversalService } from '../shared/services/universal.service';
 import { Category, CategoryService } from '../shared/services/category.service';
 import { IUserDetail } from '../models/user-detail';
 import { CategoryViewerController } from '../models/category-viewer-controller';
-import { expandVerticalAnimation } from '../_helpers/animations';
+import { expandAllAnimation, expandVerticalAnimation } from '../_helpers/animations';
 import { Professional } from '../models/professional';
 import { CityId, getLabelByCityId } from '../_helpers/location-data';
 import { BlogSearchQuery, IBlogSearchResult } from '../models/blog-search-query';
 import { Blog, IBlog } from '../models/blog';
 import { ExpertFinderController } from '../models/expert-finder-controller';
 import { smoothHorizontalScrolling } from './smooth-scroll';
+import { smoothWindowScrollTo } from '../_helpers/smooth-scroll';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -22,9 +23,15 @@ import { smoothHorizontalScrolling } from './smooth-scroll';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  animations: [expandVerticalAnimation],
+  animations: [expandVerticalAnimation, expandAllAnimation],
 })
 export class HomeComponent implements OnInit {
+
+  get sizeL() { return window && window.innerWidth >= 920; }
+
+  public appFeatureItems = appFeatureItems;
+
+
   constructor(
     private router: Router,
     private _catService: CategoryService,
@@ -35,8 +42,8 @@ export class HomeComponent implements OnInit {
   ) {
   }
 
-    ////// NEW
-    @ViewChild('expertFinderScrollHorizontal') elExpertFinderScrollHorizontal: ElementRef;
+    @ViewChildren('appFeatureSwitcher') private appFeatureSwitchers: QueryList<ElementRef>;
+    @ViewChild('expertFinderScrollHorizontal') private elExpertFinderScrollHorizontal: ElementRef;
     public pageCurrentPractitionersFeatured: number = 0
     public citiesFeatured: {id: CityId, label: string}[];
     public blogs: Blog[];
@@ -110,7 +117,6 @@ export class HomeComponent implements OnInit {
         }
       }
     }
-    ////// NEW END
 
   AWS_S3 = '';
 
@@ -174,5 +180,75 @@ export class HomeComponent implements OnInit {
       }
     }, (error) => { console.log(error); });
   }
+
+  isAppFeatureSelected(index: number) {
+    return this.selectedAppFeature === index;
+  }
+  get isAppFeatureLeftSelected() {
+    return this.selectedAppFeature === 0 || (this.selectedAppFeature > 0 && this.selectedAppFeature < 3);
+  }
+  get isAppFeatureRightSelected() {
+    return this.selectedAppFeature >= 3;
+  }
+  
+  public selectedAppFeature: number = null;
+
+  onIntersectAppFeatureItem(select: boolean, index: number) {
+    if(select) {
+      this.selectedAppFeature = index;
+    } else if(index > 0) {
+      this.selectedAppFeature = index - 1;
+    } else {
+      this.selectedAppFeature = null;
+    }
+  }
+  
+  onClickAppFeatureItem(index: number) {
+    if(!this._uService.isServer) {
+      let topEl = (this.appFeatureSwitchers.toArray()[index].nativeElement as HTMLDivElement).getBoundingClientRect().top;
+      // if(this.selectedAppFeature > index)
+      window.scrollTo({top: topEl + window.scrollY});
+      setTimeout(() => {
+        this.selectedAppFeature = index;
+      }, 10)  
+    }
+  }
 }
 
+const appFeatureItems = [
+  [
+    {
+      icon: 'verified-outline', 
+      title: 'Search for health and wellness practitioners',
+      content: 'Search for health and wellness practitioners',
+    },
+    {
+      icon: 'checkbox-square-outline',
+      title: 'Search for health and wellness practitioners',
+      content: 'Read reviews and make informed decisions about your care when booking appointments',
+    },
+    {
+      icon: 'users-outline',
+      title: 'Stay connected with your favourite experts',
+      content: 'Get notified when experts you follow share new content',
+    }
+  ],
+  [
+    {
+      icon: 'book-open-outline',
+      title: 'Browse and learn from our content library',
+      content: 'View by category and filter by media type to find expert-created content that matters to you',
+    },
+    {
+      icon: 'tags-2-outline',
+      title: 'Discover select deals on expert-recommended products',
+      content: 'Browse our product offerings page for deals to support your health and wellness journey',
+    },
+    {
+      icon: 'shield-check-outline',
+      title: 'Safe & Secure',
+      content: 'Your privacy and security is ensured (PIPEDA/HIPPA compliant)',
+    }
+
+  ],
+]
