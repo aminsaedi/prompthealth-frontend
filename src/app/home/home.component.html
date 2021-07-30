@@ -217,6 +217,54 @@
 </section>
 <!-- expert finder end -->
 
+<!-- #community -->
+<section class="container mt-100p mb-100p">
+  <div class="row">
+    <div class="col-12 col-lg-5 col-xl-6">
+      <h6 class="text-primary mb-10p mb-md-20p mb-lg-10p mb-xl-20p">Our community</h6>
+      <h2 class="h3 h2-md mb-25p">Stay connected with your favourite experts</h2>
+      <p class="mb-60p">
+        PromptHealth helps providers reach more new patients for in-person visits, video visits or both. 
+        PromptHealth helps providers reach more new patients for in-person visits, video visits or both.
+      </p>
+      <a 
+      routerLink="/community/feed" 
+      class="btn btn-primary"
+      >
+        See our community
+      </a>    
+    </div>
+
+    <div class="col-12 col-lg-7 col-xl-6 my-20p my-lg-0p">
+      <div class="d-flex bg-primary-light py-15p rounded-12p post-types-container">
+        <div class="mx-5p mx-md-20p mx-lg-10p mx-xl-20p mt-100p">
+          <ng-container *ngTemplateOutlet="cardPostType; "></ng-container>
+        </div>
+        <div class="mt-lg-50p">
+          <ng-container *ngTemplateOutlet="cardPostType; "></ng-container>
+          <ng-container *ngTemplateOutlet="cardPostType; "></ng-container>
+        </div>
+        <div class="mx-5p mx-md-20p mx-lg-10p mx-xl-20p mt-50p mt-lg-0p">
+          <ng-container *ngTemplateOutlet="cardPostType; "></ng-container>
+          <ng-container *ngTemplateOutlet="cardPostType; "></ng-container>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #cardPostType>
+      <div class="card rounded-12p py-20p px-10p my-5p my-md-20p my-lg-10p my-xl-20p">
+        <div class="mb-10p mb-md-20p">
+          <div class="d-inline-block bg-secondary rounded-8p icon-container">
+            <i iconPh="file" class="text-white center" style="font-size: 25px;"></i>
+          </div>
+        </div>
+        <h5 class="h6 mb-0 h5-md mb-md-10p">{{introductionPostType.note.title}}</h5>
+        <p class="body2 body1-md mb-0 text-label">{{introductionPostType.note.content}}</p>
+      </div>
+    </ng-template>
+  </div>
+</section>
+
 <!-- testimonial start-->
 <section class="bg-primary-light py-100p position-relative overflow-hidden">
   <!-- <div class="circle-container-testimonial">
@@ -260,13 +308,14 @@
   </div>
 
   <div class="position-relative app-sticky-section-container">
-    <!-- <div class="intersection-observer" intersectionObserver rootMargin="-500px 0px 10000px 0px" (changeStatus)="onIntersectAppFeature($event)"></div> -->
+    <div class="intersection-observer" intersectionObserver rootMargin="-200px 0px 10000px 0px" (changeStatus)="onIntersectAppFeature($event)"></div>
     <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-0" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 0)"></div>
     <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-1" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 1)"></div>
     <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-2" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 2)"></div>
     <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-3" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 3)"></div>
     <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-4" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 4)"></div>
-    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-5" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 5)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-5" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 5)"></div>  
+
     <div class="intersection-observer" style="top: calc(100% - 100vh + 80px); "></div>
     <div class="mt-30p mt-md-50p sticky-top app-sticky-section container-md">
       <div class="d-flex justify-content-center align-items-center flex-nowrap">

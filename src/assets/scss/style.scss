@@ -28,6 +28,13 @@ a {
   cursor: pointer;
 }
 
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .opacity-0 { opacity: 0!important; }
 .opacity-1 { opacity: 1!important; }
 @for $i from 1 through 9 {

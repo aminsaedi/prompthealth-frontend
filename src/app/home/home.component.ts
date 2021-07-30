@@ -29,9 +29,6 @@ export class HomeComponent implements OnInit {
 
   get sizeL() { return window && window.innerWidth >= 920; }
 
-  public appFeatureItems = appFeatureItems;
-
-
   constructor(
     private router: Router,
     private _catService: CategoryService,
@@ -39,87 +36,42 @@ export class HomeComponent implements OnInit {
     private _headerStatusService: HeaderStatusService,
     private _uService: UniversalService,
     private _changeDetector: ChangeDetectorRef,
-  ) {
+  ) { }
+
+
+  private timerResize: any = null;
+  private previousScreenWidth: number = 0;
+
+  @HostListener('window:resize', ['$event']) WindowResize(e: Event) {
+    if(this.categories && window.innerWidth && window.innerWidth != this.previousScreenWidth) {
+      this.previousScreenWidth = window.innerWidth;
+      this.categoryController.disposeAll();
+        
+      if(this.timerResize) {
+        clearTimeout(this.timerResize);
+      }
+  
+      this.timerResize = setTimeout(() => {
+        this.categoryController = new CategoryViewerController(this.categories);
+        this.expertFinderController.initLayout();
+        this._changeDetector.detectChanges();
+      }, 500);   
+    }
+  }
+  
+  changeHeaderShadowStatus(isShown: boolean) {
+    if(isShown) {
+      this._headerStatusService.showShadow();
+    } else {
+      this._headerStatusService.hideShadow();
+    }
   }
 
-    @ViewChildren('appFeatureSwitcher') private appFeatureSwitchers: QueryList<ElementRef>;
-    @ViewChild('expertFinderScrollHorizontal') private elExpertFinderScrollHorizontal: ElementRef;
-    public pageCurrentPractitionersFeatured: number = 0
-    public citiesFeatured: {id: CityId, label: string}[];
-    public blogs: Blog[];
-
-    private timerResize: any = null;
-    private previousScreenWidth: number = 0;
-
-    @HostListener('window:resize', ['$event']) WindowResize(e: Event) {
-      if(this.categories && window.innerWidth && window.innerWidth != this.previousScreenWidth) {
-        this.previousScreenWidth = window.innerWidth;
-        this.categoryController.disposeAll();
-
-        if(this.timerResize) {
-          clearTimeout(this.timerResize);
-        }
-  
-        this.timerResize = setTimeout(() => {
-          this.categoryController = new CategoryViewerController(this.categories);
-          this.expertFinderController.initLayout();
-          this._changeDetector.detectChanges();
-        }, 500); 
-  
-      }
+  ngAfterViewInit() {
+    if(!this._uService.isServer) {
+      this.elExpertFinderScrollHorizontal.nativeElement.scrollTo({left: 10000});
     }
-
-    private categories: Category[];
-    public categoryController: CategoryViewerController;
-
-    public expertFinderController: ExpertFinderController = new ExpertFinderController();
-    public countPractitionersFeaturedPerPage: number = 7;
-
-    changeHeaderShadowStatus(isShown: boolean) {
-      if(isShown) {
-        this._headerStatusService.showShadow();
-      } else {
-        this._headerStatusService.hideShadow();
-      }
-    }
-
-    async getBlog() {
-      const query = new BlogSearchQuery({count: 3});
-      this._sharedService.getNoAuth('/blog/get-all', query.json ).subscribe((res: IBlogSearchResult) => {
-        if(res.statusCode === 200) {
-          const blogs = [];
-          res.data.data.forEach(d => {
-            blogs.push(new Blog(d));
-          });
-          this.blogs = blogs;
-        } else {
-          console.log(res.message);
-          this.blogs = [];
-        }
-      }, (error) => {
-        console.log(error);
-        this.blogs= [];
-      });
-    }
-
-    ngAfterViewInit() {
-      if(!this._uService.isServer) {
-        this.elExpertFinderScrollHorizontal.nativeElement.scrollTo({left: 10000});
-      }
-    }
-
-    onEnterExpertFinder(isLeaving: boolean) {
-      if(!isLeaving) {
-        const el = this.elExpertFinderScrollHorizontal.nativeElement as HTMLElement;
-        const start = el.scrollLeft;
-        if(start > 0) {
-          smoothHorizontalScrolling(el, Math.floor(start * 2 / 9), -start, start);
-        }
-      }
-    }
-
-  AWS_S3 = '';
-
+  }
 
   // eventbriteCheckout(event) {
   //   registerEvent(146694387863, (res) => {
@@ -145,9 +97,6 @@ export class HomeComponent implements OnInit {
     }
     this.citiesFeatured = citiesFeatured;
 
-    const ls = this._uService.localStorage;
-    this.AWS_S3 = environment.config.AWS_S3;
-
     this.getBlog();
 
     if (!this._uService.isServer) {
@@ -168,6 +117,17 @@ export class HomeComponent implements OnInit {
     });
   }
 
+
+  /** CATEGORIES */
+  private categories: Category[];
+  public categoryController: CategoryViewerController;
+  /** CATEGORIES END */
+
+
+  /** EXPERT FINDER */
+  public expertFinderController: ExpertFinderController = new ExpertFinderController();
+  @ViewChild('expertFinderScrollHorizontal') private elExpertFinderScrollHorizontal: ElementRef;
+
   /** temporary solution to fill featured practitioners */
   getPractitionersFeatured() {
     this._sharedService.getNoAuth('user/get-paid-spc').subscribe((res: any) => {
@@ -181,6 +141,23 @@ export class HomeComponent implements OnInit {
     }, (error) => { console.log(error); });
   }
 
+  onEnterExpertFinder(isLeaving: boolean) {
+    if(!isLeaving) {
+      const el = this.elExpertFinderScrollHorizontal.nativeElement as HTMLElement;
+      const start = el.scrollLeft;
+      if(start > 0) {
+        smoothHorizontalScrolling(el, Math.floor(start * 2 / 9), -start, start);
+      }
+    }
+  }
+  /** EXPERT FINDER END */
+
+
+  /** COMMUNITY */
+  public introductionPostType = introductionPostType;
+  /** COMMUNITY END */
+
+  /** APP */
   isAppFeatureSelected(index: number) {
     return this.selectedAppFeature === index;
   }
@@ -191,13 +168,24 @@ export class HomeComponent implements OnInit {
     return this.selectedAppFeature >= 3;
   }
   
+  public appFeatureItems = appFeatureItems;
   public selectedAppFeature: number = null;
+  public isOnAppFeature: boolean = false;
+  @ViewChildren('appFeatureSwitcher') private appFeatureSwitchers: QueryList<ElementRef>;
+
+  onIntersectAppFeature(enter: boolean) {
+    this.isOnAppFeature = enter;
+  }
 
   onIntersectAppFeatureItem(select: boolean, index: number) {
-    if(select) {
-      this.selectedAppFeature = index;
-    } else if(index > 0) {
-      this.selectedAppFeature = index - 1;
+    if(this.isOnAppFeature) {
+      if(select) {
+        this.selectedAppFeature = index;
+      } else if(index > 0) {
+        this.selectedAppFeature = index - 1;
+      } else {
+        this.selectedAppFeature = null;
+      }    
     } else {
       this.selectedAppFeature = null;
     }
@@ -213,6 +201,33 @@ export class HomeComponent implements OnInit {
       }, 10)  
     }
   }
+  /** APP END */
+
+  /** CITIES */
+  public citiesFeatured: {id: CityId, label: string}[];
+  /** CITIES END */
+
+  /** BLOGS */
+  public blogs: Blog[];
+  async getBlog() {
+    const query = new BlogSearchQuery({count: 3});
+    this._sharedService.getNoAuth('/blog/get-all', query.json ).subscribe((res: IBlogSearchResult) => {
+      if(res.statusCode === 200) {
+        const blogs = [];
+        res.data.data.forEach(d => {
+          blogs.push(new Blog(d));
+        });
+        this.blogs = blogs;
+      } else {
+        console.log(res.message);
+        this.blogs = [];
+      }
+    }, (error) => {
+      console.log(error);
+      this.blogs= [];
+    });
+  }
+  /** BLOGS END */
 }
 
 const appFeatureItems = [
@@ -249,6 +264,15 @@ const appFeatureItems = [
       title: 'Safe & Secure',
       content: 'Your privacy and security is ensured (PIPEDA/HIPPA compliant)',
     }
-
   ],
 ]
+
+const introductionPostType = {
+  note: {
+    icon: '',
+    color: '',
+
+    title: 'Notes',
+    content: 'Create any types of events too easy',
+  }
+}

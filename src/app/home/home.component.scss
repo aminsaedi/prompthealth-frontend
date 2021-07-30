@@ -113,6 +113,24 @@
   box-shadow: 0 6px 25px rgba($color: #0051be, $alpha: 0.1);
 }
 
+.post-types-container {
+  margin: 0 -25px;
+  overflow: hidden;
+  @media (min-width: $breakpointSm) {
+    overflow: auto;
+  }
+  @media (min-width: $breakpointMd) {
+    margin: 0;
+  }
+
+  .icon-container {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 40px;
+  }
+}
+
 .badge-appstore-top{
   width: auto;
   height: 42px;
