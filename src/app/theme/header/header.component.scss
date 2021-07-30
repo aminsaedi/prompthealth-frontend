@@ -5,7 +5,6 @@
 header {
   transition-property: transform box-shadow;
   transition-duration: 400ms;
-  z-index: 100;
 
   &.hide {
     transform: translateY(-100%);
@@ -14,14 +13,6 @@ header {
   &.shadow{
     box-shadow: 0 2px 5px #d6dfea!important;
   }
-}
-
-
-.dashboard-menu-wrapper-md{
-  z-index: 10000;
-  border-radius: 15px;
-  box-shadow: 0 0 5px #00000033;
-  overflow: hidden;
 }
 
 modal#user-type-menu{

@@ -146,14 +146,16 @@
   }
 }
 
+$stickyPointAppFeature: 80px;
+
 .app-sticky-section-container {
-  height: calc((100vh - 80px) * 4);
+  height: calc((100vh - #{$stickyPointAppFeature}) * 4);
 }
 .app-sticky-section {
-  top: 80px;
+  top: $stickyPointAppFeature;
   overflow: hidden;
   width: 100vw;
-  height: calc(100vh - 80px);
+  height: calc(100vh - #{$stickyPointAppFeature});
   min-height: 500px;
 }
 
@@ -164,15 +166,80 @@
 .app-feature-switcher-4 { top: 50%; }
 .app-feature-switcher-5 { top: 62.5%; }
 
+.app-feature-canvas {
+  position: relative;
+  height: calc(100vh - #{$stickyPointAppFeature} - 60px /** app badge height*/);
+  @media (min-width: $breakpointMd) {
+    height: calc(100vh - #{$stickyPointAppFeature} - 70px /** app badge height*/);
+  }
+}
+
+.app-feature-controller {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+
+  padding: 10px 0 27px; // height 70px;
+  margin: 0;
+
+  @media (max-width: 340px) {
+    display: none!important;
+  }
+
+  li {
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
 .app-features-container {
   position: absolute;
+
   left: 50%;
-  top: 100px;
   transform: translateX(-50%);
   transition: transform 300ms;
 
+  height: 420px; /** based on image size */
+  top: calc(50% - 245px);
+
+  @media (min-width: $breakpointMd) {
+    height: 520px; /** based on image size */
+    top: calc(50% - 295px);
+  } 
+
+  @media (min-width: $breakpointLg) {
+    top: calc(50% - 260px);
+  }
+
+  @media (min-height: 1000px) and (min-width: $breakpointMd) {
+    height: 610px;
+    top: calc(50% - 340px);
+  }
+  @media (min-height: 1000px) and (min-width: $breakpointLg) {
+    top: calc(50% - 310px);
+  }
+
+  @media (max-width: $breakpointLg - 1) {
+    &.focus-left {
+      transform: translateX(calc(-50% + 180px));
+    }
+    &.focus-right {
+      transform: translateX(calc(-50% - 180px));
+    }  
+  }
+
+  @media (max-width: $breakpointLg - 1) and (min-height: 1000px) {
+    &.focus-left {
+      transform: translateX(calc(-50% + 160px));
+    }
+    &.focus-right {
+      transform: translateX(calc(-50% - 160px));
+    }  
+  }
+
   @media (max-width: $breakpointMd - 1) {
-    top: 90px;
     &.focus-left {
       transform: translateX(calc(-50% + 152px));
     }
@@ -193,6 +260,9 @@
 }
 .app-features {
   flex: 0 0 230px;
+  @media (min-width: $breakpointMd) { flex: 0 0 330px; }
+  @media (min-width: $breakpointLg) { flex: 0 0 230px; }
+  @media (min-width: $breakpointXl) { flex: 0 0 330px; }
 
   >li {
     @media (min-width: $breakpointLg) {
@@ -210,9 +280,9 @@
 
   .content {
     width: 210px;
-    @media (min-width: $breakpointXl) {
-      width: 290px;
-    }
+    @media (min-width: $breakpointMd) { width: 290px; }
+    @media (min-width: $breakpointLg) { width: 210px; }
+    @media (min-width: $breakpointXl) { width: 290px; }
   }
 }
 
@@ -222,32 +292,10 @@
   img.mobile-body {
     width: 200px;
     height: auto;
-    @media (min-width: $breakpointLg) {
-      width: 250px;      
-    }
+    @media (min-width: $breakpointMd) { width: 250px; }
+    @media (min-height: 1000px) { width: 290px; }
   }
 }
 
-.app-feature-controller {
-  position: absolute;
-  bottom: 15%;
-  width: 100%;
-  @media (max-width: 340px) {
-    display: none!important;
-  }
 
-  @media (max-height: 800px) {
-    bottom: 10%;
-  }
-  @media (max-height: 700px) {
-    bottom: 0;
-  }
-
-  li {
-    margin-right: 10px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-}
 

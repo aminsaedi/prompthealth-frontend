@@ -27,7 +27,7 @@ import { smoothWindowScrollTo } from '../_helpers/smooth-scroll';
 })
 export class HomeComponent implements OnInit {
 
-  get sizeL() { return window && window.innerWidth >= 920; }
+  get sizeL() { return window && window.innerWidth >= 992; }
 
   constructor(
     private router: Router,
