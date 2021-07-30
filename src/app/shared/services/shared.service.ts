@@ -184,7 +184,7 @@ export class SharedService {
     });
   }
 
-  async shrinkImageByFixedWidth(file: File, width: number = 1500): Promise<{ file: Blob, filename: string }> {
+  async shrinkImageByFixedWidth(file: File | Blob, width: number = 1500): Promise<{ file: Blob, filename: string }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = (e: any) => {

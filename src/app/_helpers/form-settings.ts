@@ -1,5 +1,6 @@
-import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms"
-import { formatStringToDate } from "./date-formatter"
+import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { formatStringToDate } from './date-formatter';
+import { pattern } from './pattern';
 
 export const minmax = {
   nameMax: 100,
@@ -10,130 +11,121 @@ export const minmax = {
   professionalTitleMax: 30,
   professionalOrganizationMax: 200,
   certificationMax: 200,
-}
+};
 
-export const pattern = {
-  // url: 'http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?',
-  url: '(http(s)?:\\/\\/)?(www\\.)?([\\w-\\.])+(\\/[\\w-%?=@&+\\.]*)?',
-  urlVideo: '^http(s)?:\\/\\/(w{3}\\.)?((youtube|vimeo)\\.com|youtu.be)\/.+',
-  urlPodcast: '^http(s)?:\\/\\/(w{3}\\.)?(open\\.spotify)\\.com\/.+',
-  phone: '^[0-9\\-\\(\\)\\s]+$',
-  price: '^[0-9]{1,}(\\.[0-9]{1,2})?$',
-  password: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^\\.&\\-]).{8,}',
-  datetime: '^[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}\\s[0-9]{2}:[0-9]{2}$',
-}
+
 
 const validatorCheckboxSelectedAtLeast = (minRequired: number = 1): ValidatorFn => {
   return function validate(formArray: FormArray) {
     let checked = 0;
 
     (formArray.value as boolean[]).forEach(val => {
-      if(val){ 
-        checked ++; 
+      if (val) {
+        checked++;
       }
     });
 
-    if(checked >= minRequired){
+    if (checked >= minRequired) {
       return null;
-    }else{
-      const errors = {}
+    } else {
+      const errors = {};
       errors['requiredCheckboxSelectedAtLeast' + minRequired] = true;
       return errors;
     }
-  }
-}
+  };
+};
 
 const validatorNestedCheckboxSelectedAtLeast = (minRequired: number = 1): ValidatorFn => {
   return function validate(formGroup: FormGroup) {
     let checked = 0;
-    if(formGroup.value.root && formGroup.value.root.length > 0){
+    if (formGroup.value.root && formGroup.value.root.length > 0) {
       formGroup.value.root.forEach((isChecked: boolean) => {
-        if(isChecked){
-          checked ++;
+        if (isChecked) {
+          checked++;
         }
       });
     }
-    
-    if(checked >= minRequired){
+
+    if (checked >= minRequired) {
       return null;
-    }else{
-      const errors = {}
+    } else {
+      const errors = {};
       errors['requiredCheckboxSelectedAtLeast' + minRequired] = true;
       return errors;
     }
-  }
-}
+  };
+};
 
 const validatorAddressSelectedFromSuggestion = (): ValidatorFn => {
   return function validate(formGroup: FormGroup) {
     const lat = formGroup.controls.latitude.value;
     const lng = formGroup.controls.longitude.value;
 
-    if(!formGroup.controls.address.value) {
+    if (!formGroup.controls.address.value) {
       return null;
-    }else if(lat != 0 && lng != 0){
+    } else if (lat != 0 && lng != 0) {
       return null;
-    }else{
-      const errors = {'addressSelectedFromSuggestion': true};
+    } else {
+      const errors = { addressSelectedFromSuggestion: true };
       return errors;
     }
-  }
-}
+  };
+};
 
 const validatorPatternPassword = (): ValidatorFn => {
   return function validate(formControl: FormControl) {
     const regex = new RegExp(pattern.password);
-    if(formControl.value.match(regex)) {
+    if (formControl.value.match(regex)) {
       return null;
-    }else{
-      const errors = {'matchPatternPassword': true};
+    } else {
+      const errors = { matchPatternPassword: true };
       return errors;
     }
-  }
-}
+  };
+};
 
 const validatorPatternDateTime = (): ValidatorFn => {
   return function validate(formControl: FormControl) {
     const regex = new RegExp(pattern.datetime);
-    if(!formControl.value || formControl.value.match(regex)) {
+    if (!formControl.value || formControl.value.match(regex)) {
       return null;
     } else {
-      const errors = {'matchPatternDateTime': true};
+      const errors = { matchPatternDateTime: true };
       return errors;
     }
-  }
-}
+  };
+};
 
 const validatorComparePostEventStartTime = (): ValidatorFn => {
   return function validate(formControl: FormControl) {
     const regex = new RegExp(pattern.datetime);
-    if(formControl.value && formControl.value.match(regex)) {
+    if (formControl.value && formControl.value.match(regex)) {
       const now = new Date();
       const start = formatStringToDate(formControl.value);
 
-      if(now.getTime() >= start.getTime()) {
-        return {'eventStartTimeLaterThanNow': true};
+      if (now.getTime() >= start.getTime()) {
+        return { eventStartTimeLaterThanNow: true };
       } else {
         return null;
       }
     } else {
       return null;
     }
-  }
-}
+  };
+};
 
 const validatorComparePostEventEndTime = (): ValidatorFn => {
-    return function validate(formGroup: FormGroup) {
+  return function validate(formGroup: FormGroup) {
     const regex = new RegExp(pattern.datetime);
     const fs = formGroup.controls.eventStartTime;
     const fe = formGroup.controls.eventEndTime;
-    if(fs && fs.value && fs.value.match(regex) && fe && fe.value && fe.value.match(regex)){
+    if (fs && fs.value && fs.value.match(regex) && fe && fe.value && fe.value.match(regex)) {
       const errors: any = {};
 
       const start = formatStringToDate(fs.value);
       const end = formatStringToDate(fe.value);
-      
-      if(start.getTime() >= end.getTime()) {
+
+      if (start.getTime() >= end.getTime()) {
         errors.endTimeLaterThanStart = true;
       }
 
@@ -146,37 +138,37 @@ const validatorComparePostEventEndTime = (): ValidatorFn => {
     } else {
       return null;
     }
-  }
-}
+  };
+};
 
 const validatorPatternURL = (): ValidatorFn => {
   return function validate(formControl: FormControl) {
     let val: string = formControl.value;
-    let isValueUpdated: boolean = false;
-    let isValueMatched: boolean = false;
-    if(!val) {
+    let isValueUpdated = false;
+    let isValueMatched = false;
+    if (!val) {
       return null;
-    } else if(!val.match(/^http(s)?:\/\//)) {
-      val = 'http://' + val; 
+    } else if (!val.match(/^http(s)?:\/\//)) {
+      val = 'http://' + val;
       isValueUpdated = true;
     }
 
-    if(val.match(/^http(s)?:\/\/www/)) {
+    if (val.match(/^http(s)?:\/\/www/)) {
       isValueMatched = (val.match(/^http(s)?:\/\/www\.[\w-\.]+(\.\w{2,})([\/\w-%?=@&+#:\.]*)?$/)) ? true : false;
     } else {
       isValueMatched = (val.match(/^http(s)?:\/\/[\w-\.]+(\.\w{2,})([\/\w-%?=@&+#:\.]*)?$/)) ? true : false;
     }
 
-    if(isValueMatched) {
-      if(isValueUpdated) {
+    if (isValueMatched) {
+      if (isValueUpdated) {
         formControl.setValue(val);
       }
       return null;
     } else {
-      return {'matchPatternURL': true };
+      return { matchPatternURL: true };
     }
-  }
-}
+  };
+};
 
 
 const validatorFirstNameClient = [Validators.maxLength(minmax.nameMax), Validators.required];
@@ -228,7 +220,7 @@ export const validators = {
 
   personalMatchGender: validatorRequired,
   personalMatchAgeRange: validatorRequired,
-  
+
   password: validatorPatternPassword(),
   accredit: validatorRequiredTrue,
 
@@ -248,4 +240,4 @@ export const validators = {
   savePostVideoLink: [Validators.pattern(pattern.urlVideo)],
   savePostPodcastLink: [Validators.pattern(pattern.urlPodcast)],
   savePost: [validatorComparePostEventEndTime()], // for formGroup validator
-}
+};
