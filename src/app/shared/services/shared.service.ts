@@ -568,7 +568,7 @@ export class SharedService {
       const ss = this._uService.sessionStorage;
       const savedCoupon: ICouponData = JSON.parse(ss.getItem('stripe_coupon_code'));
       const _option = new CheckoutPlanOption(option, user.roles);
-
+      console.log(user);
       const payload: IStripeCheckoutData = {
         cancel_url: _option.cancelUrl,
         success_url: _option.successUrl,
