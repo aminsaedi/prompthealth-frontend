@@ -289,7 +289,7 @@ export class SharedService {
         });
       case 'facebook':
         return this.http.get(this.rootUrl + 'oauth/facebooksignin?access_token=' + body.authToken
-          + '&role=' + body.userRole, {
+          + '&role=' + body.roles, {
           headers
         });
       default:

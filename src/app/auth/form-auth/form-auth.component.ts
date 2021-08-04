@@ -69,7 +69,7 @@ export class FormAuthComponent implements OnInit {
         socialToken,
         authToken: x.authToken,
         social_id: x.id,
-        roles: this.userRole,
+        roles: this.userRole || 'U',
         profileImage: x.photoUrl,
         firstName: x.firstName,
         lastName: x.lastName,
@@ -114,12 +114,13 @@ export class FormAuthComponent implements OnInit {
     } else {
       data.hear_from = this.f.hear_from.value;
       data.t_c = true;
-      data.roles = this.userRole;
+      data.roles = this.userRole || 'U';
     }
 
     this._sharedService.loader('show');
     this.changeState.emit('start');
 
+    console.log(data);
     const subscription = (this.authType === 'signin') ? this._sharedService.login(data) : this._sharedService.register(data);
     subscription.subscribe((res: any) => {
       this._sharedService.loader('hide');
