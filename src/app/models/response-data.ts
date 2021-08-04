@@ -9,3 +9,15 @@ export interface IResponseData {
 export interface IGetProfileResult extends IResponseData{
   data: IUserDetail[];
 }
+
+export interface IGetPractitionersResult extends IResponseData {
+  data: {
+    userId: string,
+    userData: IUserDetail,
+    ans: {
+      _id: string,
+      item_text: string,
+      subans: boolean,
+    }[],
+  }[]
+}

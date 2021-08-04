@@ -327,3 +327,4 @@ export type QuestionnaireMapSitemap = {
 }
 
 type QuestionnairesType = 'personalMatch' | 'profileService' | 'profilePractitioner' | 'sitemap';
+

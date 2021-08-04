@@ -27,9 +27,9 @@ export class ModalService {
     this._router.navigate([path], {queryParams: queryParams});
   }
 
-  public hide(goNext: boolean = false, routeNext: string[] = null) {
+  public hide(goNext: boolean = false, routeNext: string[] = null, paramsNext: Params = null) {
     if(goNext) {
-      this.goNext(routeNext);
+      this.goNext(routeNext, paramsNext);
     } else {
       this.goBack();
     }
@@ -45,10 +45,10 @@ export class ModalService {
     }
   }
 
-  private goNext(routeNext: string[] = null) {
+  private goNext(routeNext: string[] = null, paramsNext: Params = null) {
     this._data = null;
     if(routeNext) {
-      this._router.navigate(routeNext, {replaceUrl: true});
+      this._router.navigate(routeNext, {replaceUrl: true, queryParams: paramsNext});
     } else {
       const [path, queryParams] = this._getPathAndQueryParams();
       queryParams.modal = null;

@@ -2,7 +2,7 @@
 
 .checkbox-group.inline {
     display: block;
-    li {
+    li.item-disabled {
         display: inline-block;
         margin: 0;
         white-space: pre-wrap;
@@ -13,8 +13,18 @@
             white-space: pre;
         }
     }
-}
 
+    li.item {
+        display: inline-block;
+        margin: 10px 20px 10px 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+
+        &:llast-child {
+            margin-right: 0;
+        }
+    }
+}
 
 .checkbox-group.block-with-zero-margin {
     >li {

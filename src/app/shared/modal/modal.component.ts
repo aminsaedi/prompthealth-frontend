@@ -46,6 +46,10 @@ export class ModalComponent implements OnInit {
     });
   }
 
+  show(data: any = null) {
+    this._modalService.show(this.id, data);
+  }
+
   hide(goNext: boolean = false, routeNext: string[] = null) {
     this._modalService.hide(goNext, routeNext);
   }

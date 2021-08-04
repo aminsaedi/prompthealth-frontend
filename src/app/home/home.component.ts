@@ -2,7 +2,6 @@ import { Component, OnInit, HostListener, ChangeDetectorRef, ViewChild, ElementR
 import { Router } from '@angular/router';
 import { SharedService } from '../shared/services/shared.service';
 import { HeaderStatusService } from '../shared/services/header-status.service';
-import { environment } from 'src/environments/environment';
 import { UniversalService } from '../shared/services/universal.service';
 import { Category, CategoryService } from '../shared/services/category.service';
 import { IUserDetail } from '../models/user-detail';
@@ -11,10 +10,9 @@ import { expandAllAnimation, expandVerticalAnimation } from '../_helpers/animati
 import { Professional } from '../models/professional';
 import { CityId, getLabelByCityId } from '../_helpers/location-data';
 import { BlogSearchQuery, IBlogSearchResult } from '../models/blog-search-query';
-import { Blog, IBlog } from '../models/blog';
-import { ExpertFinderController } from '../models/expert-finder-controller';
-import { smoothHorizontalScrolling } from './smooth-scroll';
-import { smoothWindowScrollTo } from '../_helpers/smooth-scroll';
+import { Blog } from '../models/blog';
+import { FeaturedExpertController } from '../models/featured-expert-controller';
+import { smoothHorizontalScrolling } from '../_helpers/smooth-scroll';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -53,7 +51,7 @@ export class HomeComponent implements OnInit {
   
       this.timerResize = setTimeout(() => {
         this.categoryController = new CategoryViewerController(this.categories);
-        this.expertFinderController.initLayout();
+        this.featuredExpertController.initLayout();
         this._changeDetector.detectChanges();
       }, 500);   
     }
@@ -125,7 +123,7 @@ export class HomeComponent implements OnInit {
 
 
   /** EXPERT FINDER */
-  public expertFinderController: ExpertFinderController = new ExpertFinderController();
+  public featuredExpertController: FeaturedExpertController = new FeaturedExpertController();
   @ViewChild('expertFinderScrollHorizontal') private elExpertFinderScrollHorizontal: ElementRef;
 
   /** temporary solution to fill featured practitioners */
@@ -136,7 +134,7 @@ export class HomeComponent implements OnInit {
         res.data.forEach((d: IUserDetail) => {
           users.push(new Professional(d._id, d));
         });
-        this.expertFinderController.addData(users);
+        this.featuredExpertController.addData(users);
       }
     }, (error) => { console.log(error); });
   }

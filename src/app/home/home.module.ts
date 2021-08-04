@@ -53,6 +53,7 @@ import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan
 import { AuthModule } from "../auth/auth.module";
 import { SitemapComponent } from './sitemap/sitemap.component';
 import { CardTestimonialComponent } from './card-testimonial/card-testimonial.component';
+import { ExpertFinderComponent } from './expert-finder/expert-finder.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { CardTestimonialComponent } from './card-testimonial/card-testimonial.co
     UserQuestionnaireItemSelectMultipleComponent,
     SitemapComponent,
     CardTestimonialComponent,
+    ExpertFinderComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

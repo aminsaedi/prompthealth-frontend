@@ -36,6 +36,7 @@ import { UserQuestionnaireItemBackgroundComponent } from "./user-questionnaire-i
 import { UserQuestionnaireItemSelectMultipleComponent } from "./user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component";
 import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
 import { SitemapComponent } from "./sitemap/sitemap.component";
+import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
 
 const routes: Routes = [
   // {
@@ -110,7 +111,7 @@ const routes: Routes = [
   { path: 'plans/product', component: subscriptionPlanProductComponent },
   { path: 'subscriptionplan', redirectTo: '/plans'},
 
-  { path: 'practitioners', component: ListingComponent },
+  { path: 'practitioners', component: ExpertFinderComponent },
   { path: 'practitioners/category/:categoryId', component: ListingComponent },
   { path: 'practitioners/category/:categoryId/:city', component: ListingComponent },
   { path: 'practitioners/type/:typeOfProviderId', component: ListingComponent },

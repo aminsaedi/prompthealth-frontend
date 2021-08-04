@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
+import { priceRange } from '../form-item-pricing/form-item-pricing.component';
 import { Questionnaire, QuestionnaireAnswer } from '../services/questionnaire.service';
 
 @Component({
@@ -57,6 +58,7 @@ export class FormItemCheckboxGroupComponent implements OnInit {
       case 'age_range': this.selectionList = (this.ageRangeType == 'simple') ? age_range : age_range_detail; break;
       case 'years_of_experience': this.selectionList = years_of_experience; break;
       case 'business_kind': this.selectionList = business_kind; break;
+      case 'price_per_hours': this.selectionList = price_per_hours; break;
       case 'gender': this.selectionList = this.selections ? this.selections : gender; break;
       default: this.selectionList = this.selections || [];
     }
@@ -88,6 +90,15 @@ export class FormItemCheckboxGroupComponent implements OnInit {
       }
     })
     return selected;
+  }
+
+  //if controller is FormArray, deselect all
+  deselectAll() {
+    if(this.controller instanceof FormArray) {
+      this.controller.controls.forEach(f => {
+        f.setValue(false);
+      });
+    }
   }
   /** checkbox control end */
 
@@ -174,6 +185,8 @@ const gender: CheckboxSelectionItem[] = [
   {id: 'gen3', label: 'Non-Binary', value: 'nonbinary'},
 ];
 
+const price_per_hours: CheckboxSelectionItem[] = priceRange;
+
 const preferNotToSay: CheckboxSelectionItem[] = [
   {id: 'prefer-not-to-say', label: 'Prefer Not To Say', value: 'Prefer Not To Say'}
 ];
@@ -187,6 +200,7 @@ export interface CheckboxSelectionItem {
 }
 
 export interface IOptionCheckboxGroup {
+  showInlineWhenEnabled?: boolean;
   showInlineWhenDisabled?: boolean;
   showInlineSubWhenDisabled?: boolean;
   showBlockWithZeroMarginWhenDisabled?: boolean;
@@ -197,6 +211,7 @@ export interface IOptionCheckboxGroup {
 }
 
 export class OptionCheckboxGroup implements IOptionCheckboxGroup {
+  get showInlineWhenEnabled() { return this.data.showInlineWhenEnabled === true ? true : false; }
   get showInlineWhenDisabled() { return this.data.showInlineWhenDisabled === true ? true : false; }
   get showInlineSubWhenDisabled() { return this.data.showInlineSubWhenDisabled === true ? true : false; }
   get showBlockWithZeroMarginWhenDisabled() {return this.data.showBlockWithZeroMarginWhenDisabled === true ? true : false; }

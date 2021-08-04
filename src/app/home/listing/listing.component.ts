@@ -636,6 +636,7 @@ export class ListingComponent implements OnInit, OnDestroy {
       if (res.statusCode === 200) {
         const professionals = [];
         const languageSet = this.getFilter('language').options;
+        console.log(res);
 
         res.data.forEach((d: any) => {
           const professional = new Professional(d.userId, d.userData, d.ans);

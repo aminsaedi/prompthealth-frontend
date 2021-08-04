@@ -37,6 +37,9 @@
 .btn.btn-grey {
   @include btn($colorGsWhite, $colorGsLabel, $colorGsPlaceholder);
 }
+.btn.btn-grey-light {
+  @include btn($colorGsLabel, $colorGsBackground, rgba($colorGsBackground, 0.7));
+}
 .btn.btn-google {
   @include btn($colorGsWhite, $colorGoogle, $colorGoogleLight);
 }
@@ -48,6 +51,9 @@
 }
 .btn-error {
   @include btn($colorGsWhite, $colorError, $colorErrorDark);
+}
+.btn.btn-inactive {
+  @include btn($colorGsPlaceholder, $colorGsBackground, rgba($colorGsBackground, 0.7));
 }
 
 @mixin btnOutline($color, $colorHover) {

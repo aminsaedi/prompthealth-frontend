@@ -165,7 +165,7 @@
   </div>
 
   <div class="container">
-    <div class="row mb-3" *ngIf="!expertFinderController || !expertFinderController.includePersonalMatchInFirstRow">
+    <div class="row mb-3" *ngIf="!featuredExpertController || !featuredExpertController.includePersonalMatchInFirstRow">
       <div class="col-12">
         <ng-container *ngTemplateOutlet="cardPersonalMatch"></ng-container>
       </div>
@@ -173,13 +173,13 @@
   </div>
 
   
-  <div *ngIf="!!expertFinderController" class="expert-finder-scroll-horizontal" #expertFinderScrollHorizontal>
+  <div *ngIf="!!featuredExpertController" class="expert-finder-scroll-horizontal" #expertFinderScrollHorizontal>
   <div class="intersection-observer" intersectionObserver rootMargin="10000px 0px -500px 0px" (changeStatus)="onEnterExpertFinder($event)"></div>
-    <ul *ngFor="let dataPerRow of expertFinderController.dataPerRows; let i = index"
+    <ul *ngFor="let dataPerRow of featuredExpertController.dataPerRows; let i = index"
     class="d-flex align-items-stretch flex-nowrap list-unstyled expert-finder-container"
     >
       <li
-      *ngIf="!!expertFinderController.includePersonalMatchInFirstRow && i == 0"
+      *ngIf="!!featuredExpertController.includePersonalMatchInFirstRow && i == 0"
       class="personal-match-container mr-15p"
       >
         <ng-container *ngTemplateOutlet="cardPersonalMatch"></ng-container>
