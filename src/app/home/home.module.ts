@@ -54,6 +54,7 @@ import { AuthModule } from "../auth/auth.module";
 import { SitemapComponent } from './sitemap/sitemap.component';
 import { CardTestimonialComponent } from './card-testimonial/card-testimonial.component';
 import { ExpertFinderComponent } from './expert-finder/expert-finder.component';
+import { NpnSliderModule } from "npn-slider";
 
 @NgModule({
   declarations: [
@@ -117,6 +118,7 @@ import { ExpertFinderComponent } from './expert-finder/expert-finder.component';
     SharedModule,
     AuthModule,
     ModalModule.forRoot(),
+    NpnSliderModule,
   ],
 
   schemas: [

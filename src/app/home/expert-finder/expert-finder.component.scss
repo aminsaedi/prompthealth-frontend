@@ -1,11 +1,20 @@
 @import "../../../assets/scss/variables";
 
+.filter-indicator {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  top: -2px;
+  right: -2px;
+  border-radius: 7px;
+  background: $colorError;
+}
 
-.practitioners-container{
+.list-container{
   box-sizing: border-box;
   transition: transform 500ms;
 
-  @media (min-width: $breakpointSm) {  width: 100%;   }
+  width: 100%;
   @media (min-width: $breakpointLg) {  width: 600px;  }
   // @media (min-width: 1350px) { width: 1020px; }
   // @media (min-width: 1700px) { width: 1350px; }
@@ -129,9 +138,77 @@
   left: 10px;
   width: calc(100% - 20px);
 }
-.ui-controller{
-  position: sticky;
-  bottom: 60px;
-  margin-top: -60px;
+
+.card-selected-practitioner-in-map {
+  position: absolute;
+  bottom: 30px;
+  left: calc(50% - 135px);
+  width: 270px;
 }
 
+// filter inner
+
+//slider
+$thumbSize: 24px;
+.range-indicator-road {
+  position: relative;
+  margin: 0 #{$thumbSize / 2};
+}
+.indicator-label {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  border-radius: 3px;
+  color: white;
+  background: $colorSecondary;
+  padding: 6px;
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translate(-50%);
+    border: 7px solid $colorSecondary;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    border-left-color: transparent;
+  }
+}
+
+input[type=range] {
+  appearance: none;
+  background: $colorPrimaryLight;
+  border-radius: 8px;
+  height: 8px;
+
+  &::-webkit-slider-thumb{
+    appearance: none;
+    width: $thumbSize;
+    height: $thumbSize;
+    border-radius: $thumbSize;
+    background: $colorPrimary;
+  }
+
+  &::-moz-range-thumb{
+    appearance: none;
+    width: $thumbSize;
+    height: $thumbSize;
+    border-radius: $thumbSize;
+    background: $colorPrimary;
+  }
+}
+
+.btn-filter-rating.active {
+  background: $colorPrimary;
+  color: $colorGsWhite;
+}
+
+.input-rating {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}

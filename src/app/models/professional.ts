@@ -98,7 +98,7 @@ export class Professional extends Profile implements IProfessional{
   get city() { return this.p.city; }
   get location() { return this.p.location || [null, null]; }
   get distance() { return this.p.calcDistance || null; }
-  get mapLabel() { return (this.price ? this.price : null); }
+  get mapLabel() { return (this._priceRange.length >= 1 ? `$${this._priceRange[0]}+` : 'N/A'); }
   get mapIconUrl() { return (this._mapIconUrl && this._mapIconUrl.length > 0) ? this._mapIconUrl : null; }
 
   get price() { return (this._priceRange.length >= 1) ? `$${this._priceRange[0]}+ / hr` : null; }
@@ -115,8 +115,9 @@ export class Professional extends Profile implements IProfessional{
   get detailByGoogle(){ return this._detailByGoogle || null; }
   get professionals() { return (this.p.plan && this.p.plan.ListOfProviders) ? this._professionals : []; }
   get rating() { return Math.round(this.p.ratingAvg * 10) / 10; }
-  get reviews() { return this._reviewData.data; }
+  get reviews() { return this._reviewData ? this._reviewData.data : []; }
   get reviewData() { return this._reviewData; }
+  get reviewCount() { return this.reviews.length; }
 
   get amenity() {
     return (this._amenities && this._amenities.imageGroups.length > 0 && this.p.plan && this.p.plan.ListAmenities) ? this._amenities : {imageGroups: []};
@@ -348,80 +349,64 @@ export class Professional extends Profile implements IProfessional{
     });
   }
 
-  async setMapIcon() {
-    const img = new Image;
+  async setMapIcon(highlight: boolean = false) {
+    this._isMapIconReady = false;
+    this._mapIconUrl = null;
+
     const c = document.createElement('canvas');
     const ctx = c.getContext('2d');
-    const needLabel = !!this.mapLabel;
 
-    const radCircle = needLabel ? 28 : 34;
-    const gap = 3;
-    const padding = 2;
-    const paddingRight = 20;
-    const hLabel = 42;
+    ctx.font = '14px bold -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
 
-    if (needLabel) {
-      ctx.fillStyle = 'black';
-      ctx.font = '14px bold -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
-      const wText = ctx.measureText(this.mapLabel).width;
-      c.width = radCircle * 2 + gap + wText + padding + paddingRight + 2;
-      c.height = radCircle * 2 + padding * 2;
+    const imageSize = 30;
+    const wText = ctx.measureText(this.mapLabel).width;
+    const [x0, x1] = [10, 10 + 5 + imageSize + 5 + wText + 10];
+    const [y0, y1] = [10, 10 + 5 + imageSize + 5];
+    const w = x1 + 10;
+    const h = y1 + 10;
+    const r = 8;
+    
+    c.width = w;
+    c.height = h;
+    ctx.shadowColor = 'rgba(0,0,0,0.2)';
+    ctx.shadowBlur = 10;
+    
+    ctx.beginPath();
+    ctx.moveTo(x0 + r, y0);
+    ctx.lineTo(x1 - r, y0);
+    ctx.arc(x1 - r, y0 + r, r, Math.PI * 3 / 2, 0, false);
+    ctx.lineTo(x1, y1 - r);
+    ctx.arc(x1 - r, y1 - r, r, 0, Math.PI * 1 / 2, false);
+    ctx.lineTo(x0 + r, y1);
+    ctx.arc(x0 + r, y1 - r, r, Math.PI * 1 / 2, Math.PI, false)
+    ctx.lineTo(x0, y0 + r);
+    ctx.arc(x0 + r, y0 + r, r, Math.PI, Math.PI * 3 / 2, false);
+    ctx.closePath();
 
-      ctx.beginPath();
-      const x = 10;
-      const y = padding + radCircle - hLabel / 2;
-      const w = c.width - 12;
-      const h = hLabel;
-      const r = h / 2;
+    ctx.fillStyle = highlight ? '#293148' : 'white';
+    ctx.fill();
 
-      ctx.moveTo(x + r, y);
-      ctx.lineTo(x + w - r, y);
-      ctx.arc(x + w - r, y + r, r, Math.PI * (3 / 2), Math.PI * (1 / 2), false);
-      ctx.lineTo(x + r, y + h);
-      ctx.arc(x + r, y + h - r, r, Math.PI * (1 / 2), Math.PI * (3 / 2), false);
-      ctx.closePath();
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = 'transparent';
 
-      ctx.fillStyle = 'white';
-      ctx.strokeStyle = 'grey';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.fill();
+    ctx.font = '14px bold -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
+    ctx.fillStyle = highlight ? 'white' : 'black';
+    ctx.fillText(this.mapLabel, x0 + 5 + imageSize + 5 , 35);
 
-      ctx.fillStyle = 'black';
-      ctx.font = '14px bold -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
-      ctx.fillText(this.mapLabel, padding + radCircle * 2 + gap, padding + radCircle + 5);
+    this._mapIconUrl = c.toDataURL('image/png', 0.5);
+    this._isMapIconReady = true;
 
-    } else {
-      c.width = 2 * (radCircle + padding);
-      c.height = 2 * (radCircle + padding);
-    }
-
+    const img = new Image;
     img.onload = () => {
-
-      ctx.beginPath();
-      ctx.arc(padding + radCircle, padding + radCircle, radCircle, 0 * Math.PI / 180, 360 * Math.PI / 180);
-      ctx.fillStyle = 'white';
-      ctx.strokeStyle = 'grey';
-      ctx.lineWidth = 1;
-      ctx.fill();
-      ctx.stroke();
-      ctx.clip();
-
       const w = img.width;
       const h = img.height;
       const rect = (w > h) ? h : w;
 
       const x = (w > h) ? (w - h) / 2 : 0;
       const y = (w > h) ? 0 : (h - w) / 2;
-      try {
-        ctx.drawImage(img, x, y, rect, rect, padding, padding, padding + radCircle * 2, padding + radCircle * 2);
-
-        this._mapIconUrl = c.toDataURL();
-      } catch (err) {
-        console.log(err);
-      }
-      this._isMapIconReady = true;
-    };
+      ctx.drawImage(img, x, y, rect, rect, x0 + 5, y0 + 5, imageSize, imageSize);
+      this._mapIconUrl = c.toDataURL();
+    }
 
     img.addEventListener('error', () => {
       if (!img.src.match(/assets/)) {

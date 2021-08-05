@@ -1,5 +1,5 @@
 <div class="d-flex flex-nowrap align-items-start">
-  <div class="m-15p m-md-30p">
+  <div class="pt-30p px-15p py-15p p-md-30p list-container">
     <div class="d-md-flex justify-content-between align-items-center">
       <div class="d-md-flex align-items-center">
         <h3 class="mb-md-0">Expert Finder</h3>
@@ -9,53 +9,68 @@
         >{{controller.countAll}} providers found</div>
       </div>
       <div class="text-right mb-10p mb-md-0p">
-        <a class="body1">
+        <a class="body1" routerLink="/personal-match">
           <u>Start personal match</u>
         </a>  
       </div>
     </div>
 
     <div class="mt-30p bg-primary-light rounded-8p border border-background">      
-      <search-bar></search-bar>
+      <search-bar #searchBar></search-bar>
+      <div #blurSearchbar></div>
     </div>
 
     <div class="mt-30p d-flex justify-content-between">
       <div>
         <button 
-        class="btn small"
-        [ngClass]="{'btn-inactive': !f.virtual.value, 'btn-primary': !!f.virtual.value}"
+        class="btn small px-5p px-md-15p"
+        [ngClass]="{'btn-inactive': !isVirtual, 'btn-primary': !!isVirtual}"
         (click)="onClickButtonToggleVirtual()"
         >
           <i 
           iconPh="video-camera" 
-          class="d-block mb-5p d-md-inline"
+          class="d-none d-md-inline"
           ></i>
           Virtual
         </button>
       </div>
       <div>
         <button 
-        class="btn btn-grey-light small"
+        class="btn btn-grey-light small px-5p px-md-15p position-relative"
         (click)="modalExpertFinderFilter.show()"
         >
           <i 
           iconPh="sliders-horiz"
-          class="d-block mb-5p d-md-inline"
+          class="d-none d-md-inline"
           ></i>
           Filters
+          <div 
+          *ngIf="isFilterApplied"
+          class="filter-indicator"
+          ></div>
         </button>
-        <button class="btn btn-grey-light small ml-20p">
+        <button 
+        class="btn btn-grey-light small px-5p px-md-15p position-relative ml-15p ml-md-20p "
+        >
           <i 
           iconPh="sort-number"
-          class="d-block mb-5p d-md-inline"
+          class="d-none d-md-inline"
           ></i>
           Sort by
         </button>
+        <button 
+        class="d-lg-none btn btn-grey-light small px-5p px-md-15p ml-15p ml-md-20p"
+        (click)="onClickButtonMapSize()"
+        >
+          <i iconPh="map-view"></i>
+          Map
+        </button>
+
       </div>
     </div>
   
     <div 
-    class="practitioners-container mt-30p" 
+    class="mt-30p" 
     [ngClass]="{'hidden': (viewState.style == 'map')}"
     >
       <ng-container *ngIf="controller.professionalsInitialized">
@@ -66,66 +81,68 @@
           </p>
         </div>
         <ul class="list-unstyled">
-          <li 
+          <a 
           *ngFor="let p of controller.professionals; let i = index;"
-          class="py-20p border-bottom border-line practitioner-item"
-          [ngClass]="{'border-top': (i == 0)}"
+          [routerLink]="['/community/profile', p._id]"
+          class="text-body"
           >
+            <li
+            class="py-20p border-bottom border-line practitioner-item"
+            [ngClass]="{'border-top': (i == 0)}"
+            >
             
-            <div class="grid-1 position-relative">
-              <profile-image [image]="p.image" [size]="(sizeS ? 80 : 100)"></profile-image>
-              <div 
-              *ngIf="p.isVirtualAvailable"
-              class="icon-virtual">
-                <i iconPh="video-camera"></i>
+              <div class="grid-1 position-relative">
+                <profile-image [image]="p.image" [size]="(sizeS ? 80 : 100)"></profile-image>
+                <div
+                *ngIf="p.isVirtualAvailable"
+                class="icon-virtual">
+                  <i iconPh="video-camera"></i>
+                </div>
               </div>
-            </div>
-
-            <div class="grid-2 d-md-flex justify-content-between">
-              <div>
-                <h6 class="h5-md mb-0">
-                  {{p.name}}
-                  <i 
-                  *ngIf="p.isVerified"
-                  iconPh="verified" 
-                  class="text-primary"
-                  ></i>
-                </h6>
-                <div class="subtitle1 text-label clamp-1line">{{p.title}}</div>
+              <div class="grid-2 d-md-flex justify-content-between">
+                <div>
+                  <h6 class="h5-md mb-0">
+                    {{p.name}}
+                    <i
+                    *ngIf="p.isVerified"
+                    iconPh="verified"
+                    class="text-primary"
+                    ></i>
+                  </h6>
+                  <div class="subtitle1 text-label clamp-1line">{{p.title}}</div>
+                </div>
+                <div class="mt-15p mt-md-0p">
+                  <div class="d-inline-block d-md-block align-middle text-right">
+                    <span>
+                      <i iconPh="star-filled" class="text-yellow"></i>
+                      <span class="subtitle1">{{p.rating}}</span>
+                      <span class="body1 text-label ml-5p">({{p.reviewCount}})</span>
+                    </span>
+                  </div>
+                  <div class="d-inline-block d-md-block align-middle ml-10p">
+                    <h5 class="text-primary-dark text-right mb-0">{{p.price}}</h5>
+                  </div>
+                </div>
               </div>
-              <div>
-                <div class="d-inline-block d-md-block align-middle">
-                  <span>
-                    <i iconPh="star" class="text-yellow"></i>
-                    <span class="subtitle1">4.75</span>
-                    <span class="body1 text-label ml-5p">(36)</span>
+              <div class="grid-3 d-md-flex align-items-center">
+                <div>
+                  <span class="body1 text-label clamp-1line">
+                    <i iconPh="pin"></i>
+                    <span>{{p.address}}</span>
                   </span>
                 </div>
-                <div class="d-inline-block d-md-block align-middle">
-                  <h5 class="text-primary-dark text-right mb-0">{{p.price}}</h5>
+                <div class="flex-grow-1 d-flex justify-content-between align-items-center ml-md-15p">
+                  <span class="text-label">
+                    <ng-container *ngIf="p.distance">
+                      <i iconPh="compass"></i>
+                      <span>{{p.distance | distance}}</span>
+                    </ng-container>
+                  </span>
+                  <span class="ml-10p">compare</span>
                 </div>
               </div>
-            </div>
-
-            <div class="grid-3 d-md-flex align-items-center">
-              <div>
-                <span class="body1 text-label clamp-1line">
-                  <i iconPh="pin"></i>
-                  <span>{{p.address}}</span>
-                </span>
-              </div>
-              <div class="flex-grow-1 d-flex justify-content-between align-items-center ml-md-15p">
-                <span class="text-label">
-                  <ng-container *ngIf="p.distance">
-                    <i iconPh="compass"></i>
-                    <span>{{p.distance}}</span>
-                  </ng-container>
-                </span>
-                <span class="ml-10p">compare</span>
-              </div>
-            </div>
-
-          </li>
+            </li>
+          </a>
 
         </ul>
   
@@ -150,8 +167,8 @@
   
       <ng-container *ngIf="!controller.professionalsInitialized">
         <div class="card-container" *ngFor="let i of [0,1,2,3,4,5]">
-          <div class="card rounded-12p">
-            <card-dummy></card-dummy>
+          <div class="border-top border-line">
+            <card-dummy [showImage]="false"></card-dummy>
           </div>
         </div>
       </ng-container>
@@ -175,7 +192,7 @@
       [gestureHandling]="'greedy'"
       (zoomChange)="onMapZoomChanged($event)"
       (boundsChange)="onMapMoved($event)"
-      (click)="onMapClicked($event)">
+      >
 
       <agm-marker 
       *ngFor="let p of controller.profesionnalsAll; let i = index;" 
@@ -185,16 +202,7 @@
       [title]="p.mapLabel"
       [zIndex]="100 - i" 
       [visible]="p.isMapIconReady"
-      (markerClick)="onMapMarkerClicked(infoWindow)">
-        <agm-info-window #infoWindow>
-          <div class="agm-info-window">
-            <card-practitioner
-            [showDistance]="true"
-            [data]="p"
-            (changeCompareStatus)="updateCompareList()"
-            ></card-practitioner>
-          </div>
-        </agm-info-window>
+      (markerClick)="onMapMarkerClicked(p)">
       </agm-marker>
     </agm-map>
 
@@ -210,139 +218,214 @@
         class="text-body"
         >Show list</span>
       </button>
-      
+
       <button 
-      class="btn btn-text small text-body btn-search-in-this-area bg-white rounded-12p text-nowrap shadow" 
+      class="btn btn-icon-white bg-black small d-lg-none rounded-12p text-nowrap shadow" 
+      (click)="onClickButtonMapSize()"
+      >
+        <i iconPh="cross" class="large"></i>
+      </button>
+
+      <button 
+      *ngIf="!isVirtual"
+      class="btn btn-text-body small bg-white btn-search-in-this-area rounded-12p text-nowrap shadow" 
       (click)="onClickButtonSearchInThisArea()"
       >
         <span class="body1">Search in this area</span>
       </button>
 
       <button 
-      class="btn btn-icon small rounded-12p bg-white shadow" 
+      class="btn btn-icon-body small rounded-12p bg-white shadow" 
       [ngClass]="{active: viewState.isGettingUserLocation}"
       [disabled]="viewState.isGettingUserLocation"
       (click)="onClickButtonUpdateUserLocation()" 
       >
-        <i class="text-body large" iconPh="gps"></i>
+        <i class="large" iconPh="gps"></i>
       </button>
-
     </div>
+
+      <div
+      class="card-selected-practitioner-in-map bg-body rounded-12p"
+      *ngIf="selectedProfessionalInMap"
+      [@slideVertical]
+      >
+        <a [routerLink]="['/community/profile', selectedProfessionalInMap?._id]">
+          <div class="p-20p d-flex align-items-center">
+            <profile-image size="70" [image]="selectedProfessionalInMap.image"></profile-image>
+            <div class="text-white ml-15p">
+              <div class="subtitle1 clamp-1line">{{selectedProfessionalInMap.name}}</div>
+              <div class="subtitle2">{{selectedProfessionalInMap.price}}</div>
+              <div class="mt-5p">
+                <star-rate rate="3" [showActiveOnly]="false" size="regular" margin="small"></star-rate>
+              </div>
+            </div>  
+          </div>
+        </a>
+      </div>
   </div>
 </div>
 
 <modal
 #modalExpertFinderFilter
 id="expert-finder-filter"
-[bodyStyle]="{padding: 0, maxWidth: '600px'}"
+[bodyStyle]="{padding: 0, maxWidth: '750px'}"
 >
-  <div class="py-10p px-15p px-md-30p title-container d-flex justify-content-between align-items-center bg-background">
+  <div class="py-10p px-15p px-md-30p title-container d-flex justify-content-between align-items-center bg-background sticky-top">
     <button class="btn btn-icon-body small pl-0" (click)="modalExpertFinderFilter.hide()">
       <i iconPh="cross" class="large"></i>
     </button>  
     <span class="h5 h4-md mr-3 mb-0">Filters</span>
-    <button class="btn btn-text-body small pr-0">Reset</button>
+    <button 
+    class="btn btn-text-body small pr-0"
+    (click)="onFilterReseted()"
+    >Reset</button>
   </div>
 
-  <div class="content-container px-15p px-md-30p pb-15p pb-md-30p">
-    <form (submit)="updateFilter()">
-      <div>
-        <h6>Gender</h6>
-        <div>
-          <form-item-checkbox-group
-          #filter
-          id="gender"
-          label="Gender"
-          [data]="controller.gender"
-          [controller]="f.gender"
-          [option]="{showInlineWhenEnabled: true}"
-          ></form-item-checkbox-group>
+  <ng-container *ngIf="questionnaires && f">
+    <form (submit)="onFilterSaved()">
+      <div class="content-container px-15p px-md-30p">
+
+        <div class="mb-30p">
+          <h6 class="mb-10p">Distance</h6>
+          <div class="position-relative">
+            <div class="range-indicator-road">
+              <div 
+              *ngIf="distanceFilterData.isLabelShown"
+              class="indicator-label text-nowrap body-small"
+              [@fade]
+              [ngStyle]="{left: getDistanceFilterLabelPosition(f.distance.value) + '%' }"
+              >
+                {{f.distance.value}} Km
+              </div>  
+            </div>
+            <input 
+            type="range" 
+            [min]="distanceFilterData.min" 
+            [max]="distanceFilterData.max"
+            [step]="distanceFilterData.step"
+            class="w-100"
+            [formControl]="f.distance"
+            >
+            <div class="d-flex justify-content-between mt-10p">
+              <span class="body-small">{{distanceFilterData.min}} Km</span>
+              <span class="body-small">{{distanceFilterData.max}} Km</span>
+            </div>  
+          </div>
         </div>
+
+        <div class="mb-30p">
+          <h6 class="mb-10p">Rating</h6>
+          <div
+          *ngFor="let rate of [5,4,3]"
+          class="position-relative py-10p px-5p p-md-10p border border-line rounded-8p d-inline-block mr-10p btn-filter-rating active"
+          [ngClass]="{active: f.rating.value == rate}"
+          >
+            <star-rate 
+            [rate]="rate" 
+            [size]="sizeS ? 'smaller' : 'small'" 
+            margin="none" 
+            [color]="(f.rating.value == rate ? 'white' : null)"
+            ></star-rate>
+            <input 
+            type="radio" 
+            class="input-rating" 
+            [value]="rate"
+            [formControl]="f.rating"
+            >
+          </div>
+        </div>    
+
+        <div class="mb-30p">
+          <h6 class="mb-10p">Gender</h6>
+          <div>
+            <form-item-checkbox-group
+            #filter
+            id="gender"
+            label="Gender"
+            [data]="controller.gender"
+            [controller]="f.gender"
+            [option]="{showInlineWhenEnabled: true}"
+            ></form-item-checkbox-group>
+          </div>
+        </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Language</h6>
+            <div>
+              <form-item-checkbox-group
+              #filter
+              id="languageId"
+              label="Language"
+              [data]="controller.languageId"
+              [controller]="f.languageId"
+              [option]="{showInlineWhenEnabled: true}"
+              [selectionsByQuestionnaire]="questionnaires.language"
+              ></form-item-checkbox-group>
+            </div>
+          </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Service Type</h6>
+            <div>
+              <form-item-checkbox-group
+              #filter
+              id="serviceOfferIds"
+              label="Service type"
+              [data]="controller.serviceOfferIds"
+              [controller]="f.serviceOfferIds"
+              [option]="{showInlineWhenEnabled: true}"
+              [selectionsByQuestionnaire]="questionnaires.serviceDelivery"
+              ></form-item-checkbox-group>
+            </div>
+          </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Availability</h6>
+            <div>
+              <form-item-checkbox-group
+              #filter
+              id="typical_hours"
+              label="Availability"
+              [data]="controller.typical_hours"
+              [controller]="f.typical_hours"
+              [option]="{showInlineWhenEnabled: true}"
+              [selectionsByQuestionnaire]="questionnaires.availability"
+              ></form-item-checkbox-group>
+            </div>
+          </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Pricing</h6>
+            <div>
+              <form-item-checkbox-group
+              #filter
+              id="price_per_hours"
+              label="Pricing"
+              [data]="controller.price_per_hours"
+              [controller]="f.price_per_hours"
+              [option]="{showInlineWhenEnabled: true}"
+              ></form-item-checkbox-group>
+            </div>
+          </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Age Group</h6>
+            <div>
+              <form-item-checkbox-group
+              #filter
+              id="age_range"
+              label="Age Group"
+              [data]="controller.age_range"
+              [controller]="f.age_range"
+              [option]="{showInlineWhenEnabled: true}"
+              ></form-item-checkbox-group>
+            </div>
+          </div>
       </div>
-
-      <ng-contaier *ngIf="questionnaires">
-        <div>
-          <h6>Language</h6>
-          <div>
-            <form-item-checkbox-group
-            #filter
-            id="languageId"
-            label="Language"
-            [data]="controller.languageId"
-            [controller]="f.languageId"
-            [option]="{showInlineWhenEnabled: true}"
-            [selectionsByQuestionnaire]="questionnaires.language"
-            ></form-item-checkbox-group>
-          </div>
-        </div>
-
-        <div>
-          <h6>Service Type</h6>
-          <div>
-            <form-item-checkbox-group
-            #filter
-            id="serviceOfferIds"
-            label="Service type"
-            [data]="controller.serviceOfferIds"
-            [controller]="f.serviceOfferIds"
-            [option]="{showInlineWhenEnabled: true}"
-            [selectionsByQuestionnaire]="questionnaires.serviceDelivery"
-            ></form-item-checkbox-group>
-          </div>
-        </div>
-
-        <div>
-          <h6>Availability</h6>
-          <div>
-            <form-item-checkbox-group
-            #filter
-            id="typical_hours"
-            label="Availability"
-            [data]="controller.typical_hours"
-            [controller]="f.typical_hours"
-            [option]="{showInlineWhenEnabled: true}"
-            [selectionsByQuestionnaire]="questionnaires.availability"
-            ></form-item-checkbox-group>
-          </div>
-        </div>
-
-        <div>
-          <h6>Availability</h6>
-          <div>
-            <form-item-checkbox-group
-            #filter
-            id="price_per_hours"
-            label="Pricing"
-            [data]="controller.price_per_hours"
-            [controller]="f.price_per_hours"
-            [option]="{showInlineWhenEnabled: true}"
-            ></form-item-checkbox-group>
-          </div>
-        </div>
-
-        <div>
-          <h6>Age Group</h6>
-          <div>
-            <form-item-checkbox-group
-            #filter
-            id="age_range"
-            label="Age Group"
-            [data]="controller.age_range"
-            [controller]="f.age_range"
-            [option]="{showInlineWhenEnabled: true}"
-            ></form-item-checkbox-group>
-          </div>
-        </div>
-
-        <div>
-          <input type="submit" class="btn btn-primary small" value="Save">
-        </div>
-      </ng-contaier>
+      <div class="text-right sticky-bottom blur pt-10p pb-15p pb-md-30p px-15p px-md-30p">
+        <input type="submit" class="btn btn-primary w-100" value="Apply Filter">
+      </div>
     </form>
-  </div>
-
-
-
-
+  </ng-container>
 
 </modal>

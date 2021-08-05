@@ -46,8 +46,8 @@ export class AppComponent implements OnInit {
         }
       });
       
-      try { await this.getPosition(); }
-      catch(error){ console.log(error); }  
+      // try { await this.getPosition(); }
+      // catch(error){ console.log(error); }  
     }
   }
 

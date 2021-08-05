@@ -1,29 +1,34 @@
-import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { filter, skip } from 'rxjs/operators';
+import { skip } from 'rxjs/operators';
 import { ExpertFinderController, FilterFieldName, IExpertFinderFilterParams, IExpertFinderFilterQueryParams, IFilterData } from 'src/app/models/expert-finder-controller';
-import { Questionnaire } from 'src/app/models/questionnaire';
+import { Professional } from 'src/app/models/professional';
 import { IGetPractitionersResult } from 'src/app/models/response-data';
 import { FormItemCheckboxGroupComponent } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
+import { SearchBarComponent } from 'src/app/shared/search-bar/search-bar.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
-import { QuestionnaireMapProfilePractitioner, QuestionnaireService, QuestionnairesProfileService } from 'src/app/shared/services/questionnaire.service';
+import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { GeoLocationService } from 'src/app/shared/services/user-location.service';
+import { fadeAnimation, slideVerticalAnimation } from 'src/app/_helpers/animations';
 import { getDistanceFromLatLng } from 'src/app/_helpers/latlng-to-distance';
 
 @Component({
   selector: 'app-expert-finder',
   templateUrl: './expert-finder.component.html',
-  styleUrls: ['./expert-finder.component.scss']
+  styleUrls: ['./expert-finder.component.scss'],
+  animations: [slideVerticalAnimation, fadeAnimation],
 })
 export class ExpertFinderComponent implements OnInit {
 
   get sizeS() { return !window || window.innerWidth < 768; }
   get f() { return this.formFilter.controls; }
+  get isFilterApplied() { return this.controller.isFilterApplied; }
+  get isVirtual() { return this.controller.isVirtual; }
 
   public viewState: IViewState = {
     style: 'list',
@@ -43,7 +48,19 @@ export class ExpertFinderComponent implements OnInit {
   private mapDataCurrent: {lat: number, lng: number, zoom: number, dist: number} = {lat: null, lng: null, zoom: null, dist: null};
   private formFilter: FormGroup;
 
+  private queryParamsCurrent: Params;
+  public selectedProfessionalInMap: Professional;
+
+  public distanceFilterData = {
+    min: 5,
+    max: 100,
+    step: 1,
+    isLabelShown: false,
+  }
+
   @ViewChildren('filter') private filters: QueryList<FormItemCheckboxGroupComponent>;
+  @ViewChild('searchBar') private searchBar: SearchBarComponent;
+  @ViewChild('blurSearchbar') private blurSearchBar: ElementRef;
 
   constructor(
     private _geoService: GeoLocationService,
@@ -51,10 +68,10 @@ export class ExpertFinderComponent implements OnInit {
     private _uService: UniversalService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _location: Location,
     private _changeDetector: ChangeDetectorRef,
     private _modalService: ModalService,
     private _qService: QuestionnaireService,
+    private _toastr: ToastrService,
   ) { }
 
   private subscriptionGeoLocation: Subscription;
@@ -73,19 +90,47 @@ export class ExpertFinderComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit() {
+    const query = this._route.snapshot.queryParams as IExpertFinderFilterQueryParams;
+    if(query.keyword) {
+      this.searchBar.setKeyword(query.keyword);
+    }
+
+    const param = this._route.snapshot.params as IExpertFinderFilterParams;
+    if(param.city) {
+      this.searchBar.setLocation(param.city);
+      const el = this.blurSearchBar.nativeElement as HTMLDivElement;
+      if(el) {
+        el.click();
+      }
+    }
+  }
+
+
   async ngOnInit() {
     this.initController();
-    this.questionnaires = await this._qService.getProfilePractitioner('SP');
 
     this._route.params.pipe(skip(1)).subscribe(() => {
-      console.log('params changed')
       this.initController();
     });
 
-    // this._route.queryParams.pipe(skip(1)).subscribe(() => {
-      
-    //   this.initController();
-    // });
+    this._route.queryParams.subscribe((param: Params) => {
+      if(param.modal) {
+        this.showFilterDistanceLabel();
+      }
+      const p = {...param};
+      delete p.page;
+      delete p.modal;
+
+      if(this.queryParamsCurrent && JSON.stringify(p) != JSON.stringify(this.queryParamsCurrent)) {
+        this.initController();
+      }
+
+      this.queryParamsCurrent = p;
+    });
+
+    this.questionnaires = await this._qService.getProfilePractitioner('SP');
+
   }
 
 
@@ -96,13 +141,21 @@ export class ExpertFinderComponent implements OnInit {
       ...this._route.snapshot.params as IExpertFinderFilterParams,
     }
     this.controller = new ExpertFinderController(filterData, {countPerPage: 3});
-    this.formFilter = this.controller.createForm();
+    if(!this.formFilter) {
+      this.formFilter = this.controller.createForm();
+      this.f.distance.valueChanges.subscribe(() => {
+        this.showFilterDistanceLabel();
+      })
+    }
 
     if (!this.controller.locationInitializedByFilter) {
+      this.viewState.isGettingUserLocation = true;
       this._geoService.getCurrentLocation().then(location => {
+        this.viewState.isGettingUserLocation = false;
         this.controller.updateFilterByUserLocation(location);
         this.search();
       }, () => {
+        this.viewState.isGettingUserLocation = false;
         this.search();
       });
     } else {
@@ -121,9 +174,12 @@ export class ExpertFinderComponent implements OnInit {
     }
   }
 
-  onClickButtonToggleVirtual() {
-    const isVirtual = this.f.virtual.value; 
-    this.controller.updateFilter('virtual', isVirtual);
+  onClickButtonToggleVirtual() { 
+    this.controller.updateFilter('virtual', !this.isVirtual);
+
+    const [path, query] = this._modalService.currentPathAndQueryParams;
+    this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
+    // this.search();
   }
   
   onMapZoomChanged(e: number) {
@@ -136,14 +192,27 @@ export class ExpertFinderComponent implements OnInit {
     const dist = getDistanceFromLatLng(bounds.north, bounds.east, bounds.south, bounds.west);
     this.mapDataCurrent.lat = center.lat();
     this.mapDataCurrent.lng = center.lng();
-    this.mapDataCurrent.dist = dist;
+    this.mapDataCurrent.dist = Math.floor(dist);
   }
 
   onMapClicked(e) {
-
+    this.selectedProfessionalInMap = null;
   }
 
-  onMapMarkerClicked(e) {}
+  onMapMarkerClicked(professional: Professional) {
+    if(this.selectedProfessionalInMap && professional._id == this.selectedProfessionalInMap._id) {
+      this.selectedProfessionalInMap.setMapIcon();
+      this.selectedProfessionalInMap = null;
+    } else {
+      if(this.selectedProfessionalInMap) {
+        this.selectedProfessionalInMap.setMapIcon();
+      }
+      
+      this.selectedProfessionalInMap = professional;
+      this.selectedProfessionalInMap.setMapIcon(true);
+      this._changeDetector.detectChanges();  
+    }
+  }
 
   changePage(i: number) {
     //change route by location (not router)
@@ -154,17 +223,31 @@ export class ExpertFinderComponent implements OnInit {
   }
 
   onClickButtonUpdateUserLocation() {
+    this.viewState.isGettingUserLocation = true;
     this._geoService.updateCurrentLocation().then(location => {
-      this.controller.updateFilterByUserLocation(location);
+      this.viewState.isGettingUserLocation = false;
+      this.controller.updateFilterByUserLocation(this.mapDataCurrent);
+      setTimeout(() => {
+        this.controller.updateFilterByUserLocation(location);
+        this._changeDetector.detectChanges();  
+      }, 100);
+    }, (error: GeolocationPositionError) => {
+      this.viewState.isGettingUserLocation = false;
+      if (error.code == 1) {
+        this._toastr.success('Please enable your location in order to see options in your geographical area. Alternatively you can only view virtual options!')
+      } else {
+        this._toastr.error('Could not get current location');
+      }
     });
   }
 
   onClickButtonSearchInThisArea() {
     this.controller.updateFilterByMap(this.mapDataCurrent);
+    this.f.distance.setValue(this.mapDataCurrent.dist);
 
     const [path, query] = this._modalService.currentPathAndQueryParams;
     this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
-    this.search();
+    // this.search();
   }
 
   onClickButtonMapSize() {
@@ -178,19 +261,45 @@ export class ExpertFinderComponent implements OnInit {
       filter.deselectAll();
       this.controller.updateFilter(filter.id as FilterFieldName, []);
     });
+    this.f.distance.setValue(100);
+    this.f.rating.setValue(0);
+
+    this.controller.updateFilter('dist', this.f.distance.value);
+    this.controller.updateFilter('rating', this.f.rating.value);
+
+    this.closeModal();
   }
 
   onFilterSaved() {
     this.filters.forEach(filter => {
       this.controller.updateFilter(filter.id as FilterFieldName, filter.getSelected());
     });
-    this.closeModalAndStartSearch();
+
+    this.controller.updateFilter('dist', this.f.distance.value);
+    this.controller.updateFilter('rating', this.f.rating.value);
+
+    this.closeModal();
   }
 
-  closeModalAndStartSearch() {
+  private timerFilterDistance: any;
+  showFilterDistanceLabel() {
+    this.distanceFilterData.isLabelShown = true;
+    if(this.timerFilterDistance) {
+      clearTimeout(this.timerFilterDistance);
+    }
+    this.timerFilterDistance = setTimeout(() => {
+      this.distanceFilterData.isLabelShown = false;
+    }, 1200);
+  } 
+  getDistanceFilterLabelPosition(val: number) {
+    const d = this.distanceFilterData;
+    const left = 100 / (d.max - d.min) * (val - d.min);
+    return left > 100 ? 100 : left < 0 ? 0 : left;
+  }
+
+  closeModal() {
     const [path, query] = this._modalService.currentPathAndQueryParams;
     this._modalService.hide(true, [path], this.controller.toQueryParams());
-    this.search();
   }
 
   search() {

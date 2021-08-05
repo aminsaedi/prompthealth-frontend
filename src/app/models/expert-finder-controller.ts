@@ -70,6 +70,9 @@ export class ExpertFinderController {
     }
   }
 
+  get isFilterApplied() { return this._isFilterApplied; }
+  get isVirtual() { return this._virtual; }
+
   private _gender: string[] = [];
   private _languageId: string[] = [];
   private _typical_hours: string[] = [];
@@ -95,6 +98,7 @@ export class ExpertFinderController {
   private _paginator: any = [[]];
 
   private _countPerPage: number;
+  private _isFilterApplied: boolean = false;
 
   constructor(private data: IFilterData, option: IOptionExpertFinderController = {}) {
     const o = new OptionExpertFinderController(option);
@@ -103,18 +107,18 @@ export class ExpertFinderController {
     if(data.categoryId) { this._services.push(data.categoryId); }
     if(data.typeOfProviderId) { this._services.push(data.typeOfProviderId); }
 
-    if (data.city) {
+    this._lat = Number(data.lt) || null;
+    this._lng = Number(data.lg) || null;
+    this._zoom = Number(data.zoom) || null;
+    this._dist = Number(data.dist) || 100;
+
+    if ((!this._lat || !this._lng) && data.city) {
       const city = locations[data.city];
       this._lat = city.lat;
       this._lng = city.lng;
       this._zoom = city.zoom;
       this._dist = city.distance;
-    } else {
-      this._lat = Number(data.lt) || null;
-      this._lng = Number(data.lg) || null;
-      this._zoom = Number(data.zoom) || null;
-      this._dist = Number(data.dist) || 100;
-    }
+    } 
 
     this._locationInitializedByFilter = !!(this._virtual || (this._lat && this._lng));
 
@@ -151,25 +155,30 @@ export class ExpertFinderController {
     this._rating = Number(data.rate) || 0;
     this._virtual = !!(data.vr == '1');
     this._keyword = data.keyword || null;
+
+    this.checkIfFilterApplied();
   }
 
   updateFilter(id: FilterFieldName, data: string[] | boolean | number) {
     this['_' + id] = data;
+    this.checkIfFilterApplied();
   }
 
   updateFilterByUserLocation(location: GeoLocationType) {
     if (location) {
-      this._lat = Math.round(location.lat * 1000) / 1000;
-      this._lng = Math.round(location.lng * 1000) / 1000;
+      this._lat = location.lat;
+      this._lng = location.lng;
       this._zoom = 12;
     }
+    // this.checkIfFilterApplied();
   }
 
   updateFilterByMap(data: {lat: number, lng: number, zoom: number, dist: number}) {
-    this._lat = Math.round(data.lat * 1000) / 1000;
-    this._lng = Math.round(data.lng * 1000) / 1000;
+    this._lat = data.lat;
+    this._lng = data.lng;
     this._zoom = data.zoom;
     this._dist = data.dist;
+    // this.checkIfFilterApplied();
   }
 
   createForm(): FormGroup {
@@ -182,7 +191,7 @@ export class ExpertFinderController {
       serviceOfferIds: new FormArray([]),
       rating: new FormControl(this._rating),
       virtual: new FormControl(this._virtual),
-      // miles: new FormControl(this._dist),
+      distance: new FormControl(this._dist),
     });
   }
 
@@ -213,8 +222,8 @@ export class ExpertFinderController {
       }
     }
 
-    if(this._lat) { res.lt = this._lat; }
-    if(this._lng) { res.lg = this._lng; }
+    if(this._lat) { res.lt = Math.round(this._lat * 10000) / 10000; }
+    if(this._lng) { res.lg = Math.round(this._lng * 10000) / 10000; }
     if(this._zoom) { res.zoom = this._zoom; }
     if(this._dist) { res.dist = Math.floor(this._dist); }
     if(this._virtual == true) { res.vr = 1; }
@@ -257,12 +266,28 @@ export class ExpertFinderController {
   }
 
   toPayload() {
-    const res: {[k: string]: any} = {};
+    const res: {[k: string]: any} = {
+      // ids: [],
+      rating: this._rating,
+      gender: this.gender,
+      languageId: this.languageId,
+      typical_hours: this.typical_hours,
+      price_per_hours: this.price_per_hours,
+      age_range: this.age_range,
+      serviceOfferIds: this.serviceOfferIds,    
+      services: this.services,
+    };
+
     if (this._virtual) {
       res.virtual = true;
-    } else {
+    } else if(this._lat && this._lng) {
       res.latLong = this._lng + ', ' + this._lat;
+      res.miles = this._dist;
+    } else {
+      res.latLong = '';
+      res.miles = null;
     }
+    return res;
   }
 
   disposeProfesionnals() {
@@ -323,6 +348,26 @@ export class ExpertFinderController {
         }
       }
     });
+  }
+
+  checkIfFilterApplied() {
+    let applied = false;
+    applied = this._rating > 0;
+    const arrayFields: FilterFieldName[] = ['gender', 'languageId', 'typical_hours', 'price_per_hours', 'age_range', 'serviceOfferIds'];
+    for(let name of arrayFields) {
+      const data = this['_' + name];
+      if(data && data.length > 0) {
+        applied = true;
+        break;
+      }
+    }
+    if(this._dist != 100) {
+      applied = true;
+    }
+    if(this._rating > 0) {
+      applied = true;
+    }
+    this._isFilterApplied = applied;
   }
 }
 

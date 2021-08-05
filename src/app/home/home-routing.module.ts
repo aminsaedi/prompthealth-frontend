@@ -112,11 +112,11 @@ const routes: Routes = [
   { path: 'subscriptionplan', redirectTo: '/plans'},
 
   { path: 'practitioners', component: ExpertFinderComponent },
-  { path: 'practitioners/category/:categoryId', component: ListingComponent },
-  { path: 'practitioners/category/:categoryId/:city', component: ListingComponent },
-  { path: 'practitioners/type/:typeOfProviderId', component: ListingComponent },
-  { path: 'practitioners/type/:typeOfProviderId/:city', component: ListingComponent },
-  { path: 'practitioners/area/:city', component: ListingComponent },
+  { path: 'practitioners/category/:categoryId', component: ExpertFinderComponent },
+  { path: 'practitioners/category/:categoryId/:city', component: ExpertFinderComponent },
+  { path: 'practitioners/type/:typeOfProviderId', component: ExpertFinderComponent },
+  { path: 'practitioners/type/:typeOfProviderId/:city', component: ExpertFinderComponent },
+  { path: 'practitioners/area/:city', component: ExpertFinderComponent },
 
   { path: 'practitioners/category', redirectTo: 'practitioners'},
   { path: 'practitioners/type', redirectTo: 'practitioners' },

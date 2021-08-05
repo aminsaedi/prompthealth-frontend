@@ -1,12 +1,13 @@
 import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { SharedService } from '../../shared/services/shared.service';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute, Params } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { QuestionnaireItemData, RegisterQuestionnaireService } from 'src/app/dashboard/register-questionnaire.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { findAbbrByFullnameOf } from 'src/app/_helpers/questionnaire-answer-map';
 
 @Component({
   selector: 'app-user-questionaire',
@@ -64,20 +65,50 @@ export class UserQuestionaireComponent implements OnInit {
         this._sharedService.loader('show');
         try{
           const personalMatch = this._qService.getUser();
+
           if(personalMatch.gender == 'Prefer Not To Say') { personalMatch.gender = null; }
           personalMatch.services = personalMatch.services.concat(personalMatch.customer_health);
 
-          this._sharedService.setPersonalMatch(personalMatch);
+          const params: Params = {}
 
-          const data = this._qService.getUserTracking();
+          const gndr = findAbbrByFullnameOf(personalMatch.gender.toLowerCase(), 'gndr');
+          if(gndr) {
+            params.gndr = gndr;
+          }
+          
+          const age_range = [];
+          personalMatch.age_range.forEach(a => {
+            const abbr = findAbbrByFullnameOf(a, 'age');
+            if(abbr) {
+              age_range.push(abbr);
+            }
+          });
+          if(age_range.length > 0) {
+            params.age = age_range.join(',');
+          }
 
-          const [ipLat, ipLng] = [localStorage.getItem('ipLat'), localStorage.getItem('ipLong')];
-          if(ipLat && ipLng){ data.location = [Number(ipLat), Number(ipLng)]}
+          const services = [];
+          personalMatch.services.forEach(s => {
+            const abbr = findAbbrByFullnameOf(s, 'svc');
+            if(abbr) {
+              services.push(abbr);
+            }
+          });
+          if(services.length > 0) {
+            params.svc = services.join(',');
+          }
 
-          const user:IUserDetail = JSON.parse(localStorage.getItem('user'));
-          data.roles = user ? user.roles : 'U';
+          // const data = this._qService.getUserTracking();
 
-          this._router.navigate(['/practitioners']);          
+          // const [ipLat, ipLng] = [localStorage.getItem('ipLat'), localStorage.getItem('ipLong')];
+          // if(ipLat && ipLng){ data.location = [Number(ipLat), Number(ipLng)]}
+
+          // const user:IUserDetail = JSON.parse(localStorage.getItem('user'));
+          // data.roles = user ? user.roles : 'U';
+
+          
+
+          this._router.navigate(['/practitioners'], {queryParams: params});          
         }catch(err){
           this._toastr.error(err);
         }finally{

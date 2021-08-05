@@ -49,9 +49,9 @@ export class GeoLocationService {
           console.log(error);
           const latlng = {lat: null, lng: null};
           this._locationChanged.next(latlng);
-          reject(latlng);
+          reject(error);
         }, {
-          enableHighAccuracy: true,
+          enableHighAccuracy: false,
           maximumAge: 0,
           timeout: 5000,
         });

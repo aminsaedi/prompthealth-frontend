@@ -12,7 +12,7 @@ import { FormItemSearchComponent } from '../form-item-search/form-item-search.co
   styleUrls: ['./search-bar.component.scss']
 })
 export class SearchBarComponent implements OnInit {
-
+  
   @Input() option: IOptionSearchBar = {};
   @Output() onSubmit = new EventEmitter<SearchKeywords>()
 
@@ -44,6 +44,14 @@ export class SearchBarComponent implements OnInit {
   ngAfterViewInit() {
     this._afterViewInit = true;
     this._changeDetector.detectChanges();
+  }
+
+  setKeyword(val: string) {
+    this.f.searchBySituation.setValue(val);
+  }
+
+  setLocation(val: string) {
+    this.f.searchByLocation.setValue(val);
   }
 
   findClosestLocation(s: string): string {

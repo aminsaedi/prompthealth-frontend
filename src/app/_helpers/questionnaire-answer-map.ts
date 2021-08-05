@@ -76,17 +76,98 @@ export const questionnaireAnswerMap = {
     full: 'services',
     abbrs: {
       /** customer health */
-      hc: '', //clonic health
-      hp: '', //pregnant  
+      hc: '5eb1a4e199957471610e6cd4', //clonic health
+      hc1: '5eb1a771c73c4f748f4581c3', //Cancer
+      hc2: '5eb1a771c73c4f748f4581bc', //Cardiopulmonary Condition
+      hc3: '607a18c7e8fa3c0ea4435f66', //Cardiovascular Disease
+      hc4: '5eb1a771c73c4f748f4581be', //Diabetes
+      hc5: '5eb1a771c73c4f748f4581c2', //Fibromyalgia
+      hc6: '5eb1a771c73c4f748f4581bd', //Heart Disease
+      hc7: '5eb1a771c73c4f748f4581c1', //Osteoporosis
+      hc8: '5eb1a771c73c4f748f4581bf', //Pulmonary Disease
+      hc9: '5eb1a771c73c4f748f4581c0', //Rheumatoid/Osteoarthritis
+
+      hp: '5eb1a4e199957471610e6cd2', //pregnant
+      // hn: '5eb1a4e199957471610e6cd1', //not cricical
 
       /** category */
-      ca: '',
-      ca1: '',
-      ca2: '',
-      ca3: '',
-      ca4: '',
-      cb: '',
-      cb1: '',
+      ca: '5eb1a4e199957471610e6ce8', //Women’s/Men’s Health
+      ca1: '5eb1b4f8c573d5029f9293e1', //Hormones
+      ca2: '5eb1b4f8c573d5029f9293e2', //PMS
+      ca3: '5eb1b4f8c573d5029f9293e3', //Maternity/Pre and Postnatal
+      ca4: '5eb1b4f8c573d5029f9293e4', //Menopause
+      ca5: '5eb1b4f8c573d5029f9293e5', //Sexual Health
+      ca6: '5eb1b4f7c573d5029f9293e0', //Reproductive Health/Fertility
+
+      cb: '5eb1a4e199957471610e6ce5', //Skin Health
+      cb1: '5eb1b3a2f818697f49f01b14', //Natural Remedies
+      cb2: '5eb1b3a2f818697f49f01b15', //Laser Treatments
+      cb3: '5eb1b3a2f818697f49f01b16', //Skin Treatments
+      
+      cc: '5eb1a4e199957471610e6ce6', //Immune System and Energy
+      cc1:'5eb1a5ec84bc5b731e39044a', //Immunization
+      cc2:'5eb1b3f957f7577fa8b839e3', //Supplements
+      cc3:'5eb1b3f957f7577fa8b839e4', //IV Therapy
+      cc4:'5eb1b3f957f7577fa8b839e2', //Natural Remedies
+      cc5:'5eb1b3f957f7577fa8b839e5', //Energy Healing
+
+      cd: '5eb1a4e199957471610e6ce2', //Nutrition
+      cd1: '5eb1b277d61a8c7d96e13450', //Weight Management
+      cd2: '5eb1b277d61a8c7d96e13451', //Digestion and Gut Health
+      cd3: '5eb1b277d61a8c7d96e13452', //Food Sensitivities
+      cd4: '5eb1b277d61a8c7d96e13454', //Eating Disorder Recovery
+      cd5: '5eb1b277d61a8c7d96e13455', //Hormone Imbalance
+      cd6: '5eb1b277d61a8c7d96e13453', //Chronic Disease Management
+
+      ce: '5eb1a4e199957471610e6ce0', // Preventative Health
+      ce1: '5eb1a68313e89a73b8a32ce3', //Foot Care
+      ce2: '5eb1b105aecbaa79d585ee95', //Medical Care
+      ce3: '5eb1b105aecbaa79d585ee96', //Oral Care
+      ce4: '5eb1b105aecbaa79d585ee97', //Hearing Care
+      ce5: '5eb1b105aecbaa79d585ee98', //Vision Care
+
+      cf: '5eb1a4e199957471610e6ce4', //Sleep
+      cf1: '5eb1b997c23117074347931f', //Natural/Holistic Remedies
+      cf2: '5eb1b997c231170743479320', //Medical Treatments
+      
+      cg: '5eb1a4e199957471610e6ce1', //Mood/Mental Health
+      cg1: '5eb1b200d1e3f67b4106646c', //Motivation
+      cg2: '5eb1b888906b5605e762d3ee', //Attention/Focus
+      cg3: '5eb1b888906b5605e762d3ef', //Memory
+      cg4: '5eb1b888906b5605e762d3f0', //Behavioural
+      cg5: '5eb1b888906b5605e762d3f1', //Learning Disability
+      cg6: '5eb1b888906b5605e762d3f2', //Stress/Anxiety
+      cg7: '5eb1b888906b5605e762d3f3', //Depression
+      cg8: '5eb1b888906b5605e762d3f4', //Eating Disorder
+      cg9: '5eb1b888906b5605e762d3f6', //Health Condition
+      cga: '5eb1b888906b5605e762d3f7', //Fertility/Adoption
+      cgb: '5eb1b888906b5605e762d3f8', //Couples/Family
+      cgc: '5eb1b888906b5605e762d3f9', //Addiction
+      cgd: '5eb1b888906b5605e762d3fa', //Anger
+      cge: '5eb1b888906b5605e762d3fb', //Trauma
+      cgf: '5eb1b888906b5605e762d3fc', //Mindfulness
+      cgg: '5eb1b888906b5605e762d3fd', //Sexual Health
+
+      ch: '5eb1a4e199957471610e6ce7', //Pain Management
+      ch1: '5eb1bb714df91809d832d4ee', //Headache
+      ch2: '5eb1bb714df91809d832d4ef', //Back
+      ch3: '5eb1bb714df91809d832d4f0', //Neck
+      ch4: '5eb1bb714df91809d832d4f1', //Shoulder
+      ch5: '5eb1bb714df91809d832d4f2', //Wrist/Hand
+      ch6: '5eb1bb714df91809d832d4f3', //Elbow
+      ch7: '5eb1bb714df91809d832d4f4', //Knee
+      ch8: '5eb1bb714df91809d832d4f5', //Hip
+      ch9: '5eb1bb714df91809d832d4f6', //Ankle/Foot
+      cha: '5eb1bb714df91809d832d4f7', //Jaw
+
+      ci: '5eb1a4e199957471610e6ce3', //Fitness
+      ci1: '5eb1b2ab3beb2d7e05c37cf4', //Yoga
+      ci2: '5eb1b2ab3beb2d7e05c37cf5', //Sports Specific Conditioning
+      ci3: '5eb1b93a64bf63066da83586', //Strength Training/Toning
+      ci4: '5eb1b93a64bf63066da83587', //High Intensity Interval Training
+      ci5: '5eb1b93a64bf63066da83588', //Running
+      ci6: '5eb1b93a64bf63066da83589', //Spin/Cycling
+      ci7: '5eb1b93a64bf63066da83585', //Pilates
 
       /** type of provider */
       p1: '',

@@ -11,6 +11,7 @@
     
     font-size: 20px;
     &.simple{ font-size: 18px;}
+    &.size-xs { font-size: 14px; }
     &.size-s{  font-size: 16px; }
     &.size-l{  font-size: 24px; }
 
@@ -20,14 +21,14 @@
     i:last-child {
         margin-right: 0!important;
     }
-}
-    
-.icon-star, .icon-dollar{
-    font-size: 1em;
-    
-    &.inactive{
+
+    i.inactive {
         color: $colorGsPlaceholder;
     }
+}
+    
+.icon-star-filled, .icon-dollar{
+    font-size: 1em;    
 }    
 
 .rate{ font-size: 16px; }

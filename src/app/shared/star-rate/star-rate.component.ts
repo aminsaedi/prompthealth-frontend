@@ -10,9 +10,10 @@ export class StarRateComponent implements OnInit {
   @Input() rate: number = 0;
   @Input() margin: string = 'regular' /** regular | big | small | none */
   @Input() simple: boolean = false;
-  @Input() size: string = 'regular'; /** regular | big | small */
-  @Input() sign: string = 'star'; /** star | dollar */
+  @Input() size: string = 'regular'; /** regular | big | small | smaller*/
+  @Input() sign: string = 'star-filled'; /** star-filled | dollar */
   @Input() showActiveOnly: boolean = true;
+  @Input() color: string = null;
   
   constructor() { }
 

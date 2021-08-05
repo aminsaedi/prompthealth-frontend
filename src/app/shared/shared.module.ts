@@ -62,6 +62,7 @@ import { ProfileImageComponent } from './profile-image/profile-image.component';
 import { ModalComponent } from './modal/modal.component';
 import { ContenteditableValueAccessor } from './contenteditable.directive';
 import { DurationPipe } from './pipes/duration.pipe';
+import { DistancePipe } from './pipes/distance.pipe';
 
 @NgModule({
   imports: [
@@ -133,6 +134,7 @@ import { DurationPipe } from './pipes/duration.pipe';
     ModalComponent,
     ContenteditableValueAccessor,
     DurationPipe,
+    DistancePipe,
   ],
   exports: [
     UserSidebarComponent,
@@ -184,6 +186,7 @@ import { DurationPipe } from './pipes/duration.pipe';
     ModalComponent,
     ContenteditableValueAccessor,
     DurationPipe,
+    DistancePipe,
   ]
 })
 export class SharedModule { }

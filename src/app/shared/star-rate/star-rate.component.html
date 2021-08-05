@@ -1,8 +1,9 @@
-<span class="star-container" *ngIf="!simple" [ngClass]="{'size-s': (size == 'small'), 'size-l': (size == 'big')}">
+<span class="star-container" *ngIf="!simple" [ngClass]="{'size-xs': (size == 'smaller'), 'size-s': (size == 'small'), 'size-l': (size == 'big')}">
     <ng-container *ngFor="let i of [1,2,3,4,5]">
         <i [iconPh]="sign"
         *ngIf="rate >= i || !showActiveOnly"
         [ngClass]="[iconMargin, iconActive(i)]"
+        [ngStyle]="{color: color}"
         ></i>        
     </ng-container>
 </span>
