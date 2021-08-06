@@ -63,7 +63,8 @@ export interface IUserDetail {
   certification?: string;
   exactPricing?: number;
   price_per_hours?: string;
-
+  acceptsInsurance?: string;
+  seeOtherRegion?: string;
 
 
   /** for SP | C | P */

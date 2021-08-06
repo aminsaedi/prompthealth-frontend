@@ -59,6 +59,9 @@ export interface IProfessional extends IProfile {
   isConnectedToGoogle: boolean;
   isCheckedForCompare: boolean;
 
+  seeOtherRegion: string;
+  acceptInsurance: string;
+
   languageIds: string[];
   ageRangeIds: string[];
   availabilityIds: string[];
@@ -110,6 +113,8 @@ export class Professional extends Profile implements IProfessional{
   get organization() { return this.p.professional_organization || null; }
   get certification() { return this.p.certification; }
   get yearsOfExperience() { return this.p.years_of_experience || null; }
+  get acceptInsurance() { return this.p.acceptsInsurance || null; }
+  get seeOtherRegion() { return this.p.seeOtherRegion || null; }
 
   get socialLink() { return this._socialLink; }
   get videos() { return (this.p.plan && this.p.plan.videoUpload) ? this.p.videos : []; } 
