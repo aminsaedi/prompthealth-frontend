@@ -137,14 +137,16 @@
         </div>
 
         <div class="mx-15p mx-md-20p py-15p py-md-20p">
-          <h6 class="header-accent">Recommendations</h6>
-          <div class="mt-25p mb-10p">
-            <i iconPh="quotes-2" class="text-secondary" style="font-size: 32px;"></i>
-          </div>
-          <p>will go back when needed next time. Recommend him but the office was busy as he is very popular!</p>
-          <div class="body1 text-label">Marianna M - July 26, 2021</div>
+          <!-- <div class="mb-40p">
+            <h6 class="header-accent">Recommendations</h6>
+            <div class="mt-25p mb-10p">
+              <i iconPh="quotes-2" class="text-secondary" style="font-size: 32px;"></i>
+            </div>
+            <p>will go back when needed next time. Recommend him but the office was busy as he is very popular!</p>
+            <div class="body1 text-label">Marianna M - July 26, 2021</div>  
+          </div> -->
           
-          <div class="mt-40p">
+          <div>
             <button class="btn btn-primary w-100" (click)="onClickBook()">
               <span *ngIf="user">Book now</span>
               <span *ngIf=!user>Login to book</span>
@@ -160,7 +162,7 @@
 
 <modal
 id="booking"
-[bodyStyle]="{'padding-bottom': 0}"
+[bodyStyle]="{'padding-bottom': 0, 'max-width': '650px'}"
 #modalBooking
 
 >

@@ -25,7 +25,7 @@
           >
             <a routerLink="/auth/login" class="text-body">Login</a> 
             / 
-            <a (click)="onClickRegister()" class="text-body">Register</a>
+            <a routerLink="/auth/registration/u" class="text-body">Register</a>
           </li>
 
           <li 
@@ -102,47 +102,13 @@
           <div>
             <a class="subtitle1" (click)="onClickMenuItemSm('/auth/login')">Login</a>
             <span> / </span>
-            <a class="subtitle1" (click)="onClickRegister()">Register</a>
+            <a class="subtitle1" (click)="onClickMenuItemSm('/auth/registration/u')">Register</a>
           </div>
         </list-item>
       </div>
     </div>
   </div> 
 </div>
-
-
-<!-- modal: user-type-menu -->
-<modal
-id="user-type-menu"
-[bodyStyle]="{maxWidth: '600px', overflow: 'initial'}"
->
-    <div class="content-container">
-      <div class="image-container position-absolute bg-white rounded-circle">
-        <img src="/assets/img/signup-modal.png" alt="sign up">
-      </div>
-      <h3 class="my-4 text-primary h3 h2-md">
-        I AM 
-        <span class="hidden-i5">...</span>
-      </h3>
-
-      <div class="mt-3 d-flex justify-content-between flex-column flex-md-row position-relative">
-        <a class="btn btn-primary mx-md-4 flex-grow-1" 
-        (click)="onClickUserTypeMenuItem('client', '/auth/registration/u')" 
-        >Health Seeker</a>
-        
-        <a *ngIf="!onProductPage" 
-        class="btn btn-outline mt-3 mt-md-0 mx-md-4 flex-grow-1" 
-        (click)="onClickUserTypeMenuItem('practitioner', '/plans')"
-        >Health Provider</a>
-        
-        <a *ngIf="onProductPage" 
-        class="btn btn-outline mt-3 mt-md-0 mx-md-4 flex-grow-1" 
-        (click)="onClickUserTypeMenuItem('product', '/plans/product')" 
-        >Product Provider</a>
-      </div>
-    </div>
-
-</modal>
 
 
 <modal 

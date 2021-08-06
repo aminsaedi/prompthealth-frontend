@@ -10,6 +10,7 @@ import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { IDefaultPlan } from 'src/app/models/default-plan';
+import { ProfileManagementService } from '../profileManagement/profile-management.service';
 
 @Component({
   selector: 'app-register-questionnaire',
@@ -32,6 +33,7 @@ export class RegisterQuestionnaireComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _qService: RegisterQuestionnaireService,
+    private _profileService: ProfileManagementService,
     private _headerService: HeaderStatusService,
     private _toastr: ToastrService,
     private _sharedService: SharedService,
@@ -133,6 +135,7 @@ export class RegisterQuestionnaireComponent implements OnInit {
         this._sharedService.loader('hide');
         if(res.statusCode == 200){
           this._bsService.setUserData(res.data);
+          this._profileService.getProfileDetail(res.data);
           resolve(res.data);
         }else{
           reject(res.message);

@@ -46,7 +46,6 @@ export class HeaderComponent implements OnInit {
   public isHeaderShown = true;
   public isMenuSmShown = false;
   public isDashboardMenuShown = false;
-  public isUserTypeMenuShown = false;
   public isShadowShown = false;
 
   public AWS_S3 = environment.config.AWS_S3;
@@ -66,7 +65,6 @@ export class HeaderComponent implements OnInit {
 
     this._route.queryParams.subscribe((param: {menu: 'show', modal: 'user-type-menu'}) => {
       this.isMenuSmShown = (param.menu == 'show');
-      this.isUserTypeMenuShown = (param.modal == 'user-type-menu');
     });
 
     if (!this._uService.isServer) {
@@ -104,15 +102,6 @@ export class HeaderComponent implements OnInit {
  
   onClickMenuItemSm(goto: string) {
     this.hideMenuSm([goto]);
-  }
-
-  onClickRegister() {
-    this._modalService.show('user-type-menu');
-  }
-
-  onClickUserTypeMenuItem(userType: UserType, goto: string) {
-    this.setPriceType(userType);
-    this._modalService.hide(true, [goto]);
   }
   
   onClickUserIcon() {

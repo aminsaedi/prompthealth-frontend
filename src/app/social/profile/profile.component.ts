@@ -106,6 +106,8 @@ export class ProfileComponent implements OnInit {
         this.profile = vals[0];
         this.questionnaires = vals[1];
         this._socialService.setProfile(this.profile);
+      }, error => {
+        this._toastr.error('Something went wrong.');
       });
     }
   }
