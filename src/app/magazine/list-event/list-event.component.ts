@@ -9,6 +9,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { MetaData, UniversalService } from 'src/app/shared/services/universal.service';
 import { MagazineService } from '../magazine.service';
 
+
 @Component({
   selector: 'app-list-event',
   templateUrl: './list-event.component.html',

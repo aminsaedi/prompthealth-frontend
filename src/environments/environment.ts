@@ -22,6 +22,7 @@ export const environment = {
     APPLE_TEAM_ID: '8JS3W47P32',
     APPLE_CLIENT_ID: 'com.prompthealthtest',
 
+    FACEBOOK_APP_ID: '373355990729755',
     disableAnalytics: true,
   },
   api_routes: {

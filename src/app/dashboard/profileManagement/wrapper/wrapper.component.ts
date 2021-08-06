@@ -3,8 +3,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { SharedService } from '../../../shared/services/shared.service';
 import { ProfileManagementService } from '../profile-management.service';
 import { ToastrService } from 'ngx-toastr';
-import { pattern } from '../../../_helpers/form-settings';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { pattern } from 'src/app/_helpers/pattern';
 
 @Component({
   selector: 'app-wrapper',
@@ -151,7 +151,7 @@ export class WrapperComponent implements OnInit {
     title: 'Offer',
     link: 'partner-offer',
     active,
-  });
+  })
 
   public myPostsTab = (active) => ({
     description: 'Add & Edit your posts',
@@ -173,15 +173,15 @@ export class WrapperComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    
+
     this.formQuestionnaireCompletedNeverAsk = new FormControl();
     this.formPhListedLink = new FormControl('', [Validators.required, Validators.pattern(this.patternURL)]);
 
     this.formQuestionnaireCompletedNeverAsk.valueChanges.subscribe(val => {
-      if(val) {
+      if (val) {
         localStorage.setItem('neverAskCompleteRegistration', 'true');
       } else {
-        localStorage.removeItem('neverAskCompleteRegistration')
+        localStorage.removeItem('neverAskCompleteRegistration');
       }
     });
 
@@ -199,15 +199,14 @@ export class WrapperComponent implements OnInit {
         this.setUserPremiumStatus();
         this.setListing(this.profile);
 
-        let neverAskCompleteRegistration = localStorage.getItem('neverAskCompleteRegistration');
-        if(this.profile.questionnaireCompleted === false && neverAskCompleteRegistration !== 'true') {
+        const neverAskCompleteRegistration = localStorage.getItem('neverAskCompleteRegistration');
+        if (this.profile.questionnaireCompleted === false && neverAskCompleteRegistration !== 'true') {
           this.alertModal.show();
         }
-      }
-      catch(error){ 
+      } catch (error) {
         console.log(error);
       }
-    }else{
+    } else {
       console.log('cannot find user data in localstorage');
     }
 

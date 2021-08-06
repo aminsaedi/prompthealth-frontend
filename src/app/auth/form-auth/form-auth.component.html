@@ -19,56 +19,30 @@
   <form [formGroup]="form" (ngSubmit)="signinEmail()">
     <div class="mb-3">
       <label>Email Address <span class="text-danger">*</span></label>
-      <form-item-input
-      name="email"
-      type="email"
-      label="Email Address"
-      placeholder="Enter your email"
-      autocomplete="email"
-      autocapitalize="off"
-      [submitted]="isSubmitted"
-      [controller]="f.email"
-      ></form-item-input>
+      <form-item-input name="email" type="email" label="Email Address" placeholder="Enter your email"
+        autocomplete="email" autocapitalize="off" [submitted]="isSubmitted" [controller]="f.email"></form-item-input>
     </div>
 
     <div class="mb-3">
       <label>Password <span class="text-danger">*</span></label>
-      <form-item-input
-      name="password"
-      label="Password"
-      type="password"
-      placeholder="Enter your password"
-      [autocomplete]="(authType == 'signin') ? 'current-password' : 'new-password'"
-      [submitted]="isSubmitted"
-      [controller]="f.password"
-      ></form-item-input>
+      <form-item-input name="password" label="Password" type="password" placeholder="Enter your password"
+        [autocomplete]="(authType == 'signin') ? 'current-password' : 'new-password'" [submitted]="isSubmitted"
+        [controller]="f.password"></form-item-input>
     </div>
 
     <div class="mb-3" *ngIf="authType == 'signup'">
       <label>Confirm Password <span class="text-danger">*</span></label>
-      <form-item-input
-      name="confirmPassword"
-      label="Password"
-      type="password"
-      placeholder="Confirm your password"
-      autocomplete="new-password"
-      [submitted]="isSubmitted"
-      [controller]="f.confirm_password"
-      ></form-item-input>
+      <form-item-input name="confirmPassword" label="Password" type="password" placeholder="Confirm your password"
+        autocomplete="new-password" [submitted]="isSubmitted" [controller]="f.confirm_password"></form-item-input>
     </div>
 
     <div class="mb-3" *ngIf="authType == 'signup'">
       <label>
-        How did you hear about us? 
+        How did you hear about us?
         <!-- <span class="text-danger">*</span> -->
       </label>
-      <form-item-input
-      name="hear_from"
-      label="Message"
-      placeholder="Enter your message"
-      [submitted]="isSubmitted"
-      [controller]="f.hear_from"
-      ></form-item-input>
+      <form-item-input name="hear_from" label="Message" placeholder="Enter your message" [submitted]="isSubmitted"
+        [controller]="f.hear_from"></form-item-input>
     </div>
 
     <div class="mb-3" *ngIf="authType == 'signup'">
@@ -108,5 +82,3 @@
     </div>
   </form>
 </section>
-
-

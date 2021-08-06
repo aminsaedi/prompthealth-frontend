@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 // import { SharedService } from '../../shared/services/shared.service';
-import { minmax, pattern, validators } from 'src/app/_helpers/form-settings';
+import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { IUserDetail } from 'src/app/models/user-detail';
 
 @Component({
@@ -13,14 +13,14 @@ import { IUserDetail } from 'src/app/models/user-detail';
 })
 export class FormPartnerGeneralComponent implements OnInit {
 
-  @Input() data: IUserDetail;  
+  @Input() data: IUserDetail;
   @Input() disabled = false;
 
   @Output() changeImage = new EventEmitter<string>();
   @Output() submitText = new EventEmitter<any>(); /** it does NOT return userID nor imageURL */
 
   public form: FormGroup;
-  public isSubmitted: boolean = false;
+  public isSubmitted = false;
 
   public maxName: number = minmax.nameMax;
   public maxTextarea: number = minmax.textareaMax;
@@ -29,7 +29,7 @@ export class FormPartnerGeneralComponent implements OnInit {
 
   // private patternPhone = pattern.phone;
 
-  get f(){ return this.form.controls; }
+  get f() { return this.form.controls; }
 
 
   constructor(
@@ -43,8 +43,8 @@ export class FormPartnerGeneralComponent implements OnInit {
     this.form = this._fb.group({
       profileImage: new FormControl((this.data.profileImage ? this.data.profileImage : ''), [Validators.required,]),
       firstName: new FormControl((this.data.firstName ? this.data.firstName : ''), [
-        Validators.required, 
-        Validators.minLength(3), 
+        Validators.required,
+        Validators.minLength(3),
         Validators.maxLength(this.maxName)
       ]),
       email: new FormControl((this.data.email ? this.data.email : ''), [
@@ -59,18 +59,18 @@ export class FormPartnerGeneralComponent implements OnInit {
       state: new FormControl((this.data.state ? this.data.state : ''), []),
       zipcode: new FormControl((this.data.zipcode ? this.data.zipcode : ''), []),
       placeId: new FormControl((this.data.placeId ? this.data.placeId : ''), []),
-      
-      phone: new FormControl((this.data.phone ? this.data.phone : ''), validators.phone ),
+
+      phone: new FormControl((this.data.phone ? this.data.phone : ''), validators.phone),
       website: new FormControl((this.data.website ? this.data.website : ''), validators.website),
       product_description: new FormControl((this.data.product_description ? this.data.product_description : ''), [
         Validators.required,
         Validators.maxLength(this.maxTextarea),
       ]),
       messageToPlatform: new FormControl((this.data.messageToPlatform ? this.data.messageToPlatform : ''), [Validators.maxLength(this.maxTextarea)]),
-    }, {validators: validators.addressSelectedFromSuggestion});
+    }, { validators: validators.addressSelectedFromSuggestion });
   }
 
-  onChangeImage(imageURL: string){
+  onChangeImage(imageURL: string) {
     this.changeImage.emit(imageURL);
   }
 
@@ -82,7 +82,7 @@ export class FormPartnerGeneralComponent implements OnInit {
     if(this.form.invalid){
       this.isSubmitted = true;
       this._toastr.error('There are some items that require your attention.');
-      return; 
+      return;
     }
 
     this.submitText.emit(this.form.value);

@@ -19,14 +19,14 @@ import { ProfileManagementService } from 'src/app/dashboard/profileManagement/pr
 })
 export class FormAuthComponent implements OnInit {
 
-  @Input() userRole: string = 'U'; /** U | SP | C | P */
-  @Input() authType: string = 'signin'; /** signin | signup */
-  @Input() staySamePage: boolean = false;
+  @Input() userRole = 'U'; /** U | SP | C | P */
+  @Input() authType = 'signin'; /** signin | signup */
+  @Input() staySamePage = false;
   @Input() nextPage: string = null;
   @Input() nextPageKeyword: string = null;
   @Output() changeState = new EventEmitter<'start'|'done'>();
 
-  get f(){ return this.form.controls}
+  get f() { return this.form.controls; }
   public form: FormGroup;
   public isSubmitted = false;
   public isLoading = false;
@@ -42,15 +42,15 @@ export class FormAuthComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.form = (this.authType == 'signin') ? this._fb.group({
-      'email': new FormControl('', [Validators.required, Validators.email]),
-      'password': new FormControl('', [Validators.required, Validators.minLength(8)]),
+    this.form = (this.authType === 'signin') ? this._fb.group({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     }) : this._fb.group({
-      'email': new FormControl('', [Validators.required, Validators.email]),
-      'password': new FormControl('', validators.password),
-      'confirm_password': new FormControl('', []),
-      'hear_from': new FormControl('', []),
-      't_c': new FormControl('', [Validators.requiredTrue]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', validators.password),
+      confirm_password: new FormControl('', []),
+      hear_from: new FormControl('', []),
+      t_c: new FormControl('', [Validators.requiredTrue]),
     }, { validator: MustMatch('password', 'confirm_password') });
   }
 
@@ -58,38 +58,40 @@ export class FormAuthComponent implements OnInit {
     const providerId = {
       facebook: FacebookLoginProvider.PROVIDER_ID,
       google: GoogleLoginProvider.PROVIDER_ID,
-    }
+    };
 
     this._authService.signIn(providerId[type]).then(x => {
-      // console.log(x);
+      console.log(x);
       let socialToken: string;
-      switch(type){
+      switch (type) {
         case 'google': socialToken = x.idToken; break;
         case 'facebook': socialToken = x.id;
       }
-  
+
       const data: SocialRegisterData = {
-        socialToken: socialToken,
+        socialToken,
+        authToken: x.authToken,
         social_id: x.id,
-        roles: this.userRole,
+        roles: this.userRole || 'U',
         profileImage: x.photoUrl,
         firstName: x.firstName,
         lastName: x.lastName,
         email: x.email,
         termsCondition: true,
         loginType: x.provider.toLowerCase(),
-      }
+      };
 
       this._sharedService.loader('show');
       this.isLoading = true;
       this.changeState.emit('start');
-      this._sharedService.socialRegister(data).subscribe((res: any) => {
+
+      this._sharedService.socialSignin(data, type).subscribe((res: any) => {
         this._sharedService.loader('hide');
         this.isLoading = false;
 
-        if(res.statusCode === 200) {
+        if (res.statusCode === 200) {
           this.afterLogin(res.data);
-        }else{
+        } else {
           this._toastr.error(res.message);
         }
       }, error => {
@@ -101,24 +103,24 @@ export class FormAuthComponent implements OnInit {
     });
   }
 
-  signinEmail(){
+  signinEmail() {
     this.isSubmitted = true;
-    if(this.form.invalid){
+    if (this.form.invalid) {
       this._toastr.error('There are some items that require your attention.');
       return;
     }
 
-    const data: {[k: string]: (string | boolean)} = {
+    const data: { [k: string]: (string | boolean) } = {
       email: this.f.email.value,
       password: this.f.password.value,
-    }
+    };
 
-    if(this.authType == 'signin') {
+    if (this.authType === 'signin') {
       data.loginType = 'email';
     } else {
       data.hear_from = this.f.hear_from.value;
       data.t_c = true;
-      data.roles = this.userRole;
+      data.roles = this.userRole || 'U';
     }
 
     this._sharedService.loader('show');
@@ -126,14 +128,15 @@ export class FormAuthComponent implements OnInit {
 
     this.changeState.emit('start');
 
-    const subscription = (this.authType == 'signin') ? this._sharedService.login(data) : this._sharedService.register(data);
+    console.log(data);
+    const subscription = (this.authType === 'signin') ? this._sharedService.login(data) : this._sharedService.register(data);
     subscription.subscribe((res: any) => {
       this._sharedService.loader('hide');
       this.isLoading = false;
 
       if(res.statusCode == 200){
         this.afterLogin(res.data);
-      }else{
+      } else {
         this._toastr.error(res.message);
       }
     }, error => {
@@ -145,7 +148,7 @@ export class FormAuthComponent implements OnInit {
 
   }
 
-  afterLogin(userinfo: any){
+  afterLogin(userinfo: any) {
     this.isSubmitted = false;
     const role = userinfo.roles;
 
@@ -161,13 +164,13 @@ export class FormAuthComponent implements OnInit {
 
     let toastrMessage = 'Welcome!';
 
-    if(!this.staySamePage){
+    if (!this.staySamePage) {
       let next: string;
-      if(this.nextPage){
+      if (this.nextPage) {
         next = this.nextPage;
-      }else if(this.nextPageKeyword){
-        if(this.nextPageKeyword == 'buyplan') {
-          switch(role.toLowerCase()){
+      } else if (this.nextPageKeyword) {
+        if (this.nextPageKeyword == 'buyplan') {
+          switch (role.toLowerCase()) {
             case 'u':
               next = '/';
               toastrMessage = 'We don\'t have a subscription plan for your account type.';
@@ -181,10 +184,10 @@ export class FormAuthComponent implements OnInit {
               break;
           }
         }
-      }else{
-        switch(role.toLowerCase()){
-          case 'u': 
-            next = '/'; 
+      } else {
+        switch (role.toLowerCase()) {
+          case 'u':
+            next = '/';
             break;
           case 'sp':
           case 'c':
@@ -193,7 +196,7 @@ export class FormAuthComponent implements OnInit {
           case 'p':
             next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/register-product';
             break;
-        }  
+        }
       }
       this._router.navigate([next]);
     }
@@ -205,6 +208,7 @@ export class FormAuthComponent implements OnInit {
 
 interface SocialRegisterData {
   socialToken: string;
+  authToken: string;
   email: string;
   loginType: string;
   termsCondition: boolean;
