@@ -2,7 +2,6 @@
 
 :host{ 
     white-space: nowrap; 
-    color: $colorYellow;
 }
 
 .star-container{
@@ -10,7 +9,6 @@
     height: 1em;
     
     font-size: 20px;
-    &.simple{ font-size: 18px;}
     &.size-xs { font-size: 14px; }
     &.size-s{  font-size: 16px; }
     &.size-l{  font-size: 24px; }
@@ -26,9 +24,11 @@
         color: $colorGsPlaceholder;
     }
 }
-    
-.icon-star-filled, .icon-dollar{
-    font-size: 1em;    
-}    
 
-.rate{ font-size: 16px; }
+.icon-star-filled {
+    color: $colorYellow;
+}
+
+// .icon-star-filled, .icon-dollar{
+//     font-size: 1em;    
+// }

@@ -70,16 +70,4 @@ class="position-relative rounded-8p bg-white p-20p body1 text-body"
     [option]="optionNestedFormCheckboxGroup"
     ></form-item-service>
   </div>
-
-  <div class="mb-30p">
-    <h6>Availability:</h6>
-    <form-item-checkbox-group
-    id="availability"
-    label="Availability"
-    [data]="profile.availabilityIds"
-    [selectionsByQuestionnaire]="questionnaires.availability"
-    [disabled]="true"
-    [option]="{showBlockWithZeroMarginWhenDisabled: true}"
-    ></form-item-checkbox-group>
-  </div>
 </div>

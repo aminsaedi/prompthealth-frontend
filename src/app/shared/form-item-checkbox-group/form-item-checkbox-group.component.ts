@@ -148,7 +148,7 @@ const age_range: CheckboxSelectionItem[] = [
   { id: 'age2', label: 'Child (<12)', value: '5eb1a4e199957471610e6cd8' },
   { id: 'age3', label: 'Adolescent (12-18)', value: '5eb1a4e199957471610e6cd9' },
   { id: 'age4', label: 'Adult (18+)', value: '5eb1a4e199957471610e6cda' },
-  { id: 'age5', label: 'Senior (>64)', value: '5eb1a4e199957471610e6cdb' },
+  { id: 'age5', label: 'Senior (>64)', value: '5eb                                                                                                   1a4e199957471610e6cdb' },
 ];
 
 const age_range_detail: CheckboxSelectionItem[] = [
@@ -205,6 +205,7 @@ export interface IOptionCheckboxGroup {
   showInlineSubWhenDisabled?: boolean;
   showBlockWithZeroMarginWhenDisabled?: boolean;
   showBlockSubWithZeroMarginWhenDisabled?: boolean;
+  iconPreWhenDisabled?: string;
   removeIndentSub?: boolean;
   fontSmallSub?: boolean;
   inlineSeparator?: string;
@@ -216,9 +217,11 @@ export class OptionCheckboxGroup implements IOptionCheckboxGroup {
   get showInlineSubWhenDisabled() { return this.data.showInlineSubWhenDisabled === true ? true : false; }
   get showBlockWithZeroMarginWhenDisabled() {return this.data.showBlockWithZeroMarginWhenDisabled === true ? true : false; }
   get showBlockSubWithZeroMarginWhenDisabled() {return this.data.showBlockSubWithZeroMarginWhenDisabled === true ? true : false; }
+
+  get iconPreWhenDisabled() { return this.data.iconPreWhenDisabled || null; }
   get removeIndentSub(){ return this.data.removeIndentSub === true ? true : false; }
   get fontSmallSub() {return this.data.fontSmallSub === true ? true : false; }
   get inlineSeparator() { return this.data.inlineSeparator || ', '; }
 
-  constructor(private data: IOptionCheckboxGroup = {}) {}
+  constructor(private data: IOptionCheckboxGroup = {}) { }
 }

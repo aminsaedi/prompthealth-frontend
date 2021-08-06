@@ -42,6 +42,7 @@ export interface IProfessional extends IProfile {
   rating: number;
   reviews: any[];
   reviewData: ReviewData;
+  reviewCount: number;
 
   amenity: ImageViewerData; /** all amenities data */
   amenityPreview: ImageGroupData[]; /** first 3 amenities for preview */

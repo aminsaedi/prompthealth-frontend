@@ -1,140 +1,164 @@
-<div class="position-relative rounded-8p bg-white body1 text-body overflow-hidden">
-  <div class="position-relative">
-    <div class="image-container-33pc">
-      <img *ngIf="profile" [src]="profile?.banner" alt="">
-    </div>
-  </div>
-
-  <div class="px-10p px-lg-30p pt-15p">
-    <div class="d-none d-lg-flex mb-30p">
-      <div style="margin-top: -45px;">
-        <profile-image 
-        [size]="90"
-        [radius]="25"
-        [image]="profile?.image"
-        ></profile-image>
-      </div>
-  
-      <div class="flex-grow-1 ml-20p">
-        <h5>
-          {{profile?.name}}
-          <i 
-          *ngIf="profile?.isVerified"
-          iconPh="verified" 
-          class="text-primary"
-          ></i>
-        </h5>
-        <div class="subtitle2 text-label">{{profile?.title}}</div>
-      </div>
-  
-      <div class="text-right">
-        <h5 class="text-primary-dark">$49/hr</h5>
-        <star-rate 
-        [rate]="profile?.rating"
-        margin="small"
-        [showActiveOnly]="false"
-        ></star-rate>
-      </div>
-    </div>
-
-    <div class="d-lg-none">
-      <div class="d-flex">
-        <div style="margin-top: -35px;">
-          <profile-image
-          [size]="70"
-          [radius]="15"
-          [image]="profile?.image"
-          ></profile-image>  
-        </div>
-        <div class="flex-grow-1 ml-15p">
-          <h6>
-            {{profile?.name}}
-            <i 
-            *ngIf="profile?.isVerified"
-            iconPh="verified" 
-            class="text-primary"
-            ></i>
-          </h6>
-        </div>
-      </div>
-
-      <div class="d-flex mt-20p mb-5p">
-        <star-rate 
-        [rate]="4"
-        margin="small"
-        [showActiveOnly]="false"
-        ></star-rate>
-        <h5 class="text-primary-dark ml-15p mb-0">$49/hr</h5>
-      </div>
-      <h6 class="mb-25p">{{profile?.title}}</h6>
-    </div>
-
-    <div class="d-flex">
-      <button class="btn btn-primary px-lg-70p" (click)="onClickBook()">
-        <span *ngIf="user">Book now</span>
-        <span *ngIf=!user>Login to book</span>
-      </button>
-      <button class="btn btn-outline ml-10p">Follow</button>
-      <button *ngIf="user" class="btn btn-icon-grey small ml-10p">
-        <i iconPh="bell-plus" style="font-size: 30px"></i>
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-1">
+      <button 
+      class="btn btn-text-body small px-0 pt-md-0"
+      (click)="onClickBack()"
+      >
+        <i iconPh="arrow-left"></i>
+        <span>Back</span>
       </button>
     </div>
-  </div>
-
-  <div class="overflow-auto mt-45p px-20p px-lg-30p">
-    <div class="d-flex profile-menu">
-      <div class="pr-30p pr-lg-40p">
-        <a
-        [routerLink]="['/community/profile', profileId]"
-        class="btn small px-0 py-20p subtitle1"
-        #rlah="routerLinkActive"
-        routerLinkActive
-        [routerLinkActiveOptions]="{exact: true}"
-        [replaceUrl]="true"
-        [ngClass]="rlah.isActive ? 'btn-text active' : 'btn-text-grey'"
-        >Home</a>
-      </div>
-
-      <div class="pr-30p pr-lg-40p">
-        <a
-        [routerLink]="['/community/profile', profileId, 'service']"
-        class="btn small px-0 py-20p subtitle1"
-        #rlas="routerLinkActive"
-        routerLinkActive
-        [replaceUrl]="true"
-        [ngClass]="rlas.isActive ? 'btn-text active' : 'btn-text-grey'"
-        >Service</a>
-      </div>
-     
-      <div class="pr-30p pr-lg-40p">
-        <a
-        [routerLink]="['/community/profile', profileId, 'feed']"
-        class="btn small px-0 py-20p subtitle1"
-        #rlaf="routerLinkActive"
-        routerLinkActive
-        [replaceUrl]="true"
-        [ngClass]="rlaf.isActive ? 'btn-text active' : 'btn-text-grey'"
-        >Feed</a>
-      </div>
+    <div class="col-12 col-md">
+      <section class="position-relative rounded-8p bg-white body1 text-body overflow-hidden">
+        <div class="position-relative">
+          <div class="image-container-33pc">
+            <img *ngIf="profile" [src]="profile?.banner" alt="">
+          </div>
+        </div>
       
-      <div class="pr-20p pr-lg-30p">
-        <a 
-        [routerLink]="['/community/profile', profileId, 'review']" 
-        class="btn small px-0 py-20p subtitle1" 
-        #rlar="routerLinkActive" 
-        routerLinkActive 
-        [replaceUrl]="true"
-        [ngClass]="rlar.isActive ? 'btn-text active' : 'btn-text-grey'"
-        >Review</a></div>
+        <div class="px-10p px-lg-30p pt-15p">
+          <div class="profile-header mb-30p">
+            <div style="margin-top: -45px" class="grid-1">
+              <profile-image
+              [size]="90"
+              [radius]="25"
+              [image]="profile?.image"
+              ></profile-image>
+            </div>
+      
+            <div class="grid-2">
+              <h5>
+                {{profile?.name}}
+                <i
+                *ngIf="profile?.isVerified"
+                iconPh="verified"
+                class="text-primary"
+                ></i>
+              </h5>
+              <div class="subtitle2 text-label">{{profile?.title}}</div>
+            </div>
+      
+            <div class="grid-3 text-right text-nowrap">
+              <button class="btn btn-outline small ml-10p">Follow</button>
+              <button *ngIf="user" class="btn btn-icon-grey small ml-10p py-5p">
+                <i iconPh="bell-plus" style="font-size: 25px"></i>
+              </button>
+            </div>
+          </div>
+      
+          
+        </div>
+      
+        <div class="overflow-auto mt-20p px-20p px-lg-30p">
+          <div class="d-flex profile-menu">
+            <div class="pr-30p pr-lg-40p">
+              <a
+              [routerLink]="['/community/profile', profileId]"
+              class="btn small px-0 py-20p subtitle1"
+              #rlah="routerLinkActive"
+              routerLinkActive
+              [routerLinkActiveOptions]="{exact: true}"
+              [replaceUrl]="true"
+              [ngClass]="rlah.isActive ? 'btn-text active' : 'btn-text-grey'"
+              >Home</a>
+            </div>
+      
+            <div class="pr-30p pr-lg-40p">
+              <a
+              [routerLink]="['/community/profile', profileId, 'service']"
+              class="btn small px-0 py-20p subtitle1"
+              #rlas="routerLinkActive"
+              routerLinkActive
+              [replaceUrl]="true"
+              [ngClass]="rlas.isActive ? 'btn-text active' : 'btn-text-grey'"
+              >Service</a>
+            </div>
+      
+            <div class="pr-30p pr-lg-40p">
+              <a
+              [routerLink]="['/community/profile', profileId, 'feed']"
+              class="btn small px-0 py-20p subtitle1"
+              #rlaf="routerLinkActive"
+              routerLinkActive
+              [replaceUrl]="true"
+              [ngClass]="rlaf.isActive ? 'btn-text active' : 'btn-text-grey'"
+              >Feed</a>
+            </div>
+      
+            <div class="pr-20p pr-lg-30p">
+              <a
+              [routerLink]="['/community/profile', profileId, 'review']"
+              class="btn small px-0 py-20p subtitle1"
+              #rlar="routerLinkActive"
+              routerLinkActive
+              [replaceUrl]="true"
+              [ngClass]="rlar.isActive ? 'btn-text active' : 'btn-text-grey'"
+              >Review</a></div>
+          </div>
+        </div>
+      </section>
+    
+      <section 
+      class="mt-20p overflow-hidden rounded-8p"
+      [@socialProfileChildRouteAnimation]="prepareRoute(outlet)"
+      >
+        <router-outlet #outlet="outlet"></router-outlet>
+      </section>
     </div>
-  </div>
-</div>
 
-<div 
-class="mt-20p overflow-hidden rounded-8p"
-[@socialProfileChildRouteAnimation]="prepareRoute(outlet)"
->
-  <router-outlet #outlet="outlet"></router-outlet>
+    <div class="col-12 col-md-5 col-lg-4 mt-20p mt-md-0p">
+      <section 
+      *ngIf="profile"
+      class="bg-white rounded-12p overflow-hidden"
+      >
+        <div class="d-flex justify-content-between mx-15p mx-md-20p py-15p border-bottom border-line">
+          <div class="text-primary-dark">
+            <span class="h6 mb-0">{{profile.priceFull}}</span> 
+            <span class="body1"> /hr</span>
+          </div>
+          <div>
+            <star-rate rate="4.7" [simple]="true"></star-rate>
+            <span class="body1 text-label ml-5p">({{profile.reviewCount}})</span>
+          </div>
+        </div>
+
+        <div class="mx-15p mx-md-20p py-15p py-md-20p border-bottom border-line">
+          <h6 class="header-accent">Available Time</h6>
+          <form-item-checkbox-group
+          *ngIf="questionnaires"
+          id="availability"
+          label="Availability"
+          [data]="profile.availabilityIds"
+          [selectionsByQuestionnaire]="questionnaires.availability"
+          [disabled]="true"
+          [option]="{showBlockWithZeroMarginWhenDisabled: true, iconPreWhenDisabled: 'time'}"
+          ></form-item-checkbox-group>
+        </div>
+
+        <div class="mx-15p mx-md-20p py-15p py-md-20p">
+          <h6 class="header-accent">Recommendations</h6>
+          <div class="mt-25p mb-10p">
+            <i iconPh="quotes-2" class="text-secondary" style="font-size: 32px;"></i>
+          </div>
+          <p>will go back when needed next time. Recommend him but the office was busy as he is very popular!</p>
+          <div class="body1 text-label">Marianna M - July 26, 2021</div>
+          
+          <div class="mt-40p">
+            <button class="btn btn-primary w-100" (click)="onClickBook()">
+              <span *ngIf="user">Book now</span>
+              <span *ngIf=!user>Login to book</span>
+            </button>
+          </div>
+        </div>
+
+
+
+      </section>
+    </div>
+
+  </div>
+
 </div>
 
 <modal

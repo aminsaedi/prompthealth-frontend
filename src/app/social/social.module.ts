@@ -42,6 +42,13 @@ import { DraftComponent } from './draft/draft.component';
 
 const routes: Routes = [
   { path: '', component: BaseComponent, children: [
+    { path: 'profile/:userid', component: ProfileComponent, children: [
+      { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
+      { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
+      { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
+      { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
+    ] },
+
     { path: 'profile/:userid/post/:slug', component: PageComponent },
     { path: 'profile/:userid/post', pathMatch: 'full', redirectTo: 'profile/:userid/' },
 
@@ -53,13 +60,6 @@ const routes: Routes = [
     { path: 'notification', component: NotificationComponent},
 
     { path: '', component: HomeComponent, children: [
-      { path: 'profile/:userid', component: ProfileComponent, children: [
-        { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
-        { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
-        { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
-        { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
-      ] },
-
       { path: ':taxonomyType', component: ListComponent },
       { path: ':taxonomyType/:topiId', component: ListComponent },  
 

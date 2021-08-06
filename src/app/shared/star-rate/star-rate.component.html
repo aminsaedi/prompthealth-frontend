@@ -8,7 +8,13 @@
     </ng-container>
 </span>
 
-<span *ngIf="simple" class="star-container simple" [ngClass]="{'size-s': (size == 'small'), 'size-l': (size == 'big')}">
-    <i [iconPh]="sign"></i>
-    <span class="rate">{{rate}}</span>
+<span 
+*ngIf="simple"
+class="subtitle1" 
+>
+    <i 
+    [iconPh]="sign" 
+    [ngStyle]="{color: color}"
+    ></i>
+    <span class="text-body">{{rate}}</span>
 </span>

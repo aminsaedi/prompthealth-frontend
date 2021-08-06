@@ -6,15 +6,17 @@
     >
       <ng-container *ngFor="let item of selectionList; let i = index">
         <li
-        *ngIf="type == 'checkbox' && data?.includes(item.value)"
+        *ngIf="(type == 'checkbox' && data?.includes(item.value) || (type == 'radio' && item.value == controller.value))"
         [attr.data-separator]="_option.inlineSeparator"
-        class="item-disabled"
-        >{{item.label}}</li>
-        <li
-        *ngIf="type == 'radio' && item.value == controller.value"
-        [attr.data-separator]="_option.inlineSeparator"
-        class="item-disabled"
-        >{{item.label}}</li>
+        class="item-disabled body1"
+        >
+          <i 
+          *ngIf="_option.iconPreWhenDisabled" 
+          [iconPh]="_option.iconPreWhenDisabled"
+          class="mr-5p"
+          ></i>
+          <span>{{item.label}}</span>
+        </li>
       </ng-container>
     </ul>
   </ng-container>

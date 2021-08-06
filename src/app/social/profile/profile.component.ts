@@ -1,6 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';;
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
@@ -11,7 +12,7 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
-import { QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
+import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
@@ -26,11 +27,14 @@ import { SocialService } from '../social.service';
 export class ProfileComponent implements OnInit {
 
   get sizeS() { return (!window || window.innerWidth < 768) ? true : false; }
+  get sizeM() { return !this.sizeS && (window.innerWidth < 992) ? true : false; }
   get f() { return this.formBooking.controls; }
 
   public profileId: string;
   public profile: Professional;
   public user: Profile;
+
+  public questionnaires: QuestionnaireMapProfilePractitioner;
 
   private formBooking: FormGroup;
   public submittedFormBooking = false;
@@ -46,6 +50,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
+    private _location: Location,
     private _sharedService: SharedService,
     private _socialService: SocialService,
     private _qService: QuestionnaireService,
@@ -91,22 +97,23 @@ export class ProfileComponent implements OnInit {
       this.profile = profile;
       this._socialService.setProfile(this.profile);
     } else {
-      const promiseAll: [Promise<Professional>, Promise<void>] = [
+      const promiseAll: [Promise<Professional>, Promise<QuestionnaireMapProfilePractitioner>] = [
         this.fetchProfile(this.profileId),
         this.getQuestionnaire(),
       ];
 
       Promise.all(promiseAll).then((vals) => {
         this.profile = vals[0];
+        this.questionnaires = vals[1];
         this._socialService.setProfile(this.profile);
       });
     }
   }
 
-  getQuestionnaire(type: IUserDetail['roles'] = 'SP'): Promise<void> {
+  getQuestionnaire(type: IUserDetail['roles'] = 'SP'): Promise<QuestionnaireMapProfilePractitioner> {
     return new Promise((resolve, reject) => {
-      this._qService.getProfilePractitioner(type).then(() => {
-        resolve();
+      this._qService.getProfilePractitioner(type).then((questionnaires) => {
+        resolve(questionnaires);
       }, error => {
         console.log(error);
         reject();
@@ -132,6 +139,15 @@ export class ProfileComponent implements OnInit {
         reject();
       });
     });
+  }
+
+  onClickBack() {
+    const state = this._location.getState() as any;
+    if(state.navigationId == 1) {
+      this._router.navigate(['/community/feed']);
+    } else {
+      this._location.back();
+    }
   }
 
   onClickBook() {

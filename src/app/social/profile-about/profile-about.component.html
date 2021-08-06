@@ -60,7 +60,10 @@ class="position-relative rounded-8p bg-white p-20p body1 text-body"
         ></form-item-checkbox-group>  
       </div>
 
-      <div class="mb-20p">
+      <div 
+      class="mb-20p"
+      *ngIf="profile.amenityPreview.length > 0"
+      >
         <h6>Amenity:</h6>
         <image-row [images]="profile.amenityPreview" [option]="{col: 3}"></image-row>
         <button 
@@ -75,7 +78,10 @@ class="position-relative rounded-8p bg-white p-20p body1 text-body"
         ></image-viewer>
       </div>
 
-      <div class="mb-20p">
+      <div 
+      class="mb-20p"
+      *ngIf="profile.productPreview.length > 0"
+      >
         <h6>Product:</h6>
         <image-row [images]="profile.productPreview" [option]="{col: 3}"></image-row>
         <button 
