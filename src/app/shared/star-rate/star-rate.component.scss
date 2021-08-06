@@ -25,6 +25,10 @@
     }
 }
 
+i {
+    transition: color 300ms;
+}
+
 .icon-star-filled {
     color: $colorYellow;
 }

@@ -4,7 +4,7 @@
 
 <div 
 *ngIf="profile"
-class="position-relative rounded-8p bg-white p-20p body1 text-body"
+class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
 >
   <p class="pb-20p mb-30p border-bottom border-line">
     {{profile.description}}
@@ -46,6 +46,7 @@ class="position-relative rounded-8p bg-white p-20p body1 text-body"
         label="Languages"
         [data]="profile.languagesId"
         [selectionsByQuestionnaire]="questionnaires?.language"
+        [option]="{showInlineWhenDisabled: true}"
         [disabled]="true"
         ></form-item-checkbox-group>  
       </div>

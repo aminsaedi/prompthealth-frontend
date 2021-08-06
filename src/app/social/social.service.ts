@@ -225,7 +225,6 @@ export class SocialService {
   }
 
   saveCacheProfile(data: Professional) {
-    console.log(data);
     if(!this.postCache.dataPerTaxonomy.users[data._id]) {
       this.postCache.dataPerTaxonomy.users[data._id] = {
         userdata: data,

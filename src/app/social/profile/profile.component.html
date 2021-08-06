@@ -118,7 +118,7 @@
             <span class="body1"> /hr</span>
           </div>
           <div>
-            <star-rate rate="4.7" [simple]="true"></star-rate>
+            <star-rate [rate]="profile.rating" [simple]="true"></star-rate>
             <span class="body1 text-label ml-5p">({{profile.reviewCount}})</span>
           </div>
         </div>
@@ -151,9 +151,6 @@
             </button>
           </div>
         </div>
-
-
-
       </section>
     </div>
 

@@ -121,6 +121,8 @@ export class ExpertFinderComponent implements OnInit {
       const p = {...param};
       delete p.page;
       delete p.modal;
+      delete p['modal-data'];
+      delete p.menu;
 
       if(this.queryParamsCurrent && JSON.stringify(p) != JSON.stringify(this.queryParamsCurrent)) {
         this.initController();
@@ -231,7 +233,7 @@ export class ExpertFinderComponent implements OnInit {
         this.controller.updateFilterByUserLocation(location);
         this._changeDetector.detectChanges();  
       }, 100);
-    }, (error: GeolocationPositionError) => {
+    }, error => {
       this.viewState.isGettingUserLocation = false;
       if (error.code == 1) {
         this._toastr.success('Please enable your location in order to see options in your geographical area. Alternatively you can only view virtual options!')
@@ -255,6 +257,12 @@ export class ExpertFinderComponent implements OnInit {
   }
 
   updateCompareList() {}
+
+  onClickButtonFilterRating(i: number) {
+    const valueCurrent = this.f.rating.value;
+    const valueNext = valueCurrent == i ? 0 : i;
+    this.f.rating.setValue(valueNext);
+  }
 
   onFilterReseted() {
     this.filters.forEach(filter => {

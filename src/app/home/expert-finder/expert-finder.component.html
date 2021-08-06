@@ -315,10 +315,12 @@ id="expert-finder-filter"
 
         <div class="mb-30p">
           <h6 class="mb-10p">Rating</h6>
-          <div
+          <button
           *ngFor="let rate of [5,4,3]"
-          class="position-relative py-10p px-5p p-md-10p border border-line rounded-8p d-inline-block mr-10p btn-filter-rating active"
+          type="button"
+          class="position-relative btn py-10p px-5p p-md-10p border border-line rounded-8p d-inline-block mr-10p btn-filter-rating active"
           [ngClass]="{active: f.rating.value == rate}"
+          (click)="onClickButtonFilterRating(rate)"
           >
             <star-rate 
             [rate]="rate" 
@@ -326,13 +328,7 @@ id="expert-finder-filter"
             margin="none" 
             [color]="(f.rating.value == rate ? 'white' : null)"
             ></star-rate>
-            <input 
-            type="radio" 
-            class="input-rating" 
-            [value]="rate"
-            [formControl]="f.rating"
-            >
-          </div>
+        </button>
         </div>    
 
         <div class="mb-30p">
