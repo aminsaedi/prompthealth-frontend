@@ -289,11 +289,41 @@ $stickyPointAppFeature: 80px;
 .image-app-container {
   position: relative;
 
+
   img.mobile-body {
+    z-index: 10;
     width: 200px;
     height: auto;
     @media (min-width: $breakpointMd) { width: 250px; }
     @media (min-height: 1000px) { width: 290px; }
+  }
+
+  img.mobile-inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    transition-property: transform opacity;
+    transition-duration: 600ms;
+
+    &.splash {
+      z-index: 8;
+    }
+    &.splash.scaleup {
+      transform: scale(4);
+      opacity: 0;
+    }
+
+    &.item {
+      transform: scale(0.95) translateY(100%);
+      // transition-delay: 200ms;
+    }
+
+    &.item.active {
+      transform: scale(0.95) translateY(0);
+      opacity: 1;
+    }
   }
 }
 

@@ -237,7 +237,7 @@ const appFeatureItems = [
     },
     {
       icon: 'checkbox-square-outline',
-      title: 'Search for health and wellness practitioners',
+      title: 'Compare and book',
       content: 'Read reviews and make informed decisions about your care when booking appointments',
     },
     {
@@ -267,10 +267,38 @@ const appFeatureItems = [
 
 const introductionPostType = {
   note: {
-    icon: '',
-    color: '',
+    icon: 'comment-2',
+    color: 'bg-success',
 
     title: 'Notes',
+    content: 'Create any types of events too easy',
+  },
+  event: {
+    icon: 'calendar',
+    color: 'bg-error',
+
+    title: 'Events',
+    content: 'Create any types of events too easy',
+  },
+  article: {
+    icon: 'file',
+    color: 'bg-yellow',
+
+    title: 'Articles',
+    content: 'Create any types of events too easy',
+  },
+  voice: {
+    icon: 'mic',
+    color: 'bg-primary',
+
+    title: 'Voices',
+    content: 'Create any types of events too easy',
+  },
+  video: {
+    icon: 'play-circle',
+    color: 'bg-secondary',
+
+    title: 'Videos',
     content: 'Create any types of events too easy',
   }
 }
