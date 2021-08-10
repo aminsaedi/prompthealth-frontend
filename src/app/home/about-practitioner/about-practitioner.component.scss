@@ -1,0 +1,188 @@
+@import '../../../assets/scss/variables';
+
+.image-shadow {
+  box-shadow: 10px 10px 10px #00000050;
+}
+
+.switch-duration {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  width: 170px;
+  height: 40px;
+  box-sizing: content-box;
+  font-size: 0;
+  user-select: none;
+  cursor: pointer;
+}
+
+.switch-on {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 56%;
+  height: 100%;
+  background: $colorPrimary;
+  transition: transform 180ms;
+
+  &.left {
+    transform: translateX(0);
+  }
+  &.right {
+    transform: translateX(78.782%);
+  }
+}
+
+.switch-item {
+  position: relative;
+  transition: all 180ms; 
+  height: 40px;
+
+  flex: 0 0 44%;
+  color: $colorGsLabel;
+
+  &.active {
+    flex: 0 0 56%;
+    color: $colorGsWhite;
+  }
+}
+
+.discount-popup {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 20px);
+  transform: translateY(-50%);
+  background:rgba($colorYellow, 0.5);
+  border-radius: 5px;
+  padding: 7px 12px;
+
+  @media (min-width: $breakpointMd) {
+    white-space: nowrap;
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    transform: translate(0,-50%);
+    border: solid 4px rgba($colorYellow, 0.5);
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+  }
+}
+
+.card.active {
+  border: solid 2px $colorPrimary;
+}
+.card .label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background:rgba($colorYellow, 0.5);
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+.plan-features {
+  .icon-pre {
+    position: absolute;
+    margin-left: -25px;
+    margin-top: 0.15em;
+  }
+}
+
+.mouse-down {
+  position: relative;
+  width: 30px;
+  height: 50px;
+  border: solid 2px $colorGsPlaceholder;
+  border-radius: 50px;
+
+  .cursor {
+    position: absolute;
+    top: 10px;
+    left: 11px;
+    width: 4px;
+    height: 10px;
+    background: $colorGsPlaceholder;
+    border-radius: 10px;
+
+    animation-name: mouse-down-animation;
+    animation-duration: 2s;
+    animation-direction: normal;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+}
+
+@keyframes mouse-down-animation {
+  from { transform: translateY(0);}
+  75% { transform: translateY(20px); }
+  90% { transform: translateY(0); }
+  to {transform: translateY(0); }
+}
+
+.arrow-downs {
+  li {
+    margin-top: -16px;
+
+    animation-name: arrow-down-animation;
+    animation-duration: 2s; 
+    animation-direction: normal;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    &:nth-child(2) {
+      animation-delay: 500ms;
+    }
+    &:nth-child(3) {
+      animation-delay: 1000ms;
+    }
+  }
+}
+
+@keyframes arrow-down-animation {
+  from {opacity: 1}
+  80% {opacity: 0}
+  to {opacity: 1;}
+}
+
+.feature-table {
+  .col-title {
+    flex: 1 0 31%;
+
+    &.feature-item {
+      @media (max-width: $breakpointMd - 1) {
+        flex: 1 0 100%;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+    }
+  }
+
+  .col-item {
+    flex: 1 0 23%;
+  }
+}
+
+.faq-item {
+  transition: background-color 180ms;
+  i {
+    transition: transform 180ms;
+  }
+
+  &.active {
+    background: $colorGsBackground;
+
+    i {
+      transform: rotateX(180deg)
+    }
+  }
+}
+
+.scroll-anchor {
+  position: absolute;
+  margin-top: -80px;
+  display: block;
+}

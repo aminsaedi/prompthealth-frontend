@@ -37,6 +37,8 @@ import { UserQuestionnaireItemSelectMultipleComponent } from "./user-questionnai
 import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
 import { SitemapComponent } from "./sitemap/sitemap.component";
 import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
+import { AboutComponent } from "./about/about.component";
+import { AboutPractitionerComponent } from "./about-practitioner/about-practitioner.component";
 
 const routes: Routes = [
   // {
@@ -107,7 +109,9 @@ const routes: Routes = [
   },
   { path: 'unsubscribe', redirectTo: '/'},
 
-  { path: 'plans', component: SubscriptionPlanComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'plans', component: AboutPractitionerComponent },
+  // { path: 'plans', component: SubscriptionPlanComponent },
   { path: 'plans/product', component: subscriptionPlanProductComponent },
   { path: 'subscriptionplan', redirectTo: '/plans'},
 

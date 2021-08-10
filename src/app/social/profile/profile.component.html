@@ -147,10 +147,23 @@
           </div> -->
           
           <div>
-            <button class="btn btn-primary w-100" (click)="onClickBook()">
-              <span *ngIf="user">Book now</span>
-              <span *ngIf=!user>Login to book</span>
-            </button>
+            <button 
+            *ngIf="!user"
+            class="btn btn-primary w-100" 
+            (click)="onClickLogin()"
+            >Login to book</button>
+
+            <button 
+            *ngIf="user && profile.bookingUrl"
+            class="btn btn-primary w-100" 
+            (click)="onClickBookOutside()"
+            >Book now</button>
+
+            <button 
+            *ngIf="user && !profile.bookingUrl"
+            class="btn btn-primary w-100" 
+            (click)="onClickBook()"
+            >Book now</button>
           </div>
         </div>
       </section>

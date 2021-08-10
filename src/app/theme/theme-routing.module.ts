@@ -34,10 +34,10 @@ const routes: Routes = [
         path: 'magazines',
         loadChildren: () => MagazineModule,
       },
-      {
-        path: 'auth',
-        loadChildren: () => AuthModule,
-      },
+      // {
+      //   path: 'auth',
+      //   loadChildren: () => AuthModule,
+      // },
       {
         path: 'dashboard',
         loadChildren: () => DashboardModule,

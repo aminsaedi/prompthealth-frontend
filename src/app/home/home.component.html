@@ -1,7 +1,7 @@
 <section class="bg-primary-light py-40p pt-md-90p pb-md-70p overflow-hidden">
   <div class="container">
     <div class="row">
-      <div class="col-12 col-lg-7">
+      <div class="col-12 col-lg-7" style="z-index: 1">
         <h6 class="h6 text-primary mb-20p">Personalize. Compare. Connect.</h6>
         <h2 class="h3 h2-md mb-30p">Your health and wellness personal assistant</h2>
         <h6 class="h6 opacity-70pc mb-50p">Take control of your health with options tailored to you</h6>
@@ -42,7 +42,7 @@
       </div>
       <div class="col">
         <div class="position-relative mt-50p">
-          <div class="circle-for-video circle-secondary"></div>
+          <div class="circle-for-video circle-secondary" parallax intensity="0.5"></div>
           <div class="video-container position-relative rounded-12p overflow-hidden">
             <video src="assets/video/video2.mp4" controls></video>
           </div>
@@ -278,11 +278,12 @@
       <div class="col-12 col-md-6 col-lg-4">
         <h2>What people think of us</h2>
         <p class="subtitle1 opacity-70pc mb-45p">We are happy when our customers are too</p>
+        <button class="btn" (click)="toggle()">CLICK</button>
         <!-- <a class="btn btn-primary">Read More Testimonials</a> -->
       </div>
 
-      <div class="col-12 col-md-6 col-lg-8">
-        <div style="width: 300px">
+      <div class="col-12 col-md-6 col-lg-8" [@slideVerticalStagger]="testimonial.length">
+        <div style="width: 300px" *ngFor="let i of testimonial">
           <card-testimonial></card-testimonial>
         </div>
       </div>

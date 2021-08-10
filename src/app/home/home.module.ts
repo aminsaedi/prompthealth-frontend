@@ -55,6 +55,8 @@ import { SitemapComponent } from './sitemap/sitemap.component';
 import { CardTestimonialComponent } from './card-testimonial/card-testimonial.component';
 import { ExpertFinderComponent } from './expert-finder/expert-finder.component';
 import { NpnSliderModule } from "npn-slider";
+import { AboutComponent } from './about/about.component';
+import { AboutPractitionerComponent } from './about-practitioner/about-practitioner.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +103,8 @@ import { NpnSliderModule } from "npn-slider";
     SitemapComponent,
     CardTestimonialComponent,
     ExpertFinderComponent,
+    AboutComponent,
+    AboutPractitionerComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

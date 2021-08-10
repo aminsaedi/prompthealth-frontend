@@ -1,0 +1,33 @@
+@import '../../../assets/scss/variables';
+
+section {
+
+  &.main {
+    flex: 0 1 550px;
+  
+  }
+  
+  &.sub {
+    flex: 1 0 auto;
+    @media (min-width: $breakpointMd) {
+      height: 100vh;
+    }          
+  }
+}
+
+.tip-image {
+  width: 100%;
+  height: auto;
+  @media (min-width:$breakpointMd) {
+    width: 300px;
+  }
+  @media (min-width:$breakpointLg) {
+    width: 400px;
+  }
+}
+
+.tip-sign {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+}

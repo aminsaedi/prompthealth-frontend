@@ -27,6 +27,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { FormAuthComponent } from './form-auth/form-auth.component';
 import { AuthComponent } from './auth/auth.component';
 import { environment } from 'src/environments/environment';
+import { NgxStripeModule, StripeService } from 'ngx-stripe';
 // import { AppleLoginProvider } from './apple.provider';
 // import { environment } from 'src/environments/environment';
 
@@ -44,6 +45,7 @@ import { environment } from 'src/environments/environment';
     // NgxIntlTelInputModule,
     ReactiveFormsModule,
     SocialLoginModule,
+    NgxStripeModule.forRoot(environment.config.stripeKey),
   ],
   declarations: [
     ContactUspageComponent,
@@ -55,7 +57,8 @@ import { environment } from 'src/environments/environment';
     AuthComponent,
   ],
   exports: [FormAuthComponent],
-  providers: [{
+  providers: [
+    StripeService, {
     provide: 'SocialAuthServiceConfig',
     useValue: {
       autoLogin: false,

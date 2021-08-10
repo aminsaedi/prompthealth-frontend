@@ -43,6 +43,14 @@ export class ProfileManagementService {
   dispose(){ 
     this._user = null; 
     this._profile = null;
+    if(!this._uService.isServer) {
+      const ls = this._uService.localStorage;
+      ls.removeItem('token');
+      ls.removeItem('loginID');
+      ls.removeItem('user');
+      ls.removeItem('roles');
+      ls.removeItem('isVipAffiliateUser');
+    }
     this.changeLoginStatus('notLoggedIn');
   }
 

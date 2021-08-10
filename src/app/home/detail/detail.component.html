@@ -60,50 +60,50 @@ class="bg-background p-4"
 
 <!-- section review -->
 <section class="container bg-white my-50p my-md-100p" *ngIf="indexTabItem == 1">
-    <div class="row justify-content-between my-5">
-      <div class="col-12 col-md-6 col-lg-7">
-        <div *ngIf="userInfo">
-          <ng-container *ngIf="userInfo.reviews.length > 0">
-            <star-rate [rate]="((userInfo)? userInfo.rating : 0)" margin='big'></star-rate>
-            <span class='text-primary body1 pl-4'>({{userInfo.reviews.length}})</span>
-          </ng-container>
+  <div class="row justify-content-between my-5">
+    <div class="col-12 col-md-6 col-lg-7">
+      <div *ngIf="userInfo">
+        <ng-container *ngIf="userInfo.reviews.length > 0">
+          <star-rate [rate]="((userInfo)? userInfo.rating : 0)" margin='big'></star-rate>
+          <span class='text-primary body1 pl-4'>({{userInfo.reviews.length}})</span>
+        </ng-container>
 
-          <span *ngIf="userInfo.reviews.length == 0 && !userInfo.detailByGoogle" class="text-primary pl-4 body1">No review yet</span>
-        </div>
+        <span *ngIf="userInfo.reviews.length == 0 && !userInfo.detailByGoogle" class="text-primary pl-4 body1">No review yet</span>
+      </div>
 
-        <div *ngIf="userInfo && userInfo.reviews.length > 0">
-          <div class="my-5">
-            <ul class="review-controller list-unstyled d-inline-flex mb-3">
-              <li class="btn btn-text small text-body mr-2 mr-md-4 "
-                (click)="sortReviewsBy(0)" 
-                [ngClass]="{active: indexSortReviews == 0}"
-              >Highest Rated</li>
-              <li class="btn btn-text small text-body mr-2 mr-md-4"
-                (click)="sortReviewsBy(1)" 
-                [ngClass]="{active: indexSortReviews == 1}" 
-              >Lowest Rated</li>
-              <li class="btn btn-text small text-body "
-                (click)="sortReviewsBy(2)" 
-                [ngClass]="{active: indexSortReviews == 2}"
-              >Most Recent</li>
-            </ul>
-        
-            <ul class="reviews p-0 m-0 list-unstyled">
-              <li class="d-md-flex flex-md-nowrap p-3 p-md-4 mb-4 bg-background" *ngFor="let r of userInfo.reviews">
-                <div class="mb-3 mb-md-0 col-md-5 col-lg-3 d-flex">
-                  <div class="review-image rounded-circle overflow-hidden mr-3">
-                    <img [src]="r.image" [alt]="r.name">
-                  </div>
-                  <h6 class="mt-3 mb-0">{{r.name}}</h6>
+      <div *ngIf="userInfo && userInfo.reviews.length > 0">
+        <div class="my-5">
+          <ul class="review-controller list-unstyled d-inline-flex mb-3">
+            <li class="btn btn-text small text-body mr-2 mr-md-4 "
+              (click)="sortReviewsBy(0)" 
+              [ngClass]="{active: indexSortReviews == 0}"
+            >Highest Rated</li>
+            <li class="btn btn-text small text-body mr-2 mr-md-4"
+              (click)="sortReviewsBy(1)" 
+              [ngClass]="{active: indexSortReviews == 1}" 
+            >Lowest Rated</li>
+            <li class="btn btn-text small text-body "
+              (click)="sortReviewsBy(2)" 
+              [ngClass]="{active: indexSortReviews == 2}"
+            >Most Recent</li>
+          </ul>
+      
+          <ul class="reviews p-0 m-0 list-unstyled">
+            <li class="d-md-flex flex-md-nowrap p-3 p-md-4 mb-4 bg-background" *ngFor="let r of userInfo.reviews">
+              <div class="mb-3 mb-md-0 col-md-5 col-lg-3 d-flex">
+                <div class="review-image rounded-circle overflow-hidden mr-3">
+                  <img [src]="r.image" [alt]="r.name">
                 </div>
-                <div class="col-md-7 col-lg-9">
-                  <star-rate [rate]="r.rate" margin='big'></star-rate>
-                  <div class="borderb-grey pt-2"></div>
-                  <p class='pt-3 pb-0'>{{r.review}}</p>
-                  <div>{{r.createdAt | date:'longDate'}}</div>
-                </div>
-                <p class="font-weight-bold mt-3 font-big mb-0">{{r.name}}</p>
+                <h6 class="mt-3 mb-0">{{r.name}}</h6>
               </div>
+              <div class="col-md-7 col-lg-9">
+                <star-rate [rate]="r.rate" margin='big'></star-rate>
+                <div class="borderb-grey pt-2"></div>
+                <p class='pt-3 pb-0'>{{r.review}}</p>
+                <div>{{r.createdAt | date:'longDate'}}</div>
+              </div>
+              <p class="font-weight-bold mt-3 font-big mb-0">{{r.name}}</p>
+              
               <div class="col-md-7 col-lg-9">
                 <star-rate [rate]="r.rate" margin='big'></star-rate>
                 <div class="borderb-grey pt-2"></div>
@@ -115,24 +115,24 @@ class="bg-background p-4"
         </div>
       </div>
 
-        <div *ngIf="userInfo?.detailByGoogle">
-          <div class="mb-5">
-            <ul class="list-unstyled reviews p-0 m-0">
-              <li class="p-3 p-md-4 mb-4 bg-background" *ngFor="let r of userInfo.detailByGoogle.reviews">
-                <div class="mb-3 d-flex">
-                  <div class="review-image rounded-circle overflow-hidden mr-3">
-                    <img [src]="r.profile_photo_url" [alt]="r.author_name">
-                  </div>
-                  <div class="mt-3">
-                    <h6>{{r.author_name}}</h6>
-                    <star-rate [rate]="r.rating" size='regular' margin="regular"></star-rate>
-                  </div>
+      <div *ngIf="userInfo?.detailByGoogle">
+        <div class="mb-5">
+          <ul class="list-unstyled reviews p-0 m-0">
+            <li class="p-3 p-md-4 mb-4 bg-background" *ngFor="let r of userInfo.detailByGoogle.reviews">
+              <div class="mb-3 d-flex">
+                <div class="review-image rounded-circle overflow-hidden mr-3">
+                  <img [src]="r.profile_photo_url" [alt]="r.author_name">
                 </div>
                 <div class="mt-3">
-                  <p class="font-weight-bold font-big">{{r.author_name}}</p>
+                  <h6>{{r.author_name}}</h6>
                   <star-rate [rate]="r.rating" size='regular' margin="regular"></star-rate>
                 </div>
               </div>
+              <div class="mt-3">
+                <p class="font-weight-bold font-big">{{r.author_name}}</p>
+                <star-rate [rate]="r.rating" size='regular' margin="regular"></star-rate>
+              </div>
+            
               <div class="">
                 <div class="borderb-grey pt-2"></div>
                 <p class='pt-3 pb-0'>{{r.text}}</p>
@@ -143,7 +143,6 @@ class="bg-background p-4"
               </div>
             </li>
           </ul>
-
         </div>
       </div>
       <div class="col-12 col-md-5 col-lg-4">
@@ -176,21 +175,7 @@ class="bg-background p-4"
                 </tr>
               </tbody>
             </table>
-
-          <!-- <ul class="list-unstyled google-reviews">
-              <li class="m-2" *ngFor="let r of userInfo.detailByGoogle.reviews">
-                <div class="d-flex flex-nowrap align-items-start mb-2">
-                  <img class="user" [src]="r.profile_photo_url" alt="">
-                  <div class="ml-2 mb-1 flex-grow-1">
-                    <span class="font-weight-400">{{r.author_name}}</span><br>
-                    <star-rate [rate]="r.rating" size="small" margin="narrow"></star-rate>
-                  </div>
-                </div>
-                <p class="font-small">{{r.text}}</p>
-                <div class="text-right font-small">{{r.relative_time_description}}</div>
-              </li>
-            </ul> -->
-
+          </div>
         </div>
       </div>
     </div>

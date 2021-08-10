@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../shared/services/shared.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { environment } from '../../../environments/environment';
-import { fadeAnimation, fadeFastAnimation, slideHorizontalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
+import { expandVerticalAnimation, fadeAnimation, fadeFastAnimation, slideHorizontalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -17,7 +17,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  animations: [fadeAnimation, fadeFastAnimation, slideVerticalAnimation, slideHorizontalAnimation]
+  animations: [fadeAnimation, fadeFastAnimation, slideVerticalAnimation, slideHorizontalAnimation, expandVerticalAnimation]
 })
 export class HeaderComponent implements OnInit {
 
@@ -45,12 +45,14 @@ export class HeaderComponent implements OnInit {
   public user: Profile;
   public isHeaderShown = true;
   public isMenuSmShown = false;
-  public isDashboardMenuShown = false;
   public isShadowShown = false;
+  public isPlanMenuShown = false;
+  public isPlanMenuSmShown = false;
 
   public AWS_S3 = environment.config.AWS_S3;
 
   public priceType: PriceType = null;
+  public planMenuData = planMenuData;
 
   private subscriptionLoginStatus: Subscription;
 
@@ -108,6 +110,15 @@ export class HeaderComponent implements OnInit {
     this._modalService.show('user-menu', this.user);
   }
 
+  onClickGetListed() {
+    this.isPlanMenuShown = !this.isPlanMenuShown;
+    this.isPlanMenuSmShown = !this.isPlanMenuSmShown;
+  }
+
+  hidePlanMenu() {
+    this.isPlanMenuShown = false;
+  }
+
   onClickUserMenuItem(route: string[]) {
     this._modalService.hide(true, route);
   }
@@ -138,3 +149,17 @@ export class HeaderComponent implements OnInit {
 
 export type PriceType = 'practitioner' | 'product';
 type UserType = 'client' | 'practitioner' | 'provider' | 'centre' | 'product';
+
+const planMenuData = [
+  {
+    title: 'Providers',
+    text: 'Celine Spino loves to cook and dine out. But a few years ago',
+    link: '/plans',
+    icon: 'verified',
+  }, {
+    title: 'Companies',
+    text: 'Celine Spino loves to cook and dine out. But a few years ago',
+    link: '/plans/product',
+    icon: 'briefcase-2',
+  }
+]

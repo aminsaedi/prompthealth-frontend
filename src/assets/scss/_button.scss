@@ -28,6 +28,9 @@
 .btn.btn-primary {
   @include btn($colorGsWhite, $colorPrimary, $colorPrimaryDark);
 }
+.btn.btn-primary-dark {
+  @include btn($colorGsWhite, $colorPrimaryDark, $colorPrimary);
+}
 .btn.btn-secondary {
   @include btn($colorGsWhite, $colorSecondary, $colorSecondaryDark);
 }

@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { RoleGuardService as RoleGuard } from '../auth/role-guard.service';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { RegistrationComponent } from './registration/registration.component';
-import { RegistrationGuard } from './registration.guard';
+import { AuthGuard } from './auth.guard';
 import { AuthComponent } from './auth/auth.component';
 
 const routes: Routes = [
@@ -12,13 +12,9 @@ const routes: Routes = [
     component: ForgotPasswordComponent
   },
   { path: 'registration', redirectTo: 'registration/u' },
-  {
-    path: 'registration/:type',
-    component: RegistrationComponent,
-    canActivate: [RoleGuard, RegistrationGuard]
-  },
+  { path: 'registration/:type', component: AuthComponent, canActivate: [AuthGuard], data: {authType: 'signup'}, },
   
-  { path: 'login', component: AuthComponent, },
+  { path: 'login', component: AuthComponent, canActivate: [AuthGuard], data: {authType: 'signin'}},
 ];
 
 @NgModule({

@@ -1,1 +1,111 @@
-<p>auth works!</p>
+<div class="d-md-flex align-items-start">
+  <section class="main mx-15p mx-md-30p mx-xl-100p mt-15p mt-30p">
+    <a routerLink="/">
+      <img 
+      src="/assets/img/logo.png"
+      routerLink="/"
+      height="25"
+      alt=""
+      >
+    </a>
+    <div class="py-50p pt-md-70p pb-md-0p">
+      <h3 class="mb-30p">
+        <ng-container *ngIf="authType == 'signin'">Sign in</ng-container>
+        <ng-container *ngIf="authType == 'signup'">Getting Started</ng-container>
+      </h3>
+      <form-auth
+      [authType]="authType"
+      [userRole]="roleType"
+      ></form-auth>
+    </div>
+  </section>
+  <section class="sub bg-primary-light sticky-top d-flex flex-column-reverse flex-md-column">
+    <div 
+    class="flex-grow-1 position-relative" 
+    style="width: 90%; max-width: 400px; margin: auto;"
+    >
+      <div class="center-md text-center w-100">
+        <img 
+        src="/assets/img/auth/login.png" 
+        class="tip-image"
+        alt=""
+        >
+  
+        <div class="mt-30p text-center">
+          <h4 class="d-inline position-relative">
+            <div class="text-left subtitle2 mb-5p tip-sign">
+              <span>
+                <i iconPh="lightning-filled" class="text-yellow mr-5p"></i>
+                <span class="text-label">Tip!</span>
+              </span>  
+            </div>
+            Share post with your friends!
+          </h4>
+  
+          <p class="text-label mb-50p mb-md-0p">
+            View by category and filter by media type to find expert-created content that matters to you
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div
+    *ngIf="authType=='signup'"
+    class="my-30p"
+    style="width: 90%; max-width: 600px; margin:auto;"
+    >
+      <div class="d-lg-flex">
+        <a 
+        routerLink="/auth/registration/u"
+        class="text-body"
+        >
+          <div
+          *ngIf="roleType != 'U'"
+          class="p-15p bg-white rounded-12p shadow"
+          >
+            <h6>
+              <i iconPh="verified" class="text-primary-dark mr-5p"></i>
+              <span>Health seekers</span>
+            </h6>
+            <p>
+              Are you a health seeker? cook and dine out. But a few years ago
+            </p>
+          </div>
+        </a>
+
+        <a routerLink="/plans">
+          
+          <div
+          *ngIf="roleType != 'SP' && roleType != 'C'"
+          class="p-15p bg-white rounded-12p shadow"
+          >
+            <h6>
+              <i iconPh="verified" class="text-primary-dark mr-5p"></i>
+              <span>Providers</span>
+            </h6>
+            <p>
+              Are you a provider? cook and dine out. But a few years ago
+            </p>
+          </div>
+        </a>
+    
+        <a routerLink="/plans/product">
+          <div
+          *ngIf="roleType != 'P'"
+          class="p-15p bg-white rounded-12p shadow mt-15p mt-lg-0p ml-lg-30p"
+          >
+            <h6>
+              <i iconPh="briefcase-2" class="text-primary-dark mr-5p"></i>
+              <span>Companies</span>
+            </h6>
+            <p>
+              Are you a provider? cook and dine out. But a few years ago
+            </p>
+          </div>
+        </a>
+    
+      </div>
+    </div>
+  </section>
+</div>
+

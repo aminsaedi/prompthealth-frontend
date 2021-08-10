@@ -7,7 +7,7 @@ import { UniversalService } from '../shared/services/universal.service';
 @Injectable({
   providedIn: 'root'
 })
-export class RegistrationGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
   constructor(
     private _uService: UniversalService,
     private _router: Router,
@@ -17,9 +17,20 @@ export class RegistrationGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree 
   {
+    const token = this._uService.localStorage.getItem('token');
+    if(token) {
+      this._router.navigate(['/']);
+      return false;
+    }
+
+    const authType = next.data ? next.data.authType : null;
+    if(authType == 'signin') {
+      return true;
+    }
+
     const params = next.params;
     const role = ((params && params.type) ? params.type : 'u').toUpperCase();
-   
+
     /** U can access to register page always  */
     /** SP / C / P can access to register page ONLY IF eligible default plan is already selected */
     switch(role) {

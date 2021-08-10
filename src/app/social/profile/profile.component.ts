@@ -152,12 +152,25 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  onClickLogin() {
+    this._modalService.show('login-menu');
+  }
+
   onClickBook() {
     if(this.user) {
       this._modalService.show('booking');
     } else {
       this._modalService.show('login-menu');
     }
+  }
+
+  async onClickBookOutside() {
+    this._sharedService.post({ _id: this.user._id }, '/booking/gain-booking-count').subscribe(res => {
+      console.log(res);
+    }, err => {
+      console.error(err);
+    });
+    window.open(this.profile.bookingUrl, '_blank');
   }
 
   onSubmitBooking() {

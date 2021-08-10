@@ -135,8 +135,6 @@ export class ExpertFinderComponent implements OnInit {
 
   }
 
-
-
   initController() {
     const filterData: IFilterData = {
       ...this._route.snapshot.queryParams as IExpertFinderFilterQueryParams,
@@ -314,7 +312,7 @@ export class ExpertFinderComponent implements OnInit {
     const payload = this.controller.toPayload();
     this.controller.disposeProfesionnals();
     this._sharedService.postNoAuth(payload, 'user/filter').subscribe((res: IGetPractitionersResult) => {
-      this.controller.setProfessionals(res.data);
+      this.controller.setProfessionals(res.data.dataArr);
       this.changePage(1);
     })
   }

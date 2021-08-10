@@ -1,3 +1,4 @@
+import { IDefaultPlan } from "./default-plan";
 import { IUserDetail } from "./user-detail";
 
 export interface IResponseData {
@@ -12,12 +13,19 @@ export interface IGetProfileResult extends IResponseData{
 
 export interface IGetPractitionersResult extends IResponseData {
   data: {
-    userId: string,
-    userData: IUserDetail,
-    ans: {
-      _id: string,
-      item_text: string,
-      subans: boolean,
+    dataArr: {
+      userId: string,
+      userData: IUserDetail,
+      ans: {
+        _id: string,
+        item_text: string,
+        subans: boolean,
+      }[],  
     }[],
-  }[]
+    filter_name: any[],
+  }
+}
+
+export interface IGetPlansResult extends IResponseData {
+  data: IDefaultPlan[]
 }

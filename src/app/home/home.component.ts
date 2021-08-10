@@ -6,7 +6,7 @@ import { UniversalService } from '../shared/services/universal.service';
 import { Category, CategoryService } from '../shared/services/category.service';
 import { IUserDetail } from '../models/user-detail';
 import { CategoryViewerController } from '../models/category-viewer-controller';
-import { expandAllAnimation, expandVerticalAnimation } from '../_helpers/animations';
+import { expandAllAnimation, expandVerticalAnimation, slideVerticalStaggerAnimation } from '../_helpers/animations';
 import { Professional } from '../models/professional';
 import { CityId, getLabelByCityId } from '../_helpers/location-data';
 import { BlogSearchQuery, IBlogSearchResult } from '../models/blog-search-query';
@@ -21,7 +21,7 @@ import { smoothHorizontalScrolling } from '../_helpers/smooth-scroll';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  animations: [expandVerticalAnimation, expandAllAnimation],
+  animations: [expandVerticalAnimation, expandAllAnimation, slideVerticalStaggerAnimation],
 })
 export class HomeComponent implements OnInit {
 
@@ -77,6 +77,10 @@ export class HomeComponent implements OnInit {
   //   });
   // }
 
+  public testimonial = [];
+  toggle() {
+    this.testimonial = this.testimonial.length == 0 ? [0,1,2,3,] : [];    
+  }
   ngOnInit() {
     this._uService.setMeta(this.router.url, {
       title: 'PromptHealth | Your health and wellness personal assistant',

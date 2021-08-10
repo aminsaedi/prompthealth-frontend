@@ -180,6 +180,14 @@ i {
   content: "\ec7d";
   margin-left: -1em;
 }
+.icon-lightning-filled .path1:before {
+  content: "\ec7c";
+}
+.icon-lightning-filled .path2:before {
+  content: "\ec7d";
+  margin-left: -1em;
+}
+
 .icon-camera-slash .path1:before {
   content: "\ec7e";
   opacity: 0.16;

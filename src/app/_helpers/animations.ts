@@ -1,4 +1,4 @@
-import { trigger, transition, animate, style, query, animateChild, group } from '@angular/animations';
+import { trigger, transition, animate, style, query, animateChild, group, stagger, state } from '@angular/animations';
 import { translate } from '@angular/localize/src/utils';
 
 export const fadeAnimation = trigger('fade', [
@@ -42,6 +42,28 @@ export const slideVerticalReverseAnimation = trigger('slideVerticalReverse', [
     animate('300ms ease', style({opacity: 0, transform: 'translateY(-50px)'}))
   ])
 ]);
+
+export const slideVerticalStaggerAnimation = trigger('slideVerticalStagger', [
+  transition('* => -1', [
+    query(':leave', [
+      style({opacity: 0}),
+    ])
+  ]),
+  transition('* => *', [
+    query(':leave, .hide', [
+      stagger(-130, [
+        animate('300ms ease', style({opacity: 0, transform: 'translateY(50px)'})),
+      ]),
+    ], { optional: true }),
+    query(':enter, .show', [
+      style({opacity: 0, transform: 'translateY(50px)'}),
+      stagger(130, [
+        animate('300ms ease', style({opacity: 1, transform: 'translateY(0'})),
+      ])
+    ], { optional: true }),
+  ]),
+]);
+
 
 export const expandAllAnimation = trigger('expandAll', [
   transition(':enter', [
@@ -138,3 +160,4 @@ export const slideInSocialProfileChildRouteAnimation = trigger('socialProfileChi
     query(':enter', animateChild(), {optional: true}),
   ]),
 ]);
+

@@ -15,6 +15,25 @@ header {
   }
 }
 
+.get-listed-md-container {
+  position: absolute;
+  width: 280px;
+  top: 100%;
+  left: calc(50% - 140px);
+  margin-top: 20px;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    margin-left: -8px;
+    border: solid 8px;
+    border-color: transparent transparent white transparent;
+  }
+}
+
 modal#user-type-menu{
   .image-container{
     width: 50%;

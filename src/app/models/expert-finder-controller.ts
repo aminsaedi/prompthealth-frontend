@@ -297,7 +297,7 @@ export class ExpertFinderController {
     this._professionalsInitialized = false;
   }
 
-  setProfessionals(data: IGetPractitionersResult['data']) {
+  setProfessionals(data: IGetPractitionersResult['data']['dataArr']) {
     const professionals = [];
     data.forEach(d => {
       const p = new Professional(d.userId, d.userData)

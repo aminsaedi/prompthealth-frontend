@@ -63,6 +63,7 @@ import { ModalComponent } from './modal/modal.component';
 import { ContenteditableValueAccessor } from './contenteditable.directive';
 import { DurationPipe } from './pipes/duration.pipe';
 import { DistancePipe } from './pipes/distance.pipe';
+import { ParallaxDirective } from './parallax.directive';
 
 @NgModule({
   imports: [
@@ -135,6 +136,7 @@ import { DistancePipe } from './pipes/distance.pipe';
     ContenteditableValueAccessor,
     DurationPipe,
     DistancePipe,
+    ParallaxDirective,
   ],
   exports: [
     UserSidebarComponent,
@@ -187,6 +189,7 @@ import { DistancePipe } from './pipes/distance.pipe';
     ContenteditableValueAccessor,
     DurationPipe,
     DistancePipe,
+    ParallaxDirective,
   ]
 })
 export class SharedModule { }
