@@ -2,15 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { Profile } from 'src/app/models/profile';
 import { SocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 
 @Component({
   selector: 'app-base',
   templateUrl: './base.component.html',
-  styleUrls: ['./base.component.scss']
+  styleUrls: ['./base.component.scss'],
+  animations: [expandVerticalAnimation],
 })
 export class BaseComponent implements OnInit {
 
@@ -19,9 +22,12 @@ export class BaseComponent implements OnInit {
   get userName() { return this.user ? this.user.name : ''; }
   get user() { return this._profileService.profile; }
 
+
   get postForModal() { return this._modalService.data as SocialPost; }
 
   private isPopState: boolean = false;
+  public isMessageBeingApprovedShownIfNeeded = true;
+
   private subscriptionRouterEvent: Subscription; 
   
   private urlPrev: {
@@ -39,13 +45,17 @@ export class BaseComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
-    this.subscriptionRouterEvent.unsubscribe();
+    if(this.subscriptionRouterEvent) {
+      this.subscriptionRouterEvent.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
     if(!this._uService.isServer) {
       this.scrollToTop();
     }
+
+    this.isMessageBeingApprovedShownIfNeeded = !this._uService.sessionStorage.getItem('hide_alert_being_approved');
     
     this.urlPrev = this.getURLset();
 
@@ -117,5 +127,10 @@ export class BaseComponent implements OnInit {
     if(state == 'done') {
       this._modalService.hide();        
     }
+  }
+
+  onClickAlertBeingApproved() {
+    this._uService.sessionStorage.setItem('hide_alert_being_approved', 'true');
+    this.isMessageBeingApprovedShownIfNeeded = false;
   }
 }

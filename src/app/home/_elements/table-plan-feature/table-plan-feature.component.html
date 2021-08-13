@@ -1,0 +1,53 @@
+<div class="feature-table">
+  <div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onChangeHeaderStickStatus($event)"></div>
+  <div 
+  class="d-flex bg-background py-20p px-30p subtitle1 text-label rounded-12p sticky-top"
+  style="top: 80px; transition-duration: 180ms;"
+  [ngClass]="{shadow: isHeaderSticked}"
+  >
+    <div class="col-title d-none d-md-block">
+      Features
+    </div>
+    <div 
+    *ngFor="let plan of plans | keyvalue:keepOriginalOrder"
+    class="col-item text-center"
+    >{{plan.key}}</div>
+  </div>
+
+  <div 
+  *ngFor="let feature of planFeatures; let i = index;"
+  class="d-flex flex-wrap py-20p px-30p subtitle2 w-100"
+  [ngClass]="i == 0 ? 'mt-20p' : null"
+  >
+    <div class="col-title feature-item">
+      <div>
+        <span (click)="showDetail(i)">
+          <span>{{feature.item}}</span>
+          <i 
+          *ngIf="feature.detail"
+          iconPh="info"
+          class="ml-10p"
+          ></i>
+        </span>  
+      </div>
+
+      <p 
+      *ngIf="idxSelectedFeature == i"
+      [@expandVertical]
+      class="mb-0 body2 text-label"
+      >{{feature.detail}}</p>
+    </div>
+
+    <div 
+    *ngFor="let plan of plans | keyvalue:keepOriginalOrder"
+    class="col-item text-center"
+    >
+    <i 
+    *ngIf="isFeatureApplicable(i, plan.key)" 
+    iconPh="checkbox-square"
+    class="text-secondary"
+    style="font-size: 23px;"
+    ></i>
+    </div>
+  </div>
+</div>

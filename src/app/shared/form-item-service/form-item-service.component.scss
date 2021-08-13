@@ -16,6 +16,10 @@
       white-space: pre-wrap;
       word-break: break-word;
 
+      &.enabled {
+        margin: 10px 15px 10px 0
+      }
+
       &:not(:last-child)::after {
         content: attr(data-separator);
         white-space: pre;

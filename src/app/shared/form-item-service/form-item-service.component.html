@@ -6,10 +6,10 @@ class="list-unstyled checkbox-group-root"
   <ng-container *ngFor="let cat of categories; let i = index;">
     <li 
     *ngIf="getFormArray('root').controls[i].value"
-    class="root"
+    class="root body1"
     [attr.data-separator]="_option.inlineSeparator"
     >
-      <span class="body1">{{cat.item_text}}</span>
+      <span>{{cat.item_text}}</span>
 
       <ul 
       *ngIf="getFormArray('root').controls[i].value"
@@ -20,7 +20,7 @@ class="list-unstyled checkbox-group-root"
           <li 
           *ngIf="getFormArray(cat._id).controls[j].value"
           class="sub" 
-          [ngClass]="{col2: col2}" 
+          [ngClass]="(_option.fontSmallSub ? 'body2' : 'body1')" 
           [attr.data-separator]="_option.inlineSeparator"
           >
             <span>{{sub.item_text}}</span>
@@ -31,9 +31,13 @@ class="list-unstyled checkbox-group-root"
   </ng-container>
 </ul>
 
-<ul class="list-unstyled checkbox-group-root" *ngIf="!disabled">
+<ul 
+*ngIf="!disabled"
+class="list-unstyled checkbox-group-root" 
+[ngClass]="{inline: _option.showInlineWhenEnabled}"
+>
   <ng-container *ngFor="let cat of categories; let i = index;">
-    <li>
+    <li class="enabled">
       <form-item-checkbox 
       [name]="cat._id" 
       [controller]="getFormArray('root').controls[i]"
@@ -41,7 +45,7 @@ class="list-unstyled checkbox-group-root"
       ></form-item-checkbox>
 
       <ul 
-      *ngIf="getFormArray('root').controls[i].value"
+      *ngIf="!_option.hideSub && getFormArray('root').controls[i].value"
       class="checkbox-group mt-3 pl-3 list-unstyled"
       [ngClass]="{col2: col2}"
       >

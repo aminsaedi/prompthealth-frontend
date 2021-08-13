@@ -6,6 +6,7 @@ import { IUserDetail } from '../../models/user-detail';
 import { Profile } from 'src/app/models/profile';
 import { Observable, Subject } from 'rxjs';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { IGetProfileResult } from 'src/app/models/response-data';
 
 @Injectable({
   providedIn: 'root'
@@ -67,9 +68,9 @@ export class ProfileManagementService {
       this.dispose();
     } else {
       this.changeLoginStatus('loggingIn');
-      this.getProfileDetail(JSON.parse(userStr)).then(u => {
-        this.setData(u);
-      }, () =>{
+      this.getProfileDetail(JSON.parse(userStr)).then(
+        () => {}, 
+        () =>{
         this.dispose();
       })
     }
@@ -84,24 +85,23 @@ export class ProfileManagementService {
   /** this is called by header at first access and set the userdata from server in this service. and then someplace will use the data which is stored here */
   getProfileDetail(user: IUserDetail): Promise<IUserDetail>{
     const id = user._id;
-    const role = user.roles.toLowerCase();
+    const role = user.roles;
 
     return new Promise((resolve, reject) => {
       if(this._user && this._user._id == id){ 
         this.setData(this._user);
         resolve(this._user);
       }else{
-        const path = environment.config.API_URL + ((role == 'p') ? 'partner/get/' : 'user/get-profile/') + id;
+        const path = environment.config.API_URL + 'user/get-profile/';
         const headers = new HttpHeaders()
           .set('Authorization', localStorage.getItem('token'))
           .set('Content-Type', 'application/json');
 
-        this.http.get( path, {headers} ).subscribe((res: any)=>{
-          if(res.statusCode === 200 && res.data.length > 0){
-            this.setData(res.data[0]);
+        this.http.get( path, {headers} ).subscribe((res: IGetProfileResult)=>{
+          if(res.statusCode == 200) {
+            this.setData(res.data);
             resolve(this._user);
-          }
-          else{ 
+          } else{ 
             checkAccessToken(res);
             this.dispose();
             reject('cannot find user data');             

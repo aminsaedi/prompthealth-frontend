@@ -3,8 +3,10 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
 import { SharedService } from '../../shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { minmax, validators } from 'src/app/_helpers/form-settings';
+import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 
 @Component({
   selector: 'app-contact-us',
@@ -12,6 +14,16 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
   styleUrls: ['./contact-us.component.scss']
 })
 export class ContactUsComponent implements OnInit {
+
+  get f() { return this.form.controls; }
+
+  public form: FormGroup;
+  public isSubmitted = false;
+  public maxMessage = minmax.bookingNoteMax;
+
+  public faqs = faqs;
+
+
   contactForm: FormGroup;
   submitted = false;
 
@@ -33,6 +45,12 @@ export class ContactUsComponent implements OnInit {
       title: 'Contact us | PromptHealth',
       description: 'Do you have questions about our service or our app? Feel free to contact us!',
     });
+    this.form = new FormGroup({
+      name: new FormControl('', validators.contactName),
+      email: new FormControl('', validators.contactEmail),
+      message: new FormControl('', validators.contactMessage),
+    });
+
     this.contactForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       name: ['', [Validators.required]],
@@ -75,3 +93,11 @@ export class ContactUsComponent implements OnInit {
 
 
 }
+
+
+const faqs: IFAQItem[] = [
+  {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
+  {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
+  {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
+  {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
+]

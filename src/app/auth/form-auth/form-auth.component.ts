@@ -127,7 +127,6 @@ export class FormAuthComponent implements OnInit {
 
     this.changeState.emit('start');
 
-    console.log(data);
     const subscription = (this.authType === 'signin') ? this._sharedService.login(data) : this._sharedService.register(data);
     subscription.subscribe((res: any) => {
       this._sharedService.loader('hide');

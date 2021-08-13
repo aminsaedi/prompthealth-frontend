@@ -1,0 +1,32 @@
+@import '../../../assets/scss/variables';
+
+.switch {
+  height: 40px;
+  box-sizing: content-box;
+  font-size: 0;
+  user-select: none;
+}
+
+.switch-hundle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: $colorPrimary;
+  transition-property: transform, width;
+  transition-duration: 180ms;
+}
+
+.switch-item {
+  position: relative;
+  transition: all 180ms; 
+
+  flex-grow: 0;
+  flex-shrink: 0;
+
+  color: $colorGsLabel;
+
+  &.active {
+    color: $colorGsWhite;
+  }
+}

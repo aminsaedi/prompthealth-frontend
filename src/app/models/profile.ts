@@ -14,7 +14,22 @@ export interface IProfile {
   profileImageFull: IUserDetail['profileImage'];
   profileImageType: string;
 
+  followData: {
+    followed: {
+      data: IUserDetail[];
+      total: number;
+    };
+    following: IProfile['followData']['followed'];
+  }
+
+  isApproved: boolean;
+  isFollowDataReady: boolean;
+
+  linkToProfile: string;
+
   gender: string;
+
+
 }
 
 export class Profile implements IProfile {
@@ -35,11 +50,20 @@ export class Profile implements IProfile {
   get profileImageFull() { return this._profileImage ? this._s3 + this._profileImage : ''; }
   get profileImageType() { return this._profileImageType; }
 
+  get isApproved() { return this.role == 'U' || this.role == 'SA' || this.data.isApproved; }
+
+  get linkToProfile() { return this.role != 'U' ? '/community/profile' + this._id : null; }
+
   get gender() { return this.data.gender || ''; }
-  
+
+  get followData() { return this._followData; }
+  get isFollowDataReady() { return this._followDataInitDone; }
 
   private _profileImage: string;
   private _profileImageType: string;
+  private _followData: IProfile['followData'] = null;
+  private _followDataInitDone = false;
+
   protected _s3 = environment.config.AWS_S3;
 
   constructor(protected data: IUserDetail) {

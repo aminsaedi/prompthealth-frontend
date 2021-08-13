@@ -8,18 +8,20 @@
       <li 
       *ngIf="getFormArray('root').controls[i].value"
       [attr.data-separator]="_option.inlineSeparator"
+      class="body1"
       >
-        <span class="body1">{{item.label}}</span>
+        <span>{{item.label}}</span>
   
         <ul 
         *ngIf="getFormArray('root').controls[i].value && item.child"
         class="checkbox-group-sub list-unstyled"
-        [ngClass]="{col2: col2, inline: _option.showInlineSubWhenDisabled, 'block-with-zero-margin': _option.showBlockSubWithZeroMarginWhenDisabled, 'pl-3': !_option.removeIndentSub, 'body2': _option.fontSmallSub}"
+        [ngClass]="{col2: col2, inline: _option.showInlineSubWhenDisabled, 'block-with-zero-margin': _option.showBlockSubWithZeroMarginWhenDisabled, 'pl-3': !_option.removeIndentSub}"
         >
           <ng-container *ngFor="let itemSub of item.child; let j = index;">
             <li 
             *ngIf="getFormArray(item.id).controls[j].value"
             [attr.data-separator]="_option.inlineSeparator"
+            [ngClass]="(_option.fontSmallSub ? 'body2' : 'body1')"
             >
               <span>{{itemSub.label}}</span>
             </li>

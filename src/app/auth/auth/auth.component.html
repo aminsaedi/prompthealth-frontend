@@ -19,9 +19,10 @@
       ></form-auth>
     </div>
   </section>
+
   <section class="sub bg-primary-light sticky-top d-flex flex-column-reverse flex-md-column">
     <div 
-    class="flex-grow-1 position-relative" 
+    class="flex-grow-1 position-relative py-50p py-md-0" 
     style="width: 90%; max-width: 400px; margin: auto;"
     >
       <div class="center-md text-center w-100">
@@ -42,7 +43,7 @@
             Share post with your friends!
           </h4>
   
-          <p class="text-label mb-50p mb-md-0p">
+          <p class="text-label">
             View by category and filter by media type to find expert-created content that matters to you
           </p>
         </div>
@@ -54,51 +55,53 @@
     class="my-30p"
     style="width: 90%; max-width: 600px; margin:auto;"
     >
-      <div class="d-lg-flex">
+      <div class="d-lg-flex align-items-stretch">
         <a 
+        *ngIf="roleType != 'U'"
         routerLink="/auth/registration/u"
         class="text-body"
+        style="flex-basis: 50%"
         >
-          <div
-          *ngIf="roleType != 'U'"
-          class="p-15p bg-white rounded-12p shadow"
-          >
+          <div class="h-100 p-15p bg-white rounded-12p shadow my-15p my-lg-0p mx-lg-15p">
             <h6>
               <i iconPh="verified" class="text-primary-dark mr-5p"></i>
               <span>Health seekers</span>
             </h6>
-            <p>
+            <p class="mb-0">
               Are you a health seeker? cook and dine out. But a few years ago
             </p>
           </div>
         </a>
 
-        <a routerLink="/plans">
-          
-          <div
-          *ngIf="roleType != 'SP' && roleType != 'C'"
-          class="p-15p bg-white rounded-12p shadow"
-          >
+        <a 
+        *ngIf="roleType != 'SP' && roleType != 'C'"
+        routerLink="/plans"
+        class="text-body"
+        style="flex-basis: 50%"
+        >
+          <div class="h-100 p-15p bg-white rounded-12p shadow my-15p my-lg-0p mx-lg-15p">
             <h6>
               <i iconPh="verified" class="text-primary-dark mr-5p"></i>
               <span>Providers</span>
             </h6>
-            <p>
+            <p class="mb-0">
               Are you a provider? cook and dine out. But a few years ago
             </p>
           </div>
         </a>
     
-        <a routerLink="/plans/product">
-          <div
-          *ngIf="roleType != 'P'"
-          class="p-15p bg-white rounded-12p shadow mt-15p mt-lg-0p ml-lg-30p"
-          >
+        <a 
+        *ngIf="roleType != 'P'"
+        routerLink="/plans/product"
+        class="text-body"
+        style="flex-basis: 50%"
+        >
+          <div class="h-100 p-15p bg-white rounded-12p shadow my-15p my-lg-0p mx-lg-15p">
             <h6>
               <i iconPh="briefcase-2" class="text-primary-dark mr-5p"></i>
               <span>Companies</span>
             </h6>
-            <p>
+            <p class="mb-0">
               Are you a provider? cook and dine out. But a few years ago
             </p>
           </div>

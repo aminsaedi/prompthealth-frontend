@@ -52,7 +52,6 @@ export interface IProfessional extends IProfile {
   isMapIconReady: boolean;
   isCentre: boolean;
   isProvider: boolean;
-  isApproved: boolean; /** approved to be listed */
   isVerified: boolean; /** verified for badge */
   isVirtualAvailable: boolean;
   provideVirtual: boolean; // old name (changed to isVirtualAvailable)
@@ -152,7 +151,6 @@ export class Professional extends Profile implements IProfessional{
   get isMapIconReady() { return this._isMapIconReady; }
   get isCentre() { return !!(this.role == 'C'); }
   get isProvider() { return !!(this.role == 'SP'); }
-  get isApproved() { return this.p.isApproved; }
   get isVerified() { return this.p.verifiedBadge || false; }
   get isVirtualAvailable() { return this.p.provideVirtual || false; }
   get provideVirtual() { return this.isVirtualAvailable; }

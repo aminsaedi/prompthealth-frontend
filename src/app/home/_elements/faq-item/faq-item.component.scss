@@ -1,0 +1,16 @@
+@import '../../../../assets/scss/variables';
+
+.faq-item {
+  transition: background-color 180ms;
+  i {
+    transition: transform 180ms;
+  }
+
+  &.active {
+    background: $colorGsBackground;
+
+    i {
+      transform: rotateX(180deg)
+    }
+  }
+}

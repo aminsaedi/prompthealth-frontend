@@ -1,16 +1,6 @@
-<!-- <ngx-spinner bdColor="#fff" size="medium" color="#fff">
-  <p style="font-size: 20px; color: white" class="loaderbg">
-    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
-  </p>
-</ngx-spinner> -->
-
-<section class="hero text-light">
-  <div class="position-relative container pt-5">
-    <div class="pt-3">
-      <h3 class="pt-5 pb-2 pb-md-4">Our Favourite Health Products and Services</h3>
-    </div>
-  </div>
-</section>
+<div class="container my-30p">
+  <h3>Health Products</h3>
+</div>
 
 <ng-template #filterTop>
   <div class="pt-3 px-3 pb-2 position-relative bg-primary-light">
@@ -23,7 +13,7 @@
   </div>    
 </ng-template>
 
-<div class="container mt-5">
+<div class="container">
   <div class="intersection-observer" intersectionObserver (changeStatus)="onChangeStickyStatus($event)"></div>
   <div class="row">
     <section class="col-12 col-lg-4 d-none d-lg-block">
@@ -80,7 +70,7 @@
               <li *ngFor="let data of sortData" class="position-relative text-nowrap">
                 <button class="btn btn-text small text-body" 
                 [ngClass]="{active: (currentSortTarget == data.id)}" 
-                (click)="sortPartners(data)"
+                (click)="sortProducts(data)"
                 >{{data.label}}</button>
               </li>
             </ul>
@@ -88,25 +78,21 @@
         </div>
       </div>
 
-      <!-- <p class="text-dark font-big font-italic mb-5" style="line-height: 1.5em;">Coming soon...wellness products and services. Please check back soon to explore our featured companies.</p> -->
-
-      <p *ngIf="!partners" class="opacity-0">Here are the options we found for you</p>
-      <ul class="row list-unstyled partners" *ngIf="!partners">
-        <li class="col-12 col-md-6 mb-4" *ngFor="let i of [0,1,2,3]">
+      <ul class="row list-unstyled products" *ngIf="!products">
+        <li class="col-12 col-md-6 mb-30p" *ngFor="let i of [0,1,2,3]">
           <card-dummy class="rounded-12p border"></card-dummy>
         </li>
       </ul>
 
-      <p *ngIf="partners && partners.length > 0" class="font-italic">Here are the options we found for you</p>
-      <ul class="partners list-unstyled row m-0" *ngIf="partners && partners.length > 0">
-        <li *ngFor="let p of partners;" class="col-12 col-md-6">
-          <div class="partner my-2 py-4 my-lg-3 py-lg-0">
-            <card-partner [data]='p'></card-partner>
+      <ul class="products list-unstyled row" *ngIf="products && products.length > 0">
+        <li *ngFor="let p of products;" class="col-12 col-md-6 mb-30p">
+          <div class="partner">
+            <card-product [data]='p'></card-product>
           </div>
         </li>
       </ul>
 
-      <p *ngIf="partners && partners.length == 0" class="font-italic">
+      <p *ngIf="products && products.length == 0" class="font-italic">
         There is no one available with your search criteria right now.
         <br><br>
         Be sure to check back as our network is growing everyday!

@@ -76,12 +76,13 @@ export const expandAllAnimation = trigger('expandAll', [
 ]);
 
 export const expandVerticalAnimation = trigger('expandVertical', [
-  transition(':enter', [
+  transition(':enter, shrink => expand', [
     style({ display: 'block', height: 0, opacity: 0 }),
     animate('300ms ease', style({ height: '*', opacity: 1 }))
   ]),
-  transition(':leave', [
-    animate('300ms ease', style({ height: '0', opacity: 0 }))
+  transition(':leave, expand => shrink', [
+    animate('300ms ease', style({ height: '0', opacity: 0 })),
+    style({height: 0}),
   ])
 ]);
 

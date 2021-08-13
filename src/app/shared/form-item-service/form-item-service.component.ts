@@ -15,13 +15,13 @@ export class FormItemServiceComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() submitted: boolean = false;
   @Input() controller: FormGroup = new FormGroup({});
-  @Input() option: IOptionCheckboxGroup = {};
+  @Input() option: IOptionCheckboxGroupService = {};
 
 
   @Output() changeValue = new EventEmitter<string[]>();
 
   public categories: Category[];
-  public _option: OptionCheckboxGroup;
+  public _option: OptionCheckboxGroupService;
 
   getFormArray(name: string){ return this.controller.controls[name] as FormArray; }
 
@@ -30,7 +30,8 @@ export class FormItemServiceComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this._option = new OptionCheckboxGroup(this.option);
+    this._option = new OptionCheckboxGroupService(this.option);
+    console.log(this._option)
 
     this.controller.setControl('root', new FormArray([]));
 
@@ -49,6 +50,10 @@ export class FormItemServiceComponent implements OnInit {
     this.controller.valueChanges.subscribe(()=>{
       this.getSelected(true);
     });
+  }
+
+  deselectAll() {
+    this.controller.reset();
   }
 
   getSelected(emit: boolean = false){
@@ -95,5 +100,17 @@ export class FormItemServiceComponent implements OnInit {
         this.getFormArray(cat._id).controls.forEach(c => { c.setValue(false); });
       })
     });
+  }
+}
+
+export interface IOptionCheckboxGroupService extends IOptionCheckboxGroup{
+  hideSub?: boolean;
+}
+
+export class OptionCheckboxGroupService extends OptionCheckboxGroup implements IOptionCheckboxGroupService {
+  
+  get hideSub() { return (this.data.showInlineWhenEnabled === true || this.data.hideSub === true) ? true : false; }
+  constructor(protected data: IOptionCheckboxGroupService = {}) {
+    super(data);
   }
 }

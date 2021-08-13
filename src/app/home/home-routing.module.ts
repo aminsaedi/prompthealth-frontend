@@ -39,6 +39,7 @@ import { SitemapComponent } from "./sitemap/sitemap.component";
 import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
 import { AboutComponent } from "./about/about.component";
 import { AboutPractitionerComponent } from "./about-practitioner/about-practitioner.component";
+import { AboutProductComponent } from "./about-product/about-product.component";
 
 const routes: Routes = [
   // {
@@ -112,7 +113,7 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'plans', component: AboutPractitionerComponent },
   // { path: 'plans', component: SubscriptionPlanComponent },
-  { path: 'plans/product', component: subscriptionPlanProductComponent },
+  { path: 'plans/product', component: AboutProductComponent },
   { path: 'subscriptionplan', redirectTo: '/plans'},
 
   { path: 'practitioners', component: ExpertFinderComponent },

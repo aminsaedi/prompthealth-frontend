@@ -1,0 +1,19 @@
+<div
+class="p-20p rounded-12p border border-line faq-item overflow-hidden"
+[ngClass]="{active: data.opened}"
+(click)="toggleState()"
+>
+  <h5 class="mb-0 d-flex justify-content-between"> 
+    <span>{{data.q}}</span>
+    <i 
+    iconPh="chevron-down"
+    class="text-placeholder"
+    ></i>
+  </h5>
+  <div
+  *ngIf="data.opened" 
+  [@expandVertical]
+  >
+    <p class="mb-0 pt-10p">{{data.a}}</p>
+  </div>
+</div>

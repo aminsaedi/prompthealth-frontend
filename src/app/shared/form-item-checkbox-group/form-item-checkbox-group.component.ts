@@ -223,5 +223,5 @@ export class OptionCheckboxGroup implements IOptionCheckboxGroup {
   get fontSmallSub() {return this.data.fontSmallSub === true ? true : false; }
   get inlineSeparator() { return this.data.inlineSeparator || ', '; }
 
-  constructor(private data: IOptionCheckboxGroup = {}) { }
+  constructor(protected data: IOptionCheckboxGroup = {}) { }
 }

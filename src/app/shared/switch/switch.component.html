@@ -1,0 +1,27 @@
+<div
+class="switch rounded-pill position-relative d-flex aling-items-center flex-nowrap border border-line cursor-pointer"
+[ngStyle]="switchStyle"
+(click)="toggleSwitch()"
+>
+  <div 
+  class="switch-hundle rounded-pill"
+   [ngStyle]="{width: hundleWidth, transform: 'translateX(' + hundlePosition + ')'}"
+  ></div>
+  
+  <div 
+  class="switch-item subtitle2"
+  [ngClass]="{'active': !_isOn}"
+  [ngStyle]="{'flex-basis': (!_isOn ? _option.ratioWhenActive[0] : _option.ratioWhenInactive[0]) + '%'}"
+  >
+    <span class="center">{{labels[0]}}</span>
+  </div>
+
+    
+  <div 
+  class="switch-item subtitle2"
+  [ngClass]="{'active': !!_isOn}"
+  [ngStyle]="{'flex-basis': (!!_isOn ? _option.ratioWhenActive[1] : _option.ratioWhenInactive[1]) + '%'}"
+  >
+    <span class="center">{{labels[1]}}</span>
+  </div>
+</div>

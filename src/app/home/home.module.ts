@@ -31,7 +31,7 @@ import { NgxSocialShareModule } from 'ngx-social-share';
 import { GetFeaturedTabComponent } from './get-featured-tab/get-featured-tab.component';
 import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
 import { ListingProductComponent } from './listing-product/listing-product.component';
-import { CardPartnerComponent } from './card-partner/card-partner.component';
+import { CardProductComponent } from './_elements/card-product/card-product.component';
 import { InvitationComponent } from './invitation/invitation.component';
 import { LandingClubhouseComponent } from './landing-clubhouse/landing-clubhouse.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -52,11 +52,16 @@ import { UserQuestionnaireItemGenderComponent } from "./user-questionnaire-item-
 import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
 import { AuthModule } from "../auth/auth.module";
 import { SitemapComponent } from './sitemap/sitemap.component';
-import { CardTestimonialComponent } from './card-testimonial/card-testimonial.component';
+import { CardTestimonialComponent } from './_elements/card-testimonial/card-testimonial.component';
 import { ExpertFinderComponent } from './expert-finder/expert-finder.component';
 import { NpnSliderModule } from "npn-slider";
 import { AboutComponent } from './about/about.component';
 import { AboutPractitionerComponent } from './about-practitioner/about-practitioner.component';
+import { ScrollIndicatorComponent } from './_elements/scroll-indicator/scroll-indicator.component';
+import { FaqItemComponent } from './_elements/faq-item/faq-item.component';
+import { TablePlanFeatureComponent } from './_elements/table-plan-feature/table-plan-feature.component';
+import { AboutProductComponent } from './about-product/about-product.component';
+
 
 @NgModule({
   declarations: [
@@ -82,7 +87,7 @@ import { AboutPractitionerComponent } from './about-practitioner/about-practitio
     GetFeaturedTabComponent,
     ProfilePartnerComponent,
     ListingProductComponent,
-    CardPartnerComponent,
+    CardProductComponent,
     InvitationComponent,
     LandingClubhouseComponent,
     NotFoundComponent,
@@ -105,6 +110,10 @@ import { AboutPractitionerComponent } from './about-practitioner/about-practitio
     ExpertFinderComponent,
     AboutComponent,
     AboutPractitionerComponent,
+    ScrollIndicatorComponent,
+    FaqItemComponent,
+    TablePlanFeatureComponent,
+    AboutProductComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

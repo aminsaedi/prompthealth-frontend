@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -10,14 +10,21 @@ import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Profile } from 'src/app/models/profile';
+import { ModalService } from 'src/app/shared/services/modal.service';
+import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
+import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
+import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 
 
 @Component({
   selector: 'card-new-post',
   templateUrl: './card-new-post.component.html',
-  styleUrls: ['./card-new-post.component.scss']
+  styleUrls: ['./card-new-post.component.scss'],
+  animations: [expandVerticalAnimation],
 })
 export class CardNewPostComponent implements OnInit {
+
+  @Output() onPublished = new EventEmitter<any>();
 
   get f() { return this.form.controls; }
 
@@ -31,6 +38,9 @@ export class CardNewPostComponent implements OnInit {
   public imagePreview: string | ArrayBuffer;
   public audioSaved: AudioData =  null;
 
+  public isSubmitted: boolean = false;
+  public isUploading: boolean = false;
+
   /** AUDIO RECORDER START */
   public isAudioRecording: boolean = false;
   public isAudioPlaying: boolean = false;
@@ -41,11 +51,12 @@ export class CardNewPostComponent implements OnInit {
   public audioData: AudioData = null;
   /** AUDIO RECORDER END */
 
-  private form: FormGroup;
+  public form: FormGroup;
   @ViewChild('inputMedia') private inputMedia: ElementRef;
   @ViewChild('audioPlayer') private audioPlayer: ElementRef;
   @ViewChild('modalAudioRecorder') private modalAudioRecorder: ModalComponent;
   @ViewChild('editor') private editor: ElementRef;
+  @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
 
   constructor(
     private _sharedService: SharedService,
@@ -56,15 +67,17 @@ export class CardNewPostComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _audioRecorder: AudioRecordService,
     private _changeDetector: ChangeDetectorRef,
+    private _modalService: ModalService,
   ) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      description: new FormControl('', validators.publishPostDescription),
-      authorId: new FormControl(null, validators.savePostAuthorId),
-      media: new FormControl(),
+      body: new FormControl(),
+      authorId: new FormControl(),
+      images: new FormControl(),
       voice: new FormControl(),
-    });
+      status: new FormControl(),
+    }, validators.note);
 
     this._audioRecorder.recordingFailed().subscribe((message) => {
       this.onAudioRecordingFaild(message);
@@ -98,7 +111,7 @@ export class CardNewPostComponent implements OnInit {
 
       try { 
         image = await this._sharedService.shrinkImageByFixedWidth(files[0], 800);
-        this.f.media.setValue(image.file);
+        this.f.images.setValue(image);
         const reader = new FileReader();
         reader.readAsDataURL(image.file);
         reader.onloadend = () => {
@@ -113,7 +126,7 @@ export class CardNewPostComponent implements OnInit {
 
   onClickButtonRemoveMedia() {
     this.imagePreview = null;
-    this.f.media.setValue('');
+    this.f.images.setValue(null);
   }
 
   onClickButtonAudio() {
@@ -246,6 +259,78 @@ export class CardNewPostComponent implements OnInit {
     this.percentAudioPlayCurrent = 0;
   }
   /** VOICE RECORDER END */
+
+  async onSubmit() {
+    this.isSubmitted = true;
+    this.f.authorId.setValue(this.user._id);
+    this.f.status.setValue('ACTIVE');
+
+
+    this.isUploading = true;
+    try {
+      await this.uploadImagesIfNeeded();
+    } catch(error) {
+      console.log(error);
+      this._toastr.error('Could not upload image. Please try again later');
+      this.isUploading = false;
+      return;
+    }
+
+    const data = {
+      ...this.form.value,
+    };
+    const categories = this.formItemService.getSelected();
+    if(categories.length > 0) {
+      data.categories = categories;
+    }
+
+    if (data.images) {
+      data.images = [data.images];
+    } else {
+      delete data.images;
+    }
+
+    if (!data.voice) {
+      delete data.voice;
+    }
+
+    console.log(data);
+    this._sharedService.put(data, 'note/create').subscribe((res: IContentCreateResult) => {
+      if(res.statusCode == 200) {
+        this.isSubmitted = false;
+        this.isMoreShown = false;
+        this.formItemService.deselectAll();
+        this.onPublished.emit(res.data);
+        this.form.reset();
+      }
+      console.log(res);
+    }, error => {
+      console.log(error);
+    }, () => {
+      this.isUploading = false;
+    });
+  }
+
+  uploadImagesIfNeeded(): Promise<void> {
+    //TODO: need to implement for multiple images upload feature (ver 2.1)
+    return new Promise((resolve, reject) => {
+      const image = this.f.images.value as {file: File|Blob, filename: string};
+      if (!image) {
+        resolve();
+      } else {
+        this._sharedService.uploadMultipleImages([image], this.user._id, 'notes').subscribe((res: IUploadImageResult) => {
+          if(res.statusCode == 200) {
+            this.f.images.setValue(res.data);
+            resolve();
+          } else {
+            reject(res.message)
+          }
+        }, error => {
+          reject(error);
+        });
+      }
+    })
+  }
 }
 
 class AudioData{

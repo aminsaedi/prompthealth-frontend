@@ -64,6 +64,7 @@ import { ContenteditableValueAccessor } from './contenteditable.directive';
 import { DurationPipe } from './pipes/duration.pipe';
 import { DistancePipe } from './pipes/distance.pipe';
 import { ParallaxDirective } from './parallax.directive';
+import { SwitchComponent } from './switch/switch.component';
 
 @NgModule({
   imports: [
@@ -137,6 +138,7 @@ import { ParallaxDirective } from './parallax.directive';
     DurationPipe,
     DistancePipe,
     ParallaxDirective,
+    SwitchComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -190,6 +192,7 @@ import { ParallaxDirective } from './parallax.directive';
     DurationPipe,
     DistancePipe,
     ParallaxDirective,
+    SwitchComponent,
   ]
 })
 export class SharedModule { }

@@ -1,5 +1,11 @@
 @import '../../../assets/scss/variables';
 
+.border-lg-top-0 {
+  @media (min-width: $breakpointLg) {
+    border-top: 0!important;
+  }
+}
+
 :host::ng-deep {
   .ql-toolbar {
     display: none;

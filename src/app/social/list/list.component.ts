@@ -20,6 +20,8 @@ export class ListComponent implements OnInit {
   get isEligibleToPost() { return (this.user && this.user.role != 'U');}
   get user() { return this._profileService.profile; }
 
+  public newPosts: SocialPost[] = [];
+
   public posts: SocialPost[] = null;
   public targetPostId: string = null;
 
@@ -58,7 +60,19 @@ export class ListComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
   ) { }
 
+  public notesTest = null;
   ngOnInit(): void {
+    const notepath = `note/get-by-author/610c12755096aa0b7cae6a4e`;
+    this._sharedService.getNoAuth(notepath).subscribe((res: any) => {
+      const notes = [];
+      res.data.forEach(data => {
+        notes.push(new SocialPost(data));
+      })
+      console.log(notes);
+      this.notesTest = notes;
+    })
+
+
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTopicId = param.topicId || null;
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
@@ -135,5 +149,10 @@ export class ListComponent implements OnInit {
     e.preventDefault();
     e.stopPropagation();
     this._router.navigate(['./'], {queryParams: {post: p._id}, relativeTo: this._route, replaceUrl: (this.targetPostId ? true : false)});
+  }
+
+  onPublishNewPost(data: any) {
+    data.authorId = this.user;
+    this.newPosts.unshift(new SocialPost(data));
   }
 }

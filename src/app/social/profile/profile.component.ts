@@ -5,9 +5,10 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';;
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { GetQuery } from 'src/app/models/get-query';
 import { Professional } from 'src/app/models/professional';
 import { Profile } from 'src/app/models/profile';
-import { IGetProfileResult } from 'src/app/models/response-data';
+import { IFollowResult, IGetFollowingsResult, IGetFollowStatusResult, IGetProfileResult, IUnfollowResult } from 'src/app/models/response-data';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
@@ -29,10 +30,13 @@ export class ProfileComponent implements OnInit {
   get sizeS() { return (!window || window.innerWidth < 768) ? true : false; }
   get sizeM() { return !this.sizeS && (window.innerWidth < 992) ? true : false; }
   get f() { return this.formBooking.controls; }
+  get isProfileMyself() { return this.user && this.user._id == this.profileId; }
+  get user() { return this._profileService.profile; }
 
   public profileId: string;
   public profile: Professional;
-  public user: Profile;
+  
+  public isFollowing = false;
 
   public questionnaires: QuestionnaireMapProfilePractitioner;
 
@@ -40,7 +44,8 @@ export class ProfileComponent implements OnInit {
   public submittedFormBooking = false;
   public minDateTime: DateTimeData;
   public maxBookingNote = minmax.bookingNoteMax;
-
+  
+  public isFollowLoading = false;
   public isBookingLoading: boolean = false;
 
   private subscriptionLoginStatus: Subscription;
@@ -86,7 +91,14 @@ export class ProfileComponent implements OnInit {
 
     this._route.params.subscribe((param: {userid: string}) => {
       this.profileId = param.userid;
+      this.checkFollowStatus();
       this.initProfile();
+    });
+
+    const query = new GetQuery({count: 50});
+    const path = 'social/get-followeds' + query.toQueryParamsString();
+    this._sharedService.get(path).subscribe((res: IGetFollowingsResult) => {
+      console.log(res);
     });
   }
 
@@ -128,7 +140,7 @@ export class ProfileComponent implements OnInit {
       const path = `user/get-profile/${id}`;
       this._sharedService.getNoAuth(path).subscribe((res: IGetProfileResult) => {
         if(res.statusCode === 200) {
-          const p = res.data[0];
+          const p = res.data;
           const professional = new Professional(p._id, p);
           this._socialService.saveCacheProfile(professional);
           resolve(professional);
@@ -173,6 +185,54 @@ export class ProfileComponent implements OnInit {
     window.open(this.profile.bookingUrl, '_blank');
   }
 
+  async onClickFollow() {
+    const query = this.isFollowing ? this.unfollow() : this.follow();
+    
+    this.isFollowLoading = true;
+    try {
+      await query;
+    } catch (error) {
+      this._toastr.error('Something went wrong. Please try again later.');
+    } finally {
+      this.isFollowLoading = false;
+    }
+  }
+
+  follow() {
+    return new Promise((resolve, reject) => {
+      const data = {
+        id: this.profileId,
+      }
+      this._sharedService.post(data, 'social/follow').subscribe((res: IFollowResult) => {
+        if(res.statusCode == 200) {
+          this.isFollowing = true;
+          resolve(true);
+        } else {
+          reject(false);
+        }
+      }, error => {
+        console.log(error);
+        reject(false);
+      });  
+    })
+  }
+
+  async unfollow() {
+    return new Promise((resolve, reject) => {
+      this._sharedService.deleteContent('social/follow/' + this.profileId).subscribe((res: IUnfollowResult) => {
+        if (res.statusCode == 200) {
+          this.isFollowing = false;
+          resolve(true);
+        } else {
+          reject(false);
+        }
+      }, error => {
+        console.log(error);
+        reject(false);
+      });
+    });
+  }
+
   onSubmitBooking() {
     this.submittedFormBooking = true;
     if (this.formBooking.invalid) {
@@ -211,10 +271,34 @@ export class ProfileComponent implements OnInit {
   }
 
   observeLoginStatus() {
-    this.user = this._profileService.profile;
-    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(() => {
-      this.user = this._profileService.profile;
+    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe((res) => {
+      this.checkFollowStatus();
     });
   }
 
+  checkFollowStatus() {
+    if(this.isFollowLoading) {
+      console.log('isFollowLoading.');
+      return;
+    }
+
+    if(this.user && this.user._id == this.profileId) {
+      console.log('this profile is myself');
+      return;
+    }
+
+    console.log('checkFollowStatus');
+
+    this.isFollowing = false;
+    this.isFollowLoading = true;
+    const path = 'social/get-follow-status/' + this.profileId;
+    this._sharedService.get(path).subscribe((res: IGetFollowStatusResult) => {
+      this.isFollowing = !!res.data;
+    }, error => {
+      console.log(error);
+      this.isFollowing = false;
+    }, () => {
+      this.isFollowLoading = false;
+    });
+  }
 }

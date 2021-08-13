@@ -228,6 +228,18 @@ export class SharedService {
     return this.http.post(this.rootUrl + path, body, { headers });
   }
 
+  uploadMultipleImages(images: {file: File|Blob, filename: string}[], userId: string, imageLocation: string) {
+    const data = new FormData();
+    data.append('imgLocation', imageLocation);
+    data.append('_id', userId);
+    images.forEach(image => {
+      data.append('images', image.file, image.filename);
+    });
+
+    const path = (images.length == 1) ? 'common/imgUpload' : 'common/imgMultipleUpload';
+    return this.imgUpload(data, path);
+  }
+
   imgUploadPut(body, path) {
     let headers = this.getAuthorizationHeader();
     headers = headers.delete('Content-Type');

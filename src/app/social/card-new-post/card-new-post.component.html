@@ -8,55 +8,59 @@ class="overlay"
 class="card rounded-8p bg-white shadow body1 text-body mb-15p"
 [ngClass]="{focused: isEditorFocused}"
 >
-  <div class="d-flex p-20p border-bottom border-line">
-    <profile-image [image]="userImage"></profile-image>
-    <div class="flex-grow-1 ml-10p"
-    scrollDetector
-    offset="200"
-    (detect)="blurEditor()"
-    #editor
-    >
-      <quill-editor
-      [styles]="{minHeight: '48px', border: 'none', fontSize: '16px'}"
-      placeholder="What's on your mind"
-      (click)="focusEditor()"
-      ></quill-editor>  
-    </div>
-  </div>
-
-  <div *ngIf="imagePreview || audioSaved" class="p-20p d-flex">
-    <div 
-    *ngIf="imagePreview" 
-    class="position-relative d-inline-block overflow-hidden rounded-4p mr-10p"
-    >
-      <img [src]="imagePreview" alt="" height="100" width="auto">
-      <button 
-      class="btn btn-icon-body small blur p-5p btn-remove-media"
-      (click)="onClickButtonRemoveMedia()"
+  <form (ngSubmit)="onSubmit()">
+    <div class="d-flex p-20p border-bottom border-line">
+      <profile-image [image]="userImage"></profile-image>
+      <div class="flex-grow-1 ml-10p"
+      scrollDetector
+      offset="200"
+      (detect)="blurEditor()"
+      #editor
       >
-        <i iconPh="cross"></i>
-      </button>  
+        <quill-editor
+        [styles]="{minHeight: '48px', border: 'none', fontSize: '16px'}"
+        placeholder="What's on your mind"
+        [formControl]="f.body"
+        (click)="focusEditor()"
+        ></quill-editor>  
+      </div>
     </div>
-    <div *ngIf="audioSaved"
-    class="position-relative d-inline-block border border-line rounded-4p preview-file"
-    >
-      <i iconPh="mic" class="icon-file-type"></i>
-      <button 
-      class="btn btn-icon-body small blur p-5p btn-remove-media"
-      (click)="onClickButtonRemoveAudio()"
+  
+    <div *ngIf="imagePreview || audioSaved" class="p-20p d-flex">
+      <div 
+      *ngIf="imagePreview" 
+      class="position-relative d-inline-block overflow-hidden rounded-4p mr-10p"
       >
-        <i iconPh="cross"></i>
-      </button>  
+        <img [src]="imagePreview" alt="" height="100" width="auto">
+        <button
+        type="button"
+        class="btn btn-icon-body small blur p-5p btn-remove-media"
+        (click)="onClickButtonRemoveMedia()"
+        >
+          <i iconPh="cross"></i>
+        </button>  
+      </div>
+      <div *ngIf="audioSaved"
+      class="position-relative d-inline-block border border-line rounded-4p preview-file"
+      >
+        <i iconPh="mic" class="icon-file-type"></i>
+        <button 
+        type="button"
+        class="btn btn-icon-body small blur p-5p btn-remove-media"
+        (click)="onClickButtonRemoveAudio()"
+        >
+          <i iconPh="cross"></i>
+        </button>  
+      </div>
     </div>
-  </div>
-
-
-  <div class="d-flex px-20p pt-10p justify-content-between">
-    <div class="d-lg-flex">
+  
+  
+    <div class="d-flex px-20p pt-10p justify-content-between">
       <div class="d-flex">
         <div>
           <button 
-          class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p"
+          type="button"
+          class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
           (click)="onClickButtonMedia()"
           >
             <i iconPh="image-3"></i>
@@ -70,49 +74,86 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
           >
         </div>     
     
-        <button 
-        class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p"
+        <button
+        type="button" 
+        class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
         (click)="onClickButtonAudio()"
         >
           <i iconPh="mic"></i>
           <span class="d-none d-lg-inline">Voice</span>
         </button>
 
+        <div class="d-none d-lg-inline-block mr-10p mb-10p">
+          <ng-container *ngTemplateOutlet="btnEvent"></ng-container>
+        </div>
+        <div class="d-none d-lg-inline-block mr-10p mb-10p">
+          <ng-container *ngTemplateOutlet="btnArticle"></ng-container>
+        </div>
+ 
         <button 
-        class="btn small d-lg-none mb-10p"
-        [ngClass]="{'btn-text-grey': !isMoreShown, 'btn-grey': isMoreShown}"
+        type="button"
+        class="btn small mb-10p px-lg-5p"
+        [ngClass]="{'btn-text-grey': !isMoreShown, 'btn-grey-light': isMoreShown}"
         (click)="onClickButtonMore()"
         >
         <i iconPh="more-horiz"></i>
-        <span>More</span>
+        <span class="d-lg-none">More</span>
         </button>  
       </div>
-
-      <div class="d-lg-flex" [ngClass]="{'d-none': !isMoreShown, 'd-flex': isMoreShown}">
-        <a 
-        class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-10p"
-        routerLink="/community/create/event"
-        >
-          <i iconPh="calendar"></i>
-          <span>Event</span>
-        </a>
-      
-        <a 
-        class="btn btn-text-grey border-lg-line small mb-10p px-0 px-lg-10p"
-        routerLink="/community/create/article"
-        >
-          <i iconPh="note-text"></i>
-          <span>Article</span>
-        </a>  
+  
+      <div>
+        <button 
+        type="submit"
+        class="btn btn-primary small"
+        [disabled]="form.invalid || !this.user"
+        >Share</button>
       </div>
     </div>
 
-    <div>
-      <button class="btn btn-primary small">Share</button>
-    </div>
+    <div 
+    class="pb-10p overflow-hidden"
+    [ngStyle]="{'height': (!isMoreShown ? '0px' : 'auto')}"
+    [@expandVertical]="(isMoreShown ? 'expand' : 'shrink')"
+    >
+      <div class="d-flex d-lg-none px-20p">
+        <div class="mr-20p">
+          <ng-container *ngTemplateOutlet="btnEvent"></ng-container>
+        </div>
+        <div class="mr-20p">
+          <ng-container *ngTemplateOutlet="btnArticle"></ng-container>
+        </div>
+      </div>
 
-  </div>
+      <div class="mt-10p pt-20p pt-lg-10p px-20p border-top border-lg-top-0 border-line">
+        <h6 class="mb-10p">Select topics</h6>
+        <form-item-service
+        #formItemService
+        [option]="{showInlineWhenEnabled: true}"
+        ></form-item-service>
+      </div>
+    </div>
+  </form>
 </div>
+
+<ng-template #btnEvent>
+  <a 
+  class="btn btn-text-grey border-lg-line small px-0 px-lg-5p"
+  routerLink="/community/create/event"
+  >
+    <i iconPh="calendar"></i>
+    <span>Event</span>
+  </a>
+</ng-template>
+
+<ng-template #btnArticle>
+  <a 
+  class="btn btn-text-grey border-lg-line small px-0 px-lg-5p"
+  routerLink="/community/create/article"
+  >
+    <i iconPh="note-text"></i>
+    <span>Article</span>
+  </a>  
+</ng-template>
 
 <modal
 id="audio-recorder"
@@ -166,6 +207,8 @@ id="audio-recorder"
         </ng-container>
       </div>
       <button
+      type="button"
+      class="button"
       *ngIf="audioData"
       class="btn btn-icon-error small"
       (click)="disposeAudio()"
@@ -176,6 +219,7 @@ id="audio-recorder"
 
     <div class="mt-80p text-right position-relative">
       <button
+      type="button"
       class="btn btn-record-control" 
       (click)="toggleAudioRecorderState()"
       [ngClass]="{disabled: audioData}"
@@ -183,7 +227,10 @@ id="audio-recorder"
         <i *ngIf="!isAudioRecording" iconPh="play"></i>
         <i *ngIf="isAudioRecording" iconPh="stop"></i>
       </button>
-      <button class="btn btn-primary small">Done</button>
+      <button 
+      type="button"
+      class="btn btn-primary small"
+      >Done</button>
     </div>
   </div>
 

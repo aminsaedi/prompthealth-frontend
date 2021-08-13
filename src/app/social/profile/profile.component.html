@@ -39,9 +39,23 @@
               <div class="subtitle2 text-label">{{profile?.title}}</div>
             </div>
       
-            <div class="grid-3 text-right text-nowrap">
-              <button class="btn btn-outline small ml-10p">Follow</button>
-              <button *ngIf="user" class="btn btn-icon-grey small ml-10p py-5p">
+            <div 
+            *ngIf="!isProfileMyself"
+            class="grid-3 text-right text-nowrap"
+            >
+              <button 
+              class="btn small ml-10p"
+              [ngClass]="(isFollowing ? 'btn-primary' : 'btn-outline')"
+              [disabled]="isFollowLoading || !user"
+              (click)="onClickFollow()"
+              >
+                <span>Follow</span>
+                <span *ngIf="isFollowing">ing</span>
+              </button>
+              <button 
+              *ngIf="user" 
+              class="btn btn-icon-grey small ml-10p py-5p"
+              >
                 <i iconPh="bell-plus" style="font-size: 25px"></i>
               </button>
             </div>

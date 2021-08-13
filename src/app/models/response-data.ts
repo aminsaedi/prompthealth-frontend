@@ -8,7 +8,7 @@ export interface IResponseData {
 }
 
 export interface IGetProfileResult extends IResponseData{
-  data: IUserDetail[];
+  data: IUserDetail;
 }
 
 export interface IGetPractitionersResult extends IResponseData {
@@ -28,4 +28,44 @@ export interface IGetPractitionersResult extends IResponseData {
 
 export interface IGetPlansResult extends IResponseData {
   data: IDefaultPlan[]
+}
+
+export interface IGetFollowingsResult extends IResponseData {
+  data: IUserDetail[];
+}
+
+export interface IGetFollowStatusResult extends IResponseData {
+  data: {
+    _id: string,
+    following: string,
+    followed: string,
+  }
+}
+
+export interface IFollowResult extends IResponseData {
+  data: {
+    _id: string,
+    following: string,
+    followed: string,
+  }
+}
+
+export interface IUnfollowResult extends IResponseData {
+  data: {
+    deleted: boolean;
+  }
+}
+
+export interface IContentCreateResult extends IResponseData {
+  data: {
+
+  }
+}
+
+export interface IUploadMultipleImagesResult extends IResponseData {
+  data: string[];
+}
+
+export interface IUploadImageResult extends IResponseData {
+  data: string;
 }

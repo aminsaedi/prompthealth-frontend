@@ -1,22 +1,25 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ICouponData } from 'src/app/models/coupon-data';
+import { IPlanData, IPlanFeatureData, PlanTypePractitioner } from 'src/app/models/default-plan';
 import { IGetPlansResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { expandVerticalAnimation } from 'src/app/_helpers/animations';
+import { expandVerticalAnimation, slideHorizontalAnimation } from 'src/app/_helpers/animations';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
+import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 
 @Component({
   selector: 'app-about-practitioner',
   templateUrl: './about-practitioner.component.html',
   styleUrls: ['./about-practitioner.component.scss'],
-  animations: [expandVerticalAnimation, ],
+  animations: [expandVerticalAnimation, slideHorizontalAnimation],
 })
 export class AboutPractitionerComponent implements OnInit {
 
-  get profile() { return this._profileService.profile; }
+  get profile() { return this._profileService.user; }
 
   public features = features;
   public plans = plans;
@@ -24,23 +27,17 @@ export class AboutPractitionerComponent implements OnInit {
   public faqs = faqs;
 
   public isDurationMonthly: boolean = false;
-  public isFeatureTableSticked: boolean = false;
-  public idxSelectedFeatureItemForDetail: number = -1;
-
   public isLoading: boolean = false;
+
+  public couponData: ICouponData = null;
+  public isCouponShown = false;
+  public isCouponShrink = false;
 
   keepOriginalOrder = (a: any, b: any) => a.key;
 
-  isFeatureApplicable(i: number, planType: PlanType) {
-    return this.planFeatures[i].targetPlan.includes(planType);
-  }
-
-  isFeatureShowable(i: number, planType: PlanType) {
+  isFeatureShowable(i: number, planType: PlanTypePractitioner) {
     return this.planFeatures[i].targetPlan.indexOf(planType) === 0; 
   }
-
-  @ViewChild('anchorPlans') private anchorPlans: ElementRef;
-  @ViewChild('anchorPlanFeatures') private anchorPlanFeatures: ElementRef;
 
   constructor(
     private _sharedService: SharedService,
@@ -51,42 +48,69 @@ export class AboutPractitionerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getPlans();
+    this.initPlans();
+    this.initCoupon();
   }
 
-  onClickSwitchDuration() {
-    this.isDurationMonthly = !this.isDurationMonthly;
+  initPlans() {
+    const path = 'user/get-plans';
+    this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
+      if(res.statusCode == 200) {
+        res.data.forEach(d => {
+          if (d.userType.includes('P')) {
+            //nothing to do
+          } else if (d.userType.length == 2) {
+            this.plans.basic.data = d;
+          } else if (d.userType.includes('SP')) {
+            this.plans.provider.data = d;
+          } else if (d.userType.includes('C')) {
+            this.plans.centre.data = d;
+          }
+        });
+      }
+    });
   }
 
-  onChangeFeatureTableStickStatus(sticked: boolean) {
-    this.isFeatureTableSticked = sticked;
+  initCoupon() {
+    const coupon = this._uService.sessionStorage.getItem('stripe_coupon_code');
+    if(coupon) {
+      this.couponData = JSON.parse(coupon);
+      let isCouponApplicable = false;
+      for (let role of ['SP', 'C']) {
+        if(this._sharedService.isCouponApplicableTo(this.couponData, role)) {
+          isCouponApplicable = true;
+        }
+      }
+
+      if(isCouponApplicable) {
+        setTimeout(() => { 
+          this.isCouponShown = true; 
+        }, 1000);
+      }
+    }
   }
 
-  showFeatureDetail(i: number) {
-    this.idxSelectedFeatureItemForDetail = (this.idxSelectedFeatureItemForDetail == i) ? -1 : i;
+  onChangeDuration(state: 'on' | 'off') {
+    this.isDurationMonthly = (state == 'on') ? true : false;
   }
 
-  toggleFAQItemState(faq: IFAQItem) {
-    faq.opened = !faq.opened;
-  }
-
-  scrollToPlan() {
-    if(this.anchorPlans && this.anchorPlans.nativeElement) {
-      const el = this.anchorPlans.nativeElement as HTMLAnchorElement;
+  scrollTo(el: HTMLElement) {
+    if(el && window) {
       const top = window.scrollY + el.getBoundingClientRect().top;
       smoothWindowScrollTo(top);
     }
   }
 
-  scrollToPlanFeature() {
-    if(this.anchorPlanFeatures && this.anchorPlanFeatures.nativeElement) {
-      const el = this.anchorPlanFeatures.nativeElement as HTMLAnchorElement;
-      const top = window.scrollY + el.getBoundingClientRect().top;
-      smoothWindowScrollTo(top);
-    }
+  expandCoupon() { 
+    this.isCouponShrink = false; 
   }
 
-  onClickSignup(type: PlanType) {
+  shrinkCoupon(e: Event) {
+    this.isCouponShrink = true;
+    e.stopPropagation();
+  }
+  
+  onClickSignup(type: PlanTypePractitioner) {
     const link = ['/auth', 'registration'];
     switch (type) {
       case 'basic':
@@ -104,8 +128,8 @@ export class AboutPractitionerComponent implements OnInit {
     this._router.navigate(link);
   }
 
-  async onClickCheckout(type: PlanType) {
-    if (this.profile.role == 'U') {
+  async onClickCheckout(type: PlanTypePractitioner) {
+    if (this.profile.roles == 'U') {
       this._toastr.error('You don\'t need to buy this plan');
     } else {
 
@@ -133,31 +157,6 @@ export class AboutPractitionerComponent implements OnInit {
       }
     }
   }
-
-
-
-
-
-  getPlans() {
-    const path = 'user/get-plans';
-    this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
-      if(res.statusCode == 200) {
-        res.data.forEach(d => {
-          if (d.userType.includes('P')) {
-            //nothing to do
-          } else if (d.userType.length == 2) {
-            this.plans.basic.data = d;
-          } else if (d.userType.includes('SP')) {
-            this.plans.provider.data = d;
-          } else if (d.userType.includes('C')) {
-            this.plans.centre.data = d;
-          }
-        });
-      }
-    });
-  }
-
-
 }
 
 const features = [
@@ -193,23 +192,23 @@ const features = [
   },
 ]
 
-const plans = {
+const plans: {[k in PlanTypePractitioner]: IPlanData} = {
   basic: {
-    icon: '',
+    icon: 'note-text',
     title: 'Basic',
     subtitle: 'For individual use',
     label: null,
     data: null,
   },
   provider: {
-    icon: '',
+    icon: 'verified',
     title: 'Providers',
     subtitle: 'For profiessional use',
     label: 'Popular',
     data: null,
   },
   centre: {
-    icon: '',
+    icon: 'users',
     title: 'Centre',
     subtitle: 'For multiple use',
     label: null,
@@ -217,7 +216,7 @@ const plans = {
   }
 }
 
-const planFeatures = [
+const planFeatures: IPlanFeatureData[] = [
   {item: 'Your professional profile', targetPlan: ['basic', 'provider', 'centre'], detail: 'explain yourself here.'},
 
   {item: 'Differentiate yourself with side-by-side comparisons', targetPlan: ['provider', 'centre'], detail: 'explain yourself here.'},
@@ -241,11 +240,3 @@ const faqs: IFAQItem[] = [
   {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
   {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
 ]
-
-type PlanType = 'basic' | 'provider' | 'centre'
-
-interface IFAQItem {
-  q: string;
-  a: string;
-  opened: boolean;
-}

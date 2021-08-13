@@ -1,4 +1,5 @@
 import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Blog } from '../models/blog';
 import { formatStringToDate } from './date-formatter';
 import { pattern } from './pattern';
 
@@ -171,6 +172,22 @@ const validatorPatternURL = (): ValidatorFn => {
   };
 };
 
+const validatorNoteHasAtLeastOneField = (): ValidatorFn => {
+  return function validate(formGroup: FormGroup) {
+    const g = formGroup.controls;
+    let body = (g.body.value as string || '');
+    body = body.replace(/<[^>]*>?/gm, '').trim();
+
+    const images = g.images.value as {file: File|Blog, filename: string};
+    const voice = g.voice.value as string;
+    if(!body && !images && !voice) {
+      return {noteHasAtLeastOneField: true};
+    } else {
+      return null;
+    }
+  }
+}
+
 
 const validatorFirstNameClient = [Validators.maxLength(minmax.nameMax), Validators.required];
 const validatorLastNameClient = [Validators.maxLength(minmax.nameMax)];
@@ -234,6 +251,11 @@ export const validators = {
   bookingDateTime: [validatorPatternDateTime(), validatorComparePostEventStartTime(), Validators.required],
   bookingNote: [Validators.maxLength(minmax.bookingNoteMax)],
 
+  /** contact form */
+  contactName: validatorFirstNameClient,
+  contactEmail: validatorEmail,
+  contactMessage: [Validators.maxLength(minmax.bookingNoteMax)],
+
   /** blog post for users */
   publishPostDescription: [Validators.required],
   publishPostEventStartTime: [Validators.required, validatorPatternDateTime(), validatorComparePostEventStartTime()],
@@ -252,4 +274,5 @@ export const validators = {
 
   /** social */
   comment: [Validators.required],
+  note: [validatorNoteHasAtLeastOneField()]
 }

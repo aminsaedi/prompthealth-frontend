@@ -11,7 +11,7 @@
         </p>
         <button 
         class="btn btn-primary"
-        (click)="scrollToPlan()"
+        (click)="scrollTo(anchorPlans)"
         >Join us Now</button>
       </div>
       <div class="col-12 col-md-5 my-30p">
@@ -46,30 +46,17 @@
     <p class="mt-20p">Free 14-day trial on best plan - No Credit Card Requeired</p>
     <div class="mt-60p mb-40p">
       <a #anchorPlans class="scroll-anchor"></a>
-      <div
-      class="rounded-pill switch-duration border border-line ml-80p ml-md-0p"
-      (click)="onClickSwitchDuration()"
+      <div 
+      class="d-inline-block position-relative ml-70p ml-md-0p"
+      style="width: 170px"
       >
         <div class="discount-popup body-small text-body">
           20% Discount
-        </div>
-        <div 
-        class="switch-on rounded-pill"
-        [ngClass]="(isDurationMonthly ? 'right' : 'left')"
-        ></div>
-        <div 
-        class="switch-item subtitle2"
-        [ngClass]="{'active': !isDurationMonthly}"
-        >
-          <span class="center">Annualy</span>
-        </div>
-        <div 
-        class="switch-item subtitle2"
-        [ngClass]="{'active': !!isDurationMonthly}"
-        >
-          <span class="center">Monthly</span>
-        </div>
-      </div>
+        </div>      <switch 
+        [labels]="['Annualy', 'Monthly']"
+        (changeState)="onChangeDuration($event)"
+        ></switch>
+      </div>  
     </div>
   </div>
 
@@ -88,8 +75,12 @@
         >
           {{plan.value.label}}
         </div>
-        <div style="font-size: 30px">
-          <i [iconPh]="plan.value.icon"></i>
+        <div clas="mb-10p">
+          <i 
+          [iconPh]="plan.value.icon"
+          style="font-size: 30px"
+          class="text-primary"
+          ></i>
         </div>
         <h4 class="mb-0">{{plan.value.title}}</h4>
         <p class="mb-0 body2 text-label">{{plan.value.subtitle}}</p>
@@ -148,80 +139,17 @@
 </section>
 
 <section class="text-center mt-70p mb-100p">
-  <div 
-  class="d-inline-block"
-  (click)="scrollToPlanFeature()"
-  >
-    <div class="mouse-down d-inline-block">
-      <div class="cursor"></div>
-    </div>
-    <ul class="arrow-downs list-unstyled mt-10p">
-      <li *ngFor="let i of [0,1,2]">
-        <i
-        iconPh="chevron-down"
-        class="text-placeholder"
-        style="font-size: 25px;"
-        ></i>
-      </li>
-    </ul>
+  <div class="d-inline-block">
+    <scroll-indicator [scrollTo]="anchorPlanFeatures"></scroll-indicator>
   </div>
 </section>
 
 <section class="container">
-  <div class="feature-table">
-    <a #anchorPlanFeatures class="scroll-anchor"></a>
-    <div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onChangeFeatureTableStickStatus($event)"></div>
-    <div 
-    class="d-flex bg-background py-20p px-30p subtitle1 text-label rounded-12p sticky-top"
-    style="top: 80px; transition-duration: 180ms;"
-    [ngClass]="{shadow: isFeatureTableSticked}"
-    >
-      <div class="col-title d-none d-md-block">
-        Features
-      </div>
-      <div 
-      *ngFor="let plan of plans | keyvalue:keepOriginalOrder"
-      class="col-item text-center"
-      >{{plan.key}}</div>
-    </div>
-
-    <div 
-    *ngFor="let feature of planFeatures; let i = index;"
-    class="d-flex flex-wrap py-20p px-30p subtitle2 w-100"
-    [ngClass]="i == 0 ? 'mt-20p' : null"
-    >
-      <div class="col-title feature-item">
-        <div>
-          <span (click)="showFeatureDetail(i)">
-            <span>{{feature.item}}</span>
-            <i 
-            *ngIf="feature.detail"
-            iconPh="info"
-            class="ml-10p"
-            ></i>
-          </span>  
-        </div>
-
-        <p 
-        *ngIf="idxSelectedFeatureItemForDetail == i"
-        [@expandVertical]
-        class="mb-0 body2 text-label"
-        >{{feature.detail}}</p>
-      </div>
-
-      <div 
-      *ngFor="let plan of plans | keyvalue:keepOriginalOrder"
-      class="col-item text-center"
-      >
-      <i 
-      *ngIf="isFeatureApplicable(i, plan.key)" 
-      iconPh="checkbox-square"
-      class="text-secondary"
-      style="font-size: 23px;"
-      ></i>
-      </div>
-    </div>
-  </div>
+  <a #anchorPlanFeatures class="scroll-anchor"></a>
+  <table-plan-feature 
+  [planFeatures]="planFeatures"
+  [plans]="plans"
+  ></table-plan-feature>
 </section>
 
 <section class="container my-100p">
@@ -230,31 +158,28 @@
       <h2 class="mb-50p text-center">
         Frequently Asked Questions
       </h2>
-      <ul class="list-unstyled">
+      
+      <ul class="list-unstyled mb-0">
         <li 
-        *ngFor="let faq of faqs; let i = index;"
-        class="mb-20p p-20p rounded-12p border border-line faq-item overflow-hidden"
-        [ngClass]="{active: faq.opened}"
-        (click)="toggleFAQItemState(faq)"
+        *ngFor="let faq of faqs;"
+        class="mb-20p"
         >
-          <h5 
-          class="mb-0 d-flex justify-content-between"
-          > 
-            <span>{{faq.q}}</span>
-            <i 
-            iconPh="chevron-down"
-            class="text-placeholder"
-            ></i>
-          </h5>
-          <div
-          *ngIf="faq.opened" 
-          [@expandVertical]
-          >
-            <div style="height: 10px"></div>
-            <p class="mb-0">{{faq.a}}</p>
-          </div>
+          <faq-item [data]="faq"></faq-item>
         </li>
       </ul>
     </div>
   </div>
 </section>
+
+<div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{shrink: isCouponShrink}"
+  (click)="expandCoupon()">
+
+  <div class="d-flex justify-content-between align-items-center mb-10p">
+    <div class="subtitle1 mb-0">You have coupon!</div>
+    <button class="btn btn-shrink" (click)="shrinkCoupon($event)">
+      <i iconPh="chevron-right" class="large"></i>
+    </button>
+  </div>
+
+  <card-coupon [couponData]="couponData"></card-coupon>
+</div>
