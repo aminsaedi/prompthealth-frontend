@@ -278,6 +278,10 @@ export class ExpertFinderController {
       services: this.services,
     };
 
+    if(this._keyword) {
+      res.keyword = this._keyword;
+    }
+
     if (this._virtual) {
       res.virtual = true;
     } else if(this._lat && this._lng) {
