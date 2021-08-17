@@ -50,8 +50,9 @@ export interface IProfessional extends IProfile {
   productPreview: ImageGroupData[]; /** first 3 products for preview */
 
   isMapIconReady: boolean;
-  isCentre: boolean;
-  isProvider: boolean;
+  isC: boolean;
+  isSP: boolean;
+  isP: boolean;
   isVerified: boolean; /** verified for badge */
   isVirtualAvailable: boolean;
   provideVirtual: boolean; // old name (changed to isVirtualAvailable)
@@ -149,8 +150,10 @@ export class Professional extends Profile implements IProfessional{
   }
 
   get isMapIconReady() { return this._isMapIconReady; }
-  get isCentre() { return !!(this.role == 'C'); }
-  get isProvider() { return !!(this.role == 'SP'); }
+  get isC() { return !!(this.role == 'C'); }
+  get isSP() { return !!(this.role == 'SP'); }
+  get isProvider() { return !!(this.isC || this.isSP); }
+  get isP() { return !!(this.role == 'P'); }
   get isVerified() { return this.p.verifiedBadge || false; }
   get isVirtualAvailable() { return this.p.provideVirtual || false; }
   get provideVirtual() { return this.isVirtualAvailable; }

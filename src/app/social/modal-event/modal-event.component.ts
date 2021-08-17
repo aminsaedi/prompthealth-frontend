@@ -7,6 +7,7 @@ import { FormSubscribeComponent } from 'src/app/shared/form-subscribe/form-subsc
 import { ToastrService } from 'ngx-toastr';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { SocialEvent } from 'src/app/models/social-note';
 
 @Component({
   selector: 'modal-event',
@@ -15,7 +16,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 })
 export class ModalEventComponent implements OnInit {
 
-  get post() { return this._modalService.data as SocialPost; }
+  get post() { return this._modalService.data as SocialEvent; }
 
   public isCalendarMenuShown: boolean = false;
   public isSubscribeMenuShown: boolean = false;
@@ -41,9 +42,9 @@ export class ModalEventComponent implements OnInit {
     const calendarOption: CalendarOptions = {
       title: this.post.title,
       location: '',
-      description: this.post.event.link,
-      start: this.post.event.startAt,
-      end: this.post.event.endAt,
+      description: this.post.link,
+      start: this.post.startAt,
+      end: this.post.endAt,
     }
 
     let calendar: GoogleCalendar | ICalendar | OutlookCalendar | YahooCalendar;
@@ -90,7 +91,7 @@ export class ModalEventComponent implements OnInit {
       if (this.timeRedirect <= 0 && location) {
         this.isRedirecting = false;
         clearInterval(this.timerRedirect);
-        location.href = this.post.event.link;
+        location.href = this.post.link;
         this.modalSubscribeMenu.hide();
       }
     }, 1000);

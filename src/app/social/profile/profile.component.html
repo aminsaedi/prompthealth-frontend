@@ -65,51 +65,22 @@
         </div>
       
         <div class="overflow-auto mt-20p px-20p px-lg-30p">
-          <div class="d-flex profile-menu">
-            <div class="pr-30p pr-lg-40p">
+          <ul class="d-flex profile-menu list-unstyled mb-0">
+            <li 
+            *ngFor="let item of profileMenus; let i = index;"
+            [ngClass]="(i == profileMenus.length - 1 ? 'pr-20p pr-lg-30p' : 'pr-20p pr-lg-40p')"
+            >
               <a
-              [routerLink]="['/community/profile', profileId]"
+              [routerLink]="linkToChildRoute(item.relativeLink)"
               class="btn small px-0 py-20p subtitle1"
+              [ngClass]="(rlah.isActive ? 'btn-text active' : 'btn-text-grey')"
               #rlah="routerLinkActive"
               routerLinkActive
               [routerLinkActiveOptions]="{exact: true}"
               [replaceUrl]="true"
-              [ngClass]="rlah.isActive ? 'btn-text active' : 'btn-text-grey'"
-              >Home</a>
-            </div>
-      
-            <div class="pr-30p pr-lg-40p">
-              <a
-              [routerLink]="['/community/profile', profileId, 'service']"
-              class="btn small px-0 py-20p subtitle1"
-              #rlas="routerLinkActive"
-              routerLinkActive
-              [replaceUrl]="true"
-              [ngClass]="rlas.isActive ? 'btn-text active' : 'btn-text-grey'"
-              >Service</a>
-            </div>
-      
-            <div class="pr-30p pr-lg-40p">
-              <a
-              [routerLink]="['/community/profile', profileId, 'feed']"
-              class="btn small px-0 py-20p subtitle1"
-              #rlaf="routerLinkActive"
-              routerLinkActive
-              [replaceUrl]="true"
-              [ngClass]="rlaf.isActive ? 'btn-text active' : 'btn-text-grey'"
-              >Feed</a>
-            </div>
-      
-            <div class="pr-20p pr-lg-30p">
-              <a
-              [routerLink]="['/community/profile', profileId, 'review']"
-              class="btn small px-0 py-20p subtitle1"
-              #rlar="routerLinkActive"
-              routerLinkActive
-              [replaceUrl]="true"
-              [ngClass]="rlar.isActive ? 'btn-text active' : 'btn-text-grey'"
-              >Review</a></div>
-          </div>
+              >{{item.label}}</a>
+            </li>
+          </ul>
         </div>
       </section>
     
@@ -122,64 +93,101 @@
     </div>
 
     <div class="col-12 col-md-5 col-lg-4 mt-20p mt-md-0p">
-      <section 
+      <section
       *ngIf="profile"
       class="bg-white rounded-12p overflow-hidden"
       >
-        <div class="d-flex justify-content-between mx-15p mx-md-20p py-15p border-bottom border-line">
-          <div class="text-primary-dark">
-            <span class="h6 mb-0">{{profile.priceFull}}</span> 
-            <span class="body1"> /hr</span>
-          </div>
-          <div>
-            <star-rate [rate]="profile.rating" [simple]="true"></star-rate>
-            <span class="body1 text-label ml-5p">({{profile.reviewCount}})</span>
-          </div>
-        </div>
-
-        <div class="mx-15p mx-md-20p py-15p py-md-20p border-bottom border-line">
-          <h6 class="header-accent">Available Time</h6>
-          <form-item-checkbox-group
-          *ngIf="questionnaires"
-          id="availability"
-          label="Availability"
-          [data]="profile.availabilityIds"
-          [selectionsByQuestionnaire]="questionnaires.availability"
-          [disabled]="true"
-          [option]="{showBlockWithZeroMarginWhenDisabled: true, iconPreWhenDisabled: 'time'}"
-          ></form-item-checkbox-group>
-        </div>
-
-        <div class="mx-15p mx-md-20p py-15p py-md-20p">
-          <!-- <div class="mb-40p">
-            <h6 class="header-accent">Recommendations</h6>
-            <div class="mt-25p mb-10p">
-              <i iconPh="quotes-2" class="text-secondary" style="font-size: 32px;"></i>
+        <ng-container *ngIf="profile.isProvider">
+          <div class="d-flex justify-content-between mx-15p mx-md-20p py-15p border-bottom border-line">
+            <div class="text-primary-dark">
+              <span class="h6 mb-0">{{profile.priceFull}}</span> 
+              <span class="body1"> /hr</span>
             </div>
-            <p>will go back when needed next time. Recommend him but the office was busy as he is very popular!</p>
-            <div class="body1 text-label">Marianna M - July 26, 2021</div>  
-          </div> -->
-          
-          <div>
-            <button 
-            *ngIf="!user"
-            class="btn btn-primary w-100" 
-            (click)="onClickLogin()"
-            >Login to book</button>
-
-            <button 
-            *ngIf="user && profile.bookingUrl"
-            class="btn btn-primary w-100" 
-            (click)="onClickBookOutside()"
-            >Book now</button>
-
-            <button 
-            *ngIf="user && !profile.bookingUrl"
-            class="btn btn-primary w-100" 
-            (click)="onClickBook()"
-            >Book now</button>
+            <div>
+              <star-rate [rate]="profile.rating" [simple]="true"></star-rate>
+              <span class="body1 text-label ml-5p">({{profile.reviewCount}})</span>
+            </div>
           </div>
+        </ng-container>
+        
+        <div class="mx-15p mx-md-20p py-15p py-md-20p">
+          <h6 class="header-accent">Contact</h6>
+            
+          <div 
+          *ngIf="profile.address"
+          class="mb-25p d-flex"
+          >
+            <i iconPh="pin" class="text-placeholder mr-5p large"></i>
+            <p class="mb-0">{{profile.address}}</p>
+          </div>
+                          
+          <div 
+          *ngIf="profile.phone" 
+          class="mb-25p d-flex"
+          >
+            <i iconPh="smartphone" class="text-placeholder mr-5p large"></i>
+            <p class="mb-0">{{profile.phone}}</p>
+          </div>
+                    
+          <div 
+          *ngIf="profile.website"
+          class="d-flex"
+          >
+            <i iconPh="laptop" class="text-placeholder mr-5p large"></i>
+            <p class="clamp-1line body1 mb-0" style="word-break: break-all">
+              <a [href]="profile.website" target="_blank">{{profile.websiteLabel}}</a>
+            </p>
+          </div>
+
         </div>
+
+        <ng-container *ngIf="profile.isProvider">
+          <div class="mx-15p mx-md-20p py-15p py-md-20p border-top border-bottom border-line">
+            <h6 class="header-accent">Available Time</h6>
+            <form-item-checkbox-group
+            *ngIf="questionnaires"
+            id="availability"
+            label="Availability"
+            [data]="profile.availabilityIds"
+            [selectionsByQuestionnaire]="questionnaires.availability"
+            [disabled]="true"
+            [option]="{showBlockWithZeroMarginWhenDisabled: true, iconPreWhenDisabled: 'time'}"
+            ></form-item-checkbox-group>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="profile.isProvider">
+          <div class="mx-15p mx-md-20p py-15p py-md-20p">
+            <!-- <div class="mb-40p">
+              <h6 class="header-accent">Recommendations</h6>
+              <div class="mt-25p mb-10p">
+                <i iconPh="quotes-2" class="text-secondary" style="font-size: 32px;"></i>
+              </div>
+              <p>will go back when needed next time. Recommend him but the office was busy as he is very popular!</p>
+              <div class="body1 text-label">Marianna M - July 26, 2021</div>  
+            </div> -->
+            
+            <div>
+              <button 
+              *ngIf="!user"
+              class="btn btn-primary w-100" 
+              (click)="onClickLogin()"
+              >Login to book</button>
+  
+              <button 
+              *ngIf="user && profile.bookingUrl"
+              class="btn btn-primary w-100" 
+              (click)="onClickBookOutside()"
+              >Book now</button>
+  
+              <button 
+              *ngIf="user && !profile.bookingUrl"
+              class="btn btn-primary w-100" 
+              (click)="onClickBook()"
+              >Book now</button>
+            </div>
+          </div>
+        </ng-container>
       </section>
     </div>
 

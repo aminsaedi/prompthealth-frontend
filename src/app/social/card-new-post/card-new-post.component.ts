@@ -72,11 +72,11 @@ export class CardNewPostComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      body: new FormControl(),
+      description: new FormControl(),
       authorId: new FormControl(),
-      images: new FormControl(),
+      images: new FormControl(), // TODO: need change to FormArray in ver2.1
       voice: new FormControl(),
-      status: new FormControl(),
+      contentType: new FormControl('NOTE'),
     }, validators.note);
 
     this._audioRecorder.recordingFailed().subscribe((message) => {
@@ -118,7 +118,7 @@ export class CardNewPostComponent implements OnInit {
           this.imagePreview = reader.result;
         }
       } catch(err){
-        this.f.media.setValue('');
+        this.f.images.setValue('');
         return;
       }
     }
@@ -136,7 +136,7 @@ export class CardNewPostComponent implements OnInit {
 
   onClickButtonRemoveAudio() {
     this.audioSaved = null;
-    this.f.audio.setValue('');
+    this.f.voice.setValue('');
   }
 
   cancelAudioRecord() {
@@ -145,6 +145,7 @@ export class CardNewPostComponent implements OnInit {
   saveAudioRecord() {
     this.f.voice.setValue(this.audioData.blob);
     this.audioSaved = this.audioData.copy();
+    console.log(this.audioSaved);
     this.modalAudioRecorder.goBack();
   }
 
@@ -263,7 +264,7 @@ export class CardNewPostComponent implements OnInit {
   async onSubmit() {
     this.isSubmitted = true;
     this.f.authorId.setValue(this.user._id);
-    this.f.status.setValue('ACTIVE');
+    // this.f.status.setValue('ACTIVE');
 
 
     this.isUploading = true;
@@ -279,9 +280,9 @@ export class CardNewPostComponent implements OnInit {
     const data = {
       ...this.form.value,
     };
-    const categories = this.formItemService.getSelected();
-    if(categories.length > 0) {
-      data.categories = categories;
+    const tags = this.formItemService.getSelected();
+    if(tags.length > 0) {
+      data.tags = tags;
     }
 
     if (data.images) {

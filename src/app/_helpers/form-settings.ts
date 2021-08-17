@@ -175,12 +175,12 @@ const validatorPatternURL = (): ValidatorFn => {
 const validatorNoteHasAtLeastOneField = (): ValidatorFn => {
   return function validate(formGroup: FormGroup) {
     const g = formGroup.controls;
-    let body = (g.body.value as string || '');
-    body = body.replace(/<[^>]*>?/gm, '').trim();
+    let description = (g.description.value as string || '');
+    description = description.replace(/<[^>]*>?/gm, '').trim();
 
-    const images = g.images.value as {file: File|Blog, filename: string};
+    const image = g.images.value as {file: File|Blog, filename: string};
     const voice = g.voice.value as string;
-    if(!body && !images && !voice) {
+    if(!description && !image && !voice) {
       return {noteHasAtLeastOneField: true};
     } else {
       return null;

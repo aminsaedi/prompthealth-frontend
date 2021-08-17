@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { rejects } from 'assert';
 import { Subscription } from 'rxjs';
+import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -14,13 +15,14 @@ import { SocialService } from '../social.service';
 })
 export class ProfileAboutComponent implements OnInit {
 
-  // get profile() { return this._socialService.selectedProfile; }
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
+  get profileAsPartner() { return this.profile as Partner; }
 
-  public profile: Professional;
+  public profile: Professional | Partner;
 
   public isAmenityViewerShown = false;
   public isProductViewerShown = false;
+  public isPartnerViewerShown = false;
 
   private subscription: Subscription;
 
@@ -43,14 +45,14 @@ export class ProfileAboutComponent implements OnInit {
     })
   }
 
-  onProfileChanged(p: Professional) {
+  onProfileChanged(p: Professional | Partner) {
     this.profile = p;
-    if(p && p.isCentre && !p.triedFetchingAmenity) {
+    if(p && p.isC && !p.triedFetchingAmenity) {
       p.markAsTriedFetchingAmenity();
       this.fetchAmenity();
     }
 
-    if(p && p.isCentre && !p.triedFetchingProduct) {
+    if(p && p.isC && !p.triedFetchingProduct) {
       p.markAsTriedFetchingProduct();
       this.fetchProduct();
     }
@@ -94,5 +96,7 @@ export class ProfileAboutComponent implements OnInit {
   closeAmenityViewer() { this.isAmenityViewerShown = false; }
   openProductViewer() { this.isProductViewerShown = true; }
   closeProductViewer() { this.isProductViewerShown = false; }
+  openPartnerViewer() { this.isPartnerViewerShown = true; }
+  closePartnerViewer() { this.isPartnerViewerShown = false; }
 
 }

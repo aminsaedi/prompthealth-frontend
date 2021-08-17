@@ -3,6 +3,7 @@ import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Profile } from 'src/app/models/profile';
+import { SocialArticle } from 'src/app/models/social-note';
 import { SocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -24,6 +25,14 @@ export class BaseComponent implements OnInit {
 
 
   get postForModal() { return this._modalService.data as SocialPost; }
+  get postTitleForModal() {
+    const d: SocialPost = this._modalService.data;
+    if(d && (d.isArticle || d.isEvent)) {
+      return (d as SocialArticle).title;
+    } else {
+      return null;
+    }
+  }
 
   private isPopState: boolean = false;
   public isMessageBeingApprovedShownIfNeeded = true;

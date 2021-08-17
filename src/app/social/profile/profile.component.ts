@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { GetQuery } from 'src/app/models/get-query';
+import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
 import { Profile } from 'src/app/models/profile';
 import { IFollowResult, IGetFollowingsResult, IGetFollowStatusResult, IGetProfileResult, IUnfollowResult } from 'src/app/models/response-data';
@@ -33,8 +34,18 @@ export class ProfileComponent implements OnInit {
   get isProfileMyself() { return this.user && this.user._id == this.profileId; }
   get user() { return this._profileService.profile; }
 
+  linkToChildRoute(link: string) {
+    const route = ['/community/profile', this.profileId];
+    if(link) {
+      route.push(link);
+    }
+    return route;
+  }
+
   public profileId: string;
   public profile: Professional;
+
+  public profileMenus: IProfileMenuItem[] = [];
   
   public isFollowing = false;
 
@@ -107,6 +118,8 @@ export class ProfileComponent implements OnInit {
     const profile = this._socialService.profileOf(this.profileId);
     if(profile) {
       this.profile = profile;
+      this.profileMenus = this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
+
       this._socialService.setProfile(this.profile);
     } else {
       const promiseAll: [Promise<Professional>, Promise<QuestionnaireMapProfilePractitioner>] = [
@@ -117,6 +130,8 @@ export class ProfileComponent implements OnInit {
       Promise.all(promiseAll).then((vals) => {
         this.profile = vals[0];
         this.questionnaires = vals[1];
+        this.profileMenus = this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
+
         this._socialService.setProfile(this.profile);
       }, error => {
         this._toastr.error('Something went wrong.');
@@ -141,7 +156,12 @@ export class ProfileComponent implements OnInit {
       this._sharedService.getNoAuth(path).subscribe((res: IGetProfileResult) => {
         if(res.statusCode === 200) {
           const p = res.data;
-          const professional = new Professional(p._id, p);
+          let professional: Professional | Partner;
+          if(p.roles == 'P') {
+            professional = new Partner(p);
+          } else {
+            professional = new Professional(p._id, p);
+          }
           this._socialService.saveCacheProfile(professional);
           resolve(professional);
         } else {
@@ -301,4 +321,23 @@ export class ProfileComponent implements OnInit {
       this.isFollowLoading = false;
     });
   }
+}
+
+const profileMenusForProvider: IProfileMenuItem[] = [
+  {id: 'about',   label: 'About',   relativeLink: null, },
+  {id: 'service', label: 'Service', relativeLink: 'service', },
+  {id: 'feed',    label: 'Feed',    relativeLink: 'feed'},
+  {id: 'review',  label: 'Review',  relativeLink: 'review'},
+];
+
+const profileMenusForCompany: IProfileMenuItem[] = [
+  {id: 'about',   label: 'About',   relativeLink: null, },
+  {id: 'promotion', label: 'Discounts', relativeLink: 'promotion', },
+  {id: 'review', label: 'Recommendation', relativeLink: 'review', },
+];
+
+interface IProfileMenuItem {
+  id: string;
+  label: string;
+  relativeLink: string;
 }

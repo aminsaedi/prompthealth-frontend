@@ -3,11 +3,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SocialPost } from 'src/app/models/social-post';
 
 @Component({
-  selector: 'card-item-post',
-  templateUrl: './card-item-post.component.html',
-  styleUrls: ['./card-item-post.component.scss']
+  selector: 'card-item-note',
+  templateUrl: './card-item-note.component.html',
+  styleUrls: ['./card-item-note.component.scss']
 })
-export class CardItemPostComponent implements OnInit {
+export class CardItemNoteComponent implements OnInit {
 
   @Input() post: SocialPost;
   @Input() shorten: boolean = true;

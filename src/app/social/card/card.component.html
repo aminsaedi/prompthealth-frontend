@@ -10,7 +10,7 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
 
   <ng-container *ngIf="_option.showLinkToDetail">
     <a 
-    [routerLink]="['/community/profile', post.authorId, 'post', post.slug]" 
+    [routerLink]="['/community/profile', post.authorId, 'post', post._id]" 
     class="text-body"
     (click)="markCurrentPosition()"
     >
@@ -28,12 +28,12 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
 
 <ng-template #clickableArea>
   <div>
-    <card-item-post 
-    *ngIf="post.isPost" 
+    <card-item-note 
+    *ngIf="post.isNote" 
     [post]="post" 
     [shorten]="shorten"
     (onClickButton)="onClickButton($event)"
-    ></card-item-post>
+    ></card-item-note>
     
     <card-item-event 
     *ngIf="post.isEvent" 
@@ -53,7 +53,7 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
       <div #content
       class="post-content"
       [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
-      [innerHTML]="post.descriptionSanitized"
+      [innerHTML]="post.description"
       ></div>
     </div>
   </div>

@@ -1,34 +1,57 @@
+import { environment } from "src/environments/environment";
 import { Blog, IBlog } from "./blog";
+import { IUserDetail } from "./user-detail";
 
-export interface ISocialPost extends IBlog {
+export interface ISocialPost {
+  _id: string;
+  contentType: 'NOTE' | 'PROMO' | 'ARTICLE' | 'EVENT';
+  authorId: string | IUserDetail;
+
+  status?: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'HIDDEN';
+  description?: string;
+
+  tags?: string[];
+
+  createdAt: string;
+
   comments: ISocialComment[];
 }
 
-export class SocialPost extends Blog implements ISocialPost {
+export class SocialPost implements ISocialPost {
+
+  get _id() { return this.data._id; }
+  get contentType() { return this.data.contentType; }
+  get status() { return this.data.status || null; }
+
+  get author() { return (this.data.authorId && typeof this.data.authorId != 'string') ? this.data.authorId.firstName : ''; } //author name
+  get authorId(): string { return (typeof this.data.authorId == 'string') ? this.data.authorId : this.data.authorId ?  this.data.authorId._id : 'noid'; }
+  get authorImage() { return (this.data.authorId && typeof this.data.authorId != 'string' && this.data.authorId.profileImage) ? this._s3 + '350x220/' + this.data.authorId.profileImage : 'assets/img/logo-sm-square.png'}
   
-  get summary() {
-    return this._summary.substr(0, 256);
-  }
+  get description() { return this.data.description || ''; }
+  get summary() { return this._summary.substr(0, 256); }
 
-  get isPost() {
-    return !this.isEvent && !this.isArticle;
-  }
-  get isArticle() {
-    return this.title && !this.isEvent;
-  }
+  get tags() { return this.data.tags; }
 
-  get isMoreShown() {
-    return !!(this._summary.length > this.summary.length)
-  }
+  get createdAt() { return this.data.createdAt; }
+
+  get isNote() { return this.contentType == 'NOTE'; }
+  get isArticle() { return this.contentType == 'ARTICLE'; }
+  get isEvent() { return this.contentType == 'EVENT'; }
+
+  get isMoreShown() { return !!(this._summary.length > this.summary.length); }
+
 
   get comments() {
     return this._commentsDummy;
   };
 
+  protected _s3 = environment.config.AWS_S3; 
+  protected _summary: string;
 
   _commentsDummy: SocialComment[];
   constructor(protected data: ISocialPost) {
-    super(data);
+    const desc = data.description || '';
+    this._summary = desc.replace(/<\/?[^>]+(>|$)/g, '').replace(/\s{2,}/, " ");
 
     const comments = [];
     commentsDummy.forEach(c => {

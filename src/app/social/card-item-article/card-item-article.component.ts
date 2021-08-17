@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { SocialArticle } from 'src/app/models/social-note';
 import { SocialPost } from 'src/app/models/social-post';
 
 @Component({
@@ -9,7 +10,7 @@ import { SocialPost } from 'src/app/models/social-post';
 })
 export class CardItemArticleComponent implements OnInit {
 
-  @Input() post: SocialPost;
+  @Input() post: SocialArticle;
   @Input() shorten: boolean = true;
 
   @Output() onClickButton = new EventEmitter<string>();

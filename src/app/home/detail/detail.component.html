@@ -15,7 +15,7 @@
       <p *ngIf="userInfo?.title" class="mb-2 overflow-hidden subtitle1 h6-md" [@expandSubtitle]="(isTabSticked? 'shrink' : 'expand')">{{userInfo?.title}} </p> 
       <div class="d-flex align-items-start title-wrapper">
         <h3 class='mb-0 overflow-hidden' [@expandTitle]="(isTabSticked? 'shrink' : 'expand')">
-          <i class="pr-2" iconPh="home" *ngIf="userInfo?.isCentre"></i>
+          <i class="pr-2" iconPh="home" *ngIf="userInfo?.isC"></i>
           <span>{{userInfo?.name | titlecase}}</span>
           <i iconPh="video-camera" class="color-video ml-10p" *ngIf="userInfo && userInfo.provideVirtual"></i>
       </h3>  
@@ -203,11 +203,11 @@ class="bg-background p-4"
           </div>
           <!-- <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.ageRange.join(', ')}}</p> -->
         </div>
-        <div class="row mb-5" *ngIf="!userInfo?.isCentre">
+        <div class="row mb-5" *ngIf="!userInfo?.isC">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-primary subtitle1">Professional organization</div>
           <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.organization}}</p>
         </div>
-        <div class="row mb-5" *ngIf="!userInfo?.isCentre">
+        <div class="row mb-5" *ngIf="!userInfo?.isC">
           <div class="col-12 col-lg-4 mb-3 mb-lg-0 text-primary subtitle1">Certification</div>
           <p class="col-12 col-lg-8 mb-0 list-item">{{userInfo?.certification}}</p>
         </div>
@@ -332,14 +332,14 @@ class="bg-background p-4"
           </ul>
         </div> -->
         
-        <!-- <div class="row bg-primary-light rounded-bottom pt-5 pb-0" *ngIf="userInfo?.isCentre">
+        <!-- <div class="row bg-primary-light rounded-bottom pt-5 pb-0" *ngIf="userInfo?.isC">
           <div class="col-12 col-lg-4 mb-2 mb-lg-0 text-primary subtitle1">Product:</div>
           <p class="col-12 col-lg-8 mb-0">{{userInfo?.product}}</p>
         </div> -->
         <div class="row bg-primary-light rounded-bottom pt-5 mb-5"></div>
   
         <!-- professionals at centre-->
-        <div *ngIf="userInfo?.isCentre && userInfo.professionals && userInfo.professionals.length > 0">
+        <div *ngIf="userInfo?.isC && userInfo.professionals && userInfo.professionals.length > 0">
           <div class="row bg-background rounded-top py-4 mt-5 justify-content-start justify-content-md-between align-items-center">
             <h4 class="col text-primary">Meet our professionals</h4>
           </div>

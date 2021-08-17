@@ -30,9 +30,9 @@
   <div class="d-flex align-items-center">
     <div
     class="status-indicator mr-2"
-    [ngClass]="{'bg-success': !post?.event.isFinished, 'bg-danger': post?.event.isFinished}"
+    [ngClass]="{'bg-success': !post?.isFinished, 'bg-danger': post?.isFinished}"
     ></div>
-    <span class="opacity-70pc body2">{{post?.event.status | titlecase}}</span>  
+    <span class="opacity-70pc body2">{{post?.status | titlecase}}</span>  
   </div>
 </div>
 
@@ -40,16 +40,16 @@
   <li class="subtitle2 text-label mb-10p">
     <i iconPh="video-camera"></i>
     <span>
-      {{post?.event.isVirtual ? 'Online' : 'Offline'}} - 
-      {{post?.event.eventOn ? 'On' : 'Virtual'}}
-      {{post?.event.eventOn | titlecase}}
+      {{post?.isVirtual ? 'Online' : 'Offline'}} - 
+      {{post?.eventOn ? 'On' : 'Virtual'}}
+      {{post?.eventOn | titlecase}}
     </span>
   </li>
   <li class="subtitle2 text-label">
     <i iconPh="calendar"></i>
     <span>
-      {{post?.event.startAt | date:'dd/M/yyyy hh:mm a'}} - 
-      {{post?.event.endAt | date:'dd/M/yyyy hh:mm a'}} (your local time)
+      {{post?.startAt | date:'dd/M/yyyy hh:mm a'}} - 
+      {{post?.endAt | date:'dd/M/yyyy hh:mm a'}} (your local time)
     </span>
   </li>
 </ul>
@@ -63,7 +63,7 @@
     >Subscribe</button>
     <a 
     *ngIf="alreadySubscribed"
-    [href]="post?.event.link"
+    [href]="post?.link"
     target="_blank"
     class="btn btn-primary w-100"
     >Join now</a>

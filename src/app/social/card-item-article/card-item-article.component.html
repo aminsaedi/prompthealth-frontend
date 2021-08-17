@@ -31,7 +31,7 @@
     <span class="mr-10p">
       <i iconPh="timer" class="mr-1"></i>
       <span *ngIf="post" class="subtitle2">
-        <span>{{post.readLengthFormatted}}</span>
+        <span>{{post.readLength | duration}}</span>
         <span class="d-none d-md-inline"> read</span>            
       </span>
     </span>

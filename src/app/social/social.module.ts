@@ -9,7 +9,7 @@ import { SharedModule } from '../shared/shared.module';
 import { CardSubscribeComponent } from './card-subscribe/card-subscribe.component';
 import { CardItemEventComponent } from './card-item-event/card-item-event.component';
 import { ModalEventComponent } from './modal-event/modal-event.component';
-import { CardItemPostComponent } from './card-item-post/card-item-post.component';
+import { CardItemNoteComponent } from './card-item-note/card-item-note.component';
 import { CardItemEyecatchComponent } from './card-item-eyecatch/card-item-eyecatch.component';
 import { CardItemArticleComponent } from './card-item-article/card-item-article.component';
 import { HomeComponent } from './home/home.component';
@@ -38,6 +38,7 @@ import { AgmCoreModule } from '@agm/core';
 import { NotificationComponent } from './notification/notification.component';
 import { CardNotificationComponent } from './card-notification/card-notification.component';
 import { DraftComponent } from './draft/draft.component';
+import { ProfileContactComponent } from './profile-contact/profile-contact.component';
 
 
 const routes: Routes = [
@@ -49,7 +50,7 @@ const routes: Routes = [
       { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
     ] },
 
-    { path: 'profile/:userid/post/:slug', component: PageComponent },
+    { path: 'profile/:userid/post/:postid', component: PageComponent },
     { path: 'profile/:userid/post', pathMatch: 'full', redirectTo: 'profile/:userid/' },
 
     { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
@@ -82,7 +83,7 @@ const routes: Routes = [
     CardSubscribeComponent, 
     CardItemEventComponent, 
     ModalEventComponent, 
-    CardItemPostComponent, 
+    CardItemNoteComponent, 
     CardItemEyecatchComponent, 
     CardItemArticleComponent, 
     CardItemCommentComponent, 
@@ -100,6 +101,7 @@ const routes: Routes = [
     NotificationComponent,
     CardNotificationComponent,
     DraftComponent,
+    ProfileContactComponent,
   ],
   providers: [
     CategoryService,

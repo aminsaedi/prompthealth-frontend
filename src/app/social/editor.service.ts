@@ -5,6 +5,8 @@ import * as RecordRTC from 'recordrtc';
 import { Profile } from '../models/profile';
 import { IBlog } from '../models/blog';
 import { formatStringToDate } from '../_helpers/date-formatter';
+import { ISocialPost, SocialPost } from '../models/social-post';
+import { ISocialEvent } from '../models/social-note';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,7 @@ export class EditorService {
   
   private editorLocked: boolean = false;
   private _form: FormGroup;
-  private editorType: SocialEditorType;
+  private editorType: SocialPost['contentType'];
 
   constructor() { }
 
@@ -27,11 +29,11 @@ export class EditorService {
     this.editorLocked = false;
   }
 
-  init(type: SocialEditorType, profile: Profile): FormGroup {
+  init(type: SocialPost['contentType'], profile: Profile): FormGroup {
     this.unlockEditor();
     this.editorType = type;
 
-    if (type == 'event') {
+    if (type == 'EVENT') {
       this._form = new FormGroup({
         status: new FormControl('DRAFT'),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
@@ -42,9 +44,9 @@ export class EditorService {
         eventStartTime: new FormControl(null),  // set validator later
         eventEndTime: new FormControl(null),  // set validator later
         joinEventLink: new FormControl(null),  // set validator later
-        address: new FormControl(null),
+        eventAddress: new FormControl(null),
       });  
-    } else if (type == 'article') {
+    } else if (type == 'ARTICLE') {
       this._form = new FormGroup({
         status: new FormControl('DRAFT'),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
@@ -73,7 +75,7 @@ export class EditorService {
     f.description.setValidators( published ? validators.publishPostDescription : validators.savePostDescription);
     f.description.updateValueAndValidity();
 
-    if(this.editorType == 'event') {
+    if(this.editorType == 'EVENT') {
       f.eventStartTime.clearValidators();
       f.eventEndTime.clearValidators();
       f.joinEventLink.clearValidators();
@@ -93,87 +95,66 @@ export type SocialEditorType = 'article' | 'event' | 'note';
 
 
 export interface ISaveQuery {
-  // _id?: string,
-  status: IBlog['status'];
-  title: string;
+  _id?: string,
+  status?: ISocialPost['status'];
+  contentType: ISocialPost['contentType'];
   authorId: string;
-  author: string;
 
-  // slug?: string;
+  title?: string;
   description?: string;
-  categoryId?: string;
+
+  image?: string;
+  images?: string[];
+  voice?: string;
+
   tags?: string[],
-  readLength?: number;
 
   eventStartTime?: string | Date;
   eventEndTime?: string | Date;
+  eventType?: ISocialEvent['eventType'];
   joinEventLink?: string;
-  
-  image?: string;
-  videoLinks?: {
-    title: string;
-    url: string;
-  }[];
-  podcastLinks?: ISaveQuery['videoLinks'];
-
-  headliner?: boolean;
+  eventAddress?: string;
 }
 
 export class SaveQuery implements ISaveQuery {
+  get _id() { return this.data._id || null };
   get status() { return this.data.status || 'DRAFT'; }
-  get title() { return this.data.title || null; }
+  get contentType() { return this.data.contentType; }
   get authorId() { return this.data.authorId || null; }
-  get author() { return this.data.author || 'test'; }
+  get title() { return this.data.title || null; }
   get description() { return this.data.description || ''; }
-  get categoryId() { return this.data.categoryId || ''; }
   get tags() { return (this.data.tags && this.data.tags.length > 0) ? this.data.tags : []; }
   
   get eventStartTime() { return this.data.eventStartTime ? formatStringToDate(this.data.eventStartTime as string) : null; }
   get eventEndTime() { return this.data.eventEndTime ? formatStringToDate(this.data.eventEndTime as string) : null; }
+  get eventType() { return this.data.eventType || 'ONLINE'; }
   get joinEventLink() { return this.data.joinEventLink || null; }
+  get eventAddress() { return this.data.eventAddress || null; }
   
   get image() { return this.data.image || ''; }
-  get videoLinks() { 
-    let res: ISaveQuery['videoLinks'] = [];
-    if(this.data.videoLinks && this.data.videoLinks.length > 0) {
-      const data = this.data.videoLinks[0];
-      if(data.url) {
-        res = [{title: 'video', url: data.url}];
-      }
-    }
-    return res;
-  }
-  get podcastLinks() {
-    let res: ISaveQuery['podcastLinks'] = [];
-    if(this.data.podcastLinks && this.data.podcastLinks.length > 0) {
-      const data = this.data.podcastLinks[0];
-      if(data.url) {
-        res = [{title: 'podcast', url: data.url}];
-      }
-    }
-    return res;
-   }
+  get images() { return this.data.images || []; }
+  get voice() { return this.data.voice || ''; }
 
   toJson() { 
     const data: ISaveQuery = {
-      status: this.status,
+      contentType: this.contentType,
       authorId: this.authorId,
-      author: this.author,
 
-      title: this.title,
-      description: this.description,
-      
-      categoryId: this.categoryId || 'test',
-      tags: this.tags,
-      
-      joinEventLink: this.joinEventLink,
-      eventStartTime: this.eventStartTime,
-      eventEndTime: this.eventEndTime,
+      ... (this._id) && {_id: this._id},
+      ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {status: this.status}, 
 
-      image: this.image,
-      videoLinks: this.videoLinks,
-      podcastLinks: this.podcastLinks,
-      headliner: false,
+      ... (this.title) && {title: this.title},
+      ... (this.description) && {description: this.description},
+      ... (this.image) && {image: this.image},
+      ... (this.images.length > 0) && {images: this.images},
+      ... (this.voice) && {voice: this.voice},
+
+      ... (this.tags.length > 0) && {tags: this.tags},
+
+      ... (this.eventType) && {eventType: this.eventType},
+      ... (this.joinEventLink) && {joinEventLink: this.joinEventLink},
+      ... (this.eventStartTime) && {eventStartTime: this.eventStartTime},
+      ... (this.eventEndTime) && {eventEndTime: this.eventEndTime},
     };
     return data;
   }

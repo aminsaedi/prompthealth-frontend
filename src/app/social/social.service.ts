@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
 import { IBlogCategory } from '../models/blog-category';
 import { Professional } from '../models/professional';
+import { SocialArticle, SocialEvent } from '../models/social-note';
 import { ISocialPost, SocialPost } from '../models/social-post';
 @Injectable({
   providedIn: 'root'
@@ -138,19 +139,20 @@ export class SocialService {
     }
   }
 
-  postOfSlug(slug: string) {
-    const data = this.postCache.dataMap;
-    let result = null;
-    if(!!data) {
-      for(let id in data) {
-        if(data[id].slug == slug) {
-          result = data[id];
-          break;
-        }
-      }
-    }
-    return result;
-  }
+  // postOfSlug(slug: string) {
+  //   const data = this.postCache.dataMap;
+  //   let result = null;
+  //   if(!!data) {
+  //     for(let id in data) {
+  //       const d = data[id];
+  //       if((d instanceof SocialArticle || d instanceof SocialEvent) && d.slug == slug ){
+  //         result = data[id];
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
 
   postsOf(
     taxonomy: SocialPostTaxonomyType = 'feed',
@@ -218,7 +220,6 @@ export class SocialService {
       //   b.setEmbedVideoAsThumbnail(this.embedVideoAsThumbnail(b.videoLinks[0]));
       // }
       // b.podcastLinks.forEach(v => { b.addEmbedPodcast(this.embedPodcast(v)); });
-      b.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(b.description));
 
       this.postCache.dataMap[data._id] = b;
     }

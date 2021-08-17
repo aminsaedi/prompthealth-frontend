@@ -19,10 +19,24 @@
   [attr.autocomplete]="autocomplete"
   [attr.autocapitalize]="autocapitalize"
   >
-  <div class="input-group-append" *ngIf="type == 'password'">
+  <div 
+  class="input-group-append" 
+  *ngIf="type == 'password'"
+  >
     <span class="input-group-text" (click)="onClickLock()">
       <i [iconPh]="(_type == 'password') ? 'lock-2' : 'lock-2-opened'"></i>
     </span>    
+  </div>
+  <div 
+  *ngIf="_option.showRemoveButton && controller.value"
+  class="input-group-append"
+  >
+    <span 
+    class="input-group-text" 
+    (click)="onClickReset()"
+    >
+      <i iconPh="cross-circle"></i>
+    </span>
   </div>
 </div>
 <div class="d-flex justify-content-end mt-1">

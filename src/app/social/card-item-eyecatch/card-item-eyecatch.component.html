@@ -1,10 +1,10 @@
 <div class="eyecatch">
-  <img [src]="post.image" [alt]="post.title">
+  <img [src]="image" [alt]="title">
   <div *ngIf="post.isEvent"
   class="position-absolute px-10p py-5p mt-10p ml-10p rounded-8p"
-  [ngClass]="{'bg-white': !post.event.isFinished, 'bg-danger text-light': post.event.isFinished}"
+  [ngClass]="{'bg-white': !isEventFinished, 'bg-danger text-light': isEventFinished}"
   >
-    <div class="h6 text-center mb-0">{{post.event.startAt | date:'dd'}}</div>
-    <div class="caption opacity-70pc text-center">{{post.event.startAt | date:'MMM' | uppercase}}</div>
+    <div class="h6 text-center mb-0">{{eventStartAt | date:'dd'}}</div>
+    <div class="caption opacity-70pc text-center">{{eventStartAt | date:'MMM' | uppercase}}</div>
   </div>
 </div>  

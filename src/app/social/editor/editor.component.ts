@@ -6,7 +6,7 @@ import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
 import Quill from 'quill';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { ISocialPost } from 'src/app/models/social-post';
+import { ISocialPost, SocialPost } from 'src/app/models/social-post';
 import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -24,8 +24,8 @@ export class EditorComponent implements OnInit {
 
 
   get f() {return this._editorService.form.controls; }
-  get isEvent() { return this.editorType == 'event'; }
-  get isArticle() { return this.editorType == 'article'; }
+  get isEvent() { return this.editorType == 'EVENT'; }
+  get isArticle() { return this.editorType == 'ARTICLE'; }
 
   @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
     if(this._editorService.isEditorLocked) {
@@ -36,7 +36,7 @@ export class EditorComponent implements OnInit {
   public imagePreview: string | ArrayBuffer;
 
   public formCheckboxOnlineEvent: FormControl;
-  public editorType: SocialEditorType = null;
+  public editorType: SocialPost['contentType'] = null;
 
   public isUploadingImage: boolean = true;
 
@@ -69,9 +69,12 @@ export class EditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this._route.data.subscribe((data: {type: SocialEditorType}) => {
-      this.editorType = data.type || null;
+    this._route.data.subscribe((data: {type: string}) => {
+      switch(data.type) {
+        case 'article': this.editorType = 'ARTICLE'; break;
+        case 'event': this.editorType = 'EVENT'; break;
+        default: this.editorType = null; 
+      }
       this._editorService.init(
         this.editorType, 
         this._profileService.profile,

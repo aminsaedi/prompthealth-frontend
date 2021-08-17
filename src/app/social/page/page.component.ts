@@ -15,7 +15,7 @@ export class PageComponent implements OnInit {
   public post: SocialPost;
 
   private userId: string;
-  private slug: string;
+  private postId: string;
 
   constructor(
     private _route: ActivatedRoute,
@@ -27,9 +27,9 @@ export class PageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this._route.params.subscribe((param: {userid: string, slug: string}) => {
+    this._route.params.subscribe((param: {userid: string, postid: string}) => {
       this.userId = param.userid;
-      this.slug = param.slug;
+      this.postId = param.postid;
 
       this.initPost();
     }); 
@@ -37,16 +37,16 @@ export class PageComponent implements OnInit {
 
   initPost() {
     return new Promise((resolve, reject) => {
-      const post = this._socialService.postOfSlug(this.slug);
+      const post = this._socialService.postOf(this.postId);
       if(post) {
         this.post = post;
         resolve(true);
       } else {
-        const path = `blog/get-by-slug/${this.slug}`;
+        const path = `note/get-by-id/${this.postId}`;
         this._sharedService.getNoAuth(path).subscribe((res: any) => {
           if(res.statusCode === 200) {
             this._socialService.saveCacheSingle(res.data);
-            this.post = this._socialService.postOfSlug(this.slug);
+            this.post = this._socialService.postOf(this.postId);
 
             resolve(true);
           } else {

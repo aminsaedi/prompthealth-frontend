@@ -122,15 +122,15 @@ id="post-menu"
   <div class="title-container d-flex justify-content-between align-items-center">
     <div 
     class="d-flex"
-    [ngClass]="(postForModal?.title ? 'algin-items-start' : 'align-items-center')"
+    [ngClass]="(postTitleForModal ? 'algin-items-start' : 'align-items-center')"
     >
       <profile-image [image]="postForModal?.authorImage"></profile-image>
       <div class="mx-3">
         <span class="subtitle2 text-label">{{postForModal?.author}}</span>
         <span 
-        *ngIf="postForModal?.title"
+        *ngIf="postTitleForModal"
         class="h5 h4-md mb-0 flex-grow-1 clamp-1line"
-        >{{postForModal?.title}}</span>
+        >{{postTitleForModal}}</span>
       </div>
     </div>
     <button class="btn pr-0 btn-icon" (click)="modalPostMenu.hide()">
@@ -139,12 +139,18 @@ id="post-menu"
   </div>
 
   <div class="content-container">
+    <h6>Topics</h6>
+    <form-item-service
+    [data]="postForModal?.tags"
+    [disabled]="true"
+    ></form-item-service>
+    <h6>Other actions</h6>
     <ul class="list-unstyled">
       <li>
-        <button class="btn btn-text-body px-0">Report as spam</button>
+        <button class="btn btn-text-body small px-0">Report as spam</button>
       </li>
       <li>
-        <button class="btn btn-text-body px-0">Mark as not interested</button>
+        <button class="btn btn-text-body small px-0">Mark as not interested</button>
       </li>
     </ul>
   </div>

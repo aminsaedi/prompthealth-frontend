@@ -29,7 +29,25 @@
 .image-container-40pc::after {
   padding-top: 40%;
 }
-
 .image-container-100pc::after {
   padding-top: 100%;
+}
+
+@media (min-width: $breakpointMd) {
+  .image-container-md-30pc::after {
+    padding-top: 30%;
+  }
+  .image-container-md-33pc::after {
+    padding-top: 33%;
+  }
+  .image-container-md-35pc::after {
+    padding-top: 35%;
+  }
+  .image-container-md-40pc::after {
+    padding-top: 40%;
+  }
+  .image-container-md-100pc::after {
+    padding-top: 100%;
+  }
+  
 }

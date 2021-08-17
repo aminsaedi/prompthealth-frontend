@@ -52,7 +52,7 @@ export class Profile implements IProfile {
 
   get isApproved() { return this.role == 'U' || this.role == 'SA' || this.data.isApproved; }
 
-  get linkToProfile() { return this.role != 'U' ? '/community/profile' + this._id : null; }
+  get linkToProfile() { return this.role != 'U' ? '/community/profile/' + this._id : null; }
 
   get gender() { return this.data.gender || ''; }
 

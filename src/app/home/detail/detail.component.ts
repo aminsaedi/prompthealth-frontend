@@ -190,7 +190,7 @@ export class DetailComponent implements OnInit {
         this.getProducts();
         this.getReviews();
 
-        if (this.userInfo.isCentre) { this.getProfessionals(); }
+        if (this.userInfo.isC) { this.getProfessionals(); }
 
         const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.userInfo.allServiceId);
         const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.userInfo.serviceOfferIds);

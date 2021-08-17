@@ -10,6 +10,7 @@ import { BehaviorService } from '../../shared/services/behavior.service';
 import { MustMatch } from '../../_helpers/must-match.validator';
 import { validators } from 'src/app/_helpers/form-settings';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { IUserDetail } from 'src/app/models/user-detail';
 
 @Component({
   selector: 'form-auth',
@@ -18,7 +19,7 @@ import { ProfileManagementService } from 'src/app/dashboard/profileManagement/pr
 })
 export class FormAuthComponent implements OnInit {
 
-  @Input() userRole = 'U'; /** U | SP | C | P */
+  @Input() userRole: IUserDetail['roles'] = 'U'; /** U | SP | C | P */
   @Input() authType = 'signin'; /** signin | signup */
   @Input() staySamePage = false;
   @Input() nextPage: string = null;
@@ -27,6 +28,7 @@ export class FormAuthComponent implements OnInit {
 
   get f() { return this.form.controls; }
   public form: FormGroup;
+  public formRole: FormControl;
   public isSubmitted = false;
   public isLoading = false;
 
@@ -41,6 +43,15 @@ export class FormAuthComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    let roleLabel: string;
+    switch(this.userRole) {
+      case 'U': roleLabel = 'Health Seeker'; break;
+      case 'SP':
+      case 'C': roleLabel = 'Provider'; break;
+      case 'P': roleLabel = 'Company'; break;
+    }
+    this.formRole = new FormControl(roleLabel);
+
     this.form = (this.authType === 'signin') ? this._fb.group({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -60,7 +71,6 @@ export class FormAuthComponent implements OnInit {
     };
 
     this._authService.signIn(providerId[type]).then(x => {
-      console.log(x);
       let socialToken: string;
       switch (type) {
         case 'google': socialToken = x.idToken; break;

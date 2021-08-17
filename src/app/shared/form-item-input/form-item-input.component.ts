@@ -53,5 +53,9 @@ export class FormItemInputComponent implements OnInit {
   onClickLock() {
     this._type = (this._type == 'text') ? 'password' : 'text';
   }
+
+  onClickReset() {
+    this.controller.setValue('');
+  }
 }
 

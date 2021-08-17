@@ -26,11 +26,22 @@
     style="width: 90%; max-width: 400px; margin: auto;"
     >
       <div class="center-md text-center w-100">
-        <img 
-        src="/assets/img/auth/login.png" 
-        class="tip-image"
-        alt=""
-        >
+
+        <div *ngIf="authType == 'signin'">
+          <img 
+          src="/assets/img/auth/login.png" 
+          class="tip-image"
+          alt=""
+          >  
+        </div>
+
+        <div *ngIf="authType == 'signup'">
+          <img 
+          src="/assets/img/auth/signup-1.png"
+          class="tip-image"
+          alt=""
+          >
+        </div>
   
         <div class="mt-30p text-center">
           <h4 class="d-inline position-relative">

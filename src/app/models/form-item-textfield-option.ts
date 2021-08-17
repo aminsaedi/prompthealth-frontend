@@ -1,9 +1,11 @@
 export interface IFormItemTextfieldOption {
   transparent?: boolean;
+  showRemoveButton?: boolean;
 }
 
 export class FormItemTextfieldOption {
   get transparent() { return this.data.transparent || false; }
+  get showRemoveButton() { return this.data.showRemoveButton === true ? true : false; }
 
   constructor(protected data: IFormItemTextfieldOption) {}
 }
