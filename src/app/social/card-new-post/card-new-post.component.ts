@@ -14,6 +14,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
+import { EditorService } from '../editor.service';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class CardNewPostComponent implements OnInit {
 
   @Output() onPublished = new EventEmitter<any>();
 
-  get f() { return this.form.controls; }
+  get f() { return this._editorService.form.controls; }
+  get form() { return this._editorService.form; }
 
   get userImage(): string { return this.user ? this.user.profileImage : ''; }
   get user(): Profile { return this._profileService.profile; }
@@ -51,7 +53,6 @@ export class CardNewPostComponent implements OnInit {
   public audioData: AudioData = null;
   /** AUDIO RECORDER END */
 
-  public form: FormGroup;
   @ViewChild('inputMedia') private inputMedia: ElementRef;
   @ViewChild('audioPlayer') private audioPlayer: ElementRef;
   @ViewChild('modalAudioRecorder') private modalAudioRecorder: ModalComponent;
@@ -68,16 +69,11 @@ export class CardNewPostComponent implements OnInit {
     private _audioRecorder: AudioRecordService,
     private _changeDetector: ChangeDetectorRef,
     private _modalService: ModalService,
+    private _editorService: EditorService,
   ) { }
 
   ngOnInit(): void {
-    this.form = new FormGroup({
-      description: new FormControl(),
-      authorId: new FormControl(),
-      images: new FormControl(), // TODO: need change to FormArray in ver2.1
-      voice: new FormControl(),
-      contentType: new FormControl('NOTE'),
-    }, validators.note);
+    this._editorService.init('NOTE', this.user);
 
     this._audioRecorder.recordingFailed().subscribe((message) => {
       this.onAudioRecordingFaild(message);
@@ -264,8 +260,6 @@ export class CardNewPostComponent implements OnInit {
   async onSubmit() {
     this.isSubmitted = true;
     this.f.authorId.setValue(this.user._id);
-    // this.f.status.setValue('ACTIVE');
-
 
     this.isUploading = true;
     try {

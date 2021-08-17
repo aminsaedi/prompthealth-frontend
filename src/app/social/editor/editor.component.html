@@ -42,7 +42,7 @@
               <input #inputMedia
               type="file"
               accept="image/jpeg, image/png"
-              (change)="onSelectMedia($event)"
+              (change)="onSelectCoverImage($event)"
               >
             </div>  
           </div>        
@@ -173,6 +173,7 @@
               name="online-event"
               [controller]="formCheckboxOnlineEvent"
               label="This is an online event"
+              (changeValue)="onChangeEventType($event)"
               ></form-item-checkbox>
             </div>
               

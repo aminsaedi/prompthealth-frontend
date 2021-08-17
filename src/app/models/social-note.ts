@@ -71,7 +71,6 @@ export interface ISocialEvent extends ISocialArticle {
   eventType?: 'ONLINE' | 'OFFLINE';
   eventAddress?: string;
   
-
   startAt: Date;
   endAt: Date;
   duration: number;

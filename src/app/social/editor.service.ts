@@ -36,6 +36,7 @@ export class EditorService {
     if (type == 'EVENT') {
       this._form = new FormGroup({
         status: new FormControl('DRAFT'),
+        contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
         title: new FormControl(null, validators.savePostTitle),
         description: new FormControl(null),
@@ -43,23 +44,27 @@ export class EditorService {
 
         eventStartTime: new FormControl(null),  // set validator later
         eventEndTime: new FormControl(null),  // set validator later
+        eventType: new FormControl('ONLINE'),
         joinEventLink: new FormControl(null),  // set validator later
         eventAddress: new FormControl(null),
       });  
     } else if (type == 'ARTICLE') {
       this._form = new FormGroup({
         status: new FormControl('DRAFT'),
+        contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
         title: new FormControl(null, validators.savePostTitle),
         description: new FormControl(null), // set validator later
         image: new FormControl('', ),
       })
-    } else {
+    } else if (type == 'NOTE') {
       this._form = new FormGroup({
-        status: new FormControl('APPROVED'),
+        contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        description: new FormControl('', validators.publishPostDescription),
-      });
+        description: new FormControl(),
+        images: new FormControl(), // TODO: need change to FormArray in ver2.1
+        voice: new FormControl(),
+      }, validators.note);
     }
 
     this._form.valueChanges.subscribe(() => {
@@ -69,11 +74,17 @@ export class EditorService {
     return this.form;
   }
 
+  // for ARTICLE | EVENt 
+  // (NOTE does not need validate)
+  // TODO: add PROMO validation process
   validate(published: boolean = false) {
     const f = this.form.controls;
-    f.description.clearValidators();
-    f.description.setValidators( published ? validators.publishPostDescription : validators.savePostDescription);
-    f.description.updateValueAndValidity();
+
+    if(this.editorType == 'ARTICLE' || this.editorType == 'EVENT') {
+      f.description.clearValidators();
+      f.description.setValidators( published ? validators.publishPostDescription : validators.savePostDescription);
+      f.description.updateValueAndValidity();  
+    }
 
     if(this.editorType == 'EVENT') {
       f.eventStartTime.clearValidators();
@@ -82,16 +93,16 @@ export class EditorService {
 
       f.eventStartTime.setValidators( published ? validators.publishPostEventStartTime : validators.savePostEventStartTime);
       f.eventEndTime.setValidators( published ? validators.publishPostEventEndTime : validators.savePostEventEndTime);
-      f.joinEventLink.setValidators( published ? validators.publishPostEventLink : validators.savePostEventLink);
+      f.joinEventLink.setValidators( (published && f.eventType.value == 'ONLINE') ? validators.publishPostEventLink : validators.savePostEventLink);
+      f.eventAddress.setValidators( (published && f.eventType.value == 'OFFLINE') ? validators.publishPostEventAddress : validators.savePostEventAddress);
+
       f.eventStartTime.updateValueAndValidity();
       f.eventEndTime.updateValueAndValidity();
       f.joinEventLink.updateValueAndValidity();  
+      f.eventAddress.updateValueAndValidity();
     }
-
   }
 }
-
-export type SocialEditorType = 'article' | 'event' | 'note';
 
 
 export interface ISaveQuery {

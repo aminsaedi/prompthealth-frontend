@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
@@ -11,9 +11,8 @@ import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-dateti
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { formatDateToString, formatStringToDate } from 'src/app/_helpers/date-formatter';
-import { validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
-import { EditorService, ISaveQuery, SaveQuery, SocialEditorType } from '../editor.service';
+import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 
 @Component({
   selector: 'app-editor',
@@ -47,7 +46,7 @@ export class EditorComponent implements OnInit {
   public minDateTimeEventStart: DateTimeData;
   public minDateTimeEventEnd: DateTimeData;
 
-  private AWS_S3 = environment.config.AWS_S3;
+  private _s3 = environment.config.AWS_S3;
 
   @ViewChild('inputMedia') private inputMedia: ElementRef;
 
@@ -110,7 +109,7 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  async onSelectMedia(e: Event) {
+  async onSelectCoverImage(e: Event) {
     const files = (e.target as HTMLInputElement).files;
     if(files && files.length > 0){
 
@@ -168,21 +167,7 @@ export class EditorComponent implements OnInit {
 
   async onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
     if('html' in e) {
-      const current = this.f.description.value;
-      const next = e.html;
-
       this.f.description.setValue(e.html);
-      if(current != next) {
-        // this._postsService.lockEditor();
-      }
-
-      if(e.html) {
-        const regExImageBase64 = /<img src="(data:image\/.+;base64,.+)"(\/)?>/
-        const matchImage = e.html.match(regExImageBase64);
-        if(matchImage) {
-          // this.onImageSelected(matchImage[1]);
-        }  
-      }
     }
   }
 
@@ -208,8 +193,11 @@ export class EditorComponent implements OnInit {
   }
 
   onChangeEndDateTime(e: Date) {
-    // this._postsService.lockEditor();
   } 
+
+  OnChangeEventType(online: boolean) {
+    this.f.eventType.setValue(online ? 'ONLINE' : 'OFFLINE');
+  }
 
   /** trigger when editor tool bar is sticked to top */
   changeStickyStatus(isSticked: boolean) {
@@ -250,7 +238,9 @@ export class EditorComponent implements OnInit {
     console.log(data);
 
     this.isUploading = true;
+    //image upload
 
+    //contentImage upload
     req.subscribe((res: any) => {
       this.isUploading = false;
       if(res.statusCode === 200) {
