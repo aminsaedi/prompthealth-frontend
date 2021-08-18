@@ -9,7 +9,7 @@
       <card
       class="pointer-events: initial;"
       [post]="n"
-      [shorten]="(targetPostId != n._id)"
+      [shorten]="true"
       ></card>
     </div>
   </div>
@@ -23,8 +23,8 @@
     <card 
     class="pointer-events: initial;"
     [post]="p" 
-    [shorten]="(targetPostId != p._id)"
-    [option]="{showLinkToDetail: (p.isEvent || p.isArticle)}"
+    [shorten]="true"
+    [option]="{showLinkToDetail: true}"
     ></card>
   </div>
 
@@ -41,5 +41,7 @@
 </ng-container>
 
 <ng-container *ngIf="isLoading">
-  <loader></loader>
+  <div class="mt-100p text-center">
+    <loader></loader>
+  </div>
 </ng-container>

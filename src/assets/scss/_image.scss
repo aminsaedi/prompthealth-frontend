@@ -16,6 +16,13 @@
   }
 }
 
+.image-container {
+  img {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+}
 
 .image-container-30pc::after {
   padding-top: 30%;

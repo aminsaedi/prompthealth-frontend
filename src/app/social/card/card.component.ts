@@ -1,8 +1,11 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { SocialArticle, SocialEvent, SocialNote, SocialPoromotion } from 'src/app/models/social-note';
 import { SocialPost } from 'src/app/models/social-post';
+import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar.component';
@@ -14,13 +17,33 @@ import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar
 })
 export class CardComponent implements OnInit {
 
-  @Input() post: SocialPost;
+  @Input() post: SocialPost|SocialNote|SocialArticle|SocialEvent|SocialPoromotion;
   @Input() shorten: boolean = true;
 
   @Input() option: ICardOption = {};
 
+  get images() {
+    let images: string[] = null;
+    if(this.post && this.post.isNote) {
+      images = (this.post as SocialNote).images;
+    }
+    return images;
+  }
+
+  get safeDescription() {
+    if(this.post) {
+      return this._sanitizer.bypassSecurityTrustHtml(this.post.description);
+    } else {
+      return null;
+    }
+  }
+
+  get topics(): Category[] { return this._categoryService.categoryList; }
+
+
   public isContentGradientShown: boolean = false;
   public _option: CardOption;
+
 
   @ViewChild('toolbar') private toolbar: CardItemToolbarComponent;
   @ViewChild('content') private content: ElementRef;
@@ -31,6 +54,8 @@ export class CardComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _location: Location,
     private _modalService: ModalService,
+    private _sanitizer: DomSanitizer,
+    private _categoryService: CategoryService,
   ) { }
 
   ngAfterViewInit() {

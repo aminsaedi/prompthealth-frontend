@@ -24,10 +24,6 @@
                 <i iconPh="cross"></i>
               </button>  
             </div>
-            
-            <div *ngIf="isUploadingImage" class="cover-image-loader">
-              <loader></loader>
-            </div>
 
             <div *ngIf="!imagePreview">
               <div class="text-placeholder text-center cover-image-placeholder">
@@ -39,7 +35,7 @@
                 </span>
               </div>
                 
-              <input #inputMedia
+              <input 
               type="file"
               accept="image/jpeg, image/png"
               (change)="onSelectCoverImage($event)"
@@ -54,6 +50,7 @@
             </label>
             <div 
             class="form-control title contenteditable body1"
+            [ngClass]="{'error': (isSubmitted && f.title.invalid), 'success': (isSubmitted && f.title.valid)}"
             contenteditable
             [formControl]="f.title"
             (beforeinput)="onBeforeInputTitle($event)"
@@ -98,7 +95,7 @@
             <label class="subtitle2 text-label">Description</label>
             <div 
             class="form-control description"
-              [ngClass]="(isArticle ? 'rich' : 'simple')"
+            [ngClass]="{'simple': isEvent, 'rich': isArticle, 'error': (isSubmitted && f.description.invalid), 'success': (isSubmitted && f.description.valid)}"
             >
               <quill-editor
               [styles]="{minHeight: (isArticle ? '360px' : '72px'), border: 'none'}"
@@ -184,11 +181,19 @@
               type="text"
               placeholder="Type address..."
               autocapitalize="off"
-              [controller]="f.address"
+              [controller]="f.eventAddress"
               [submitted]="isSubmitted"
               ></form-item-input>
             </div>
           </ng-container>
+
+          <div class="mt-30p">
+            <label class="subtitle2 text-label">Select topics</label>
+            <form-item-service
+            #formItemService
+            [option]="{showInlineWhenEnabled: true}"
+            ></form-item-service>
+          </div>
 
           <div class="mt-25p text-right sticky-bottom pb-30p button-bottom-group blur">
             <div class="d-flex justify-content-between">
@@ -196,6 +201,7 @@
               type="button"
               class="btn btn-outline"
               (click)="saveAsDraft()"
+              [disabled]="isUploading"
               >
                 <span *ngIf="f.status.value == 'DRAFT'">Save as draft</span>
                 <span *ngIf="f.status.value != 'DRAFT'">Make private</span>
@@ -204,6 +210,7 @@
               <input 
               type="submit" 
               class="btn btn-primary" 
+              [disabled]="isUploading"
               [value]="f.status.value == 'DRAFT' ? 'Publish' : 'Update'"
               >
             </div>
@@ -213,3 +220,18 @@
     </div>
   </div>
 </form>
+
+<div 
+*ngIf="isUploading"
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Uploading...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

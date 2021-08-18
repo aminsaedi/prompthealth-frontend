@@ -23,7 +23,11 @@
     <h6 class="d-flex align-items-center subtitle2">
       <profile-image [image]="post.authorImage" size="32"></profile-image>
       <span class="ml-10p text-body">{{post.author}}</span>
-      <i iconPh="verified" class="text-primary large ml-5p"></i>
+      <i 
+      *ngIf="post.authorVerified"
+      iconPh="verified" 
+      class="text-primary large ml-5p"
+      ></i>
     </h6>
   </a>
 
@@ -32,18 +36,26 @@
     class="status-indicator mr-2"
     [ngClass]="{'bg-success': !post?.isFinished, 'bg-danger': post?.isFinished}"
     ></div>
-    <span class="opacity-70pc body2">{{post?.status | titlecase}}</span>  
+    <span class="opacity-70pc body2">{{post?.openStatus | titlecase}}</span>  
   </div>
 </div>
 
 <ul class="list-unstyled mb-30p">
   <li class="subtitle2 text-label mb-10p">
-    <i iconPh="video-camera"></i>
-    <span>
-      {{post?.isVirtual ? 'Online' : 'Offline'}} - 
-      {{post?.eventOn ? 'On' : 'Virtual'}}
-      {{post?.eventOn | titlecase}}
-    </span>
+
+    <ng-container *ngIf="post?.isVirtual">
+      <i iconPh="video-camera" class="mr-5p"></i>
+      <span *ngIf="post?.isVirtual">
+        <ng-container *ngIf="post?.venue">On {{post.venue | titlecase}}</ng-container>
+        <ng-container *ngIf="!post?.venue">Virtual event</ng-container>
+      </span>
+    </ng-container>
+    <ng-container *ngIf="!post?.isVirtual">
+      <i iconPh="pin" class="mr-5p"></i>
+      <span>
+        <ng-container *ngIf="post?.venue">At {{post.venue | titlecase}}</ng-container>
+      </span>
+    </ng-container>
   </li>
   <li class="subtitle2 text-label">
     <i iconPh="calendar"></i>

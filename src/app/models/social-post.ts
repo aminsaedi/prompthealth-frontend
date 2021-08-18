@@ -26,7 +26,8 @@ export class SocialPost implements ISocialPost {
   get author() { return (this.data.authorId && typeof this.data.authorId != 'string') ? this.data.authorId.firstName : ''; } //author name
   get authorId(): string { return (typeof this.data.authorId == 'string') ? this.data.authorId : this.data.authorId ?  this.data.authorId._id : 'noid'; }
   get authorImage() { return (this.data.authorId && typeof this.data.authorId != 'string' && this.data.authorId.profileImage) ? this._s3 + '350x220/' + this.data.authorId.profileImage : 'assets/img/logo-sm-square.png'}
-  
+  get authorVerified() {return (this.data.authorId && typeof this.data.authorId != 'string' && this.data.authorId.verifiedBadge) ? true : false; }
+
   get description() { return this.data.description || ''; }
   get summary() { return this._summary.substr(0, 256); }
 

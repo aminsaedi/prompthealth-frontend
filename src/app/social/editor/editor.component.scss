@@ -31,8 +31,7 @@
     opacity: 0;
   }
     
-  .cover-image-placeholder,
-  .cover-image-loader {
+  .cover-image-placeholder{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -148,4 +147,10 @@
 .sticky-left {
   position: sticky;
   left: 0;
+}
+
+.modal-view{
+  .modal-drop {
+    backdrop-filter: none;
+  }
 }

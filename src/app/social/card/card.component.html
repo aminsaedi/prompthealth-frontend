@@ -53,8 +53,36 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
       <div #content
       class="post-content"
       [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
-      [innerHTML]="post.description"
+      [innerHTML]="(shorten ? post.description : safeDescription)"
       ></div>
+    </div>
+
+    <ul 
+    class="list-unstyled mb-10p" 
+    *ngIf="images"
+    >
+      <li 
+      *ngFor="let image of images" 
+      [ngClass]="shorten ? 'image-container-40pc rounded-12p overflow-hidden' : 'image-container'"
+      >
+        <img [src]="image" alt="">
+      </li>
+    </ul>
+
+    <div
+    *ngIf="post.tags && !shorten && topics"
+    class="mt-20p mb-10p"
+    >
+      <!-- <h6 class="subtitle1 mb-5p">Topics</h6> -->
+      <div class="mb-0 list-unstyled topics">
+        <ng-container *ngFor="let item of topics">
+          <a
+          *ngIf="post.tags.includes(item._id)" 
+          class="body2 text-body rounded-pill mr-10p mb-10p border border-body d-inline-block"
+          style="padding: 2px 8px"
+          >{{item.item_text}}</a>
+        </ng-container>
+      </div>
     </div>
   </div>
 </ng-template>

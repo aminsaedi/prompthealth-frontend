@@ -3,7 +3,8 @@ import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/cor
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { BlogSearchQuery, IBlogSearchQuery } from 'src/app/models/blog-search-query';
-import { SocialPost } from 'src/app/models/social-post';
+import { ISocialNote, SocialNote } from 'src/app/models/social-note';
+import { ISocialPost, SocialPost } from 'src/app/models/social-post';
 import { ISocialPostResult } from 'src/app/models/social-post-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
@@ -23,7 +24,6 @@ export class ListComponent implements OnInit {
   public newPosts: SocialPost[] = [];
 
   public posts: SocialPost[] = null;
-  public targetPostId: string = null;
 
   public countPerPage: number = 20;
   public selectedTopicId: string;
@@ -60,17 +60,17 @@ export class ListComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
   ) { }
 
-  public notesTest = null;
+  // public notesTest = null;
   ngOnInit(): void {
-    const notepath = `note/get-by-author/610c12755096aa0b7cae6a4e`;
-    this._sharedService.getNoAuth(notepath).subscribe((res: any) => {
-      const notes = [];
-      res.data.forEach(data => {
-        notes.push(new SocialPost(data));
-      })
-      console.log(notes);
-      this.notesTest = notes;
-    })
+    // const notepath = `note/get-by-author/610c12755096aa0b7cae6a4e`;
+    // this._sharedService.getNoAuth(notepath).subscribe((res: any) => {
+    //   const notes = [];
+    //   res.data.forEach(data => {
+    //     notes.push(new SocialPost(data));
+    //   })
+    //   console.log(notes);
+    //   this.notesTest = notes;
+    // })
 
 
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
@@ -84,8 +84,6 @@ export class ListComponent implements OnInit {
     });
 
     this._route.queryParams.subscribe((param: {post: string}) => {
-      this.targetPostId = param.post || null;
-    
       if(this.initDone) {
         this.initPosts();
       }
@@ -145,14 +143,9 @@ export class ListComponent implements OnInit {
     });
   }
 
-  onClickCardPost(e: Event, p: SocialPost) {
-    e.preventDefault();
-    e.stopPropagation();
-    this._router.navigate(['./'], {queryParams: {post: p._id}, relativeTo: this._route, replaceUrl: (this.targetPostId ? true : false)});
-  }
+  onPublishNewPost(data: ISocialNote) {
+    data.authorId = this._profileService.user;
 
-  onPublishNewPost(data: any) {
-    data.authorId = this.user;
-    this.newPosts.unshift(new SocialPost(data));
+    this.newPosts.unshift(new SocialNote(data));
   }
 }

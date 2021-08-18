@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from '../_helpers/form-settings';
-import * as RecordRTC from 'recordrtc';
 import { Profile } from '../models/profile';
-import { IBlog } from '../models/blog';
 import { formatStringToDate } from '../_helpers/date-formatter';
 import { ISocialPost, SocialPost } from '../models/social-post';
 import { ISocialEvent } from '../models/social-note';
@@ -162,10 +160,11 @@ export class SaveQuery implements ISaveQuery {
 
       ... (this.tags.length > 0) && {tags: this.tags},
 
-      ... (this.eventType) && {eventType: this.eventType},
+      ... (this.eventType && this.contentType == 'EVENT') && {eventType: this.eventType},
       ... (this.joinEventLink) && {joinEventLink: this.joinEventLink},
       ... (this.eventStartTime) && {eventStartTime: this.eventStartTime},
       ... (this.eventEndTime) && {eventEndTime: this.eventEndTime},
+      ... (this.eventAddress) && {eventAddress: this.eventAddress},
     };
     return data;
   }

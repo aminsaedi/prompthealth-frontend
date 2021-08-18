@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
 import { IBlogCategory } from '../models/blog-category';
 import { Professional } from '../models/professional';
-import { SocialArticle, SocialEvent } from '../models/social-note';
+import { ISocialArticle, ISocialEvent, ISocialNote, SocialArticle, SocialEvent, SocialNote } from '../models/social-note';
 import { ISocialPost, SocialPost } from '../models/social-post';
 @Injectable({
   providedIn: 'root'
@@ -214,7 +214,11 @@ export class SocialService {
 
   saveCacheSingle(data: ISocialPost) {
     if(!this.postCache.dataMap[data._id]) {
-      const b = new SocialPost(data);
+      const b = 
+        data.contentType == 'NOTE' ? new SocialNote(data as ISocialNote) : 
+        data.contentType == 'ARTICLE' ? new SocialArticle(data as ISocialArticle) :
+        data.contentType == 'EVENT' ? new SocialEvent(data as ISocialEvent) :
+        new SocialPost(data);
       // b.videoLinks.forEach(v => { b.addEmbedVideo(this.embedVideo(v)); });
       // if(b.videoLinks && b.videoLinks.length > 0) {
       //   b.setEmbedVideoAsThumbnail(this.embedVideoAsThumbnail(b.videoLinks[0]));

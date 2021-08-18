@@ -12,9 +12,7 @@ export class CardItemEyecatchComponent implements OnInit {
   @Input() post: SocialArticle | SocialEvent;
 
   get image() {
-    console.log(this.post.isArticle)
     if(this.post.isArticle || this.post.isEvent) {
-      console.log(this.post.image);
       return this.post.image;
     } else {
       return null;

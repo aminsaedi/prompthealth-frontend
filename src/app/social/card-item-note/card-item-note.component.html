@@ -8,7 +8,10 @@
           <h6 class="subtitle2 mb-0 text-body">
             {{post?.author}}
     
-            <i iconPh="verified" class="text-primary large ml-5p"></i>
+            <i 
+            *ngIf="post?.authorVerified"
+            iconPh="verified" 
+            class="text-primary large ml-5p"></i>
           </h6>        
         </a>
         <div class="body2 text-label">

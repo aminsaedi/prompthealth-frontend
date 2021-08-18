@@ -31,7 +31,6 @@ export class FormItemServiceComponent implements OnInit {
 
   async ngOnInit() {
     this._option = new OptionCheckboxGroupService(this.option);
-    console.log(this._option)
 
     this.controller.setControl('root', new FormArray([]));
 

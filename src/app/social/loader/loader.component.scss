@@ -1,15 +1,10 @@
 @import '../../../assets/scss/variables';
 
 .loader-container {
+  display: inline-block;
   position: relative;
-  height: 200px;
 
   .loader {
-    position: absolute;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-
     >div {
       width: 3px;
       height: 10px;

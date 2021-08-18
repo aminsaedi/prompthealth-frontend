@@ -6,8 +6,10 @@ import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
 import Quill from 'quill';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { ISocialPost, SocialPost } from 'src/app/models/social-post';
 import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
+import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { formatDateToString, formatStringToDate } from 'src/app/_helpers/date-formatter';
@@ -25,6 +27,7 @@ export class EditorComponent implements OnInit {
   get f() {return this._editorService.form.controls; }
   get isEvent() { return this.editorType == 'EVENT'; }
   get isArticle() { return this.editorType == 'ARTICLE'; }
+  get user() { return this._profileService.profile; }
 
   @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
     if(this._editorService.isEditorLocked) {
@@ -48,8 +51,8 @@ export class EditorComponent implements OnInit {
 
   private _s3 = environment.config.AWS_S3;
 
-  @ViewChild('inputMedia') private inputMedia: ElementRef;
-
+  // @ViewChild('inputMedia') private inputMedia: ElementRef;
+  @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
 
   constructor(
     private _sharedService: SharedService,
@@ -76,7 +79,7 @@ export class EditorComponent implements OnInit {
       }
       this._editorService.init(
         this.editorType, 
-        this._profileService.profile,
+        this.user,
       );
     });
 
@@ -117,6 +120,7 @@ export class EditorComponent implements OnInit {
 
       try { 
         image = await this._sharedService.shrinkImageByFixedWidth(files[0], 800);
+        this.f.image.setValue(image);
 
         const reader = new FileReader();
         reader.readAsDataURL(image.file);
@@ -132,6 +136,7 @@ export class EditorComponent implements OnInit {
 
   onClickButtonRemoveMedia() {
     this.imagePreview = null;
+    this.f.image.setValue(null);
   }
 
 
@@ -195,7 +200,8 @@ export class EditorComponent implements OnInit {
   onChangeEndDateTime(e: Date) {
   } 
 
-  OnChangeEventType(online: boolean) {
+  onChangeEventType(online: boolean) {
+    console.log('onChangeEventType')
     this.f.eventType.setValue(online ? 'ONLINE' : 'OFFLINE');
   }
 
@@ -216,46 +222,135 @@ export class EditorComponent implements OnInit {
     this.save('APPROVED')
   }
 
-  save(status: ISocialPost['status']) {
+  async save(status: ISocialPost['status']) {
     this.isSubmitted = true;
 
     const form = this._editorService.form;   
     const publish = status == 'DRAFT' ? false : true;
 
     this._editorService.validate(publish);
-    console.log(form)
     if(form.invalid) {
       this._toastr.error('There are several items that require your attention.');
       return;
     }
 
-    const data: ISaveQuery = new SaveQuery(form.value).toJson();
+    this.isUploading = true;
+
+    let imageUploaded = false;
+    try {
+      await this.uploadImagesIfNeeded();
+      imageUploaded = true;
+    } catch(error) {
+      console.log(error);
+      this._toastr.error('Could not upload image. Please try later');
+      this.isUploading = false;
+    }
+    if(!imageUploaded) {
+      return false;
+    }
+
+    const data: ISaveQuery = form.value;
+    const tags = this.formItemService.getSelected();
+    if(tags.length > 0) {
+      data.tags = tags;
+    }
     data.status = status;
 
-    // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
-    const req =  this._sharedService.post(data, 'blog/create');
+    const payload: ISaveQuery = new SaveQuery(data).toJson();
     console.log('===PAYLOAD====')
-    console.log(data);
+    console.log(payload);
 
-    this.isUploading = true;
-    //image upload
+    // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
+    const req =  this._sharedService.post(payload, 'blog/create');
 
-    //contentImage upload
+
     req.subscribe((res: any) => {
-      this.isUploading = false;
       if(res.statusCode === 200) {
         this.isSubmitted = false;
-        this._toastr.success('Updated successfully');  
+        this._toastr.success('Updated successfully');
+        this._editorService.unlockEditor();
+        console.log(res);
       } else {
         this._toastr.error(res.message);
       }
     }, (err) => {
-      this.isUploading = false;
       console.log(err);
       this._toastr.error(err);
+    }, () => {
+      this.isUploading = false;
     });
-
   }
-  
+
+  uploadImagesIfNeeded(): Promise<void> {
+    return new Promise( async (resolve, reject) => {
+      const images = [];
+      if(this.f.image.value && typeof this.f.image.value != 'string') {
+        images.push(this.f.image.value);
+      }
+
+      let desc = this.f.description.value || '';
+      const regExImageBase64All = /<img src="(data:image\/.+?;base64,.+?)"(\/)?>/g;
+      const matchImages: string[] = desc.match(regExImageBase64All);
+      if(matchImages && matchImages.length > 0) {
+        try {
+          const results = await this.shrinkImagesInBody(matchImages);
+          results.forEach(res => {
+            images.push(res);
+          });
+        } catch(error) {
+          reject();
+        }
+      }
+
+      if(images.length == 0) {
+        console.log('no image found');
+        resolve();
+      } else {
+        this._sharedService.uploadMultipleImages(images, this.user._id, 'blogs').subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {
+          if(res.statusCode === 200) {
+            const images = (typeof res.data == 'string') ? [res.data] : res.data;
+
+            if(typeof this.f.image.value != 'string') {
+              this.f.image.setValue(images[0]);
+              images.splice(0,1);
+            }
+            if(matchImages && matchImages.length > 0) {
+              matchImages.forEach((match, i) => {
+                desc = desc.replace(match, `<img src="${this._s3 + images[i]}">`);
+              });
+              this.f.description.setValue(desc);  
+            }
+            resolve();
+          } else {
+            console.log(res.message);
+            reject()
+          }
+        }, error => {
+          console.log(error);
+          reject();
+        });
+      }
+    });
+  }
+
+  shrinkImagesInBody(images: string[]): Promise<{file: Blob|File, filename: string}[]> {
+    return new Promise((resolve, reject) => {
+      const regExImageBase64 = /<img src="(data:image\/.+?;base64,.+?)"(\/)?>/
+
+      const promiseAll = [];
+      images.forEach(image => {
+        const b64 = image.match(regExImageBase64)[1];
+        const blob = this._sharedService.b64ToBlob(b64);
+        promiseAll.push(this._sharedService.shrinkImageByFixedWidth(blob, 800));
+      });
+
+      Promise.all(promiseAll).then((results: {file: Blob|File, filename: string}[]) => {
+        resolve(results);
+      }, error => {
+        console.log(error);
+        reject();
+      });  
+    });
+  }
 }
 
