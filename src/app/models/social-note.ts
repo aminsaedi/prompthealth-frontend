@@ -9,33 +9,33 @@ export interface ISocialNote extends ISocialPost{
 export class SocialNote extends SocialPost implements ISocialNote {
   get voice() { return this.data.voice || null; }
   get images() { return this._images; }
-
+  
   private _images: string[];
   constructor(protected data: ISocialNote) {
     super(data);
-
+    
     this._images = data.images ? data.images.map(image => this._s3 + image) : [];
   }
 }
 
 export interface ISocialPromotion extends ISocialNote {
-
+  
 }
 
 export class SocialPoromotion extends SocialNote implements ISocialPromotion {
-
+  
 }
 
 export interface ISocialArticle extends ISocialPost {
   title: string;
-
+  
   image?: string;  
   readLength: number;
 }
 
 export class SocialArticle extends SocialPost implements ISocialArticle {
   get title() { return this.data.title; }
-
+  
   get image() { return (this.data.image) ? this._s3 + this.data.image : '/assets/img/logo-square-primary-light.png'; }
   get imageType() {
     let imageType: string = '';
@@ -46,14 +46,14 @@ export class SocialArticle extends SocialPost implements ISocialArticle {
     }
     return imageType;
   }
-
+  
   get readLength() { return this._readLength; } /** UNIT: minute */
-
+  
   private _readLength: number;
-
+  
   constructor(protected data: ISocialArticle) {
     super(data);
-
+    
     /** calculate readLength if it's 0 */
     if(data.readLength > 0) {
       this._readLength = data.readLength;
@@ -75,34 +75,34 @@ export interface ISocialEvent extends ISocialArticle {
   endAt: Date;
   duration: number;
   link: string;
-  eventStatus: string;
+  openStatus: string;
   isFinished: boolean;
   isVirtual: boolean;
-  eventOn: string;
+  venue: string;
 }
 
 export class SocialEvent extends SocialArticle implements ISocialEvent {
-
+  
   get startAt(): Date { return this._startAt; }
   get endAt(): Date { return this._endAt; }
   get duration(): number { return (this._endAt.getTime() - this._startAt.getTime()) / 1000 / 60; /** unit: minute */ }
-
+  
   get link() { return this.data.joinEventLink; }
-  get eventStatus() { return this._status; }
-  get isFinished() { return (this.eventStatus == 'finished'); }
-  get isVirtual() { return true; }
-  get eventOn() { return this.getVenueFromURL(); }
-
+  get openStatus() { return this._openStatus; }
+  get isFinished() { return (this.openStatus == 'finished'); }
+  get isVirtual() { return this.data.eventType == 'ONLINE'; }
+  get venue() { return this.isVirtual ? this.getVenueFromURL() : this.data.eventAddress; }
+  
   private _startAt: Date;
   private _endAt: Date;
-  private _status: string;
-
+  private _openStatus: string;
+  
   constructor(protected data: ISocialEvent) {
     super(data);
-
+    
     this._startAt = (this.data.eventStartTime) ?  new Date(this.data.eventStartTime) : null;
     this._endAt = (this.data.eventEndTime) ? new Date(this.data.eventEndTime) : null;
-
+    
     const now = new Date();
     let status: string;
     if(!this._startAt || !this._endAt) {
@@ -116,18 +116,19 @@ export class SocialEvent extends SocialArticle implements ISocialEvent {
     } else {
       status = 'finished';
     }
-    this._status = status;
+    this._openStatus = status;
   }
-
+  
   getVenueFromURL() {
     let venue: string = null;
-
+    
     if(this.data.joinEventLink) {
       let path = this.data.joinEventLink;
       let host = null;
       host = path.replace(/http(s)?:\/\/(www\.)?/, '').replace(/\/.*$/, '');
-
+      
       const match = host.match(/(eventbrite|zoom|meet)/);
+      
       switch(true) {
         case /eventbrite/.test(host):
           venue = 'Eventbrite';
@@ -135,7 +136,6 @@ export class SocialEvent extends SocialArticle implements ISocialEvent {
         case /easywebinar/.test(host):
           venue = 'Easywebinar';
           break;
-
         case /zoom/.test(host):
           venue = 'Zoom';
           break;
@@ -145,7 +145,6 @@ export class SocialEvent extends SocialArticle implements ISocialEvent {
         case /teams/.test(host):
           venue = 'Teams';
           break;
-
         case /clubhouse/.test(host):
           venue = 'Clubhouse';
           break;
@@ -164,8 +163,9 @@ export class SocialEvent extends SocialArticle implements ISocialEvent {
         default: 
           venue = null;
       }
+      
     }
-
+    
     return venue;
   }
 }
