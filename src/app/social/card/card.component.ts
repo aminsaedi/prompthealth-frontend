@@ -30,6 +30,14 @@ export class CardComponent implements OnInit {
     return images;
   }
 
+  get voice() {
+    let voice: string = null;
+    if(this.post && this.post.isNote) {
+      voice = (this.post as SocialNote).voice || null;
+    }
+    return voice;
+  }
+
   get safeDescription() {
     if(this.post) {
       return this._sanitizer.bypassSecurityTrustHtml(this.post.description);

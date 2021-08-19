@@ -1,4 +1,3 @@
-import { SafeHtml } from "@angular/platform-browser";
 import { ISocialPost, SocialPost } from "./social-post";
 
 export interface ISocialNote extends ISocialPost{
@@ -7,7 +6,7 @@ export interface ISocialNote extends ISocialPost{
 }
 
 export class SocialNote extends SocialPost implements ISocialNote {
-  get voice() { return this.data.voice || null; }
+  get voice() { return this.data.voice ? (this._s3 + this.data.voice) : null; }
   get images() { return this._images; }
   
   private _images: string[];
@@ -48,8 +47,10 @@ export class SocialArticle extends SocialPost implements ISocialArticle {
   }
   
   get readLength() { return this._readLength; } /** UNIT: minute */
+  get readLengthLabel() { return this._readLengthLabel; }
   
   private _readLength: number;
+  private _readLengthLabel: string;
   
   constructor(protected data: ISocialArticle) {
     super(data);
@@ -60,7 +61,19 @@ export class SocialArticle extends SocialPost implements ISocialArticle {
     } else {
       const words = data.title + this._summary;
       this._readLength = Math.ceil(words.length / 200);
-    }    
+    }
+    this._readLengthLabel = this.getFormattedTime(this._readLength);
+  }
+
+  getFormattedTime(minutes: number) { 
+    let res: string = '';
+    if(minutes >= 60) {
+      const h = Math.floor(minutes / 60 * 100) / 100;
+      res = h + 'hour' + (h > 1 ? 's' : '');
+    } else {
+      res = minutes + 'min' + (minutes > 1 ? 's' : '');      
+    }
+    return res;
   }
 }
 

@@ -42,9 +42,10 @@ export class PageComponent implements OnInit {
         this.post = post;
         resolve(true);
       } else {
-        const path = `note/get-by-id/${this.postId}`;
+        const path = `blog/get-by-id/${this.postId}`;
         this._sharedService.getNoAuth(path).subscribe((res: any) => {
           if(res.statusCode === 200) {
+            console.log(res.data)
             this._socialService.saveCacheSingle(res.data);
             this.post = this._socialService.postOf(this.postId);
 

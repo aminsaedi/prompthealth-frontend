@@ -302,6 +302,11 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
+    if(!this.user) {
+      console.log('you are not logged in');
+      return;
+    }
+
     if(this.user && this.user._id == this.profileId) {
       console.log('this profile is myself');
       return;

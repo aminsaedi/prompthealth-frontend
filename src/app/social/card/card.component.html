@@ -69,6 +69,10 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
       </li>
     </ul>
 
+    <div *ngIf="voice">
+      <audio-player [src]="voice"></audio-player>
+    </div>
+
     <div
     *ngIf="post.tags && !shorten && topics"
     class="mt-20p mb-10p"

@@ -19,6 +19,8 @@ export const environment = {
     APPLE_CLIENT_ID: 'com.prompthealth',
     FACEBOOK_APP_ID: '2053494228293760',
     disableAnalytics: false,
+
+    idSA: '610b23f28d24b31170b67c60',
   },
   api_routes: {
     LOGIN: 'login',

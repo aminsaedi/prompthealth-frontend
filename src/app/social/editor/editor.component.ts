@@ -268,6 +268,8 @@ export class EditorComponent implements OnInit {
       if(res.statusCode === 200) {
         this.isSubmitted = false;
         this._toastr.success('Updated successfully');
+        this._editorService.resetForm();
+        this.formCheckboxOnlineEvent.setValue(true);
         this._editorService.unlockEditor();
         console.log(res);
       } else {

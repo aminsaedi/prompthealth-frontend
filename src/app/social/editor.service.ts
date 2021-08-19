@@ -17,6 +17,7 @@ export class EditorService {
   private editorLocked: boolean = false;
   private _form: FormGroup;
   private editorType: SocialPost['contentType'];
+  private userId: string;
 
   constructor() { }
 
@@ -27,9 +28,25 @@ export class EditorService {
     this.editorLocked = false;
   }
 
+  resetForm() {
+    this.form.reset();
+    const f = this.form.controls;
+    f.authorId.setValue(this.userId);
+    f.contentType.setValue(this.editorType);
+
+    if(this.editorType == 'ARTICLE' || this.editorType == 'EVENT') {
+      f.status.setValue('DRAFT');
+    }
+
+    if(this.editorType == 'EVENT') {
+      f.eventType.setValue('ONLINE');
+    }
+  }
+
   init(type: SocialPost['contentType'], profile: Profile): FormGroup {
     this.unlockEditor();
     this.editorType = type;
+    this.userId = profile._id;
 
     if (type == 'EVENT') {
       this._form = new FormGroup({

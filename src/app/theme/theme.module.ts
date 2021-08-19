@@ -11,7 +11,6 @@ import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { LayoutComponent } from './layout/layout.component';
-// import { FlashMessagesModule } from 'ngx-flash-messages';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
 

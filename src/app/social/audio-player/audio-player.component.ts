@@ -66,7 +66,10 @@ export class AudioPlayerComponent implements OnInit {
     }
   }
 
-  togglePlayerState() {
+  togglePlayerState(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+
     if(!this.player) {
       console.error('cannot find player');
       return;
@@ -79,7 +82,10 @@ export class AudioPlayerComponent implements OnInit {
     }
   }
 
-  onClickReplay() {
+  onClickReplay(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+
     this.player.currentTime = 0;
   }
 
