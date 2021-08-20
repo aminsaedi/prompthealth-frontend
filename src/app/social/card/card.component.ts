@@ -38,14 +38,6 @@ export class CardComponent implements OnInit {
     return voice;
   }
 
-  get safeDescription() {
-    if(this.post) {
-      return this._sanitizer.bypassSecurityTrustHtml(this.post.description);
-    } else {
-      return null;
-    }
-  }
-
   get topics(): Category[] { return this._categoryService.categoryList; }
 
 
@@ -78,13 +70,13 @@ export class CardComponent implements OnInit {
 
     this._route.fragment.pipe( first() ).subscribe(fragment => {
       if(fragment && fragment == this.post._id && this.anchor && this.anchor.nativeElement) {
-        const el: HTMLAnchorElement = this.anchor.nativeElement;
-        const elTop = el.getBoundingClientRect().top;
-        this._location.replaceState(this._location.path());
 
         setTimeout(() => {
+          const el: HTMLAnchorElement = this.anchor.nativeElement;
+          const elTop = el.getBoundingClientRect().top;
+          this._location.replaceState(this._location.path());
           smoothWindowScrollTo(elTop);
-        });
+        }, 100);
       }
     });
   

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
-import { IBlogCategory } from '../models/blog-category';
 import { Professional } from '../models/professional';
 import { ISocialArticle, ISocialEvent, ISocialNote, SocialArticle, SocialEvent, SocialNote } from '../models/social-note';
 import { ISocialPost, SocialPost } from '../models/social-post';
@@ -10,18 +9,8 @@ import { ISocialPost, SocialPost } from '../models/social-post';
 })
 export class SocialService {
 
-  private categoryCache: IBlogCategory[];
-  private tagCache: IBlogCategory[];
   private postCache: PostCache;
   private _selectedProfile: Professional = null;
-
-  get categories(): any[] {
-    return this.categoryCache;
-  }
-
-  get tags(): any[] {
-    return this.tagCache;
-  };
 
   get selectedProfile() { return this._selectedProfile; }
   private _selectedProfileChanged = new Subject<Professional>();
@@ -40,88 +29,13 @@ export class SocialService {
   constructor(
     private _sanitizer: DomSanitizer,
   ) { 
-    this.categoryCache = null;
     this.postCache = new PostCache();
   }
 
-  taxonomyNameOf(taxonomyId: string) {
-    let name: string = null;
-    if (taxonomyId.match(/video|podcast/)) {
-      name = taxonomyId;
-    } else {
-      name = this.categoryNameOf(taxonomyId);
-      if(!name) {
-        name = this.tagNameOf(taxonomyId);
-      }
-    }
-    return name;
+  filterOf(taxonomy: SocialPostTaxonomyType) {
+    const cache = this.postCache.dataPerTaxonomy[taxonomy];
+    return cache ? cache.filter : null;
   }
-
-  tagNameOf(tagId: string) {
-    let name: string = null;
-    if(this.tagCache) {
-      for(let tag of this.tagCache) {
-        if(tag._id == tagId) {
-          name = tag.title;
-          break;
-        }
-      }
-    }
-    return name;
-  }
-
-  categoryNameOf(catId: string) {
-    let name: string = null;
-    if (this.categoryCache) {
-      for(let cat of this.categoryCache) {
-        if(cat._id == catId) {
-          name = cat.title;
-          break;
-        }
-      }
-    }
-    return name;
-  }
-
-  get categoryEvent() {
-    let cat: IBlogCategory = null;
-    if(this.categoryCache) {
-      for (let c of this.categoryCache) {
-        if(c.slug.match(/event/)) {
-          cat = c;
-          break;
-        }
-      }
-    }
-    return cat;
-  }
-
-  getCategoryBySlug(slug: string) {
-    let category: IBlogCategory = null;
-    if(this.categoryCache) {
-      for(let cat of this.categoryCache) {
-        if(cat.slug == slug) {
-          category = cat;
-          break;
-        }
-      }
-    }
-    return category;
-  }
-
-  getTagBySlug(slug: string) {
-    let tag: IBlogCategory = null;
-    if(this.tagCache) {
-      for(let t of this.tagCache) {
-        if(t.slug == slug) {
-          tag = t;
-          break;
-        }
-      }
-    }
-    return tag;
-  }
-
   postOf(id: string) {
     const data = this.postCache.dataMap;
     if(!data) { 
@@ -138,21 +52,6 @@ export class SocialService {
       return result;
     }
   }
-
-  // postOfSlug(slug: string) {
-  //   const data = this.postCache.dataMap;
-  //   let result = null;
-  //   if(!!data) {
-  //     for(let id in data) {
-  //       const d = data[id];
-  //       if((d instanceof SocialArticle || d instanceof SocialEvent) && d.slug == slug ){
-  //         result = data[id];
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   return result;
-  // }
 
   postsOf(
     taxonomy: SocialPostTaxonomyType = 'feed',
@@ -171,7 +70,7 @@ export class SocialService {
     }
   }
 
-  postsOfUser(userId: string): SocialPost[] {
+  postsOfUser(userId: string): (SocialPost|SocialNote|SocialArticle|SocialEvent)[] {
     const data = this.postCache.dataPerTaxonomy.users[userId];
     return data ? data.postdata : null;
   }
@@ -185,7 +84,15 @@ export class SocialService {
     this.postCache = new PostCache();
   }
 
-  saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'feed'): SocialPost[] {
+  disposeCacheOf(taxonomy: SocialPostTaxonomyType = 'feed') {
+    this.postCache.dataPerTaxonomy[taxonomy] = {data: null};
+    console.log('cache reset', taxonomy);
+  }
+
+  saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'feed', topic: string = null): SocialPost[] {
+    this.postCache.dataPerTaxonomy[taxonomy].filter = {
+      topic: topic,
+    }
     if(!this.postCache.dataPerTaxonomy[taxonomy].data) {
       this.postCache.dataPerTaxonomy[taxonomy].data = [];
     }
@@ -212,25 +119,56 @@ export class SocialService {
     return returnData;
   }
 
+  saveCachePostsOfUser(data: ISocialPost[], userId: string): (SocialPost|SocialNote|SocialArticle|SocialEvent)[] {
+
+    const cache = this.postCache.dataPerTaxonomy.users[userId];
+    if (!cache) {
+      this.postCache.dataPerTaxonomy.users[userId] = {
+        userdata: null,
+        postdata: [],
+      }
+    } else if(!cache.postdata) {
+      cache.postdata = [];
+    }
+
+    const returnData = [];
+
+    for(let d of data) {
+      let idInMap = null;
+      for(let id in this.postCache.dataMap) {
+        if(d._id == id) {
+          idInMap = id;
+          break;
+        }
+      }
+      if(!idInMap) {
+        this.saveCacheSingle(d);
+        idInMap = d._id;
+      }
+
+      this.postCache.dataPerTaxonomy.users[userId].postdata.push(this.postOf(idInMap));
+      returnData.push(this.postOf(idInMap));
+    }
+    return returnData;
+  }
+
+
   saveCacheSingle(data: ISocialPost) {
     if(!this.postCache.dataMap[data._id]) {
-      const b = 
+      const content = 
         data.contentType == 'NOTE' ? new SocialNote(data as ISocialNote) : 
         data.contentType == 'ARTICLE' ? new SocialArticle(data as ISocialArticle) :
         data.contentType == 'EVENT' ? new SocialEvent(data as ISocialEvent) :
         new SocialPost(data);
-      // b.videoLinks.forEach(v => { b.addEmbedVideo(this.embedVideo(v)); });
-      // if(b.videoLinks && b.videoLinks.length > 0) {
-      //   b.setEmbedVideoAsThumbnail(this.embedVideoAsThumbnail(b.videoLinks[0]));
-      // }
-      // b.podcastLinks.forEach(v => { b.addEmbedPodcast(this.embedPodcast(v)); });
 
-      this.postCache.dataMap[data._id] = b;
+      content.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(content.description));
+      this.postCache.dataMap[data._id] = content;
     }
   }
 
   saveCacheProfile(data: Professional) {
-    if(!this.postCache.dataPerTaxonomy.users[data._id]) {
+    const cache = this.postCache.dataPerTaxonomy.users[data._id];
+    if(!cache) {
       this.postCache.dataPerTaxonomy.users[data._id] = {
         userdata: data,
         postdata: null,
@@ -238,13 +176,7 @@ export class SocialService {
     }
   }
 
-  saveCacheCategories(data: IBlogCategory[]) {
-    this.categoryCache = data;
-  }
 
-  saveCacheTags(data: IBlogCategory[]) {
-    this.tagCache = data;
-  }
 
   createDummyArray(count: number) {
     const data = [];

@@ -53,7 +53,7 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
       <div #content
       class="post-content"
       [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
-      [innerHTML]="(shorten ? post.description : safeDescription)"
+      [innerHTML]="post.descriptionSanitized"
       ></div>
     </div>
 

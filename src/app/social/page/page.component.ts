@@ -42,7 +42,7 @@ export class PageComponent implements OnInit {
         this.post = post;
         resolve(true);
       } else {
-        const path = `blog/get-by-id/${this.postId}`;
+        const path = `note/${this.postId}`;
         this._sharedService.getNoAuth(path).subscribe((res: any) => {
           if(res.statusCode === 200) {
             console.log(res.data)

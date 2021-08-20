@@ -62,7 +62,7 @@ const routes: Routes = [
 
     { path: '', component: HomeComponent, children: [
       { path: ':taxonomyType', component: ListComponent },
-      { path: ':taxonomyType/:topiId', component: ListComponent },  
+      { path: ':taxonomyType/:topicId', component: ListComponent },  
 
       { path: '', pathMatch: 'full', redirectTo: 'feed', },
 

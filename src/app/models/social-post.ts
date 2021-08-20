@@ -1,3 +1,4 @@
+import { SafeHtml } from "@angular/platform-browser";
 import { environment } from "src/environments/environment";
 import { Blog, IBlog } from "./blog";
 import { IUserDetail } from "./user-detail";
@@ -9,6 +10,7 @@ export interface ISocialPost {
 
   status?: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'HIDDEN';
   description?: string;
+  descriptonSanitized?: SafeHtml;
 
   tags?: string[];
 
@@ -29,6 +31,7 @@ export class SocialPost implements ISocialPost {
   get authorVerified() {return (this.data.authorId && typeof this.data.authorId != 'string' && this.data.authorId.verifiedBadge) ? true : false; }
 
   get description() { return this.data.description || ''; }
+  get descriptionSanitized() { return this._description; }
   get summary() { return this._summary.substr(0, 256); }
 
   get tags() { return this.data.tags; }
@@ -48,6 +51,7 @@ export class SocialPost implements ISocialPost {
 
   protected _s3 = environment.config.AWS_S3; 
   protected _summary: string;
+  private _description: SafeHtml;
 
   _commentsDummy: SocialComment[];
   constructor(protected data: ISocialPost) {
@@ -60,7 +64,10 @@ export class SocialPost implements ISocialPost {
     })
 
     this._commentsDummy = comments;
+  }
 
+  setSanitizedDescription(d: SafeHtml) {
+    this._description = d;
   }
 }
 

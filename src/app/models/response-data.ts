@@ -69,3 +69,13 @@ export interface IUploadMultipleImagesResult extends IResponseData {
 export interface IUploadImageResult extends IResponseData {
   data: string;
 }
+
+export interface IGetSocialContentsResult extends IResponseData {
+  data: {
+    data: (ISocialPost|ISocialNote|ISocialArticle|ISocialEvent)[]
+  }
+}
+
+export interface IGetSocialContentsByAuthorResult extends IResponseData {
+  data: (ISocialPost|ISocialNote|ISocialArticle|ISocialEvent)[]
+}

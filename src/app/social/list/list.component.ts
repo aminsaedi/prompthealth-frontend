@@ -1,13 +1,17 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { BlogSearchQuery, IBlogSearchQuery } from 'src/app/models/blog-search-query';
+import { BlogSearchQuery, IBlogSearchQuery, IBlogSearchResult } from 'src/app/models/blog-search-query';
+import { Profile } from 'src/app/models/profile';
+import { IGetSocialContentsResult } from 'src/app/models/response-data';
+import { ISocialContentSearchQuery, SocialContentSearchQuery } from 'src/app/models/social-content-search-query';
 import { ISocialNote, SocialNote } from 'src/app/models/social-note';
 import { ISocialPost, SocialPost } from 'src/app/models/social-post';
-import { ISocialPostResult } from 'src/app/models/social-post-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
+import { environment } from 'src/environments/environment';
 import { SocialPostTaxonomyType, SocialService } from '../social.service';
 
 @Component({
@@ -32,7 +36,7 @@ export class ListComponent implements OnInit {
   public isLoading: boolean = false;
   public isMorePosts: boolean = true;
 
-  private initDone: boolean = false;
+  private subscriptionLoginStatus: Subscription;
 
   @HostListener('window:scroll', ['$event']) async onWindowScroll(e: Event) {
     if(!this.isLoading && this.isMorePosts && document.body && this.posts && this.posts.length > 0) {
@@ -40,10 +44,7 @@ export class ListComponent implements OnInit {
       if(startLoad) {
         console.log('startLoad');
         this.isLoading = true;
-        
-        const page = Math.ceil(this.posts.length / this.countPerPage) + 1 
-        const params: IBlogSearchQuery = {page: page, count: this.countPerPage};
-        const postsFetched = await this.fetchPosts(params);
+        const postsFetched = await this.fetchPosts();
         postsFetched.forEach(p => {
           this.posts.push(p);
         });
@@ -53,47 +54,61 @@ export class ListComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
-    private _router: Router,
     private _socialService: SocialService,
     private _sharedService: SharedService,
     private _profileService: ProfileManagementService,
     private _changeDetector: ChangeDetectorRef,
   ) { }
 
-  // public notesTest = null;
-  ngOnInit(): void {
-    // const notepath = `note/get-by-author/610c12755096aa0b7cae6a4e`;
-    // this._sharedService.getNoAuth(notepath).subscribe((res: any) => {
-    //   const notes = [];
-    //   res.data.forEach(data => {
-    //     notes.push(new SocialPost(data));
-    //   })
-    //   console.log(notes);
-    //   this.notesTest = notes;
-    // })
-
-
-    this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
-      this.selectedTopicId = param.topicId || null;
-      this.selectedTaxonomyType = param.taxonomyType || 'feed';
-      console.log(this.selectedTaxonomyType);
-
-      if(this.initDone) {
-        this.initPosts();
-      }
-    });
-
-    this._route.queryParams.subscribe((param: {post: string}) => {
-      if(this.initDone) {
-        this.initPosts();
-      }
-    });
-
-    this.initPosts();
-    this.initDone = true;
+  ngOnDestroy() {
+    if(this.subscriptionLoginStatus) {
+      this.subscriptionLoginStatus.unsubscribe();
+    }
   }
 
+  ngOnInit(): void {
+
+    this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
+      this.selectedTaxonomyType = param.taxonomyType || 'feed';
+      this.selectedTopicId = param.topicId;
+
+      const currentFilter = this._socialService.filterOf(this.selectedTaxonomyType);
+      const topicIdAsCurrentFilter = currentFilter ? currentFilter.topic : null;
+      // console.log(this.selectedTopicId, topicIdAsCurrentFilter)
+
+      if(this.selectedTopicId != topicIdAsCurrentFilter){
+        this._socialService.disposeCacheOf(this.selectedTaxonomyType);
+      }
+
+      if(this.selectedTaxonomyType == 'feed') {
+        this.subscribeLoginStatusAndInitPost()
+      }
+      else {
+        console.log('start init post for article / media / event');
+        this.initPosts();
+      }
+    });
+  }
+
+  subscribeLoginStatusAndInitPost() {
+    const status = this._profileService.loginStatus;
+    if(status == 'loggedIn' || status == 'notLoggedIn') {
+      this.initPosts();
+    }
+    
+    if(!this.subscriptionLoginStatus) {
+      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(res => {
+        if(res == 'loggedIn' || res == 'notLoggedIn') {
+          this._socialService.disposeCacheOf('feed');
+          this.initPosts();
+        }
+      });
+    }
+  }
+
+
   async initPosts() {    
+    this.posts = null;
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
     if(!!posts) {
       setTimeout(() => {
@@ -102,33 +117,56 @@ export class ListComponent implements OnInit {
         console.log('set posts from cache')
       }, 100);
     } else {
-
-      const params: IBlogSearchQuery = {count: this.countPerPage};
-      if(this.selectedTopicId) { params.tags = [this.selectedTopicId] };
-      if(this.selectedTaxonomyType == 'media') {
-      } else if (this.selectedTaxonomyType == 'event') {
-        
-      }
-
       try {
-        this.posts = await this.fetchPosts(params); 
+        this.posts = await this.fetchPosts(); 
       } catch (error) {
+        console.log(error)
         this.posts = [];
       }
     }
   }
 
-  fetchPosts(params: IBlogSearchQuery): Promise<SocialPost[]> {
+  fetchPosts(): Promise<SocialPost[]> {
     return new Promise((resolve, reject) => {
-      const query = new BlogSearchQuery(params);
-      const path = `blog/get-all${query.queryParams}`;
+      const tax = this.selectedTaxonomyType;
+      
+      const params: ISocialContentSearchQuery = {
+        count: this.countPerPage,
+        ... (this.selectedTopicId) && {tags: [this.selectedTopicId]},
+        ... (this.posts && this.posts.length > 0) && {
+          page: Math.ceil(this.posts.length / this.countPerPage) + 1,
+          timestamp: this.posts[0].createdAt,
+        },
+      }
+
+      let req: Observable<any>;
+      if (tax == 'feed' && this.user) {
+        const query = new SocialContentSearchQuery(params);
+        console.log(query.toQueryParams());
+        req = this._sharedService.get('note/get-feed' + query.toQueryParams());
+      } else {
+        if(tax == 'feed') {
+          params.authorId = environment.config.idSA;
+        } else if (tax == 'article') {
+          params.contentType = 'ARTICLE';
+        } else if(tax == 'media') {
+          params.hasMedia = true;
+        } else if(tax == 'event') {
+          params.contentType = 'EVENT';
+          params.sort = 'eventStartTime';
+        }
+
+        const query = new SocialContentSearchQuery(params);
+        console.log(query.toQueryParams());
+        req = this._sharedService.getNoAuth('note/filter' + query.toQueryParams());
+      } 
+
       this.isLoading = true;
-      this._sharedService.getNoAuth(path).subscribe((res: ISocialPostResult) => {
+      req.subscribe((res: IGetSocialContentsResult) => {
         this.isLoading = false;
         if(res.statusCode === 200) {
-          const posts = this._socialService.saveCache(res.data.data, this.selectedTaxonomyType);
-          const count = posts.length + (this.posts ? this.posts.length : 0);
-          this.isMorePosts = (count >= res.data.total) ? false : true;
+          this.isMorePosts = (res.data.data.length < this.countPerPage) ? false : true;
+          const posts = this._socialService.saveCache(res.data.data, this.selectedTaxonomyType, this.selectedTopicId);
           resolve(posts);
         } else {
           this.isMorePosts = false;

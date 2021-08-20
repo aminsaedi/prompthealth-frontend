@@ -290,7 +290,6 @@ export class CardNewPostComponent implements OnInit {
       delete data.voice;
     }
 
-    console.log(data);
     this._sharedService.put(data, 'note/create').subscribe((res: IContentCreateResult) => {
       if(res.statusCode == 200) {
         this.isSubmitted = false;

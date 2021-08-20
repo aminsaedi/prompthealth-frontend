@@ -106,11 +106,11 @@ export class ProfileComponent implements OnInit {
       this.initProfile();
     });
 
-    const query = new GetQuery({count: 50});
-    const path = 'social/get-followeds' + query.toQueryParamsString();
-    this._sharedService.get(path).subscribe((res: IGetFollowingsResult) => {
-      console.log(res);
-    });
+    // const query = new GetQuery({count: 50});
+    // const path = 'social/get-followeds' + query.toQueryParamsString();
+    // this._sharedService.get(path).subscribe((res: IGetFollowingsResult) => {
+    //   console.log(res);
+    // });
   }
 
   initProfile() {
@@ -154,6 +154,7 @@ export class ProfileComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const path = `user/get-profile/${id}`;
       this._sharedService.getNoAuth(path).subscribe((res: IGetProfileResult) => {
+        console.log(res.data)
         if(res.statusCode === 200) {
           const p = res.data;
           let professional: Professional | Partner;
