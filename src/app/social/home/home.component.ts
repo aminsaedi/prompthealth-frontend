@@ -5,6 +5,7 @@ import { Category, CategoryService } from 'src/app/shared/services/category.serv
 import { QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { locations } from 'src/app/_helpers/location-data';
+import { environment } from 'src/environments/environment';
 import { SocialPostTaxonomyType } from '../social.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit {
   public countCities: number;
 
   public selectedTaxonomyType: SocialPostTaxonomyType;
+  public idPH = environment.config.idSA;
 
 
   iconOf(topic: Category): string {

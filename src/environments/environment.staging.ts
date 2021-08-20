@@ -22,7 +22,7 @@ export const environment = {
 
     disableAnalytics: true,
 
-    idSA: '5edb61483cd45aa28f6413c0',
+    idSA: '610b23f28d24b31170b67c60',
 
   },
   api_routes: {
