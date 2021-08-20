@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Professional } from 'src/app/models/professional';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
-import { ISocialContentSearchQuery, SocialContentSearchQuery } from 'src/app/models/social-content-search-query';
+import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-content-search-query';
 import { ISocialArticle, ISocialEvent, ISocialNote, SocialArticle, SocialEvent, SocialNote } from 'src/app/models/social-note';
 import { ISocialPost, SocialPost } from 'src/app/models/social-post';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -89,14 +89,14 @@ export class ProfileFeedComponent implements OnInit {
   fetchPosts(): Promise<(SocialPost|SocialNote|SocialArticle|SocialEvent)[]> {
     console.log('fetch')
     return new Promise((resolve, reject) => {
-      const params: ISocialContentSearchQuery = {
+      const params: ISocialPostSearchQuery = {
         count: this.countPerPage,
         ... (this.posts && this.posts.length > 0) && {
           page: (Math.ceil(this.posts.length / this.countPerPage) + 1),
           timestamp: this.posts[0].createdAt,
         },
       }
-      const query = new SocialContentSearchQuery(params);
+      const query = new SocialPostSearchQuery(params);
 
       this.isLoading = true;
       const path = 'note/get-by-author/' + this.profile._id + query.toQueryParams();

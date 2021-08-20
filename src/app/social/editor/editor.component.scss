@@ -131,6 +131,13 @@
     line-height: 24px;
     color: $colorGsPlaceholder;
   }
+
+  .ql-snow .ql-editor img {
+    max-width: 80%;
+    @media (min-width: $breakpointMd) {
+      max-width: 60%;
+    }
+  }
 }
 
 .button-bottom-group {

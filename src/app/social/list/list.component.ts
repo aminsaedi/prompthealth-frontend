@@ -6,7 +6,7 @@ import { ProfileManagementService } from 'src/app/dashboard/profileManagement/pr
 import { BlogSearchQuery, IBlogSearchQuery, IBlogSearchResult } from 'src/app/models/blog-search-query';
 import { Profile } from 'src/app/models/profile';
 import { IGetSocialContentsResult } from 'src/app/models/response-data';
-import { ISocialContentSearchQuery, SocialContentSearchQuery } from 'src/app/models/social-content-search-query';
+import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-content-search-query';
 import { ISocialNote, SocialNote } from 'src/app/models/social-note';
 import { ISocialPost, SocialPost } from 'src/app/models/social-post';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -72,16 +72,8 @@ export class ListComponent implements OnInit {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
       this.selectedTopicId = param.topicId;
 
-      const currentFilter = this._socialService.filterOf(this.selectedTaxonomyType);
-      const topicIdAsCurrentFilter = currentFilter ? currentFilter.topic : null;
-      // console.log(this.selectedTopicId, topicIdAsCurrentFilter)
-
-      if(this.selectedTopicId != topicIdAsCurrentFilter){
-        this._socialService.disposeCacheOf(this.selectedTaxonomyType);
-      }
-
       if(this.selectedTaxonomyType == 'feed') {
-        this.subscribeLoginStatusAndInitPost()
+        this.checkLoginStatusAndInitPost()
       }
       else {
         console.log('start init post for article / media / event');
@@ -90,7 +82,7 @@ export class ListComponent implements OnInit {
     });
   }
 
-  subscribeLoginStatusAndInitPost() {
+  checkLoginStatusAndInitPost() {
     const status = this._profileService.loginStatus;
     if(status == 'loggedIn' || status == 'notLoggedIn') {
       this.initPosts();
@@ -99,7 +91,6 @@ export class ListComponent implements OnInit {
     if(!this.subscriptionLoginStatus) {
       this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(res => {
         if(res == 'loggedIn' || res == 'notLoggedIn') {
-          this._socialService.disposeCacheOf('feed');
           this.initPosts();
         }
       });
@@ -107,9 +98,14 @@ export class ListComponent implements OnInit {
   }
 
 
-  async initPosts() {    
+  async initPosts() {
+    this.disposeCacheIfNeeded();
     this.posts = null;
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
+    const metadata = this._socialService.metadataOf(this.selectedTaxonomyType);
+    if(metadata) {
+      this.isMorePosts = metadata.existMorePost;
+    }
     if(!!posts) {
       setTimeout(() => {
         this.posts = posts;
@@ -126,11 +122,29 @@ export class ListComponent implements OnInit {
     }
   }
 
+  disposeCacheIfNeeded() {
+    const meta = this._socialService.metadataOf(this.selectedTaxonomyType);
+    if(this.selectedTaxonomyType == 'feed') {
+      const userId = this.user ? this.user._id : null;
+      const userIdInMeta = meta && meta.userId ? meta.userId : null;
+      const userIdMatched = !!(userId == userIdInMeta);
+      if(userId != userIdInMeta) {
+        this._socialService.disposeCacheOf('feed');
+      }
+    }
+
+    const topicId = this.selectedTopicId ? this.selectedTopicId : null;
+    const topicIdInMeta = meta && meta.topic ? meta.topic : null;
+    if(topicId != topicIdInMeta) {
+      this._socialService.disposeCacheOf(this.selectedTaxonomyType);
+    }
+  }
+
   fetchPosts(): Promise<SocialPost[]> {
     return new Promise((resolve, reject) => {
       const tax = this.selectedTaxonomyType;
       
-      const params: ISocialContentSearchQuery = {
+      const params: ISocialPostSearchQuery = {
         count: this.countPerPage,
         ... (this.selectedTopicId) && {tags: [this.selectedTopicId]},
         ... (this.posts && this.posts.length > 0) && {
@@ -141,7 +155,7 @@ export class ListComponent implements OnInit {
 
       let req: Observable<any>;
       if (tax == 'feed' && this.user) {
-        const query = new SocialContentSearchQuery(params);
+        const query = new SocialPostSearchQuery(params);
         console.log(query.toQueryParams());
         req = this._sharedService.get('note/get-feed' + query.toQueryParams());
       } else {
@@ -153,10 +167,18 @@ export class ListComponent implements OnInit {
           params.hasMedia = true;
         } else if(tax == 'event') {
           params.contentType = 'EVENT';
-          params.sort = 'eventStartTime';
+          params.sortBy = 'eventStartTime';
+          params.order = 'asc';
+          const meta = this._socialService.metadataOf('event');
+          if(meta && meta.eventTimeRange) {
+            params.eventTimeRange = meta.eventTimeRange;
+          } else {
+            const now = new Date();
+            params.eventTimeRange = [now.toISOString(), '2021-08-23T20:00:00.000Z'];
+          }
         }
 
-        const query = new SocialContentSearchQuery(params);
+        const query = new SocialPostSearchQuery(params);
         console.log(query.toQueryParams());
         req = this._sharedService.getNoAuth('note/filter' + query.toQueryParams());
       } 
@@ -166,7 +188,15 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
         if(res.statusCode === 200) {
           this.isMorePosts = (res.data.data.length < this.countPerPage) ? false : true;
-          const posts = this._socialService.saveCache(res.data.data, this.selectedTaxonomyType, this.selectedTopicId);
+          const posts = this._socialService.saveCache(
+            res.data.data, 
+            this.selectedTaxonomyType, 
+            {
+              userId: this.user ? this.user._id : null, 
+              topic: this.selectedTopicId, 
+              existMorePost: this.isMorePosts,
+            }
+          );
           resolve(posts);
         } else {
           this.isMorePosts = false;

@@ -32,9 +32,9 @@ export class SocialService {
     this.postCache = new PostCache();
   }
 
-  filterOf(taxonomy: SocialPostTaxonomyType) {
+  metadataOf(taxonomy: SocialPostTaxonomyType) {
     const cache = this.postCache.dataPerTaxonomy[taxonomy];
-    return cache ? cache.filter : null;
+    return cache ? cache.metadata : null;
   }
   postOf(id: string) {
     const data = this.postCache.dataMap;
@@ -89,10 +89,8 @@ export class SocialService {
     console.log('cache reset', taxonomy);
   }
 
-  saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'feed', topic: string = null): SocialPost[] {
-    this.postCache.dataPerTaxonomy[taxonomy].filter = {
-      topic: topic,
-    }
+  saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'feed', metadata: IPostsPerTaxonomy['metadata']): SocialPost[] {
+    this.postCache.dataPerTaxonomy[taxonomy].metadata = metadata;
     if(!this.postCache.dataPerTaxonomy[taxonomy].data) {
       this.postCache.dataPerTaxonomy[taxonomy].data = [];
     }
@@ -207,10 +205,10 @@ class PostCache implements IPostCache {
   constructor() {
     this.dataMap = {};
     this.dataPerTaxonomy = {
-      feed:    {filter: null, data: null,},
-      article: {filter: null, data: null,},
-      event:   {filter: null, data: null,},
-      media:   {filter: null, data: null,},
+      feed:    {metadata: null, data: null,},
+      article: {metadata: null, data: null,},
+      event:   {metadata: null, data: null,},
+      media:   {metadata: null, data: null,},
       users: {},
     }
   }
@@ -218,8 +216,11 @@ class PostCache implements IPostCache {
 
 interface IPostsPerTaxonomy {
   data: SocialPost[];
-  filter?: {
+  metadata?: {
     topic?: string;
+    userId?: string;
+    existMorePost?: boolean;
+    eventTimeRange?: (string|Date)[];
   };
 }
 

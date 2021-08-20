@@ -2,6 +2,7 @@ import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { validators } from 'src/app/_helpers/form-settings';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'card-item-toolbar',
@@ -22,6 +23,7 @@ export class CardItemToolbarComponent implements OnInit {
 
   public isViewSm: boolean = true;
   public isFormCommentShown = false;
+  public FRONTEND_URL = environment.config.BASE_URL
   
   public formComment: FormControl;
 

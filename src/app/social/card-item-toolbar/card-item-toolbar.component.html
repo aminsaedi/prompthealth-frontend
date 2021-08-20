@@ -25,11 +25,10 @@
     </button>
 
     <button-share
-    [facebook]="'test'"
-    [twitter]="'test'"
-    [linkedin]="'test'"
-    [pinterest]="'test'"
-    [email]="'test'"
+    facebook twitter linkedin email
+    [url]="FRONTEND_URL + 'community/profile/' + post.authorId +  '/post/' + post._id"
+    title="Check out my content on PromptHealth!"
+    [text]=""
     [label]="isViewSm ? '' : 'Share'"
     btnClass="btn btn-text-grey small px-0 ml-20p ml-md-30p"
     ></button-share>
