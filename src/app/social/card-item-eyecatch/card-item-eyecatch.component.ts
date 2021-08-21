@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SocialArticle, SocialEvent } from 'src/app/models/social-note';
-import { SocialPost } from 'src/app/models/social-post';
+import { ISocialPost } from 'src/app/models/social-post';
 
 @Component({
   selector: 'card-item-eyecatch',
@@ -9,7 +8,7 @@ import { SocialPost } from 'src/app/models/social-post';
 })
 export class CardItemEyecatchComponent implements OnInit {
 
-  @Input() post: SocialArticle | SocialEvent;
+  @Input() post: ISocialPost;
 
   get image() {
     if(this.post.isArticle || this.post.isEvent) {
@@ -21,7 +20,7 @@ export class CardItemEyecatchComponent implements OnInit {
 
   get title() {
     if(this.post.isArticle || this.post.isEvent) {
-      return (this.post as SocialArticle).title;
+      return this.post.title;
     } else {
       return null;
     }
@@ -29,7 +28,7 @@ export class CardItemEyecatchComponent implements OnInit {
 
   get eventStartAt() {
     if(this.post.isEvent) {
-      return (this.post as SocialEvent).startAt;
+      return this.post.startAt;
     } else {
       return null;
     }
@@ -37,7 +36,7 @@ export class CardItemEyecatchComponent implements OnInit {
 
   get isEventFinished() {
     if(this.post.isEvent) {
-      return (this.post as SocialEvent).isFinished;
+      return this.post.isFinished;
     } else {
       return false;
     }

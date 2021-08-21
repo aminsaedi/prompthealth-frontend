@@ -15,7 +15,7 @@ import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult }
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { EditorService } from '../editor.service';
-import { ISocialNote } from 'src/app/models/social-note';
+import { ISocialPost } from 'src/app/models/social-post';
 
 
 @Component({
@@ -295,7 +295,7 @@ export class CardNewPostComponent implements OnInit {
         this.isSubmitted = false;
         this.isMoreShown = false;
         this.formItemService.deselectAll();
-        this.onPublished.emit(res.data as ISocialNote);
+        this.onPublished.emit(res.data as ISocialPost);
         this._editorService.resetForm();
       }
     }, error => {

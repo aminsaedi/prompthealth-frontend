@@ -3,8 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from '../_helpers/form-settings';
 import { Profile } from '../models/profile';
 import { formatStringToDate } from '../_helpers/date-formatter';
-import { ISocialPost, SocialPost } from '../models/social-post';
-import { ISocialEvent } from '../models/social-note';
+import { ISocialPost } from '../models/social-post';
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class EditorService {
   
   private editorLocked: boolean = false;
   private _form: FormGroup;
-  private editorType: SocialPost['contentType'];
+  private editorType: ISocialPost['contentType'];
   private userId: string;
 
   constructor() { }
@@ -43,7 +43,7 @@ export class EditorService {
     }
   }
 
-  init(type: SocialPost['contentType'], profile: Profile): FormGroup {
+  init(type: ISocialPost['contentType'], profile: Profile): FormGroup {
     this.unlockEditor();
     this.editorType = type;
     this.userId = profile._id;
@@ -137,7 +137,7 @@ export interface ISaveQuery {
 
   eventStartTime?: string | Date;
   eventEndTime?: string | Date;
-  eventType?: ISocialEvent['eventType'];
+  eventType?: ISocialPost['eventType'];
   joinEventLink?: string;
   eventAddress?: string;
 }

@@ -8,7 +8,7 @@
       <i 
       [iconPh]="'heart' + (isLiked ? '-filled' :'')" 
       class="large"
-      [ngClass]="{'text-error': post.like}"
+      [ngClass]="{'text-error': post.isLiked}"
       ></i>
       <span *ngIf="!isViewSm">
         <span>Like</span>
@@ -21,7 +21,7 @@
     (click)="onClickComment($event)"
     >
       <i iconPh="comment" class="large"></i>
-      <span>24</span>
+      <span>{{post.numComments}}</span>
     </button>
 
     <button-share
@@ -55,7 +55,8 @@
 <div *ngIf="isFormCommentShown" [@expandVertical]>
   <div class="pt-10p">
     <form-item-comment
-    [controller]="formComment"
+    [controller]="f.body"
+    [disabled]="isUploading"
     [option]="{hideCancel: true}"
     (onSubmit)="onSubmitComment()"
     ></form-item-comment>    

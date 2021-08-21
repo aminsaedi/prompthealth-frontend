@@ -1,18 +1,15 @@
-import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { BlogSearchQuery, IBlogSearchQuery, IBlogSearchResult } from 'src/app/models/blog-search-query';
-import { Profile } from 'src/app/models/profile';
 import { IGetSocialContentsResult } from 'src/app/models/response-data';
-import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-content-search-query';
-import { ISocialNote, SocialNote } from 'src/app/models/social-note';
-import { ISocialPost, SocialPost } from 'src/app/models/social-post';
+import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
+import { SocialNote } from 'src/app/models/social-note';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
 import { environment } from 'src/environments/environment';
 import { SocialPostTaxonomyType, SocialService } from '../social.service';
+import { ISocialPost } from 'src/app/models/social-post';
 
 @Component({
   selector: 'app-list',
@@ -25,9 +22,9 @@ export class ListComponent implements OnInit {
   get isEligibleToPost() { return (this.user && this.user.role != 'U');}
   get user() { return this._profileService.profile; }
 
-  public newPosts: SocialPost[] = [];
+  public newPosts: ISocialPost[] = [];
 
-  public posts: SocialPost[] = null;
+  public posts: ISocialPost[] = null;
 
   public countPerPage: number = 20;
   public selectedTopicId: string;
@@ -67,7 +64,6 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
       this.selectedTopicId = param.topicId;
@@ -140,7 +136,7 @@ export class ListComponent implements OnInit {
     }
   }
 
-  fetchPosts(): Promise<SocialPost[]> {
+  fetchPosts(): Promise<ISocialPost[]> {
     return new Promise((resolve, reject) => {
       const tax = this.selectedTaxonomyType;
       
@@ -174,7 +170,7 @@ export class ListComponent implements OnInit {
             params.eventTimeRange = meta.eventTimeRange;
           } else {
             const now = new Date();
-            params.eventTimeRange = [now.toISOString(), '2021-08-23T20:00:00.000Z'];
+            params.eventTimeRange = [now.toISOString()];
           }
         }
 
@@ -211,7 +207,7 @@ export class ListComponent implements OnInit {
     });
   }
 
-  onPublishNewPost(data: ISocialNote) {
+  onPublishNewPost(data: ISocialPost) {
     data.authorId = this._profileService.user;
 
     this.newPosts.unshift(new SocialNote(data));

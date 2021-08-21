@@ -1,5 +1,11 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ICommentCreateResult } from 'src/app/models/response-data';
+import { ISocialPost } from 'src/app/models/social-post';
+import { ModalService } from 'src/app/shared/services/modal.service';
+import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
@@ -12,10 +18,13 @@ import { environment } from 'src/environments/environment';
 })
 export class CardItemToolbarComponent implements OnInit {
 
-  get isLiked() { return this.post.like; }
-  get isBookmarked() { return this.post.bookmark; }
+  @Input() post: ISocialPost;
 
-  @Input() post: any = {};
+  get isLiked() { return this.post.isLiked; }
+  get isBookmarked() { return this.post.isBookmarked; }
+  get f() { return this.formComment.controls; }
+  get user() { return this._profileService.profile; }
+  get _user() { return this._profileService.user; }
 
   @HostListener('window:resize') onWindowResize() {
     this.isViewSm = (window && window.innerWidth >= 768) ? false : true;
@@ -23,21 +32,30 @@ export class CardItemToolbarComponent implements OnInit {
 
   public isViewSm: boolean = true;
   public isFormCommentShown = false;
+  public isUploading = false;
   public FRONTEND_URL = environment.config.BASE_URL
   
-  public formComment: FormControl;
+  private formComment: FormGroup;
 
-  constructor() { }
+  constructor(
+    private _sharedService: SharedService,
+    private _profileService: ProfileManagementService,
+    private _modalService: ModalService,
+    private _toastr: ToastrService,
+  ) { }
 
   ngOnInit(): void {
     this.onWindowResize();
-    this.formComment = new FormControl('', validators.comment);
+    this.formComment = new FormGroup({
+      body: new FormControl('', validators.comment),
+    });
   }
 
   onClickLike(e: Event) {
     this.stopPropagation(e);
     setTimeout(() => {
-      this.post.like = this.post.like == true ? false : true;
+
+      this.post.isLiked = this.post.isLiked == true ? false : true;
     }, 500);
   }
 
@@ -52,14 +70,33 @@ export class CardItemToolbarComponent implements OnInit {
 
   onClickBookmark(e: Event) {
     this.stopPropagation(e);
-
+    
     setTimeout(() => {
-      this.post.bookmark = this.post.bookmark == true ? false : true;
+      this.post.isBookmarked = this.post.isBookmarked == true ? false : true;
     }, 500);
   }
 
   onSubmitComment() {
-    console.log('form comment submitted');
+    if(!this.user) {
+      this._modalService.show('login-menu');
+    } else {
+      this.isUploading = true;
+      this._sharedService.post(this.formComment.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
+        if(res.statusCode == 200) {
+          this.formComment.reset();
+          res.data.author = this._user;
+          this.post.setComment(res.data);
+        } else {
+          console.log(res.message);
+          this._toastr.error('Could not post your comment. Please try again');
+        }
+      }, error => {
+        console.log(error);
+        this._toastr.error('Could not post your comment. Please try again');
+      }, () => {
+        this.isUploading = false;
+      });
+    }
   }
 
   showComment() {

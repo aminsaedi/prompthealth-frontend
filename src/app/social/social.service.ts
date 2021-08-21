@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
 import { Professional } from '../models/professional';
-import { ISocialArticle, ISocialEvent, ISocialNote, SocialArticle, SocialEvent, SocialNote } from '../models/social-note';
-import { ISocialPost, SocialPost } from '../models/social-post';
+import { SocialArticle } from '../models/social-article';
+import { SocialEvent } from '../models/social-event';
+import { SocialNote } from '../models/social-note';
+import { ISocialPost, SocialPostBase } from '../models/social-post';
 @Injectable({
   providedIn: 'root'
 })
@@ -57,7 +59,7 @@ export class SocialService {
     taxonomy: SocialPostTaxonomyType = 'feed',
     offset: number = 0, 
     count: number = 100000000, 
-  ): SocialPost[] {
+  ): ISocialPost[] {
     if(this.postCache.dataPerTaxonomy[taxonomy] && this.postCache.dataPerTaxonomy[taxonomy].data) {
       const data = this.postCache.dataPerTaxonomy[taxonomy].data;
  
@@ -70,7 +72,7 @@ export class SocialService {
     }
   }
 
-  postsOfUser(userId: string): (SocialPost|SocialNote|SocialArticle|SocialEvent)[] {
+  postsOfUser(userId: string): ISocialPost[] {
     const data = this.postCache.dataPerTaxonomy.users[userId];
     return data ? data.postdata : null;
   }
@@ -89,7 +91,7 @@ export class SocialService {
     console.log('cache reset', taxonomy);
   }
 
-  saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'feed', metadata: IPostsPerTaxonomy['metadata']): SocialPost[] {
+  saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'feed', metadata: IPostsPerTaxonomy['metadata']): ISocialPost[] {
     this.postCache.dataPerTaxonomy[taxonomy].metadata = metadata;
     if(!this.postCache.dataPerTaxonomy[taxonomy].data) {
       this.postCache.dataPerTaxonomy[taxonomy].data = [];
@@ -117,7 +119,7 @@ export class SocialService {
     return returnData;
   }
 
-  saveCachePostsOfUser(data: ISocialPost[], userId: string): (SocialPost|SocialNote|SocialArticle|SocialEvent)[] {
+  saveCachePostsOfUser(data: ISocialPost[], userId: string): ISocialPost[] {
 
     const cache = this.postCache.dataPerTaxonomy.users[userId];
     if (!cache) {
@@ -154,10 +156,10 @@ export class SocialService {
   saveCacheSingle(data: ISocialPost) {
     if(!this.postCache.dataMap[data._id]) {
       const content = 
-        data.contentType == 'NOTE' ? new SocialNote(data as ISocialNote) : 
-        data.contentType == 'ARTICLE' ? new SocialArticle(data as ISocialArticle) :
-        data.contentType == 'EVENT' ? new SocialEvent(data as ISocialEvent) :
-        new SocialPost(data);
+        data.contentType == 'NOTE' ? new SocialNote(data as ISocialPost) : 
+        data.contentType == 'ARTICLE' ? new SocialArticle(data as ISocialPost) :
+        data.contentType == 'EVENT' ? new SocialEvent(data as ISocialPost) :
+        new SocialPostBase(data);
 
       content.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(content.description));
       this.postCache.dataMap[data._id] = content;
@@ -187,7 +189,7 @@ export class SocialService {
 
 interface IPostCache {
   dataMap: {
-    [k: string]: SocialPost;
+    [k: string]: ISocialPost;
   },
   dataPerTaxonomy : {
     feed: IPostsPerTaxonomy;
@@ -215,7 +217,7 @@ class PostCache implements IPostCache {
 }
 
 interface IPostsPerTaxonomy {
-  data: SocialPost[];
+  data: ISocialPost[];
   metadata?: {
     topic?: string;
     userId?: string;
@@ -226,7 +228,7 @@ interface IPostsPerTaxonomy {
 
 interface IProfileWithPosts {
   userdata: Professional,
-  postdata: SocialPost[]
+  postdata: ISocialPost[]
 }
 
 export type SocialPostTaxonomyType = 'feed' | 'article' | 'event' | 'media';

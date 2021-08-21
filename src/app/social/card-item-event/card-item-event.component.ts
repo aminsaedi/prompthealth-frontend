@@ -1,11 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SocialEvent } from 'src/app/models/social-note';
-import { SocialPost } from 'src/app/models/social-post';
-import { ModalService } from 'src/app/shared/services/modal.service';
+import { ISocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { SocialService } from '../social.service';
 
 @Component({
   selector: 'card-item-event',
@@ -14,7 +11,7 @@ import { SocialService } from '../social.service';
 })
 export class CardItemEventComponent implements OnInit {
 
-  @Input() post: SocialEvent;
+  @Input() post: ISocialPost;
   @Input() shorten: boolean = true;
 
   @Output() onClickButton = new EventEmitter<string>();

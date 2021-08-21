@@ -2,13 +2,12 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Professional } from 'src/app/models/professional';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
-import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-content-search-query';
-import { ISocialArticle, ISocialEvent, ISocialNote, SocialArticle, SocialEvent, SocialNote } from 'src/app/models/social-note';
-import { ISocialPost, SocialPost } from 'src/app/models/social-post';
+import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { fadeAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../social.service';
+import { ISocialPost } from 'src/app/models/social-post';
 
 @Component({
   selector: 'app-profile-feed',
@@ -19,7 +18,7 @@ import { SocialService } from '../social.service';
 export class ProfileFeedComponent implements OnInit {
 
   public profile: Professional;
-  public posts: (SocialPost|SocialNote|SocialArticle|SocialEvent)[];
+  public posts: ISocialPost[];
 
   @HostListener('window:scroll', ['$event']) async onWindowScroll(e: Event) {
     if(!this.isLoading && this.isMorePosts && document.body && this.posts && this.posts.length > 0) {
@@ -86,7 +85,7 @@ export class ProfileFeedComponent implements OnInit {
     }
   }
 
-  fetchPosts(): Promise<(SocialPost|SocialNote|SocialArticle|SocialEvent)[]> {
+  fetchPosts(): Promise<ISocialPost[]> {
     console.log('fetch')
     return new Promise((resolve, reject) => {
       const params: ISocialPostSearchQuery = {

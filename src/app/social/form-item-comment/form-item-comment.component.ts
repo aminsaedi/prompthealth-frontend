@@ -11,6 +11,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 export class FormItemCommentComponent implements OnInit {
 
   @Input() controller: FormControl;
+  @Input() disabled: boolean= false;
   @Input() option: IFormCommentOption = {};
 
   @Output() onCancel = new EventEmitter<void>();
@@ -70,7 +71,6 @@ export class FormItemCommentComponent implements OnInit {
 
   onClickSubmit(e: Event) {
     this.stopPropagation(e);
-    console.log(this.controller.invalid)
     this.onSubmit.emit();
   }
 
