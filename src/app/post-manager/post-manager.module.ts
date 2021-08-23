@@ -14,18 +14,18 @@ import { GuardIfPostNotSavedGuard } from './guard-if-post-not-saved.guard';
 
 
 const routes: Routes = [
-  { path: 'create', component: EditorComponent, canDeactivate: [GuardIfPostNotSavedGuard]},
+  { path: 'create', component: EditorComponent, canDeactivate: [GuardIfPostNotSavedGuard] },
   { path: 'edit/:id', component: EditorComponent, canDeactivate: [GuardIfPostNotSavedGuard] },
   { path: '', redirectTo: '1' },
   { path: ':page', component: ListComponent },
-]
+];
 
 @NgModule({
   declarations: [ListComponent, EditorComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     FormsModule,
     NgbModule,
     NgxSpinnerModule,
@@ -35,10 +35,10 @@ const routes: Routes = [
       modules: {
         toolbar: [
           ['bold', 'italic', 'underline', 'clean'],
-          [{ 'list': 'ordered'}, { 'list': 'bullet' }, 'blockquote'],       
-          [{ 'header': 1 }, { 'header': 2 }],              
-          [{ 'color': [] }, { 'background': [] }],       
-          ['link', 'image', 'video']                      
+          [{ list: 'ordered' }, { list: 'bullet' }, 'blockquote'],
+          [{ header: 1 }, { header: 2 }],
+          [{ color: [] }, { background: [] }],
+          ['link', 'image', 'video']
         ],
       },
     }),
