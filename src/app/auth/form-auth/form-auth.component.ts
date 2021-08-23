@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -27,6 +27,7 @@ export class FormAuthComponent implements OnInit {
   @Output() changeState = new EventEmitter<'start'|'done'>();
 
   get f() { return this.form.controls; }
+
   public form: FormGroup;
   public formRole: FormControl;
   public isSubmitted = false;
@@ -40,17 +41,24 @@ export class FormAuthComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _bs: BehaviorService,
     private _toastr: ToastrService,
-  ) { }
+  ) { 
+    this.formRole = new FormControl(); 
+  }
+
+  ngOnChanges(e: SimpleChanges) {
+    if(e && e.userRole && e.userRole.currentValue != e.userRole.previousValue) {
+      let roleLabel: string;
+      switch(this.userRole) {
+        case 'U': roleLabel = 'Health Seeker'; break;
+        case 'SP':
+        case 'C': roleLabel = 'Provider'; break;
+        case 'P': roleLabel = 'Company'; break;
+      }
+      this.formRole.setValue(roleLabel);
+    }
+  }
 
   ngOnInit(): void {
-    let roleLabel: string;
-    switch(this.userRole) {
-      case 'U': roleLabel = 'Health Seeker'; break;
-      case 'SP':
-      case 'C': roleLabel = 'Provider'; break;
-      case 'P': roleLabel = 'Company'; break;
-    }
-    this.formRole = new FormControl(roleLabel);
 
     this.form = (this.authType === 'signin') ? this._fb.group({
       email: new FormControl('', [Validators.required, Validators.email]),

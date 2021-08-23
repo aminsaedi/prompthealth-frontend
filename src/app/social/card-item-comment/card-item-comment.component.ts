@@ -1,6 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { ISocialComment, SocialPost } from 'src/app/models/social-post';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ICommentCreateResult } from 'src/app/models/response-data';
+import { ISocialComment, ISocialPost } from 'src/app/models/social-post';
+import { ModalService } from 'src/app/shared/services/modal.service';
+import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
@@ -10,20 +15,89 @@ import { validators } from 'src/app/_helpers/form-settings';
 })
 export class CardItemCommentComponent implements OnInit {
 
-  @Input() post: SocialPost;
+  @Input() post: ISocialPost;
 
-  public form: FormControl;
+  get f() { return this.form.controls; }
+  get user() { return this._profileService.profile; }
+  get _user() { return this._profileService.user; }
+
+  get comments() {
+    if(!this.post || !this.post.comments) {
+      return null;
+    } else {
+      const comments = [];
+      this.post.comments.forEach(c => {
+        if(!c.replyTo) {
+          comments.push(c);
+        }
+      });
+      return comments;
+    }
+  }
+
+  repliesOf(id: string) {
+    if(!this.post || !this.post.comments) {
+      return null;
+    } else {
+      const replies = [];
+      this.post.comments.forEach(c => {
+        if(c.replyTo == id) {
+          replies.push(c);
+        }
+      });
+      return replies;
+    }
+  }
+
+  hasReply(id: string) {
+    if(!this.post || !this.post.comments) {
+      return false;
+    } else {
+      let hasReply = false;
+      for(let c of this.post.comments) {
+        if(c.replyTo == id) {
+          hasReply = true;
+          break;
+        }
+      }
+      return hasReply;
+    }
+  }
+
+  nameReplyTo(id: string) {
+    let name = null;
+    for(let c of this.post.comments) {
+      if(c._id == id) {
+        name = c.author.firstName;
+        break;
+      }
+    }
+    return name;
+  }
+
+
   public targetCommentIdForReply: string;
   public targetCommentIdsForShow: string[] = [];
+  public isUploading = false;
 
   isReplyOpened(commentId: string) {
     return (this.targetCommentIdsForShow.includes(commentId));
   }
 
-  constructor() { }
+  private form: FormGroup;
+
+  constructor(
+    private _modalService: ModalService,
+    private _profileService: ProfileManagementService,
+    private _sharedService: SharedService,
+    private _toastr: ToastrService,
+  ) { }
 
   ngOnInit(): void {
-    this.form = new FormControl('', validators.comment);
+    this.form = new FormGroup({
+      body: new FormControl('', validators.comment),
+      replyTo: new FormControl(),
+    });
   }
 
   onClickReply(c: ISocialComment) {
@@ -32,11 +106,33 @@ export class CardItemCommentComponent implements OnInit {
 
   onCancelReply() {
     this.targetCommentIdForReply = null;
-    this.form.setValue(null);
+    this.f.body.setValue(null);
   }
 
   onSubmitReply() {
-    console.log('reply submitted');
+    if(!this.user) {
+      this._modalService.show('login-menu');
+    } else {
+      this.f.replyTo.setValue(this.targetCommentIdForReply);
+      this.isUploading = true;
+      this._sharedService.post(this.form.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
+        if(res.statusCode == 200) {
+          res.data.author = this._user;
+          this.post.setComment(res.data);
+          this.onClickShowReply(this.targetCommentIdForReply);
+          this.targetCommentIdForReply = null;
+          this.form.reset();
+        } else {
+          console.log(res.message);
+          this._toastr.error('Could not post your comment. Please try again');
+        }
+      }, error => {
+        console.log(error);
+        this._toastr.error('Could not post your comment. Please try again');
+      }, () => {
+        this.isUploading = false;
+      });
+    }
   }
 
   onClickShowReply(commentId: string) {

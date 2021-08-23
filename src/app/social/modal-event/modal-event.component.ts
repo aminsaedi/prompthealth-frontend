@@ -1,13 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { SocialPost } from 'src/app/models/social-post';
-import { SocialService } from '../social.service';
 import { CalendarOptions, GoogleCalendar, ICalendar, OutlookCalendar, YahooCalendar} from 'datebook';
 import { FormSubscribeComponent } from 'src/app/shared/form-subscribe/form-subscribe.component';
 import { ToastrService } from 'ngx-toastr';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
-import { SocialEvent } from 'src/app/models/social-note';
+import { ISocialPost } from 'src/app/models/social-post';
 
 @Component({
   selector: 'modal-event',
@@ -16,7 +13,7 @@ import { SocialEvent } from 'src/app/models/social-note';
 })
 export class ModalEventComponent implements OnInit {
 
-  get post() { return this._modalService.data as SocialEvent; }
+  get post() { return this._modalService.data as ISocialPost; }
 
   public isCalendarMenuShown: boolean = false;
   public isSubscribeMenuShown: boolean = false;

@@ -1,5 +1,6 @@
+import { SafeHtml } from "@angular/platform-browser";
 import { environment } from "src/environments/environment";
-import { Blog, IBlog } from "./blog";
+import { Profile } from "./profile";
 import { IUserDetail } from "./user-detail";
 
 export interface ISocialPost {
@@ -10,14 +11,59 @@ export interface ISocialPost {
   status?: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'HIDDEN';
   description?: string;
 
+  title?: string;
+  voice?: string;
+  image?: string;  /** cover photo for article | event */
+  images?: string[]; /** content photo for note | promo */
+
+  joinEventLink?: string;
+  eventStartTime?: string;
+  eventEndTime?: string;
+  eventType?: 'ONLINE' | 'OFFLINE';
+  eventAddress?: string;
+
+  numComments?: number;
+  numLikes?: number;
+
   tags?: string[];
 
   createdAt: string;
 
   comments: ISocialComment[];
+
+  /** socialPostBase */
+  author?: string;
+  authorImage?: string;
+  authorVerified?: boolean;
+  descriptionSanitized?: SafeHtml;
+  isNote?: boolean;
+  isArticle?: boolean;
+  isEvent?: boolean;
+  isMoreShown?: boolean;
+  isLiked?: boolean;
+  isBookmarked?: boolean;
+  setComments?(s: ISocialComment[]): void;
+  setComment?(s: ISocialComment): void;
+
+  /** SocialArticle */
+  imageType?: string;
+  readLength?: number;
+  readLengthLabel?: string;
+  
+  /** SocialEvent */
+  startAt?: Date;
+  endAt?: Date;
+  duration?: number;
+  link?: string;
+  openStatus?: string;
+  isFinished?: boolean;
+  isVirtual?: boolean;
+  venue?: string;
+  setSanitizedDescription?(s: SafeHtml): void;
+
 }
 
-export class SocialPost implements ISocialPost {
+export class SocialPostBase implements ISocialPost {
 
   get _id() { return this.data._id; }
   get contentType() { return this.data.contentType; }
@@ -29,6 +75,7 @@ export class SocialPost implements ISocialPost {
   get authorVerified() {return (this.data.authorId && typeof this.data.authorId != 'string' && this.data.authorId.verifiedBadge) ? true : false; }
 
   get description() { return this.data.description || ''; }
+  get descriptionSanitized() { return this._description; }
   get summary() { return this._summary.substr(0, 256); }
 
   get tags() { return this.data.tags; }
@@ -41,205 +88,67 @@ export class SocialPost implements ISocialPost {
 
   get isMoreShown() { return !!(this._summary.length > this.summary.length); }
 
+  get numComments() { return this.data.numComments || 0; }
+  get numLikes() { return this.data.numLikes || 0; }
 
   get comments() {
-    return this._commentsDummy;
+    return this._comments;
   };
 
   protected _s3 = environment.config.AWS_S3; 
   protected _summary: string;
+  private _description: SafeHtml;
 
-  _commentsDummy: SocialComment[];
+
+  _comments: SocialComment[];
   constructor(protected data: ISocialPost) {
     const desc = data.description || '';
     this._summary = desc.replace(/<\/?[^>]+(>|$)/g, '').replace(/\s{2,}/, " ");
+  }
 
-    const comments = [];
-    commentsDummy.forEach(c => {
-      comments.push(new SocialComment(c));
-    })
+  setSanitizedDescription(d: SafeHtml) {
+    this._description = d;
+  }
 
-    this._commentsDummy = comments;
-
+  setComments(comments: ISocialComment[]) {
+    comments.forEach(c => {
+      this.setComment(c);
+    });
+  }
+  setComment(comment: ISocialComment) {
+    if(!this._comments) {
+      this._comments = [];
+    }
+    this._comments.push(new SocialComment(comment));
   }
 }
 
 export interface ISocialComment {
   _id: string;
-  content: string;
-  like: number;
-  userId?: string;
-  user?: {
-    _id: string;
-    profileImage: string;
-    firstName: string;
-    lastName: string;
-  }
+  body?: string;
+  like?: number;
+  blogId?: string;
+  authorId?: string;
+  author?: IUserDetail;
+  replyTo?: string;
+  createdAt?: string|Date;
 
-  comments: ISocialComment[];
+  comments?: ISocialComment[];
 }
-
-
-const commentsDummy: ISocialComment[] = [
-  {
-    _id: '1', 
-    content: 'MA planning made restaurant dining the easier option. Celine Spino loves to cook and dine out.',
-    like: 8,
-    userId: 'user123',
-    user: {
-      _id: 'user123',
-      profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-      firstName: 'Ida',
-      lastName: 'Webb',
-    },
-    
-    comments: [
-      {
-        _id: '2', 
-        content: 'MA.',
-        like: 2,
-        userId: 'user123',
-        user: {
-          _id: 'user123',
-          profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Ella',
-          lastName: 'Mcbride',
-        },
-        
-        comments: [{
-          _id: '3', 
-          content: 'MA and dine out.',
-          like: 0,
-          userId: 'user123',
-          user: {
-            _id: 'user123',
-            profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-            firstName: 'Vanessa',
-            lastName: 'Meyer',
-          },
-          comments: [],
-        }],
-      },
-      {
-        _id: '4', 
-        content: 'Celine Spino loves to cook and dine out.',
-        like: 6,
-        userId: 'user123',
-        user: {
-          _id: 'user123',
-          profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Norris',
-          lastName: 'Hunter',
-        },
-        comments: [],
-      }
-    ]
-  },
-  {
-    _id: '5', 
-    content: 'MA planning made restaurant dine out.',
-    like: 12,
-    userId: 'user123',
-    user: {
-      _id: 'user123',
-      profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-      firstName: 'Ollie',
-      lastName: 'Fowler',
-    },
-    
-    comments: [
-      {
-        _id: '6', 
-        content: 'MA easier option. Celine Spino loves to cook and dine out.',
-        like: 4,
-        userId: 'user123',
-        user: {
-          _id: 'user123',
-          profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Andrew',
-          lastName: 'Lamb',
-        },
-        
-        comments: [],
-      },
-      {
-        _id: '7', 
-        content: 'and dine out.',
-        like: 53,
-        userId: 'user123',
-        user: {
-          _id: 'user123',
-          profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Beatrice',
-          lastName: 'Menzie',
-        },
-        
-        comments: [],
-      }
-    ]
-  },
-  {
-    _id: '8', 
-    content: 'MA planning made restaurant dining the easier option. Celine Spino loves to cook and dine out.',
-    like: 53,
-    userId: 'user123',
-    user: {
-      _id: 'user123',
-      profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-      firstName: 'Daphne',
-      lastName: 'Aguilar',
-    },
-    
-    comments: [
-      {
-        _id: '9', 
-        content: 'MA planning made restaurant dining the easier option. Celine Spino loves to cook and dine out.',
-        like: 53,
-        userId: 'user123',
-        user: {
-          _id: 'user123',
-          profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Kayla',
-          lastName: 'Oliver',
-        },
-        
-        comments: [],
-      },
-      {
-        _id: '10', 
-        content: 'MA planning made restaurant dining the easier option. Celine Spino loves to cook and dine out.',
-        like: 53,
-        userId: 'user123',
-        user: {
-          _id: 'user123',
-          profileImage: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/users/1625868480702qwkD-edgar-castrejon-1csavdwfiew-unsplash.jpg?ver=1.0.2',
-          firstName: 'Beatrice',
-          lastName: 'Row',
-        },
-        
-        comments: [],
-      }
-    ]
-  }
-];
 
 class SocialComment implements ISocialComment {
 
   get _id() { return this.data._id; }
-  get content() { return this.data.content; }
+  get body() { return this.data.body; }
   get like() { return this.data.like; }
-  get user() { return this.data.user || null; }
-  get comments() { return this._comments; }
+  get authorId() { return this.data.authorId || null; }
+  get author() { return this._author || {}}
 
-  get hasChild() { return (this._comments.length > 0); }
+  get replyTo() { return this.data.replyTo; }
 
-  private _comments: SocialComment[] = [];
+  private _author: Profile;
 
-  constructor(private data: ISocialComment, public level: number = 0, public replyTo: ISocialComment['user'] = null) {
-    const levelNext = level + 1;
-
-    data.comments.forEach(c => {
-      this._comments.push(new SocialComment(c, levelNext, data.user));
-    });
+  constructor(private data: ISocialComment) {
+    this._author = new Profile(data.author);
   }
 }

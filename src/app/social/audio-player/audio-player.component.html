@@ -6,7 +6,7 @@ class="audio-player"
   <div class="d-flex align-items-center">
     <button
     class="btn btn-play-control"
-    (click)="togglePlayerState()"
+    (click)="togglePlayerState($event)"
     [disabled]="!isPlayerReady"
     >
       <i [iconPh]="isPlayerPlaying ? 'pause' : 'play'"></i>
@@ -30,7 +30,7 @@ class="audio-player"
     <button
     *ngIf="currentTime > 0"
     class="btn btn-play-control btn-replay"
-    (click)="onClickReplay()"
+    (click)="onClickReplay($event)"
     >
       <i iconPh="replay"></i>
     </button>

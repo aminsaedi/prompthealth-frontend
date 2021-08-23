@@ -1,18 +1,18 @@
 <div>
-  <div *ngFor="let c of post.comments">
-    <ng-container *ngTemplateOutlet="comment; context:{$implicit:c}"></ng-container>
+  <div *ngFor="let c of comments">
+    <ng-container *ngTemplateOutlet="comment; context:{$implicit:c, indent: false}"></ng-container>
   </div>
 </div>
 
-<ng-template #comment let-data>
-  <div class="d-flex mt-20p" [ngClass]="{indent: data.level > 0}">
-    <profile-image size="42" [image]="data.user.profileImage"></profile-image>
+<ng-template #comment let-data let-indent="indent">
+  <div class="d-flex mt-20p" [ngClass]="{indent: indent}">
+    <profile-image size="42" [image]="data.author.profileImage"></profile-image>
     <div class="ml-10p flex-grow-1">
       <div class="rounded-8p px-15p pt-15p pb-5p d-inline-block bg-background">
-        <h6 class="subtitle2">{{data.user.firstName}} {{data.user.lastName}}</h6>
+        <h6 class="subtitle2">{{data.author.firstName}} {{data.author.lastName}}</h6>
         <p class="body2 mb-5p">
-          <b *ngIf="data.replyTo">@{{data.replyTo.firstName}} </b>
-          <span>{{data.content}}</span>
+          <b *ngIf="data.replyTo">@{{nameReplyTo(data.replyTo)}} </b>
+          <span [innerHTML]="data.body"></span>
         </p>
         <div class="d-flex">
           <button
@@ -34,13 +34,14 @@
       class="mt-10p"
       >
         <form-item-comment
-        [controller]="form"
+        [controller]="f.body"
+        [disabled]="isUploading"
         (onCancel)="onCancelReply()"
         (onSubmit)="onSubmitReply()"
         ></form-item-comment>
       </div>
 
-      <div *ngIf="data.hasChild">
+      <div *ngIf="hasReply(data._id)">
         <button *ngIf="!isReplyOpened(data._id)"
         class="btn btn-text small px-0"
         (click)="onClickShowReply(data._id)"
@@ -60,8 +61,8 @@
     </div>
   </div>
   <ng-container *ngIf="isReplyOpened(data._id)">
-    <ng-container *ngFor="let c of data.comments">
-      <ng-content *ngTemplateOutlet="comment; context:{$implicit:c}"></ng-content>
+    <ng-container *ngFor="let r of repliesOf(data._id)">
+      <ng-content *ngTemplateOutlet="comment; context:{$implicit:r, indent: true}"></ng-content>
     </ng-container>  
   </ng-container>
 </ng-template>

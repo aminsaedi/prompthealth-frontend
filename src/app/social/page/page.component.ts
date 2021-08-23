@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SocialPost } from 'src/app/models/social-post';
+import { ISocialPost } from 'src/app/models/social-post';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { SocialService } from '../social.service';
 
@@ -12,7 +12,7 @@ import { SocialService } from '../social.service';
 })
 export class PageComponent implements OnInit {
 
-  public post: SocialPost;
+  public post: ISocialPost;
 
   private userId: string;
   private postId: string;
@@ -40,13 +40,16 @@ export class PageComponent implements OnInit {
       const post = this._socialService.postOf(this.postId);
       if(post) {
         this.post = post;
+        this.fetchComments();
         resolve(true);
       } else {
-        const path = `note/get-by-id/${this.postId}`;
+        const path = `note/${this.postId}`;
         this._sharedService.getNoAuth(path).subscribe((res: any) => {
           if(res.statusCode === 200) {
+            console.log(res.data)
             this._socialService.saveCacheSingle(res.data);
             this.post = this._socialService.postOf(this.postId);
+            this.fetchComments();
 
             resolve(true);
           } else {
@@ -60,6 +63,13 @@ export class PageComponent implements OnInit {
 
       }  
     });
+  }
+
+  fetchComments() {
+    this._sharedService.getNoAuth('blog/comment/' + this.post._id).subscribe((res: any) => {
+      console.log(res);
+      this.post.setComments(res.data as any);
+    })
   }
 
   goback() {

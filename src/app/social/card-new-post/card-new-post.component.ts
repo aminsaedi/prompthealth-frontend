@@ -15,7 +15,7 @@ import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult }
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { EditorService } from '../editor.service';
-import { ISocialNote } from 'src/app/models/social-note';
+import { ISocialPost } from 'src/app/models/social-post';
 
 
 @Component({
@@ -140,7 +140,7 @@ export class CardNewPostComponent implements OnInit {
     this.modalAudioRecorder.goBack();
   }
   saveAudioRecord() {
-    this.f.voice.setValue(this.audioData.blob);
+    this.f.voice.setValue(this.audioData);
     this.audioSaved = this.audioData.copy();
     console.log(this.audioSaved);
     this.modalAudioRecorder.goBack();
@@ -290,14 +290,13 @@ export class CardNewPostComponent implements OnInit {
       delete data.voice;
     }
 
-    console.log(data);
     this._sharedService.put(data, 'note/create').subscribe((res: IContentCreateResult) => {
       if(res.statusCode == 200) {
         this.isSubmitted = false;
         this.isMoreShown = false;
         this.formItemService.deselectAll();
-        this.onPublished.emit(res.data as ISocialNote);
-        this.form.reset();
+        this.onPublished.emit(res.data as ISocialPost);
+        this._editorService.resetForm();
       }
     }, error => {
       console.log(error);
@@ -309,13 +308,34 @@ export class CardNewPostComponent implements OnInit {
   uploadImagesIfNeeded(): Promise<void> {
     //TODO: need to implement for multiple images upload feature (ver 2.1)
     return new Promise((resolve, reject) => {
-      const image = this.f.images.value as {file: File|Blob, filename: string};
-      if (!image) {
+      const files = [];
+      const _image = this.f.images.value;
+      const image = _image && typeof _image != 'string' ? _image : null;
+      if(image) {
+        files.push(image);
+      }
+
+      const _voice = this.f.voice.value;
+      const voice = _voice && typeof _voice != 'string' ? _voice : null;
+      if(voice) {
+        files.push(voice);
+      }
+
+      if (files.length == 0) {
         resolve();
       } else {
-        this._sharedService.uploadMultipleImages([image], this.user._id, 'notes').subscribe((res: IUploadImageResult) => {
+        this._sharedService.uploadMultipleImages(files, this.user._id, 'notes').subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {
           if(res.statusCode == 200) {
-            this.f.images.setValue(res.data);
+            const files = typeof res.data == 'string' ? [res.data] : res.data;
+            if(image) {
+              this.f.images.setValue(files[0]);
+              files.splice(0,1);
+            }
+
+            if(voice) {
+              this.f.voice.setValue(files[0]);
+            }
+
             resolve();
           } else {
             reject(res.message)
@@ -330,21 +350,21 @@ export class CardNewPostComponent implements OnInit {
 
 class AudioData{
   public url: string = null;
-  public name: string = null;
-  public blob: Blob = null;
+  public filename: string = null;
+  public file: Blob = null;
   public duration: number = null;
   public durationFormatted: string = null;
   
   constructor(data: RecordedAudioOutput) {
     this.url = URL.createObjectURL(data.blob);
-    this.name = data.title;
-    this.blob = data.blob;
+    this.filename = data.title;
+    this.file = data.blob;
     getBlobDuration(data.blob).then((duration) => {
       this.duration = duration;
     });
   }
 
   copy() {
-    return new AudioData({blob: this.blob, title: this.name});
+    return new AudioData({blob: this.file, title: this.filename});
   }
 }

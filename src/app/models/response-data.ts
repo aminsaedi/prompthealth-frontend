@@ -1,6 +1,5 @@
 import { IDefaultPlan } from "./default-plan";
-import { ISocialArticle, ISocialEvent, ISocialNote, ISocialPromotion } from "./social-note";
-import { ISocialPost } from "./social-post";
+import { ISocialComment, ISocialPost } from "./social-post";
 import { IUserDetail } from "./user-detail";
 
 export interface IResponseData {
@@ -59,7 +58,7 @@ export interface IUnfollowResult extends IResponseData {
 }
 
 export interface IContentCreateResult extends IResponseData {
-  data: ISocialPost | ISocialNote | ISocialArticle | ISocialEvent | ISocialPromotion;
+  data: ISocialPost;
 }
 
 export interface IUploadMultipleImagesResult extends IResponseData {
@@ -68,4 +67,18 @@ export interface IUploadMultipleImagesResult extends IResponseData {
 
 export interface IUploadImageResult extends IResponseData {
   data: string;
+}
+
+export interface IGetSocialContentsResult extends IResponseData {
+  data: {
+    data: (ISocialPost)[]
+  }
+}
+
+export interface IGetSocialContentsByAuthorResult extends IResponseData {
+  data: (ISocialPost)[]
+}
+
+export interface ICommentCreateResult extends IResponseData {
+  data: ISocialComment;
 }

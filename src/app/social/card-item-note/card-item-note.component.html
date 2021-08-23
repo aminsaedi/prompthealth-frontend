@@ -1,10 +1,10 @@
   <div class="d-flex justify-content-between mb-20p">
     <div class="d-flex flex-nowrap">
-      <a [routerLink]="['/community', post?.authorId]">
+      <a [routerLink]="['/community/profile', post?.authorId]">
         <profile-image [image]="post?.authorImage"></profile-image>
       </a>
       <div class="info-container ml-10p">
-        <a [routerLink]="['/community', post?.authorId]">
+        <a [routerLink]="['/community/profile', post?.authorId]">
           <h6 class="subtitle2 mb-0 text-body">
             {{post?.author}}
     

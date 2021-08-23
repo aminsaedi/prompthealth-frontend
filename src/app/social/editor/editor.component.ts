@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import Quill from 'quill';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
-import { ISocialPost, SocialPost } from 'src/app/models/social-post';
+import { ISocialPost } from 'src/app/models/social-post';
 import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
@@ -38,7 +38,7 @@ export class EditorComponent implements OnInit {
   public imagePreview: string | ArrayBuffer;
 
   public formCheckboxOnlineEvent: FormControl;
-  public editorType: SocialPost['contentType'] = null;
+  public editorType: ISocialPost['contentType'] = null;
 
   public isUploadingImage: boolean = true;
 
@@ -268,6 +268,8 @@ export class EditorComponent implements OnInit {
       if(res.statusCode === 200) {
         this.isSubmitted = false;
         this._toastr.success('Updated successfully');
+        this._editorService.resetForm();
+        this.formCheckboxOnlineEvent.setValue(true);
         this._editorService.unlockEditor();
         console.log(res);
       } else {

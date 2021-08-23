@@ -3,10 +3,10 @@ export const environment = {
   config: {
     APP_NAME: 'Wellness',
     // server
-    BASE_URL: 'http://3.12.81.245:3000/api/v1/',
+    // BASE_URL: 'http://3.12.81.245:3000/api/v1/',
     API_URL: 'http://3.12.81.245:3000/api/v1/',
 
-    // BASE_URL: 'https://prompthealth.ca:4200/',
+    BASE_URL: 'https://prompthealth.ca:4200/',
     // API_URL: 'https://prompthealth.ca:3000/api/v1/',
     stripeKey: 'pk_test_51HMSVQHzvKsIv7FcySpZJiaqJEpFyeV4T1fqzmTaIMKAt8VoIcSFNOoy0xChuIec3fotWjF00FAMMNI5MZRvr10X00NqhMqjLR',
     AWS_S3: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/',
@@ -20,7 +20,10 @@ export const environment = {
     APPLE_CLIENT_ID: 'com.prompthealthtest',
     FACEBOOK_APP_ID: '373355990729755',
 
-    disableAnalytics: true
+    disableAnalytics: true,
+
+    idSA: '610b23f28d24b31170b67c60',
+
   },
   api_routes: {
     LOGIN: 'login',

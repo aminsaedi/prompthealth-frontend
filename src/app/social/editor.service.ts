@@ -3,8 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from '../_helpers/form-settings';
 import { Profile } from '../models/profile';
 import { formatStringToDate } from '../_helpers/date-formatter';
-import { ISocialPost, SocialPost } from '../models/social-post';
-import { ISocialEvent } from '../models/social-note';
+import { ISocialPost } from '../models/social-post';
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,8 @@ export class EditorService {
   
   private editorLocked: boolean = false;
   private _form: FormGroup;
-  private editorType: SocialPost['contentType'];
+  private editorType: ISocialPost['contentType'];
+  private userId: string;
 
   constructor() { }
 
@@ -27,9 +28,25 @@ export class EditorService {
     this.editorLocked = false;
   }
 
-  init(type: SocialPost['contentType'], profile: Profile): FormGroup {
+  resetForm() {
+    this.form.reset();
+    const f = this.form.controls;
+    f.authorId.setValue(this.userId);
+    f.contentType.setValue(this.editorType);
+
+    if(this.editorType == 'ARTICLE' || this.editorType == 'EVENT') {
+      f.status.setValue('DRAFT');
+    }
+
+    if(this.editorType == 'EVENT') {
+      f.eventType.setValue('ONLINE');
+    }
+  }
+
+  init(type: ISocialPost['contentType'], profile: Profile): FormGroup {
     this.unlockEditor();
     this.editorType = type;
+    this.userId = profile._id;
 
     if (type == 'EVENT') {
       this._form = new FormGroup({
@@ -120,7 +137,7 @@ export interface ISaveQuery {
 
   eventStartTime?: string | Date;
   eventEndTime?: string | Date;
-  eventType?: ISocialEvent['eventType'];
+  eventType?: ISocialPost['eventType'];
   joinEventLink?: string;
   eventAddress?: string;
 }

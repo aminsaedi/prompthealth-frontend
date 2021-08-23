@@ -3,8 +3,8 @@ import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, SimpleChanges,
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { SocialArticle, SocialEvent, SocialNote, SocialPoromotion } from 'src/app/models/social-note';
-import { SocialPost } from 'src/app/models/social-post';
+import { SocialNote } from 'src/app/models/social-note';
+import { ISocialPost } from 'src/app/models/social-post';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
@@ -17,7 +17,7 @@ import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar
 })
 export class CardComponent implements OnInit {
 
-  @Input() post: SocialPost|SocialNote|SocialArticle|SocialEvent|SocialPoromotion;
+  @Input() post: ISocialPost;
   @Input() shorten: boolean = true;
 
   @Input() option: ICardOption = {};
@@ -30,12 +30,12 @@ export class CardComponent implements OnInit {
     return images;
   }
 
-  get safeDescription() {
-    if(this.post) {
-      return this._sanitizer.bypassSecurityTrustHtml(this.post.description);
-    } else {
-      return null;
+  get voice() {
+    let voice: string = null;
+    if(this.post && this.post.isNote) {
+      voice = (this.post as SocialNote).voice || null;
     }
+    return voice;
   }
 
   get topics(): Category[] { return this._categoryService.categoryList; }
@@ -70,13 +70,13 @@ export class CardComponent implements OnInit {
 
     this._route.fragment.pipe( first() ).subscribe(fragment => {
       if(fragment && fragment == this.post._id && this.anchor && this.anchor.nativeElement) {
-        const el: HTMLAnchorElement = this.anchor.nativeElement;
-        const elTop = el.getBoundingClientRect().top;
-        this._location.replaceState(this._location.path());
 
         setTimeout(() => {
+          const el: HTMLAnchorElement = this.anchor.nativeElement;
+          const elTop = el.getBoundingClientRect().top;
+          this._location.replaceState(this._location.path());
           smoothWindowScrollTo(elTop);
-        });
+        }, 100);
       }
     });
   

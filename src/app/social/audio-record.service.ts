@@ -40,6 +40,11 @@ export class AudioRecordService {
       return;
     }
 
+    if(!('mediaDevices' in navigator)) {
+      this._recordingFailed.next('No recorder found. Please use the device which has microphone.');
+      return;
+    }
+
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(s => {
         this.stream = s;

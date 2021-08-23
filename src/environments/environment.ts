@@ -24,6 +24,8 @@ export const environment = {
 
     FACEBOOK_APP_ID: '373355990729755',
     disableAnalytics: true,
+
+    idSA: '610b23f28d24b31170b67c60',
   },
   api_routes: {
     LOGIN: 'login',
