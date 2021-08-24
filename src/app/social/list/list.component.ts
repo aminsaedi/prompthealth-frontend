@@ -145,7 +145,11 @@ export class ListComponent implements OnInit {
       let req: Observable<any>;
       if (tax == 'feed') {
         const query = new SocialPostSearchQuery(params);
-        req = this._sharedService.get('note/get-feed' + query.toQueryParams());
+        if(this.user) {
+          req = this._sharedService.get('note/get-feed' + query.toQueryParams());
+        } else {
+          req = this._sharedService.getNoAuth('note/get-feed' + query.toQueryParams());
+        }
       } else {
         if (tax == 'article') {
           params.contentType = 'ARTICLE';
@@ -165,17 +169,17 @@ export class ListComponent implements OnInit {
         }
 
         const query = new SocialPostSearchQuery(params);
-        req = this._sharedService.get('note/filter' + query.toQueryParams());
+        if(this.user) {
+          req = this._sharedService.get('note/filter' + query.toQueryParams());
+        } else {
+          req = this._sharedService.getNoAuth('note/filter' + query.toQueryParams());
+        }
       } 
 
       this.isLoading = true;
-      console.log('GET FEED');
       req.subscribe((res: IGetSocialContentsResult) => {
-        console.log(res);
         this.isLoading = false;
         if(res.statusCode === 200) {
-          console.log('GET FEED SUCCESS')
-
           this.isMorePosts = (res.data.data.length < this.countPerPage) ? false : true;
           const posts = this._socialService.saveCache(
             res.data.data, 
@@ -188,12 +192,10 @@ export class ListComponent implements OnInit {
           );
           resolve(posts);
         } else {
-          console.log('GET FEED ERROR')
           this.isMorePosts = false;
-          reject('oops');
+          reject(res.message);
         }
       }, error => {
-        console.log('SERVER ERROR')
         this.isLoading = false;
         this.isMorePosts = false;
         console.log(error);
