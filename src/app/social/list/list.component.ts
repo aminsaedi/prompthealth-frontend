@@ -67,14 +67,7 @@ export class ListComponent implements OnInit {
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
       this.selectedTopicId = param.topicId;
-
-      if(this.selectedTaxonomyType == 'feed') {
-        this.checkLoginStatusAndInitPost()
-      }
-      else {
-        console.log('start init post for article / media / event');
-        this.initPosts();
-      }
+      this.checkLoginStatusAndInitPost()
     });
   }
 
@@ -120,14 +113,14 @@ export class ListComponent implements OnInit {
 
   disposeCacheIfNeeded() {
     const meta = this._socialService.metadataOf(this.selectedTaxonomyType);
-    if(this.selectedTaxonomyType == 'feed') {
-      const userId = this.user ? this.user._id : null;
-      const userIdInMeta = meta && meta.userId ? meta.userId : null;
-      const userIdMatched = !!(userId == userIdInMeta);
-      if(userId != userIdInMeta) {
-        this._socialService.disposeCacheOf('feed');
-      }
-    }
+    // if(this.selectedTaxonomyType == 'feed') {
+    //   const userId = this.user ? this.user._id : null;
+    //   const userIdInMeta = meta && meta.userId ? meta.userId : null;
+    //   const userIdMatched = !!(userId == userIdInMeta);
+    //   if(userId != userIdInMeta) {
+    //     this._socialService.disposeCacheOf('feed');
+    //   }
+    // }
 
     const topicId = this.selectedTopicId ? this.selectedTopicId : null;
     const topicIdInMeta = meta && meta.topic ? meta.topic : null;
@@ -176,10 +169,13 @@ export class ListComponent implements OnInit {
       } 
 
       this.isLoading = true;
+      console.log('GET FEED');
       req.subscribe((res: IGetSocialContentsResult) => {
+        console.log(res);
         this.isLoading = false;
         if(res.statusCode === 200) {
-          console.log(res)
+          console.log('GET FEED SUCCESS')
+
           this.isMorePosts = (res.data.data.length < this.countPerPage) ? false : true;
           const posts = this._socialService.saveCache(
             res.data.data, 
@@ -192,10 +188,12 @@ export class ListComponent implements OnInit {
           );
           resolve(posts);
         } else {
+          console.log('GET FEED ERROR')
           this.isMorePosts = false;
-          reject(res.message)
+          reject('oops');
         }
       }, error => {
+        console.log('SERVER ERROR')
         this.isLoading = false;
         this.isMorePosts = false;
         console.log(error);

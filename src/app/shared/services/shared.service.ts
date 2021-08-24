@@ -62,9 +62,9 @@ export class SharedService {
 
 
   logout(navigate: boolean = true) {
+    this._socialManager.dispose();
     this._postManager.dispose();
     this._profileManager.dispose();
-    this._socialManager.dispose();
 
     const ls = this._uService.localStorage;
 
