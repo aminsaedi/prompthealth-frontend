@@ -1,5 +1,9 @@
 <div class="eyecatch">
-  <img [src]="image" [alt]="title">
+  <img 
+  [src]="image" 
+  [alt]="title"
+  crossorigin="anonymous"
+  >
   <div *ngIf="post.isEvent"
   class="position-absolute px-10p py-5p mt-10p ml-10p rounded-8p"
   [ngClass]="{'bg-white': !isEventFinished, 'bg-danger text-light': isEventFinished}"

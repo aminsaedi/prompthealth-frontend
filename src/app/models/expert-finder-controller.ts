@@ -52,7 +52,7 @@ export class ExpertFinderController {
 
   get professionalsInitialized() { return this._professionalsInitialized; }
   get professionals() { return this._professionalsPerPage; }
-  get profesionnalsAll() { return this._professionals; }
+  get professionalsAll() { return this._professionals; }
   get countAll() { return this._professionals.length; }
   get countPerPage() { return this._countPerPage; }
 

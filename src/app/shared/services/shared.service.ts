@@ -26,6 +26,8 @@ import { IDefaultPlan } from 'src/app/models/default-plan';
 import { IAddonPlan } from 'src/app/models/addon-plan';
 import { ICouponData } from 'src/app/models/coupon-data';
 import { ToastrService } from 'ngx-toastr';
+import { Professional } from 'src/app/models/professional';
+import { SocialService } from 'src/app/social/social.service';
 
 declare var jQuery: any;
 
@@ -50,6 +52,7 @@ export class SharedService {
     private _stripeService: StripeService,
     private _postManager: PostManagerService,
     private _profileManager: ProfileManagementService,
+    private _socialManager: SocialService,
     private _toastr: ToastrService,
 
     @Inject(DOCUMENT) private document,
@@ -61,6 +64,7 @@ export class SharedService {
   logout(navigate: boolean = true) {
     this._postManager.dispose();
     this._profileManager.dispose();
+    this._socialManager.dispose();
 
     const ls = this._uService.localStorage;
 
@@ -387,6 +391,14 @@ export class SharedService {
     return this.personalMatch;
   }
   clearPersonalMatch() { this.personalMatch = null; }
+
+  private compareList: Professional[] = [];
+  setCompareList(compareList: Professional[] = []) {
+    this.compareList = compareList;
+  }
+  getCompareList() {
+    return this.compareList;
+  }
 
   /*This function is use to get access token from cookie. */
   getAccessToken(): string {

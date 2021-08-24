@@ -25,7 +25,7 @@ export class CardComponent implements OnInit {
   get images() {
     let images: string[] = null;
     if(this.post && this.post.isNote) {
-      images = (this.post as SocialNote).images;
+      images = this.post.images;
     }
     return images;
   }
@@ -33,7 +33,7 @@ export class CardComponent implements OnInit {
   get voice() {
     let voice: string = null;
     if(this.post && this.post.isNote) {
-      voice = (this.post as SocialNote).voice || null;
+      voice = this.post.voice || null;
     }
     return voice;
   }

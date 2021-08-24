@@ -145,19 +145,16 @@ export class ListComponent implements OnInit {
         ... (this.selectedTopicId) && {tags: [this.selectedTopicId]},
         ... (this.posts && this.posts.length > 0) && {
           page: Math.ceil(this.posts.length / this.countPerPage) + 1,
-          timestamp: this.posts[0].createdAt,
+          timestamp: this.posts[this.posts.length - 1].createdAt,
         },
       }
 
       let req: Observable<any>;
-      if (tax == 'feed' && this.user) {
+      if (tax == 'feed') {
         const query = new SocialPostSearchQuery(params);
-        console.log(query.toQueryParams());
         req = this._sharedService.get('note/get-feed' + query.toQueryParams());
       } else {
-        if(tax == 'feed') {
-          params.authorId = environment.config.idSA;
-        } else if (tax == 'article') {
+        if (tax == 'article') {
           params.contentType = 'ARTICLE';
         } else if(tax == 'media') {
           params.hasMedia = true;
@@ -175,14 +172,14 @@ export class ListComponent implements OnInit {
         }
 
         const query = new SocialPostSearchQuery(params);
-        console.log(query.toQueryParams());
-        req = this._sharedService.getNoAuth('note/filter' + query.toQueryParams());
+        req = this._sharedService.get('note/filter' + query.toQueryParams());
       } 
 
       this.isLoading = true;
       req.subscribe((res: IGetSocialContentsResult) => {
         this.isLoading = false;
         if(res.statusCode === 200) {
+          console.log(res)
           this.isMorePosts = (res.data.data.length < this.countPerPage) ? false : true;
           const posts = this._socialService.saveCache(
             res.data.data, 
@@ -208,7 +205,7 @@ export class ListComponent implements OnInit {
   }
 
   onPublishNewPost(data: ISocialPost) {
-    data.authorId = this._profileService.user;
+    data.author = this._profileService.user;
 
     this.newPosts.unshift(new SocialNote(data));
   }

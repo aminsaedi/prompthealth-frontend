@@ -1,4 +1,11 @@
 <div>
+  <div 
+  *ngIf="post && !post.isCommentDoneInit"
+  class="py-30p text-center"
+  >
+    <loader></loader>
+  </div>
+
   <div *ngFor="let c of comments">
     <ng-container *ngTemplateOutlet="comment; context:{$implicit:c, indent: false}"></ng-container>
   </div>

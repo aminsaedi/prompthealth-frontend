@@ -118,8 +118,7 @@ export class ProfileComponent implements OnInit {
     const profile = this._socialService.profileOf(this.profileId);
     if(profile) {
       this.profile = profile;
-      this.profileMenus = this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
-
+      this.setProfileMenu();
       this._socialService.setProfile(this.profile);
     } else {
       const promiseAll: [Promise<Professional>, Promise<QuestionnaireMapProfilePractitioner>] = [
@@ -130,13 +129,17 @@ export class ProfileComponent implements OnInit {
       Promise.all(promiseAll).then((vals) => {
         this.profile = vals[0];
         this.questionnaires = vals[1];
-        this.profileMenus = this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
+        this.setProfileMenu();
 
         this._socialService.setProfile(this.profile);
       }, error => {
         this._toastr.error('Something went wrong.');
       });
     }
+  }
+
+  setProfileMenu() {
+    this.profileMenus = this.profile.isSA ? profileMenusForPH : this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
   }
 
   getQuestionnaire(type: IUserDetail['roles'] = 'SP'): Promise<QuestionnaireMapProfilePractitioner> {
@@ -340,6 +343,11 @@ const profileMenusForCompany: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
   {id: 'promotion', label: 'Discounts', relativeLink: 'promotion', },
   {id: 'review', label: 'Recommendation', relativeLink: 'review', },
+];
+
+const profileMenusForPH: IProfileMenuItem[] = [
+  {id: 'about',   label: 'About',   relativeLink: null, },
+  {id: 'feed',    label: 'Feed',    relativeLink: 'feed'},
 ];
 
 interface IProfileMenuItem {

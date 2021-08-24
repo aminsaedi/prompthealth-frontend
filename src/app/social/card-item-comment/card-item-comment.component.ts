@@ -98,6 +98,16 @@ export class CardItemCommentComponent implements OnInit {
       body: new FormControl('', validators.comment),
       replyTo: new FormControl(),
     });
+
+    if(this.post && !this.post.isCommentDoneInit) {
+      this.fetchComments();
+    }
+  }
+
+  fetchComments() {
+    this._sharedService.getNoAuth('blog/comment/' + this.post._id).subscribe((res: any) => {
+      this.post.setComments(res.data as any);
+    });
   }
 
   onClickReply(c: ISocialComment) {
@@ -117,8 +127,8 @@ export class CardItemCommentComponent implements OnInit {
       this.isUploading = true;
       this._sharedService.post(this.form.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
         if(res.statusCode == 200) {
-          res.data.author = this._user;
-          this.post.setComment(res.data);
+          res.data.comment.author = this._user;
+          this.post.setComment(res.data.comment, res.data.post.numComments);
           this.onClickShowReply(this.targetCommentIdForReply);
           this.targetCommentIdForReply = null;
           this.form.reset();

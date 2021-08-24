@@ -65,7 +65,37 @@
           <i iconPh="map-view"></i>
           Map
         </button>
+      </div>
+    </div>
 
+    <div
+    *ngIf="compareList && compareList.length > 0"
+    [@expandVertical]
+    class="overflow-auto"
+    >
+      <div class="d-flex flex-nowrap align-items-center mt-20p mb-5p">
+        <ul class="d-flex flex-nowrap list-unstyled mb-0">
+          <li 
+          *ngFor="let p of compareList"
+          class="mr-10p position-relative"
+          >
+            <profile-image
+            size="70"
+            [image]="p.profileImage"
+            ></profile-image>
+            <button 
+            class="btn btn-error small p-5p position-absolute"
+            style="top: 0; left: 0;"
+            (click)="removeFromCompareList(p._id)"
+            >
+              <i iconPh="cross"></i>
+            </button>
+          </li>
+        </ul>
+        <button 
+        class="btn btn-outline small text-nowrap"
+        (click)="setCompare()"
+        >Compare All</button>
       </div>
     </div>
   
@@ -101,7 +131,7 @@
               </div>
               <div class="grid-2 d-md-flex justify-content-between">
                 <div>
-                  <h6 class="h5-md mb-0">
+                  <h6 class="h6 h5-md mb-0 clamp-1line">
                     {{p.name}}
                     <i
                     *ngIf="p.isVerified"
@@ -138,7 +168,19 @@
                       <span>{{p.distance | distance}}</span>
                     </ng-container>
                   </span>
-                  <span class="ml-10p">compare</span>
+                  <div 
+                  class="ml-10p py-10p"
+                  (click)="preventDefaultClickAction($event)"
+                  >
+                    <form-item-checkbox
+                    (click)="stopPropagation($event)"
+                    [name]="p._id"
+                    type="checkbox"
+                    [controller]="fCompare[p._id]"
+                    label="Compare"
+                    (changeValue)="onChangeCompareValue(p._id)"
+                    ></form-item-checkbox>
+                </div>
                 </div>
               </div>
             </li>
@@ -195,7 +237,7 @@
       >
 
       <agm-marker 
-      *ngFor="let p of controller.profesionnalsAll; let i = index;" 
+      *ngFor="let p of controller.professionalsAll; let i = index;" 
       [longitude]="p.location[0]"
       [latitude]="p.location[1]" 
       [iconUrl]="p.mapIconUrl" 

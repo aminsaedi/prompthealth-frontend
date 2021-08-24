@@ -4,6 +4,7 @@ export class SocialArticle extends SocialPostBase implements ISocialPost {
   get title() { return this.data.title; }
   
   get image() { return (this.data.image) ? this._s3 + this.data.image : '/assets/img/logo-square-primary-light.png'; }
+  get _image() { return this.data.image ? this.image : null; }
   get imageType() {
     let imageType: string = '';
     if(this.data.image) {

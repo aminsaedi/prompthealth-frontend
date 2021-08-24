@@ -4,6 +4,7 @@
     class="btn btn-text-grey small px-0"
     type="button"
     (click)="onClickLike($event)"
+    [disabled]="isUploading"
     >
       <i 
       [iconPh]="'heart' + (isLiked ? '-filled' :'')" 
@@ -34,7 +35,7 @@
     ></button-share>
   </div>
 
-  <div>
+  <!-- <div>
     <button 
     class="btn btn-text-grey small px-0"
     (click)="onClickBookmark($event)"
@@ -49,10 +50,14 @@
       [ngClass]="{'text-success': isBookmarked}"
       ></i>
     </button>
-  </div>
+  </div> -->
 </div>
 
-<div *ngIf="isFormCommentShown" [@expandVertical]>
+<div 
+*ngIf="isFormCommentShown" 
+[@expandVertical]
+class="overflow-hidden"
+>
   <div class="pt-10p">
     <form-item-comment
     [controller]="f.body"

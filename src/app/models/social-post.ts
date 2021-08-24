@@ -6,7 +6,7 @@ import { IUserDetail } from "./user-detail";
 export interface ISocialPost {
   _id: string;
   contentType: 'NOTE' | 'PROMO' | 'ARTICLE' | 'EVENT';
-  authorId: string | IUserDetail;
+  authorId?: string;
 
   status?: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'HIDDEN';
   description?: string;
@@ -22,6 +22,13 @@ export interface ISocialPost {
   eventType?: 'ONLINE' | 'OFFLINE';
   eventAddress?: string;
 
+  isDeleted?: boolean;
+
+  liked?: boolean;
+  likes?: IUserDetail[];
+
+  mentions?: any[];
+
   numComments?: number;
   numLikes?: number;
 
@@ -32,7 +39,8 @@ export interface ISocialPost {
   comments: ISocialComment[];
 
   /** socialPostBase */
-  author?: string;
+  author?: IUserDetail;
+  authorName?: string;
   authorImage?: string;
   authorVerified?: boolean;
   descriptionSanitized?: SafeHtml;
@@ -42,8 +50,12 @@ export interface ISocialPost {
   isMoreShown?: boolean;
   isLiked?: boolean;
   isBookmarked?: boolean;
+  isCommentDoneInit?: boolean;
   setComments?(s: ISocialComment[]): void;
-  setComment?(s: ISocialComment): void;
+  setComment?(s: ISocialComment, updateNumCommentTo?: number): void;
+  updateCommentCount?(s: number): void;
+  like?(): void;
+  unlike?(): void;
 
   /** SocialArticle */
   imageType?: string;
@@ -69,10 +81,10 @@ export class SocialPostBase implements ISocialPost {
   get contentType() { return this.data.contentType; }
   get status() { return this.data.status || null; }
 
-  get author() { return (this.data.authorId && typeof this.data.authorId != 'string') ? this.data.authorId.firstName : ''; } //author name
-  get authorId(): string { return (typeof this.data.authorId == 'string') ? this.data.authorId : this.data.authorId ?  this.data.authorId._id : 'noid'; }
-  get authorImage() { return (this.data.authorId && typeof this.data.authorId != 'string' && this.data.authorId.profileImage) ? this._s3 + '350x220/' + this.data.authorId.profileImage : 'assets/img/logo-sm-square.png'}
-  get authorVerified() {return (this.data.authorId && typeof this.data.authorId != 'string' && this.data.authorId.verifiedBadge) ? true : false; }
+  get authorName() { return this.data.author ? this.data.author.firstName : ''; } //author name
+  get authorId(): string { return (typeof this.data.author == 'string') ? this.data.author : this.data.author ?  this.data.author._id : 'noid'; }
+  get authorImage() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.profileImage) ? this._s3 + '350x220/' + this.data.author.profileImage : 'assets/img/logo-sm-square.png'}
+  get authorVerified() {return (this.data.author && typeof this.data.author != 'string' && this.data.author.verifiedBadge) ? true : false; }
 
   get description() { return this.data.description || ''; }
   get descriptionSanitized() { return this._description; }
@@ -86,21 +98,22 @@ export class SocialPostBase implements ISocialPost {
   get isArticle() { return this.contentType == 'ARTICLE'; }
   get isEvent() { return this.contentType == 'EVENT'; }
 
+  get isLiked() { return !!this.data.liked; }
+
   get isMoreShown() { return !!(this._summary.length > this.summary.length); }
+  get isCommentDoneInit() { return !!this._comments; }
 
   get numComments() { return this.data.numComments || 0; }
   get numLikes() { return this.data.numLikes || 0; }
 
-  get comments() {
-    return this._comments;
-  };
+  get comments() { return this._comments; };
 
   protected _s3 = environment.config.AWS_S3; 
   protected _summary: string;
   private _description: SafeHtml;
 
 
-  _comments: SocialComment[];
+  _comments: SocialComment[] = null;
   constructor(protected data: ISocialPost) {
     const desc = data.description || '';
     this._summary = desc.replace(/<\/?[^>]+(>|$)/g, '').replace(/\s{2,}/, " ");
@@ -111,15 +124,35 @@ export class SocialPostBase implements ISocialPost {
   }
 
   setComments(comments: ISocialComment[]) {
+    if(!this._comments) {
+      this._comments = [];
+    }
     comments.forEach(c => {
       this.setComment(c);
     });
   }
-  setComment(comment: ISocialComment) {
+  setComment(comment: ISocialComment, updateNumCommentTo?: number) {
     if(!this._comments) {
       this._comments = [];
     }
     this._comments.push(new SocialComment(comment));
+    if(updateNumCommentTo) {
+      this.updateNumComment(updateNumCommentTo);
+    }
+  }
+
+  updateNumComment(numComments?: number) {
+    if(!numComments) {
+      numComments = this.comments ? this.comments.length : 0;
+    }
+    this.data.numComments = numComments;
+  }
+
+  like() {
+    this.data.liked = true;
+  }
+  unlike() {
+    this.data.liked = false;
   }
 }
 

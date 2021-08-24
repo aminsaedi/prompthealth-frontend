@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -14,21 +14,37 @@ import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/a
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { GeoLocationService } from 'src/app/shared/services/user-location.service';
-import { fadeAnimation, slideVerticalAnimation } from 'src/app/_helpers/animations';
+import { expandVerticalAnimation, fadeAnimation, slideVerticalAnimation } from 'src/app/_helpers/animations';
 import { getDistanceFromLatLng } from 'src/app/_helpers/latlng-to-distance';
+import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 
 @Component({
   selector: 'app-expert-finder',
   templateUrl: './expert-finder.component.html',
   styleUrls: ['./expert-finder.component.scss'],
-  animations: [slideVerticalAnimation, fadeAnimation],
+  animations: [slideVerticalAnimation, fadeAnimation, expandVerticalAnimation],
 })
 export class ExpertFinderComponent implements OnInit {
 
   get sizeS() { return !window || window.innerWidth < 768; }
   get f() { return this.formFilter.controls; }
+  get fCompare() { return this.formCompare.controls; }
   get isFilterApplied() { return this.controller.isFilterApplied; }
   get isVirtual() { return this.controller.isVirtual; }
+
+  professionalOf(id: string) {
+    const professionals = this.controller.professionalsAll
+    let res: Professional = null;
+    if(professionals) {
+      for(let p of professionals) {
+        if(p._id == id) {
+          res = p;
+          break;  
+        }
+      }
+    }
+    return res;
+  }
 
   public viewState: IViewState = {
     style: 'list',
@@ -47,9 +63,11 @@ export class ExpertFinderComponent implements OnInit {
 
   private mapDataCurrent: {lat: number, lng: number, zoom: number, dist: number} = {lat: null, lng: null, zoom: null, dist: null};
   private formFilter: FormGroup;
+  private formCompare: FormGroup;
 
   private queryParamsCurrent: Params;
   public selectedProfessionalInMap: Professional;
+  public compareList: Professional[] = [];
 
   public distanceFilterData = {
     min: 5,
@@ -106,7 +124,6 @@ export class ExpertFinderComponent implements OnInit {
     }
   }
 
-
   async ngOnInit() {
     this.initController();
 
@@ -140,7 +157,7 @@ export class ExpertFinderComponent implements OnInit {
       ...this._route.snapshot.queryParams as IExpertFinderFilterQueryParams,
       ...this._route.snapshot.params as IExpertFinderFilterParams,
     }
-    this.controller = new ExpertFinderController(filterData, {countPerPage: 3});
+    this.controller = new ExpertFinderController(filterData, {countPerPage: 10});
     if(!this.formFilter) {
       this.formFilter = this.controller.createForm();
       this.f.distance.valueChanges.subscribe(() => {
@@ -220,6 +237,9 @@ export class ExpertFinderComponent implements OnInit {
     this.pageCurrent = i;
     this.controller.setProfesionnalsPerPage(i);
     this.controller.initPaginator(i);
+    if(window) {
+      smoothWindowScrollTo(0);
+    }
   }
 
   onClickButtonUpdateUserLocation() {
@@ -253,8 +273,6 @@ export class ExpertFinderComponent implements OnInit {
   onClickButtonMapSize() {
     this.viewState.style = (this.viewState.style == 'list') ? 'map' : 'list';
   }
-
-  updateCompareList() {}
 
   onClickButtonFilterRating(i: number) {
     const valueCurrent = this.f.rating.value;
@@ -308,13 +326,59 @@ export class ExpertFinderComponent implements OnInit {
     this._modalService.hide(true, [path], this.controller.toQueryParams());
   }
 
+  preventDefaultClickAction(e: Event, stopPropagation = true) {
+    e.preventDefault();
+    if(stopPropagation) {
+      this.stopPropagation(e);
+    }
+  }
+
+  stopPropagation(e: Event) {
+    e.stopPropagation();    
+  }
+
   search() {
     const payload = this.controller.toPayload();
     this.controller.disposeProfesionnals();
     this._sharedService.postNoAuth(payload, 'user/filter').subscribe((res: IGetPractitionersResult) => {
       this.controller.setProfessionals(res.data.dataArr);
+      const professionals = this.controller.professionalsAll;
+      this.formCompare = new FormGroup({});
+      if(professionals){
+        professionals.forEach(p => {
+          this.formCompare.addControl(p._id, new FormControl());
+        });  
+      }
       this.changePage(1);
     })
+  }
+
+  onChangeCompareValue(id: string) {
+    const selected = this.fCompare[id].value;
+    if(selected) {
+      this.addToCompareList(id);
+    } else {
+      this.removeFromCompareList(id, false);
+    }
+  }
+  removeFromCompareList(id: string, updateValue: boolean = true) {
+    this.compareList = this.compareList.filter(p => p._id != id);
+    const controller = this.fCompare[id];
+    if(updateValue && controller) {
+      controller.setValue(false);
+    }
+  }
+
+  addToCompareList(id: string) {
+    const exist = this.compareList.find(p => p.id == id);
+    if(!exist) {
+      this.compareList.push(this.professionalOf(id));
+    }
+  }
+
+  setCompare() {
+    this._sharedService.setCompareList(this.compareList);
+    this._router.navigate(['/compare-practitioners']);
   }
 
 }

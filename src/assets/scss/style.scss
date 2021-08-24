@@ -69,6 +69,11 @@ a {
   .rounded-#{$i * 4}p {
     border-radius: #{$i * 4}px!important;
   }
+  .rounded-md-#{$i * 4}p {
+    @media (min-width: $breakpointMd) {
+      border-radius: #{$i * 4}px!important;
+    }
+  }
 }
 
 

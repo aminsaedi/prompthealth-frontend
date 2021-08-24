@@ -92,14 +92,14 @@ export class ProfileFeedComponent implements OnInit {
         count: this.countPerPage,
         ... (this.posts && this.posts.length > 0) && {
           page: (Math.ceil(this.posts.length / this.countPerPage) + 1),
-          timestamp: this.posts[0].createdAt,
+          timestamp: this.posts[this.posts.length -1].createdAt,
         },
       }
       const query = new SocialPostSearchQuery(params);
 
       this.isLoading = true;
       const path = 'note/get-by-author/' + this.profile._id + query.toQueryParams();
-      this._sharedService.getNoAuth(path).subscribe((res: IGetSocialContentsByAuthorResult) => {
+      this._sharedService.get(path).subscribe((res: IGetSocialContentsByAuthorResult) => {
         if(res.statusCode == 200) {
           this.isMorePosts = (res.data.length < this.countPerPage) ? false : true;
           const posts = this._socialService.saveCachePostsOfUser(res.data, this.profile._id);

@@ -53,10 +53,33 @@ export class CardItemToolbarComponent implements OnInit {
 
   onClickLike(e: Event) {
     this.stopPropagation(e);
-    setTimeout(() => {
+    const isLikedCurrent = this.post.isLiked;
+    this.changeLikeStatus(!this.post.isLiked);
 
-      this.post.isLiked = this.post.isLiked == true ? false : true;
-    }, 500);
+    if(this.post) {
+      this.isUploading = true;
+      this._sharedService.post({}, 'blog/like/' + this.post._id).subscribe(res => {
+        if(res.statusCode != 200) {
+          console.log(res.message);
+          this.changeLikeStatus(isLikedCurrent);
+          this._toastr.error('Something went wrong');          
+        }
+      }, error => {
+        console.log(error);
+        this.changeLikeStatus(isLikedCurrent);
+        this._toastr.error('Something went wrong');          
+      }, () => {
+        this.isUploading = false;
+      });
+    }
+  }
+
+  changeLikeStatus(isLiked: boolean) {
+    if(isLiked) {
+      this.post.like();
+    } else {
+      this.post.unlike();
+    }
   }
 
   onClickComment(e: Event) {
@@ -84,8 +107,8 @@ export class CardItemToolbarComponent implements OnInit {
       this._sharedService.post(this.formComment.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
         if(res.statusCode == 200) {
           this.formComment.reset();
-          res.data.author = this._user;
-          this.post.setComment(res.data);
+          res.data.comment.author = this._user;
+          this.post.setComment(res.data.comment, res.data.post.numComments);
         } else {
           console.log(res.message);
           this._toastr.error('Could not post your comment. Please try again');

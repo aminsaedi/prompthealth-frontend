@@ -22,6 +22,12 @@ export interface IProfile {
     following: IProfile['followData']['followed'];
   }
 
+  isC: boolean;
+  isP: boolean;
+  isSP: boolean;
+  isSA: boolean;
+  isU: boolean;
+  isProvider: boolean;
   isApproved: boolean;
   isFollowDataReady: boolean;
 
@@ -49,6 +55,14 @@ export class Profile implements IProfile {
   get profileImage() { return this._profileImage ? this._s3 + '350x220/' + this._profileImage : ''; }
   get profileImageFull() { return this._profileImage ? this._s3 + this._profileImage : ''; }
   get profileImageType() { return this._profileImageType; }
+
+  get isU() { return !!(this.role == 'U'); }
+  get isC() { return !!(this.role == 'C'); }
+  get isSP() { return !!(this.role == 'SP'); }
+  get isProvider() { return !!(this.isC || this.isSP); }
+  get isP() { return !!(this.role == 'P'); }
+  get isSA() { return !!(this.role == 'SA'); }
+
 
   get isApproved() { return this.role == 'U' || this.role == 'SA' || this.data.isApproved; }
 

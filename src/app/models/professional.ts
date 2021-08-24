@@ -150,10 +150,6 @@ export class Professional extends Profile implements IProfessional{
   }
 
   get isMapIconReady() { return this._isMapIconReady; }
-  get isC() { return !!(this.role == 'C'); }
-  get isSP() { return !!(this.role == 'SP'); }
-  get isProvider() { return !!(this.isC || this.isSP); }
-  get isP() { return !!(this.role == 'P'); }
   get isVerified() { return this.p.verifiedBadge || false; }
   get isVirtualAvailable() { return this.p.provideVirtual || false; }
   get provideVirtual() { return this.isVirtualAvailable; }
