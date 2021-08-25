@@ -207,6 +207,7 @@ export class FormAuthComponent implements OnInit {
       } else {
         switch (role.toLowerCase()) {
           case 'u':
+          case 'sa':
             next = '/';
             break;
           case 'sp':

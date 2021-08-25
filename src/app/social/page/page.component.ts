@@ -65,7 +65,7 @@ export class PageComponent implements OnInit {
 
   goback() {
     const state = this._location.getState() as any;
-    if(state.navigationId == 1) {
+    if(state && state.navigationId == 1) {
       this._router.navigate(['/community/feed']);
     } else {
       this._location.back();

@@ -24,7 +24,7 @@
   <form-client-general *ngIf="profile && profile.roles == 'U'" [disabled]="!editFields" [data]="profile"
     (submitForm)="onSubmit($event)"></form-client-general>
 
-  <form-provider-general *ngIf="profile && profile.roles == 'SP'" [disabled]="!editFields" [data]="profile"
+  <form-provider-general *ngIf="profile && (profile.roles == 'SP' || profile.roles == 'SA')" [disabled]="!editFields" [data]="profile"
     (submitForm)="onSubmit($event)"></form-provider-general>
 
   <form-centre-general *ngIf="profile && profile.roles == 'C'" [disabled]="!editFields" [data]="profile"

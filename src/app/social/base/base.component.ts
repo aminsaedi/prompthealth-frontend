@@ -18,7 +18,7 @@ export class BaseComponent implements OnInit {
 
   get userId() { return this.user ? this.user._id : ''; }
   get userRole() { return this.user ? this.user.role : 'U'; }
-  get userName() { return this.user ? this.user.name : ''; }
+  get userName() { return this.user ? this.user.nickname : ''; }
   get user() { return this._profileService.profile; }
 
 

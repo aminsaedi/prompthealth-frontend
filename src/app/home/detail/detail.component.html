@@ -5,7 +5,7 @@
 </ngx-spinner>
 
 <div class="container-fluid banner position-relative"
-  [style]="(userInfo? 'background-image: url(' + userInfo?.banner + ')': '')"></div>
+  [style]="(userInfo? 'background-image: url(' + userInfo?.coverImage + ')': '')"></div>
 <div class='intersection-observer' intersectionObserver (changeStatus)="changeStickyStatusTabbar($event)"></div>
 <div class="container-fluid border-bottom border-line bg-white sticky-top">
   <div class="max-w-1200 position-relative tabbar" [ngClass]="{sticked: isTabSticked}">

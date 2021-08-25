@@ -1,0 +1,17 @@
+@import '../../../assets/scss/variables';
+
+.name-container {
+  flex: 0 0 100%;
+  @media (min-width: $breakpointMd) {
+    flex: 1 1 auto;
+  }
+}
+
+.description {
+  max-height: 96px; //24px * 4line
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}

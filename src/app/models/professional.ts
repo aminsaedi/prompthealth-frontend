@@ -10,13 +10,10 @@ export interface IProfessional extends IProfile {
   image: IProfessional['profileImage']; /** profile image small size (if not set, return default avator) */
   imageFull: IProfessional['profileImageFull']; /** profile image original size (if not set, return default avator) */
   imageType: IProfessional['profileImageType'] /** profile image file type (same as profileImageType) */
-  coverImage: string;
-  banner: string; // old name (changed to coverImage)
 
   emailToDisplay: string
 
   title: string;
-  description: string; /** practicePhilosophy | description of professionals belonging at the center */
   phone: string;
   address: IUserDetail['address'];
   state: IUserDetail['state'];
@@ -53,7 +50,6 @@ export interface IProfessional extends IProfile {
   isC: boolean;
   isSP: boolean;
   isP: boolean;
-  isVerified: boolean; /** verified for badge */
   isVirtualAvailable: boolean;
   provideVirtual: boolean; // old name (changed to isVirtualAvailable)
   isConnectedToGoogle: boolean;
@@ -90,12 +86,10 @@ export class Professional extends Profile implements IProfessional{
   get imageFull() { return this.profileImageFull.length > 0 ? this.profileImageFull : this._defaultAvator; }
   get imageType(){ return this.profileImageType; }
   get coverImage() { return this._defaultBanner; }
-  get banner() { return this.coverImage; }
 
   get emailToDisplay() { return this.p.displayEmail; }
 
   get title() { return this.p.professional_title || null; }
-  get description() { return this.p.product_description || this.p.description || ''; }
   get phone() { return this._phone; }
   get address() { return (!this.p.hideAddress && this.p.address && this.p.address.length > 0) ? this.p.address : null; }
   get state() { return this.p.state; }
@@ -150,7 +144,6 @@ export class Professional extends Profile implements IProfessional{
   }
 
   get isMapIconReady() { return this._isMapIconReady; }
-  get isVerified() { return this.p.verifiedBadge || false; }
   get isVirtualAvailable() { return this.p.provideVirtual || false; }
   get provideVirtual() { return this.isVirtualAvailable; }
   get isConnectedToGoogle() { return !!this.p.placeId}

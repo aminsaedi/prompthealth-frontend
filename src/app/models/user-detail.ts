@@ -24,7 +24,10 @@ export interface IUserDetail {
   
   phone?: string;
 
-  followCount?:any;
+  follow?: {
+    following: number;
+    followed: number;
+  };
 
   isApproved?: boolean;
   isDeleted?: boolean;

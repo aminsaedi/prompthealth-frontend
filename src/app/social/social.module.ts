@@ -37,8 +37,10 @@ import { GuardIfNotEligbleToCreatePostGuard } from './guard-if-not-eligble-to-cr
 import { AgmCoreModule } from '@agm/core';
 import { NotificationComponent } from './notification/notification.component';
 import { CardNotificationComponent } from './card-notification/card-notification.component';
-import { DraftComponent } from './draft/draft.component';
+// import { DraftComponent } from './draft/draft.component';
 import { ProfileContactComponent } from './profile-contact/profile-contact.component';
+import { FollowListComponent } from './follow-list/follow-list.component';
+import { ProfileFollowListComponent } from './profile-follow-list/profile-follow-list.component';
 
 
 const routes: Routes = [
@@ -50,14 +52,17 @@ const routes: Routes = [
       { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
     ] },
 
+    { path: 'profile/:userid/followings', component: ProfileFollowListComponent, data: {type: 'following'}},
+
     { path: 'profile/:userid/post/:postid', component: PageComponent },
     { path: 'profile/:userid/post', pathMatch: 'full', redirectTo: 'profile/:userid/' },
 
     { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create', redirectTo: 'create/article' },
-    { path: 'draft', component: DraftComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
-
+    // { path: 'draft', component: DraftComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
+    { path: 'followings', component: FollowListComponent, data: {type: 'following'}},
+    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}},
     { path: 'notification', component: NotificationComponent},
 
     { path: '', component: HomeComponent, children: [
@@ -100,8 +105,10 @@ const routes: Routes = [
     ProfileFeedComponent,
     NotificationComponent,
     CardNotificationComponent,
-    DraftComponent,
+    // DraftComponent,
     ProfileContactComponent,
+    FollowListComponent,
+    ProfileFollowListComponent,
   ],
   providers: [
     CategoryService,

@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
 
   get topics() { return this._catService.categoryList; }
   get userImage() { return this.user ? this.user.profileImage : ''; }
-  get userName() { return this.user ? this.user.name : '(No Name)'; }
+  get userName() { return this.user ? this.user.nickname : ''; }
   get user(): Profile { return this._profileService.profile; }
 
   get sizeS(): boolean { return (!window || window.innerWidth < 768); }

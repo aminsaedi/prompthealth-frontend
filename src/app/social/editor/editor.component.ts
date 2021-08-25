@@ -37,6 +37,7 @@ export class EditorComponent implements OnInit {
 
   public imagePreview: string | ArrayBuffer;
 
+  public description: string;
   public formCheckboxOnlineEvent: FormControl;
   public editorType: ISocialPost['contentType'] = null;
 
@@ -170,9 +171,15 @@ export class EditorComponent implements OnInit {
     this.contentEditor = e;
   }
 
-  async onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
+  onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
     if('html' in e) {
-      this.f.description.setValue(e.html);
+      const regExSpotifyEmbedded = /<iframe(.*)src="https:\/\/open\.spotify\.com\/(track|playlist|show|episode)/;
+      const matchSpotify = e.html.match(regExSpotifyEmbedded);
+
+      if(matchSpotify) {
+        const replaced = `<iframe${matchSpotify[1]}src="https://open.spotify.com/embed/${matchSpotify[2]}`;
+        this.f.description.setValue(e.html.replace(regExSpotifyEmbedded, replaced));
+      }
     }
   }
 
