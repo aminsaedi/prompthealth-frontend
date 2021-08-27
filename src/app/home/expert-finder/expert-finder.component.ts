@@ -220,7 +220,7 @@ export class ExpertFinderComponent implements OnInit {
     this.mapDataCurrent.dist = Math.floor(dist);
   }
 
-  onMapClicked(e) {
+  onMapClicked(e: Event) {
     this.selectedProfessionalInMap = null;
   }
 
@@ -245,7 +245,7 @@ export class ExpertFinderComponent implements OnInit {
     this.pageCurrent = i;
     this.controller.setProfesionnalsPerPage(i);
     this.controller.initPaginator(i);
-    if(window) {
+    if(this._uService.isBrowser) {
       smoothWindowScrollTo(0);
     }
   }
