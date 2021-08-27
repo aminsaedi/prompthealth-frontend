@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { FormItemCheckboxGroupComponent, CheckboxSelectionItem } from '../form-item-checkbox-group/form-item-checkbox-group.component';
@@ -36,14 +37,14 @@ export class FormClientGeneralComponent implements OnInit {
   async ngOnInit() {
 
     this.form = this._fb.group({
+      profileImage: new FormControl(this.data.profileImage ? this.data.profileImage : ''),
       firstName: new FormControl(this.data.firstName ? this.data.firstName : '', validators.firstnameClient),
       lastName: new FormControl(this.data.lastName ? this.data.lastName : '', validators.lastnameClient),
       
       userType: new FormControl('Client'),
       email: new FormControl(this.data.email ? this.data.email : '', validators.email),
       phone: new FormControl(this.data.phone ? this.data.phone : '', validators.phone),
-      gender: new FormControl(this.data.gender ? this.data.gender: '', validators.gender),
-      
+      gender: new FormControl(this.data.gender ? this.data.gender: ''),
       address: new FormControl(this.data.address ? this.data.address : ''),
       latitude: new FormControl((this.data.location && this.data.location[1]) ? this.data.location[1] : 0 ),
       longitude: new FormControl((this.data.location && this.data.location[0]) ? this.data.location[0] : 0 ),
@@ -51,6 +52,10 @@ export class FormClientGeneralComponent implements OnInit {
       state: new FormControl( this.data.state ? this.data.state : '' ),
       zipcode: new FormControl( this.data.zipcode ? this.data.zipcode : '' ),
     }, {validators: validators.addressSelectedFromSuggestion});
+  }
+
+  onChangeImage(imageURL: string) {
+    // this._profileService.update({profileImage: imageURL});
   }
 
 

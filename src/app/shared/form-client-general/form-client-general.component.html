@@ -1,6 +1,24 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
   <div class="row mb-4">
     <div class="col-md-4">
+      <label>
+        Profile image
+        <span class="text-danger">*</span>
+      </label>
+    </div>
+    <div class="col-md-8">
+      <form-item-upload-image-button
+      [userid]="data?._id"
+      label="Profile image"
+      [disabled]="disabled"
+      [submitted]="isSubmitted"
+      [controller]="f.profileImage"
+      (changeImage)="onChangeImage($event)"
+      ></form-item-upload-image-button>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-md-4">
       <label for="firstName">
         First Name
         <span class="text-danger">*</span>
@@ -93,7 +111,7 @@
   <div class="row mb-4 pt-2">
     <label class="col-md-4 mt-0">
       Gender
-      <span class="text-danger">*</span>
+      <!-- <span class="text-danger">*</span> -->
     </label>
     <div class="col-md-8">
       <form-item-checkbox-group

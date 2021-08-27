@@ -61,6 +61,15 @@ export class ProfileManagementService {
     this.changeLoginStatus('loggedIn');
   }
 
+  update(u: IUserDetail) {
+    Object.keys(u).forEach(key => {
+      if(key != '_id'){
+        this._user[key] = u[key];
+      }
+    });
+    this._profile = new Profile(this._user);
+  }
+
   init() {
     const userStr = this._uService.localStorage.getItem('user');
     if(!userStr) {

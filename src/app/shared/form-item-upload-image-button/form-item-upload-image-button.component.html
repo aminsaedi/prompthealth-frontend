@@ -12,6 +12,12 @@ class="btn small position-relative"
   >
 </button>
 <div class="mt-2">
-  <img class="preview" *ngIf="controller.value" [src]="baseURLImage + controller.value" [alt]="label">
+  <img 
+  *ngIf="controller.value" 
+  class="preview" 
+  [src]="baseURLImage + controller.value + '?ver=1.0.2'" 
+  [alt]="label"
+  crossorigin="anonymous"
+  >
 </div>
 <form-item-errors [controller]="controller" [label]="label" [submitted]="submitted"></form-item-errors>

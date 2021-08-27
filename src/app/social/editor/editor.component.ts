@@ -299,6 +299,7 @@ export class EditorComponent implements OnInit {
         this.isSubmitted = false;
         this._toastr.success('Updated successfully');
         this._editorService.resetForm();
+        this.imagePreview = null;
         this.formItemService.deselectAll();
         this.formCheckboxOnlineEvent.setValue(true);
         this._editorService.unlockEditor();

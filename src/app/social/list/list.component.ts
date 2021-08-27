@@ -7,11 +7,11 @@ import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/so
 import { SocialNote } from 'src/app/models/social-note';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
-import { environment } from 'src/environments/environment';
 import { SocialPostTaxonomyType, SocialService } from '../social.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-list',
@@ -60,6 +60,7 @@ export class ListComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _uService: UniversalService,
     private _catService: CategoryService,
+    private _sanitizer: DomSanitizer,
   ) { }
 
   ngOnDestroy() {
@@ -227,7 +228,8 @@ export class ListComponent implements OnInit {
 
   onPublishNewPost(data: ISocialPost) {
     data.author = this._profileService.user;
-
-    this.newPosts.unshift(new SocialNote(data));
+    const note = new SocialNote(data);
+    note.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(note.description));
+    this.newPosts.unshift(note);
   }
 }

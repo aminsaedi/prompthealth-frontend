@@ -24,8 +24,8 @@ export class HeaderComponent implements OnInit {
   get onProductPage(){ return !!this._router.url.match('product'); }
   get isLoggedIn(): boolean { return !!this.user; }
   get userRole() { return this.user ? this.user.role : null; }
-
   get userId() { return this.user ? this.user._id : ''; }
+  get user() { return this._profileService.profile; }
 
   constructor(
     private _router: Router,
@@ -40,7 +40,6 @@ export class HeaderComponent implements OnInit {
     private _modalService: ModalService,
   ) { }
 
-  public user: Profile;
   public isHeaderShown = true;
   public isMenuSmShown = false;
   public isShadowShown = false;
@@ -73,9 +72,7 @@ export class HeaderComponent implements OnInit {
         this._changeDetector.detectChanges();
       });
 
-      this.user = this._profileService.profile;
       this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(() => {
-        this.user = this._profileService.profile;
         this.setPriceType(this.user ? this.user.role : null);
       });
     }

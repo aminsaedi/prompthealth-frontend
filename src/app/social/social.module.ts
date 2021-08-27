@@ -63,7 +63,7 @@ const routes: Routes = [
     { path: 'create', redirectTo: 'create/article' },
     // { path: 'draft', component: DraftComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
     { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
-    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfNotLoggedInGuard], },
+    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], },
     { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },
 
     { path: '', component: HomeComponent, children: [
@@ -127,7 +127,7 @@ const routes: Routes = [
     }),
     NgxStripeModule.forRoot(environment.config.stripeKey),
     RouterModule.forChild(routes),
-    QuillModule.forRoot(),
+    QuillModule.forRoot( {formats: ['bold', 'italic', 'underline', 'header', 'list', 'link', 'image', 'video', 'code-block']}),
   ]
 })
 export class SocialModule { }
