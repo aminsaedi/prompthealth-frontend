@@ -113,6 +113,9 @@ export class ExpertFinderComponent implements OnInit {
     if(query.keyword) {
       this.searchBar.setKeyword(query.keyword);
     }
+    if(query.keyloc) {
+      this.searchBar.setLocation(query.keyloc);
+    }
 
     const param = this._route.snapshot.params as IExpertFinderFilterParams;
     if(param.city) {
@@ -125,6 +128,11 @@ export class ExpertFinderComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this._uService.setMeta(this._router.url, {
+      title: 'Find best health care providers | PromptHealth',
+      description: 'Use our Expart Finder to find a top-rated health care provider near you or offering virtual appointment.',
+    });
+
     this.initController();
 
     this._route.params.pipe(skip(1)).subscribe(() => {
@@ -162,7 +170,7 @@ export class ExpertFinderComponent implements OnInit {
       this.formFilter = this.controller.createForm();
       this.f.distance.valueChanges.subscribe(() => {
         this.showFilterDistanceLabel();
-      })
+      });
     }
 
     if (!this.controller.locationInitializedByFilter) {
@@ -348,6 +356,10 @@ export class ExpertFinderComponent implements OnInit {
         professionals.forEach(p => {
           this.formCompare.addControl(p._id, new FormControl());
         });  
+        if(this.queryParamsCurrent.keyloc) {
+          this.controller.updateFilterByProfessionalsLocation();
+
+        }
       }
       this.changePage(1);
     })

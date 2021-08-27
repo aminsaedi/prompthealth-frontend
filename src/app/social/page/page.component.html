@@ -12,6 +12,12 @@
       </div>
     </section>
     <section class="col-12 col-md-10 col-xl-8">
+      <div 
+      *ngIf="!post"
+      class="mt-80p text-center"
+      >
+        <loader></loader>
+      </div>
       <ng-container *ngIf="post">
         <card 
         [post]="post" 

@@ -33,7 +33,6 @@ export class CategoryService {
   getCategoryAsync(): Promise<Category[]>{
     return new Promise((resolve, reject) => {
       if(!this.categoryList){
-        console.log('getCategoryAsync')
         this.subscriptionCat = this.observeCategoryService().subscribe(() => {
           // this.subscriptionCat.unsubscribe();
           resolve(this.categoryList)

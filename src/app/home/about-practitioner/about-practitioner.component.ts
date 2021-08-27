@@ -48,6 +48,11 @@ export class AboutPractitionerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Reach more new patients grow your practice with PromptHealth',
+      description: 'PromptHealth helps providers reach more new patients for in-person visits, video visits or both.',
+    });
+
     this.initPlans();
     this.initCoupon();
   }
@@ -162,33 +167,33 @@ export class AboutPractitionerComponent implements OnInit {
 const features = [
   {
     icon: 'camera',
-    title: 'Attract new patients. Showcase your practice',
-    content: 'Attract new patients. Showcase your practice',
+    title: 'Simple to use and time-saving.',
+    content: 'We are creating a space where health and wellness experts can lead the conversation around the topics they are experts in. Instead of spending time building your credibility online, let them come to you on PromptHealth and focus on what you do best.',
   },
   {
     icon: 'camera',
-    title: 'Attract new patients. Showcase your practice',
-    content: 'Attract new patients. Showcase your practice',
+    title: 'Choose a content creation option that works best for you.',
+    content: 'Easy to use content creation tools made for busy health practitioners. Share using the medium that suits you best. Whether it’s through voice notes, videos, articles, or online events, we made it easy for health providers to create and share.',
   },
   {
     icon: 'camera',
-    title: 'Attract new patients. Showcase your practice',
-    content: 'Attract new patients. Showcase your practice',
+    title: 'Share information on topics you are an expert in.',
+    content: 'Health misinformation online is a huge problem today. We are serious about making sure those providing health information are accredited and trusted. We prioritize verifying our providers to remain a credible and helpful health resource for the public.',
   },
   {
     icon: 'camera',
-    title: 'Attract new patients. Showcase your practice',
-    content: 'Attract new patients. Showcase your practice',
+    title: 'Connect with clients.',
+    content: 'Find clients, share details about the services you offer and how you can help, and accept bookings all in one platform. ',
   },
   {
     icon: 'camera',
-    title: 'Attract new patients. Showcase your practice',
-    content: 'Attract new patients. Showcase your practice',
+    title: 'Engage with the health and wellness community.',
+    content: 'Be part of our community. Stay engaged with new and current clients, and other practitioners in your area. ',
   },
   {
     icon: 'camera',
-    title: 'Attract new patients. Showcase your practice',
-    content: 'Attract new patients. Showcase your practice',
+    title: 'Recommend other health professionals you trust.',
+    content: 'Think your clients will benefit from a different treatment, or do you know another provider you trust? Find and leave recommendations for other practitioners. ',
   },
 ]
 

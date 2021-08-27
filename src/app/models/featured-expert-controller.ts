@@ -53,9 +53,6 @@ export class FeaturedExpertController {
       dataPerRows[idxRow].push(data[i]);
     }
     this.dataPerRows = dataPerRows;
-
-    console.log(this.dataPerRows);
-
   }
 
 

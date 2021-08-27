@@ -11,10 +11,7 @@
       class="large"
       [ngClass]="{'text-error': post.isLiked}"
       ></i>
-      <span *ngIf="!isViewSm">
-        <span>Like</span>
-        <span [ngClass]="{'opacity-0': !isLiked}">d</span>
-      </span>
+      <span>{{post.numLikes}}</span>
     </button>
   
     <button 

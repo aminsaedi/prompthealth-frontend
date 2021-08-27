@@ -31,7 +31,7 @@ style="min-height: 100vh;"
 
 <modal 
 id="user-menu"
-[bodyStyle]="{padding: 0, maxWidth: '350px'}" 
+[bodyStyle]="{padding: 0, maxWidth: '450px'}" 
 #modalUserMenu
 >
   <ng-container *ngIf="user">
@@ -96,6 +96,29 @@ id="user-menu"
             <span>My profile</span>
           </a>
         </div>
+
+        <div class="mb-5p">
+          <a
+          *ngIf="!user.isU"
+          class="btn btn-text-body small px-0"
+          (click)="onClickUserMenuItem(['/community/create/article'])"
+          >
+            <i iconPh="file" class="mr-5p"></i>
+            <span>Create new article</span>
+          </a>
+        </div>
+
+        <div class="mb-5p">
+          <a
+          *ngIf="!user.isU"
+          class="btn btn-text-body small px-0"
+          (click)="onClickUserMenuItem(['/community/create/event'])"
+          >
+            <i iconPh="calendar" class="mr-5p"></i>
+            <span>Create new event</span>
+          </a>
+        </div>
+
         <div class="mb-5p">
           <a
           class="btn btn-text-body small px-0"

@@ -53,32 +53,34 @@ export class CardItemToolbarComponent implements OnInit {
 
   onClickLike(e: Event) {
     this.stopPropagation(e);
+
+    const numLikesCurrent = this.post.numLikes || 0;
     const isLikedCurrent = this.post.isLiked;
-    this.changeLikeStatus(!this.post.isLiked);
+    this.changeLikeStatus(!this.post.isLiked, numLikesCurrent + (isLikedCurrent ? -1 : 1));
 
     if(this.post) {
       this.isUploading = true;
       this._sharedService.post({}, 'blog/like/' + this.post._id).subscribe(res => {
+        this.isUploading = false;
         if(res.statusCode != 200) {
           console.log(res.message);
-          this.changeLikeStatus(isLikedCurrent);
+          this.changeLikeStatus(isLikedCurrent, numLikesCurrent);
           this._toastr.error('Something went wrong');          
         }
       }, error => {
-        console.log(error);
-        this.changeLikeStatus(isLikedCurrent);
-        this._toastr.error('Something went wrong');          
-      }, () => {
         this.isUploading = false;
+        console.log(error);
+        this.changeLikeStatus(isLikedCurrent, numLikesCurrent);
+        this._toastr.error('Something went wrong');          
       });
     }
   }
 
-  changeLikeStatus(isLiked: boolean) {
+  changeLikeStatus(isLiked: boolean, numLikes: number) {
     if(isLiked) {
-      this.post.like();
+      this.post.like(true, numLikes);
     } else {
-      this.post.unlike();
+      this.post.unlike(true, numLikes);
     }
   }
 
@@ -105,6 +107,7 @@ export class CardItemToolbarComponent implements OnInit {
     } else {
       this.isUploading = true;
       this._sharedService.post(this.formComment.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
+        this.isUploading = false;
         if(res.statusCode == 200) {
           this.formComment.reset();
           res.data.comment.author = this._user;
@@ -115,9 +118,8 @@ export class CardItemToolbarComponent implements OnInit {
         }
       }, error => {
         console.log(error);
-        this._toastr.error('Could not post your comment. Please try again');
-      }, () => {
         this.isUploading = false;
+        this._toastr.error('Could not post your comment. Please try again');
       });
     }
   }

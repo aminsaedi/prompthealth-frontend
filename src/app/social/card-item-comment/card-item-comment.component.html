@@ -13,24 +13,42 @@
 
 <ng-template #comment let-data let-indent="indent">
   <div class="d-flex mt-20p" [ngClass]="{indent: indent}">
-    <profile-image size="42" [image]="data.author.profileImage"></profile-image>
+    <a 
+    *ngIf="!data.author.isU"
+    [routerLink]="['/community/profile', data.author._id]"
+    >
+      <profile-image size="42" [image]="data.author.profileImage"></profile-image>
+    </a>
+    <ng-container *ngIf="data.author.isU">
+      <profile-image size="42" [image]="data.author.profileImage"></profile-image>
+    </ng-container>
     <div class="ml-10p flex-grow-1">
-      <div class="rounded-8p px-15p pt-15p pb-5p d-inline-block bg-background">
-        <h6 class="subtitle2">{{data.author.firstName}} {{data.author.lastName}}</h6>
+      <div class="rounded-8p px-15p pt-15p pb-5p d-inline-block bg-background">    
+        <a 
+        *ngIf="!data.author.isU"
+        [routerLink]="['/community/profile', data.author._id]"
+        class="text-body"
+        >
+          <h6 class="subtitle2">{{data.author.firstName}} {{data.author.lastName}}</h6>
+        </a>
+        <ng-container *ngIf="data.author.isU">
+          <h6 class="subtitle2">{{data.author.firstName}} {{data.author.lastName}}</h6>
+        </ng-container>
+        
         <p class="body2 mb-5p">
           <b *ngIf="data.replyTo">@{{nameReplyTo(data.replyTo)}} </b>
           <span [innerHTML]="data.body"></span>
         </p>
         <div class="d-flex">
-          <button
-          class="btn btn-text-grey small px-0"
+          <!-- <button
+          class="btn btn-text-grey small px-0 mr-20p"
           type="button"
           >
             <i [iconPh]="'heart'"></i>
             <span *ngIf="data.like > 0" class="ml-5p">{{data.like}}</span>
-          </button>
+          </button> -->
           <button 
-          class="ml-20p btn btn-text-grey small px-0"
+          class="btn btn-text-grey small px-0"
           (click)="onClickReply(data)"
           >Reply</button>
         </div>

@@ -123,12 +123,36 @@ export class Profile implements IProfile {
     });
   }
 
-  setFollowing(user: IUserDetail) {
+  setFollowing(user: IUserDetail, countup: boolean = false) {
     if(!this._followings) {
       this._followings = [];
     }
 
     this._followings.push(new Profile(user));
+
+    if(countup) {
+      this.countupFollowing();
+    }
+  }
+
+  removeFollowing(user: IUserDetail, countdown: boolean = false) {
+    if(this._followings && this._followings.length == 0) {
+      console.log('no one follows. you cannot remove this user from following list');
+      return;
+    }
+
+    if (!this._followings) {
+      console.log('following list is not ready yet. the user will not be added in following list for now');
+    } else {
+      const idx = this._followings.findIndex(item => item._id == user._id);
+      if(idx >= 0) {
+        this._followings.splice(idx, 1);
+      }
+    }
+
+    if(countdown && this.data.follow.following > 0) {
+      this.countdownFollowing();
+    }
   }
 
   setFollowers(users: IUserDetail[]) {
@@ -147,4 +171,12 @@ export class Profile implements IProfile {
 
     this._followers.push(new Profile(user));
   }
+
+  countupFollowing() { this.data.follow.following = this.data.follow.following ? this.data.follow.following + 1 : 1; }
+  countdownFollowing() { this.data.follow.following = this.data.follow.following > 0 ? this.data.follow.following - 1 : 0; }
+  countupFollower() { this.data.follow.followed = this.data.follow.followed ? this.data.follow.followed + 1 : 1; }
+  countdownFollower() { this.data.follow.followed = this.data.follow.followed > 0 ? this.data.follow.followed - 1 : 0; }
+
+  decode(): IUserDetail { return this.data; }
+
 }

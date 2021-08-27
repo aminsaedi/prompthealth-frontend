@@ -13,6 +13,10 @@ import { BlogSearchQuery, IBlogSearchResult } from '../models/blog-search-query'
 import { Blog } from '../models/blog';
 import { FeaturedExpertController } from '../models/featured-expert-controller';
 import { smoothHorizontalScrolling } from '../_helpers/smooth-scroll';
+import { environment } from 'src/environments/environment';
+import { SocialPostSearchQuery } from '../models/social-post-search-query';
+import { IGetSocialContentsByAuthorResult } from '../models/response-data';
+import { SocialArticle } from '../models/social-article';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -212,12 +216,12 @@ export class HomeComponent implements OnInit {
   /** BLOGS */
   public blogs: Blog[];
   async getBlog() {
-    const query = new BlogSearchQuery({count: 3});
-    this._sharedService.getNoAuth('/blog/get-all', query.json ).subscribe((res: IBlogSearchResult) => {
+    const query = new SocialPostSearchQuery({count: 3, contentType: 'ARTICLE'});
+    this._sharedService.getNoAuth('/note/get-by-author/' + environment.config.idSA + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
       if(res.statusCode === 200) {
         const blogs = [];
-        res.data.data.forEach(d => {
-          blogs.push(new Blog(d));
+        res.data.forEach(d => {
+          blogs.push(new SocialArticle(d));
         });
         this.blogs = blogs;
       } else {
@@ -237,7 +241,7 @@ const appFeatureItems = [
     {
       icon: 'verified-outline', 
       title: 'Search for health and wellness practitioners',
-      content: 'Search for health and wellness practitioners',
+      content: 'Use personalized filters to find your best match',
     },
     {
       icon: 'checkbox-square-outline',
@@ -275,34 +279,34 @@ const introductionPostType = {
     color: 'bg-success',
 
     title: 'Notes',
-    content: 'Create any types of events too easy',
+    content: 'Read quick health tips and thoughts.',
   },
   event: {
     icon: 'calendar',
     color: 'bg-error',
 
     title: 'Events',
-    content: 'Create any types of events too easy',
+    content: 'Attend in-person or virtual events hosted by practitioners.',
   },
   article: {
     icon: 'file',
     color: 'bg-yellow',
 
     title: 'Articles',
-    content: 'Create any types of events too easy',
+    content: 'Dive deep into different topics.',
   },
   voice: {
     icon: 'mic',
     color: 'bg-primary',
 
     title: 'Voices',
-    content: 'Create any types of events too easy',
+    content: 'Listen to informative audio and get empowered.',
   },
   video: {
     icon: 'play-circle',
     color: 'bg-secondary',
 
     title: 'Videos',
-    content: 'Create any types of events too easy',
+    content: 'Watch fun, educational health and wellness content.',
   }
 }

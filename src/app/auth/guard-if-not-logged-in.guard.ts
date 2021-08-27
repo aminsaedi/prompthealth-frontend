@@ -5,8 +5,8 @@ import { LoginStatusType, ProfileManagementService } from '../dashboard/profileM
 @Injectable({
   providedIn: 'root'
 })
-export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
-  
+export class GuardIfNotLoggedInGuard implements CanActivate {
+
   constructor(
     private _profileService: ProfileManagementService,
     private _router: Router,
@@ -16,9 +16,8 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> | boolean
-  {
+  {    
     let loginStatus = this._profileService.loginStatus;
-
     if(loginStatus == 'notChecked' || loginStatus == 'loggingIn') {
       return new Promise((resolve, reject) => {
         const subscription = this._profileService.loginStatusChanged().subscribe(status => {
@@ -28,7 +27,7 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
             if(isValidated) {
               resolve(true);
             } else {
-              this.guard();
+              this.guard(state);
               reject(false);
             }  
           }
@@ -39,21 +38,22 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
       if(isValidated) {
         return true;
       } else {
-        this.guard();
+        this.guard(state);
         return false;
       }
     }
   }
 
   validate(loginStatus: LoginStatusType) {
-    if(loginStatus == 'loggedIn' && this._profileService.profile.role != 'U') {
-      return true;
+    return !!(loginStatus == 'loggedIn');
+  }
+
+  guard(state: RouterStateSnapshot) {
+    if(state.url.match(/\/community/)) {
+      this._router.navigate(['/community/feed']);
     } else {
-      return false;
+      this._router.navigate(['/']);
     }
   }
   
-  guard() {
-    this._router.navigate(['/community/feed']);
-  }
 }

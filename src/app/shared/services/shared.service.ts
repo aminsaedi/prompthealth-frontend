@@ -41,7 +41,7 @@ export class User {
 export class SharedService {
   rootUrl: string = environment.config.API_URL;
   // baseUrl: string = environment.config.API_URL;
-  type: any;
+  // type: any;
   personalMatch;
   constructor(
     private _router: Router,
@@ -57,7 +57,7 @@ export class SharedService {
 
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
-    this.type = this._uService.localStorage.getItem('roles');
+    // this.type = this._uService.localStorage.getItem('roles');
   }
 
 
@@ -84,7 +84,8 @@ export class SharedService {
   }
 
   get(path, setParams = {}) {
-    if (!this.type) {
+    const token = this._uService.localStorage.getItem('token');
+    if (!token) {
       const url = this.rootUrl + path;
       return this.http.get(url);
     } else {

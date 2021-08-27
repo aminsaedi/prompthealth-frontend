@@ -27,6 +27,7 @@ export interface IExpertFinderFilterQueryParams extends Params {
   lg: string, //49.09934 (string) --> latLong
   svc: string, //1,2,3 (array) --> services (customerHealth, category, typeOfProvider, treatmentModality)
   keyword: string, ///adfaer (string)
+  keyloc: string, ///british columbia (string)
   zoom: string, //8 (string)
   dist: string,
   vr: string, 
@@ -89,6 +90,7 @@ export class ExpertFinderController {
   private _dist: number = null;
   private _virtual: boolean;
   private _keyword: string = null;
+  private _keyloc: string = null;
 
   private _locationInitializedByFilter = false;
   private _professionalsInitialized = false;
@@ -100,7 +102,7 @@ export class ExpertFinderController {
   private _countPerPage: number;
   private _isFilterApplied: boolean = false;
 
-  constructor(private data: IFilterData, option: IOptionExpertFinderController = {}) {
+  constructor(data: IFilterData, option: IOptionExpertFinderController = {}) {
     const o = new OptionExpertFinderController(option);
     this._countPerPage = o.countPerPage;
 
@@ -155,6 +157,7 @@ export class ExpertFinderController {
     this._rating = Number(data.rate) || 0;
     this._virtual = !!(data.vr == '1');
     this._keyword = data.keyword || null;
+    this._keyloc = data.keyloc || null;
 
     this.checkIfFilterApplied();
   }
@@ -171,6 +174,21 @@ export class ExpertFinderController {
       this._zoom = 12;
     }
     // this.checkIfFilterApplied();
+  }
+
+  updateFilterByProfessionalsLocation() {
+    this._keyloc = null;
+
+    let [lng, lat] = [0,0]
+    this.professionalsAll.forEach(p => {
+      console.log(p.location);
+      lng += p.location[0];
+      lat += p.location[1];
+    });
+    this.updateFilterByUserLocation({
+      lat: lat / this.professionalsAll.length,
+      lng: lng / this.professionalsAll.length
+    });
   }
 
   updateFilterByMap(data: {lat: number, lng: number, zoom: number, dist: number}) {
@@ -228,6 +246,7 @@ export class ExpertFinderController {
     if(this._dist) { res.dist = Math.floor(this._dist); }
     if(this._virtual == true) { res.vr = 1; }
     if(this._keyword) { res.keyword = this._keyword; }
+    if(this._keyloc) { res.keyloc = this._keyloc; }
     if(this._rating) { res.rate = this._rating; }
 
     if(this.price_per_hours) {
@@ -256,14 +275,14 @@ export class ExpertFinderController {
     return res;
   }
 
-  toQueryParamsString(): string {
-    const params = this.toQueryParams();
-    let res = '?';
-    for(let key in params) {
-      res += key + '=' + params[key] + '&';
-    }
-    return res.slice(0,-1);
-  }
+  // toQueryParamsString(): string {
+  //   const params = this.toQueryParams();
+  //   let res = '?';
+  //   for(let key in params) {
+  //     res += key + '=' + params[key] + '&';
+  //   }
+  //   return res.slice(0,-1);
+  // }
 
   toPayload() {
     const res: {[k: string]: any} = {
@@ -276,11 +295,9 @@ export class ExpertFinderController {
       age_range: this.age_range,
       serviceOfferIds: this.serviceOfferIds,    
       services: this.services,
+      ...this._keyword && {keyword: this._keyword},
+      ...this._keyloc && {keyloc: this._keyloc},
     };
-
-    if(this._keyword) {
-      res.keyword = this._keyword;
-    }
 
     if (this._virtual) {
       res.virtual = true;
@@ -373,6 +390,7 @@ export class ExpertFinderController {
     }
     this._isFilterApplied = applied;
   }
+
 }
 
 export type FilterFieldName = 

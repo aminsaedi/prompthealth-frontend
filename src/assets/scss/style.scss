@@ -652,6 +652,16 @@ textarea.form-control {
     line-height: 24px!important;
     letter-spacing: 0.2px!important;
   }
+
+  h3, h4, h5, h6 {
+    /** subtitle1 with fontWeightBold*/
+    font-size: 16px!important;
+    font-weight: 600!important;
+    line-height: 24px!important;
+    letter-spacing: 0.25px!important;
+
+  }
+
 }
 
 .contenteditable {

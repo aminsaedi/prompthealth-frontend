@@ -126,6 +126,7 @@ export class CardItemCommentComponent implements OnInit {
       this.f.replyTo.setValue(this.targetCommentIdForReply);
       this.isUploading = true;
       this._sharedService.post(this.form.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
+        this.isUploading = false;
         if(res.statusCode == 200) {
           res.data.comment.author = this._user;
           this.post.setComment(res.data.comment, res.data.post.numComments);
@@ -138,9 +139,8 @@ export class CardItemCommentComponent implements OnInit {
         }
       }, error => {
         console.log(error);
-        this._toastr.error('Could not post your comment. Please try again');
-      }, () => {
         this.isUploading = false;
+        this._toastr.error('Could not post your comment. Please try again');
       });
     }
   }

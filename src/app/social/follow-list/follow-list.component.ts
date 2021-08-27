@@ -8,6 +8,7 @@ import { GetQuery } from 'src/app/models/get-query';
 import { Profile } from 'src/app/models/profile';
 import { IGetFollowingsResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-follow-list',
@@ -34,6 +35,7 @@ export class FollowListComponent implements OnInit {
     private _location: Location,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _uService: UniversalService,
   ) { }
 
 
@@ -44,6 +46,10 @@ export class FollowListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Follow list | PromptHealth Community'
+    });
+
     this._route.data.subscribe((data: {type: FollowType}) => {
       this.followType = data.type;
       this.observeLoginStatus();

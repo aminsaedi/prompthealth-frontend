@@ -41,6 +41,7 @@ import { CardNotificationComponent } from './card-notification/card-notification
 import { ProfileContactComponent } from './profile-contact/profile-contact.component';
 import { FollowListComponent } from './follow-list/follow-list.component';
 import { ProfileFollowListComponent } from './profile-follow-list/profile-follow-list.component';
+import { GuardIfNotLoggedInGuard } from '../auth/guard-if-not-logged-in.guard';
 
 
 const routes: Routes = [
@@ -61,9 +62,9 @@ const routes: Routes = [
     { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create', redirectTo: 'create/article' },
     // { path: 'draft', component: DraftComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
-    { path: 'followings', component: FollowListComponent, data: {type: 'following'}},
-    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}},
-    { path: 'notification', component: NotificationComponent},
+    { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
+    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfNotLoggedInGuard], },
+    { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },
 
     { path: '', component: HomeComponent, children: [
       { path: ':taxonomyType', component: ListComponent },

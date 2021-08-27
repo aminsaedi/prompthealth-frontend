@@ -28,9 +28,7 @@ export class ParallaxDirective {
     }
   }
 
-  ngAfterViewInit() {
-    console.log('afterviewinit')
-    
+  ngAfterViewInit() {   
     const el = this.el.nativeElement as HTMLElement;
     if(el && !this._uService.isServer) {
       setTimeout(() => {

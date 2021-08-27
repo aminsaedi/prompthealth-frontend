@@ -17,10 +17,31 @@
 }
 
 .image-container {
+  position: relative;
   img {
     position: relative;
     width: 100%;
     height: auto;
+
+    &.cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &.cover-md {
+      @media (min-width: $breakpointMd) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;  
+      }
+    }
   }
 }
 

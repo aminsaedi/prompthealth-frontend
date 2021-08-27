@@ -29,12 +29,12 @@
   <ul class="row list-unstyled">
     <li 
     *ngFor="let feature of features" 
-    class="mb-50p col-12 col-md-6 col-lg-4"
+    class="mb-50p col-12 col-md-6 col-xl-4"
     >
       <div class="mb-25p">
         <i [iconPh]="feature.icon" style="font-size: 30px;"></i>
       </div>
-      <h4>{{feature.title}}</h4>
+      <h4 class="h4 clamp-2line">{{feature.title}}</h4>
       <p class="text-label">{{feature.content}}</p>
     </li>
   </ul>

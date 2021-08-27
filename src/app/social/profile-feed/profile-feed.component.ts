@@ -8,6 +8,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { fadeAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../social.service';
 import { ISocialPost } from 'src/app/models/social-post';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-feed',
@@ -17,14 +18,14 @@ import { ISocialPost } from 'src/app/models/social-post';
 })
 export class ProfileFeedComponent implements OnInit {
 
-  public profile: Professional;
+  get profile() { return this._socialService.selectedProfile; }
+
   public posts: ISocialPost[];
 
   @HostListener('window:scroll', ['$event']) async onWindowScroll(e: Event) {
     if(!this.isLoading && this.isMorePosts && document.body && this.posts && this.posts.length > 0) {
       const startLoad = !!(document.body.scrollHeight < window.scrollY + window.innerHeight * 2);
       if(startLoad) {
-        console.log('startLoad');
         this.isLoading = true;
         const postsFetched = await this.fetchPosts();
         postsFetched.forEach(p => {
@@ -43,6 +44,8 @@ export class ProfileFeedComponent implements OnInit {
   constructor(
     private _socialService: SocialService,
     private _sharedService: SharedService,
+    private _uService: UniversalService,
+    private _router: Router,
   ) { }
 
   ngOnDestroy() {
@@ -50,23 +53,33 @@ export class ProfileFeedComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const profile = this._socialService.selectedProfile;
-    this.onProfileChanged(profile);
-
-    this.subscription = this._socialService.selectedProfileChanged().subscribe(p => {
-      this.onProfileChanged(p);
+     this.onProfileChanged();
+    this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
+      this.onProfileChanged();
     });
   }
 
-  onProfileChanged(p: Professional) {
-    if(p && (!this.profile || this.profile._id != p._id)) {
-      this.profile = p;
-      const posts = this._socialService.postsOfUser(p._id);
+  onProfileChanged() {
+    this.setMeta();
+    if(this.profile) {
+      const posts = this._socialService.postsOfUser(this.profile._id);
       if (posts) {
         this.posts = posts;
       } else {
-        this.initPosts()
+        this.initPosts();
       }
+    }
+  }
+
+  setMeta() {
+    if(this.profile) {
+      this._uService.setMeta(this._router.url, {
+        title: `Contents from ${this.profile.name}`,
+        description: `Check out healthcare contents from ${this.profile.name}`,
+        image: this.profile.imageFull,
+        imageType: this.profile.imageType,
+        imageAlt: this.profile.name,
+      });  
     }
   }
 
@@ -86,7 +99,6 @@ export class ProfileFeedComponent implements OnInit {
   }
 
   fetchPosts(): Promise<ISocialPost[]> {
-    console.log('fetch')
     return new Promise((resolve, reject) => {
       const params: ISocialPostSearchQuery = {
         count: this.countPerPage,

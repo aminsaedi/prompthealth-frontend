@@ -12,7 +12,7 @@ export class CardItemEyecatchComponent implements OnInit {
 
   get image() {
     if(this.post.isArticle || this.post.isEvent) {
-      return this.post.image;
+      return this.post.coverImage;
     } else {
       return null;
     }

@@ -2,13 +2,13 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
 import { GetQuery } from 'src/app/models/get-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
 import { Profile } from 'src/app/models/profile';
 import { IGetFollowingsResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
 
 @Component({
@@ -26,7 +26,6 @@ export class ProfileFollowListComponent implements OnInit {
 
   private countPerPage = 40;
 
-  private subscription: Subscription;
 
   constructor(
     private _socialService: SocialService,
@@ -35,19 +34,14 @@ export class ProfileFollowListComponent implements OnInit {
     private _location: Location,
     private _router: Router,
     private _route: ActivatedRoute,
+    private _uService: UniversalService,
   ) { }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
   ngOnInit(): void {
-    const profile = this._socialService.selectedProfile;
-    this.onProfileChanged(profile);
-
-    this.subscription = this._socialService.selectedProfileChanged().subscribe(p => {
-      this.onProfileChanged(p);
-    })
+    this._route.params.subscribe((params: {userid: string}) => {
+      this.profile = this._socialService.profileOf(params.userid);
+      this.onProfileChanged(this.profile);
+    });
   }
 
   onProfileChanged(p: Professional | Partner) {
@@ -55,6 +49,7 @@ export class ProfileFollowListComponent implements OnInit {
     if(!p) {
       this.goback();
     } else{    
+      this.setMeta();
       if (p.followings) {
         this.follows = p.followings;
         this.checkExistMore();
@@ -62,6 +57,12 @@ export class ProfileFollowListComponent implements OnInit {
         this.fetchFollowData();
       }  
     }
+  }
+
+  setMeta() {
+    this._uService.setMeta(this._router.url, {
+      title: `${this.profile.name}'s follow list | PromptHealth Community`
+    });
   }
 
   fetchFollowData() {
