@@ -9,6 +9,7 @@ import { Professional } from 'src/app/models/professional';
 import { IGetPractitionersResult } from 'src/app/models/response-data';
 import { FormItemCheckboxGroupComponent } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
 import { SearchBarComponent } from 'src/app/shared/search-bar/search-bar.component';
+import { CategoryService } from 'src/app/shared/services/category.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -17,6 +18,7 @@ import { GeoLocationService } from 'src/app/shared/services/user-location.servic
 import { expandVerticalAnimation, fadeAnimation, slideVerticalAnimation } from 'src/app/_helpers/animations';
 import { getDistanceFromLatLng } from 'src/app/_helpers/latlng-to-distance';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
+import { titleCaseOf } from 'src/app/_helpers/titlecase';
 
 @Component({
   selector: 'app-expert-finder',
@@ -90,6 +92,7 @@ export class ExpertFinderComponent implements OnInit {
     private _modalService: ModalService,
     private _qService: QuestionnaireService,
     private _toastr: ToastrService,
+    private _catService: CategoryService,
   ) { }
 
   private subscriptionGeoLocation: Subscription;
@@ -128,18 +131,13 @@ export class ExpertFinderComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this._uService.setMeta(this._router.url, {
-      title: 'Find best health care providers | PromptHealth',
-      description: 'Use our Expart Finder to find a top-rated health care provider near you or offering virtual appointment.',
-    });
-
     this.initController();
 
     this._route.params.pipe(skip(1)).subscribe(() => {
       this.initController();
     });
 
-    this._route.queryParams.subscribe((param: Params) => {
+    this._route.queryParams.subscribe((param: IExpertFinderFilterQueryParams) => {
       if(param.modal) {
         this.showFilterDistanceLabel();
       }
@@ -157,6 +155,37 @@ export class ExpertFinderComponent implements OnInit {
     });
 
     this.questionnaires = await this._qService.getProfilePractitioner('SP');
+    this.setMeta();
+  }
+
+  async setMeta() {
+    const param = this._route.snapshot.params as IExpertFinderFilterParams;
+
+    let category = null;
+    if(param.categoryId) {
+      await this._catService.getCategoryAsync(); 
+      category = this._catService.titleOf(param.categoryId).toLowerCase();
+    }
+
+    let typeOfProvider: string = null;
+    if(param.typeOfProviderId) {
+      const answer = this.questionnaires.typeOfProvider.answers.find(item => item._id == param.typeOfProviderId);
+      typeOfProvider = answer ? answer.item_text.toLowerCase() : null;
+    }
+
+    let city = param.city ? titleCaseOf(param.city) : null;
+    
+    let specialist = category ? `${category} specialists` : typeOfProvider ? `${typeOfProvider}` : 'health care providers';
+    let area = city ? city : 'Canada';
+
+
+    let desc = 'Use our Expert Finder to find a top-rated ';
+    desc += 
+
+    this._uService.setMeta(this._router.url, {
+      title: `Find best ${specialist} in ${area} | PromptHealth`,
+      description: `Use our Expart Finder to find a top-rated ${specialist} in ${area} or offering virtual appointment.`,
+    });  
 
   }
 

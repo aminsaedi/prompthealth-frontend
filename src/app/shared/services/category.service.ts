@@ -30,6 +30,17 @@ export class CategoryService {
     return img2
   }
 
+  titleOf(id: string): string {
+    let title = '';
+    if(this.categoryList) {
+      const cat: Category = this.categoryList.find(_cat => id == _cat._id);
+      if(cat) {
+        title = cat.item_text;
+      }
+    }
+    return title;
+  }
+
   getCategoryAsync(): Promise<Category[]>{
     return new Promise((resolve, reject) => {
       if(!this.categoryList){

@@ -49,7 +49,7 @@ export class AboutPractitionerComponent implements OnInit {
 
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
-      title: 'Reach more new patients grow your practice with PromptHealth',
+      title: 'Reach more new patients and grow your practice with PromptHealth',
       description: 'PromptHealth helps providers reach more new patients for in-person visits, video visits or both.',
     });
 

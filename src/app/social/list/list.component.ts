@@ -96,7 +96,7 @@ export class ListComponent implements OnInit {
     } 
 
     this._uService.setMeta(this._router.url, {
-      title: `${type}${topic ? (' of ' + topic) : ''} | PromptHealth Community`,
+      title: `PromptHealth Community | ${type == 'feed' ? 'Home' : (type + 's')}${topic ? (': collection of ' + topic) : ''}`,
       description: desc,
     });
   }
