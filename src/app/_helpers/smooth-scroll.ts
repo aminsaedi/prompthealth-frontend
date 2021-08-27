@@ -30,7 +30,6 @@ function SVS_B(e, sc, eAmt, start) {
 
 export function smoothWindowScrollTo(to: number) {
   if(!window) {
-    console.log('window is not defined. do not scroll');
     return;
   } 
 
@@ -43,7 +42,6 @@ export function smoothWindowScrollTo(to: number) {
   const move = (to - currentPosition);
   const moveAbs = Math.abs(move);
   if(moveAbs < moveMin) {
-    console.log('too small to scroll. do not scroll');
     return;
   }
 

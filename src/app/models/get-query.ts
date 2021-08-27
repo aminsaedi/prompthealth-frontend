@@ -11,7 +11,7 @@ export class GetQuery {
     protected data: IGetQuery = {},
   ) {}
 
-  toJSON() {
+  toJson() {
     const json: IGetQuery = {
       count: this.count,
       page: this.page,
@@ -20,10 +20,13 @@ export class GetQuery {
   }
 
   toQueryParamsString() {
-    let str = '?';
-    str += `count+${this.count}`;
-    str += `page+${this.page}`;
-
-    return str;
+    const paramsArray = [];
+    const data = this.toJson();
+    
+    for(let key in data) {
+      let val = data[key];
+      paramsArray.push(key + '=' + val);
+    }
+    return '?' + paramsArray.join('&');
   }
 }

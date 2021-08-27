@@ -54,43 +54,51 @@ export class SearchBarComponent implements OnInit {
     this.f.searchByLocation.setValue(val);
   }
 
-  findClosestLocation(s: string): string {
-    if(!s || s.length == 0) {
-      return null;
-    } else {
-      const regex = new RegExp('^' + s.toLowerCase());
-      let locationId: string;
-      for(let state of this._cities) {
-        for(let city of state.subitems) {
-          if(city.label.toLowerCase().match(regex)) {
-            locationId = city.id;
-            break;
-          }  
-        }
-        if(locationId) {
-          break;
-        }
-      }
-      return locationId;    
-    }
-  }
+  // findClosestLocation(s: string): string {
+  //   if(!s || s.length == 0) {
+  //     return null;
+  //   } else {
+  //     const regex = new RegExp('^' + s.toLowerCase());
+  //     let locationId: string;
+  //     for(let state of this._cities) {
+  //       for(let city of state.subitems) {
+  //         if(city.label.toLowerCase().match(regex)) {
+  //           locationId = city.id;
+  //           break;
+  //         }  
+  //       }
+  //       if(locationId) {
+  //         break;
+  //       }
+  //     }
+  //     return locationId;    
+  //   }
+  // }
 
   _onSubmit() {
-    const valSituation = this.f.searchBySituation.value;
     const dataLocation = this.searchLocation.dataSelected;
-    const valLocation = dataLocation ? dataLocation.id : this.f.searchByLocation.value;
+    const valArea = dataLocation ? dataLocation.id : null;
+    const valLocation = dataLocation ? null : this.f.searchByLocation.value;
+    const valSituation = this.f.searchBySituation.value;
+
     this.onSubmit.emit({
       searchBySituation: valSituation || '',
-      searchByLocation: valLocation,
+      searchByLocation: valLocation || '',
+      searchByArea: valArea || '',
     });
 
     if(this._option.navigateToListing) {
       let route = ["/practitioners"];
-      if(!!valLocation){ 
-        route = route.concat(['area', valLocation]);
+      if(!!dataLocation){ 
+        route = route.concat(['area', dataLocation.id]);
       }
-      let params: NavigationExtras;
-      if(valSituation && valSituation.length > 0) { params = {queryParams: {keyword: valSituation}}; }
+
+      let params: NavigationExtras = {
+        queryParams: {
+          ...(valSituation && valSituation.length > 0) && {keyword: valSituation},
+          ...(valLocation && valLocation.length > 0) && {keyloc: valLocation},
+        }
+      };
       this._router.navigate(route, params);
     }
   }
@@ -100,6 +108,7 @@ export class SearchBarComponent implements OnInit {
 interface SearchKeywords {
   searchBySituation: string;
   searchByLocation: string;
+  searchByArea: string;
 }
 
 interface IOptionSearchBar {

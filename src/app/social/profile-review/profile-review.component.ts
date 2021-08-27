@@ -1,7 +1,9 @@
 import { MapsAPILoader } from '@agm/core';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Professional } from 'src/app/models/professional';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
 
 @Component({
@@ -11,13 +13,16 @@ import { SocialService } from '../social.service';
 })
 export class ProfileReviewComponent implements OnInit {
 
-  public profile: Professional;
-  public googleReviews: google.maps.places.PlaceResult;
+  get profile() { return this._socialService.selectedProfile; }
+  get googleReviews() { return this.profile && this.profile.detailByGoogle ? this.profile.detailByGoogle : null };
+
   private subscription: Subscription;
   
   constructor(
     private _socialService: SocialService,
     private _map: MapsAPILoader,
+    private _uService: UniversalService,
+    private _router: Router,
   ) { }
 
 
@@ -26,27 +31,32 @@ export class ProfileReviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const profile = this._socialService.selectedProfile;
-    this.onProfileChanged(profile);
-
-    this.subscription = this._socialService.selectedProfileChanged().subscribe(p => {
-      this.onProfileChanged(p);
+    this.onProfileChanged();
+    this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
+      this.onProfileChanged();
     });
   }
 
+  onProfileChanged() {
+    this.setMeta();
 
-  onProfileChanged(p: Professional) {
-    this.profile = p;
-    if(p && p.detailByGoogle) {
-      this.googleReviews = p.detailByGoogle;
-    }
-
-    if(p && p.isConnectedToGoogle && !p.detailByGoogle && !p.triedFetchingGoogleReviews)  {
+    if(this.profile && this.profile.isConnectedToGoogle && !this.profile.detailByGoogle && !this.profile.triedFetchingGoogleReviews)  {
       this._map.load().then(() => {
-        p.setGoogleReviews().then(result => {
-          this.googleReviews = result;
-        });        
+        this.profile.setGoogleReviews();
       });
     }
   }
+
+  setMeta() {
+    if(this.profile) {
+      this._uService.setMeta(this._router.url, {
+        title: `${this.profile.name} review`,
+        description: `Check out how people evaluate ${this.profile.name}`,
+        image: this.profile.imageFull,
+        imageType: this.profile.imageType,
+        imageAlt: this.profile.name,
+      });  
+    }
+  }
+
 }

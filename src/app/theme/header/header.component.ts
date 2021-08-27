@@ -26,8 +26,6 @@ export class HeaderComponent implements OnInit {
   get userRole() { return this.user ? this.user.role : null; }
 
   get userId() { return this.user ? this.user._id : ''; }
-  get userName() { return this.user ? this.user.name : 'No name' }
-  
 
   constructor(
     private _router: Router,

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
 import Quill from 'quill';
+import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
@@ -12,6 +13,7 @@ import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-dateti
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString, formatStringToDate } from 'src/app/_helpers/date-formatter';
 import { environment } from 'src/environments/environment';
 import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
@@ -37,6 +39,7 @@ export class EditorComponent implements OnInit {
 
   public imagePreview: string | ArrayBuffer;
 
+  public description: string;
   public formCheckboxOnlineEvent: FormControl;
   public editorType: ISocialPost['contentType'] = null;
 
@@ -50,6 +53,7 @@ export class EditorComponent implements OnInit {
   public minDateTimeEventEnd: DateTimeData;
 
   private _s3 = environment.config.AWS_S3;
+  private subscriptionLoginStatus: Subscription;
 
   // @ViewChild('inputMedia') private inputMedia: ElementRef;
   @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
@@ -63,20 +67,32 @@ export class EditorComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _headerService: HeaderStatusService,
     private _toastr: ToastrService,
+    private _uService: UniversalService,
   ) { }
 
   ngOnDestroy() {
     this._editorService.unlockEditor();
     this._headerService.showHeader();
+
+    if(this.subscriptionLoginStatus) {
+      this.subscriptionLoginStatus.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
+    this.observeLoginStatus();
+
     this._route.data.subscribe((data: {type: string}) => {
+      this._uService.setMeta(this._router.url, {
+        title: 'Editor | PromptHealth Community'
+      });
+
       switch(data.type) {
         case 'article': this.editorType = 'ARTICLE'; break;
         case 'event': this.editorType = 'EVENT'; break;
         default: this.editorType = null; 
       }
+
       this._editorService.init(
         this.editorType, 
         this.user,
@@ -101,6 +117,15 @@ export class EditorComponent implements OnInit {
 
     this.formCheckboxOnlineEvent = new FormControl(true);
 
+  }
+
+  observeLoginStatus() {
+    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(res => {
+      if(res == 'notLoggedIn') {
+        this._editorService.dispose();
+        this._router.navigate(['/community/feed'], {replaceUrl: true});
+      }
+    });
   }
 
   onClickCancel() {
@@ -170,9 +195,15 @@ export class EditorComponent implements OnInit {
     this.contentEditor = e;
   }
 
-  async onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
-    if('html' in e) {
-      this.f.description.setValue(e.html);
+  onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
+    if('html' in e && e.html) {
+      const regExSpotifyEmbedded = /<iframe(.*)src="https:\/\/open\.spotify\.com\/(track|playlist|show|episode)/;
+      const matchSpotify = e.html.match(regExSpotifyEmbedded);
+
+      if(matchSpotify) {
+        const replaced = `<iframe${matchSpotify[1]}src="https://open.spotify.com/embed/${matchSpotify[2]}`;
+        this.f.description.setValue(e.html.replace(regExSpotifyEmbedded, replaced));
+      }
     }
   }
 
@@ -257,29 +288,27 @@ export class EditorComponent implements OnInit {
     data.status = status;
 
     const payload: ISaveQuery = new SaveQuery(data).toJson();
-    console.log('===PAYLOAD====')
-    console.log(payload);
 
     // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
     const req =  this._sharedService.post(payload, 'blog/create');
 
 
     req.subscribe((res: any) => {
+      this.isUploading = false;
       if(res.statusCode === 200) {
         this.isSubmitted = false;
         this._toastr.success('Updated successfully');
         this._editorService.resetForm();
+        this.formItemService.deselectAll();
         this.formCheckboxOnlineEvent.setValue(true);
         this._editorService.unlockEditor();
-        console.log(res);
       } else {
         this._toastr.error(res.message);
       }
     }, (err) => {
       console.log(err);
-      this._toastr.error(err);
-    }, () => {
       this.isUploading = false;
+      this._toastr.error(err);
     });
   }
 

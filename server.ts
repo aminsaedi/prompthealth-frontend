@@ -60,6 +60,7 @@ export function app() {
   // app.get('/api/**', (req, res) => { });
   // Serve static files from /browser
   server.get('/bootstrap.min.css.map', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary not to try SSR because this file doesn't exist. */
+  server.get('/sockjs-node/iframe.html', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary not to try SSR because this file doesn't exist. */
   server.get('*.*', express.static(distFolder, {
     maxAge: '1y'
   }));
@@ -72,6 +73,12 @@ export function app() {
   server.use('/unsubscribe',           (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/404',                   (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/thankyou',              (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  
+  server.use('/community/create',      (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/community/followings',  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/community/followers',   (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/community/notification',(req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+
   
   // create sitemap dynamically (SSR)
   server.use('/sitemap', routerSitemap);
@@ -86,7 +93,7 @@ export function app() {
           console.log('SSR error. something went wrong: ');
           console.log(err)
         }
-        // showMeta(req.originalUrl, html);
+        showMeta(req.originalUrl, html);
         res.send(html);
       }
     );

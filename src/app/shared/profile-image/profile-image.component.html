@@ -1,5 +1,6 @@
 <div 
-class="profile-image-container" 
+class="profile-image-container"
+[ngClass]="(image ? '' : _option.dummyBgClass)" 
 [ngStyle]="{width: size + 'px', borderRadius: radius + 'px'}"
 >
   <img 

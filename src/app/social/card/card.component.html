@@ -10,7 +10,7 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
 
   <ng-container *ngIf="_option.showLinkToDetail">
     <a 
-    [routerLink]="['/community/profile', post.authorId, 'post', post._id]" 
+    [routerLink]="[post.linkToPost]" 
     class="text-body"
     (click)="markCurrentPosition()"
     >

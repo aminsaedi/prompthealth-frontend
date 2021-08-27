@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IGetSocialContentsResult } from 'src/app/models/response-data';
@@ -10,6 +10,8 @@ import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animati
 import { environment } from 'src/environments/environment';
 import { SocialPostTaxonomyType, SocialService } from '../social.service';
 import { ISocialPost } from 'src/app/models/social-post';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { CategoryService } from 'src/app/shared/services/category.service';
 
 @Component({
   selector: 'app-list',
@@ -51,10 +53,13 @@ export class ListComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
     private _socialService: SocialService,
     private _sharedService: SharedService,
     private _profileService: ProfileManagementService,
     private _changeDetector: ChangeDetectorRef,
+    private _uService: UniversalService,
+    private _catService: CategoryService,
   ) { }
 
   ngOnDestroy() {
@@ -67,14 +72,31 @@ export class ListComponent implements OnInit {
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
       this.selectedTopicId = param.topicId;
+      this.setMeta();
+      this.checkLoginStatusAndInitPost()
+    });
+  }
 
-      if(this.selectedTaxonomyType == 'feed') {
-        this.checkLoginStatusAndInitPost()
-      }
-      else {
-        console.log('start init post for article / media / event');
-        this.initPosts();
-      }
+  async setMeta() {
+    const type = this.selectedTaxonomyType.charAt(0).toUpperCase() + this.selectedTaxonomyType.substr(1).toLowerCase();
+    let topic = null;
+    if(this.selectedTopicId) {
+      const topics = await this._catService.getCategoryAsync();
+      const topicData = topics.find(item => item._id == this.selectedTopicId);
+      topic = topicData.item_text;
+    }
+
+    let desc: string;
+    switch(this.selectedTaxonomyType) {
+      case 'feed': desc = 'See what\'s happening about healthcare around the world.'; break;
+      case 'article': desc = 'Learn about healthcare topics and improve your health with us!'; break;
+      case 'event': desc = 'Find your favorite healthcare event and join now!'; break;
+      case 'media': desc = 'Find your favorite notes from best practitioners with voice, photos and media'; break;
+    } 
+
+    this._uService.setMeta(this._router.url, {
+      title: `${type}${topic ? (' of ' + topic) : ''} | PromptHealth Community`,
+      description: desc,
     });
   }
 
@@ -120,14 +142,14 @@ export class ListComponent implements OnInit {
 
   disposeCacheIfNeeded() {
     const meta = this._socialService.metadataOf(this.selectedTaxonomyType);
-    if(this.selectedTaxonomyType == 'feed') {
-      const userId = this.user ? this.user._id : null;
-      const userIdInMeta = meta && meta.userId ? meta.userId : null;
-      const userIdMatched = !!(userId == userIdInMeta);
-      if(userId != userIdInMeta) {
-        this._socialService.disposeCacheOf('feed');
-      }
-    }
+    // if(this.selectedTaxonomyType == 'feed') {
+    //   const userId = this.user ? this.user._id : null;
+    //   const userIdInMeta = meta && meta.userId ? meta.userId : null;
+    //   const userIdMatched = !!(userId == userIdInMeta);
+    //   if(userId != userIdInMeta) {
+    //     this._socialService.disposeCacheOf('feed');
+    //   }
+    // }
 
     const topicId = this.selectedTopicId ? this.selectedTopicId : null;
     const topicIdInMeta = meta && meta.topic ? meta.topic : null;
@@ -145,19 +167,16 @@ export class ListComponent implements OnInit {
         ... (this.selectedTopicId) && {tags: [this.selectedTopicId]},
         ... (this.posts && this.posts.length > 0) && {
           page: Math.ceil(this.posts.length / this.countPerPage) + 1,
-          timestamp: this.posts[0].createdAt,
+          timestamp: this.posts[this.posts.length - 1].createdAt,
         },
       }
 
       let req: Observable<any>;
-      if (tax == 'feed' && this.user) {
+      if (tax == 'feed') {
         const query = new SocialPostSearchQuery(params);
-        console.log(query.toQueryParams());
         req = this._sharedService.get('note/get-feed' + query.toQueryParams());
       } else {
-        if(tax == 'feed') {
-          params.authorId = environment.config.idSA;
-        } else if (tax == 'article') {
+        if (tax == 'article') {
           params.contentType = 'ARTICLE';
         } else if(tax == 'media') {
           params.hasMedia = true;
@@ -175,8 +194,7 @@ export class ListComponent implements OnInit {
         }
 
         const query = new SocialPostSearchQuery(params);
-        console.log(query.toQueryParams());
-        req = this._sharedService.getNoAuth('note/filter' + query.toQueryParams());
+        req = this._sharedService.get('note/filter' + query.toQueryParams());
       } 
 
       this.isLoading = true;
@@ -196,7 +214,7 @@ export class ListComponent implements OnInit {
           resolve(posts);
         } else {
           this.isMorePosts = false;
-          reject(res.message)
+          reject(res.message);
         }
       }, error => {
         this.isLoading = false;
@@ -208,7 +226,7 @@ export class ListComponent implements OnInit {
   }
 
   onPublishNewPost(data: ISocialPost) {
-    data.authorId = this._profileService.user;
+    data.author = this._profileService.user;
 
     this.newPosts.unshift(new SocialNote(data));
   }

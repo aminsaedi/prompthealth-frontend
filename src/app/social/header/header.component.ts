@@ -2,19 +2,28 @@ import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { Professional } from 'src/app/models/professional';
 import { Profile } from 'src/app/models/profile';
+import { ISearchResult } from 'src/app/models/response-data';
+import { SearchQuery } from 'src/app/models/search-query';
+import { SocialArticle } from 'src/app/models/social-article';
+import { SocialEvent } from 'src/app/models/social-event';
+import { SocialNote } from 'src/app/models/social-note';
+import { ISocialPost, SocialPostBase } from 'src/app/models/social-post';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { fadeAnimation, slideHorizontalReverseAnimation, slideVerticalReverseAnimation } from 'src/app/_helpers/animations';
+import { expandVerticalAnimation, fadeAnimation, slideHorizontalReverseAnimation, slideVerticalReverseAnimation } from 'src/app/_helpers/animations';
 
 @Component({
   selector: 'header-social',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  animations: [slideHorizontalReverseAnimation, slideVerticalReverseAnimation, fadeAnimation],
+  animations: [slideHorizontalReverseAnimation, slideVerticalReverseAnimation, fadeAnimation, expandVerticalAnimation],
 })
 export class HeaderComponent implements OnInit {
 
@@ -24,11 +33,14 @@ export class HeaderComponent implements OnInit {
   public isMenuSearchShown: boolean = false;
   public isNotificationSummaryShown: boolean = false;
 
+  public isSearchLoading = false;
+  searchResult: {users: Professional[], blogs: ISocialPost[]};
+
   public formSearch: FormControl;
 
   get topics() { return this._catService.categoryList; }
   get userImage() { return this.user ? this.user.profileImage : ''; }
-  get userName() { return this.user ? this.user.name : '(No Name)'; }
+  get userName() { return this.user ? this.user.nickname : ''; }
   get user(): Profile { return this._profileService.profile; }
 
   get sizeS(): boolean { return (!window || window.innerWidth < 768); }
@@ -43,6 +55,7 @@ export class HeaderComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _modalService: ModalService,
     private _uService: UniversalService,
+    private _sharedService: SharedService,
   ) { }
 
   isActiveTaxonomy(type: string) {
@@ -56,6 +69,9 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.formSearch = new FormControl();
+    this.formSearch.valueChanges.subscribe((val) => {
+      this.onSearchValueChanged(val);
+    });
     
     this._headerService.observeHeaderStatus().subscribe(([key, val]: [string, any]) => {
       this[key] = val;
@@ -84,7 +100,6 @@ export class HeaderComponent implements OnInit {
     queryParams.menu = id;
     this._router.navigate([path], {queryParams: queryParams});
   }
-
 
   onClickProfileIcon() {
     if(this.user) {
@@ -123,4 +138,54 @@ export class HeaderComponent implements OnInit {
     const taxonomyType = match ? match[1] : 'feed';
     this._router.navigate(['/community', taxonomyType, topic._id], {replaceUrl: true});
   }
+
+  resetSearch() {
+    this.formSearch.setValue('');
+  }
+
+  private timer: any;
+  onSearchValueChanged(keyword: string) {
+    if(this.timer) {
+      clearTimeout(this.timer);
+    }
+
+    this.timer = setTimeout(() => {
+      if(keyword.length <= 2) { 
+        this.searchResult = null;
+      } else {
+        this.search(keyword);
+      }
+    }, 500)
+  }
+
+  search(keyword: string) {
+    const query = new SearchQuery({count: 3});
+    this.isSearchLoading = true;
+    this._sharedService.getNoAuth(
+      'common/search/' + keyword + query.toQueryParams()
+    ).subscribe((res: ISearchResult) => {
+      if(res.statusCode == 200) {
+        this.searchResult = {users: [], blogs: []};
+        if(res.data.users && res.data.users.length > 0) {
+          this.searchResult.users = res.data.users.map(user=> new Professional(user._id, user));
+        }
+        if(res.data.blogs && res.data.blogs.length > 0) {
+          this.searchResult.blogs = res.data.blogs.map(blog => 
+            blog.contentType == 'NOTE' ? new SocialNote(blog) : 
+            blog.contentType == 'ARTICLE' ? new SocialArticle(blog) :
+            blog.contentType == 'EVENT' ? new SocialEvent(blog) :
+            new SocialPostBase(blog)
+          );
+        }
+      } else {
+        this.searchResult = null;
+      }
+    }, error => {
+      console.log(error);
+      this.searchResult = null;
+    }, () => {
+      this.isSearchLoading = null;
+    });  
+  }
+  
 }

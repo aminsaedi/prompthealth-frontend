@@ -4,6 +4,11 @@ import { SharedService } from '../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
 import { UniversalService } from "src/app/shared/services/universal.service";
 import { Router } from "@angular/router";
+import { Professional } from "src/app/models/professional";
+import { ProfileManagementService } from "src/app/dashboard/profileManagement/profile-management.service";
+import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from "src/app/shared/services/questionnaire.service";
+import { IOptionCheckboxGroup } from "src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component";
+import { CategoryService } from "src/app/shared/services/category.service";
 
 @Component({
   selector: "app-listingcompare",
@@ -12,6 +17,22 @@ import { Router } from "@angular/router";
 })
 
 export class ListingcompareComponent implements OnInit {
+  get user() { return this._profileService.profile; }
+  get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
+
+  public professionals: Professional[];
+
+  public optionNestedFormCheckboxGroup: IOptionCheckboxGroup = {
+    showBlockWithZeroMarginWhenDisabled: true, 
+    showInlineSubWhenDisabled: true,
+    removeIndentSub: true, 
+    fontSmallSub: true
+  }
+
+  public optionFormCheckboxGroup: IOptionCheckboxGroup = {
+    showInlineWhenDisabled: true,
+    inlineSeparator: ', ',
+  }
 
   compareIds;
   languageQuestion;
@@ -19,7 +40,6 @@ export class ListingcompareComponent implements OnInit {
   serviceOffering;
   categoryList;
 
-  public data = [];
   loggedInUser: string;
   public AWS_S3='';
 
@@ -28,10 +48,14 @@ export class ListingcompareComponent implements OnInit {
     private behaviorService: BehaviorService,
     private sharedService: SharedService,
     private _uService: UniversalService,
+    private _profileService: ProfileManagementService,
+    private _qService: QuestionnaireService,
   ) { }
 
   ngOnInit(): void {
     this.loggedInUser = localStorage.getItem('loginID');
+    this.professionals = this.sharedService.getCompareList();
+
     this.getProfileQuestion();
     this.AWS_S3 = environment.config.AWS_S3
     // this.data = this.compareIds[i];
@@ -47,7 +71,7 @@ export class ListingcompareComponent implements OnInit {
         this.compareIds = this.behaviorService.getCopmareIds().value;
 
         for (var i = 0; i < this.compareIds.length; ++i) {
-          if (this.compareIds[i]) this.data.push(this.compareIds[i]);
+          // if (this.compareIds[i]) this.data.push(this.compareIds[i]);
         }
 
         res.data.forEach(element => {

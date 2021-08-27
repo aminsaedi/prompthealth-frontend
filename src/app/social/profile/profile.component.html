@@ -1,9 +1,9 @@
 <div class="container">
-  <div class="row">
+  <div class="row align-items-start">
     <div class="col-12 col-lg-1">
       <button 
       class="btn btn-text-body small px-0 pt-md-0"
-      (click)="onClickBack()"
+      (click)="goback()"
       >
         <i iconPh="arrow-left"></i>
         <span>Back</span>
@@ -13,17 +13,18 @@
       <section class="position-relative rounded-8p bg-white body1 text-body overflow-hidden">
         <div class="position-relative">
           <div class="image-container-33pc">
-            <img *ngIf="profile" [src]="profile?.banner" alt="">
+            <img *ngIf="profile" [src]="profile?.coverImage" alt="">
           </div>
         </div>
       
-        <div class="px-10p px-lg-30p pt-15p">
-          <div class="profile-header mb-30p">
+        <div class="px-20p px-lg-30p pt-15p">
+          <div class="profile-header">
             <div style="margin-top: -45px" class="grid-1">
               <profile-image
               [size]="90"
               [radius]="25"
-              [image]="profile?.image"
+              [image]="profile?.profileImage"
+              [option]="{dummyBgClass: 'bg-white'}"
               ></profile-image>
             </div>
       
@@ -67,11 +68,26 @@
               </button>
             </div>
           </div>
-      
-          
+
+          <div 
+          *ngIf="profile"
+          class="d-flex mt-lg-30p"
+          >
+            <a
+            class="text-body"
+            [routerLink]="['/community/profile', profile._id,  'followings']"
+            >
+              <div class="subtitle2">Following</div>
+              <div class="h5">{{profile.numFollowing}}</div>
+            </a>
+            <div class="ml-20p text-body">
+              <div class="subtitle2">Followed</div>
+              <div class="h5">{{profile.numFollower}}</div>
+            </div>
+          </div>
         </div>
       
-        <div class="overflow-auto mt-20p px-20p px-lg-30p">
+        <div class="overflow-auto mt-10p px-20p px-lg-30p">
           <ul class="d-flex profile-menu list-unstyled mb-0">
             <li 
             *ngFor="let item of profileMenus; let i = index;"
@@ -99,7 +115,10 @@
       </section>
     </div>
 
-    <div class="col-12 col-md-5 col-lg-4 mt-20p mt-md-0p">
+    <div 
+    class="col-12 col-md-5 col-lg-4 mt-20p mt-md-0p sticky-top"
+    style="top: 80px;"
+    >
       <section
       *ngIf="profile"
       class="bg-white rounded-12p overflow-hidden"
@@ -134,6 +153,16 @@
           >
             <i iconPh="smartphone" class="text-placeholder mr-5p large"></i>
             <p class="mb-0">{{profile.phone}}</p>
+          </div>
+
+          <div 
+          *ngIf="profile.emailToDisplay" 
+          class="mb-25p d-flex"
+          >
+            <i iconPh="email" class="text-placeholder mr-5p large"></i>
+            <p class="mb-0">
+              <a [href]="'mailto:' + profile.emailToDisplay">{{profile.emailToDisplay}}</a>
+            </p>
           </div>
                     
           <div 

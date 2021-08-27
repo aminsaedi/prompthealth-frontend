@@ -16,6 +16,7 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { SocialService } from '../social.service';
@@ -33,6 +34,7 @@ export class ProfileComponent implements OnInit {
   get f() { return this.formBooking.controls; }
   get isProfileMyself() { return this.user && this.user._id == this.profileId; }
   get user() { return this._profileService.profile; }
+  get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
 
   linkToChildRoute(link: string) {
     const route = ['/community/profile', this.profileId];
@@ -48,8 +50,6 @@ export class ProfileComponent implements OnInit {
   public profileMenus: IProfileMenuItem[] = [];
   
   public isFollowing = false;
-
-  public questionnaires: QuestionnaireMapProfilePractitioner;
 
   private formBooking: FormGroup;
   public submittedFormBooking = false;
@@ -74,6 +74,7 @@ export class ProfileComponent implements OnInit {
     private _modalService: ModalService,
     private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
+    private _uService: UniversalService,
   ) { }
 
   ngOnDestroy() {
@@ -105,12 +106,6 @@ export class ProfileComponent implements OnInit {
       this.checkFollowStatus();
       this.initProfile();
     });
-
-    // const query = new GetQuery({count: 50});
-    // const path = 'social/get-followeds' + query.toQueryParamsString();
-    // this._sharedService.get(path).subscribe((res: IGetFollowingsResult) => {
-    //   console.log(res);
-    // });
   }
 
   initProfile() {
@@ -118,9 +113,9 @@ export class ProfileComponent implements OnInit {
     const profile = this._socialService.profileOf(this.profileId);
     if(profile) {
       this.profile = profile;
-      this.profileMenus = this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
-
+      this.setProfileMenu();
       this._socialService.setProfile(this.profile);
+      this.setMetaForAbout();
     } else {
       const promiseAll: [Promise<Professional>, Promise<QuestionnaireMapProfilePractitioner>] = [
         this.fetchProfile(this.profileId),
@@ -129,14 +124,29 @@ export class ProfileComponent implements OnInit {
 
       Promise.all(promiseAll).then((vals) => {
         this.profile = vals[0];
-        this.questionnaires = vals[1];
-        this.profileMenus = this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
-
+        this.setProfileMenu();
         this._socialService.setProfile(this.profile);
       }, error => {
+        this._router.navigate(['404'], {replaceUrl: true});
         this._toastr.error('Something went wrong.');
       });
     }
+  }
+
+  setMetaForAbout() {
+    const url = this._router.url;
+    if(!url.match('service|feed|review')) {
+      const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
+      const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
+      this._uService.setMeta(this._router.url, {
+        title: `${this.profile.name} in ${this.profile.city}, ${this.profile.state} | PromptHealth Community`,
+        description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
+      });
+    }
+  }
+
+  setProfileMenu() {
+    this.profileMenus = this.profile.isSA ? profileMenusForPH : this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
   }
 
   getQuestionnaire(type: IUserDetail['roles'] = 'SP'): Promise<QuestionnaireMapProfilePractitioner> {
@@ -154,7 +164,6 @@ export class ProfileComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const path = `user/get-profile/${id}`;
       this._sharedService.getNoAuth(path).subscribe((res: IGetProfileResult) => {
-        console.log(res.data)
         if(res.statusCode === 200) {
           const p = res.data;
           let professional: Professional | Partner;
@@ -176,9 +185,9 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  onClickBack() {
+  goback() {
     const state = this._location.getState() as any;
-    if(state.navigationId == 1) {
+    if(state && state.navigationId == 1) {
       this._router.navigate(['/community/feed']);
     } else {
       this._location.back();
@@ -227,6 +236,8 @@ export class ProfileComponent implements OnInit {
       this._sharedService.post(data, 'social/follow').subscribe((res: IFollowResult) => {
         if(res.statusCode == 200) {
           this.isFollowing = true;
+          this.user.setFollowing(this.profile.decode(), true);
+          this.profile.countupFollower();
           resolve(true);
         } else {
           reject(false);
@@ -243,6 +254,8 @@ export class ProfileComponent implements OnInit {
       this._sharedService.deleteContent('social/follow/' + this.profileId).subscribe((res: IUnfollowResult) => {
         if (res.statusCode == 200) {
           this.isFollowing = false;
+          this.user.removeFollowing(this.profile.decode(), true);
+          this.profile.countdownFollower();
           resolve(true);
         } else {
           reject(false);
@@ -340,6 +353,11 @@ const profileMenusForCompany: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
   {id: 'promotion', label: 'Discounts', relativeLink: 'promotion', },
   {id: 'review', label: 'Recommendation', relativeLink: 'review', },
+];
+
+const profileMenusForPH: IProfileMenuItem[] = [
+  {id: 'about',   label: 'About',   relativeLink: null, },
+  {id: 'feed',    label: 'Feed',    relativeLink: 'feed'},
 ];
 
 interface IProfileMenuItem {

@@ -22,11 +22,14 @@ export class SitemapComponent implements OnInit {
 
   ngAfterViewInit() {
     this._route.fragment.pipe( first() ).subscribe(fragment => {
-      if(fragment == 'type-of-provider' && this.typeOfProvider && this.typeOfProvider.nativeElement) {
-        const el: HTMLAnchorElement = this.typeOfProvider.nativeElement;
-        const elTop = el.getBoundingClientRect().top;
-        smoothWindowScrollTo(elTop);
-      }
+      setTimeout(() => {
+        if(fragment == 'type-of-provider' && this.typeOfProvider && this.typeOfProvider.nativeElement) {
+          const el: HTMLAnchorElement = this.typeOfProvider.nativeElement;
+          const elTop = el.getBoundingClientRect().top;
+          console.log(elTop)
+          smoothWindowScrollTo(elTop);
+        }          
+      }, 100);
     });
 
   }

@@ -21,6 +21,11 @@ export class EditorService {
 
   constructor() { }
 
+  dispose() {
+    this.resetForm();
+    this.unlockEditor();
+  }
+
   lockEditor() {
     this.editorLocked = true;
   }

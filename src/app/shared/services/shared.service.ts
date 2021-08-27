@@ -26,6 +26,8 @@ import { IDefaultPlan } from 'src/app/models/default-plan';
 import { IAddonPlan } from 'src/app/models/addon-plan';
 import { ICouponData } from 'src/app/models/coupon-data';
 import { ToastrService } from 'ngx-toastr';
+import { Professional } from 'src/app/models/professional';
+import { SocialService } from 'src/app/social/social.service';
 
 declare var jQuery: any;
 
@@ -39,7 +41,7 @@ export class User {
 export class SharedService {
   rootUrl: string = environment.config.API_URL;
   // baseUrl: string = environment.config.API_URL;
-  type: any;
+  // type: any;
   personalMatch;
   constructor(
     private _router: Router,
@@ -50,15 +52,17 @@ export class SharedService {
     private _stripeService: StripeService,
     private _postManager: PostManagerService,
     private _profileManager: ProfileManagementService,
+    private _socialManager: SocialService,
     private _toastr: ToastrService,
 
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
-    this.type = this._uService.localStorage.getItem('roles');
+    // this.type = this._uService.localStorage.getItem('roles');
   }
 
 
   logout(navigate: boolean = true) {
+    this._socialManager.dispose();
     this._postManager.dispose();
     this._profileManager.dispose();
 
@@ -80,7 +84,8 @@ export class SharedService {
   }
 
   get(path, setParams = {}) {
-    if (!this.type) {
+    const token = this._uService.localStorage.getItem('token');
+    if (!token) {
       const url = this.rootUrl + path;
       return this.http.get(url);
     } else {
@@ -387,6 +392,14 @@ export class SharedService {
     return this.personalMatch;
   }
   clearPersonalMatch() { this.personalMatch = null; }
+
+  private compareList: Professional[] = [];
+  setCompareList(compareList: Professional[] = []) {
+    this.compareList = compareList;
+  }
+  getCompareList() {
+    return this.compareList;
+  }
 
   /*This function is use to get access token from cookie. */
   getAccessToken(): string {

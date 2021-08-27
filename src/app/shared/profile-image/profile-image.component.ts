@@ -27,12 +27,14 @@ interface IProfileImageOption {
   dummyIcon?: IconName;
   dummySize?: number;
   dummyClass?: string;
+  dummyBgClass?: string;
 }
 
 class ProfileImageOption implements IProfileImageOption{
   get dummyIcon() { return this.data.dummyIcon || 'user'; }
   get dummySize() { return this.data.dummySize || 22; }
   get dummyClass() { return this.data.dummyClass || 'text-label'}
+  get dummyBgClass() { return this.data.dummyBgClass || null; }
 
   constructor(private data: IProfileImageOption){}
 }

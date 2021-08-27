@@ -4,8 +4,6 @@ export interface ISocialPostSearchQuery {
   sortBy?: string; /** default: createdAt*/
   order?: 'desc' | 'asc';
   count?: number; /** default: 20 */
-  page?: number; /** start with 1 */
-  // frontend?: string; /** if 1, get only data which status is true */
   tags?: string[]; /** object id list for tag (greedy) */
   timestamp?: string|Date; /** search contents created before the timestamp */
   eventTimeRange?: (string|Date)[]; /** [from, to?] search events which START in this time range*/
@@ -22,8 +20,6 @@ export class SocialPostSearchQuery implements ISocialPostSearchQuery {
   get sortBy() { return this.data.sortBy || null; }
   get order() { return this.data.order || null; }
   get count() { return this.data.count || 20; }
-  get page() { return this.data.page || null; }
-  // get frontend() { return this.data.frontend || '1'; }
   get tags() { return this.data.tags || null; }
   get hasMedia() { return this.data.hasMedia || null; }
   get hasImage() { return this.data.hasImage || null; }
@@ -35,11 +31,9 @@ export class SocialPostSearchQuery implements ISocialPostSearchQuery {
 
   toJson() {
     const data: ISocialPostSearchQuery = {
-      // frontend: this.frontend,
       count: this.count,
       ... (this.sortBy) && {sortBy: this.sortBy},
       ... (this.order) && {order: this.order},
-      ... (this.page) && {page: this.page},
       ... (this.tags) && {tags: this.tags},
       ... (this.hasMedia) && {hasMedia: this.hasMedia},
       ... (this.hasImage) && {hasImage: this.hasImage},

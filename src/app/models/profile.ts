@@ -9,21 +9,28 @@ export interface IProfile {
   firstName: IUserDetail['firstName'];
   lastName: IUserDetail['lastName'];
   name: string;
+  nickname: string;
+
+  description: string; /** practicePhilosophy | description of professionals belonging at the center */
 
   profileImage: IUserDetail['profileImage'];
   profileImageFull: IUserDetail['profileImage'];
   profileImageType: string;
+  coverImage: string;
 
-  followData: {
-    followed: {
-      data: IUserDetail[];
-      total: number;
-    };
-    following: IProfile['followData']['followed'];
-  }
+  numFollowing: number;
+  numFollower: number;
+  followings: Profile[];
+  followers: Profile[];
 
+  isC: boolean;
+  isP: boolean;
+  isSP: boolean;
+  isSA: boolean;
+  isU: boolean;
+  isProvider: boolean;
   isApproved: boolean;
-  isFollowDataReady: boolean;
+  isVerified: boolean; /** verified for badge */
 
   linkToProfile: string;
 
@@ -45,24 +52,48 @@ export class Profile implements IProfile {
     if(this.lastName.length > 0) { nameArray.push(this.lastName); }
     return nameArray.join(' ').trim();
   }
+  get nickname() {
+    let name = '(No Name)';
+    if (this.firstName.length > 0) { 
+      name = this.firstName; 
+    } else if (this.lastName.length > 0) {
+      name = this.lastName;
+    }
+    return name;
+  }
+
+  get description() { return this.data.product_description || this.data.description || ''; }
 
   get profileImage() { return this._profileImage ? this._s3 + '350x220/' + this._profileImage : ''; }
   get profileImageFull() { return this._profileImage ? this._s3 + this._profileImage : ''; }
   get profileImageType() { return this._profileImageType; }
 
-  get isApproved() { return this.role == 'U' || this.role == 'SA' || this.data.isApproved; }
+  get coverImage() { return null; }
 
-  get linkToProfile() { return this.role != 'U' ? '/community/profile/' + this._id : null; }
+  get followings() { return this._followings; };
+  get followers() { return this._followers; }
+
+  get numFollowing() { return this.data.follow.following || 0; }
+  get numFollower() { return this.data.follow.followed || 0; }
+
+  get isU() { return !!(this.role == 'U'); }
+  get isC() { return !!(this.role == 'C'); }
+  get isSP() { return !!(this.role == 'SP'); }
+  get isProvider() { return !!(this.isC || this.isSP); }
+  get isP() { return !!(this.role == 'P'); }
+  get isSA() { return !!(this.role == 'SA'); }
+
+  get isApproved() { return this.isU || this.isSA || this.data.isApproved; }
+  get isVerified() { return this.isSA || this.data.verifiedBadge || false; }
+
+  get linkToProfile() { return !this.isU ? '/community/profile/' + this._id : null; }
 
   get gender() { return this.data.gender || ''; }
 
-  get followData() { return this._followData; }
-  get isFollowDataReady() { return this._followDataInitDone; }
-
   private _profileImage: string;
   private _profileImageType: string;
-  private _followData: IProfile['followData'] = null;
-  private _followDataInitDone = false;
+  private _followings: Profile[] = null;
+  private _followers: Profile[] = null;
 
   protected _s3 = environment.config.AWS_S3;
 
@@ -82,4 +113,70 @@ export class Profile implements IProfile {
     }
     this._profileImageType = imageType;
   }
+
+  setFollowings(users: IUserDetail[]) {
+    if(!this._followings) {
+      this._followings = [];
+    }
+    users.forEach(user => {
+      this.setFollowing(user);
+    });
+  }
+
+  setFollowing(user: IUserDetail, countup: boolean = false) {
+    if(!this._followings) {
+      this._followings = [];
+    }
+
+    this._followings.push(new Profile(user));
+
+    if(countup) {
+      this.countupFollowing();
+    }
+  }
+
+  removeFollowing(user: IUserDetail, countdown: boolean = false) {
+    if(this._followings && this._followings.length == 0) {
+      console.log('no one follows. you cannot remove this user from following list');
+      return;
+    }
+
+    if (!this._followings) {
+      console.log('following list is not ready yet. the user will not be added in following list for now');
+    } else {
+      const idx = this._followings.findIndex(item => item._id == user._id);
+      if(idx >= 0) {
+        this._followings.splice(idx, 1);
+      }
+    }
+
+    if(countdown && this.data.follow.following > 0) {
+      this.countdownFollowing();
+    }
+  }
+
+  setFollowers(users: IUserDetail[]) {
+    if(!this._followers) {
+      this._followers = [];
+    }
+    users.forEach(user => {
+      this.setFollower(user);
+    });
+  }
+
+  setFollower(user: IUserDetail) {
+    if(!this._followers) {
+      this._followers = [];
+    }
+
+    this._followers.push(new Profile(user));
+  }
+
+  countupFollowing() { this.data.follow.following = this.data.follow.following ? this.data.follow.following + 1 : 1; }
+  countdownFollowing() { this.data.follow.following = this.data.follow.following > 0 ? this.data.follow.following - 1 : 0; }
+  countupFollower() { this.data.follow.followed = this.data.follow.followed ? this.data.follow.followed + 1 : 1; }
+  countdownFollower() { this.data.follow.followed = this.data.follow.followed > 0 ? this.data.follow.followed - 1 : 0; }
+
+  decode(): IUserDetail { return this.data; }
+
 }

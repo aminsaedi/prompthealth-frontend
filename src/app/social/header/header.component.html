@@ -80,12 +80,12 @@ style="z-index: 100;"
               (click)="onClickProfileIcon()"
               >Login</button>
             </div>
-            <button 
+            <!-- <button 
             class="btn btn-icon-grey small d-none d-xl-inline-block ml-15p pr-0"
             (click)="onClickButtonMore()"
             >
               <i iconPh="more-horiz" class="large"></i>
-            </button>
+            </button> -->
           </div>
         </div>
       </div>
@@ -168,15 +168,90 @@ class="menu-slide-vertical"
   ></div>
   <div class="menu-body">
     <div class="container py-25p py-md-15p">
-      <form-item-input
-      name="search"
-      prependIcon="search"
-      type="text"
-      placeholder="Search..."
-      [controller]="formSearch"
-      [option]="{transparent: true}"
-      ></form-item-input>
+      <form (ngSubmit)="search(formSearch.value)">
+        <form-item-input
+        name="search"
+        prependIcon="search"
+        type="text"
+        placeholder="Search..."
+        [controller]="formSearch"
+        [option]="{transparent: true, showRemoveButton: true}"
+        ></form-item-input>  
+      </form>
     </div>
+  </div>
+
+  <div 
+  *ngIf="searchResult"
+  [@expandVertical]
+  class="p-10p py-md-20p px-md-30p bg-white position-relative mt-0 mt-md-30p rounded-md-12p overflow-auto"
+  style="max-width: 500px; margin: auto; max-height: 500px;"
+  >
+    <div 
+    *ngIf="searchResult.users && searchResult.users.length > 0"
+    class="mb-10p"
+    >
+      <h6 class="mb-20p">Users</h6>
+      <ul class="list-unstyled">
+        <li 
+        *ngFor="let u of searchResult.users"
+        class="mb-15p"
+        >
+          <a 
+          [routerLink]="['/community/profile', u._id]"
+          [replaceUrl]="true"
+          class="d-flex align-items-start text-body"
+          (click)="resetSearch()"
+          >
+            <profile-image [image]="u.profileImage"></profile-image>
+            <div class="ml-10p">
+              <div class="subtitle2 clamp-1line">{{u.name}}</div>
+              <div class="body2 clamp-1line text-label">{{u.description}}</div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="searchResult.blogs && searchResult.blogs.length > 0">
+      <h6 class="mb-20p">Contents</h6>
+      <ul class="list-unstyled">
+        <li 
+        *ngFor="let b of searchResult.blogs"
+        class="mb-15p"
+        >
+          <a 
+          [routerLink]="['/community/profile', b.authorId, 'post', b._id]"
+          [replaceUrl]="true"
+          (click)="resetSearch()"
+          class="text-body d-flex align-items-start"
+          >
+            <div class="mr-10p">
+              <profile-image 
+              [image]="b._image ? b._image : (b.images && b.images.length > 0) ? b.images[0] : null"
+              [option]="{dummyClass: 'text-white', dummyIcon: (b.isNote ? 'comment-2' : b.isArticle ? 'file' : b.isEvent ? 'calendar' : null), dummyBgClass: (b.isNote ? 'bg-success' : b.isArticle ? 'bg-yellow' : b.isEvent ? 'bg-error' : 'bg-white')}"
+              ></profile-image>
+            </div>
+            <div>
+              <div
+              *ngIf="b.title"
+              class="subtitle2 clamp-1line"
+              >{{b.title}}</div>
+              <div
+              class="body2 clamp-2line"
+              [ngClass]="{'text-label': b.title}"
+              [innerHTML]="b.summary"
+              ></div>  
+            </div>
+          </a>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="mt-50p text-center" *ngIf="isSearchLoading">
+    <loader color="white"></loader>
   </div>
 
 </div>

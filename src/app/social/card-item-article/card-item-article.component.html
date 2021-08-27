@@ -16,7 +16,7 @@
       (click)="markCurrentPosition()"
       >
         <h6 class="subtitle2 mb-0 text-body">
-          {{post?.author}}
+          {{post?.authorName}}
   
           <i 
           *ngIf="post?.authorVerified"
@@ -39,12 +39,12 @@
       </span>
     </span>
 
-    <button 
+    <!-- <button 
     class="btn btn-icon-grey small py-5p"
     (click)="_onClickButton($event, 'post-menu')"
     >
       <i iconPh="more-horiz"></i>
-    </button>  
+    </button>   -->
   </div>
 
 </div>

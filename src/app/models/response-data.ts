@@ -80,5 +80,15 @@ export interface IGetSocialContentsByAuthorResult extends IResponseData {
 }
 
 export interface ICommentCreateResult extends IResponseData {
-  data: ISocialComment;
+  data: {
+    post: ISocialPost;
+    comment: ISocialComment;
+  };
+}
+
+export interface ISearchResult extends IResponseData {
+  data: {
+    users: IUserDetail[];
+    blogs: ISocialPost[];
+  }
 }

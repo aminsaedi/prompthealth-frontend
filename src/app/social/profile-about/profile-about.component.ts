@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { rejects } from 'assert';
 import { Subscription } from 'rxjs';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { slideVerticalAnimation } from 'src/app/_helpers/animations';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
 
 @Component({
@@ -30,6 +31,8 @@ export class ProfileAboutComponent implements OnInit {
     private _socialService: SocialService,
     private _sharedService: SharedService,
     private _qService: QuestionnaireService,
+    private _uService: UniversalService,
+    private _router: Router,
   ) { }
 
   ngOnDestroy() {
@@ -42,11 +45,13 @@ export class ProfileAboutComponent implements OnInit {
 
     this.subscription = this._socialService.selectedProfileChanged().subscribe(p => {
       this.onProfileChanged(p);
-    })
+    });
   }
 
   onProfileChanged(p: Professional | Partner) {
     this.profile = p;
+    this.setMeta();
+
     if(p && p.isC && !p.triedFetchingAmenity) {
       p.markAsTriedFetchingAmenity();
       this.fetchAmenity();
@@ -55,6 +60,20 @@ export class ProfileAboutComponent implements OnInit {
     if(p && p.isC && !p.triedFetchingProduct) {
       p.markAsTriedFetchingProduct();
       this.fetchProduct();
+    }
+  }
+
+  setMeta() {
+    if(this.profile) {
+      const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
+      const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);
+      this._uService.setMeta(this._router.url, {
+        title: `${this.profile.name} in ${this.profile.city}, ${this.profile.state} | PromptHealth Community`,
+        description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
+        image: this.profile.imageFull,
+        imageType: this.profile.imageType,
+        imageAlt: this.profile.name,
+      });  
     }
   }
 

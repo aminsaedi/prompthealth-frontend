@@ -11,6 +11,7 @@ import { MustMatch } from '../../_helpers/must-match.validator';
 import { validators } from 'src/app/_helpers/form-settings';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IUserDetail } from 'src/app/models/user-detail';
+import { SocialService } from 'src/app/social/social.service';
 
 @Component({
   selector: 'form-auth',
@@ -39,6 +40,7 @@ export class FormAuthComponent implements OnInit {
     private _authService: SocialAuthService,
     private _sharedService: SharedService,
     private _profileService: ProfileManagementService,
+    private _socialService: SocialService,
     private _bs: BehaviorService,
     private _toastr: ToastrService,
   ) { 
@@ -174,7 +176,9 @@ export class FormAuthComponent implements OnInit {
     this._sharedService.addCookie('isVipAffiliateUser', userinfo.isVipAffiliateUser);
     this._sharedService.addCookieObject('user', userinfo);
     
+    this._socialService.dispose();
     this._profileService.getProfileDetail(userinfo);
+
 
     this._bs.setUserData(userinfo);
 
@@ -203,6 +207,7 @@ export class FormAuthComponent implements OnInit {
       } else {
         switch (role.toLowerCase()) {
           case 'u':
+          case 'sa':
             next = '/';
             break;
           case 'sp':

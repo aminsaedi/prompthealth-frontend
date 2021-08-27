@@ -53,7 +53,7 @@ export class FormItemCheckboxGroupComponent implements OnInit {
         });
       });
     }
-
+    
     switch(this.id){
       case 'age_range': this.selectionList = (this.ageRangeType == 'simple') ? age_range : age_range_detail; break;
       case 'years_of_experience': this.selectionList = years_of_experience; break;
