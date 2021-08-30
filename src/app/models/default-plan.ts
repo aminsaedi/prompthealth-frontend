@@ -3,6 +3,7 @@ export type PlanTypeProduct = 'productBasic' | 'productAdvanced'
 export type PlanType = PlanTypePractitioner | PlanTypeProduct;
 
 export interface IPlanData {
+  id: string;
   icon: string;
   title: string;
   subtitle: string;

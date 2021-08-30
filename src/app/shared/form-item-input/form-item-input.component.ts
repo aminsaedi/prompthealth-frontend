@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FormItemTextfieldOption, IFormItemTextfieldOption } from 'src/app/models/form-item-textfield-option';
 
@@ -28,6 +28,7 @@ export class FormItemInputComponent implements OnInit {
   @Output() onFocus = new EventEmitter<boolean>()
   @Output() onChangeValue = new EventEmitter<string>();
 
+  @ViewChild('input') private input: ElementRef;
 
   public _type: string;
   public _option: FormItemTextfieldOption;
@@ -40,6 +41,12 @@ export class FormItemInputComponent implements OnInit {
     this.controller.valueChanges.subscribe(val => {
       this.onChangeValue.emit(val);
     });
+  }
+
+  focus() {
+    if(this.input && this.input.nativeElement) {
+      (this.input.nativeElement as HTMLInputElement).focus();
+    }
   }
 
   _onFocus(){

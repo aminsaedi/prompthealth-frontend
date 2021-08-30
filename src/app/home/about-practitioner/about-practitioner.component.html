@@ -105,14 +105,14 @@
             *ngIf="isFeatureShowable(j, plan.key)"
             class="position-relative mb-20p subtitle2"
             >  
-              <i class="icon-pre text-placeholder" iconPh="checkbox-square"></i>
+              <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
               <span>{{feature.item}}</span>
             </li>  
           </ng-container>
         </ul>
 
         <button 
-        *ngIf="!profile"
+        *ngIf="isNotLoggedIn"
         class="btn"
         [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
         (click)="onClickSignup(plan.key)"
@@ -122,17 +122,17 @@
           <ng-container *ngIf="plan.key == 'centre'">Select</ng-container>
         </button>
 
-        <button 
-        *ngIf="!!profile"
-        class="btn"
-        [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
-        [disabled]="isLoading"
-        (click)="onClickCheckout(plan.key)"
-        >
-          <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
-          <ng-container *ngIf="plan.key == 'centre'">Select</ng-container>
-        </button>
-
+        <ng-container *ngIf="isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')">
+          <button 
+          class="btn"
+          [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
+          [disabled]="isLoading"
+          (click)="onClickCheckout(plan.key)"
+          >
+            <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
+            <ng-container *ngIf="plan.key != 'provider'">Select</ng-container>
+          </button>  
+        </ng-container>
       </div>
     </div>
   </div>

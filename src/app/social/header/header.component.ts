@@ -1,8 +1,7 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Professional } from 'src/app/models/professional';
 import { Profile } from 'src/app/models/profile';
@@ -12,11 +11,11 @@ import { SocialArticle } from 'src/app/models/social-article';
 import { SocialEvent } from 'src/app/models/social-event';
 import { SocialNote } from 'src/app/models/social-note';
 import { ISocialPost, SocialPostBase } from 'src/app/models/social-post';
+import { FormItemInputComponent } from 'src/app/shared/form-item-input/form-item-input.component';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, fadeAnimation, slideHorizontalReverseAnimation, slideVerticalReverseAnimation } from 'src/app/_helpers/animations';
 
 @Component({
@@ -45,6 +44,8 @@ export class HeaderComponent implements OnInit {
 
   get sizeS(): boolean { return (!window || window.innerWidth < 768); }
 
+  @ViewChild('searchbar') private searchbar: FormItemInputComponent;
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -54,7 +55,6 @@ export class HeaderComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _profileService: ProfileManagementService,
     private _modalService: ModalService,
-    private _uService: UniversalService,
     private _sharedService: SharedService,
   ) { }
 
@@ -99,6 +99,9 @@ export class HeaderComponent implements OnInit {
     const [path, queryParams] = this._modalService.currentPathAndQueryParams;
     queryParams.menu = id;
     this._router.navigate([path], {queryParams: queryParams});
+    setTimeout(() => {
+      this.searchbar.focus();
+    }, 100);
   }
 
   onClickProfileIcon() {

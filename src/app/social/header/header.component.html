@@ -170,6 +170,7 @@ class="menu-slide-vertical"
     <div class="container py-25p py-md-15p">
       <form (ngSubmit)="search(formSearch.value)">
         <form-item-input
+        #searchbar
         name="search"
         prependIcon="search"
         type="text"

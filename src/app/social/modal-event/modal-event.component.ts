@@ -38,10 +38,10 @@ export class ModalEventComponent implements OnInit {
   addToCalendar(calendarType: string) {
     const calendarOption: CalendarOptions = {
       title: this.post.title,
-      location: '',
-      description: this.post.link,
       start: this.post.startAt,
       end: this.post.endAt,
+      ...this.post.link && {description: this.post.link},
+      ...!this.post.isVirtual && {location: this.post.venue},
     }
 
     let calendar: GoogleCalendar | ICalendar | OutlookCalendar | YahooCalendar;

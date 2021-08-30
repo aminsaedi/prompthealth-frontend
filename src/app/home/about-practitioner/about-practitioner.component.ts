@@ -20,6 +20,8 @@ import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 export class AboutPractitionerComponent implements OnInit {
 
   get profile() { return this._profileService.user; }
+  get isNotLoggedIn() { return this._profileService.loginStatus == 'notLoggedIn'; }
+  get isLoggedIn() { return this._profileService.loginStatus == 'loggedIn'; }
 
   public features = features;
   public plans = plans;
@@ -166,32 +168,32 @@ export class AboutPractitionerComponent implements OnInit {
 
 const features = [
   {
-    icon: 'camera',
+    icon: 'lightning-outline',
     title: 'Simple to use and time-saving.',
     content: 'We are creating a space where health and wellness experts can lead the conversation around the topics they are experts in. Instead of spending time building your credibility online, let them come to you on PromptHealth and focus on what you do best.',
   },
   {
-    icon: 'camera',
+    icon: 'text-block-outline',
     title: 'Choose a content creation option that works best for you.',
     content: 'Easy to use content creation tools made for busy health practitioners. Share using the medium that suits you best. Whether it’s through voice notes, videos, articles, or online events, we made it easy for health providers to create and share.',
   },
   {
-    icon: 'camera',
+    icon: 'user-check-outline',
     title: 'Share information on topics you are an expert in.',
     content: 'Health misinformation online is a huge problem today. We are serious about making sure those providing health information are accredited and trusted. We prioritize verifying our providers to remain a credible and helpful health resource for the public.',
   },
   {
-    icon: 'camera',
+    icon: 'cast-outline',
     title: 'Connect with clients.',
     content: 'Find clients, share details about the services you offer and how you can help, and accept bookings all in one platform. ',
   },
   {
-    icon: 'camera',
+    icon: 'thumbs-up-outline',
     title: 'Engage with the health and wellness community.',
     content: 'Be part of our community. Stay engaged with new and current clients, and other practitioners in your area. ',
   },
   {
-    icon: 'camera',
+    icon: 'verified-outline',
     title: 'Recommend other health professionals you trust.',
     content: 'Think your clients will benefit from a different treatment, or do you know another provider you trust? Find and leave recommendations for other practitioners. ',
   },
@@ -199,21 +201,24 @@ const features = [
 
 const plans: {[k in PlanTypePractitioner]: IPlanData} = {
   basic: {
-    icon: 'note-text',
+    id: 'basic',
+    icon: 'note-text-outline',
     title: 'Basic',
     subtitle: 'For individual use',
     label: null,
     data: null,
   },
   provider: {
-    icon: 'verified',
+    id: 'provider',
+    icon: 'verified-outline',
     title: 'Providers',
     subtitle: 'For profiessional use',
     label: 'Popular',
     data: null,
   },
   centre: {
-    icon: 'users',
+    id: 'centre',
+    icon: 'users-outline',
     title: 'Centre',
     subtitle: 'For multiple use',
     label: null,
