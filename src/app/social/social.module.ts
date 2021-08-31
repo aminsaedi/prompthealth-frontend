@@ -55,8 +55,8 @@ const routes: Routes = [
 
     { path: 'profile/:userid/followings', component: ProfileFollowListComponent, data: {type: 'following'}},
 
-    { path: 'profile/:userid/post/:postid', component: PageComponent },
-    { path: 'profile/:userid/post', pathMatch: 'full', redirectTo: 'profile/:userid/' },
+    { path: 'content/:postid', component: PageComponent },
+    { path: 'content', pathMatch: 'full', redirectTo: 'feed' },
 
     { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },

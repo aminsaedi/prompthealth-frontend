@@ -80,6 +80,10 @@ export interface IGetSocialContentsByAuthorResult extends IResponseData {
   data: (ISocialPost)[]
 }
 
+export interface IGetSocialContentResult extends IResponseData {
+  data: ISocialPost;
+}
+
 export interface ICommentCreateResult extends IResponseData {
   data: {
     post: ISocialPost;
