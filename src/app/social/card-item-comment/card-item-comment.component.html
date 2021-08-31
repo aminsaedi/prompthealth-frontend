@@ -16,6 +16,7 @@
     <a 
     *ngIf="!data.author.isU"
     [routerLink]="['/community/profile', data.author._id]"
+    (click)="markCurrentPosition()"
     >
       <profile-image size="42" [image]="data.author.profileImage"></profile-image>
     </a>
@@ -28,6 +29,7 @@
         *ngIf="!data.author.isU"
         [routerLink]="['/community/profile', data.author._id]"
         class="text-body"
+        (click)="markCurrentPosition()"
         >
           <h6 class="subtitle2">{{data.author.firstName}} {{data.author.lastName}}</h6>
         </a>

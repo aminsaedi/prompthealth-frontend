@@ -1,9 +1,7 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { SocialNote } from 'src/app/models/social-note';
 import { ISocialPost } from 'src/app/models/social-post';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
@@ -54,7 +52,6 @@ export class CardComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _location: Location,
     private _modalService: ModalService,
-    private _sanitizer: DomSanitizer,
     private _categoryService: CategoryService,
   ) { }
 
