@@ -260,7 +260,10 @@ class="menu-slide-vertical"
 
 <ng-template #notification>
   <i iconPh="bell" class="large"></i>
-  <div class="notification-count bg-error text-white body-small rounded-4p">
-    <span>2</span>
+  <div 
+  *ngIf="numUnreadNotifications > 0"
+  class="notification-count bg-error text-white body-small rounded-4p"
+  >
+    <span>{{numUnreadNotifications}}</span>
   </div>
 </ng-template>

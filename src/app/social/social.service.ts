@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
+import { ISocialNotification, SocialNotification } from '../models/notification';
 import { Professional } from '../models/professional';
 import { SocialArticle } from '../models/social-article';
 import { SocialEvent } from '../models/social-event';
@@ -12,7 +13,13 @@ import { ISocialPost, SocialPostBase } from '../models/social-post';
 export class SocialService {
 
   private postCache: PostCache;
+  private notificationCache: SocialNotification[];
+
   private _selectedProfile: Professional = null;
+
+  get notifications(): SocialNotification[] { return this.notificationCache; }
+  get doneInitNotification(): boolean { return !!this.notificationCache; }
+
 
   get selectedProfile() { return this._selectedProfile; }
   private _selectedProfileChanged = new Subject<Professional>();
@@ -33,6 +40,7 @@ export class SocialService {
   ) { 
     this.postCache = new PostCache();
   }
+
 
   metadataOf(taxonomy: SocialPostTaxonomyType) {
     const cache = this.postCache.dataPerTaxonomy[taxonomy];
@@ -84,6 +92,7 @@ export class SocialService {
 
   dispose() {
     this.postCache = new PostCache();
+    this.notificationCache = null;
   }
 
   disposeCacheOf(taxonomy: SocialPostTaxonomyType = 'feed') {
@@ -176,6 +185,27 @@ export class SocialService {
     }
   }
 
+  saveNotifications(data: ISocialNotification[]) {
+    if(!this.notificationCache) {
+      this.notificationCache = [];
+    }
+    data.forEach(d => {
+      this.saveNotificationSingle(d);
+    })
+  }
+
+  saveNotificationSingle(data: ISocialNotification) {
+    if(!this.notificationCache) {
+      this.notificationCache = [];
+    }
+    this.notificationCache.push(new SocialNotification(data));
+  }
+
+  removeNotificationsAll() {
+    if(this.notificationCache) {
+      this.notificationCache = [];
+    }
+  }
 
 
   createDummyArray(count: number) {

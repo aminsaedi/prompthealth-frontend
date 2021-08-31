@@ -1,4 +1,5 @@
 import { IDefaultPlan } from "./default-plan";
+import { ISocialNotification } from "./notification";
 import { ISocialComment, ISocialPost } from "./social-post";
 import { IUserDetail } from "./user-detail";
 
@@ -92,3 +93,15 @@ export interface ISearchResult extends IResponseData {
     blogs: ISocialPost[];
   }
 }
+
+export interface IGetNotificationsResult extends IResponseData {
+  data: ISocialNotification[];
+}
+
+// export interface IMarkAllNotificationsAsReadResult extends IResponseData {
+//   data: {
+//     n: number,
+//     nModified: number,
+//     ok: number,
+//   }
+// }
