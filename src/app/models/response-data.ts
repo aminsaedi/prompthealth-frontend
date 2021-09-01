@@ -58,6 +58,28 @@ export interface IUnfollowResult extends IResponseData {
   }
 }
 
+export interface IBellResult extends IResponseData {
+  data: {
+    _id: string,
+    belling: string,
+    belled: string,
+  }
+}
+
+export interface IUnbellResult extends IResponseData {
+  data: {
+    deleted: boolean;
+  }
+}
+
+export interface IGetBellStatusResult extends IResponseData {
+  data: {
+    _id: string,
+    belling: string,
+    belled: string,
+  }
+}
+
 export interface IContentCreateResult extends IResponseData {
   data: ISocialPost;
 }

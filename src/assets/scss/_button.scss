@@ -135,6 +135,9 @@
 .btn.btn-icon-body {
   @include btnIcon($colorGsBody);
 }
+.btn.btn-icon-success {
+  @include btnIcon($colorSuccess);
+}
 .btn.btn-icon-error {
   @include btnIcon($colorError);
 }
