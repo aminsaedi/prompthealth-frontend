@@ -7,6 +7,8 @@ const baseURL = environment.config.BASE_URL;
 
 import { default as axios } from 'axios';
 import { IUserDetail } from './models/user-detail';
+import { QuestionnaireAnswer } from './shared/services/questionnaire.service';
+import { IGetSocialContentsResult } from './models/response-data';
 const rSitemap = Router();
 
 rSitemap.get('/main', (req, res) => {
@@ -20,18 +22,24 @@ rSitemap.get('/practitioners', async (req, res) => {
   res.send(xml);
 });
 
-
-rSitemap.get('/products', async (req, res) => {
-  let xml = await getSitemapProducts();
+rSitemap.get('/community', async (req, res) => {
+  let xml = await getSitemapSocial();
   res.set('Content-Type', 'text/xml');
   res.send(xml);
-});
+})
 
-rSitemap.get('/magazines', async (req, res) => {
-  let xml = await getSitemapMagazines();
-  res.set('Content-Type', 'text/xml');
-  res.send(xml);
-});
+
+// rSitemap.get('/products', async (req, res) => {
+//   let xml = await getSitemapProducts();
+//   res.set('Content-Type', 'text/xml');
+//   res.send(xml);
+// });
+
+// rSitemap.get('/magazines', async (req, res) => {
+//   let xml = await getSitemapMagazines();
+//   res.set('Content-Type', 'text/xml');
+//   res.send(xml);
+// });
 
 rSitemap.get('/', (req, res) => {
   res.set('Content-Type', 'text/xml');
@@ -47,11 +55,8 @@ const sitemapRoot = `<?xml version="1.0" encoding="UTF-8"?>
       <loc>${baseURL}sitemap/practitioners</loc>
     </sitemap>
     <sitemap>
-      <loc>${baseURL}sitemap/products</loc>
+      <loc>${baseURL}sitemap/community</loc>
     </sitemap>
-    <sitemap>
-      <loc>${baseURL}sitemap/magazines</loc>
-    </sitemap>        
   </sitemapindex>
 `;
 
@@ -64,7 +69,7 @@ const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
       <loc>${baseURL}plans</loc>
     </url>
     <url>
-      <loc>${baseURL}plans/product</loc>
+      <loc>${baseURL}products</loc>
     </url>
     <url>
       <loc>${baseURL}ambassador-program</loc>
@@ -98,9 +103,10 @@ function getSitemapPractitioners(): Promise<string> {
   return new Promise( async (resolve) => {
 
     const areas = getAllAreas();
-    Promise.all([getAllCategoryIds(), getAllPractitionerIds()]).then(vals => {
+    
+    Promise.all([getAllCategoryIds(), getAllTypeOfProviderIds()]).then(vals => {
       const categoryIds = vals[0];
-      const practitionerIds = vals[1];
+      const typeOfProviderIds = vals[1];
 
       areas.forEach(area => {
         /** listing by area */
@@ -129,13 +135,22 @@ function getSitemapPractitioners(): Promise<string> {
         });
       });
 
-      practitionerIds.forEach(id => {
-        /** profile page */
+      typeOfProviderIds.forEach(id => {
+        /** listing by type of provider */
         xml += `
           <url>
-            <loc>${baseURL}practitioners/${id}</loc>
+            <loc>${baseURL}practitioners/type/${id}</loc>
           </url>
         `;
+
+        areas.forEach(area => {
+          /** listing by type of provider + area */
+          xml += `
+            <url>
+              <loc>${baseURL}practitioners/type/${id}/${area}</loc>
+            </url>
+          `;
+        });
       });
     }).catch(error => {
       console.log(error);
@@ -146,90 +161,158 @@ function getSitemapPractitioners(): Promise<string> {
   });
 };
 
-function getSitemapProducts(): Promise<string> {
+// function getSitemapProducts(): Promise<string> {
+//   let xml = `<?xml version="1.0" encoding="UTF-8"?>
+//     <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
+//       <url>
+//         <loc>${baseURL}products</loc>
+//       </url>
+//   `;
+
+//   return new Promise(async (resolve) => {
+//     try {
+//       const productIds = await getAllProductIds();
+//       productIds.forEach(id => {
+//         xml += `
+//           <url>
+//             <loc>${baseURL}products/${id}</loc>
+//           </url>
+//         `;
+//       });  
+//     }catch(error) {
+//       console.log(error);
+//     }finally {
+//       xml += '</urlset>';
+//       resolve(xml);
+//     }
+//   });
+// }
+
+// function getSitemapMagazines(): Promise<string> {
+//   /** paginator is not added in sitemap yet. */
+//   let xml = `<?xml version="1.0" encoding="UTF-8"?>
+//     <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
+//       <url>
+//         <loc>${baseURL}magazines</loc>
+//       </url>
+//       <url>
+//         <loc>${baseURL}magazines/video</loc>
+//       </url>
+//       <url>
+//         <loc>${baseURL}magazines/podcast</loc>
+//       </url>
+//       <url>
+//         <loc>${baseURL}magazines/event</loc>
+//       </url>
+//     `;
+
+//   return new Promise(async (resolve) => {
+//     Promise.all([getAllBlogCategorySlugs(), getAllBlogTagSlugs(), getAllBlogEntrySlugs()]).then((vals) => {
+//       const categorySlugs = vals[0];
+//       const tagSlugs = vals[1];
+//       const entrySlugs = vals[2];
+
+//       categorySlugs.forEach(category => {
+//         xml += `
+//           <url>
+//             <loc>${baseURL}magazines/category/${category}</loc>
+//           </url>
+//         `;
+//       });
+
+//       tagSlugs.forEach(tag => {
+//         xml += `
+//           <url>
+//             <loc>${baseURL}magazines/tag/${tag}</loc>
+//           </url>
+//         `;
+//       });
+
+//       entrySlugs.forEach(entry => {
+//         xml += `
+//           <url>
+//             <loc>${baseURL}magazines/${entry}</loc>
+//           </url>
+//         `;
+//       });
+//     }).catch(error => {
+//       console.log(error);
+//     }).finally(() => {
+//       xml += '</urlset>';
+//       resolve(xml);
+//     })
+//   }); 
+// }
+
+function getSitemapSocial(): Promise<string> {
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
-      <url>
-        <loc>${baseURL}products</loc>
-      </url>
-  `;
+    `;
 
-  return new Promise(async (resolve) => {
-    try {
-      const productIds = await getAllProductIds();
-      productIds.forEach(id => {
+  return new Promise((resolve) => {
+    Promise.all([getAllCategoryIds(true), getAllPractitionerIds(), getAllSocialContentIds()]).then(vals => {
+      console.log('koko');
+      const categoryIds = vals[0];
+      const practitionerIds = vals[1];
+      const contentIds = vals[2];
+      const taxonomies = ['feed', 'article', 'media', 'event'];
+
+      taxonomies.forEach(type => {
         xml += `
           <url>
-            <loc>${baseURL}products/${id}</loc>
+            <loc>${baseURL}community/${type}</loc>
           </url>
         `;
-      });  
-    }catch(error) {
-      console.log(error);
-    }finally {
+        categoryIds.forEach(id => {
+          xml += `
+            <url>
+              <loc>${baseURL}community/${type}/${id}</loc>
+            </url>
+          `;
+        });
+      });
+
+      xml += `
+        <url>
+          <loc>${baseURL}community/profile/${environment.config.idSA}</loc>
+        </url>
+        <url>
+          <loc>${baseURL}community/profile/${environment.config.idSA}/feed</loc>
+        </url>
+      `;
+
+      practitionerIds.forEach(id => {
+        xml += `
+          <url>
+            <loc>${baseURL}community/profile/${id}</loc>
+          </url>
+          <url>
+            <loc>${baseURL}community/profile/${id}/service</loc>
+          </url>
+          <url>
+            <loc>${baseURL}community/profile/${id}/feed</loc>
+          </url>
+          <url>
+            <loc>${baseURL}community/profile/${id}/review</loc>
+          </url>
+        `;
+      });
+
+      contentIds.forEach(id => {
+        xml += `
+          <url>
+            <loc>${baseURL}community/content/${id}</loc>
+          </url>
+        `;
+      });
       xml += '</urlset>';
-      resolve(xml);
-    }
+      resolve(xml);  
+    });
   });
 }
 
-function getSitemapMagazines(): Promise<string> {
-  /** paginator is not added in sitemap yet. */
-  let xml = `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
-      <url>
-        <loc>${baseURL}magazines</loc>
-      </url>
-      <url>
-        <loc>${baseURL}magazines/video</loc>
-      </url>
-      <url>
-        <loc>${baseURL}magazines/podcast</loc>
-      </url>
-      <url>
-        <loc>${baseURL}magazines/event</loc>
-      </url>
-    `;
 
-  return new Promise(async (resolve) => {
-    Promise.all([getAllBlogCategorySlugs(), getAllBlogTagSlugs(), getAllBlogEntrySlugs()]).then((vals) => {
-      const categorySlugs = vals[0];
-      const tagSlugs = vals[1];
-      const entrySlugs = vals[2];
-
-      categorySlugs.forEach(category => {
-        xml += `
-          <url>
-            <loc>${baseURL}magazines/category/${category}</loc>
-          </url>
-        `;
-      });
-
-      tagSlugs.forEach(tag => {
-        xml += `
-          <url>
-            <loc>${baseURL}magazines/tag/${tag}</loc>
-          </url>
-        `;
-      });
-
-      entrySlugs.forEach(entry => {
-        xml += `
-          <url>
-            <loc>${baseURL}magazines/${entry}</loc>
-          </url>
-        `;
-      });
-    }).catch(error => {
-      console.log(error);
-    }).finally(() => {
-      xml += '</urlset>';
-      resolve(xml);
-    })
-  }); 
-}
-
-function getAllCategoryIds(): Promise<String[]> {
+function getAllCategoryIds(onlyRoot: boolean = false): Promise<String[]> {
   return new Promise((resolve) => {
     const categoryIds: string[] = [];
 
@@ -240,9 +323,11 @@ function getAllCategoryIds(): Promise<String[]> {
             const cats = data.category;
             cats.forEach((c: any) => {
               categoryIds.push(c._id);
-              c.subCategory.forEach((cSub: any) => {
-                categoryIds.push(cSub._id);
-              });
+              if(!onlyRoot) {
+                c.subCategory.forEach((cSub: any) => {
+                  categoryIds.push(cSub._id);
+                });  
+              }
             });
             break;
           }
@@ -254,6 +339,27 @@ function getAllCategoryIds(): Promise<String[]> {
       resolve(categoryIds);
     });
   });
+}
+
+function getAllTypeOfProviderIds(): Promise<string[]> {
+  return new Promise((resolve) => {
+    const typeOfProviderIds: string[] = [];
+    axios.get(apiURL + 'questionare/get-questions?type=SP').then(res => {
+      if(res.status == 200) {
+        const qs = res.data.data;
+        console.log(res.data);
+        for(let q of qs) {
+          if(q.slug == 'providers-are-you') {
+            q.answers.forEach((a: QuestionnaireAnswer) => {
+              typeOfProviderIds.push(a._id);
+            });
+            break;  
+          }
+        }
+      }
+      resolve(typeOfProviderIds);
+    });
+  })
 }
 
 function getAllAreas(): string[] {
@@ -270,7 +376,7 @@ function getAllPractitionerIds(): Promise<String[]> {
 
     axios.post(apiURL + 'user/filter', {}).then(res => {
       if(res.status == 200) {
-        res.data.data.forEach((d: {userId: string}) => {
+        res.data.data.dataArr.forEach((d: {userId: string}) => {
           practitionerIds.push(d.userId);
         });
       }
@@ -282,76 +388,92 @@ function getAllPractitionerIds(): Promise<String[]> {
   });
 }
 
-function getAllProductIds(): Promise<string[]> {
+function getAllSocialContentIds(): Promise<string[]> {
   return new Promise((resolve) => {
-    const productIds: string[] = [];
-
-    axios.post(apiURL + 'partner/get-all', {}).then(res => {
+    const contentIds = [];
+    axios.get(apiURL + 'note/filter?count=100').then(res => {
       if(res.status == 200) {
-        res.data.data.data.forEach((d: IUserDetail) => {
-          productIds.push(d._id);
+        res.data.data.data.forEach((d: {_id: string}) => {
+          contentIds.push(d._id);
         });
       }
+      resolve(contentIds);
     }).catch(error => {
-      console.log(error);
-    }).finally(() => {
-      resolve(productIds);
-    });
-  });
-}
-
-function getAllBlogCategorySlugs(excludeEvent: boolean = true): Promise<string[]> {
-  return new Promise((resolve) => {
-    const blogCategorySlugs: string[] = []
-    axios.get(apiURL + 'category/get-categories').then(res => {
-      if(res.status == 200) {
-        for(let d of res.data.data) {
-          if(!d.slug.match(/event/)) {
-            blogCategorySlugs.push(d.slug)
-          }
-        }
-      }
-    }).catch(error => {
-      console.log(error);
-    }).finally(() => {
-      resolve(blogCategorySlugs);
+      resolve(contentIds);
     });  
   });
 }
 
-function getAllBlogTagSlugs(): Promise<string[]> {
-  return new Promise((resolve) => {
-    const blogTagSlugs: string[] = [];
-    axios.get(apiURL + 'tag/get-all').then(res => {
-      if(res.status === 200) {
-        for(let d of res.data.data.data) {
-          blogTagSlugs.push(d.slug);
-        }
-      }
-    }).catch(error => {
-      console.log(error);
-    }).finally(() => {
-      resolve(blogTagSlugs);
-    })
-  })
-}
+// function getAllProductIds(): Promise<string[]> {
+//   return new Promise((resolve) => {
+//     const productIds: string[] = [];
 
-function getAllBlogEntrySlugs(): Promise<string[]> {
-  return new Promise((resolve) => {
-    const blogEntrySlugs: string[] = []
+//     axios.post(apiURL + 'partner/get-all', {}).then(res => {
+//       if(res.status == 200) {
+//         res.data.data.data.forEach((d: IUserDetail) => {
+//           productIds.push(d._id);
+//         });
+//       }
+//     }).catch(error => {
+//       console.log(error);
+//     }).finally(() => {
+//       resolve(productIds);
+//     });
+//   });
+// }
 
-    axios.get(apiURL + 'blog/get-all?frontend=1').then(res => {
-      if(res.status == 200) {
-        for(let d of res.data.data.data) {
-          blogEntrySlugs.push(d.slug)
-        }
-      }
-    }).catch(error => {
-      console.log(error);
-    }).finally(() => {
-      resolve(blogEntrySlugs);
-    });  
-  });
-}
+// function getAllBlogCategorySlugs(excludeEvent: boolean = true): Promise<string[]> {
+//   return new Promise((resolve) => {
+//     const blogCategorySlugs: string[] = []
+//     axios.get(apiURL + 'category/get-categories').then(res => {
+//       if(res.status == 200) {
+//         for(let d of res.data.data) {
+//           if(!d.slug.match(/event/)) {
+//             blogCategorySlugs.push(d.slug)
+//           }
+//         }
+//       }
+//     }).catch(error => {
+//       console.log(error);
+//     }).finally(() => {
+//       resolve(blogCategorySlugs);
+//     });  
+//   });
+// }
+
+// function getAllBlogTagSlugs(): Promise<string[]> {
+//   return new Promise((resolve) => {
+//     const blogTagSlugs: string[] = [];
+//     axios.get(apiURL + 'tag/get-all').then(res => {
+//       if(res.status === 200) {
+//         for(let d of res.data.data.data) {
+//           blogTagSlugs.push(d.slug);
+//         }
+//       }
+//     }).catch(error => {
+//       console.log(error);
+//     }).finally(() => {
+//       resolve(blogTagSlugs);
+//     })
+//   })
+// }
+
+// function getAllBlogEntrySlugs(): Promise<string[]> {
+//   return new Promise((resolve) => {
+//     const blogEntrySlugs: string[] = []
+
+//     axios.get(apiURL + 'blog/get-all?frontend=1').then(res => {
+//       if(res.status == 200) {
+//         for(let d of res.data.data.data) {
+//           blogEntrySlugs.push(d.slug)
+//         }
+//       }
+//     }).catch(error => {
+//       console.log(error);
+//     }).finally(() => {
+//       resolve(blogEntrySlugs);
+//     });  
+//   });
+// }
 
 export const routerSitemap = rSitemap;

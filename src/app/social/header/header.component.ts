@@ -130,7 +130,7 @@ export class HeaderComponent implements OnInit {
     if(id == 'search') {
       setTimeout(() => {
         this.searchbar.focus();
-      }, 100);  
+      }, 300);  
     }
   }
 
