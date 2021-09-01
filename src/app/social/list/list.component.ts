@@ -91,7 +91,7 @@ export class ListComponent implements OnInit {
     switch(this.selectedTaxonomyType) {
       case 'feed': desc = `See what\'s happening in healthcare scene${topic ? ' about ' + topic : ''} around the world.`; break;
       case 'article': desc = `Larn about healthcare topics${topic ? ' about ' + topic : ''} and improve your health with us!`; break;
-      case 'event': desc = `Find your favorite healthcare event${topic ? ' ' + topic : ''} and join now!`; break;
+      case 'event': desc = `Find your favorite healthcare event${topic ? ' about ' + topic : ''} and join now!`; break;
       case 'media': desc = `Find your favorite quick tips${topic ? ' about ' + topic : ''} from best practitioners with voice, photos and media`; break;
     } 
 
