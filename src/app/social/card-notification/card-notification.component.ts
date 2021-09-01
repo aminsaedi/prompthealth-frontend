@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SocialNotification } from 'src/app/models/notification';
 import { IResponseData } from 'src/app/models/response-data';
@@ -44,6 +45,7 @@ export class CardNotificationComponent implements OnInit {
     private _socialService: SocialService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -79,13 +81,14 @@ export class CardNotificationComponent implements OnInit {
         if(res.statusCode !== 200) {
           console.log(res.message);
           notification.markAsUnread();
-          this._toastr.error('Something went wrong. Please try again');
         }
       }, error => {
         console.log(error);
         notification.markAsUnread();
-        this._toastr.error('Something went wrong. Please try again');
       });  
+    }
+    if(notification.linkToTarget) {
+      this._router.navigate([notification.linkToTarget]);
     }
   }
 }

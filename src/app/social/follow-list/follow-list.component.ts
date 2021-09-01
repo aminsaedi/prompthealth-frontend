@@ -18,6 +18,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 export class FollowListComponent implements OnInit {
 
   get user() { return this._profileService.profile; }
+  followerNameOf(data: Profile) { return data.name || '(No name)'; }
   
   public follows: Profile[] = null;
   public existsMore: boolean = true;
