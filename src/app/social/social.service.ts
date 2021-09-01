@@ -191,14 +191,19 @@ export class SocialService {
     }
     data.forEach(d => {
       this.saveNotificationSingle(d);
-    })
+    });
+    this.notificationCache.sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime());
+
   }
 
-  saveNotificationSingle(data: ISocialNotification) {
+  saveNotificationSingle(data: ISocialNotification, sort: boolean = false) {
     if(!this.notificationCache) {
       this.notificationCache = [];
     }
     this.notificationCache.push(new SocialNotification(data));
+    if(sort) {
+      this.notificationCache.sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime());
+    }
   }
 
   removeNotificationsAll() {
