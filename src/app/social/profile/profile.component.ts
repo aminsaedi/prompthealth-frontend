@@ -113,6 +113,7 @@ export class ProfileComponent implements OnInit {
 
   initProfile() {
     this._socialService.disposeProfile();
+    this.countupProfileView();
     const profile = this._socialService.profileOf(this.profileId);
     if(profile) {
       this.profile = profile;
@@ -134,6 +135,10 @@ export class ProfileComponent implements OnInit {
         this._toastr.error('Something went wrong.');
       });
     }
+  }
+
+  countupProfileView() {
+    this._sharedService.postNoAuth({_id: this.profileId}, 'user/update-view-count').subscribe(() => {});
   }
 
   setMetaForAbout() {
