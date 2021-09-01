@@ -84,7 +84,7 @@ export class ListComponent implements OnInit {
     if(this.selectedTopicId) {
       const topics = await this._catService.getCategoryAsync();
       const topicData = topics.find(item => item._id == this.selectedTopicId);
-      topic = topicData.item_text;
+      topic = topicData.item_text.toLowerCase();
     }
 
     let desc: string;
