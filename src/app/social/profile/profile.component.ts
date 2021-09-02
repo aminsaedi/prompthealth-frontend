@@ -9,7 +9,7 @@ import { GetQuery } from 'src/app/models/get-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
 import { Profile } from 'src/app/models/profile';
-import { IFollowResult, IGetFollowingsResult, IGetFollowStatusResult, IGetProfileResult, IUnfollowResult } from 'src/app/models/response-data';
+import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowingsResult, IGetFollowStatusResult, IGetProfileResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
@@ -48,14 +48,16 @@ export class ProfileComponent implements OnInit {
   public profile: Professional;
 
   public profileMenus: IProfileMenuItem[] = [];
-  
   public isFollowing = false;
+  public isBelling = false;
 
   private formBooking: FormGroup;
   public submittedFormBooking = false;
   public minDateTime: DateTimeData;
   public maxBookingNote = minmax.bookingNoteMax;
   
+
+  public isBellLoading = false;
   public isFollowLoading = false;
   public isBookingLoading: boolean = false;
 
@@ -104,18 +106,20 @@ export class ProfileComponent implements OnInit {
     this._route.params.subscribe((param: {userid: string}) => {
       this.profileId = param.userid;
       this.checkFollowStatus();
+      this.checkBellStatus();
       this.initProfile();
     });
   }
 
   initProfile() {
     this._socialService.disposeProfile();
+    this.countupProfileView();
     const profile = this._socialService.profileOf(this.profileId);
     if(profile) {
       this.profile = profile;
       this.setProfileMenu();
       this._socialService.setProfile(this.profile);
-      this.setMetaForAbout();
+      // this.setMetaForAbout();
     } else {
       const promiseAll: [Promise<Professional>, Promise<QuestionnaireMapProfilePractitioner>] = [
         this.fetchProfile(this.profileId),
@@ -133,17 +137,21 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  setMetaForAbout() {
-    const url = this._router.url;
-    if(!url.match('service|feed|review')) {
-      const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
-      const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
-      this._uService.setMeta(this._router.url, {
-        title: `${this.profile.name} in ${this.profile.city}, ${this.profile.state} | PromptHealth Community`,
-        description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
-      });
-    }
+  countupProfileView() {
+    this._sharedService.postNoAuth({_id: this.profileId}, 'user/update-view-count').subscribe(() => {});
   }
+
+  // setMetaForAbout() {
+  //   const url = this._router.url;
+  //   if(!url.match('service|feed|review')) {
+  //     const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
+  //     const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
+  //     this._uService.setMeta(this._router.url, {
+  //       title: `${this.profile.name} in ${this.profile.city}, ${this.profile.state} | PromptHealth Community`,
+  //       description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
+  //     });
+  //   }
+  // }
 
   setProfileMenu() {
     this.profileMenus = this.profile.isSA ? profileMenusForPH : this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
@@ -233,17 +241,24 @@ export class ProfileComponent implements OnInit {
       const data = {
         id: this.profileId,
       }
+      this.isFollowing = true;
+      this.user.setFollowing(this.profile.decode(), true);
+      this.profile.countupFollower();
+
       this._sharedService.post(data, 'social/follow').subscribe((res: IFollowResult) => {
         if(res.statusCode == 200) {
-          this.isFollowing = true;
-          this.user.setFollowing(this.profile.decode(), true);
-          this.profile.countupFollower();
           resolve(true);
         } else {
+        this.isFollowing = false;
+        this.user.removeFollowing(this.profile.decode(), true);
+          this.profile.countdownFollower();
           reject(false);
         }
       }, error => {
         console.log(error);
+        this.isFollowing = false;
+        this.user.removeFollowing(this.profile.decode(), true);
+        this.profile.countdownFollower();
         reject(false);
       });  
     })
@@ -251,17 +266,79 @@ export class ProfileComponent implements OnInit {
 
   async unfollow() {
     return new Promise((resolve, reject) => {
+      this.isFollowing = false;
+      this.user.removeFollowing(this.profile.decode(), true);
+      this.profile.countdownFollower();
+
       this._sharedService.deleteContent('social/follow/' + this.profileId).subscribe((res: IUnfollowResult) => {
         if (res.statusCode == 200) {
-          this.isFollowing = false;
-          this.user.removeFollowing(this.profile.decode(), true);
-          this.profile.countdownFollower();
           resolve(true);
         } else {
+          this.isFollowing = true;
+          this.user.setFollowing(this.profile.decode(), true);
+          this.profile.countupFollower();
           reject(false);
         }
       }, error => {
         console.log(error);
+        this.isFollowing = true;
+        this.user.setFollowing(this.profile.decode(), true);
+        this.profile.countupFollower();
+        reject(false);
+      });
+    });
+  }
+
+  async onClickBell() {
+    const query = this.isBelling ? this.unbell() : this.bell();
+    
+    this.isBellLoading = true;
+    try {
+      await query;
+    } catch (error) {
+      this._toastr.error('Something went wrong. Please try again later.');
+    } finally {
+      this.isBellLoading = false;
+    }
+  }
+
+  async bell() {
+    return new Promise((resolve, reject) => {
+      const data = {
+        id: this.profileId,
+      }
+
+      this.isBelling = true;
+      
+      this._sharedService.post(data, 'social/bell').subscribe((res: IBellResult) => {
+        if(res.statusCode == 200) {
+          resolve(true);
+        } else {
+          this.isBelling = false;
+          reject(false);
+        }
+      }, error => {
+        console.log(error);
+        this.isBelling = false;
+        reject(false);
+      });
+    });
+  }
+
+  async unbell() {
+    return new Promise((resolve, reject) => {
+      this.isBelling = false;
+
+      this._sharedService.deleteContent('social/bell/' + this.profileId).subscribe((res: IUnbellResult) => {
+        if (res.statusCode == 200) {
+          resolve(true);
+        } else {
+          this.isBelling = true;
+          reject(false);
+        }
+      }, error => {
+        console.log(error);
+        this.isBelling = true;
         reject(false);
       });
     });
@@ -307,37 +384,43 @@ export class ProfileComponent implements OnInit {
   observeLoginStatus() {
     this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe((res) => {
       this.checkFollowStatus();
+      this.checkBellStatus();
     });
   }
 
   checkFollowStatus() {
-    if(this.isFollowLoading) {
-      console.log('isFollowLoading.');
+    if(this.isFollowLoading || !this.user || this.isProfileMyself) {
+      console.log('do not start checkFollowStatus');
       return;
     }
 
-    if(!this.user) {
-      console.log('you are not logged in');
-      return;
-    }
-
-    if(this.user && this.user._id == this.profileId) {
-      console.log('this profile is myself');
-      return;
-    }
-
-    console.log('checkFollowStatus');
-
-    this.isFollowing = false;
     this.isFollowLoading = true;
     const path = 'social/get-follow-status/' + this.profileId;
     this._sharedService.get(path).subscribe((res: IGetFollowStatusResult) => {
+      this.isFollowLoading = false;
       this.isFollowing = !!res.data;
     }, error => {
       console.log(error);
-      this.isFollowing = false;
-    }, () => {
       this.isFollowLoading = false;
+      this.isFollowing = false;
+    });
+  }
+
+  checkBellStatus() {
+    if(this.isBellLoading || !this.user || this.isProfileMyself) {
+      console.log('checking follow status is not ready yet');
+      return;
+    }
+
+    this.isBellLoading = true;
+    const path = 'social/get-bell-status/' + this.profileId;
+    this._sharedService.get(path).subscribe((res: IGetBellStatusResult) => {
+      this.isBellLoading = false;
+      this.isBelling = !!res.data;
+    }, error => {
+      console.log(error);
+      this.isBellLoading = false;
+      this.isBelling = false;
     });
   }
 }

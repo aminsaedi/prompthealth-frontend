@@ -60,8 +60,11 @@ export class MyProfileComponent implements OnInit {
         this.profile = res.data;
         this.toastr.success(res.message);
         this.editFields = false;
+        this._profileService.update(data);
+        
         this._changeDetector.detectChanges();
         this._bs.setUserData(res.data);
+
       } else {
         this.toastr.error(res.message);
       }

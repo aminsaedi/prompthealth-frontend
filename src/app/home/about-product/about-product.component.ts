@@ -178,6 +178,7 @@ const features = [
 
 const plans: {[k in PlanTypeProduct]: IPlanData} = {
   productBasic: {
+    id: 'basic',
     icon: 'file',
     title: 'Basic',
     subtitle: 'For individual use',
@@ -185,6 +186,7 @@ const plans: {[k in PlanTypeProduct]: IPlanData} = {
     data: null,
   },
   productAdvanced: {
+    id: 'advanced',
     icon: 'briefcase-2',
     title: 'Advanced',
     subtitle: 'For advanced use',

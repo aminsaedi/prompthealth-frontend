@@ -1,5 +1,7 @@
 <ng-container *ngIf="!(profile)">
-  <loader></loader>
+  <div class="text-center mt-30p">
+    <loader></loader>
+  </div>
 </ng-container>
 
 <div 
@@ -7,7 +9,7 @@
 class="position-relative rounded-8p bg-white p-20p p-lg-30p body1 text-body"
 >
   <div *ngIf="googleReviews">
-    <div class="d-flex flex-column flex-lg-row-reverse align-items-lg-center">
+    <!-- <div class="d-flex flex-column flex-lg-row-reverse align-items-lg-center">
       <div class="d-flex align-items-center justify-content-between flex-lg-column ml-lg-60p mr-lg-30p">
         <h3 class="h1-lg">{{googleReviews.rating}}</h3>
         <div class="text-right text-lg-center">
@@ -64,8 +66,9 @@ class="position-relative rounded-8p bg-white p-20p p-lg-30p body1 text-body"
           <span class="text-label text-right" style="flex: 0 0 40px;">0%</span>
         </li>
       </ul>
-    </div>
-    <ul class="mt-50p list-unstyled">
+    </div> -->
+    <h5>Reviews from Google</h5>
+    <ul class="mt-30p list-unstyled">
       <li class="mb-20p mb-lg-30p" *ngFor="let review of googleReviews.reviews">
         <div class="d-flex">
           <profile-image size="42" [image]="review.profile_photo_url"></profile-image>

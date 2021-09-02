@@ -291,17 +291,22 @@ export class CardNewPostComponent implements OnInit {
     }
 
     this._sharedService.put(data, 'note/create').subscribe((res: IContentCreateResult) => {
+      this.isUploading = false;
       if(res.statusCode == 200) {
         this.isSubmitted = false;
         this.isMoreShown = false;
         this.formItemService.deselectAll();
         this.onPublished.emit(res.data as ISocialPost);
         this._editorService.resetForm();
+        this.imagePreview = null;
+      } else {
+        console.log(res.message);
+        this._toastr.error('Could not upload note. Please try again later.')
       }
     }, error => {
-      console.log(error);
-    }, () => {
       this.isUploading = false;
+      console.log(error);
+      this._toastr.error('Could not upload note. Please try again later.')
     });
   }
 

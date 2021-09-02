@@ -68,8 +68,10 @@ export class ProfileAboutComponent implements OnInit {
       const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
       const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);
       this._uService.setMeta(this._router.url, {
-        title: `${this.profile.name} in ${this.profile.city}, ${this.profile.state} | PromptHealth Community`,
-        description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
+        title: this.profile.isSA ? `${this.profile.name} | PromptHealth Community`
+          : `${this.profile.name} in ${this.profile.city}, ${this.profile.state} | PromptHealth Community`,
+        description: this.profile.isSA ? this.profile.description
+          : `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
         image: this.profile.imageFull,
         imageType: this.profile.imageType,
         imageAlt: this.profile.name,

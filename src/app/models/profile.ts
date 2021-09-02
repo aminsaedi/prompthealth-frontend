@@ -20,8 +20,8 @@ export interface IProfile {
 
   numFollowing: number;
   numFollower: number;
-  followings: Profile[];
-  followers: Profile[];
+  followings: Profile[]; /** should be saved in socialService? */
+  followers: Profile[]; /** should be saved in socialService? */
 
   isC: boolean;
   isP: boolean;
@@ -35,8 +35,6 @@ export interface IProfile {
   linkToProfile: string;
 
   gender: string;
-
-
 }
 
 export class Profile implements IProfile {

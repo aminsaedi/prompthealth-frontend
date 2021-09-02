@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -91,6 +92,7 @@ export class CardItemCommentComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _location: Location,
   ) { }
 
   ngOnInit(): void {
@@ -156,6 +158,10 @@ export class CardItemCommentComponent implements OnInit {
     if(index >= 0) {
       this.targetCommentIdsForShow.splice(index,1);
     }
+  }
+
+  markCurrentPosition() {
+    this._location.replaceState(this._location.path() + '#' + this.post._id);
   }
 
 }

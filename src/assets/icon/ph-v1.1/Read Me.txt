@@ -5,7 +5,15 @@ SHOULD CREATE FOLLOWING ICONS IN ICOMOON NEXT TIME
 3) icon-star-outline
 4) icon-star-filled
 5) icon-checkbox-square-outline
-
+6) icon-lightning-outline / icon-lightning-filled
+7) icon-text-block-outline
+8) icon-user-check-outline
+9) icon-cast-outline
+10) icon-thumbs-up-outline
+11) icon-verified-outline
+12) icon-file-outline
+13) icon-note-text-outline
+14) icon-info-outline
 
 MESSAGE FROM YUKI
 

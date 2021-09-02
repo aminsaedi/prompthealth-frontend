@@ -75,7 +75,7 @@ export class ProfileFeedComponent implements OnInit {
     if(this.profile) {
       this._uService.setMeta(this._router.url, {
         title: `Contents from ${this.profile.name}`,
-        description: `Check out healthcare contents from ${this.profile.name}`,
+        description: `Check out healthcare contents provided by ${this.profile.name}`,
         image: this.profile.imageFull,
         imageType: this.profile.imageType,
         imageAlt: this.profile.name,

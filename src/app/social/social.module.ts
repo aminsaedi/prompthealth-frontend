@@ -55,15 +55,15 @@ const routes: Routes = [
 
     { path: 'profile/:userid/followings', component: ProfileFollowListComponent, data: {type: 'following'}},
 
-    { path: 'profile/:userid/post/:postid', component: PageComponent },
-    { path: 'profile/:userid/post', pathMatch: 'full', redirectTo: 'profile/:userid/' },
+    { path: 'content/:postid', component: PageComponent },
+    { path: 'content', pathMatch: 'full', redirectTo: 'feed' },
 
     { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
     { path: 'create', redirectTo: 'create/article' },
     // { path: 'draft', component: DraftComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
     { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
-    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfNotLoggedInGuard], },
+    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], },
     { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },
 
     { path: '', component: HomeComponent, children: [
@@ -127,7 +127,7 @@ const routes: Routes = [
     }),
     NgxStripeModule.forRoot(environment.config.stripeKey),
     RouterModule.forChild(routes),
-    QuillModule.forRoot(),
+    QuillModule.forRoot( {formats: ['bold', 'italic', 'underline', 'header', 'list', 'link', 'image', 'video', 'code-block']}),
   ]
 })
 export class SocialModule { }

@@ -26,6 +26,8 @@ export class ProfileFollowListComponent implements OnInit {
 
   private countPerPage = 40;
 
+  followerNameOf(data: Profile) { return data.name || '(No name)'; }
+
 
   constructor(
     private _socialService: SocialService,

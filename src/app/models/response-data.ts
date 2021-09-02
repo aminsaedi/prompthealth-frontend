@@ -1,4 +1,5 @@
 import { IDefaultPlan } from "./default-plan";
+import { ISocialNotification } from "./notification";
 import { ISocialComment, ISocialPost } from "./social-post";
 import { IUserDetail } from "./user-detail";
 
@@ -57,6 +58,28 @@ export interface IUnfollowResult extends IResponseData {
   }
 }
 
+export interface IBellResult extends IResponseData {
+  data: {
+    _id: string,
+    belling: string,
+    belled: string,
+  }
+}
+
+export interface IUnbellResult extends IResponseData {
+  data: {
+    deleted: boolean;
+  }
+}
+
+export interface IGetBellStatusResult extends IResponseData {
+  data: {
+    _id: string,
+    belling: string,
+    belled: string,
+  }
+}
+
 export interface IContentCreateResult extends IResponseData {
   data: ISocialPost;
 }
@@ -79,6 +102,10 @@ export interface IGetSocialContentsByAuthorResult extends IResponseData {
   data: (ISocialPost)[]
 }
 
+export interface IGetSocialContentResult extends IResponseData {
+  data: ISocialPost;
+}
+
 export interface ICommentCreateResult extends IResponseData {
   data: {
     post: ISocialPost;
@@ -92,3 +119,15 @@ export interface ISearchResult extends IResponseData {
     blogs: ISocialPost[];
   }
 }
+
+export interface IGetNotificationsResult extends IResponseData {
+  data: ISocialNotification[];
+}
+
+// export interface IMarkAllNotificationsAsReadResult extends IResponseData {
+//   data: {
+//     n: number,
+//     nModified: number,
+//     ok: number,
+//   }
+// }

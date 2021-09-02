@@ -180,6 +180,9 @@ i {
   content: "\ec7d";
   margin-left: -1em;
 }
+.icon-lightning-outline:before {
+  content: "\ec7d";
+}
 .icon-lightning-filled .path1:before {
   content: "\ec7c";
 }
@@ -1240,6 +1243,9 @@ i {
   content: "\ed8d";
   margin-left: -1em;
 }
+.icon-text-block-outline:before {
+  content: "\ed8d";
+}
 .icon-text-bold .path1:before {
   content: "\ed8e";
   opacity: 0.16;
@@ -1810,6 +1816,9 @@ i {
   content: "\e979";
   margin-left: -1em;
 }
+.icon-cast-outline:before {
+  content: "\e979";
+}
 .icon-flag .path1:before {
   content: "\e97a";
   opacity: 0.16;
@@ -2107,6 +2116,9 @@ i {
 .icon-thumbs-up .path2:before {
   content: "\e9c5";
   margin-left: -1em;
+}
+.icon-thumbs-up-outline:before {
+  content: "\e9c5";
 }
 .icon-checkbox-circle .path1:before {
   content: "\e9c6";
@@ -2728,6 +2740,9 @@ i {
   content: "\ea5b";
   margin-left: -1em;
 }
+.icon-user-check-outline:before {
+  content: "\ea5b";
+}
 .icon-user-arrow-right .path1:before {
   content: "\ea5c";
   opacity: 0.16;
@@ -2994,6 +3009,9 @@ i {
 .icon-info .path2:before {
   content: "\eac1";
   margin-left: -1em;
+}
+.icon-info-outline:before {
+  content: "\eac1";
 }
 .icon-check-circle .path1:before {
   content: "\eac2";
@@ -4239,6 +4257,9 @@ i {
   content: "\ebd9";
   margin-left: -1em;
 }
+.icon-file-outline:before {
+  content: "\ebd9";
+}
 .icon-file-scan .path1:before {
   content: "\ebda";
   opacity: 0.16;
@@ -4286,6 +4307,9 @@ i {
 .icon-note-text .path2:before {
   content: "\ebe5";
   margin-left: -1em;
+}
+.icon-note-text-outline:before {
+  content: "\ebe5";
 }
 .icon-note .path1:before {
   content: "\ebe6";

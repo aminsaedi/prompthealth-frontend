@@ -22,7 +22,9 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
         placeholder="What's on your mind"
         [formControl]="f.description"
         (click)="focusEditor()"
-        ></quill-editor>  
+        >
+          <div quill-editor-toolbar></div>
+        </quill-editor>  
       </div>
     </div>
   

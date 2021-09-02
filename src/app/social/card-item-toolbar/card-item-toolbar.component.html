@@ -24,7 +24,7 @@
 
     <button-share
     facebook twitter linkedin email
-    [url]="FRONTEND_URL + 'community/profile/' + post.authorId +  '/post/' + post._id"
+    [url]="FRONTEND_URL + post.linkToPost"
     title="Check out my content on PromptHealth!"
     [text]=""
     [label]="isViewSm ? '' : 'Share'"

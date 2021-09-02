@@ -7,11 +7,11 @@ import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/so
 import { SocialNote } from 'src/app/models/social-note';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
-import { environment } from 'src/environments/environment';
 import { SocialPostTaxonomyType, SocialService } from '../social.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-list',
@@ -60,6 +60,7 @@ export class ListComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _uService: UniversalService,
     private _catService: CategoryService,
+    private _sanitizer: DomSanitizer,
   ) { }
 
   ngOnDestroy() {
@@ -83,19 +84,19 @@ export class ListComponent implements OnInit {
     if(this.selectedTopicId) {
       const topics = await this._catService.getCategoryAsync();
       const topicData = topics.find(item => item._id == this.selectedTopicId);
-      topic = topicData.item_text;
+      topic = topicData.item_text.toLowerCase();
     }
 
     let desc: string;
     switch(this.selectedTaxonomyType) {
-      case 'feed': desc = 'See what\'s happening about healthcare around the world.'; break;
-      case 'article': desc = 'Learn about healthcare topics and improve your health with us!'; break;
-      case 'event': desc = 'Find your favorite healthcare event and join now!'; break;
-      case 'media': desc = 'Find your favorite notes from best practitioners with voice, photos and media'; break;
+      case 'feed': desc = `See what\'s happening in healthcare scene${topic ? ' about ' + topic : ''} around the world.`; break;
+      case 'article': desc = `Larn about healthcare topics${topic ? ' about ' + topic : ''} and improve your health with us!`; break;
+      case 'event': desc = `Find your favorite healthcare event${topic ? ' about ' + topic : ''} and join now!`; break;
+      case 'media': desc = `Find your favorite quick tips${topic ? ' about ' + topic : ''} from best practitioners with voice, photos and media`; break;
     } 
 
     this._uService.setMeta(this._router.url, {
-      title: `${type}${topic ? (' of ' + topic) : ''} | PromptHealth Community`,
+      title: `PromptHealth Community | ${type == 'feed' ? 'Home' : (type + 's')}${topic ? (': collection of ' + topic) : ''}`,
       description: desc,
     });
   }
@@ -227,7 +228,8 @@ export class ListComponent implements OnInit {
 
   onPublishNewPost(data: ISocialPost) {
     data.author = this._profileService.user;
-
-    this.newPosts.unshift(new SocialNote(data));
+    const note = new SocialNote(data);
+    note.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(note.description));
+    this.newPosts.unshift(note);
   }
 }

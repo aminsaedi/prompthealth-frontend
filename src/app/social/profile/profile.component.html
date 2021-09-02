@@ -63,8 +63,13 @@
                 <span>Follow</span>
                 <span *ngIf="isFollowing">ing</span>
               </button>
-              <button class="btn btn-icon-grey small ml-10p py-5p">
-                <i iconPh="bell-plus" style="font-size: 25px"></i>
+              <button 
+              class="btn small ml-10p py-5p"
+              [ngClass]="(isBelling ? 'btn-icon-success' : 'btn-icon-grey')"
+              [disabled]="isBellLoading"
+              (click)="onClickBell()"
+              >
+                <i [iconPh]="isBelling ? 'bell' : 'bell-plus'" style="font-size: 25px"></i>
               </button>
             </div>
           </div>

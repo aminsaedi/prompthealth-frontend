@@ -1,23 +1,25 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { SocialNotification } from 'src/app/models/notification';
 import { Professional } from 'src/app/models/professional';
 import { Profile } from 'src/app/models/profile';
-import { ISearchResult } from 'src/app/models/response-data';
+import { IGetNotificationsResult, ISearchResult } from 'src/app/models/response-data';
 import { SearchQuery } from 'src/app/models/search-query';
 import { SocialArticle } from 'src/app/models/social-article';
 import { SocialEvent } from 'src/app/models/social-event';
 import { SocialNote } from 'src/app/models/social-note';
 import { ISocialPost, SocialPostBase } from 'src/app/models/social-post';
+import { FormItemInputComponent } from 'src/app/shared/form-item-input/form-item-input.component';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, fadeAnimation, slideHorizontalReverseAnimation, slideVerticalReverseAnimation } from 'src/app/_helpers/animations';
+import { SocialService } from '../social.service';
 
 @Component({
   selector: 'header-social',
@@ -43,7 +45,25 @@ export class HeaderComponent implements OnInit {
   get userName() { return this.user ? this.user.nickname : ''; }
   get user(): Profile { return this._profileService.profile; }
 
+  get numNotifications(): number { return this._socialService.notifications ? this._socialService.notifications.length : 0 };
+  get numUnreadNotifications() : number{
+    let num = 0;
+    if(this._socialService.notifications) {
+      this._socialService.notifications.forEach(n => {
+        if(!n.isRead) {
+          num++;
+        }
+      });
+    }
+    return num;
+  }
+
   get sizeS(): boolean { return (!window || window.innerWidth < 768); }
+
+  private subscriptionLoginStatus: Subscription;
+
+
+  @ViewChild('searchbar') private searchbar: FormItemInputComponent;
 
   constructor(
     private _router: Router,
@@ -54,8 +74,8 @@ export class HeaderComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _profileService: ProfileManagementService,
     private _modalService: ModalService,
-    private _uService: UniversalService,
     private _sharedService: SharedService,
+    private _socialService: SocialService,
   ) { }
 
   isActiveTaxonomy(type: string) {
@@ -67,7 +87,15 @@ export class HeaderComponent implements OnInit {
     return this._catService.iconOf(topic);
   }
 
+  ngOnDestroy() {
+    if(this.subscriptionLoginStatus) {
+      this.subscriptionLoginStatus.unsubscribe();
+    }
+  }
   ngOnInit(): void {
+
+    this.observeLoginStatus();
+
     this.formSearch = new FormControl();
     this.formSearch.valueChanges.subscribe((val) => {
       this.onSearchValueChanged(val);
@@ -99,6 +127,11 @@ export class HeaderComponent implements OnInit {
     const [path, queryParams] = this._modalService.currentPathAndQueryParams;
     queryParams.menu = id;
     this._router.navigate([path], {queryParams: queryParams});
+    if(id == 'search') {
+      setTimeout(() => {
+        this.searchbar.focus();
+      }, 300);  
+    }
   }
 
   onClickProfileIcon() {
@@ -187,5 +220,30 @@ export class HeaderComponent implements OnInit {
       this.isSearchLoading = null;
     });  
   }
-  
+
+  observeLoginStatus() {
+    const status = this._profileService.loginStatus;
+    if(status == 'loggedIn' && !this._socialService.doneInitNotification) {
+      this.fetchNotification();
+    }
+
+    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(status => {
+      if(status == 'loggedIn') {
+        this.fetchNotification();
+      }
+    });
+  }
+
+  fetchNotification() {
+    console.log('fetchNotification');
+    this._sharedService.get('notification/get-all').subscribe((res: IGetNotificationsResult) => {
+      if(res.statusCode == 200) {
+        this._socialService.saveNotifications(res.data);
+      } else {
+        console.log(res.message);
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
 }

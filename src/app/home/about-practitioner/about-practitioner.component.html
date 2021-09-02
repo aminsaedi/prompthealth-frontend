@@ -4,7 +4,7 @@
       <div class="col-12 col-md-7 col-xl-6 my-30p">
         <h6 class="text-primary">For Providers</h6>
         <h2 class="h3 h2-lg mb-25p">
-          Reach more new patients Grow your practice
+          Reach more new patients<br>Grow your practice
         </h2>
         <p class="text-label mb-30p">
           PromptHealth helps providers reach more new patients for in-person visits, video visits or both.
@@ -34,7 +34,7 @@
       <div class="mb-25p">
         <i [iconPh]="feature.icon" style="font-size: 30px;"></i>
       </div>
-      <h4 class="h4 clamp-2line">{{feature.title}}</h4>
+      <h4 class="h4 clamp-md-2line">{{feature.title}}</h4>
       <p class="text-label">{{feature.content}}</p>
     </li>
   </ul>
@@ -105,14 +105,14 @@
             *ngIf="isFeatureShowable(j, plan.key)"
             class="position-relative mb-20p subtitle2"
             >  
-              <i class="icon-pre text-placeholder" iconPh="checkbox-square"></i>
+              <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
               <span>{{feature.item}}</span>
             </li>  
           </ng-container>
         </ul>
 
         <button 
-        *ngIf="!profile"
+        *ngIf="isNotLoggedIn"
         class="btn"
         [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
         (click)="onClickSignup(plan.key)"
@@ -122,17 +122,17 @@
           <ng-container *ngIf="plan.key == 'centre'">Select</ng-container>
         </button>
 
-        <button 
-        *ngIf="!!profile"
-        class="btn"
-        [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
-        [disabled]="isLoading"
-        (click)="onClickCheckout(plan.key)"
-        >
-          <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
-          <ng-container *ngIf="plan.key == 'centre'">Select</ng-container>
-        </button>
-
+        <ng-container *ngIf="isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')">
+          <button 
+          class="btn"
+          [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
+          [disabled]="isLoading"
+          (click)="onClickCheckout(plan.key)"
+          >
+            <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
+            <ng-container *ngIf="plan.key != 'provider'">Select</ng-container>
+          </button>  
+        </ng-container>
       </div>
     </div>
   </div>

@@ -170,6 +170,7 @@ class="menu-slide-vertical"
     <div class="container py-25p py-md-15p">
       <form (ngSubmit)="search(formSearch.value)">
         <form-item-input
+        #searchbar
         name="search"
         prependIcon="search"
         type="text"
@@ -259,7 +260,10 @@ class="menu-slide-vertical"
 
 <ng-template #notification>
   <i iconPh="bell" class="large"></i>
-  <div class="notification-count bg-error text-white body-small rounded-4p">
-    <span>2</span>
+  <div 
+  *ngIf="numUnreadNotifications > 0"
+  class="notification-count bg-error text-white body-small rounded-4p"
+  >
+    <span>{{numUnreadNotifications}}</span>
   </div>
 </ng-template>
