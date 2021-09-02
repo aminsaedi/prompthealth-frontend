@@ -43,9 +43,7 @@ export class SocialNotification implements ISocialNotification{
 
   private _s3 = environment.config.AWS_S3;
 
-  constructor(private data: ISocialNotification) {
-    console.log(data);
-  }
+  constructor(private data: ISocialNotification) {}
 
   markAsRead() {
     this.data.isRead = true;

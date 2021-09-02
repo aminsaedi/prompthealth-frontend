@@ -119,7 +119,7 @@ export class ProfileComponent implements OnInit {
       this.profile = profile;
       this.setProfileMenu();
       this._socialService.setProfile(this.profile);
-      this.setMetaForAbout();
+      // this.setMetaForAbout();
     } else {
       const promiseAll: [Promise<Professional>, Promise<QuestionnaireMapProfilePractitioner>] = [
         this.fetchProfile(this.profileId),
@@ -141,17 +141,17 @@ export class ProfileComponent implements OnInit {
     this._sharedService.postNoAuth({_id: this.profileId}, 'user/update-view-count').subscribe(() => {});
   }
 
-  setMetaForAbout() {
-    const url = this._router.url;
-    if(!url.match('service|feed|review')) {
-      const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
-      const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
-      this._uService.setMeta(this._router.url, {
-        title: `${this.profile.name} in ${this.profile.city}, ${this.profile.state} | PromptHealth Community`,
-        description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
-      });
-    }
-  }
+  // setMetaForAbout() {
+  //   const url = this._router.url;
+  //   if(!url.match('service|feed|review')) {
+  //     const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
+  //     const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
+  //     this._uService.setMeta(this._router.url, {
+  //       title: `${this.profile.name} in ${this.profile.city}, ${this.profile.state} | PromptHealth Community`,
+  //       description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
+  //     });
+  //   }
+  // }
 
   setProfileMenu() {
     this.profileMenus = this.profile.isSA ? profileMenusForPH : this.profile.isProvider ? profileMenusForProvider : profileMenusForCompany;
