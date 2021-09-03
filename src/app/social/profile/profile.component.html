@@ -234,6 +234,7 @@
                 *ngFor="let indicator of profile.recommendations; let i = index;"
                 class="rounded-pill mx-5p active"
                 [ngClass]="{active: idxActiveRecommendationIndicator == i}"
+                (click)="onClickRecommendationCarouselIndicator(i)"
                 ></li>
               </ul>
             </div>
@@ -266,7 +267,7 @@
         *ngIf="canRecommend"
         routerLink="new-recommend"
         class="btn btn-text small px-0 mt-20p"
-        >Make a recommendation?</a>  
+        >Write a recommendation?</a>  
       </div>
     </div>
   </div>

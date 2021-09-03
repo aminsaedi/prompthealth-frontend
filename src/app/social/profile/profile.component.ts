@@ -200,22 +200,35 @@ export class ProfileComponent implements OnInit {
         this.startRecommendationCarousel();
       }, 300);
     }
-
   }
 
-  startRecommendationCarousel() {
-    const el = this.recommendationCarousel ? this.recommendationCarousel.nativeElement as HTMLDivElement : null;
+  startRecommendationCarousel(startAt: number = 0) {
+    const el = this.recommendationCarousel ? this.recommendationCarousel.nativeElement as HTMLDivElement : null;   
     if(el && this.profile.recommendations && this.profile.recommendations.length > 1) {
+      this.moveRecommendationCarousel(this.idxActiveRecommendationIndicator, startAt);
+
       this.timerRecommendationCarousel = setInterval(() => {
         const current = this.idxActiveRecommendationIndicator;
         const next = (this.idxActiveRecommendationIndicator + 1) % this.profile.recommendations.length;
-        this.idxActiveRecommendationIndicator = next;
-        
-        const wEl = el.getBoundingClientRect().width;
-        smoothHorizontalScrolling(el, 300, wEl * next - wEl * current, wEl * current);
+        this.moveRecommendationCarousel(current, next);
         this._changeDetector.detectChanges();
       }, 8000);  
     } 
+  }
+
+  moveRecommendationCarousel(current: number, next: number) {
+    const el = this.recommendationCarousel.nativeElement as HTMLDivElement;
+    const wEl = el.getBoundingClientRect().width;
+
+    this.idxActiveRecommendationIndicator = next;
+    smoothHorizontalScrolling(el, 300, wEl * next - wEl * current, wEl * current);
+  }
+
+  onClickRecommendationCarouselIndicator(i: number) {
+    if(this.timerRecommendationCarousel) {
+      clearInterval(this.timerRecommendationCarousel);
+    }
+    this.startRecommendationCarousel(i);
   }
 
   countupProfileView() {
