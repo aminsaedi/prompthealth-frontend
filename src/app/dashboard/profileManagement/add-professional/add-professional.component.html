@@ -38,7 +38,7 @@
             <td>
                 {{ prod.fname }} - {{ prod.lname }}
             </td>
-            <td class="whitespace-pre">{{ prod.description }}</td>
+            <td style="white-space: normal">{{ prod.description }}</td>
             <td>
                 <button (click)="deleteStaff(prod._id)" class="btn btn-error small mr-2"><i iconPh="trash"></i></button>
                 <button (click)="editStaff(prod)" class="btn btn-primary small">Edit</button>
