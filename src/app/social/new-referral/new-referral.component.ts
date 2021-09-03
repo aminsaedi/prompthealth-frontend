@@ -3,6 +3,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Professional } from 'src/app/models/professional';
 import { ICreateReferralsResult } from 'src/app/models/response-data';
@@ -48,8 +49,17 @@ export class NewReferralComponent implements OnInit {
 
 
   private referralType: ReferralType;
+  private subscriptionLoginStatus: Subscription;
+
+  ngOnDestroy() {
+    if(this.subscriptionLoginStatus) {
+      this.subscriptionLoginStatus.unsubscribe();
+    }
+  }
 
   ngOnInit(): void {
+    this.observeLoginStatus();
+
     this.form = new FormControl('', validators.referral);
 
     this._route.data.subscribe((data: {type: ReferralType}) => {
@@ -67,7 +77,14 @@ export class NewReferralComponent implements OnInit {
     }
   }
 
-
+  observeLoginStatus() {
+    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(res => {
+      if(res == 'notLoggedIn') {
+        this.isLocked = false;
+        this._router.navigate(['../'], {replaceUrl: true, relativeTo: this._route});
+      }
+    });
+  }
 
   publish() {
     this.isSubmitted = true;
