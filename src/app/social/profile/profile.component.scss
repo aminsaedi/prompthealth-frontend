@@ -75,3 +75,18 @@
     }
   }
 }
+
+.indicators {
+  li {
+    flex: 0 0 10px;
+    height: 5px;
+    background: $colorGsLine;
+
+    transition: flex 300ms;
+
+    &.active{
+      flex: 0 0 30px;
+      background: $colorSecondary;
+    }
+  }
+}

@@ -9,7 +9,7 @@ export interface ISocialNotification {
   isRead?: boolean;
   image?: string;
   link?: string;
-  type?: 'following' | 'new-event' | 'new-article' | 'password-change' | 'new-note' | 'new-promo';
+  type?: 'following' | 'new-event' | 'new-article' | 'password-change' | 'new-note' | 'new-promo' | 'new-review' | 'new-recommend';
   iOSLink?: string;
   androidLink?: string;
   createdAt?: Date;
@@ -32,6 +32,8 @@ export class SocialNotification implements ISocialNotification{
     let link = '';
     if(this.data.link) {
       switch(this.data.type) {
+        case 'new-recommend':
+        case 'new-review':
         case 'following': link = '/community/profile/' + this.data.link; break;
         case 'new-note':
         case 'new-article':

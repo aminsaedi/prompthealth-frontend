@@ -42,6 +42,9 @@ import { ProfileContactComponent } from './profile-contact/profile-contact.compo
 import { FollowListComponent } from './follow-list/follow-list.component';
 import { ProfileFollowListComponent } from './profile-follow-list/profile-follow-list.component';
 import { GuardIfNotLoggedInGuard } from '../auth/guard-if-not-logged-in.guard';
+import { NewReferralComponent } from './new-referral/new-referral.component';
+import { GuardIfNotProfileSelectedGuard } from './guard-if-not-profile-selected.guard';
+import { GuardIfNewReferralIncompletedGuard } from '../guard-if-new-referral-incompleted.guard';
 
 
 const routes: Routes = [
@@ -54,6 +57,15 @@ const routes: Routes = [
     ] },
 
     { path: 'profile/:userid/followings', component: ProfileFollowListComponent, data: {type: 'following'}},
+
+    { path: 'profile/:userid/new-review', component: NewReferralComponent, data: {type: 'review'}, 
+      canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfNotProfileSelectedGuard],
+      canDeactivate: [GuardIfNewReferralIncompletedGuard]
+    },
+    { path: 'profile/:userid/new-recommend', component: NewReferralComponent, data: {type: 'recommend'}, 
+      canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfNotProfileSelectedGuard],
+      canDeactivate: [GuardIfNewReferralIncompletedGuard]
+    },
 
     { path: 'content/:postid', component: PageComponent },
     { path: 'content', pathMatch: 'full', redirectTo: 'feed' },
@@ -110,6 +122,7 @@ const routes: Routes = [
     ProfileContactComponent,
     FollowListComponent,
     ProfileFollowListComponent,
+    NewReferralComponent,
   ],
   providers: [
     CategoryService,

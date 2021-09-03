@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';;
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +9,7 @@ import { GetQuery } from 'src/app/models/get-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
 import { Profile } from 'src/app/models/profile';
-import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowingsResult, IGetFollowStatusResult, IGetProfileResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
+import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowingsResult, IGetFollowStatusResult, IGetProfileResult, IGetReferralsResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
@@ -17,15 +17,16 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
+import { expandVerticalAnimation, slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
+import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
 import { SocialService } from '../social.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
-  animations: [slideInSocialProfileChildRouteAnimation],
+  animations: [slideInSocialProfileChildRouteAnimation, expandVerticalAnimation],
 })
 export class ProfileComponent implements OnInit {
 
@@ -35,6 +36,29 @@ export class ProfileComponent implements OnInit {
   get isProfileMyself() { return this.user && this.user._id == this.profileId; }
   get user() { return this._profileService.profile; }
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
+
+  get canRecommend() {
+    let canRecommend = false;
+    if(this.user && this.profile && !this.isProfileMyself && this.profile.doneInitRecommendations) {
+      if(this.user.isSA) {
+        canRecommend = true;
+      } else if (this.user.isProvider || this.user.isP) {
+        canRecommend = !!this.user.isApproved;
+      }
+
+      if(canRecommend) {
+        let alreadyCreateRecomendation = false;
+        for(let recommend of this.profile.recommendations) {
+          if(recommend.from == this.user._id) {
+            alreadyCreateRecomendation = true;
+            break;
+          }
+        }
+        canRecommend = !alreadyCreateRecomendation;
+      }
+    }
+    return canRecommend;
+  }
 
   linkToChildRoute(link: string) {
     const route = ['/community/profile', this.profileId];
@@ -55,6 +79,9 @@ export class ProfileComponent implements OnInit {
   public submittedFormBooking = false;
   public minDateTime: DateTimeData;
   public maxBookingNote = minmax.bookingNoteMax;
+
+  public idxActiveRecommendationIndicator: number = 0;
+  private timerRecommendationCarousel: any;
   
 
   public isBellLoading = false;
@@ -65,6 +92,7 @@ export class ProfileComponent implements OnInit {
 
   @ViewChild(FormItemDatetimeComponent) private formDateTimeComponent: FormItemDatetimeComponent;
   @ViewChild('#modalBooking') private modalBooking: ModalComponent;
+  @ViewChild('recommendationCarousel') private recommendationCarousel: ElementRef;
 
   constructor(
     private _route: ActivatedRoute,
@@ -77,10 +105,14 @@ export class ProfileComponent implements OnInit {
     private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
     private _uService: UniversalService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnDestroy() {
     this.subscriptionLoginStatus.unsubscribe();
+    if(this.timerRecommendationCarousel) {
+      clearInterval(this.timerRecommendationCarousel);
+    }
   }
 
   ngOnInit(): void {
@@ -108,6 +140,10 @@ export class ProfileComponent implements OnInit {
       this.checkFollowStatus();
       this.checkBellStatus();
       this.initProfile();
+
+      if(this.timerRecommendationCarousel) {
+        clearInterval(this.timerRecommendationCarousel);
+      }
     });
   }
 
@@ -117,6 +153,7 @@ export class ProfileComponent implements OnInit {
     const profile = this._socialService.profileOf(this.profileId);
     if(profile) {
       this.profile = profile;
+      this.initRecommendation();
       this.setProfileMenu();
       this._socialService.setProfile(this.profile);
       this.setMetaForAbout();
@@ -128,6 +165,7 @@ export class ProfileComponent implements OnInit {
 
       Promise.all(promiseAll).then((vals) => {
         this.profile = vals[0];
+        this.initRecommendation();
         this.setProfileMenu();
         this._socialService.setProfile(this.profile);
       }, error => {
@@ -135,6 +173,49 @@ export class ProfileComponent implements OnInit {
         this._toastr.error('Something went wrong.');
       });
     }
+
+  }
+
+  initRecommendation() {
+    this.idxActiveRecommendationIndicator = 0;
+
+    if(!this.profile.doneInitRecommendations) {
+      this._sharedService.getNoAuth('referral/get/' + this.profile._id).subscribe((res: IGetReferralsResult) => {
+        if(res.statusCode == 200) {
+          this.profile.setRecomendations(res.data);
+        } else {
+          console.log(res.message);
+          this.profile.setRecomendations([]);
+        }
+      }, error => {
+        console.log(error);
+        this.profile.setRecomendations([]);
+      }, () => {
+        setTimeout(() => {
+          this.startRecommendationCarousel();
+        }, 300); 
+      });
+    } else {
+      setTimeout(() => {
+        this.startRecommendationCarousel();
+      }, 300);
+    }
+
+  }
+
+  startRecommendationCarousel() {
+    const el = this.recommendationCarousel ? this.recommendationCarousel.nativeElement as HTMLDivElement : null;
+    if(el && this.profile.recommendations && this.profile.recommendations.length > 1) {
+      this.timerRecommendationCarousel = setInterval(() => {
+        const current = this.idxActiveRecommendationIndicator;
+        const next = (this.idxActiveRecommendationIndicator + 1) % this.profile.recommendations.length;
+        this.idxActiveRecommendationIndicator = next;
+        
+        const wEl = el.getBoundingClientRect().width;
+        smoothHorizontalScrolling(el, 300, wEl * next - wEl * current, wEl * current);
+        this._changeDetector.detectChanges();
+      }, 8000);  
+    } 
   }
 
   countupProfileView() {
