@@ -5,11 +5,10 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';;
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { GetQuery } from 'src/app/models/get-query';
+import { GetReferralsQuery } from 'src/app/models/get-referrals-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
-import { Profile } from 'src/app/models/profile';
-import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowingsResult, IGetFollowStatusResult, IGetProfileResult, IGetReferralsResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
+import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetReferralsResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
@@ -180,7 +179,12 @@ export class ProfileComponent implements OnInit {
     this.idxActiveRecommendationIndicator = 0;
 
     if(!this.profile.doneInitRecommendations) {
-      this._sharedService.getNoAuth('referral/get/' + this.profile._id).subscribe((res: IGetReferralsResult) => {
+      const query = new GetReferralsQuery({
+        type: 'recommend',
+        order: 'desc',
+        sortBy: 'createdAt',
+      });
+      this._sharedService.getNoAuth('referral/get/' + this.profile._id + query.toQueryParamsString()).subscribe((res: IGetReferralsResult) => {
         if(res.statusCode == 200) {
           this.profile.setRecomendations(res.data);
         } else {
@@ -535,6 +539,7 @@ const profileMenusForCompany: IProfileMenuItem[] = [
 const profileMenusForPH: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
   {id: 'feed',    label: 'Feed',    relativeLink: 'feed'},
+  {id: 'review',  label: 'Review',  relativeLink: 'review'},
 ];
 
 interface IProfileMenuItem {

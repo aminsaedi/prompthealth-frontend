@@ -213,7 +213,7 @@
               >
                 <ul class="list-unstyled d-flex flex-nowrap">
                   <li
-                  *ngFor="let recommendation of profile.recommendations"
+                  *ngFor="let recommendation of profile.recommendationsPreview"
                   style="flex: 0 0 100%;"
                   >
                     <p class="body1 clamp-3line">{{recommendation.body}}</p>
@@ -227,16 +227,17 @@
                 </ul>
               </div>
               <ul 
-              *ngIf="profile.recommendations && profile.recommendations.length > 1"
+              *ngIf="profile.recommendationsPreview.length > 1"
               class="list-unstyled d-flex flex-nowrap justify-content-center indicators"
               >
                 <li 
-                *ngFor="let indicator of profile.recommendations; let i = index;"
+                *ngFor="let indicator of profile.recommendationsPreview; let i = index;"
                 class="rounded-pill mx-5p active"
                 [ngClass]="{active: idxActiveRecommendationIndicator == i}"
                 (click)="onClickRecommendationCarouselIndicator(i)"
                 ></li>
               </ul>
+              <a routerLink="review" class="btn btn-text small px-0">See more recommendations</a>
             </div>
             
             <div *ngIf="profile.isProvider">

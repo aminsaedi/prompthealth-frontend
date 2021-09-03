@@ -1,11 +1,15 @@
 export interface IGetQuery {
   count?: number;
   page?: number;
+  sortBy?: string;
+  order?: 'desc' | 'asc';
 }
 
 export class GetQuery {
   get count() { return this.data.count || 20; };
   get page() { return this.data.page || 1; };
+  get order() { return this.data.order || null; }
+  get sortBy() { return this.data.sortBy || null; }
 
   constructor(
     protected data: IGetQuery = {},
@@ -15,6 +19,8 @@ export class GetQuery {
     const json: IGetQuery = {
       count: this.count,
       page: this.page,
+      ... this.sortBy && {sortBy: this.sortBy},
+      ... this.order && {order: this.order},
     };
     return json;
   }
@@ -25,7 +31,11 @@ export class GetQuery {
     
     for(let key in data) {
       let val = data[key];
-      paramsArray.push(key + '=' + val);
+      if(Array.isArray(val)) {
+        paramsArray.push(key + '=' + val.join(','));
+      } else {
+        paramsArray.push(key + '=' + val);
+      }
     }
     return '?' + paramsArray.join('&');
   }

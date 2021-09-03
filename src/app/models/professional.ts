@@ -44,6 +44,7 @@ export interface IProfessional extends IProfile {
 
   doneInitRecommendations: boolean;
   recommendations: Referral[];
+  recommendationsPreview: Referral[];
 
 
   amenity: ImageViewerData; /** all amenities data */
@@ -126,6 +127,7 @@ export class Professional extends Profile implements IProfessional{
 
   get doneInitRecommendations() { return !!this._recommendations; }
   get recommendations() { return this._recommendations; }
+  get recommendationsPreview() { return this.recommendations ? this.recommendations.slice(0,3) : []};
 
   get amenity() {
     return (this._amenities && this._amenities.imageGroups.length > 0 && this.p.plan && this.p.plan.ListAmenities) ? this._amenities : {imageGroups: []};
