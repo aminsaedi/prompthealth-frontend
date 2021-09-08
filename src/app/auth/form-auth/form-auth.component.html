@@ -60,8 +60,7 @@
 
     <div class="mb-3" *ngIf="authType == 'signup'">
       <form-item-checkbox
-      name="t_c"
-      label="I agree to the terms of service and privacy policy"
+      label="I agree to the <a href='/terms' target='_blank'>terms of service</a> and <a href='/terms' target='_blank'>privacy policy</a>"
       [controller]="f.t_c"
       ></form-item-checkbox>
       <form-item-errors
