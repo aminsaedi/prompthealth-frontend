@@ -77,21 +77,25 @@ export class ModalEventComponent implements OnInit {
   }
   onSuccessSubscribe() {
     this.isLoading = false;
-    this._toastr.success('Thank you for subscribe! you are redireced to event page within 5 seconds');
+    if(!this.post.link) {
+      this._toastr.success('Thank you for subscribe!');
+    } else {
+      this._toastr.success('Thank you for subscribe! you are redireced to event page within 5 seconds');
 
-    this.timeRedirect = 5;
-    this.isRedirecting = true;
-
-    this.timerRedirect = setInterval(() => {
-      this.timeRedirect --;
-
-      if (this.timeRedirect <= 0 && location) {
-        this.isRedirecting = false;
-        clearInterval(this.timerRedirect);
-        location.href = this.post.link;
-        this.modalSubscribeMenu.hide();
-      }
-    }, 1000);
+      this.timeRedirect = 5;
+      this.isRedirecting = true;
+  
+      this.timerRedirect = setInterval(() => {
+        this.timeRedirect --;
+  
+        if (this.timeRedirect <= 0 && location) {
+          this.isRedirecting = false;
+          clearInterval(this.timerRedirect);
+          location.href = this.post.link;
+          this.modalSubscribeMenu.hide();
+        }
+      }, 1000);
+    }
   }
 
   onErrorSubscribe() {
