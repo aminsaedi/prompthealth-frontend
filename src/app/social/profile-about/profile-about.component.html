@@ -16,7 +16,7 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
   <ng-container *ngIf="profile.isProvider">
     <div class="pt-30p border-top border-line">
       <div class="row">
-        <div class="col-12 col-lg-6">
+        <div class="col-12">
           <div class="mb-20p">
             <h6>Fees:</h6>
             <p>Standard Hourly Fees: $49</p>
@@ -91,9 +91,39 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
             (click)="openProductViewer()" 
             >Show detail</button>
           </div>
+
+          <div 
+          class="mb-20p"
+          *ngIf="profile.professionals.length > 0"
+          >
+            <h6>Staffs:</h6>
+            <ul 
+            *ngFor="let professional of profile.professionals"
+            class="list-unstyled"
+            >
+              <li class="d-flex">
+                <profile-image [image]="professional.profileImage" size=70></profile-image>
+                <div class="ml-15p">
+                  <div class="subtitle1">{{professional.name}}</div>
+                  <p 
+                  class="body1 text-label mb-0"
+                  [ngClass]="{'clamp-2line': !isStaffSelected(professional)}"
+                  >{{professional.description}}</p>
+
+                  <button
+                  class="btn btn-text-body small px-0"
+                  (click)="onClickStaffDescription(professional)"
+                  >
+                    <span *ngIf="isStaffSelected(professional)">Show less</span>
+                    <span *ngIf="!isStaffSelected(professional)">Show more</span>
+                  </button>
+                </div>  
+              </li>
+            </ul>
+          </div>
         </div>
     
-        <div class="col-12 col-lg-6">
+        <!-- <div class="col-12 col-lg-6">
           <div class="bg-background rounded-8p p-20p">
             <h6>Contact</h6>
     
@@ -121,7 +151,7 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
             </div>
       
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </ng-container>

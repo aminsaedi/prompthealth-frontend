@@ -26,6 +26,7 @@ export class ProfileAboutComponent implements OnInit {
   public isPartnerViewerShown = false;
 
   private subscription: Subscription;
+  private selectedStaffIds = [];
 
   constructor(
     private _socialService: SocialService,
@@ -61,6 +62,11 @@ export class ProfileAboutComponent implements OnInit {
       p.markAsTriedFetchingProduct();
       this.fetchProduct();
     }
+
+    if(p && p.isC && !p.triedFetchingProfessionals) {
+      p.markAsTriedFetchingProfessionals();
+      this.fetchStaffs();
+    }
   }
 
   setMeta() {
@@ -81,7 +87,7 @@ export class ProfileAboutComponent implements OnInit {
 
   fetchAmenity() {
     return new Promise((resolve, reject) => {
-      const path = `amenity/get-all/?userId=${this.profile._id}&count=10&page=1&frontend=0`;
+      const path = `amenity/get-all/?userId=${this.profile._id}&count=20&page=1&frontend=0`;
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
         if (res.statusCode === 200) {
           this.profile.setAmenities(res.data.data);
@@ -98,7 +104,7 @@ export class ProfileAboutComponent implements OnInit {
 
   fetchProduct() {
     return new Promise((resolve, reject) => {
-      const path = `product/get-all?userId=${this.profile.id}&count=10&page=1&frontend=0/`;
+      const path = `product/get-all?userId=${this.profile.id}&count=20&page=1&frontend=0/`;
       this._sharedService.getNoAuth(path).subscribe((res: any) => {
         if (res.statusCode === 200) {
           this.profile.setProducts(res.data.data);
@@ -111,6 +117,37 @@ export class ProfileAboutComponent implements OnInit {
         reject();
       });  
     })
+  }
+
+  fetchStaffs() {
+    return new Promise((resolve, reject) => {
+      const path = `staff/get-all?userId=${this.profile.id}&count=20&page=1&frontend=0/`;
+      this._sharedService.getNoAuth(path).subscribe((res: any) => {
+        if(res.statusCode == 200) {
+          this.profile.setProfessionals(res.data.data);
+          resolve(true);  
+        } else {
+          console.log(res.message);
+          reject();
+        }
+      }, error => {
+        console.log(error);
+        reject();
+      });
+    });
+  }
+
+  isStaffSelected(p: Professional) {
+    return !!(this.selectedStaffIds.indexOf(p._id) >= 0);
+  }
+
+  onClickStaffDescription(p: Professional) {
+    const idx = this.selectedStaffIds.findIndex(id => id == p._id);
+    if(idx >= 0) {
+      this.selectedStaffIds.splice(idx, 1);
+    } else {
+      this.selectedStaffIds.push(p._id);
+    }
   }
 
   openAmenityViewer() { this.isAmenityViewerShown = true; }
