@@ -374,14 +374,19 @@
               [ngClass]="{scaleup: selectedAppFeature !== null}"
               src="assets/img/home/app-feature-splash.png"
               >
-              <ng-container *ngFor="let i of [0,1,2,3,4,5]">
+              <!-- <ng-container *ngFor="let i of [0,1,2,3,4,5]">
                 <img 
                 class="mobile-inner item"
                 [ngClass]="{'active': i == 0 || selectedAppFeature >= i}"
                 [src]="'assets/img/home/app-feature-item-' + i + '.png'"
                 >  
-              </ng-container>
-              <img class="mobile-body position-relative" src="assets/img/home/app-feature-body.png" alt="PromptHealth app is available on App Store and Google Play">  
+              </ng-container> -->
+              <img 
+              class="mobile-inner item"
+              [ngClass]="{'active': selectedAppFeature >= 0}"
+              [src]="'assets/img/home/app-feature-item.png'"
+              >  
+            <img class="mobile-body position-relative" src="assets/img/home/app-feature-body.png" alt="PromptHealth app is available on App Store and Google Play">  
             </div>
           </div>
           <ul class="list-unstyled app-features mb-0 ml-md-50p ml-xl-90p">

@@ -205,7 +205,7 @@ const validatorExactPricingRequired = [Validators.pattern(pattern.price), Valida
 const validatorTextarea = [Validators.maxLength(minmax.textareaMax)];
 
 export const validators = {
-  profileImageProvider: validatorRequired,
+  profileImageProvider: [],
   nameCentre: validatorNameSP,
   nameProvider: validatorNameSP,
   namePartner: validatorNameSP,
