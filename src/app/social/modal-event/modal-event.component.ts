@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { ISocialPost } from 'src/app/models/social-post';
+import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
   selector: 'modal-event',
@@ -17,14 +18,13 @@ export class ModalEventComponent implements OnInit {
 
   public isCalendarMenuShown: boolean = false;
   public isSubscribeMenuShown: boolean = false;
+  public isICalAvailable: boolean = true;
 
   public isLoading: boolean = false;
   public isRedirecting: boolean = false;
 
   public timeRedirect: number = 5;
   public timerRedirect: any;
-
-  public test: string;
 
   @ViewChild('formSubscribe') formSubscribe: FormSubscribeComponent;
   @ViewChild('modalSubscribeMenu') modalSubscribeMenu: ModalComponent;
@@ -36,11 +36,13 @@ export class ModalEventComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const isICalAvailable = true;
     if(window && 'navigator' in window) {
-      this.test =window.navigator.userAgent;
+      const ua = window.navigator.userAgent.toLowerCase();
+      this.isICalAvailable = !(ua.match(/iphone|ipad/) && ua.match(/crios/));
     }
   }
+
+  public test: any;
 
   addToCalendar(calendarType: string) {
     const calendarOption: CalendarOptions = {
@@ -57,13 +59,6 @@ export class ModalEventComponent implements OnInit {
         calendar = new GoogleCalendar(calendarOption); 
         window.open(calendar.render(), '_blank');
         break;
-      case 'ical': 
-        calendar = new ICalendar(calendarOption); 
-        // calendar.download('calendar.ics');
-        window.open('webcal://' + calendar.render());
-
-
-        break;
       case 'outlook':
         calendar = new OutlookCalendar(calendarOption);
         window.open(calendar.render(), '_blank');
@@ -72,7 +67,16 @@ export class ModalEventComponent implements OnInit {
         calendar = new YahooCalendar(calendarOption);
         window.open(calendar.render(), '_blank');
         break;
-    }
+      case 'ical': 
+        calendar = new ICalendar(calendarOption); 
+        try {
+          calendar.download();
+        } catch(error) {
+          this.test = error;
+        }
+        
+        break;
+      }
 
     setTimeout(() => {
       this.modalCalendarMenu.hide();
