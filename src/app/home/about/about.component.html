@@ -138,18 +138,16 @@
       >
         <div
         *ngFor="let member of teamData; let i = index"
-        class="col-12 col-md-6 col-xl-4 mb-50p"
+        class="col-12 col-md-6 col-xl-4 mb-50p cursor-pointer"
         (click)="onMemberClicked(i)"
-        (mouseenter)="onMemberMouseHover(i)"
-        (mouseleave)="onMemberMouseHover(-1)"
         >
-          <div class="image-container-100pc image-container-md-130pc image-container-lg-100pc image-container-xl-130pc mb-20p rounded-12p overflow-hidden">
+          <div class="image-container-100pc image-container-md-130pc image-container-lg-100pc image-container-xl-130pc mb-20p rounded-12p overflow-hidden member-image-container">
             <img
             [src]="'/assets/img/about/' + member.image"
             [alt]="member.name"
             >
             <p 
-            class="member-content position-absolute px-20p py-15p text-white mb-0"
+            class="member-content position-absolute px-20p py-15p text-white mb-0 rounded-12p"
             *ngIf="i == idxSelectedMember"
             [@fade]
             >{{member.content}}</p>

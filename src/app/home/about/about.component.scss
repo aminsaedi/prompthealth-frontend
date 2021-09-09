@@ -73,6 +73,13 @@ svg.icon-ph-half {
   transform: translate(20%);
 }
 
+.member-image-container {
+  transition: box-shadow 150ms;
+  &:hover {
+    box-shadow: 0 0 5px #949494;
+  }
+}
+
 .member-content {
   width: 100%;
   height: 100%;

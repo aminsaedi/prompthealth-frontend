@@ -70,13 +70,7 @@ export class AboutComponent implements OnInit {
 
   onMemberClicked(i: number) {
     const next = this.idxSelectedMember == i ? -1 : i;
-    this.changeSelectedMember(next);  
-  }
-
-  onMemberMouseHover(i: number) {
-    setTimeout(() => {
-      this.changeSelectedMember(i);
-    });
+    this.changeSelectedMember(next);
   }
 
   changeSelectedMember(i: number) {
@@ -129,7 +123,7 @@ const teamData = [
     name: 'Takayuki Hiraishi',
     title: 'Software Developer',
     image: 'hedieh.png',
-    content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
+    content: 'Takayuki joined the team as frontend engineer in December 2020, with MEAN stack experience, contributing to PromptHealth web platform. He believes in the power of combination of the healthcare system and web service and is eager to make user experience on the platform better.'
   },
   {
     name: 'Amin Saedi',
