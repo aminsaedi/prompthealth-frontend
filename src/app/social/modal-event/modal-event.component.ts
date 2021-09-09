@@ -24,6 +24,8 @@ export class ModalEventComponent implements OnInit {
   public timeRedirect: number = 5;
   public timerRedirect: any;
 
+  public test: string;
+
   @ViewChild('formSubscribe') formSubscribe: FormSubscribeComponent;
   @ViewChild('modalSubscribeMenu') modalSubscribeMenu: ModalComponent;
   @ViewChild('modalCalendarMenu') modalCalendarMenu: ModalComponent;
@@ -33,7 +35,12 @@ export class ModalEventComponent implements OnInit {
     private _modalService: ModalService,
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    const isICalAvailable = true;
+    if(window && 'navigator' in window) {
+      this.test =window.navigator.userAgent;
+    }
+  }
 
   addToCalendar(calendarType: string) {
     const calendarOption: CalendarOptions = {
@@ -52,7 +59,10 @@ export class ModalEventComponent implements OnInit {
         break;
       case 'ical': 
         calendar = new ICalendar(calendarOption); 
-        calendar.download('calendar.ics')
+        // calendar.download('calendar.ics');
+        window.open('webcal://' + calendar.render());
+
+
         break;
       case 'outlook':
         calendar = new OutlookCalendar(calendarOption);
