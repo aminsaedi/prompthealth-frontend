@@ -68,13 +68,12 @@ export class ModalEventComponent implements OnInit {
         window.open(calendar.render(), '_blank');
         break;
       case 'ical': 
-        calendar = new ICalendar(calendarOption); 
-        try {
+        if (this.isICalAvailable) {
+          calendar = new ICalendar(calendarOption); 
           calendar.download();
-        } catch(error) {
-          this.test = error;
-        }
-        
+        } else {
+          alert('Please use safari to add calendar.');
+        }        
         break;
       }
 
