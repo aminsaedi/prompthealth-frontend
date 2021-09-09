@@ -42,8 +42,6 @@ export class ModalEventComponent implements OnInit {
     }
   }
 
-  public test: any;
-
   addToCalendar(calendarType: string) {
     const calendarOption: CalendarOptions = {
       title: this.post.title,
@@ -72,7 +70,7 @@ export class ModalEventComponent implements OnInit {
           calendar = new ICalendar(calendarOption); 
           calendar.download();
         } else {
-          alert('Please use safari to add calendar.');
+          alert('Please use Safari to add calendar.');
         }        
         break;
       }
