@@ -24,7 +24,7 @@ export class SocialNotification implements ISocialNotification{
   get body() { return this.data.body; }
   get userId() { return this.data.userId; }
   get isRead() { return this.data.isRead; }
-  get image() { return this._s3 + this.data.image; }
+  get image() { return this._image; }
   get link() { return this.data.link; }
   get createdAt() { return new Date(this.data.createdAt); }
 
@@ -42,8 +42,15 @@ export class SocialNotification implements ISocialNotification{
   }
 
   private _s3 = environment.config.AWS_S3;
+  private _image: string;
 
-  constructor(private data: ISocialNotification) {}
+  constructor(private data: ISocialNotification) {
+    if(data.type == 'password-change') {
+      this._image = '/assets/img/logo-sm-white.png';
+    } else {
+      this._image = data.image ? (this._s3 + data.image) : null;
+    }
+  }
 
   markAsRead() {
     this.data.isRead = true;

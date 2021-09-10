@@ -73,6 +73,7 @@ export interface IProfessional extends IProfile {
   triedFetchingGoogleReviews: boolean;
   triedFetchingAmenity: boolean;
   triedFetchingProduct: boolean;
+  triedFetchingProfessionals: boolean;
 }
 
 export class Professional extends Profile implements IProfessional{
@@ -180,6 +181,7 @@ export class Professional extends Profile implements IProfessional{
   get triedFetchingAmenity() { return this._triedFetchingAmenity; }
   get triedFetchingProduct() { return this._triedFetchingProduct;}
   get triedFetchingGoogleReviews() { return this._triedFetchingGoogleReviews; }
+  get triedFetchingProfessionals() { return this._triedFetchingProfessionals; }
 
 
   uncheckForCompare() { this._isCheckedForCompared = false; }
@@ -220,6 +222,7 @@ export class Professional extends Profile implements IProfessional{
   private _triedFetchingGoogleReviews = false;
   private _triedFetchingAmenity = false;
   private _triedFetchingProduct = false;
+  private _triedFetchingProfessionals = false;
 
   constructor(id: string, protected p: IUserDetail, private ans?: any) {
     super({...p, _id: id});
@@ -254,9 +257,13 @@ export class Professional extends Profile implements IProfessional{
 
   markAsTriedFetchingAmenity() { this._triedFetchingAmenity = true; }
   markAsTriedFetchingProduct() { this._triedFetchingProduct = true; }
+  markAsTriedFetchingProfessionals() { this._triedFetchingProfessionals = true; }
 
   
-  setProfessionals(professionals: Professional[]) { professionals.forEach(p => { this._professionals.push(p); }); }
+  setProfessionals(professionals: IUserDetail[]) { 
+    const ps = professionals.map(item => new Professional(item._id, item));
+    this._professionals = ps;
+  }
 
   setAmenities(amenities: any[]) {
     const as = [];

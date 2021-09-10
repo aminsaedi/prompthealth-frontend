@@ -428,7 +428,7 @@ export class ProfileComponent implements OnInit {
 const profileMenusForProvider: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
   {id: 'service', label: 'Service', relativeLink: 'service', },
-  {id: 'feed',    label: 'Feed',    relativeLink: 'feed'},
+  {id: 'feed',    label: 'Contents',    relativeLink: 'feed'},
   {id: 'review',  label: 'Review',  relativeLink: 'review'},
 ];
 
@@ -440,7 +440,7 @@ const profileMenusForCompany: IProfileMenuItem[] = [
 
 const profileMenusForPH: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
-  {id: 'feed',    label: 'Feed',    relativeLink: 'feed'},
+  {id: 'feed',    label: 'Contents',    relativeLink: 'feed'},
 ];
 
 interface IProfileMenuItem {

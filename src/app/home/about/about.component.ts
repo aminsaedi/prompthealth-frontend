@@ -69,7 +69,6 @@ export class AboutComponent implements OnInit {
   }
 
   onMemberClicked(i: number) {
-    this.disableAnimationTeam = false;
     const next = this.idxSelectedMember == i ? -1 : i;
     this.changeSelectedMember(next);
   }
@@ -91,44 +90,50 @@ const topImages = [
 
 const teamData = [
   {
-    name: 'Hedieh Safiyari',
-    title: 'CEO & Founder',
+    name: 'Jasmine Marahar',
+    title: 'Product Manager',
+    image: 'hedieh.png',
+    content: 'Jasmine joined the team in January 2020 with a background in HR Management to help on the mission to educate others on their treatment options. As someone who has battled mental health challenges all her life, Jasmine knows first-hand that individual care needs for what can diagnostically be the same issue can still be different. Helping others find information and care that is reliable and works best for their needs is important to her.'
+  },
+  {
+    name: 'Jaden Kim',
+    title: 'Digital Marketing and Social Media Manager',
+    image: 'hedieh.png',
+    content: 'Jaden joined the team in May, with a background in social media and marketing, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue her passion for marketing and making healthcare more accessible. Working at PromptHealth means a lot to her, as she feels strongly about the value that PromptHealth can bring to people.'
+  },
+  {
+    name: 'Leah King',
+    title: 'Digital Marketing and Communications Manager',
+    image: 'hedieh.png',
+    content: 'Leah joined the team in May 2021, eager to use her background in marketing to propel PromptHealth’s mission to help others in their health and wellness journeys. With an experience of the difficulties our current healthcare system entails when seeking healthcare, Leah sees the immense value PromptHealth can bring to people.'
+  },
+  {
+    name: 'Evan Wang',
+    title: 'Account Relationship Manager',
+    image: 'hedieh.png',
+    content: 'Evan joined the team in August 2021 with a running record of sales experiences to unveil and expand the myriad of health services for those in need. In the process of completing his bachelor’s degree in commerce, he is seeking to emulate his values of altruism and service by assisting those who practice health. Generating channels for service providers gives him purpose and has proven to be his vocation.'
+  },
+  {
+    name: 'Otto Hu',
+    title: 'Software Developer',
     image: 'hedieh.png',
     content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
   },
   {
-    name: 'Hedieh Safiyari',
-    title: 'CEO & Founder',
+    name: 'Takayuki Hiraishi',
+    title: 'Software Developer',
+    image: 'hedieh.png',
+    content: 'Takayuki joined the team as frontend engineer in December 2020, with MEAN stack experience, contributing to PromptHealth web platform. He believes in the power of combination of the healthcare system and web service and is eager to make user experience on the platform better.'
+  },
+  {
+    name: 'Amin Saedi',
+    title: 'Mobile App Developer',
     image: 'hedieh.png',
     content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
   },
   {
-    name: 'Hedieh Safiyari',
-    title: 'CEO & Founder',
-    image: 'hedieh.png',
-    content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
-  },
-  {
-    name: 'Hedieh Safiyari',
-    title: 'CEO & Founder',
-    image: 'hedieh.png',
-    content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
-  },
-  {
-    name: 'Hedieh Safiyari',
-    title: 'CEO & Founder',
-    image: 'hedieh.png',
-    content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
-  },
-  {
-    name: 'Hedieh Safiyari',
-    title: 'CEO & Founder',
-    image: 'hedieh.png',
-    content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
-  },
-  {
-    name: 'Hedieh Safiyari',
-    title: 'CEO & Founder',
+    name: 'Reza Ghenaat',
+    title: 'Product Designer',
     image: 'hedieh.png',
     content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
   },

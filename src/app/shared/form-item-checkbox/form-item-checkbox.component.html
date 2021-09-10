@@ -23,5 +23,5 @@
     <input type="radio" [id]="name" class="form-check-controller" [name]="group" [value]="value" [formControl]="controller" (change)="onChange()">
   </div>
 
-  <label [for]="name" class="m-0 subtitle1">{{label}}</label>  
+  <label [for]="name" class="m-0 subtitle1" [innerHTML]="label"></label>  
 </div>

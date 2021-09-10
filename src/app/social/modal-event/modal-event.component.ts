@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { ISocialPost } from 'src/app/models/social-post';
+import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
   selector: 'modal-event',
@@ -17,6 +18,7 @@ export class ModalEventComponent implements OnInit {
 
   public isCalendarMenuShown: boolean = false;
   public isSubscribeMenuShown: boolean = false;
+  public isICalAvailable: boolean = true;
 
   public isLoading: boolean = false;
   public isRedirecting: boolean = false;
@@ -33,7 +35,12 @@ export class ModalEventComponent implements OnInit {
     private _modalService: ModalService,
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if(window && 'navigator' in window) {
+      const ua = window.navigator.userAgent.toLowerCase();
+      this.isICalAvailable = !(ua.match(/iphone|ipad/) && ua.match(/crios/));
+    }
+  }
 
   addToCalendar(calendarType: string) {
     const calendarOption: CalendarOptions = {
@@ -50,10 +57,6 @@ export class ModalEventComponent implements OnInit {
         calendar = new GoogleCalendar(calendarOption); 
         window.open(calendar.render(), '_blank');
         break;
-      case 'ical': 
-        calendar = new ICalendar(calendarOption); 
-        calendar.download('calendar.ics')
-        break;
       case 'outlook':
         calendar = new OutlookCalendar(calendarOption);
         window.open(calendar.render(), '_blank');
@@ -62,7 +65,15 @@ export class ModalEventComponent implements OnInit {
         calendar = new YahooCalendar(calendarOption);
         window.open(calendar.render(), '_blank');
         break;
-    }
+      case 'ical': 
+        if (this.isICalAvailable) {
+          calendar = new ICalendar(calendarOption); 
+          calendar.download();
+        } else {
+          alert('Please use Safari to add calendar.');
+        }        
+        break;
+      }
 
     setTimeout(() => {
       this.modalCalendarMenu.hide();
@@ -77,21 +88,25 @@ export class ModalEventComponent implements OnInit {
   }
   onSuccessSubscribe() {
     this.isLoading = false;
-    this._toastr.success('Thank you for subscribe! you are redireced to event page within 5 seconds');
+    if(!this.post.link) {
+      this._toastr.success('Thank you for subscribe!');
+    } else {
+      this._toastr.success('Thank you for subscribe! you are redireced to event page within 5 seconds');
 
-    this.timeRedirect = 5;
-    this.isRedirecting = true;
-
-    this.timerRedirect = setInterval(() => {
-      this.timeRedirect --;
-
-      if (this.timeRedirect <= 0 && location) {
-        this.isRedirecting = false;
-        clearInterval(this.timerRedirect);
-        location.href = this.post.link;
-        this.modalSubscribeMenu.hide();
-      }
-    }, 1000);
+      this.timeRedirect = 5;
+      this.isRedirecting = true;
+  
+      this.timerRedirect = setInterval(() => {
+        this.timeRedirect --;
+  
+        if (this.timeRedirect <= 0 && location) {
+          this.isRedirecting = false;
+          clearInterval(this.timerRedirect);
+          location.href = this.post.link;
+          this.modalSubscribeMenu.hide();
+        }
+      }, 1000);
+    }
   }
 
   onErrorSubscribe() {
