@@ -5,6 +5,12 @@
   background: rgba($color: $colorPrimaryLight, $alpha: 0.7);
 }
 
+.overflow-lg-visible {
+  @media (min-width: $breakpointLg) {
+    overflow: visible!important;
+  }
+}
+
 .video-container {
   width: 100%;
   box-shadow: 10px 10px 10px #00000050;
@@ -293,6 +299,7 @@ $stickyPointAppFeature: 80px;
 
     &.splash {
       z-index: 8;
+      transform: scale(0.95);
     }
     &.splash.scaleup {
       transform: scale(4);

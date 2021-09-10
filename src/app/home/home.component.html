@@ -266,22 +266,30 @@
 </section>
 
 <!-- testimonial start-->
+<div class="intersection-observer" intersectionObserver rootMargin="-70% 0px 10000px 0px" (changeStatus)="onIntersectTestimonial($event)"></div>
 <section class="bg-primary-light py-100p position-relative overflow-hidden">
   <!-- <div class="circle-container-testimonial">
     <div class="circle-secondary"></div>
   </div> -->
   <div class="container">
     <div class="row">
-      <div class="col-12 col-md-6 col-lg-4">
+      <div class="col-12 col-xl-4">
         <h2>What people think of us</h2>
         <p class="subtitle1 opacity-70pc mb-45p">When our members are happy, we are too.</p>
-        <button class="btn" (click)="toggle()">CLICK</button>
         <!-- <a class="btn btn-primary">Read More Testimonials</a> -->
       </div>
 
-      <div class="col-12 col-md-6 col-lg-8" [@slideVerticalStagger]="testimonial.length">
-        <div style="width: 300px" *ngFor="let i of testimonial">
-          <card-testimonial></card-testimonial>
+      <div 
+      class="col-12 col-xl-8 d-flex px-10p px-lg-0p flex-nowrap overflow-auto overflow-lg-visible" 
+      [@slideVerticalStagger]="testimonials.length"
+      [@.disabled]="disabledAnimationTestimonials"
+      >
+        <div 
+        class="mr-15p"
+        style="width: 300px" 
+        *ngFor="let testimonial of testimonials"
+        >
+          <card-testimonial [data]="testimonial"></card-testimonial>
         </div>
       </div>
     </div>
