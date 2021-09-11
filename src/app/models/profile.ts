@@ -66,7 +66,7 @@ export class Profile implements IProfile {
   get profileImageFull() { return this._profileImage ? this._s3 + this._profileImage : ''; }
   get profileImageType() { return this._profileImageType; }
 
-  get coverImage() { return null; }
+  get coverImage() { return this.data.cover ? this._s3 + this.data.cover : ''; }
 
   get followings() { return this._followings; };
   get followers() { return this._followers; }

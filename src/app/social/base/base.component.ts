@@ -121,14 +121,6 @@ export class BaseComponent implements OnInit {
     return urlset;
   }
 
-  onClickUserMenuItem(route: string[]) {
-    this._modalService.hide(true, route);
-  }
-
-  onClickUserMenuItemLogout() {
-    this._sharedService.logout(false);
-    this._modalService.hide();
-  }
 
   onChangeLoginState(state: 'start'|'done') {
     if(state == 'done') {

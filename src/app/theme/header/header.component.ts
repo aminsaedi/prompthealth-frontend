@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SharedService } from '../../shared/services/shared.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { environment } from '../../../environments/environment';
 import { expandVerticalAnimation, fadeAnimation, fadeFastAnimation, slideHorizontalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
@@ -9,7 +8,6 @@ import { ProfileManagementService } from '../../dashboard/profileManagement/prof
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { Location } from '@angular/common';
 import { IUserDetail } from 'src/app/models/user-detail';
-import { Profile } from 'src/app/models/profile';
 import { Subscription } from 'rxjs';
 import { ModalService } from 'src/app/shared/services/modal.service';
 
@@ -31,7 +29,6 @@ export class HeaderComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _location: Location,
-    private _sharedService: SharedService,
     private _headerStatusService: HeaderStatusService,
     public catService: CategoryService,
     private _profileService: ProfileManagementService,
@@ -112,15 +109,6 @@ export class HeaderComponent implements OnInit {
 
   hidePlanMenu() {
     this.isPlanMenuShown = false;
-  }
-
-  onClickUserMenuItem(route: string[]) {
-    this._modalService.hide(true, route);
-  }
-
-  onClickUserMenuItemLogout() {
-    this._sharedService.logout();
-    this._modalService.hide();
   }
 
   setPriceType(type: UserType | IUserDetail['roles'] = null){
