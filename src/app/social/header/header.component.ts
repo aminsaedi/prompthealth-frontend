@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit {
   public formSearch: FormControl;
 
   get topics() { return this._catService.categoryList; }
-  get userImage() { return this.user ? this.user.profileImage : ''; }
+  get userImage() { return this.user ? this.user.profileImageFull : ''; }
   get userName() { return this.user ? this.user.nickname : ''; }
   get user(): Profile { return this._profileService.profile; }
 

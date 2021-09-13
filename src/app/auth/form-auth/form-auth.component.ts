@@ -51,9 +51,9 @@ export class FormAuthComponent implements OnInit {
     if(e && e.userRole && e.userRole.currentValue != e.userRole.previousValue) {
       let roleLabel: string;
       switch(this.userRole) {
-        case 'U': roleLabel = 'Health Seeker'; break;
+        case 'U': roleLabel = 'Wellness Seeker'; break;
         case 'SP':
-        case 'C': roleLabel = 'Provider'; break;
+        case 'C': roleLabel = 'Wellness Provider'; break;
         case 'P': roleLabel = 'Company'; break;
       }
       this.formRole.setValue(roleLabel);

@@ -98,7 +98,7 @@ const teamData = [
   {
     name: 'Jaden Kim',
     title: 'Digital Marketing and Social Media Manager',
-    image: 'hedieh.png',
+    image: 'jaden.jpg',
     content: 'Jaden joined the team in May, with a background in social media and marketing, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue her passion for marketing and making healthcare more accessible. Working at PromptHealth means a lot to her, as she feels strongly about the value that PromptHealth can bring to people.'
   },
   {
@@ -117,7 +117,7 @@ const teamData = [
     name: 'Otto Hu',
     title: 'Software Developer',
     image: 'hedieh.png',
-    content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
+    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, practitioners and product companies.',
   },
   {
     name: 'Takayuki Hiraishi',
@@ -129,7 +129,7 @@ const teamData = [
     name: 'Amin Saedi',
     title: 'Mobile App Developer',
     image: 'hedieh.png',
-    content: 'Jaden joined the team in May, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue.'
+    content: 'Amin just joined Prompt Health in September 2021 as a Mobile application developer and currently studying computer science. He is interested in changing people\'s experience of the healthcare system, and he hopes the technology can do more to serve the health of society.',
   },
   {
     name: 'Reza Ghenaat',

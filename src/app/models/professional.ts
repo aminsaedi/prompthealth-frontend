@@ -86,7 +86,7 @@ export class Professional extends Profile implements IProfessional{
   get image() { return this.profileImage.length > 0 ? this.profileImage : this._defaultAvator; } // if profile image is not set, return default image
   get imageFull() { return this.profileImageFull.length > 0 ? this.profileImageFull : this._defaultAvator; }
   get imageType(){ return this.profileImageType; }
-  get coverImage() { return this._defaultBanner; }
+  get coverImage() { return super.coverImage || this._defaultBanner; }
 
   get emailToDisplay() { return this.p.displayEmail; }
 

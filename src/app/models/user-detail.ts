@@ -13,6 +13,7 @@ export interface IUserDetail {
   fname?: string;
   lname?: string;
   profileImage?: string;
+  cover?: string;
   email?: string;
   displayEmail?: string;
   address?: string;

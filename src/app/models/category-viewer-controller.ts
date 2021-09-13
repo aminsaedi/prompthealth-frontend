@@ -22,7 +22,7 @@ export class CategoryViewerController {
   subCategoriesString(parent: Category) {
     const categories = [];
     parent.subCategory.forEach(sub => {categories.push(sub.item_text); });
-    return categories.join(' / ');
+    return categories.join(', ');
   }
 
   onTapMainCategory(idxRow: number, idxCol: number) {

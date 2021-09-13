@@ -81,10 +81,7 @@ export class HomeComponent implements OnInit {
   //   });
   // }
 
-  public testimonial = [];
-  toggle() {
-    this.testimonial = this.testimonial.length == 0 ? [0,1,2,3,] : [];    
-  }
+
   ngOnInit() {
     this._uService.setMeta(this.router.url, {
       title: 'PromptHealth | Your health and wellness personal assistant',
@@ -157,6 +154,23 @@ export class HomeComponent implements OnInit {
     }
   }
   /** EXPERT FINDER END */
+
+  /** TESTIMONIAL */
+  public testimonials = [];
+  public disabledAnimationTestimonials = false;
+
+  onIntersectTestimonial(enter: boolean) {
+    if(enter) {
+      this.testimonials = testimonials;
+      setTimeout(() => {
+        this.disabledAnimationTestimonials = true;
+      });
+    } else {
+      this.disabledAnimationTestimonials = false;
+      this.testimonials = [];
+    }
+  }
+  /** TESTIMONIAL END */
 
 
   /** COMMUNITY */
@@ -268,7 +282,7 @@ const appFeatureItems = [
     {
       icon: 'shield-check-outline',
       title: 'Safe & Secure',
-      content: 'Your privacy and security is ensured (PIPEDA/HIPPA compliant)',
+      content: 'Your privacy and security is ensured',
     }
   ],
 ]
@@ -310,3 +324,32 @@ const introductionPostType = {
     content: 'Watch fun, educational health and wellness content.',
   }
 }
+
+const testimonials = [
+  {
+    name: 'Gary Prihar',
+    image: '/assets/img/testimonial/movehealth.jpg',
+    body: 'We are beyond pleased with our decision to partner with Prompt Health.  Their innovative approach to matching patients with health providers has helped accelerate our multi-disciplinary wellness business.',
+    link: 'https://www.instagram.com/movehealthwellness/',
+    numFollowers: 981,
+    numPosts: 96,
+    rating: 5,
+  },
+  {
+    name: 'Gary Prihar',
+    image: '/assets/img/testimonial/movehealth.jpg',
+    body: 'We are beyond pleased with our decision to partner with Prompt Health.  Their innovative approach to matching patients with health providers has helped accelerate our multi-disciplinary wellness business.',
+    link: 'https://www.instagram.com/movehealthwellness/',
+    numFollowers: 981,
+    numPosts: 96,
+    rating: 5,
+  },
+  {
+    name: 'Gary Prihar',
+    image: '/assets/img/testimonial/movehealth.jpg',
+    link: 'https://www.instagram.com/movehealthwellness/',
+    numFollowers: 981,
+    numPosts: 96,
+    rating: 5,
+  }
+];
