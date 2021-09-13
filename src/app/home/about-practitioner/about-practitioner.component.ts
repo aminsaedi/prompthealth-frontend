@@ -204,7 +204,7 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
     id: 'basic',
     icon: 'note-text-outline',
     title: 'Basic',
-    subtitle: 'For individual use',
+    subtitle: 'Get started with PromptHealth for free!',
     label: null,
     data: null,
   },
@@ -212,7 +212,7 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
     id: 'provider',
     icon: 'verified-outline',
     title: 'Providers',
-    subtitle: 'For profiessional use',
+    subtitle: 'Get the most out of PromptHealth',
     label: 'Popular',
     data: null,
   },
@@ -220,33 +220,36 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
     id: 'centre',
     icon: 'users-outline',
     title: 'Centre',
-    subtitle: 'For multiple use',
+    subtitle: 'For centers with multiple providers',
     label: null,
     data: null,
   }
 }
 
 const planFeatures: IPlanFeatureData[] = [
-  {item: 'Your professional profile', targetPlan: ['basic', 'provider', 'centre'], detail: 'explain yourself here.'},
+  {item: 'Get listed with a personalized profile', targetPlan: ['basic', 'provider', 'centre'], detail: null},
+  {item: 'Follow and engage with other users', targetPlan: ['basic', 'provider', 'centre'], detail: null},
+  {item: 'Share your knowledge via voice memos, notes, articles, and events', targetPlan: ['basic', 'provider', 'centre'], detail: null},
+  {item: 'Receive booking requests', targetPlan: ['basic', 'provider', 'centre'], detail: null},
 
-  {item: 'Differentiate yourself with side-by-side comparisons', targetPlan: ['provider', 'centre'], detail: 'explain yourself here.'},
-  {item: 'Showcase yourself with a video introduction', targetPlan: ['provider', 'centre'], detail: 'explain yourself here.'},
-  {item: 'Genuine reviews and feedback', targetPlan: ['provider', 'centre'], detail: 'explain yourself here.'},
-  {item: 'Receive requests for booking /integration with your own booking system option', targetPlan: ['provider', 'centre'], detail: 'explain yourself here.'},
-  {item: 'Performance dashboard', targetPlan: ['provider', 'centre'], detail: 'explain yourself here.'},
-  {item: 'Link your social media accounts on your Prompthealth profile page', targetPlan: ['provider', 'centre'], detail: 'explain yourself here.'},
-  {item: 'Apply for a verified badge and rank before everyone else in search results', targetPlan: ['provider', 'centre'], detail: 'explain yourself here.'},
-  {item: 'Exciting features & benefits coming every month', targetPlan: ['provider', 'centre'], detail: 'explain yourself here.'},
+  {item: 'Inter referrals enabled', targetPlan: ['provider', 'centre'], detail: null},
+  {item: 'Ratings and reviews', targetPlan: ['provider', 'centre'], detail: null},
+  {item: 'Performance analytics', targetPlan: ['provider', 'centre'], detail: null},
 
-  {item: 'List special amenities', targetPlan: ['centre'], detail: 'explain yourself here.'},
-  {item: 'List of providers', targetPlan: ['centre'], detail: 'explain yourself here.'},
-  {item: 'Link your google business profile and display your google reviews on your profile page', targetPlan: ['centre'], detail: 'explain yourself here.'},
-  {item: 'Exciting features & benefits coming every month', targetPlan: ['centre'], detail: 'explain yourself here.'},
+  {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
+  {item: 'Display company products and amenities', targetPlan: ['centre'], detail: null},
+  {item: 'Tag your providers', targetPlan: ['centre'], detail: null},
 ];
 
 const faqs: IFAQItem[] = [
-  {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
-  {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
-  {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
-  {q: 'What is the center plan?', a: 'Celine Spino loves to cook and dine out. But a few years ago, the New Jersey accountant and mother of two decided she was doing a little too much of the latter. A lack of time and planning made restaurant dining the easier option on many nights, yet eating out meant she couldn\'t exercise much control over her family\'s nutrition. So Celine began planning meals ahead of time to ensure that home cooking was on the menu almost every night.', opened: false,},
+  {
+    q: 'I am a health and wellness practitioner. How does it work?', 
+    a: 'After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your background and specialities. This allows us to ensure you are listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern./nAfter setting up your account, you will be listed in our system, have access to our educational content creation tools to help you market yourself better, and ultimately will get matched with new clients.', 
+    opened: false,
+  },
+  {
+    q: 'How much does it cost?', 
+    a: 'PromptHealth is completely free for the health seekers. Practitioners have the option of creating a free account, with different subscription options available on the pricing page.',
+    opened: false,
+  }
 ]
