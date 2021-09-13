@@ -2,12 +2,15 @@
 
 .faq-item {
   transition: background-color 180ms;
+  cursor: pointer;
   i {
+    display: inline-block;
     transition: transform 180ms;
   }
 
   &.active {
     background: $colorGsBackground;
+    cursor: initial;
 
     i {
       transform: rotateX(180deg)

@@ -16,7 +16,13 @@ export class FaqItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  toggleState() {
+  open() {
+    this.data.opened = true;
+  }
+
+  toggleState(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
     this.data.opened = !this.data.opened;
   }
 
