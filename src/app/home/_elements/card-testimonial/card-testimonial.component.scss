@@ -1,8 +1,7 @@
 @import '../../../../assets/scss/variables';
 
-.image-container {
-  width: 75px;
-  height:75px;
+.image-container-100pc {
+  flex: 0 0 75px;
   background: white;
   border: solid 3px $colorSecondary;
   border-radius: 75px;
