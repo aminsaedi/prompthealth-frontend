@@ -97,7 +97,6 @@ export class SocialService {
 
   disposeCacheOf(taxonomy: SocialPostTaxonomyType = 'feed') {
     this.postCache.dataPerTaxonomy[taxonomy] = {data: null};
-    console.log('cache reset', taxonomy);
   }
 
   saveCache(data: ISocialPost[] = [], taxonomy: SocialPostTaxonomyType = 'feed', metadata: IPostsPerTaxonomy['metadata']): ISocialPost[] {
@@ -193,7 +192,6 @@ export class SocialService {
       this.saveNotificationSingle(d);
     });
     this.notificationCache.sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime());
-    console.log(this.notificationCache);
 
   }
 

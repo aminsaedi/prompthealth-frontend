@@ -133,7 +133,17 @@ export interface IGetStaffsResult extends IResponseData {
       userId: IUserDetail;
       createdAt: string;
       isDeleted: boolean;
-    }[];
+    }[]
+  }
+}
+
+export interface IGetStaffResult extends IResponseData {
+  data: {
+    _id: string;
+    center: IUserDetail;
+    userId: string;
+    createdAt: string;
+    isDeleted: boolean;
   }
 }
 
