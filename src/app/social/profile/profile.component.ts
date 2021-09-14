@@ -5,11 +5,9 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';;
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { GetQuery } from 'src/app/models/get-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
-import { Profile } from 'src/app/models/profile';
-import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowingsResult, IGetFollowStatusResult, IGetProfileResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
+import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetStaffResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
@@ -76,7 +74,6 @@ export class ProfileComponent implements OnInit {
     private _modalService: ModalService,
     private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
-    private _uService: UniversalService,
   ) { }
 
   ngOnDestroy() {
@@ -130,6 +127,11 @@ export class ProfileComponent implements OnInit {
         this.profile = vals[0];
         this.setProfileMenu();
         this._socialService.setProfile(this.profile);
+
+        if(this.profile.isSP && !this.profile.triedFetchingTeam) {
+          this.fetchTeam();
+        }
+
       }, error => {
         this._router.navigate(['404'], {replaceUrl: true});
         this._toastr.error('Something went wrong.');
@@ -182,6 +184,25 @@ export class ProfileComponent implements OnInit {
           }
           this._socialService.saveCacheProfile(professional);
           resolve(professional);
+        } else {
+          console.log(res.message);
+          reject();
+        }
+      }, error => {
+        console.log(error);
+        reject();
+      });
+    });
+  }
+
+  fetchTeam(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const path = `staff/get-by-user/${this.profile._id}`;
+      this._sharedService.getNoAuth(path).subscribe((res: IGetStaffResult) => {
+        if(res.statusCode == 200) {
+          this.profile.markAsTriedFetchingTeam();
+          this.profile.setTeam(res.data.center);
+          resolve();
         } else {
           console.log(res.message);
           reject();
