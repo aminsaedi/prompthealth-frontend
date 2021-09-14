@@ -12,6 +12,7 @@ import { validators } from 'src/app/_helpers/form-settings';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { SocialService } from 'src/app/social/social.service';
+import { MessagingService } from 'src/app/shared/services/messaging.service';
 
 @Component({
   selector: 'form-auth',
@@ -25,7 +26,7 @@ export class FormAuthComponent implements OnInit {
   @Input() staySamePage = false;
   @Input() nextPage: string = null;
   @Input() nextPageKeyword: string = null;
-  @Output() changeState = new EventEmitter<'start'|'done'>();
+  @Output() changeState = new EventEmitter<'start' | 'done'>();
 
   get f() { return this.form.controls; }
 
@@ -43,14 +44,15 @@ export class FormAuthComponent implements OnInit {
     private _socialService: SocialService,
     private _bs: BehaviorService,
     private _toastr: ToastrService,
-  ) { 
-    this.formRole = new FormControl(); 
+    private _ms: MessagingService
+  ) {
+    this.formRole = new FormControl();
   }
 
   ngOnChanges(e: SimpleChanges) {
-    if(e && e.userRole && e.userRole.currentValue != e.userRole.previousValue) {
+    if (e && e.userRole && e.userRole.currentValue != e.userRole.previousValue) {
       let roleLabel: string;
-      switch(this.userRole) {
+      switch (this.userRole) {
         case 'U': roleLabel = 'Wellness Seeker'; break;
         case 'SP':
         case 'C': roleLabel = 'Wellness Provider'; break;
@@ -116,7 +118,7 @@ export class FormAuthComponent implements OnInit {
       }, error => {
         console.log(error);
         this._toastr.error(error);
-        this._sharedService.loader('hide');  
+        this._sharedService.loader('hide');
         this.isLoading = false;
       });
     });
@@ -152,7 +154,7 @@ export class FormAuthComponent implements OnInit {
       this._sharedService.loader('hide');
       this.isLoading = false;
 
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         this.afterLogin(res.data);
       } else {
         this._toastr.error(res.message);
@@ -175,7 +177,7 @@ export class FormAuthComponent implements OnInit {
     this._sharedService.addCookie('loginID', userinfo._id);
     this._sharedService.addCookie('isVipAffiliateUser', userinfo.isVipAffiliateUser);
     this._sharedService.addCookieObject('user', userinfo);
-    
+
     this._socialService.dispose();
     this._profileService.getProfileDetail(userinfo);
 
@@ -183,7 +185,7 @@ export class FormAuthComponent implements OnInit {
     this._bs.setUserData(userinfo);
 
     let toastrMessage = 'Welcome!';
-
+    this._ms.requestPermission(userinfo);
     if (!this.staySamePage) {
       let next: string;
       if (this.nextPage) {

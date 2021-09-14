@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { SharedService } from './services/shared.service';
 import { PreviousRouteService } from './services/previousUrl.service';
@@ -68,6 +68,10 @@ import { SwitchComponent } from './switch/switch.component';
 import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import { ModalUserMenuComponent } from './modal-user-menu/modal-user-menu.component';
 import { ImageUploaderDirective } from './image-uploader.directive';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
+import { MessagingService } from './services/messaging.service';
 
 @NgModule({
   imports: [
@@ -77,12 +81,14 @@ import { ImageUploaderDirective } from './image-uploader.directive';
     ReactiveFormsModule,
     ModalModule.forRoot(),
     NgbModule,
-
+    AngularFireMessagingModule,
+    AngularFireModule.initializeApp(environment.config.firebase),
     // FlashMessagesModule,
   ],
   providers: [
     PreviousRouteService,
     SharedService,
+    MessagingService,
     CategoryService
   ],
   declarations: [

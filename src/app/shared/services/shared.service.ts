@@ -39,10 +39,6 @@ export class User {
 
 @Injectable()
 export class SharedService {
-  rootUrl: string = environment.config.API_URL;
-  // baseUrl: string = environment.config.API_URL;
-  // type: any;
-  personalMatch;
   constructor(
     private _router: Router,
     private spinner: NgxSpinnerService,
@@ -59,6 +55,12 @@ export class SharedService {
     private http: HttpClient) {
     // this.type = this._uService.localStorage.getItem('roles');
   }
+  rootUrl: string = environment.config.API_URL;
+  // baseUrl: string = environment.config.API_URL;
+  // type: any;
+  personalMatch;
+
+  private compareList: Professional[] = [];
 
 
   logout(navigate: boolean = true) {
@@ -76,7 +78,7 @@ export class SharedService {
 
     this._bs.setUserData(null);
     this._toastr.success('Logged out successfully');
-    
+
     ls.setItem('userType', 'U');
     if (navigate) {
       this._router.navigate(['/']);
@@ -232,7 +234,7 @@ export class SharedService {
     return this.http.post(this.rootUrl + path, body, { headers });
   }
 
-  uploadMultipleImages(images: {file: File|Blob, filename: string}[], userId: string, imageLocation: string) {
+  uploadMultipleImages(images: { file: File | Blob, filename: string }[], userId: string, imageLocation: string) {
     const data = new FormData();
     data.append('imgLocation', imageLocation);
     data.append('_id', userId);
@@ -392,8 +394,6 @@ export class SharedService {
     return this.personalMatch;
   }
   clearPersonalMatch() { this.personalMatch = null; }
-
-  private compareList: Professional[] = [];
   setCompareList(compareList: Professional[] = []) {
     this.compareList = compareList;
   }
