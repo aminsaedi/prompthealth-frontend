@@ -1,0 +1,31 @@
+<section *ngIf="!isLoading && centre"
+class="container my-100p"
+>
+  <div class="row justify-content-center">
+    <div class="col-12 col-xl-10 text-center">
+      <h2 class="mb-50p">
+        Your account has been connected to
+      </h2>
+      <div class="d-inline-block">
+        <profile-image [image]="centre.profileImage" size="120"></profile-image>
+        <h3>{{centre.name}}</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div 
+*ngIf="!!isLoading"
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Please wait...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -11,6 +11,9 @@ export class AuthComponent implements OnInit {
   public authType: AuthType;
   public roleType: RoleType;
 
+  public nextPage: string;
+  public nextPageKeyword: string;
+
   constructor(
     private _route: ActivatedRoute,
   ) { }
@@ -20,12 +23,17 @@ export class AuthComponent implements OnInit {
       this.authType = data.authType;
     });
 
-    this._route.params.subscribe((param: {type: string}) => {
+    this._route.params.subscribe((param: Params) => {
       let roleType: string;
       roleType = param.type || 'U';;
 
       const matchRoleType = !!(roleType.match(/^(u|sp|c|p|U|SP|C|P)$/));
       this.roleType = matchRoleType ? roleType.toUpperCase() as RoleType : 'U';
+    });
+
+    this._route.queryParams.subscribe((param: Params) => {
+      this.nextPage = param.next ? param.next : null;
+      this.nextPageKeyword = param.nextKeyword ? param.nextKeyword : null;
     });
 
   }

@@ -193,6 +193,7 @@ export class SocialService {
       this.saveNotificationSingle(d);
     });
     this.notificationCache.sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime());
+    console.log(this.notificationCache);
 
   }
 

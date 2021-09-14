@@ -11,7 +11,7 @@ export class TimeAgoPipe implements PipeTransform {
     const now = new Date();
 
     const def = now.getTime() - _date.getTime();
-    const y = Math.floor(def / (1000 * 60 * 24 * 365));
+    const y = Math.floor(def / (1000 * 60 * 60 * 24 * 365));
     if(y > 0) {
       return `${y} year${y > 1 ? 's' : ''} ago`;
     }

@@ -40,6 +40,7 @@ import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
 import { AboutComponent } from "./about/about.component";
 import { AboutPractitionerComponent } from "./about-practitioner/about-practitioner.component";
 import { AboutProductComponent } from "./about-product/about-product.component";
+import { TagProviderComponent } from "./tag-provider/tag-provider.component";
 
 const routes: Routes = [
   // {
@@ -147,10 +148,11 @@ const routes: Routes = [
 
   { path: 'invitation', component: InvitationComponent }, /** invitation for webinars */
   { path: 'invitation/:id', component: LandingAmbassadorComponent, data: {type: 'client'}}, /** invitation for clients by ambassador */
+  { path: 'tag-staff/:id', component: TagProviderComponent },
 
   { path: 'subscribe/newsletter', component: LandingClubhouseComponent },
   { path: 'subscribe', redirectTo: '/subscribe/newsletter'},
-  { path: 'subscribe-email', redirectTo: '/subscribe/newsletter'},
+  { path: 'subscribe-email', redirectTo: '/subscribe/newslet,ter'},
   { path: 'clubhouse', redirectTo: '/subscribe/newsletter' },
   { 
     path: 'ambassador-program', 

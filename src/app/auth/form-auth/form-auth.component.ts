@@ -12,6 +12,7 @@ import { validators } from 'src/app/_helpers/form-settings';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { SocialService } from 'src/app/social/social.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'form-auth',
@@ -43,6 +44,7 @@ export class FormAuthComponent implements OnInit {
     private _socialService: SocialService,
     private _bs: BehaviorService,
     private _toastr: ToastrService,
+    private _uService: UniversalService,
   ) { 
     this.formRole = new FormControl(); 
   }
@@ -166,8 +168,7 @@ export class FormAuthComponent implements OnInit {
 
   }
 
-  afterLogin(userinfo: any) {
-    this.isSubmitted = false;
+  async afterLogin(userinfo: any) {
     const role = userinfo.roles;
 
     this._sharedService.addCookie('token', userinfo.loginToken);
@@ -175,13 +176,20 @@ export class FormAuthComponent implements OnInit {
     this._sharedService.addCookie('loginID', userinfo._id);
     this._sharedService.addCookie('isVipAffiliateUser', userinfo.isVipAffiliateUser);
     this._sharedService.addCookieObject('user', userinfo);
+
+    const taggedCentreId = this._uService.sessionStorage.getItem('tag_by_centre');
+    if(taggedCentreId && role == 'SP') {
+      this._uService.sessionStorage.removeItem('tag_by_centre');
+      //TODO: connect this SP and C
+    }
+
     
     this._socialService.dispose();
-    this._profileService.getProfileDetail(userinfo);
-
-
+    await this._profileService.getProfileDetail(userinfo);
+  
     this._bs.setUserData(userinfo);
 
+    this.isSubmitted = false;
     let toastrMessage = 'Welcome!';
 
     if (!this.staySamePage) {

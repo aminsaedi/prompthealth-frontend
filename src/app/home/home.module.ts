@@ -61,6 +61,7 @@ import { ScrollIndicatorComponent } from './_elements/scroll-indicator/scroll-in
 import { FaqItemComponent } from './_elements/faq-item/faq-item.component';
 import { TablePlanFeatureComponent } from './_elements/table-plan-feature/table-plan-feature.component';
 import { AboutProductComponent } from './about-product/about-product.component';
+import { TagProviderComponent } from './tag-provider/tag-provider.component';
 
 
 @NgModule({
@@ -114,6 +115,7 @@ import { AboutProductComponent } from './about-product/about-product.component';
     FaqItemComponent,
     TablePlanFeatureComponent,
     AboutProductComponent,
+    TagProviderComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

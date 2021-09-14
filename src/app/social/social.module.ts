@@ -28,7 +28,6 @@ import { GuardIfEditorLockedGuard } from './guard-if-editor-locked.guard';
 import { AudioPlayerComponent } from './audio-player/audio-player.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileAboutComponent } from './profile-about/profile-about.component';
-import { LoaderComponent } from './loader/loader.component';
 import { ProfileReviewComponent } from './profile-review/profile-review.component';
 import { ProfileServiceComponent } from './profile-service/profile-service.component';
 import { ProfileFeedComponent } from './profile-feed/profile-feed.component';
@@ -100,7 +99,6 @@ const routes: Routes = [
     AudioPlayerComponent,
     ProfileComponent,
     ProfileAboutComponent,
-    LoaderComponent,
     ProfileReviewComponent,
     ProfileServiceComponent,
     ProfileFeedComponent,

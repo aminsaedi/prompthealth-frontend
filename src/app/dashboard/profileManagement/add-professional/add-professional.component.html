@@ -1,8 +1,104 @@
 <ngx-spinner bdColor="#fff" size="medium" color="#fff">
-    <p style="font-size: 20px; color: white" class="loaderbg">
-      <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  <p style="font-size: 20px; color: white" class="loaderbg">
+    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  </p>
+</ngx-spinner>
+
+<h4 class="mb-4">Manage your staffs</h4>
+
+<div class="d-flex justify-content-center border-bottom border-line mb-45p">
+    <button 
+    class="btn btn-text small px-0 mx-15p"
+    (click)="changeMode('list')"
+    >View staffs</button>
+    <button 
+    class="btn btn-text small px-0 mx-15p"
+    (click)="changeMode('tag')"
+    >Add staff</button>
+</div>
+
+<div 
+*ngIf="mode=='tag'"
+class="mb-15p"
+>
+    <section>
+        <h6 class="" (click)="toggleStateTipShareLink()">
+            <span>Share the link with your staffs</span>
+            <i iconPh="info" class="text-label ml-5p"></i>
+        </h6>
+        <p *ngIf="isTipShareLinkShown">
+            You can easily join your staffs to your centre.
+            Please share this link with your staffs.
+        </p>
+        
+        <div 
+        class="border rounded-lg px-3 py-2 mb-2 d-flex align-items-center justify-content-end" 
+        >
+            <input class="flex-grow-1 input-link text-body1" 
+            #referralLink
+            [value]="linkToTagStaff" 
+            readonly
+            >
+        <button-share
+        email
+        label="Share"
+        btnClass="btn btn-primary small"
+        [url]="linkToTagStaff"
+        title="Collaborate with us."
+        text="Join our team and collaborate with us!"
+        ></button-share>
+        </div>      
+    </section>
+</div>
+
+<div *ngIf="mode=='list'">
+    <ul class="list-unstyled">
+        <li>
+            <profile-image></profile-image>
+        </li>
+        <li>
+            <profile-image></profile-image>
+        </li>
+    </ul>
+</div>
+
+
+<!-- 
+<section class="mt-4">
+    <h6 class="mb-3" (click)="toggleStateTipInvite()">
+        <span>Or invite your staffs to PromptHealth</span>
+        <i iconPh="info" class="text-label ml-5p"></i>
+    </h6>
+    <p *ngIf="isTipInviteShown">
+        If your staffs don't have account with us, you can send invitation email.
     </p>
-  </ngx-spinner>
+    
+    <form (ngSubmit)="onSubmitEmail()">
+        <div class="d-md-flex flex-nowrap">
+            <div class="flex-grow-1">
+                <form-item-input
+                name="email"
+                label="Email"
+                placeholder="Provider's email..."
+                type="email"
+                prependIcon="email"
+                autocomplete="on"
+                autocapitalize="off"
+                [controller]="form"
+                [submitted]="isSubmitted"
+                ></form-item-input>        
+            </div>
+            <div class="ml-md-10p">
+                <input 
+                class="btn btn-primary small" 
+                type="submit" 
+                value="Send"
+                >
+            </div>
+        </div>
+    </form>
+</section> -->
+<!-- 
 <h4 class="mb-3"  *ngIf="doctors && doctors.length">My Professionals
     <button *ngIf="doctors && doctors.length" (click)="addMore = !addMore" class="btn btn-primary add-more">Add More</button>
 </h4>
@@ -54,82 +150,18 @@
             </td>
         </tr>
     </tfoot>
-</table>
+</table> -->
 <!-- <pagination-controls
     *ngIf="product && product.length"
     id="productListing" (pageChange)="p = $event"
 ></pagination-controls> -->
-<hr *ngIf="addMore && doctors && doctors.length == 0">
+<!-- <hr *ngIf="addMore && doctors && doctors.length == 0">
 <form  *ngIf="addMore || doctors && doctors.length == 0" role="form"  [formGroup]="addDoctorForm" (ngSubmit)="save()">
-    <h3>Add Professional</h3>
+    <h3>Tag providers</h3>
     <div class="row">
-        <div class="form-group col-sm-6">
-            <label class="col-md-12">First Name<span class="text-danger">*</span></label>
-            <input
-            type="text"
-            id="docFname"
-            name="docFname"
-            formControlName="fname"
-            placeholder="Enter First Name"
-            class="form-control"
-            />
-            <div *ngIf="submitted && f.fname.errors" class="error-msg">
-                <small *ngIf="f.fname.errors.required"  class="text-danger">First Name is required</small>
-                <small *ngIf="f.fname.errors.maxlength" class="text-danger">First Name too long</small>
-                <small *ngIf="f.fname.errors.pattern"   class="text-danger">First Name invalid</small>
-            </div>
-        </div>
-        <div class="form-group col-sm-6">
-            <label class="col-md-12">Last Name</label>
-            <input
-            type="text"
-            autocomplete="off"
-            id="docLname"
-            name="docLname"
-            formControlName="lname"
-            placeholder="Enter Last Name"
-            class="form-control"
-            />
-            <div *ngIf="submitted && f.lname.errors" class="error-msg">
-                <small *ngIf="f.lname.errors.maxlength" class="text-danger">Last Name too long</small>
-                <small *ngIf="f.lname.errors.pattern"   class="text-danger">Last Name invalid</small>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group col-sm-12">
-            
-            <div class="multipleImage" *ngIf="imagesList.length">
-                <img [src]="AWS_S3 + imagesList" height="200"> <br/>
-                <a (click)="imagesList = ''" class="fa fa-times"></a>
-            </div>
-            <div>
-                <label class="col-md-12">Upload Images<span class="text-danger">*</span></label>
-                <!-- <img [src]="profile.images ? 'https://api.prompthealth.ca/users/'+profile.profileImage : defaultImage" /> -->
-                <input type="file" name="profile" 
-                class="form-control col-md-12" (change)="onFileSelect($event)"/>
-            
-            </div>
-        </div>
-        <div class="form-group col-sm-12">
-            <label class="col-md-3">Description<span class="text-danger">*</span></label>
-            <textarea
-            type="text"
-            autocomplete="off"
-            id="productDesc"
-            name="productDesc"
-            formControlName="description"
-            placeholder="Enter Description"
-            class="form-control col-md-12"
-            ></textarea>
-            <div *ngIf="submitted && f.description?.errors">
-                <small *ngIf="f.description.errors.required"  class="text-danger">Description is required</small>
-                <small *ngIf="f.description.errors.maxlength" class="text-danger">Description too long</small>
-                <small *ngIf="f.description.errors.pattern"   class="text-danger">Description invalid</small>
-            </div>
-        </div>
+
         <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Send invitation</button>
         </div>
     </div>
 </form>
@@ -177,9 +209,9 @@
                 <a (click)="imagesList = ''" class="fa fa-times"></a>
             </div>
             <div>
-                <label class="col-md-12">Upload Images</label>
+                <label class="col-md-12">Upload Images</label> -->
                 <!-- <img [src]="profile.images ? 'https://api.prompthealth.ca/users/'+profile.profileImage : defaultImage" /> -->
-                <input type="file" name="profile" 
+                <!-- <input type="file" name="profile" 
                 class="form-control col-md-12" (change)="onFileSelect($event)"/>
             
             </div>
@@ -207,4 +239,4 @@
             <button type="submit" class="btn btn-primary">Edit</button>
         </div>
     </div>
-</form>
+</form> -->
