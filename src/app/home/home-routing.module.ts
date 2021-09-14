@@ -148,7 +148,7 @@ const routes: Routes = [
 
   { path: 'invitation', component: InvitationComponent }, /** invitation for webinars */
   { path: 'invitation/:id', component: LandingAmbassadorComponent, data: {type: 'client'}}, /** invitation for clients by ambassador */
-  { path: 'tag-staff/:id', component: TagProviderComponent },
+  { path: 'join-team/:id', component: TagProviderComponent },
 
   { path: 'subscribe/newsletter', component: LandingClubhouseComponent },
   { path: 'subscribe', redirectTo: '/subscribe/newsletter'},

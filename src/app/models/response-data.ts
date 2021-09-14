@@ -124,6 +124,19 @@ export interface IGetNotificationsResult extends IResponseData {
   data: ISocialNotification[];
 }
 
+export interface IGetStaffsResult extends IResponseData {
+  data: {
+    total: number;
+    data: {
+      _id: string;
+      center: string;
+      userId: IUserDetail;
+      createdAt: string;
+      isDeleted: boolean;
+    }[];
+  }
+}
+
 // export interface IMarkAllNotificationsAsReadResult extends IResponseData {
 //   data: {
 //     n: number,

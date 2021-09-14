@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Professional } from 'src/app/models/professional';
-import { IGetProfileResult } from 'src/app/models/response-data';
+import { IGetProfileResult, IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 
@@ -21,6 +21,8 @@ export class TagProviderComponent implements OnInit {
 
   public centre: Professional;
   public isLoading: boolean;
+  public isTaggedSuccess: boolean;
+
 
   constructor(
     private _profileService: ProfileManagementService,
@@ -46,55 +48,89 @@ export class TagProviderComponent implements OnInit {
   }
 
   observeLoginStatus() {
-    this.onChangeLoginStatus();
-    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe((status) => {
+    const status = this._profileService.loginStatus;
+    if(status == 'notLoggedIn' || status == 'loggedIn') {
       this.onChangeLoginStatus();
-    });
+    } else {
+      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe((status) => {
+        this.onChangeLoginStatus();
+      });  
+    }
   }
 
-  onChangeLoginStatus() {
+  async onChangeLoginStatus() {
     const status = this._profileService.loginStatus;
     if (status == 'notLoggedIn') {
       this._toastr.error('Please login to complete this process');
       this._uService.sessionStorage.setItem('tag_by_centre', this.centreId);
-      this._router.navigate(['/auth/login'], {queryParams: {next: this._location.path()}});
+      this._router.navigate(['/auth/login'], {queryParams: {next: this._location.path()}, replaceUrl: true});
     } else if(status == 'loggedIn') {
-      if (this.user.isSP) {
-        this.fetchCentre();
-      } else {
-        this._toastr.error('Your account type cannot access this page');
-        this._router.navigate(['/404'], {replaceUrl: true});
-      }
-
       if(this.subscriptionLoginStatus) {
         this.subscriptionLoginStatus.unsubscribe();
+      }
+
+      if (!this.user.isSP) {
+        this._toastr.error('Your account type cannot access this page');
+        this._router.navigate(['/community'], {replaceUrl: true});
+      } else {
+        try {
+          await this.fetchCentre(); 
+        } catch (error) {
+          this.isLoading = false;
+          this._router.navigate(['/404'], {replaceUrl: true});
+          return;
+        }
+
+        try {
+          await this.connectStaff();
+          this.isLoading = false;
+          this.isTaggedSuccess = true;
+        } catch (error) {
+          this.isLoading = false;
+          this.isTaggedSuccess = false;
+          this._toastr.error(error);
+          this._router.navigate(['/404'], {replaceUrl: true});
+        }
       }
     }
   }
 
-  fetchCentre() {
-    this._sharedService.get('user/get-profile/' + this.centreId).subscribe((res: IGetProfileResult) => {
-      this.isLoading = false;
-      if(res.statusCode == 200) {
-        const profile = new Professional(res.data._id, res.data);
-        if (profile.isC) {
-          this.centre = profile;
-          this.connectStaff();
-        } else {
-          this._router.navigate(['/404'], {replaceUrl: true});
+
+  fetchCentre(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._sharedService.get('user/get-profile/' + this.centreId).subscribe((res: IGetProfileResult) => {
+        if(res.statusCode == 200) {
+          const profile = new Professional(res.data._id, res.data);
+          if (profile.isC) {
+            this.centre = profile;
+            resolve();
+          } else {
+            reject();
+          }
+        } else{
+          reject();
         }
-      } else{
-        this._router.navigate(['/404'], {replaceUrl: true});
-      }
-    }, error => {
-      console.log(error);
-      this.isLoading = false;
-      this._router.navigate(['/404'], {replaceUrl: true});
+      }, error => {
+        console.log(error);
+        reject();
+      });
     });
   }
 
-  connectStaff() {
-
+  connectStaff(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._sharedService.post({},'staff/create/' + this.centreId).subscribe((res: IResponseData) => {
+        console.log(res);
+        if(res.statusCode == 200) {
+          resolve();
+        } else {
+          reject(res.message);
+        }
+      }, error => {
+        console.log(error);
+        reject('Something went wrong. Please try again later');
+      });  
+    });
   }
 
 }
