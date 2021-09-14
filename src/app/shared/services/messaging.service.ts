@@ -17,7 +17,7 @@ export class MessagingService {
     this.angularFireMessaging.requestToken.subscribe(
       (token) => {
         console.log(token);
-        this._sharedService.post({ token }, 'notification/saveToken').toPromise().then(res => {
+        this._sharedService.post({ token }, 'notification/save-token').toPromise().then(res => {
           console.log('token saved to db', res);
         });
       },

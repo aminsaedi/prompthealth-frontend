@@ -186,6 +186,7 @@ export class FormAuthComponent implements OnInit {
 
     let toastrMessage = 'Welcome!';
     this._ms.requestPermission(userinfo);
+    this._ms.receiveMessage();
     if (!this.staySamePage) {
       let next: string;
       if (this.nextPage) {
