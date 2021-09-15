@@ -23,6 +23,17 @@ export const environment = {
     disableAnalytics: false,
 
     idSA: '5edb61483cd45aa28f6413c0',
+
+    firebase: {
+      apiKey: 'AIzaSyC6JqGOHfsZShTHqy1cq-nWOKhlIULtRmI',
+      authDomain: 'prompthealth-22680.firebaseapp.com',
+      projectId: 'prompthealth-22680',
+      storageBucket: 'prompthealth-22680.appspot.com',
+      messagingSenderId: '740878106701',
+      appId: '1:740878106701:web:a596945bf68f452e37dc04',
+      measurementId: 'G-3GTRM03FCL'
+    }
+
   },
   api_routes: {
     LOGIN: 'login',

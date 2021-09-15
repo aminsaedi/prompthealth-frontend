@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -19,14 +19,14 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
   templateUrl: './form-auth.component.html',
   styleUrls: ['./form-auth.component.scss']
 })
-export class FormAuthComponent implements OnInit {
+export class FormAuthComponent implements OnInit, OnChanges {
 
   @Input() userRole: IUserDetail['roles'] = 'U'; /** U | SP | C | P */
   @Input() authType = 'signin'; /** signin | signup */
   @Input() staySamePage = false;
   @Input() nextPage: string = null;
   @Input() nextPageKeyword: string = null;
-  @Output() changeState = new EventEmitter<'start'|'done'>();
+  @Output() changeState = new EventEmitter<'start' | 'done'>();
 
   get f() { return this.form.controls; }
 
@@ -45,14 +45,14 @@ export class FormAuthComponent implements OnInit {
     private _bs: BehaviorService,
     private _toastr: ToastrService,
     private _uService: UniversalService,
-  ) { 
-    this.formRole = new FormControl(); 
+  ) {
+    this.formRole = new FormControl();
   }
 
   ngOnChanges(e: SimpleChanges) {
-    if(e && e.userRole && e.userRole.currentValue != e.userRole.previousValue) {
+    if (e && e.userRole && e.userRole.currentValue != e.userRole.previousValue) {
       let roleLabel: string;
-      switch(this.userRole) {
+      switch (this.userRole) {
         case 'U': roleLabel = 'Wellness Seeker'; break;
         case 'SP':
         case 'C': roleLabel = 'Wellness Provider'; break;
@@ -118,7 +118,7 @@ export class FormAuthComponent implements OnInit {
       }, error => {
         console.log(error);
         this._toastr.error(error);
-        this._sharedService.loader('hide');  
+        this._sharedService.loader('hide');
         this.isLoading = false;
       });
     });
@@ -154,7 +154,7 @@ export class FormAuthComponent implements OnInit {
       this._sharedService.loader('hide');
       this.isLoading = false;
 
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         this.afterLogin(res.data);
       } else {
         this._toastr.error(res.message);
@@ -177,21 +177,25 @@ export class FormAuthComponent implements OnInit {
     this._sharedService.addCookie('isVipAffiliateUser', userinfo.isVipAffiliateUser);
     this._sharedService.addCookieObject('user', userinfo);
 
+    this._socialService.dispose();
+    this._profileService.getProfileDetail(userinfo);
+
     const taggedCentreId = this._uService.sessionStorage.getItem('tag_by_centre');
-    if(taggedCentreId && role == 'SP') {
+    if (taggedCentreId && role == 'SP') {
       this._uService.sessionStorage.removeItem('tag_by_centre');
-      //TODO: connect this SP and C
+      // TODO: connect this SP and C
     }
 
-    
+
     this._socialService.dispose();
     await this._profileService.getProfileDetail(userinfo);
-  
+
     this._bs.setUserData(userinfo);
 
     this.isSubmitted = false;
     let toastrMessage = 'Welcome!';
-
+    this._sharedService.requestPermission(userinfo);
+    // this._ms.receiveMessage();
     if (!this.staySamePage) {
       let next: string;
       if (this.nextPage) {
