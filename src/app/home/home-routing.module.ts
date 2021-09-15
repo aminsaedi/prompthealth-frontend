@@ -13,12 +13,12 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 // import { EnterpriceComponent } from './enterprice/enterprice.component';
 // import { DoctorFilterComponent } from './doctor-filter/doctor-filter.component';
 // import { AffiliateComponent } from './affiliate/affiliate.component';
-import { BlogComponent } from './blog/blog.component';
-import { BlogDetailComponent } from './blog-detail/blog-detail.component';
-import { BlogCategoryComponent } from './blog-category/blog-category.component';
-import { SubscriptionComponent } from './subscription/subscription.component';
+// import { BlogComponent } from './blog/blog.component';
+// import { BlogDetailComponent } from './blog-detail/blog-detail.component';
+// import { BlogCategoryComponent } from './blog-category/blog-category.component';
+// import { SubscriptionComponent } from './subscription/subscription.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
-import { subscriptionPlanProductComponent } from "./subscription-plan-product/subscription-plan-product.component";
+// import { subscriptionPlanProductComponent } from "./subscription-plan-product/subscription-plan-product.component";
 import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
 import { ListingProductComponent } from './listing-product/listing-product.component';
 import { InvitationComponent } from './invitation/invitation.component';
@@ -26,8 +26,8 @@ import { LandingClubhouseComponent } from "./landing-clubhouse/landing-clubhouse
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingAmbassadorComponent } from "./landing-ambassador/landing-ambassador.component";
 import { AmbassadorProgramGuardGuard } from "./ambassador-program-guard.guard";
-import { DetailComponent } from "./detail/detail.component";
-import { ListingComponent } from "./listing/listing.component";
+// import { DetailComponent } from "./detail/detail.component";
+// import { ListingComponent } from "./listing/listing.component";
 import { ListingcompareComponent } from "./listingcompare/listingcompare.component";
 import { UserQuestionaireComponent } from "./user-questionaire/user-questionaire.component";
 import { UserQuestionnaireItemGenderComponent } from "./user-questionnaire-item-gender/user-questionnaire-item-gender.component";
@@ -40,6 +40,7 @@ import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
 import { AboutComponent } from "./about/about.component";
 import { AboutPractitionerComponent } from "./about-practitioner/about-practitioner.component";
 import { AboutProductComponent } from "./about-product/about-product.component";
+import { TagProviderComponent } from "./tag-provider/tag-provider.component";
 
 const routes: Routes = [
   // {
@@ -72,13 +73,13 @@ const routes: Routes = [
   //   path: "loyalty",
   //   component: LoyalityProgramsComponent
   // },
-  { path: "blogs/:id", redirectTo: '/magazines/:id'},
-  { path: 'blog-detail/:id', redirectTo: '/magazines/:id'},
+  // { path: "blogs/:id", redirectTo: '/magazines/:id'},
+  // { path: 'blog-detail/:id', redirectTo: '/magazines/:id'},
 
-  { path: "blogs/category/:id", redirectTo: '/magazines'}, /** catId is deprecated. use slug to show category list. */
-  { path: 'blogs/category', redirectTo: '/magazines'},
-  { path: 'blog-category/:id', redirectTo: '/magazines'}, /** old route */
-  { path: "blogs", redirectTo: '/magazines' },
+  // { path: "blogs/category/:id", redirectTo: '/magazines'}, /** catId is deprecated. use slug to show category list. */
+  // { path: 'blogs/category', redirectTo: '/magazines'},
+  // { path: 'blog-category/:id', redirectTo: '/magazines'}, /** old route */
+  // { path: "blogs", redirectTo: '/magazines' },
 
   {
     path: "contact-us",
@@ -128,7 +129,7 @@ const routes: Routes = [
   { path: 'practitioners/area', redirectTo: 'practitioners' },
   
 
-  { path: 'practitioners/:id', component: DetailComponent }, 
+  // { path: 'practitioners/:id', component: DetailComponent }, 
   { path: 'compare-practitioners', component: ListingcompareComponent},
 
   {
@@ -147,10 +148,11 @@ const routes: Routes = [
 
   { path: 'invitation', component: InvitationComponent }, /** invitation for webinars */
   { path: 'invitation/:id', component: LandingAmbassadorComponent, data: {type: 'client'}}, /** invitation for clients by ambassador */
+  { path: 'join-team/:id', component: TagProviderComponent },
 
   { path: 'subscribe/newsletter', component: LandingClubhouseComponent },
   { path: 'subscribe', redirectTo: '/subscribe/newsletter'},
-  { path: 'subscribe-email', redirectTo: '/subscribe/newsletter'},
+  { path: 'subscribe-email', redirectTo: '/subscribe/newslet,ter'},
   { path: 'clubhouse', redirectTo: '/subscribe/newsletter' },
   { 
     path: 'ambassador-program', 

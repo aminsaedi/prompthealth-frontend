@@ -36,7 +36,6 @@ export interface IProfessional extends IProfile {
   socialLink: {isAvailable: boolean, data: SocialLinkData};
   videos: IVideo[];
   detailByGoogle: google.maps.places.PlaceResult;
-  professionals: Professional[];
   rating: number;
   reviews: any[];
   reviewData: ReviewData;
@@ -47,6 +46,8 @@ export interface IProfessional extends IProfile {
   recommendationsPreview: Referral[];
 
 
+  team: Professional;
+  staffs: Professional[];
   amenity: ImageViewerData; /** all amenities data */
   amenityPreview: ImageGroupData[]; /** first 3 amenities for preview */
   product: ImageViewerData; /** all products data */
@@ -79,7 +80,9 @@ export interface IProfessional extends IProfile {
   triedFetchingGoogleReviews: boolean;
   triedFetchingAmenity: boolean;
   triedFetchingProduct: boolean;
-  triedFetchingProfessionals: boolean;
+  triedFetchingStaffs: boolean;
+  triedFetchingTeam: boolean;
+  eligibleFeatureStaffs: boolean;
 }
 
 export class Professional extends Profile implements IProfessional{
@@ -120,7 +123,6 @@ export class Professional extends Profile implements IProfessional{
   get socialLink() { return this._socialLink; }
   get videos() { return (this.p.plan && this.p.plan.videoUpload) ? this.p.videos : []; } 
   get detailByGoogle(){ return this._detailByGoogle || null; }
-  get professionals() { return (this.p.plan && this.p.plan.ListOfProviders) ? this._professionals : []; }
   get rating() { return Math.round(this.p.ratingAvg * 10) / 10; }
   get reviews() { return this._reviewData ? this._reviewData.data : []; }
   get reviewData() { return this._reviewData; }
@@ -129,6 +131,8 @@ export class Professional extends Profile implements IProfessional{
   get doneInitRecommendations() { return !!this._recommendations; }
   get recommendations() { return this._recommendations; }
   get recommendationsPreview() { return this.recommendations ? this.recommendations.slice(0,3) : []};
+  get team() { return this._team; }
+  get staffs() { return (this.p.plan && this.eligibleFeatureStaffs) ? this._staffs : []; }
 
   get amenity() {
     return (this._amenities && this._amenities.imageGroups.length > 0 && this.p.plan && this.p.plan.ListAmenities) ? this._amenities : {imageGroups: []};
@@ -193,6 +197,10 @@ export class Professional extends Profile implements IProfessional{
   get triedFetchingGoogleReviews() { return this._triedFetchingGoogleReviews; }
   get triedFetchingProfessionals() { return this._triedFetchingProfessionals; }
   get triedFetchingRecommendations() { return this._triedFetchingRecommendations; }
+  get triedFetchingStaffs() { return this._triedFetchingStaffs; }
+  get triedFetchingTeam() { return this._triedFetchingTeam; }
+
+  get eligibleFeatureStaffs() { return !!this.p.plan && this.p.plan.ListOfProviders; }
 
 
   uncheckForCompare() { this._isCheckedForCompared = false; }
@@ -209,7 +217,9 @@ export class Professional extends Profile implements IProfessional{
   private _recommendations: Referral[];
 
   private _priceRange: number[] = [];
-  private _professionals: Professional[] = [];
+
+  private _team: Professional;
+  private _staffs: Professional[] = [];
   private _amenities: ImageViewerData;
   private _products: ImageViewerData;
 
@@ -236,6 +246,8 @@ export class Professional extends Profile implements IProfessional{
   private _triedFetchingProduct = false;
   private _triedFetchingProfessionals = false;
   private _triedFetchingRecommendations = false;
+  private _triedFetchingStaffs = false;
+  private _triedFetchingTeam = false;
 
   constructor(id: string, protected p: IUserDetail, private ans?: any) {
     super({...p, _id: id});
@@ -270,12 +282,16 @@ export class Professional extends Profile implements IProfessional{
 
   markAsTriedFetchingAmenity() { this._triedFetchingAmenity = true; }
   markAsTriedFetchingProduct() { this._triedFetchingProduct = true; }
-  markAsTriedFetchingProfessionals() { this._triedFetchingProfessionals = true; }
+  markAsTriedFetchingStaffs() { this._triedFetchingStaffs = true; }
+  markAsTriedFetchingTeam() { this._triedFetchingTeam = true; }
 
+  setTeam(team: IUserDetail) {
+    this._team = new Professional(team._id, team);
+  }
   
-  setProfessionals(professionals: IUserDetail[]) { 
-    const ps = professionals.map(item => new Professional(item._id, item));
-    this._professionals = ps;
+  setStaffs(staffs: IUserDetail[]) { 
+    const ps = staffs.map(item => new Professional(item._id, item));
+    this._staffs = ps;
   }
 
   setAmenities(amenities: any[]) {

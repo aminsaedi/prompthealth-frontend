@@ -132,6 +132,28 @@ export interface IGetReferralsResult extends IResponseData {
 export interface ICreateReferralsResult extends IResponseData {
   data: IReferral[];
 }
+export interface IGetStaffsResult extends IResponseData {
+  data: {
+    total: number;
+    data: {
+      _id: string;
+      center: string;
+      userId: IUserDetail;
+      createdAt: string;
+      isDeleted: boolean;
+    }[]
+  }
+}
+
+export interface IGetStaffResult extends IResponseData {
+  data: {
+    _id: string;
+    center: IUserDetail;
+    userId: string;
+    createdAt: string;
+    isDeleted: boolean;
+  }
+}
 
 // export interface IMarkAllNotificationsAsReadResult extends IResponseData {
 //   data: {

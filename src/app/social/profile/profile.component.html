@@ -90,6 +90,23 @@
               <div class="h5">{{profile.numFollower}}</div>
             </div>
           </div>
+
+          <div
+          *ngIf="profile && profile.team"
+          class="my-20p"
+          >
+            <a 
+            [routerLink]="[profile.team.linkToProfile]"
+            class="d-inline-flex align-items-center btn btn-text-grey small border border-line rounded-8p bg-background"
+            >
+              <profile-image size=45 [image]="profile.team.profileImage"></profile-image>
+              <div class="ml-15p text-left">
+                <span class="body2">Member of </span>
+                <br>
+                <span class="subtitle2">{{profile.team.name}}</span>
+              </div>  
+            </a>
+          </div>
         </div>
       
         <div class="overflow-auto mt-10p px-20p px-lg-30p">

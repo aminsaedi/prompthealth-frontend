@@ -1,10 +1,12 @@
-<div class="sticky-top" style="z-index: 90;">
-    <app-header></app-header>
-</div>
-
-<div class="wrapper">
-    <router-outlet appHighlight></router-outlet>
-    <div class="push"></div>
+<div style="min-height: 100vh">
+    <div class="sticky-top" style="z-index: 90;">
+        <app-header></app-header>
+    </div>
+    
+    <div class="wrapper">
+        <router-outlet appHighlight></router-outlet>
+        <div class="push"></div>
+    </div>
 </div>
 
 <app-footer *ngIf="showFooter" class="footer"></app-footer>

@@ -68,6 +68,7 @@ import { SwitchComponent } from './switch/switch.component';
 import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import { ModalUserMenuComponent } from './modal-user-menu/modal-user-menu.component';
 import { ImageUploaderDirective } from './image-uploader.directive';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   imports: [
@@ -145,6 +146,7 @@ import { ImageUploaderDirective } from './image-uploader.directive';
     TimeAgoPipe,
     ModalUserMenuComponent,
     ImageUploaderDirective,
+    LoaderComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -202,6 +204,7 @@ import { ImageUploaderDirective } from './image-uploader.directive';
     TimeAgoPipe,
     ModalUserMenuComponent,
     ImageUploaderDirective,
+    LoaderComponent,
   ]
 })
 export class SharedModule { }

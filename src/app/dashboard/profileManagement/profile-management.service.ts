@@ -95,7 +95,8 @@ export class ProfileManagementService {
   getProfileDetail(user: IUserDetail): Promise<IUserDetail>{
     const id = user._id;
     const role = user.roles;
-
+    this.changeLoginStatus('loggingIn');
+    
     return new Promise((resolve, reject) => {
       if(this._user && this._user._id == id){ 
         this.setData(this._user);

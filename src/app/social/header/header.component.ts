@@ -235,7 +235,6 @@ export class HeaderComponent implements OnInit {
   }
 
   fetchNotification() {
-    console.log('fetchNotification');
     this._sharedService.get('notification/get-all').subscribe((res: IGetNotificationsResult) => {
       if(res.statusCode == 200) {
         this._socialService.saveNotifications(res.data);

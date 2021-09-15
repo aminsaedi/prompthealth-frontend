@@ -8,14 +8,13 @@ import { ProfileManagementService } from 'src/app/dashboard/profileManagement/pr
 import { GetReferralsQuery } from 'src/app/models/get-referrals-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
-import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetReferralsResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
+import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetStaffResult, IGetReferralsResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
@@ -103,7 +102,6 @@ export class ProfileComponent implements OnInit {
     private _modalService: ModalService,
     private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
-    private _uService: UniversalService,
     private _changeDetector: ChangeDetectorRef,
   ) { }
 
@@ -167,6 +165,11 @@ export class ProfileComponent implements OnInit {
         this.initRecommendation();
         this.setProfileMenu();
         this._socialService.setProfile(this.profile);
+
+        if(this.profile.isSP && !this.profile.triedFetchingTeam) {
+          this.fetchTeam();
+        }
+
       }, error => {
         this._router.navigate(['404'], {replaceUrl: true});
         this._toastr.error('Something went wrong.');
@@ -280,6 +283,25 @@ export class ProfileComponent implements OnInit {
           }
           this._socialService.saveCacheProfile(professional);
           resolve(professional);
+        } else {
+          console.log(res.message);
+          reject();
+        }
+      }, error => {
+        console.log(error);
+        reject();
+      });
+    });
+  }
+
+  fetchTeam(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const path = `staff/get-by-user/${this.profile._id}`;
+      this._sharedService.getNoAuth(path).subscribe((res: IGetStaffResult) => {
+        if(res.statusCode == 200) {
+          this.profile.markAsTriedFetchingTeam();
+          this.profile.setTeam(res.data.center);
+          resolve();
         } else {
           console.log(res.message);
           reject();

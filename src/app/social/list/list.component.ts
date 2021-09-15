@@ -41,7 +41,6 @@ export class ListComponent implements OnInit {
     if(!this.isLoading && this.isMorePosts && document.body && this.posts && this.posts.length > 0) {
       const startLoad = !!(document.body.scrollHeight < window.scrollY + window.innerHeight * 2);
       if(startLoad) {
-        console.log('startLoad');
         this.isLoading = true;
         const postsFetched = await this.fetchPosts();
         postsFetched.forEach(p => {

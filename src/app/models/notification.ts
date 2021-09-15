@@ -9,7 +9,7 @@ export interface ISocialNotification {
   isRead?: boolean;
   image?: string;
   link?: string;
-  type?: 'following' | 'new-event' | 'new-article' | 'password-change' | 'new-note' | 'new-promo' | 'new-review' | 'new-recommend';
+  type?: 'following' | 'new-event' | 'new-article' | 'password-change' | 'new-note' | 'new-promo' | 'new-review' | 'new-recommend' | 'tag-provider';;
   iOSLink?: string;
   androidLink?: string;
   createdAt?: Date;
@@ -30,15 +30,19 @@ export class SocialNotification implements ISocialNotification{
 
   get linkToTarget() {
     let link = '';
-    if(this.data.link) {
-      switch(this.data.type) {
-        case 'new-recommend':
-        case 'new-review':
-        case 'following': link = '/community/profile/' + this.data.link; break;
-        case 'new-note':
-        case 'new-article':
-        case 'new-event': link = '/community/content/' + this.data.link; break;
-      }      
+    if(this.data.type == 'tag-provider') {
+      link = '/dashboard/profilemanagement/add-professionals';
+    } else {
+      if(this.data.link) {
+        switch(this.data.type) {
+          case 'new-recommend':
+          case 'new-review':
+          case 'following': link = '/community/profile/' + this.data.link; break;
+          case 'new-note':
+          case 'new-article':
+          case 'new-event': link = '/community/content/' + this.data.link; break;
+        }      
+      }
     }
     return link;
   }
@@ -47,7 +51,7 @@ export class SocialNotification implements ISocialNotification{
   private _image: string;
 
   constructor(private data: ISocialNotification) {
-    if(data.type == 'password-change') {
+    if(data.type == 'password-change' || data.type == 'tag-provider') {
       this._image = '/assets/img/logo-sm-white.png';
     } else {
       this._image = data.image ? (this._s3 + data.image) : null;
