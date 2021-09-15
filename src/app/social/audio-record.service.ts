@@ -15,7 +15,7 @@ export class AudioRecordService {
   private _recordingFailed = new Subject<string>();
   private _recordingStarted = new Subject<void>();
   private _timerRecording = new Subject<number>();
-  private secondsMaxRecordingTime = 65;
+  private secondsMaxRecordingTime = 600;
   private secondsRemainingRecordingTime: number = this.secondsMaxRecordingTime;
 
 
