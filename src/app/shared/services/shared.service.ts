@@ -8,7 +8,7 @@ import { BehaviorService } from './behavior.service';
 
 // import { SocialAuthService } from 'angularx-social-login';
 
-import { throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 
 // import 'rxjs/add/operator/toPromise';
 import { catchError, map } from 'rxjs/operators';
@@ -28,6 +28,7 @@ import { ICouponData } from 'src/app/models/coupon-data';
 import { ToastrService } from 'ngx-toastr';
 import { Professional } from 'src/app/models/professional';
 import { SocialService } from 'src/app/social/social.service';
+import { AngularFireMessaging } from '@angular/fire/messaging';
 
 declare var jQuery: any;
 
@@ -50,11 +51,16 @@ export class SharedService {
     private _profileManager: ProfileManagementService,
     private _socialManager: SocialService,
     private _toastr: ToastrService,
+    private angularFireMessaging: AngularFireMessaging,
 
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
+    this.receiveMessage();
+    console.log('fcm loaded');
     // this.type = this._uService.localStorage.getItem('roles');
   }
+  currentMessage = new BehaviorSubject(null);
+
   rootUrl: string = environment.config.API_URL;
   // baseUrl: string = environment.config.API_URL;
   // type: any;
@@ -62,8 +68,39 @@ export class SharedService {
 
   private compareList: Professional[] = [];
 
+  requestPermission(user: User) {
+    this.angularFireMessaging.requestToken.subscribe(
+      (token) => {
+        console.log(token);
+        this.post({ token, deviceType: 'web' }, 'notification/save-token').toPromise().then(res => {
+          console.log('token saved to db', res);
+        });
+      },
+      (err) => {
+        console.error('Unable to get permission to notify.', err);
+      }
+    );
+  }
+  receiveMessage() {
+    this.angularFireMessaging.messages.subscribe(
+      (payload: any) => {
+        console.log('new message received. ', payload);
+        this.currentMessage.next(payload);
+        // const notification: { title: string, body: string, image: string } = payload.notification;
+        // const noti = new Notification(notification.title, {
+        //   body: notification.body,
+        //   image: notification.image
+        // });
+      });
+  }
 
-  logout(navigate: boolean = true) {
+  async logout(navigate: boolean = true) {
+    const token = await this.angularFireMessaging.getToken.toPromise();
+    console.log(token);
+    this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
+      console.log('Cleared fcm token');
+    });
+
     this._socialManager.dispose();
     this._postManager.dispose();
     this._profileManager.dispose();
@@ -78,7 +115,6 @@ export class SharedService {
 
     this._bs.setUserData(null);
     this._toastr.success('Logged out successfully');
-
     ls.setItem('userType', 'U');
     if (navigate) {
       this._router.navigate(['/']);
@@ -378,7 +414,7 @@ export class SharedService {
     const code = err.code;
     const message = err.message;
 
-    if ((code == 401 && message == 'authorization')) {
+    if (code === 401 && message === 'authorization') {
       this._uService.localStorage.removeItem('token');
       // this.showAlert('Session Expired.', 'alert-danger')
       // this._router.navigate(['/auth/business']);

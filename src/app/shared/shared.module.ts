@@ -71,7 +71,6 @@ import { ImageUploaderDirective } from './image-uploader.directive';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
-import { MessagingService } from './services/messaging.service';
 
 @NgModule({
   imports: [
@@ -88,7 +87,6 @@ import { MessagingService } from './services/messaging.service';
   providers: [
     PreviousRouteService,
     SharedService,
-    MessagingService,
     CategoryService
   ],
   declarations: [

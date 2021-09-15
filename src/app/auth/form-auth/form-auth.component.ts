@@ -12,7 +12,6 @@ import { validators } from 'src/app/_helpers/form-settings';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { SocialService } from 'src/app/social/social.service';
-import { MessagingService } from 'src/app/shared/services/messaging.service';
 
 @Component({
   selector: 'form-auth',
@@ -44,7 +43,6 @@ export class FormAuthComponent implements OnInit {
     private _socialService: SocialService,
     private _bs: BehaviorService,
     private _toastr: ToastrService,
-    private _ms: MessagingService
   ) {
     this.formRole = new FormControl();
   }
@@ -185,8 +183,8 @@ export class FormAuthComponent implements OnInit {
     this._bs.setUserData(userinfo);
 
     let toastrMessage = 'Welcome!';
-    this._ms.requestPermission(userinfo);
-    this._ms.receiveMessage();
+    this._sharedService.requestPermission(userinfo);
+    // this._ms.receiveMessage();
     if (!this.staySamePage) {
       let next: string;
       if (this.nextPage) {
