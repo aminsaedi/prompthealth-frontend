@@ -71,7 +71,7 @@ export class SharedService {
   requestPermission(user: User) {
     this.angularFireMessaging.requestToken.subscribe(
       (token) => {
-        console.log(token);
+        // console.log(token);
         this.post({ token, deviceType: 'web' }, 'notification/save-token').toPromise().then(res => {
           console.log('token saved to db', res);
         });
@@ -96,7 +96,7 @@ export class SharedService {
 
   async logout(navigate: boolean = true) {
     const token = await this.angularFireMessaging.getToken.toPromise();
-    console.log(token);
+    // console.log(token);
     this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
       console.log('Cleared fcm token');
     });
