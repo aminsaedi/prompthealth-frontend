@@ -88,7 +88,7 @@ export class DetailComponent implements OnInit {
 
   /** professionals section */
   public isGettingProfessional = false;
-  public isProfessionalsMoreExist = true;
+  public isStaffsMoreExist = true;
 
   /** for booking */
   public bookingForm: FormGroup;
@@ -336,7 +336,7 @@ export class DetailComponent implements OnInit {
   getProfessionals() {
     // default count is 20
     const count = 4;
-    const lenProfessional = this.userInfo.professionals.length || 0;
+    const lenProfessional = this.userInfo.staffs.length || 0;
     const page = Math.floor(lenProfessional / count) + 1;
 
     const path = `staff/get-all?userId=${this.userInfo.id}&count=${count}&page=${page}&frontend=0/`;
@@ -344,13 +344,13 @@ export class DetailComponent implements OnInit {
     this._sharedService.getNoAuth(path).subscribe((res: any) => {
       this.isGettingProfessional = false;
       if (res.statusCode === 200) {
-        const professionals = [];
+        const staffs = [];
 
         res.data.data.forEach((p: IUserDetail) => {
-          professionals.push(new Professional(p.userId, p));
+          staffs.push(new Professional(p.userId, p));
         });
-        this.userInfo.setProfessionals(professionals);
-        if (this.userInfo.professionals.length < page * count) { this.isProfessionalsMoreExist = false; }
+        this.userInfo.setStaffs(staffs);
+        if (this.userInfo.staffs.length < page * count) { this.isStaffsMoreExist = false; }
 
       } else {
         this._sharedService.checkAccessToken(res.message);

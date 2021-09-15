@@ -1,5 +1,6 @@
 import { IDefaultPlan } from "./default-plan";
 import { ISocialNotification } from "./notification";
+import { IReferral } from "./referral";
 import { ISocialComment, ISocialPost } from "./social-post";
 import { IUserDetail } from "./user-detail";
 
@@ -122,6 +123,36 @@ export interface ISearchResult extends IResponseData {
 
 export interface IGetNotificationsResult extends IResponseData {
   data: ISocialNotification[];
+}
+
+export interface IGetReferralsResult extends IResponseData {
+  data: IReferral[];
+}
+
+export interface ICreateReferralsResult extends IResponseData {
+  data: IReferral[];
+}
+export interface IGetStaffsResult extends IResponseData {
+  data: {
+    total: number;
+    data: {
+      _id: string;
+      center: string;
+      userId: IUserDetail;
+      createdAt: string;
+      isDeleted: boolean;
+    }[]
+  }
+}
+
+export interface IGetStaffResult extends IResponseData {
+  data: {
+    _id: string;
+    center: IUserDetail;
+    userId: string;
+    createdAt: string;
+    isDeleted: boolean;
+  }
 }
 
 // export interface IMarkAllNotificationsAsReadResult extends IResponseData {

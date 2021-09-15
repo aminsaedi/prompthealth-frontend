@@ -17,9 +17,24 @@ export class FormItemTextareaComponent implements OnInit {
   @Input() controller: FormControl;
   @Input() max: number = null;
 
+  @Input() option: ITextareaOption = {};
+
+  public rows: number;
+
   constructor() { }
 
   ngOnInit(): void {
+    const option = new TextareaOption(this.option);
+    this.rows = option.rows;
   }
+}
 
+interface ITextareaOption {
+  rows?: number;
+}
+
+class TextareaOption implements ITextareaOption{
+  get rows() { return this.data.rows || 3; }
+
+  constructor(private data: ITextareaOption = {}) {}
 }

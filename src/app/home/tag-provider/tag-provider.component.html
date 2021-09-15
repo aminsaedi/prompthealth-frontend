@@ -1,0 +1,52 @@
+<ng-container *ngIf="!isLoading">
+  <section 
+  class="my-100p"
+  >
+    <div class="text-center">
+      <div 
+      class="d-inline-block border border-line p-15p p-md-30p rounded-12p bg-background"
+      style="width: 96vw; max-width: 600px;"
+      >
+        <h4 class="h3-md">
+          Welcome to the team
+        </h4>
+        <p class="mb-50p">
+          You have joined the team successfully!
+        </p>
+        <div class="d-flex justify-content-center">
+          <div style="flex: 0 0 48%; margin-right: 2%">
+            <div class="d-inline-block">
+              <profile-image [image]="centre.profileImage" [size]="120"></profile-image>
+            </div>
+            <div class="subtitle1">{{centre.name}}</div>  
+          </div>
+          <div style="flex: 0 0 48%; margin-left: 2%;">
+            <div class="d-inline-block">
+              <profile-image [image]="user.profileImage" [size]="120"></profile-image>
+            </div>
+            <div class="subtitle1">{{user.name}}</div>  
+          </div>  
+        </div>
+
+      </div>
+    </div>
+  </section>
+  
+</ng-container>
+
+
+
+<div 
+*ngIf="!!isLoading"
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Please wait...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

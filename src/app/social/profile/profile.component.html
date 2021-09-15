@@ -82,13 +82,30 @@
             class="text-body"
             [routerLink]="['/community/profile', profile._id,  'followings']"
             >
-              <div class="subtitle2">Following</div>
+              <div class="subtitle2">Followings</div>
               <div class="h5">{{profile.numFollowing}}</div>
             </a>
             <div class="ml-20p text-body">
-              <div class="subtitle2">Followed</div>
+              <div class="subtitle2">Followers</div>
               <div class="h5">{{profile.numFollower}}</div>
             </div>
+          </div>
+
+          <div
+          *ngIf="profile && profile.team"
+          class="my-20p"
+          >
+            <a 
+            [routerLink]="[profile.team.linkToProfile]"
+            class="d-inline-flex align-items-center btn btn-text-grey small border border-line rounded-8p bg-background"
+            >
+              <profile-image size=45 [image]="profile.team.profileImage"></profile-image>
+              <div class="ml-15p text-left">
+                <span class="body2">Member of </span>
+                <br>
+                <span class="subtitle2">{{profile.team.name}}</span>
+              </div>  
+            </a>
           </div>
         </div>
       
@@ -197,18 +214,50 @@
           </div>
         </ng-container>
 
-        <ng-container *ngIf="profile.isProvider">
+        <ng-container *ngIf="profile.isProvider || profile.isSA">
           <div class="mx-15p mx-md-20p py-15p py-md-20p">
-            <!-- <div class="mb-40p">
+            <div 
+            *ngIf="profile.recommendations && profile.recommendations.length > 0"
+            class="mb-40p"
+            >
               <h6 class="header-accent">Recommendations</h6>
               <div class="mt-25p mb-10p">
                 <i iconPh="quotes-2" class="text-secondary" style="font-size: 32px;"></i>
               </div>
-              <p>will go back when needed next time. Recommend him but the office was busy as he is very popular!</p>
-              <div class="body1 text-label">Marianna M - July 26, 2021</div>  
-            </div> -->
+              <div 
+              #recommendationCarousel
+              class="overflow-hidden"
+              >
+                <ul class="list-unstyled d-flex flex-nowrap">
+                  <li
+                  *ngFor="let recommendation of profile.recommendationsPreview"
+                  style="flex: 0 0 100%;"
+                  >
+                    <p class="body1 clamp-3line">{{recommendation.body}}</p>
+                    <a 
+                    class="body2 text-label"
+                    [routerLink]="recommendation.fromLinkToProfile"
+                    >
+                      {{recommendation.fromName}} - {{recommendation.createdAt | date}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <ul 
+              *ngIf="profile.recommendationsPreview.length > 1"
+              class="list-unstyled d-flex flex-nowrap justify-content-center indicators"
+              >
+                <li 
+                *ngFor="let indicator of profile.recommendationsPreview; let i = index;"
+                class="rounded-pill mx-5p active"
+                [ngClass]="{active: idxActiveRecommendationIndicator == i}"
+                (click)="onClickRecommendationCarouselIndicator(i)"
+                ></li>
+              </ul>
+              <a routerLink="review" class="btn btn-text small px-0">See more recommendations</a>
+            </div>
             
-            <div>
+            <div *ngIf="profile.isProvider">
               <button 
               *ngIf="!user"
               class="btn btn-primary w-100" 
@@ -230,8 +279,15 @@
           </div>
         </ng-container>
       </section>
-    </div>
 
+      <div clas="text-center">
+        <a 
+        *ngIf="canRecommend"
+        routerLink="new-recommend"
+        class="btn btn-text small px-0 mt-20p"
+        >Write a recommendation?</a>  
+      </div>
+    </div>
   </div>
 
 </div>
@@ -240,7 +296,6 @@
 id="booking"
 [bodyStyle]="{'padding-bottom': 0, 'max-width': '650px'}"
 #modalBooking
-
 >
   <div class="title-container d-flex justify-content-between align-items-center">
     <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Request appointment</span>

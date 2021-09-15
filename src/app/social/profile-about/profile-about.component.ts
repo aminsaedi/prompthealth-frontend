@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { rejects } from 'assert';
 import { Subscription } from 'rxjs';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
+import { IGetStaffsResult } from 'src/app/models/response-data';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -63,8 +63,8 @@ export class ProfileAboutComponent implements OnInit {
       this.fetchProduct();
     }
 
-    if(p && p.isC && !p.triedFetchingProfessionals) {
-      p.markAsTriedFetchingProfessionals();
+    if(p && p.eligibleFeatureStaffs && !p.triedFetchingStaffs) {
+      p.markAsTriedFetchingStaffs();
       this.fetchStaffs();
     }
   }
@@ -121,10 +121,11 @@ export class ProfileAboutComponent implements OnInit {
 
   fetchStaffs() {
     return new Promise((resolve, reject) => {
-      const path = `staff/get-all?userId=${this.profile.id}&count=20&page=1&frontend=0/`;
-      this._sharedService.getNoAuth(path).subscribe((res: any) => {
+      const path = `staff/get-all?center=${this.profile._id}&count=20&page=1&frontend=0/`;
+      this._sharedService.getNoAuth(path).subscribe((res: IGetStaffsResult) => {
         if(res.statusCode == 200) {
-          this.profile.setProfessionals(res.data.data);
+          const staffs = res.data.data.map(item => item.userId);
+          this.profile.setStaffs(staffs);
           resolve(true);  
         } else {
           console.log(res.message);

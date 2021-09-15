@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { locations } from 'src/app/_helpers/location-data';
 
 const apiURL = environment.config.API_URL;
-const baseURL = environment.config.BASE_URL;
+const baseURL = environment.config.FRONTEND_BASE;
 
 import { default as axios } from 'axios';
 import { IUserDetail } from './models/user-detail';
@@ -49,13 +49,13 @@ rSitemap.get('/', (req, res) => {
 const sitemapRoot = `<?xml version="1.0" encoding="UTF-8"?>
   <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <sitemap>
-      <loc>${baseURL}sitemap/main</loc>
+      <loc>${baseURL}/sitemap/main</loc>
     </sitemap>
     <sitemap>
-      <loc>${baseURL}sitemap/practitioners</loc>
+      <loc>${baseURL}/sitemap/practitioners</loc>
     </sitemap>
     <sitemap>
-      <loc>${baseURL}sitemap/community</loc>
+      <loc>${baseURL}/sitemap/community</loc>
     </sitemap>
   </sitemapindex>
 `;
@@ -66,28 +66,28 @@ const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
       <loc>${baseURL}</loc>
     </url>
     <url>
-      <loc>${baseURL}plans</loc>
+      <loc>${baseURL}/plans</loc>
     </url>
     <url>
-      <loc>${baseURL}products</loc>
+      <loc>${baseURL}/products</loc>
     </url>
     <url>
-      <loc>${baseURL}ambassador-program</loc>
+      <loc>${baseURL}/ambassador-program</loc>
     </url>
     <url>
-      <loc>${baseURL}faq</loc>
+      <loc>${baseURL}/faq</loc>
     </url>       
     <url>
-      <loc>${baseURL}subscribe/newsletter</loc>
+      <loc>${baseURL}/subscribe/newsletter</loc>
     </url>   
     <url>
-      <loc>${baseURL}contact-us</loc>
+      <loc>${baseURL}/contact-us</loc>
     </url>          
     <url>
-      <loc>${baseURL}policy</loc>
+      <loc>${baseURL}/policy</loc>
     </url>              
     <url>
-      <loc>${baseURL}terms</loc>
+      <loc>${baseURL}/terms</loc>
     </url>
   </urlset>   
 `;
@@ -96,7 +96,7 @@ function getSitemapPractitioners(): Promise<string> {
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
       <url>
-        <loc>${baseURL}practitioners</loc>
+        <loc>${baseURL}/practitioners</loc>
       </url>
   `;
 
@@ -112,7 +112,7 @@ function getSitemapPractitioners(): Promise<string> {
         /** listing by area */
         xml += `
           <url>
-            <loc>${baseURL}practitioners/area/${area}</loc>
+            <loc>${baseURL}/practitioners/area/${area}</loc>
           </url>
         `;
       });
@@ -121,7 +121,7 @@ function getSitemapPractitioners(): Promise<string> {
         /** listing by category */
         xml += `
           <url>
-            <loc>${baseURL}practitioners/category/${category}</loc>
+            <loc>${baseURL}/practitioners/category/${category}</loc>
           </url>
         `;
 
@@ -129,7 +129,7 @@ function getSitemapPractitioners(): Promise<string> {
           /** listing by category + area */
           xml += `
             <url>
-              <loc>${baseURL}practitioners/category/${category}/${area}</loc>
+              <loc>${baseURL}/practitioners/category/${category}/${area}</loc>
             </url>
           `;
         });
@@ -139,7 +139,7 @@ function getSitemapPractitioners(): Promise<string> {
         /** listing by type of provider */
         xml += `
           <url>
-            <loc>${baseURL}practitioners/type/${id}</loc>
+            <loc>${baseURL}/practitioners/type/${id}</loc>
           </url>
         `;
 
@@ -147,7 +147,7 @@ function getSitemapPractitioners(): Promise<string> {
           /** listing by type of provider + area */
           xml += `
             <url>
-              <loc>${baseURL}practitioners/type/${id}/${area}</loc>
+              <loc>${baseURL}/practitioners/type/${id}/${area}</loc>
             </url>
           `;
         });
@@ -260,13 +260,13 @@ function getSitemapSocial(): Promise<string> {
       taxonomies.forEach(type => {
         xml += `
           <url>
-            <loc>${baseURL}community/${type}</loc>
+            <loc>${baseURL}/community/${type}</loc>
           </url>
         `;
         categoryIds.forEach(id => {
           xml += `
             <url>
-              <loc>${baseURL}community/${type}/${id}</loc>
+              <loc>${baseURL}/community/${type}/${id}</loc>
             </url>
           `;
         });
@@ -274,26 +274,26 @@ function getSitemapSocial(): Promise<string> {
 
       xml += `
         <url>
-          <loc>${baseURL}community/profile/${environment.config.idSA}</loc>
+          <loc>${baseURL}/community/profile/${environment.config.idSA}</loc>
         </url>
         <url>
-          <loc>${baseURL}community/profile/${environment.config.idSA}/feed</loc>
+          <loc>${baseURL}/community/profile/${environment.config.idSA}/feed</loc>
         </url>
       `;
 
       practitionerIds.forEach(id => {
         xml += `
           <url>
-            <loc>${baseURL}community/profile/${id}</loc>
+            <loc>${baseURL}/community/profile/${id}</loc>
           </url>
           <url>
-            <loc>${baseURL}community/profile/${id}/service</loc>
+            <loc>${baseURL}/community/profile/${id}/service</loc>
           </url>
           <url>
-            <loc>${baseURL}community/profile/${id}/feed</loc>
+            <loc>${baseURL}/community/profile/${id}/feed</loc>
           </url>
           <url>
-            <loc>${baseURL}community/profile/${id}/review</loc>
+            <loc>${baseURL}/community/profile/${id}/review</loc>
           </url>
         `;
       });
@@ -301,7 +301,7 @@ function getSitemapSocial(): Promise<string> {
       contentIds.forEach(id => {
         xml += `
           <url>
-            <loc>${baseURL}community/content/${id}</loc>
+            <loc>${baseURL}/community/content/${id}</loc>
           </url>
         `;
       });

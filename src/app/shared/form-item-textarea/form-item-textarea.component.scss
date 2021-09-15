@@ -5,6 +5,7 @@
   color: $colorGsBody;
   background: $colorPrimaryLight;
   border-color: rgba($colorPrimary, 0.12);
+  height: auto;
 
   &:disabled {
     background: $colorGsBackground;

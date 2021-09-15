@@ -94,28 +94,33 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
 
           <div 
           class="mb-20p"
-          *ngIf="profile.professionals.length > 0"
+          *ngIf="profile.staffs.length > 0"
           >
-            <h6>Staffs:</h6>
+            <h6>Team members:</h6>
             <ul 
-            *ngFor="let professional of profile.professionals"
+            *ngFor="let staff of profile.staffs"
             class="list-unstyled"
             >
               <li class="d-flex">
-                <profile-image [image]="professional.profileImage" size=70></profile-image>
+                <a [routerLink]="[staff.linkToProfile]">
+                  <profile-image [image]="staff.profileImage" size=70></profile-image>
+                </a>
                 <div class="ml-15p">
-                  <div class="subtitle1">{{professional.name}}</div>
+                  <a 
+                  class="subtitle1" 
+                  [routerLink]="[staff.linkToProfile]"
+                  >{{staff.name}}</a>
                   <p 
                   class="body1 text-label mb-0"
-                  [ngClass]="{'clamp-2line': !isStaffSelected(professional)}"
-                  >{{professional.description}}</p>
+                  [ngClass]="{'clamp-2line': !isStaffSelected(staff)}"
+                  >{{staff.description}}</p>
 
                   <button
                   class="btn btn-text-body small px-0"
-                  (click)="onClickStaffDescription(professional)"
+                  (click)="onClickStaffDescription(staff)"
                   >
-                    <span *ngIf="isStaffSelected(professional)">Show less</span>
-                    <span *ngIf="!isStaffSelected(professional)">Show more</span>
+                    <span *ngIf="isStaffSelected(staff)">Show less</span>
+                    <span *ngIf="!isStaffSelected(staff)">Show more</span>
                   </button>
                 </div>  
               </li>

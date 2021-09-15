@@ -195,7 +195,7 @@ export class HeaderComponent implements OnInit {
     const query = new SearchQuery({count: 3});
     this.isSearchLoading = true;
     this._sharedService.getNoAuth(
-      'common/search/' + keyword + query.toQueryParams()
+      'common/search/' + keyword + query.toQueryParamsString()
     ).subscribe((res: ISearchResult) => {
       if(res.statusCode == 200) {
         this.searchResult = {users: [], blogs: []};
@@ -235,7 +235,6 @@ export class HeaderComponent implements OnInit {
   }
 
   fetchNotification() {
-    console.log('fetchNotification');
     this._sharedService.get('notification/get-all').subscribe((res: IGetNotificationsResult) => {
       if(res.statusCode == 200) {
         this._socialService.saveNotifications(res.data);

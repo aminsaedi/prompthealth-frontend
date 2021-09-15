@@ -20,9 +20,9 @@ import { MapComponent } from "./map/map.component";
 import { AgmCoreModule } from '@agm/core';
 import { DoctorFilterComponent } from './doctor-filter/doctor-filter.component';
 import { AffiliateComponent } from './affiliate/affiliate.component';
-import { BlogComponent } from './blog/blog.component';
-import { BlogDetailComponent } from './blog-detail/blog-detail.component';
-import { BlogCategoryComponent } from './blog-category/blog-category.component';
+// import { BlogComponent } from './blog/blog.component';
+// import { BlogDetailComponent } from './blog-detail/blog-detail.component';
+// import { BlogCategoryComponent } from './blog-category/blog-category.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 import { subscriptionPlanProductComponent } from './subscription-plan-product/subscription-plan-product.component';
@@ -36,13 +36,13 @@ import { InvitationComponent } from './invitation/invitation.component';
 import { LandingClubhouseComponent } from './landing-clubhouse/landing-clubhouse.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingAmbassadorComponent } from './landing-ambassador/landing-ambassador.component';
-import { DetailComponent } from "./detail/detail.component";
-import { ListingComponent } from "./listing/listing.component";
-import { FilterDropdownComponent } from "./filter-dropdown/filter-dropdown.component";
-import { FilterDropdownInputComponent } from "./filter-dropdown-input/filter-dropdown-input.component";
-import { FilterDropdownLocationComponent } from "./filter-dropdown-location/filter-dropdown-location.component";
-import { FilterDropdownSelectComponent } from "./filter-dropdown-select/filter-dropdown-select.component";
-import { FilterDropdownSliderComponent } from "./filter-dropdown-slider/filter-dropdown-slider.component";
+// import { DetailComponent } from "./detail/detail.component";
+// import { ListingComponent } from "./listing/listing.component";
+// import { FilterDropdownComponent } from "./filter-dropdown/filter-dropdown.component";
+// import { FilterDropdownInputComponent } from "./filter-dropdown-input/filter-dropdown-input.component";
+// import { FilterDropdownLocationComponent } from "./filter-dropdown-location/filter-dropdown-location.component";
+// import { FilterDropdownSelectComponent } from "./filter-dropdown-select/filter-dropdown-select.component";
+// import { FilterDropdownSliderComponent } from "./filter-dropdown-slider/filter-dropdown-slider.component";
 import { ListingcompareComponent } from "./listingcompare/listingcompare.component";
 import { UserQuestionnaireItemSelectMultipleComponent } from "./user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component";
 import { UserQuestionnaireItemBackgroundComponent } from "./user-questionnaire-item-background/user-questionnaire-item-background.component";
@@ -61,6 +61,7 @@ import { ScrollIndicatorComponent } from './_elements/scroll-indicator/scroll-in
 import { FaqItemComponent } from './_elements/faq-item/faq-item.component';
 import { TablePlanFeatureComponent } from './_elements/table-plan-feature/table-plan-feature.component';
 import { AboutProductComponent } from './about-product/about-product.component';
+import { TagProviderComponent } from './tag-provider/tag-provider.component';
 
 
 @NgModule({
@@ -77,9 +78,9 @@ import { AboutProductComponent } from './about-product/about-product.component';
     MapComponent,
     DoctorFilterComponent,
     AffiliateComponent,
-    BlogComponent,
-    BlogDetailComponent,
-    BlogCategoryComponent,
+    // BlogComponent,
+    // BlogDetailComponent,
+    // BlogCategoryComponent,
     SubscriptionComponent,
     UnsubscribeComponent,
     SubscriptionPlanComponent,
@@ -92,14 +93,14 @@ import { AboutProductComponent } from './about-product/about-product.component';
     LandingClubhouseComponent,
     NotFoundComponent,
     LandingAmbassadorComponent,
-    DetailComponent,
-    ListingComponent,
+    // DetailComponent,
+    // ListingComponent,
     ListingcompareComponent,
-    FilterDropdownComponent,
-    FilterDropdownInputComponent,
-    FilterDropdownLocationComponent,
-    FilterDropdownSelectComponent,
-    FilterDropdownSliderComponent,
+    // FilterDropdownComponent,
+    // FilterDropdownInputComponent,
+    // FilterDropdownLocationComponent,
+    // FilterDropdownSelectComponent,
+    // FilterDropdownSliderComponent,
     UserQuestionaireComponent,
     UserQuestionnaireItemGenderComponent,
     UserQuestionnaireItemSelectComponent,
@@ -114,6 +115,7 @@ import { AboutProductComponent } from './about-product/about-product.component';
     FaqItemComponent,
     TablePlanFeatureComponent,
     AboutProductComponent,
+    TagProviderComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

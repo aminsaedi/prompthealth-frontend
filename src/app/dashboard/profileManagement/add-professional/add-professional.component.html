@@ -1,210 +1,141 @@
 <ngx-spinner bdColor="#fff" size="medium" color="#fff">
-    <p style="font-size: 20px; color: white" class="loaderbg">
-      <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
-    </p>
-  </ngx-spinner>
-<h4 class="mb-3"  *ngIf="doctors && doctors.length">My Professionals
-    <button *ngIf="doctors && doctors.length" (click)="addMore = !addMore" class="btn btn-primary add-more">Add More</button>
-</h4>
-<input  *ngIf="doctors && doctors.length" type="text" [(ngModel)]="doctorSearch" placeholder="Serach.." class="form-control searchBar"/>
-<table class="table table-hover addprofessionaltable w-100" *ngIf="doctors && doctors.length">
-    <thead>
-        <tr>
-            <th>
-                <h5>Images</h5>
-            </th>
-            <th>
-                <h5>Name</h5>
-            </th>
-            <th>
-                <h5>Description</h5>
-            </th>
-            <th>
-                <h5>Action</h5>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let prod of (doctors  | paginate: { id: 'video',
-        itemsPerPage: 5,
-        currentPage: currentPage,
-        totalItems: totalItems 
-        }
-        | customFilter: doctorSearch: 'fname');  let i = index">
-            
-            <td>
-                <img [src]=" AWS_S3 + prod.image" />
-            </td>
-            <td>
-                {{ prod.fname }} - {{ prod.lname }}
-            </td>
-            <td style="white-space: normal">{{ prod.description }}</td>
-            <td>
-                <button (click)="deleteStaff(prod._id)" class="btn btn-error small mr-2"><i iconPh="trash"></i></button>
-                <button (click)="editStaff(prod)" class="btn btn-primary small">Edit</button>
-            </td>
-        </tr>
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="3" *ngIf="totalItems > 5">
-                <pagination-controls
-                    id="video" 
-                    (pageChange)="currentPage = $event"></pagination-controls>
-            </td>
-        </tr>
-    </tfoot>
-</table>
-<!-- <pagination-controls
-    *ngIf="product && product.length"
-    id="productListing" (pageChange)="p = $event"
-></pagination-controls> -->
-<hr *ngIf="addMore && doctors && doctors.length == 0">
-<form  *ngIf="addMore || doctors && doctors.length == 0" role="form"  [formGroup]="addDoctorForm" (ngSubmit)="save()">
-    <h3>Add Professional</h3>
-    <div class="row">
-        <div class="form-group col-sm-6">
-            <label class="col-md-12">First Name<span class="text-danger">*</span></label>
-            <input
-            type="text"
-            id="docFname"
-            name="docFname"
-            formControlName="fname"
-            placeholder="Enter First Name"
-            class="form-control"
-            />
-            <div *ngIf="submitted && f.fname.errors" class="error-msg">
-                <small *ngIf="f.fname.errors.required"  class="text-danger">First Name is required</small>
-                <small *ngIf="f.fname.errors.maxlength" class="text-danger">First Name too long</small>
-                <small *ngIf="f.fname.errors.pattern"   class="text-danger">First Name invalid</small>
+  <p style="font-size: 20px; color: white" class="loaderbg">
+    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
+  </p>
+</ngx-spinner>
+
+<h4 class="mb-50p">Manage your team</h4>
+
+<div class="mb-40p">
+    <section>
+        <h6 class="mb-15p" (click)="toggleStateTipShareLink()">
+            <span>Let your members join the team</span>
+            <i iconPh="info" class="text-label ml-5p"></i>
+        </h6>
+        <p *ngIf="isTipShareLinkShown">
+            You can easily let your members to join the team.
+            To do it, please share this link with your members.
+        </p>
+        
+        <div class="border rounded-lg px-3 py-2 mb-2 d-flex align-items-center justify-content-end" >
+            <input class="flex-grow-1 input-link text-body1" 
+            #referralLink
+            [value]="linkToTagStaff" 
+            readonly
+            >
+        <button-share
+        email
+        label="Share"
+        btnClass="btn btn-primary small"
+        [url]="linkToTagStaff"
+        title="Collaborate with us."
+        text="Join our team and collaborate with us!"
+        ></button-share>
+        </div>      
+    </section>
+</div>
+
+<div class="">
+    <h6 class="mb-20p">Team members</h6>
+    <ul 
+    *ngIf="staffs && staffs.length > 0"
+    class="list-unstyled"
+    >
+        <li 
+        *ngFor="let staff of staffs;"
+        class="d-flex"
+        >   
+            <profile-image 
+            size=60 
+            [image]="staff.profileImage"
+            ></profile-image>
+            <div class="d-lg-flex align-items-center ml-15p">
+                <div>
+                    <div class="subtitle1">{{staff.name}}</div>
+                    <p class="body2 text-label clamp-2line mb-0">{{staff.description}}</p>
+                </div>
+                <div class="text-nowrap mt-10p mt-0p ml-lg-15p">
+                    <a 
+                    class="btn btn-outline small text-nowrap"
+                    [routerLink]="['/community/profile', staff._id]"
+                    >See profile</a>
+                    <button 
+                    class="btn btn-icon-grey small ml-10p"
+                    (click)="showMenu(staff)"
+                    >
+                        <i iconPh="more-horiz"></i>
+                    </button>    
+                </div>    
             </div>
-        </div>
-        <div class="form-group col-sm-6">
-            <label class="col-md-12">Last Name</label>
-            <input
-            type="text"
-            autocomplete="off"
-            id="docLname"
-            name="docLname"
-            formControlName="lname"
-            placeholder="Enter Last Name"
-            class="form-control"
-            />
-            <div *ngIf="submitted && f.lname.errors" class="error-msg">
-                <small *ngIf="f.lname.errors.maxlength" class="text-danger">Last Name too long</small>
-                <small *ngIf="f.lname.errors.pattern"   class="text-danger">Last Name invalid</small>
-            </div>
-        </div>
+        </li>
+    </ul>
+
+    <div
+    *ngIf="staffs && staffs.length == 0"
+    class="subtitle1"
+    >  
+        You have no team members yet.
     </div>
-    <div class="row">
-        <div class="form-group col-sm-12">
-            
-            <div class="multipleImage" *ngIf="imagesList.length">
-                <img [src]="AWS_S3 + imagesList" height="200"> <br/>
-                <a (click)="imagesList = ''" class="fa fa-times"></a>
-            </div>
-            <div>
-                <label class="col-md-12">Upload Images<span class="text-danger">*</span></label>
-                <!-- <img [src]="profile.images ? 'https://api.prompthealth.ca/users/'+profile.profileImage : defaultImage" /> -->
-                <input type="file" name="profile" 
-                class="form-control col-md-12" (change)="onFileSelect($event)"/>
-            
-            </div>
-        </div>
-        <div class="form-group col-sm-12">
-            <label class="col-md-3">Description<span class="text-danger">*</span></label>
-            <textarea
-            type="text"
-            autocomplete="off"
-            id="productDesc"
-            name="productDesc"
-            formControlName="description"
-            placeholder="Enter Description"
-            class="form-control col-md-12"
-            ></textarea>
-            <div *ngIf="submitted && f.description?.errors">
-                <small *ngIf="f.description.errors.required"  class="text-danger">Description is required</small>
-                <small *ngIf="f.description.errors.maxlength" class="text-danger">Description too long</small>
-                <small *ngIf="f.description.errors.pattern"   class="text-danger">Description invalid</small>
-            </div>
-        </div>
-        <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
+
+    <div
+    *ngIf="isLoading"
+    class="mt-15p text-center"
+    >
+        <loader></loader>
     </div>
-</form>
-<form  *ngIf="editDoctorCheck" role="form"  [formGroup]="editDoctorForm" (ngSubmit)="updateStaff()">
-    <h3>Edit Professional</h3>
-    <div class="row">
-        <div class="form-group col-sm-6">
-            <label class="col-md-12">First Name<span class="text-danger">*</span></label>
-            <input
-            type="text"
-            id="docFname"
-            name="docFname"
-            formControlName="fname"
-            placeholder="Enter First Name"
-            class="form-control"
-            />
-            <div *ngIf="submitted && ef.fname.errors" class="error-msg">
-                <small *ngIf="ef.fname.errors.required"  class="text-danger">First Name is required</small>
-                <small *ngIf="ef.fname.errors.maxlength" class="text-danger">First Name too long</small>
-                <small *ngIf="ef.fname.errors.pattern"   class="text-danger">First Name invalid</small>
+</div>
+
+<modal 
+id="staff-menu" 
+#modalStaffMenu
+[bodyStyle]="{'max-width': '380px'}"
+>
+    <ng-container *ngIf="selectedStaff">
+        <div class="text-right">
+            <button
+            class="btn btn-icon"
+            (click)="modalStaffMenu.hide()"
+            >
+                <i iconPh="cross"></i>
+            </button>
+        </div>
+        <div class="content-container text-center">
+            <div class="d-inline-block">
+                <profile-image 
+                size="70" 
+                [image]="selectedStaff.profileImage"
+                ></profile-image>                    
+            </div>
+            <div class="subtitle1 mt-20p mb-10p">Remove from your team</div>
+            <p class="body1 text-body mb-30p mb-md-60p">
+                Are you sure to remove "{{selectedStaff.nickname}}"?
+            </p>
+        
+            <div class="d-flex justify-content-between">
+                <button 
+                class="btn btn-outline-error"
+                (click)="removeStaff(selectedStaff)"
+                >Yes, Remove</button>
+                <button 
+                class="btn btn-primary"
+                (click)="modalStaffMenu.hide()"
+                >Cancel</button>
             </div>
         </div>
-        <div class="form-group col-sm-6">
-            <label class="col-md-12">Last Name</label>
-            <input
-            type="text"
-            autocomplete="off"
-            id="docLname"
-            name="docLname"
-            formControlName="lname"
-            placeholder="Enter Last Name"
-            class="form-control"
-            />
-            <div *ngIf="submitted && ef.lname.errors" class="error-msg">
-                <small *ngIf="ef.lname.errors.maxlength" class="text-danger">Last Name too long</small>
-                <small *ngIf="ef.lname.errors.pattern"   class="text-danger">Last Name invalid</small>
-            </div>
-        </div>
+    </ng-container>
+</modal>
+
+<div 
+*ngIf="!!isUploading"
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Processing...</h5>
     </div>
-    <div class="row">
-        <div class="form-group col-sm-12">
-            
-            <div class="multipleImage" *ngIf="imagesList.length">
-                <img [src]="AWS_S3 + imagesList" height="200"> <br/>
-                <a (click)="imagesList = ''" class="fa fa-times"></a>
-            </div>
-            <div>
-                <label class="col-md-12">Upload Images</label>
-                <!-- <img [src]="profile.images ? 'https://api.prompthealth.ca/users/'+profile.profileImage : defaultImage" /> -->
-                <input type="file" name="profile" 
-                class="form-control col-md-12" (change)="onFileSelect($event)"/>
-            
-            </div>
-        </div>
-        <div class="form-group col-sm-12">
-            <label class="col-md-3">Description<span class="text-danger">*</span></label>
-            <textarea
-            type="text"
-            autocomplete="off"
-            id="productDesc"
-            name="productDesc"
-            formControlName="description"
-            placeholder="Enter Description"
-            class="form-control col-md-12"
-            ></textarea>
-            <div *ngIf="submitted && ef.description?.errors">
-                <small *ngIf="ef.description.errors.required"  class="text-danger">Description is required</small>
-                <small *ngIf="ef.description.errors.maxlength" class="text-danger">Description too long</small>
-                <small *ngIf="ef.description.errors.pattern"   class="text-danger">Description invalid</small>
-            </div>
-        </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
     </div>
-    <div class="row">
-        <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-primary">Edit</button>
-        </div>
-    </div>
-</form>
+  </div>
+</div>
