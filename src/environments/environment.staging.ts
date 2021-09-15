@@ -16,6 +16,8 @@ export const environment = {
     //  API_URL: 'https://api.prompthealth.ca/api/v1/',
     // stripeKey: 'pk_live_51HMSVQHzvKsIv7FclCIgEYNrD4tlvjzZRTDx43Y54pVY3vjQ8MhFuOntQMY094MZ49bDzOdFf2A2tkYdTwSag9ij00xDUu4xnU'
 
+    FRONTEND_BASE: 'http://3.12.81.245:4200',
+
     APPLE_TEAM_ID: '8JS3W47P32',
     APPLE_CLIENT_ID: 'com.prompthealthtest',
     FACEBOOK_APP_ID: '373355990729755',

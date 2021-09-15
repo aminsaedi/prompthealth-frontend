@@ -19,6 +19,8 @@ export const environment = {
     stripeKey: 'pk_test_51HMSVQHzvKsIv7FcySpZJiaqJEpFyeV4T1fqzmTaIMKAt8VoIcSFNOoy0xChuIec3fotWjF00FAMMNI5MZRvr10X00NqhMqjLR',
     AWS_S3: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/',
 
+    FRONTEND_BASE: 'http://localhost:4200',
+
     APPLE_TEAM_ID: '8JS3W47P32',
     APPLE_CLIENT_ID: 'com.prompthealthtest',
 

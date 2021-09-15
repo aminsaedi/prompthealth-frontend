@@ -36,7 +36,7 @@ export class AddProfessionalComponent implements OnInit {
     private _modalService: ModalService,
   ) { }
 
-  private urlBase = environment.config.BASE_URL;
+  private urlBase = environment.config.FRONTEND_BASE;
 
   
   public isTipShareLinkShown: boolean = false;

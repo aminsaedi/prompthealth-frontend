@@ -33,7 +33,7 @@ export class CardItemToolbarComponent implements OnInit {
   public isViewSm: boolean = true;
   public isFormCommentShown = false;
   public isUploading = false;
-  public FRONTEND_URL = environment.config.BASE_URL
+  public FRONTEND_URL = environment.config.FRONTEND_BASE
   
   private formComment: FormGroup;
 
