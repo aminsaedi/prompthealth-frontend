@@ -9,7 +9,7 @@ export interface ISocialNotification {
   isRead?: boolean;
   image?: string;
   link?: string;
-  type?: 'following' | 'new-event' | 'new-article' | 'password-change' | 'new-note' | 'new-promo' | 'new-review' | 'new-recommend' | 'tag-provider';;
+  type?: 'following' | 'new-event' | 'new-article' | 'password-change' | 'new-note' | 'new-promo' | 'new-review' | 'new-recommend' | 'tag-provider';
   iOSLink?: string;
   androidLink?: string;
   createdAt?: Date;

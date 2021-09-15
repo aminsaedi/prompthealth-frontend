@@ -37,21 +37,15 @@ export class ProfileComponent implements OnInit {
 
   get canRecommend() {
     let canRecommend = false;
-    if(this.user && this.profile && !this.isProfileMyself && this.profile.doneInitRecommendations) {
+    if(this.user && this.profile && this.profile.eligibleFeatureRecommendation) {
       if(this.user.isSA) {
         canRecommend = true;
-      } else if (this.user.isProvider || this.user.isP) {
-        canRecommend = !!this.user.isApproved;
+      } else if ((this.user.isProvider || this.user.isP) && this.user.isApproved) {
+        canRecommend = true;
       }
 
       if(canRecommend) {
-        let alreadyCreateRecomendation = false;
-        for(let recommend of this.profile.recommendations) {
-          if(recommend.from == this.user._id) {
-            alreadyCreateRecomendation = true;
-            break;
-          }
-        }
+        const alreadyCreateRecomendation = !!this.profile.recommendations.find(item => item.from == this.user._id);
         canRecommend = !alreadyCreateRecomendation;
       }
     }
@@ -216,7 +210,7 @@ export class ProfileComponent implements OnInit {
 
       this.timerRecommendationCarousel = setInterval(() => {
         const current = this.idxActiveRecommendationIndicator;
-        const next = (this.idxActiveRecommendationIndicator + 1) % this.profile.recommendations.length;
+        const next = (this.idxActiveRecommendationIndicator + 1) % this.profile.recommendationsPreview.length;
         this.moveRecommendationCarousel(current, next);
         this._changeDetector.detectChanges();
       }, 8000);  
