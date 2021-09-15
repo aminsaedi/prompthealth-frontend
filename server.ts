@@ -73,6 +73,7 @@ export function app() {
   server.use('/unsubscribe',           (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/404',                   (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/thankyou',              (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/join-team',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   
   server.use('/community/create',      (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/community/followings',  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
