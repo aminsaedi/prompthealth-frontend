@@ -12,7 +12,9 @@ export const minmax = {
   professionalTitleMax: 30,
   professionalOrganizationMax: 200,
   certificationMax: 200,
-  bookingNoteMax: 500
+  bookingNoteMax: 500,
+  referralMin: 10,
+  referralMax: 500,
 };
 
 
@@ -276,5 +278,6 @@ export const validators = {
 
   /** social */
   comment: [Validators.required],
-  note: [validatorNoteHasAtLeastOneField()]
+  note: [validatorNoteHasAtLeastOneField()],
+  referral: [Validators.required, Validators.maxLength(minmax.referralMax), Validators.minLength(minmax.referralMin)],
 }

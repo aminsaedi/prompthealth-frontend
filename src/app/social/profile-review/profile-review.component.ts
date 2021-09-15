@@ -39,7 +39,6 @@ export class ProfileReviewComponent implements OnInit {
 
   onProfileChanged() {
     this.setMeta();
-
     if(this.profile && this.profile.isConnectedToGoogle && !this.profile.detailByGoogle && !this.profile.triedFetchingGoogleReviews)  {
       this._map.load().then(() => {
         this.profile.setGoogleReviews();

@@ -3,6 +3,7 @@ import { ImageData, ImageGroupData, ImageViewerData } from '../shared/image-view
 import { IUserDetail, IVideo } from './user-detail';
 import { IProfile, Profile } from './profile';
 import { ReviewData } from './review-data';
+import { IReferral, Referral } from './referral';
 
 export interface IProfessional extends IProfile {
   id: IProfessional['_id']; /** old name (changed to _id) */
@@ -40,6 +41,11 @@ export interface IProfessional extends IProfile {
   reviews: any[];
   reviewData: ReviewData;
   reviewCount: number;
+
+  doneInitRecommendations: boolean;
+  recommendations: Referral[];
+  recommendationsPreview: Referral[];
+
 
   amenity: ImageViewerData; /** all amenities data */
   amenityPreview: ImageGroupData[]; /** first 3 amenities for preview */
@@ -120,6 +126,10 @@ export class Professional extends Profile implements IProfessional{
   get reviewData() { return this._reviewData; }
   get reviewCount() { return this.reviews.length; }
 
+  get doneInitRecommendations() { return !!this._recommendations; }
+  get recommendations() { return this._recommendations; }
+  get recommendationsPreview() { return this.recommendations ? this.recommendations.slice(0,3) : []};
+
   get amenity() {
     return (this._amenities && this._amenities.imageGroups.length > 0 && this.p.plan && this.p.plan.ListAmenities) ? this._amenities : {imageGroups: []};
   }
@@ -182,6 +192,7 @@ export class Professional extends Profile implements IProfessional{
   get triedFetchingProduct() { return this._triedFetchingProduct;}
   get triedFetchingGoogleReviews() { return this._triedFetchingGoogleReviews; }
   get triedFetchingProfessionals() { return this._triedFetchingProfessionals; }
+  get triedFetchingRecommendations() { return this._triedFetchingRecommendations; }
 
 
   uncheckForCompare() { this._isCheckedForCompared = false; }
@@ -195,6 +206,7 @@ export class Professional extends Profile implements IProfessional{
 
   private _phone: string;
   private _reviewData: ReviewData;
+  private _recommendations: Referral[];
 
   private _priceRange: number[] = [];
   private _professionals: Professional[] = [];
@@ -223,6 +235,7 @@ export class Professional extends Profile implements IProfessional{
   private _triedFetchingAmenity = false;
   private _triedFetchingProduct = false;
   private _triedFetchingProfessionals = false;
+  private _triedFetchingRecommendations = false;
 
   constructor(id: string, protected p: IUserDetail, private ans?: any) {
     super({...p, _id: id});
@@ -327,6 +340,25 @@ export class Professional extends Profile implements IProfessional{
       }
       this._reviewData = new ReviewData(populated);
     });
+  }
+
+  setRecomendations(data: IReferral[]) {
+    if(!this._recommendations) {
+      this._recommendations = [];
+    }
+    data.forEach(d => {
+      this.setRecomendation(d);
+    });
+  }
+  setRecomendation(data: IReferral, insertAt: number = -1) {
+    if(!this._recommendations) {
+      this._recommendations = [];
+    }
+    if(insertAt > -1) {
+      this._recommendations.splice(insertAt, 0, new Referral(data));
+    } else {
+      this._recommendations.push(new Referral(data));
+    }
   }
 
   async setGoogleReviews(): Promise<google.maps.places.PlaceResult>{

@@ -90,4 +90,24 @@ class="position-relative rounded-8p bg-white p-20p p-lg-30p body1 text-body"
     </ul>
   </div>
 
+  <ng-container *ngIf="profile.recommendations && profile.recommendations.length > 0">
+    <h5>Recommendations from other providers</h5>
+    <ul class="mt-30p list-unstyled">
+      <li class="mb-20p mb-lg-30p" *ngFor="let recommendation of profile.recommendations">
+        <div class="d-flex">
+          <a [routerLink]="recommendation.fromLinkToProfile">
+            <profile-image size="42" [image]="recommendation.fromImage"></profile-image>
+          </a>
+          <div class="ml-10p">
+            <a [routerLink]="recommendation.fromLinkToProfile">
+              <h6 class="subtitle1 text-body">{{recommendation.fromName}}</h6>
+            </a>
+            <div class="text-label body-small">{{recommendation.createdAt | timeago}}</div>
+          </div>
+        </div>
+        <p class="body2 mt-10p">{{recommendation.body}}</p>
+      </li>
+    </ul>
+  </ng-container>
+
 </div>
