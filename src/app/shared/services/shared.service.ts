@@ -56,7 +56,7 @@ export class SharedService {
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
     this.receiveMessage();
-    console.log('fcm loaded');
+    // console.log('fcm loaded');
     // this.type = this._uService.localStorage.getItem('roles');
   }
   currentMessage = new BehaviorSubject(null);
@@ -72,7 +72,7 @@ export class SharedService {
       (token) => {
         // console.log(token);
         this.post({ token, deviceType: 'web' }, 'notification/save-token').toPromise().then(res => {
-          console.log('token saved to db', res);
+          // console.log('token saved to db', res);
         });
       },
       (err) => {

@@ -64,7 +64,8 @@ export class AudioRecordService {
     this.recorder = new RecordRTC.StereoAudioRecorder(this.stream, {
       type: 'audio',
       mimeType: 'audio/mp3',
-      sampleRate: 44100
+      desiredSampleRate: 16000,
+      numberOfAudioChannels: 1,
     });
 
     this.recorder.record();
@@ -75,14 +76,14 @@ export class AudioRecordService {
 
   stopRecording() {
     if (this.recorder) {
-      this.recorder.stop((blob) => {
+      this.stopTimer();
+      this.recorder.stop((blob: Blob) => {
         const mp3Name = encodeURIComponent('audio_' + new Date().getTime() + '.mp3');
         this.stopMedia();
-        this.stopTimer();
+
         this._recordingDone.next({ blob: blob, title: mp3Name });
       }, () => {
         this.stopMedia();
-        this.stopTimer();
         this._recordingFailed.next();
       });
     }
