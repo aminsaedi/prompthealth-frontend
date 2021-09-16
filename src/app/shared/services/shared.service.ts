@@ -65,7 +65,6 @@ export class SharedService {
   // baseUrl: string = environment.config.API_URL;
   // type: any;
   personalMatch;
-  registrationToken: string;
   private compareList: Professional[] = [];
 
   requestPermission(user: User) {
@@ -75,7 +74,6 @@ export class SharedService {
         this.post({ token, deviceType: 'web' }, 'notification/save-token').toPromise().then(res => {
           console.log('token saved to db', res);
         });
-        this.registrationToken = token;
       },
       (err) => {
         console.error('Unable to get permission to notify.', err);
@@ -97,12 +95,13 @@ export class SharedService {
 
   async logout(navigate: boolean = true) {
     // console.log(token);
-    if (this.registrationToken) {
-
-      this.post({ token: this.registrationToken, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
+    await this.angularFireMessaging.getToken.toPromise().then(token => {
+      this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
         console.log('Cleared fcm token');
       });
-    }
+    }).catch(error => {
+      console.error(error);
+    });
 
     this._socialManager.dispose();
     this._postManager.dispose();
