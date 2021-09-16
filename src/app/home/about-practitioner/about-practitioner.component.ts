@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, ElementRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { ICouponData } from 'src/app/models/coupon-data';
@@ -10,6 +10,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, slideHorizontalAnimation } from 'src/app/_helpers/animations';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-about-practitioner',
@@ -46,8 +47,22 @@ export class AboutPractitionerComponent implements OnInit {
     private _uService: UniversalService,
     private _profileService: ProfileManagementService,
     private _router: Router,
+    private _route: ActivatedRoute,
     private _toastr: ToastrService,
+    private _el: ElementRef,
   ) { }
+
+  ngAfterViewInit() {
+    this._route.fragment.pipe( first() ).subscribe(fragment => {
+      const el: HTMLElement = this._el.nativeElement.querySelector('#' + fragment);
+      if(el) {
+        setTimeout(() => {
+          const top = el.getBoundingClientRect().top;
+          smoothWindowScrollTo(top);  
+        }, 300); 
+      }
+    });
+  }
 
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
@@ -243,13 +258,54 @@ const planFeatures: IPlanFeatureData[] = [
 
 const faqs: IFAQItem[] = [
   {
-    q: 'I am a health and wellness practitioner. How does it work?', 
-    a: 'After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your background and specialities. This allows us to ensure you are listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern./nAfter setting up your account, you will be listed in our system, have access to our educational content creation tools to help you market yourself better, and ultimately will get matched with new clients.', 
+    q: 'What is PromptHealth and why should I be involved?',
+    a: 'PromptHealth is an online platform revolutionizing the health and wellness experience. It started off as a two-sided marketplace where people could personalize their search options and connect with different practitioner types proven to help with a specific cause. Now, with the help of our network of practitioners and further technology development, PromptHealth is on track to be the go-to social app and site to provide people with the educational resources they need to make informed decisions about their health, in an engaging format.',
     opened: false,
   },
   {
-    q: 'How much does it cost?', 
-    a: 'PromptHealth is completely free for the health seekers. Practitioners have the option of creating a free account, with different subscription options available on the pricing page.',
+    q: 'How is PromptHealth different from a regular directory?',
+    a: `Unlike regular directories, we don’t assume that people know what providers to search for, and what they all do. Instead, we start from a person’s individual needs and show them all of the options. Our search filters allow people to narrow their search based on preferences such as gender, age speciality, language, location, virtual care, and more.
+      <br><br>
+      Further, people are able to learn about each practitioner by the content they post on their profile.  Before booking with a practitioner, our users can learn about their area of interest, and follow them to get notified every time a new post is created. This allows our users to make informed decisions about their care, and book with someone they truly trust and feel comfortable with.`,
     opened: false,
-  }
+  },
+  {
+    q: 'Does it cost to join PromptHealth?',
+    a: 'You have the option of creating a free account. You also have the option to create an enhanced profile for $25/month as a solo provider, or $95/ month as a center with multiple providers. Details of each account type and features can be found on the pricing page.',
+    opened: false,
+  },
+  {
+    q: 'How do I get listed?',
+    a: 'After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your background and specialities. This allows us to ensure you are listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern.',
+    opened: false,
+  },
+  {
+    q: 'How do I create an account?',
+    a: 'Creating an account is easy. Click the “sign-up” link on our site, and follow the steps shown.  When creating an account, please ensure that you fill out all requested information, as it helps create the perfect profile for new clients to find and book sessions with you. Our team DOES NOT approve profiles that are partially filled out, as this does not ensure you are placed in the correct category in our search. We expect you to follow the guidelines provided to upload a professional picture and only select modalities that you are certified in, in order to get the most suitable client match.',
+    opened: false,
+  },
+  {
+    q: 'How do I create content?',
+    a: `PromptHealth is on a mission to make it easy for people to research, learn, discover, and ultimately make informed decisions about their health, all in one place. Our goal is to eliminate trial and error online by making PromptHealth the modern and user friendly hub for trusted health and wellness information right by you. We have created a platform to display your  knowledge, educate people, and get connected. 
+    <br><br>
+    On your profile, you are able to share wellness content via notes, audio, blogs, events, images, and video (coming soon). Our team is here to support you in the process of creating content, and are happy to provide guidance if needed. Just reach out!`,
+    opened: false,
+  },
+  {
+    q: 'Will I be able to receive reviews and recommendations?',
+    a: `You are able to connect any existing Google reviews to your profile to gain credibility right away. Further, new clients can write you a review after they have attended any booked appointments.
+    <br><br>
+    In addition, we are the first online platform that makes it possible for health and wellness providers to easily find and inter-refer each other. You can do this by providing recommendations on another provider’s profile to build further trust within the health and wellness community.`,
+    opened: false,
+  },
+  {
+    q: 'How do I deactivate or delete my account?',
+    a: 'You can delete your account via your dashboard under the Account Settings tab.',
+    opened: false,
+  },
+  {
+    q: 'Is there a verification process?',
+    a: 'Before we approve a listing, we ensure to complete an audit and do a background check to ensure the accuracy of information provided by a health and wellness provider. We encourage you to upload your certification in order to receive a verified badge beside your profile, indicating you are verified to build more credibility and trust.',
+    opened: false,
+  },
 ]

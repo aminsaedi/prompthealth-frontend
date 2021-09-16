@@ -110,7 +110,7 @@ const teamData = [
   {
     name: 'Evan Wang',
     title: 'Account Relationship Manager',
-    image: 'hedieh.png',
+    image: 'evan.png',
     content: 'Evan joined the team in August 2021 with a running record of sales experiences to unveil and expand the myriad of health services for those in need. In the process of completing his bachelor’s degree in commerce, he is seeking to emulate his values of altruism and service by assisting those who practice health. Generating channels for service providers gives him purpose and has proven to be his vocation.'
   },
   {

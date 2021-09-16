@@ -37,17 +37,13 @@ export class ProfileComponent implements OnInit {
 
   get canRecommend() {
     let canRecommend = false;
-    if(this.user && this.profile && this.profile.eligibleFeatureRecommendation) {
-      if(this.user.isSA) {
-        canRecommend = true;
-      } else if ((this.user.isProvider || this.user.isP) && this.user.isApproved) {
-        canRecommend = true;
-      }
+    if(this.user && this.profile && !this.isProfileMyself && this.profile.eligibleFeatureRecommendation && this.user.eligibleCreateRecommendation) {
+      canRecommend = true;
+    }
 
-      if(canRecommend) {
-        const alreadyCreateRecomendation = !!this.profile.recommendations.find(item => item.from == this.user._id);
-        canRecommend = !alreadyCreateRecomendation;
-      }
+    if(canRecommend) {
+      const alreadyCreateRecomendation = !!this.profile.recommendations.find(item => item.from == this.user._id);
+      canRecommend = !alreadyCreateRecomendation;
     }
     return canRecommend;
   }

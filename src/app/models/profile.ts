@@ -35,6 +35,8 @@ export interface IProfile {
   linkToProfile: string;
 
   gender: string;
+
+  eligibleCreateRecommendation: boolean;
 }
 
 export class Profile implements IProfile {
@@ -87,6 +89,14 @@ export class Profile implements IProfile {
   get linkToProfile() { return !this.isU ? '/community/profile/' + this._id : null; }
 
   get gender() { return this.data.gender || ''; }
+
+  get eligibleCreateRecommendation() { 
+    return this.isSA ? 
+      true : 
+      this.isProvider && this.isApproved ?
+        true :
+        false;
+  }
 
   private _profileImage: string;
   private _profileImageType: string;
