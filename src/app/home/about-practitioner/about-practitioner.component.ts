@@ -300,7 +300,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: 'How do I deactivate or delete my account?',
-    a: 'You can delete your account via your dashboard under the Account Settings tab.',
+    a: 'You can contact the admin at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>',
     opened: false,
   },
   {

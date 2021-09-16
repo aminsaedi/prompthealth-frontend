@@ -37,7 +37,7 @@ export class ProfileComponent implements OnInit {
 
   get canRecommend() {
     let canRecommend = false;
-    if(this.user && this.profile && !this.isProfileMyself && this.profile.eligibleFeatureRecommendation && this.user.eligibleCreateRecommendation) {
+    if(this.user && this.profile && !this.isProfileMyself && this.profile.eligibleFeatureRecommendation && this.user.eligibleCreateRecommendation && this.profile.doneInitRecommendations) {
       canRecommend = true;
     }
 
@@ -286,19 +286,20 @@ export class ProfileComponent implements OnInit {
 
   fetchTeam(): Promise<void> {
     return new Promise((resolve, reject) => {
+      this.profile.markAsTriedFetchingTeam();
       const path = `staff/get-by-user/${this.profile._id}`;
       this._sharedService.getNoAuth(path).subscribe((res: IGetStaffResult) => {
         if(res.statusCode == 200) {
-          this.profile.markAsTriedFetchingTeam();
+
           this.profile.setTeam(res.data.center);
           resolve();
         } else {
           console.log(res.message);
-          reject();
+          resolve();
         }
       }, error => {
         console.log(error);
-        reject();
+        resolve();
       });
     });
   }
