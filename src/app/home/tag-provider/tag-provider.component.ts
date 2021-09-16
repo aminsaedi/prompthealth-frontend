@@ -21,7 +21,9 @@ export class TagProviderComponent implements OnInit {
 
   public centre: Professional;
   public isLoading: boolean;
+  public isTaggedDone: boolean = false;
   public isTaggedSuccess: boolean;
+  public errorMessageTagged: string;
 
 
   constructor(
@@ -74,27 +76,30 @@ export class TagProviderComponent implements OnInit {
         this._router.navigate(['/community'], {replaceUrl: true});
       } else {
         try {
-          await this.fetchCentre(); 
+          await this.fetchCentre();
         } catch (error) {
           this.isLoading = false;
           this._router.navigate(['/404'], {replaceUrl: true});
-          return;
-        }
-
-        try {
-          await this.connectStaff();
+        } finally {
           this.isLoading = false;
-          this.isTaggedSuccess = true;
-        } catch (error) {
-          this.isLoading = false;
-          this.isTaggedSuccess = false;
-          this._toastr.error(error);
-          this._router.navigate(['/404'], {replaceUrl: true});
         }
       }
     }
   }
 
+  async onClickJoinTeam() {
+    this.isLoading = true;
+    try {
+      await this.connectStaff();
+      this.isTaggedSuccess = true;
+    } catch (error) {
+      this.isTaggedSuccess = false;
+      this.errorMessageTagged = error;
+    } finally {
+      this.isLoading = false;
+      this.isTaggedDone = true;
+    }
+  }
 
   fetchCentre(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -120,10 +125,9 @@ export class TagProviderComponent implements OnInit {
   connectStaff(): Promise<void> {
     return new Promise((resolve, reject) => {
       this._sharedService.post({},'staff/create/' + this.centreId).subscribe((res: IResponseData) => {
-        console.log(res);
-        if(res.statusCode == 200) {
+        if(res.statusCode == 200) { 
           resolve();
-        } else {
+        } else{
           reject(res.message);
         }
       }, error => {
