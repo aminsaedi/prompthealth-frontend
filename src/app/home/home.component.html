@@ -285,9 +285,8 @@
       [@.disabled]="disabledAnimationTestimonials"
       >
         <div 
-        class="mr-15p"
-        style="width: 300px" 
         *ngFor="let testimonial of testimonials"
+        class="mr-15p card-testimonial-container"
         >
           <card-testimonial [data]="testimonial"></card-testimonial>
         </div>

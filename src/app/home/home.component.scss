@@ -121,6 +121,13 @@
   }
 }
 
+.card-testimonial-container {
+  flex: 0 0 300px;
+  @media (min-width: $breakpointMd) {
+    flex: 1 1 300px;
+  }
+}
+
 .badge-appstore-top{
   width: auto;
   height: 42px;

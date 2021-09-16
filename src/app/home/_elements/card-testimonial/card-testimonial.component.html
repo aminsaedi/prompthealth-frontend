@@ -1,10 +1,15 @@
 <div class="bg-body pt-30p px-30p text-white rounded-12p h-100 d-flex flex-column">
   <section class="d-flex align-items-start">
-    <div class="image-container-100pc mr-10p overflow-hidden">
+    <a 
+    [routerLink]="['/community/profile', data.profileId]"
+    class="image-container-100pc mr-10p overflow-hidden"
+    >
       <img [src]="data.image">
-    </div>
+    </a>
     <div class="mt-5p">
-      <div class="subtitle1">{{data.name}}</div>
+      <a [routerLink]="['/community/profile', data.profileId]">
+        <div class="subtitle1 text-white">{{data.name}}</div>
+      </a>
       <div class="subtitle2 text-placeholder">{{data.location}}</div>
       <!-- <div class="d-flex">
         <div class="text-center">
@@ -40,7 +45,7 @@
     target="_blank"
     >
       <span>
-        <i iconPh="laptop" class="text-white mr-2"></i>
+        <i iconPh="link-1" class="text-white mr-2"></i>
         <span class="text-placeholder subtitle2">{{data.name}}</span>
       </span>
       <i iconPh="arrow-right-circle" class="text-primary"></i>
