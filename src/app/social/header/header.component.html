@@ -221,7 +221,7 @@ class="menu-slide-vertical"
         class="mb-15p"
         >
           <a 
-          [routerLink]="['/community/profile', b.authorId, 'post', b._id]"
+          [routerLink]="[b.linkToPost]"
           [replaceUrl]="true"
           (click)="resetSearch()"
           class="text-body d-flex align-items-start"
