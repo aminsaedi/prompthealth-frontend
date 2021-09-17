@@ -72,6 +72,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
+import { AlertUploadingComponent } from './alert-uploading/alert-uploading.component';
 
 @NgModule({
   imports: [
@@ -151,6 +152,7 @@ import { environment } from 'src/environments/environment';
     ModalUserMenuComponent,
     ImageUploaderDirective,
     LoaderComponent,
+    AlertUploadingComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -209,6 +211,7 @@ import { environment } from 'src/environments/environment';
     ModalUserMenuComponent,
     ImageUploaderDirective,
     LoaderComponent,
+    AlertUploadingComponent,
   ]
 })
 export class SharedModule { }

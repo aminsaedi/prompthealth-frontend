@@ -1,11 +1,12 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivationStart, NavigationEnd, Router, ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from './shared/services/universal.service';
 import { BehaviorService } from './shared/services/behavior.service';
-import { SharedService } from './shared/services/shared.service';
+import { UploadingStatus, UploadObserverService } from './shared/services/upload-observer.service';
+import { slideVerticalAnimation } from './_helpers/animations';
 
 declare let gtag: Function;
 declare let fbq: Function;
@@ -13,9 +14,15 @@ declare let fbq: Function;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [slideVerticalAnimation],
 })
 export class AppComponent implements OnInit {
+
+  get isAlertUploadingInBackgroundShown() { return this.isUploadingInBackground || this.isUploadingDoneInBackground; }
+  public isUploadingInBackground: boolean = false;
+  public isUploadingDoneInBackground: boolean = false;
+  private currentUploadingStatus: UploadingStatus;
 
   constructor(
     private _uService: UniversalService,
@@ -24,12 +31,23 @@ export class AppComponent implements OnInit {
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
     private _location: Location,
+    private _uploadObserver: UploadObserverService,
   ) { }
+
+  @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
+    if(this._uploadObserver.isUploading) {
+      e.returnValue = true;
+    }
+  }
 
   private disableAnalytics: boolean = environment.config.disableAnalytics;
 
   async ngOnInit() {
     if (!this._uService.isServer) {
+      this._uploadObserver.uploadingStatusChanged().subscribe(status => {
+        this.onUploadingStatusChanged(status);
+      });
+
       this._router.events.subscribe((event: NavigationEnd) => {
         this.onRouteChanged(event);
       });
@@ -50,6 +68,20 @@ export class AppComponent implements OnInit {
       // try { await this.getPosition(); }
       // catch(error){ console.log(error); }
     }
+  }
+
+  onUploadingStatusChanged(status: UploadingStatus) {
+    if(status == 'background') {
+      this.isUploadingInBackground = true;
+    } else if(this.currentUploadingStatus == 'background' && status == 'done' ) {
+      this.isUploadingInBackground = false;
+      this.isUploadingDoneInBackground = true;
+      setTimeout(() => {
+        this.isUploadingDoneInBackground = false;
+      }, 6000 );
+    }
+    
+    this.currentUploadingStatus = status;
   }
 
   onRedirectFromStripe(params: { [k: string]: any }) {
@@ -100,7 +132,13 @@ export class AppComponent implements OnInit {
           reject(err);
         }, { enableHighAccuracy: true, maximumAge: 0, timeout: 1000000 });
     });
+  }
 
+  onClickAlertUploadingInBackground() {
+    if(this.isUploadingDoneInBackground) {
+      //hide done message forcibly;
+      this.isUploadingDoneInBackground = false;
+    }
   }
 }
 

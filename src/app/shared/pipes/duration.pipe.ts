@@ -6,9 +6,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class DurationPipe implements PipeTransform {
 
   transform(seconds: number, ...args: unknown[]): unknown {
+    seconds = Math.ceil(seconds);
     let h: number = Math.floor( seconds / 3600 ) || 0;
     let m: number = Math.floor( (seconds - h * 3600) / 60 ) || 0;
-    let s: number = Math.ceil( seconds - h * 3600 - m * 60) || 0; 
+    let s: number = (seconds - h * 3600 - m * 60) || 0; 
         
     let duration = "";
     if(h > 0) {

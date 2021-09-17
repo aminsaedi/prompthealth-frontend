@@ -17,6 +17,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ErrorInterceptor } from './shared/services/error.interceptor';
 import { EmbedVideo } from 'ngx-embed-video';
+import { SharedModule } from './shared/shared.module';
 // import { SharedService } from './shared/services/shared.service';
 
 @NgModule({
@@ -30,7 +31,8 @@ import { EmbedVideo } from 'ngx-embed-video';
     AppRoutingModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),
-    EmbedVideo.forRoot()
+    EmbedVideo.forRoot(),
+    SharedModule,
   ],
   providers: [
     BehaviorService,

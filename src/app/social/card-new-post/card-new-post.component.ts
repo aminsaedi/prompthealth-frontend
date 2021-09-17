@@ -16,6 +16,7 @@ import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { EditorService } from '../editor.service';
 import { ISocialPost } from 'src/app/models/social-post';
+import { UploadObserverService } from 'src/app/shared/services/upload-observer.service';
 
 
 @Component({
@@ -43,9 +44,11 @@ export class CardNewPostComponent implements OnInit {
 
   public isSubmitted: boolean = false;
   public isUploading: boolean = false;
+  public isAlertUploadingClosedForcibly: boolean = false;
 
   /** AUDIO RECORDER START */
   public isAudioRecording: boolean = false;
+  public isAudioRecorderBusy: boolean = false;
   public isAudioPlaying: boolean = false;
   public timeAudioPlayCurrent: number = 0; //unit: ms;
   public timeAudioRecordingRemaining: number = 0; //unit: s;
@@ -71,6 +74,7 @@ export class CardNewPostComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _modalService: ModalService,
     private _editorService: EditorService,
+    private _uploadObserver: UploadObserverService,
   ) { }
 
   ngOnInit(): void {
@@ -80,7 +84,7 @@ export class CardNewPostComponent implements OnInit {
       this.onAudioRecordingFaild(message);
     });
 
-    this._audioRecorder.recordingStarted().subscribe((data) => {
+    this._audioRecorder.recordingStarted().subscribe(() => {
       this.onAudioRecordingStarted();
     });
 
@@ -90,6 +94,14 @@ export class CardNewPostComponent implements OnInit {
 
     this._audioRecorder.recordingDone().subscribe((data) => {
       this.onAudioRecordingDone(data);
+    });
+
+    this._audioRecorder.processingStarted().subscribe(() => {
+      this.isAudioRecorderBusy = true;
+    });
+
+    this._audioRecorder.processingDone().subscribe(() => {
+      this.isAudioRecorderBusy = false;
     });
   }
 
@@ -263,6 +275,7 @@ export class CardNewPostComponent implements OnInit {
     this.f.authorId.setValue(this.user._id);
 
     this.isUploading = true;
+    this._uploadObserver.markAsUploading();
     try {
       await this.uploadImagesIfNeeded();
     } catch(error) {
@@ -292,6 +305,9 @@ export class CardNewPostComponent implements OnInit {
 
     this._sharedService.put(data, 'note/create').subscribe((res: IContentCreateResult) => {
       this.isUploading = false;
+      this.isAlertUploadingClosedForcibly = false;
+      this._uploadObserver.markAsUploadDone();
+
       if(res.statusCode == 200) {
         this.isSubmitted = false;
         this.isMoreShown = false;
@@ -305,9 +321,17 @@ export class CardNewPostComponent implements OnInit {
       }
     }, error => {
       this.isUploading = false;
+      this.isAlertUploadingClosedForcibly = false;
+      this._uploadObserver.markAsUploadDone();
+
       console.log(error);
       this._toastr.error('Could not upload note. Please try again later.')
     });
+  }
+
+  onAlertUploadingClosed() {
+    this.isAlertUploadingClosedForcibly = true;
+    this._uploadObserver.markAsUploadingInBackground();
   }
 
   uploadImagesIfNeeded(): Promise<void> {

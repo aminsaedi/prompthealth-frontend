@@ -15,6 +15,8 @@ export class AudioRecordService {
   private _recordingFailed = new Subject<string>();
   private _recordingStarted = new Subject<void>();
   private _timerRecording = new Subject<number>();
+  private _processingStarted = new Subject<void>();
+  private _processingDone = new Subject<void>();
   private secondsMaxRecordingTime = 600;
   private secondsRemainingRecordingTime: number = this.secondsMaxRecordingTime;
 
@@ -22,7 +24,6 @@ export class AudioRecordService {
   recordingDone(): Observable<RecordedAudioOutput> {
     return this._recordingDone.asObservable();
   }
-
   recordingStarted(): Observable<void> {
     return this._recordingStarted.asObservable();
   }
@@ -31,6 +32,12 @@ export class AudioRecordService {
   }
   recordingFailed(): Observable<string> {
     return this._recordingFailed.asObservable();
+  }
+  processingStarted(): Observable<void> {
+    return this._processingStarted.asObservable();
+  }
+  processingDone(): Observable<void> {
+    return this._processingDone.asObservable();
   }
 
 
@@ -73,14 +80,13 @@ export class AudioRecordService {
     this.startTimer();
   }
 
-
   stopRecording() {
     if (this.recorder) {
       this.stopTimer();
+
       this.recorder.stop((blob: Blob) => {
         const mp3Name = encodeURIComponent('audio_' + new Date().getTime() + '.mp3');
         this.stopMedia();
-
         this._recordingDone.next({ blob: blob, title: mp3Name });
       }, () => {
         this.stopMedia();

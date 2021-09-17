@@ -107,7 +107,7 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
         <button 
         type="submit"
         class="btn btn-primary small"
-        [disabled]="form.invalid || !this.user"
+        [disabled]="form.invalid || !this.user || isUploading"
         >Share</button>
       </div>
     </div>
@@ -163,7 +163,11 @@ id="audio-recorder"
 #modalAudioRecorder
 >
   <div class="title-container text-right">
-    <button class="btn pr-0 btn-icon-grey" (click)="cancelAudioRecord()">
+    <button 
+    class="btn pr-0 btn-icon-grey" 
+    (click)="cancelAudioRecord()"
+    [disabled]="isAudioRecording || isAudioRecorderBusy"
+    >
       <i iconPh="cross" class="large"></i>
     </button>  
   </div>
@@ -225,6 +229,7 @@ id="audio-recorder"
       class="btn btn-record-control" 
       (click)="toggleAudioRecorderState()"
       [ngClass]="{disabled: audioData}"
+      [disabled]="isAudioRecorderBusy"
       >
         <i *ngIf="!isAudioRecording" iconPh="play"></i>
         <i *ngIf="isAudioRecording" iconPh="stop"></i>
@@ -233,10 +238,14 @@ id="audio-recorder"
       type="button"
       class="btn btn-primary small"
       (click)="saveAudioRecord()"
+      [disabled]="isAudioRecording || isAudioRecorderBusy"
       >Done</button>
     </div>
   </div>
-
-
-
 </modal>
+
+<alert-uploading 
+*ngIf="isUploading && !isAlertUploadingClosedForcibly"
+[closable]="true"
+(onClose)="onAlertUploadingClosed()"
+></alert-uploading>
