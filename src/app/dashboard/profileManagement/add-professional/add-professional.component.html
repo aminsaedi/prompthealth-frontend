@@ -28,8 +28,8 @@
         label="Share"
         btnClass="btn btn-primary small"
         [url]="linkToTagStaff"
-        title="Collaborate with us."
-        text="Join our team and collaborate with us!"
+        [title]="'Join ' + user.name + ' on PromptHealth'"
+        [text]="user.name + ' invites you to the team on PromptHealth.'"
         ></button-share>
         </div>      
     </section>

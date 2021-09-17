@@ -5,8 +5,7 @@
     style="width: 96vw; max-width: 600px;"
     >
       <ng-container *ngIf="centre && !isTaggedDone">
-        <h4 class="h3-md">You are about to joining the team</h4>
-        <p class="mb-50p">Are you sure to join the team?</p>
+        <h4 class="h3-md">You are joining the team</h4>
         <div class="d-inline-block">
           <profile-image [image]="centre.profileImage" [size]="120"></profile-image>
           <div class="subtitle1 mt-10p">{{centre.name}}</div>  
@@ -26,7 +25,6 @@
 
       <ng-container *ngIf="isTaggedDone && isTaggedSuccess">
         <h4 class="h3-md">Welcome to the team</h4>
-        <p class="mb-50p">You have joined the team successfully!</p>
         <div class="d-flex justify-content-center">
           <div style="flex: 0 0 48%; margin-right: 2%">
             <div class="d-inline-block">
