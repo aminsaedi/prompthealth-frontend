@@ -84,7 +84,7 @@
           <a class="nav-link" [ngClass]="{'px-2': (margin == 'narrow')}" [routerLink]="['/magazines/event']">Events</a>
         </div>
         <div class="nav-item">
-          <a class="nav-link" [ngClass]="{'px-2': (margin == 'narrow')}" [routerLink]="['/magazines']">Resource</a>
+          <a class="nav-link" [ngClass]="{'px-2': (margin == 'narrow')}" [routerLink]="['/magazines']">Resources</a>
         </div>
       </div>
     </ng-template>
@@ -147,7 +147,7 @@
       <a *ngIf="priceType == 'product'" class="text-blue" [routerLink]="['/plans/product']" (click)="hideMenu()">Pricing</a>
     </li>
     <li><a class="text-blue" [routerLink]="['/magazines/event']" (click)="hideMenu()">Events</a></li>
-    <li><a class="text-blue" [routerLink]="['/magazines']" (click)="hideMenu()">Resource</a></li>
+    <li><a class="text-blue" [routerLink]="['/magazines']" (click)="hideMenu()">Resources</a></li>
 
     <li *ngIf="!token">
       <!-- <a class="px-2 text-blue" data-toggle="modal" data-target="#loginmodal" (click)="hideMenu()">Log in</a> -->
@@ -167,7 +167,7 @@
       <button class="btn btn-icon text-blue" (click)="scrollMenuSm(0)">
         <i class="fas fa-arrow-left"></i>
       </button>
-      Find Practioners
+      Find Practitioners
     </li>
     <li *ngFor="let cat of catService.categoryList; let i = index">
       <span (click)="changeMenuCategory(i); scrollMenuSm(2)" class="d-flex justify-content-between">
