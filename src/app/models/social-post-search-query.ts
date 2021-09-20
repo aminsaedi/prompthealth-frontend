@@ -12,7 +12,6 @@ export interface ISocialPostSearchQuery {
   hasImage?: boolean;
   hasVoice?: boolean;
   authorId?: string;
-
 }
 
 export class SocialPostSearchQuery implements ISocialPostSearchQuery {
