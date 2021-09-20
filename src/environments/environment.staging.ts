@@ -3,8 +3,8 @@ export const environment = {
   config: {
     APP_NAME: 'Wellness',
     // server
-    BASE_URL: 'http://3.12.81.245:3000/api/v1/',
-    API_URL: 'http://3.12.81.245:3000/api/v1/',
+    BASE_URL: 'https://s5319.prompthealth.ca/api/v1/',
+    API_URL: 'https://s5319.prompthealth.ca/api/v1/',
 
     // BASE_URL: 'https://prompthealth.ca:4200/',
     // API_URL: 'https://prompthealth.ca:3000/api/v1/',
