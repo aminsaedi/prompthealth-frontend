@@ -36,7 +36,7 @@ import { GuardIfNotEligbleToCreatePostGuard } from './guard-if-not-eligble-to-cr
 import { AgmCoreModule } from '@agm/core';
 import { NotificationComponent } from './notification/notification.component';
 import { CardNotificationComponent } from './card-notification/card-notification.component';
-// import { DraftComponent } from './draft/draft.component';
+import { DraftsComponent } from './drafts/drafts.component';
 import { ProfileContactComponent } from './profile-contact/profile-contact.component';
 import { FollowListComponent } from './follow-list/follow-list.component';
 import { ProfileFollowListComponent } from './profile-follow-list/profile-follow-list.component';
@@ -44,6 +44,8 @@ import { GuardIfNotLoggedInGuard } from '../auth/guard-if-not-logged-in.guard';
 import { NewReferralComponent } from './new-referral/new-referral.component';
 import { GuardIfNotProfileSelectedGuard } from './guard-if-not-profile-selected.guard';
 import { GuardIfNewReferralIncompletedGuard } from '../guard-if-new-referral-incompleted.guard';
+import { CardPostDraftComponent } from './card-post-draft/card-post-draft.component';
+import { GuardIfDataNotSetGuard } from './guard-if-data-not-set.guard';
 
 
 const routes: Routes = [
@@ -69,10 +71,14 @@ const routes: Routes = [
     { path: 'content/:postid', component: PageComponent },
     { path: 'content', pathMatch: 'full', redirectTo: 'feed' },
 
-    { path: 'create/article', component: EditorComponent, data: {type: 'article'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
-    { path: 'create/event', component: EditorComponent, data: {type: 'event'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard] },
-    { path: 'create', redirectTo: 'create/article' },
-    // { path: 'draft', component: DraftComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
+    { path: 'drafts', component: DraftsComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
+
+    { path: 'editor/article', component: EditorComponent, data: {type: 'article'},  canActivate: [GuardIfNotEligbleToCreatePostGuard]},
+    { path: 'editor/event', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard]},
+    { path: 'editor/article/:id', component: EditorComponent, data: {type: 'article'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard]},
+    { path: 'editor/event/:id', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard]},    
+    { path: 'editor', redirectTo: 'editor/article' },
+
     { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
     { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], },
     { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },
@@ -116,11 +122,12 @@ const routes: Routes = [
     ProfileFeedComponent,
     NotificationComponent,
     CardNotificationComponent,
-    // DraftComponent,
+    DraftsComponent,
     ProfileContactComponent,
     FollowListComponent,
     ProfileFollowListComponent,
     NewReferralComponent,
+    CardPostDraftComponent,
   ],
   providers: [
     CategoryService,

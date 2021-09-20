@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row align-items-start justify-content-center">
+    <section class="col-12 col-md-2 col-xl-2">
+      <div class="text-md-right">
+        <button 
+        class="btn btn-text-body small" 
+        (click)="goback()"
+        >
+          <i iconPh="arrow-left"></i>
+          <span>Back</span>
+        </button>
+      </div>
+    </section>
+    <section class="col-12 col-md-10 col-lg-8 col-xl-7">
+      <ng-container *ngIf="drafts">
+        <div *ngIf="drafts.length == 0">
+          No Drafts found!
+        </div>
+
+        <div *ngIf="drafts.length > 0">
+          <h4>Drafts</h4>
+          <ul 
+          *ngFor="let d of drafts"
+          class="list-unstyled"
+          >
+            <card-post-draft [post]="d"></card-post-draft>
+          </ul>
+        </div>
+      </ng-container>
+
+      <div 
+      *ngIf="isLoading"
+      class="text-center mt-30p"
+      >
+        <loader></loader>
+      </div>
+    </section>        
+  </div>
+</div>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from '../_helpers/form-settings';
 import { Profile } from '../models/profile';
-import { formatStringToDate } from '../_helpers/date-formatter';
+import { formatStringToDate, formatStringToDateTimeData } from '../_helpers/date-formatter';
 import { ISocialPost } from '../models/social-post';
 
 
@@ -12,8 +12,11 @@ import { ISocialPost } from '../models/social-post';
 export class EditorService {
 
   get isEditorLocked() { return this.editorLocked; }
+  get existsData() { return !!this._originalData; }
+  get originalData() { return this._originalData; }
   get form() { return this._form; }
   
+  private _originalData: ISocialPost;
   private editorLocked: boolean = false;
   private _form: FormGroup;
   private editorType: ISocialPost['contentType'];
@@ -23,6 +26,7 @@ export class EditorService {
 
   dispose() {
     this.resetForm();
+    this._originalData = null;
     this.unlockEditor();
   }
 
@@ -48,35 +52,44 @@ export class EditorService {
     }
   }
 
+  setData(data: ISocialPost) {
+    this._originalData = data;
+  }
+
   init(type: ISocialPost['contentType'], profile: Profile): FormGroup {
     this.unlockEditor();
     this.editorType = type;
     this.userId = profile._id;
 
+    const d: ISocialPost = this._originalData;
+    
     if (type == 'EVENT') {
+      const startTime = d && d.eventStartTime ? formatStringToDateTimeData(d.eventStartTime) : null;
+      const endTime = d && d.eventEndTime ? formatStringToDateTimeData(d.eventEndTime) : null;
+
       this._form = new FormGroup({
-        status: new FormControl('DRAFT'),
+        status: new FormControl(d ? d.status : 'DRAFT'),
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        title: new FormControl(null, validators.savePostTitle),
-        description: new FormControl(null),
-        image: new FormControl(null),
+        title: new FormControl(d ? d.title : null, validators.savePostTitle),
+        description: new FormControl(d ? d.description || '' : ''),
+        image: new FormControl(d ? d.image || '' : ''),
 
-        eventStartTime: new FormControl(null),  // set validator later
-        eventEndTime: new FormControl(null),  // set validator later
-        eventType: new FormControl('ONLINE'),
-        joinEventLink: new FormControl(null),  // set validator later
-        eventAddress: new FormControl(null),
+        eventStartTime: new FormControl(startTime),  // set validator later
+        eventEndTime: new FormControl(endTime),  // set validator later
+        eventType: new FormControl(d? d.eventType : 'ONLINE'),
+        joinEventLink: new FormControl(d ? d.joinEventLink || '' : ''),  // set validator later
+        eventAddress: new FormControl(d ? d.eventAddress || '' : ''),
       });  
     } else if (type == 'ARTICLE') {
       this._form = new FormGroup({
-        status: new FormControl('DRAFT'),
+        status: new FormControl(d ? d.status : 'DRAFT'),
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        title: new FormControl(null, validators.savePostTitle),
-        description: new FormControl(null), // set validator later
-        image: new FormControl('', ),
-      })
+        title: new FormControl(d ? d.title : null, validators.savePostTitle),
+        description: new FormControl(d ? d.description : null), // set validator later
+        image: new FormControl(d ? d.image || '' : ''),
+      });
     } else if (type == 'NOTE') {
       this._form = new FormGroup({
         contentType: new FormControl(type),
@@ -162,9 +175,9 @@ export class SaveQuery implements ISaveQuery {
   get joinEventLink() { return this.data.joinEventLink || null; }
   get eventAddress() { return this.data.eventAddress || null; }
   
-  get image() { return this.data.image || ''; }
+  get image() { return this.data.image || null; }
   get images() { return this.data.images || []; }
-  get voice() { return this.data.voice || ''; }
+  get voice() { return this.data.voice || null; }
 
   toJson() { 
     const data: ISaveQuery = {
@@ -172,17 +185,19 @@ export class SaveQuery implements ISaveQuery {
       authorId: this.authorId,
 
       ... (this._id) && {_id: this._id},
-      ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {status: this.status}, 
+      ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {
+        status: this.status,
+        image: this.image,
+      }, 
 
       ... (this.title) && {title: this.title},
       ... (this.description) && {description: this.description},
-      ... (this.image) && {image: this.image},
       ... (this.images.length > 0) && {images: this.images},
       ... (this.voice) && {voice: this.voice},
 
       ... (this.tags.length > 0) && {tags: this.tags},
 
-      ... (this.eventType && this.contentType == 'EVENT') && {eventType: this.eventType},
+      ... (this.contentType == 'EVENT' && this.eventType) && {eventType: this.eventType},
       ... (this.joinEventLink) && {joinEventLink: this.joinEventLink},
       ... (this.eventStartTime) && {eventStartTime: this.eventStartTime},
       ... (this.eventEndTime) && {eventEndTime: this.eventEndTime},

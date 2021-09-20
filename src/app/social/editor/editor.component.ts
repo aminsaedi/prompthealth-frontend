@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import Quill from 'quill';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
+import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
@@ -25,11 +25,18 @@ import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 })
 export class EditorComponent implements OnInit {
 
-
+  get form() { return this._editorService.form; }
   get f() {return this._editorService.form.controls; }
   get isEvent() { return this.editorType == 'EVENT'; }
   get isArticle() { return this.editorType == 'ARTICLE'; }
   get user() { return this._profileService.profile; }
+  get isEditMode() { return this._editorService.existsData; }
+
+  get imagePreview() {
+    return this._imagePreview ? this._imagePreview :
+     this.form && this.f.image.value && typeof this.f.image.value == 'string' ? this._s3 + this.f.image.value : 
+      null;
+  }
 
   @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
     if(this._editorService.isEditorLocked) {
@@ -37,7 +44,7 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  public imagePreview: string | ArrayBuffer;
+  public _imagePreview: string | ArrayBuffer;
 
   public description: string;
   public formCheckboxOnlineEvent: FormControl;
@@ -49,6 +56,7 @@ export class EditorComponent implements OnInit {
 
   public isSubmitted: boolean = false;
   public isUploading: boolean = false;
+  public tagsInitial: string[] = [];
   public minDateTimeEventStart: DateTimeData;
   public minDateTimeEventEnd: DateTimeData;
 
@@ -71,7 +79,7 @@ export class EditorComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
-    this._editorService.unlockEditor();
+    this._editorService.dispose();
     this._headerService.showHeader();
 
     if(this.subscriptionLoginStatus) {
@@ -97,26 +105,27 @@ export class EditorComponent implements OnInit {
         this.editorType, 
         this.user,
       );
+
+      const isOnline = this.f.eventType ? this.f.eventType.value == 'ONLINE' : false;
+      this.formCheckboxOnlineEvent = new FormControl(isOnline);
+      this.tagsInitial = this._editorService.existsData ? this._editorService.originalData.tags || [] : [];
+  
+      const now = new Date();
+      this.minDateTimeEventStart = {
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+        hour: now.getHours() + 1,
+        minute: 0,
+      }
+      this.minDateTimeEventEnd = {
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+        hour: now.getHours() + 2,
+        minute: 0
+      }  
     });
-
-    const now = new Date();
-    this.minDateTimeEventStart = {
-      year: now.getFullYear(),
-      month: now.getMonth() + 1,
-      day: now.getDate(),
-      hour: now.getHours() + 1,
-      minute: 0,
-    }
-    this.minDateTimeEventEnd = {
-      year: now.getFullYear(),
-      month: now.getMonth() + 1,
-      day: now.getDate(),
-      hour: now.getHours() + 2,
-      minute: 0
-    }
-
-    this.formCheckboxOnlineEvent = new FormControl(true);
-
   }
 
   observeLoginStatus() {
@@ -150,7 +159,7 @@ export class EditorComponent implements OnInit {
         const reader = new FileReader();
         reader.readAsDataURL(image.file);
         reader.onloadend = () => {
-          this.imagePreview = reader.result;
+          this._imagePreview = reader.result;
         }
       } catch(err){
         console.log(err);
@@ -160,7 +169,7 @@ export class EditorComponent implements OnInit {
   }
 
   onClickButtonRemoveMedia() {
-    this.imagePreview = null;
+    this._imagePreview = null;
     this.f.image.setValue(null);
   }
 
@@ -288,21 +297,26 @@ export class EditorComponent implements OnInit {
     data.status = status;
 
     const payload: ISaveQuery = new SaveQuery(data).toJson();
+    console.log(payload);
+    const req =  this.isEditMode ? this._sharedService.put(payload, `blog/update/${this._editorService.originalData._id}`) : this._sharedService.post(data, 'blog/create');
 
-    // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
-    const req =  this._sharedService.post(payload, 'blog/create');
-
-
-    req.subscribe((res: any) => {
+    req.subscribe((res: IContentCreateResult) => {
+      console.log(res);
       this.isUploading = false;
       if(res.statusCode === 200) {
         this.isSubmitted = false;
+
+        if(status == 'APPROVED') {
+          this._editorService.dispose();
+          this._imagePreview = null;
+          this.formItemService.deselectAll();
+          this.formCheckboxOnlineEvent.setValue(true);
+        } else if(status == 'DRAFT') {
+          this._editorService.unlockEditor();
+        };
+
         this._toastr.success('Updated successfully');
-        this._editorService.resetForm();
-        this.imagePreview = null;
-        this.formItemService.deselectAll();
-        this.formCheckboxOnlineEvent.setValue(true);
-        this._editorService.unlockEditor();
+
       } else {
         this._toastr.error(res.message);
       }

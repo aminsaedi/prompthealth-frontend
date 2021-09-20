@@ -1,0 +1,47 @@
+<div class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p">
+  <a 
+  [id]="'card-' + post._id" 
+  #anchor
+  style="top: -100px; position: absolute;"
+  ></a>
+
+  <div 
+  class="text-body"
+  (click)="onClickCard()"
+  >
+    <ng-container *ngTemplateOutlet="clickableArea"></ng-container>
+  </div>
+</div>
+
+<ng-template #clickableArea>
+  <div>
+    <div class="eyecatch">
+      <img 
+      [src]="post.coverImage" 
+      [alt]="post.title"
+      crossorigin="anonymous"
+      >
+      <div 
+      *ngIf="post.isEvent && post.eventStartTime"
+      class="position-absolute px-10p py-5p mt-10p ml-10p rounded-8p bg-white"
+      >
+        <div class="h6 text-center mb-0">{{post.eventStartTime | date:'dd'}}</div>
+        <div class="caption opacity-70pc text-center">{{post.eventStartTime | date:'MMM' | uppercase}}</div>
+      </div>
+    </div>
+
+
+    <h4 class="mt-15p mb-20p">
+      <i *ngIf="post.isArticle" iconPh="file" class="mr-5p text-label"></i>
+      <i *ngIf="post.isEvent" iconPh="calendar" class="mr-5p text-label"></i>
+      <span>{{post.title}}</span>
+    </h4>
+
+    <div class="mb-20p">
+      <div #content
+      class="post-content"
+      [innerHTML]="descriptionSanitized"
+      ></div>
+    </div>
+  </div>
+</ng-template>

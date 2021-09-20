@@ -1,18 +1,32 @@
-<form (ngSubmit)="publish()">
+<form 
+*ngIf="form"
+(ngSubmit)="publish()"
+>
   <div class="container-fluid container-md">
     <div class="row justify-content-center">
       <div class="col-12 col-lg-9 col-xl-8">
         <div class="bg-white pt-15p px-15p pt-md-20p px-md-20p editor-container">
           <div class="d-flex justify-content-between align-items-center mb-20p">
             <h5 class="mb-0">
-              <span *ngIf="isEvent">Create an event</span>
-              <span *ngIf="isArticle">Write an article</span>
+              <span *ngIf="isEvent">
+                <ng-container *ngIf="!isEditMode">Create </ng-container>
+                <ng-container *ngIf="isEditMode">Edit </ng-container>
+                an event
+              </span>
+              <span *ngIf="isArticle">
+                <ng-container *ngIf="!isEditMode">Write </ng-container>
+                <ng-container *ngIf="isEditMode">Edit </ng-container>
+                an article
+              </span>
             </h5>
             <button 
             class="btn btn-text-body small px-0"
             type="button"
             (click)="onClickCancel()"
-            >Cancel</button>
+            >
+            <span *ngIf="!isEditMode">Cancel</span>
+            <span *ngIf="isEditMode">Go back</span>
+            </button>
           </div>
           <div class="cover-image-container cursor-pointer overflow-hidden">
             <div *ngIf="imagePreview">
@@ -192,13 +206,14 @@
             <label class="subtitle2 text-label">Select topics</label>
             <form-item-service
             #formItemService
+            [data]="tagsInitial"
             [option]="{showInlineWhenEnabled: true}"
             ></form-item-service>
           </div>
 
           <div class="mt-25p text-right sticky-bottom pb-30p button-bottom-group blur">
-            <div class="d-flex justify-content-end">
-              <!-- <button
+            <div class="d-flex justify-content-between">
+              <button
               type="button"
               class="btn btn-outline"
               (click)="saveAsDraft()"
@@ -206,7 +221,7 @@
               >
                 <span *ngIf="f.status.value == 'DRAFT'">Save as draft</span>
                 <span *ngIf="f.status.value != 'DRAFT'">Make private</span>
-              </button> -->
+              </button>
 
               <input 
               type="submit" 

@@ -112,7 +112,7 @@ id="user-menu"
         <a
         *ngIf="!user.isU"
         class="btn btn-text-body small px-0"
-        (click)="onClickUserMenuItem(['/community/create/article'])"
+        (click)="onClickUserMenuItem(['/community/editor/article'])"
         >
           <i iconPh="file" class="mr-5p"></i>
           <span>Create new article</span>
@@ -123,12 +123,24 @@ id="user-menu"
         <a
         *ngIf="!user.isU"
         class="btn btn-text-body small px-0"
-        (click)="onClickUserMenuItem(['/community/create/event'])"
+        (click)="onClickUserMenuItem(['/community/editor/event'])"
         >
           <i iconPh="calendar" class="mr-5p"></i>
           <span>Create new event</span>
         </a>
       </div>
+
+      <div class="mb-5p">
+        <a
+        *ngIf="!user.isU"
+        class="btn btn-text-body small px-0"
+        (click)="onClickUserMenuItem(['/community/drafts'])"
+        >
+          <i iconPh="inbox-filled" class="mr-5p"></i>
+          <span>See drafts</span>
+        </a>
+      </div>
+
       <div class="mb-5p">
         <a
         class="btn btn-text-body small px-0"

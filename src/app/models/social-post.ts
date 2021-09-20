@@ -76,6 +76,7 @@ export interface ISocialPost {
   isVirtual?: boolean;
   venue?: string;
   setSanitizedDescription?(s: SafeHtml): void;
+  decode?(): ISocialPost;
 
 }
 
@@ -184,6 +185,10 @@ export class SocialPostBase implements ISocialPost {
       imageType = match ? ('image/' + match[1]) : '';  
     }
     return imageType;
+  }
+
+  decode() {
+    return this.data;
   }
 }
 
