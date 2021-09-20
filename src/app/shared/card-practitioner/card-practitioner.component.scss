@@ -13,20 +13,12 @@ $colorBlueTag: #95B3EF;
 
 .fa-video{ color: #00D147; }
 
-.clamp-1line{
-  display: -webkit-box;
-  height: 1em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  line-height: 1em;
-}
 
 .card{ 
   overflow: hidden; 
   margin: auto;
-  border: solid 1px #dae5f5;
+  border: solid 1px #E9F2FF;
+  box-shadow: 0 6px 25px rgba($color: #0051be, $alpha: 0.1);
   max-width: 350px;
 }
 
@@ -36,11 +28,7 @@ $colorBlueTag: #95B3EF;
 }
 
 .img-wrapper{
-  $imageHeight: 100px;
-
   position: relative;
-  height: $imageHeight;
-
 }
 
 .button-compare{

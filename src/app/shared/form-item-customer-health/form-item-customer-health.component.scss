@@ -1,30 +1,41 @@
 .tags-horizontal{
   li{
     border: solid 1px;
-    font-size: 0.85em;
-    color: #00208F;
-    border-color: #00208F;
     overflow: hidden;
     flex: 0 0 auto;
     line-height: 1em;
-    label{ 
-      background: #cfdaff;
-      color: #00208F;
-      padding: 3px 10px; 
-      border-radius: 0;
-    }
   }
 }
 
 .checkbox-group-root {
-
   >li {
     flex: 1 0 100%;
 
     &:not(:first-child){
       margin-top: 1em;
     }
-  }  
+  }
+
+  &.inline {
+    display: block;
+    >li {
+      display: inline-block;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+
+      &:not(:last-child)::after {
+        content: attr(data-separator);
+        white-space: pre;
+      }
+    }
+  }
+
+  &.block-with-zero-margin {
+    >li {
+      margin: 0;
+    }
+  }
 }
 
 .checkbox-group-sub {
@@ -46,5 +57,27 @@
 
   >li {
     margin-bottom: 1em;
-  }  
+  }
+  
+  &.inline {
+    display: block;
+    margin: 0;
+    >li {
+      display: inline-block;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      &:not(:last-child)::after {
+        content: attr(data-separator);
+        white-space: pre;
+      }
+    }
+  }
+
+  &.block-with-zero-margin {
+    margin: 0;
+    >li {
+      margin: 0;
+    }
+  }
 }

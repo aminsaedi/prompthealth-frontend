@@ -1,18 +1,81 @@
-@import "mixins";
-.cursor-pointer {cursor: pointer; }
+@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap");
+@import "variables";
 
-:root{
-  --ph-blue: #3377C5;
-  --ph-black-bold: #1A1A1A;
+@import "mixins";
+@import "typography";
+@import "spacing";
+@import "button";
+@import "color";
+@import "alignment";
+@import "image";
+
+a {
+  color: $colorPrimary;
+  cursor: pointer;
+
+  &:not([href]) {
+    color: $colorPrimary;
+    text-decoration: none;
+  }
+
+  &:hover,
+  &:not([href]):hover {
+    color: $colorPrimaryDark;
+    text-decoration: none;
+  }
 }
 
-ui-switch{
-  .switch{
-    &:not(.checked){
-      background-color: $primaryColor !important;
+.cursor-pointer {
+  cursor: pointer;
+}
+
+[class^=circle-for] {
+  &:after {
+    content: '';
+    display: block;
+    padding-top: 100%;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 1000px;  
+  }
+}
+
+.circle-primary::before {
+  background-color: $colorPrimary;
+}
+
+.circle-secondary::before {
+  background-color: $colorSecondary;
+}
+
+.circle-border::before {
+  border: solid 1px $colorGsLine;
+}
+
+.opacity-0 { opacity: 0!important; }
+.opacity-1 { opacity: 1!important; }
+@for $i from 1 through 9 {
+  .opacity-#{$i * 10}pc { 
+    opacity: $i / 10 !important
+  }
+}
+
+@for $i from 1 through 3 {
+  .rounded-#{$i * 4}p {
+    border-radius: #{$i * 4}px!important;
+  }
+  .rounded-md-#{$i * 4}p {
+    @media (min-width: $breakpointMd) {
+      border-radius: #{$i * 4}px!important;
     }
   }
 }
+
 
 .form-control.is-invalid {
   padding-right: 30px !important;
@@ -22,72 +85,31 @@ ui-switch{
   overflow-wrap: anywhere !important;
 }
 
-
-// bootstarp classes
-.rounded-right {
-  border-top-right-radius: $radius !important;
-  border-bottom-right-radius: $radius !important;
-}
-.rounded-left {
-  border-top-left-radius: $radius !important;
-  border-bottom-left-radius: $radius !important;
-}
-// bootstarp classes end
-
-input.InputElement{
-  &::placeholder{
-    
-    opacity: 1 !important;
-  }
-}
-
 .pull-right {
   float: right;
-}
-
-a {
-  color: $primaryColor;
-  &:hover {
-    text-decoration: none;
-  }
-  &:not([href]) {
-    color: initial;
-    text-decoration: none;
-  }
 }
 
 .text-rating {
   color: gold;
 }
 
-.fa,
-.far,
-.fab {
-  > span {
-    font-family: $themeFont;
-    margin-left: 8px;
-    font-weight: 400;
-    display: inline-block;
-  }
-}
-
 body {
-  color: $secondaryColor;
+  color: $colorGsBody;
   font-family: $themeFont;
   font-size: $themeFontSize;
   line-height: $themeLignHeight;
   letter-spacing: 1px;
   font-weight: 300;
-  &::-webkit-scrollbar {
-    width: 7px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #f8f9fa;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 20px;
-    background-color: $primaryColor;
-  }
+  // &::-webkit-scrollbar {
+  //   width: 7px;
+  // }
+  // &::-webkit-scrollbar-track {
+  //   background-color: #f8f9fa;
+  // }
+  // &::-webkit-scrollbar-thumb {
+  //   border-radius: 20px;
+  //   background-color: $primaryColor;
+  // }
 }
 
 label {
@@ -95,10 +117,6 @@ label {
   font-size: 13px;
 }
 
-.object-fit-contain {
-  object-fit: contain !important;
-  object-position: center !important;
-}
 
 .p-6 {
   padding: $p6 !important;
@@ -109,37 +127,6 @@ label {
 
 .pb-6 {
   padding-bottom: $p6 !important;
-}
-
-.h2,
-h2,
-.h4,
-h4 {
-  font-weight: 500;
-  line-height: normal !important;
-}
-
-.h2,
-h2 {
-  font-size: 35px;
-}
-
-h4,
-.h4 {
-  font-size: 22px;
-  line-height: 35px !important;
-}
-
-h5,
-.h5 {
-  font-size: 20px !important;
-  line-height: 30px !important;
-}
-
-h6,
-.h6 {
-  font-size: 18px !important;
-  line-height: normal;
 }
 
 .intro-thumbnail {
@@ -153,52 +140,21 @@ h6,
   margin-top: -84px;
 }
 
-.text-black {
-  color: black !important;
-}
-.text-primary {
-  color: $primaryColor !important;
-}
 .text-accent {
   color: $accentColor !important;
   font-weight: 400;
 }
 
-.text-google {
-  color: $googleColor !important;
-}
-
-.text-facebook {
-  color: $facebookColor !important;
-}
-
-.text-facebook {
-  color: $facebookColor !important;
-}
-
-.text-facebook {
-  color: $facebookColor !important;
-}
-.text-linkedIn {
-  color: $linkedInColor !important;
-}
-.text-insta {
-  color: $instaColor !important;
-}
-.text-white {
-  color: white;
-}
-
 .form-control {
   line-height: normal !important;
-  height: auto !important;
-  font-size: $themeFontSize;
+  height: auto;
+  font-size: 16px;
   line-height: $themeLignHeight;
   padding: 12px 15px !important;
 }
 
 textarea.form-control {
-  height: 120px !important;
+  height: 120px;
 }
 
 // Image Slider
@@ -247,65 +203,6 @@ textarea.form-control {
   border: 9px solid #6c757dd1;
 }
 
-.btn {
-  font-size: 14px;
-  line-height: normal;
-  padding: 10px 15px;
-  font-weight: 400;
-  &:hover,
-  &:focus {
-    box-shadow: none;
-  }
-}
-
-.bg-primary {
-  background-color: $primaryColor !important;
-}
-.bg-accent {
-  background-color: $accentColor !important;
-}
-
-.btn-secondary {
-  color: #fff !important;
-  background-color: $secondaryColor !important;
-  border: $secondaryColor !important;
-  &:hover {
-  }
-}
-
-.btn-facebook {
-  background-color: $facebookColor !important;
-  border-color: $facebookColor !important;
-  color: #fff !important;
-  &:hover {
-    color: #fff !important;
-    background-color: $facebookColorH !important;
-    border-color: $facebookColorH !important;
-  }
-}
-
-.btn-google {
-  background-color: $googleColor !important;
-  border-color: $googleColor !important;
-  color: #fff !important;
-  &:hover {
-    color: #fff !important;
-    background-color: $googleColorH !important;
-    border-color: $googleColorH !important;
-  }
-}
-
-.btn-primary {
-  color: #fff !important;
-  background-color: $primaryColor !important;
-  border-color: $primaryColor !important;
-  &:hover,
-  &:focus {
-    color: #fff !important;
-    background-color: $primaryColorhover !important;
-    border-color: $primaryColorhover !important;
-  }
-}
 
 .btn-light {
   color: #212529 !important;
@@ -363,11 +260,6 @@ textarea.form-control {
   min-height: calc(60vh - #{$headerHeight+$footerHeight});
 }
 
-/*
-.spacer-top {
-  height: $headerHeightMd;
-}
-*/
 .bg-cover {
   background-size: cover;
   background-position: center;
@@ -569,11 +461,7 @@ textarea.form-control {
   .heightHF-100 {
     min-height: calc(100vh - #{$headerHeight+$footerHeight});
   }
-/*
-  .spacer-top {
-    height: $headerHeight;
-  }
-*/
+
   .heightH-60 {
     min-height: calc(60vh - #{$headerHeight});
   }
@@ -583,81 +471,15 @@ textarea.form-control {
   }
 }
 
-@import "responsive_variables";
-.spacer-top{
-  height: $headerHeight;
-  @media screen and (min-width:  768px){ height: $headerHeightMd; }
-  @media screen and (min-width:  992px){ height: $headerHeightLg; }
-  @media screen and (min-width: 1200px){ height: $headerHeightXl; }
-
-  &.loggedin{
-    height: $headerHeightLoggedin;
-    @media screen and (min-width:  768px){ height: $headerHeightLoggedinMd; }
-    @media screen and (min-width:  992px){ height: $headerHeightLoggedinLg; }
-    @media screen and (min-width: 1200px){ height: $headerHeightLoggedinXl; }
-  }
-}
-
 .max-w-1200{
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
 
-
-//.font-smallest{ font-size: 0.4rem; }
-.font-smaller{ font-size: 0.7em; }
-.font-small{ font-size: 0.8em; }
-.font-regular{ font-size: 1em }
-.font-big{ font-size: 1.2em }
-.font-bigger{ font-size: 1.4em; }
-.font-biggest{ font-size: 1.6em; }
-
-//.font-mg-smallest{ @media screen and (min-width: 768px){ font-size: 0.4em; }}
-//.font-mg-smaller{ @media screen and (min-width: 768px){ font-size: 0.6em; }}
-.font-mg-small, .font-md-small{ @media screen and (min-width: 768px){ font-size: 0.8em; }}
-.font-mg-regular, .font-md-regular{ @media screen and (min-width: 768px){ font-size: 1em; }}
-.font-mg-big, .font-md-big{ @media screen and (min-width: 768px){ font-size: 1.2em; }}
-.font-mg-bigger, .font-md-bigger{ @media screen and (min-width: 768px){ font-size: 1.4em; }}
-.font-mg-biggest, .font-md-biggest{ @media screen and (min-width: 768px){ font-size: 1.6em; }}
-
-.bg-white{ background: white; }
-.rounded-15p{ border-radius: 15px; }
-.rounded-10p{ border-radius: 10px; }
-.btn-ph-blue{
-  background: var(--ph-blue);
-  color: white;
-  &:hover{ color: white; }
-}
-.text-ph-blue { color: var(--ph-blue); }
-.bg-ph-blue{ background: var(--ph-blue); }
-.border-ph-blue { border: solid 1px var(--ph-blue); }
-
-.font-weight-400 { font-weight: 400; }
-.font-weight-500 { font-weight: 500; }
-
 .whitespace-pre{ white-space: pre; }
 .whitespace-prewrap{ white-space: pre-wrap}
 
-.clamp-2line{
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.clamp-3line{
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-.clamp-4line{
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-}
 
 .sticky-top{
   z-index: 10;
@@ -701,12 +523,6 @@ textarea.form-control {
   }
 }
 
-// npn-handle{
-//   .filler{}
-//   .left-handle{}
-//   .right-handle{}
-// }
-
 
 .modal-view {
   position: fixed;
@@ -727,12 +543,14 @@ textarea.form-control {
 
   .modal-body {
     position: absolute;
+    overflow: auto;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 
     width: 94vw;
     max-width: 500px;
+    max-height: 96vh;
     padding: 15px;
     background: white;
     border-radius: 12px;
@@ -748,427 +566,109 @@ textarea.form-control {
 }
 
 
-
-
-///// TEMPORARY TODO: REMOVE THIS AFTER MERGE INTO DESIGN-CHANGE BRANCH
-$breakpointSm: 576px;
-$breakpointMd: 768px;
-$breakpointLg: 992px;
-$breakpointXl: 1200px;
-
-$colorPrimary: #0C74FF;
-$colorPrimaryDark: #0055C7;
-$colorPrimaryLight: #E9F2FF;
-
-$colorSecondary: #00C2FF;
-$colorSecondaryDark: #00B2EA;
-$colorSecondaryLight: #E8FBFF;
-
-$colorYellow: #FDB813;
-$colorYellowDark: #A47300;
-$colorYellowLight: #FCEBC2;
-
-$colorError: #EA4242;
-$colorErrorDark: #BB1313;
-$colorErrorLight: #FBECEC;
-
-$colorSuccess: #12C132;
-$colorSuccessDark: #079020;
-$colorSuccessLight: #E8F9EB;
-
-/** greyscale */
-$colorGsBlack: #04122D;
-$colorGsBody: #293148;
-$colorGsLabel: #838790;
-$colorGsPlaceholder: #A0A3BD;
-$colorGsLine: #D6D8E7;
-$colorGsBackground: #EFF3F7;
-$colorGsWhite: #FFFFFF;
-
-/** social media */
-$colorGoogle: #db4437;
-$colorGoogleLight: #ea5f54;
-$colorFacebook: #3b5998;
-$colorFacebookLight: #3c6acb;
-$colorTwitter: #1DA1F2;
-$colorLinkedin: #2867B2;
-$colorInstagram: #E1306C;
-$colorTiktok: #69C9D0;
-$colorYoutube: #FF0000;
-
-//fonts (previous design)
-$accentColor: #B7D3F3;
-$primaryColor: #4274BA;
-$primaryColorhover: #5683c2;
-$linkedInColor: #0e76a8;
-$instaColor: #3f729b;
-$secondaryColor: #6d6e71;
-$secondaryColorhover: #525458;
-$themeFont: "Roboto", sans-serif;
-$themeFontSize: 14px;
-$themeLignHeight: 19px;
-$headerHeight: 62px;
-$footerHeight: 170px;
-$p6: 100px;
-$radius: 0.25rem;
-
-$ph-gradient: -webkit-linear-gradient(271.61deg, #5D7DC1 16.86%, #213F7A 101.15%);
-$ph-gradient-light: -webkit-linear-gradient(271.68deg, #21617D -10.74%, #4A7FCA -10.73%, #94B0ED 89.35%);
-@mixin typography($fontSize, $lineHeight, $fontWeight, $letterSpacing) {
-  font-size: $fontSize!important;
-  font-weight: $fontWeight!important;
-  line-height: $lineHeight!important;
-  letter-spacing: $letterSpacing!important;
-}
-
-$fontWeightBold: 700;
-$fontWeightMedium: 500;
-$fontWeightRegular: 400;
-
-.h1-temp { @include typography(60px, 64px, $fontWeightBold, -0.5px); }
-.h2-temp { @include typography(48px, 54px, $fontWeightBold, 0px); }
-.h3-temp { @include typography(34px, 42px, $fontWeightBold, 0.25px); }
-.h4-temp { @include typography(24px, 32px, $fontWeightBold, 0px); }
-.h5-temp { @include typography(20px, 26px, $fontWeightBold, 0.2px); }
-.h6-temp { @include typography(18px, 24px, $fontWeightMedium, 0.2px); }
-.subtitle1-temp { @include typography(16px, 24px, $fontWeightMedium, 0.25px); }
-.subtitle2-temp { @include typography(14px, 18px, $fontWeightMedium, 0.1px); }
-.body1-temp { @include typography(16px, 24px, $fontWeightRegular, 0.1px); }
-.body2-temp { @include typography(14px, 22px, $fontWeightRegular, -0.2px); }
-.body-small-temp { @include typography(13px, 16px, $fontWeightMedium, 0.2px); }
-.caption-temp { @include typography(12px, 16px, $fontWeightRegular, 0.2px); }
-
-@media (min-width: #{$breakpointMd}) {
-  .h1-temp-md { @include typography(60px, 64px, $fontWeightBold, -0.5px); }
-  .h2-temp-md { @include typography(48px, 54px, $fontWeightBold, 0px); }
-  .h3-temp-md { @include typography(34px, 42px, $fontWeightBold, 0.25px); }
-  .h4-temp-md { @include typography(24px, 32px, $fontWeightBold, 0px); }
-  .h5-temp-md { @include typography(20px, 26px, $fontWeightBold, 0.2px); }
-  .h6-temp-md { @include typography(18px, 24px, $fontWeightMedium, 0.2px); }
-  .subtitle1-temp-md { @include typography(16px, 24px, $fontWeightMedium, 0.25px); }
-  .subtitle2-temp-md { @include typography(14px, 18px, $fontWeightMedium, 0.1px); }
-  .body1-temp-md { @include typography(16px, 24px, $fontWeightRegular, 0.1px); }
-  .body2-temp-md { @include typography(14px, 22px, $fontWeightRegular, -0.2px); }
-  .body-small-temp-md { @include typography(13px, 16px, $fontWeightMedium, 0.2px); }
-  .caption-temp-md { @include typography(12px, 16px, $fontWeightRegular, 0.2px); }
-}
-
-
-@mixin clamp($line, $height) {
-  height: $line * $height;
-  display: -webkit-box;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-line-clamp: $line;
-  -webkit-box-orient: vertical;
-}
-
-@mixin clampTemplate($name, $height) {
-  @for $i from 1 through 5{
-    .#{$name}.clamp-#{$i}line { @include clamp($i, $height); }
-  }
-}
-@mixin clampTemplateMd($name, $height) {
-  @for $i from 1 through 5{
-    .#{$name}-md.clamp-#{$i}line {     @include clamp($i, $height); }
-  }
-}
-@mixin clampTemplateLg($name, $height) {
-  @for $i from 1 through 5{
-    .#{$name}-lg.clamp-#{$i}line {     @include clamp($i, $height); }
-  }
-}
-@mixin clampTemplateXl($name, $height) {
-  @for $i from 1 through 5{
-    .#{$name}-xl.clamp-#{$i}line {     @include clamp($i, $height); }
-  }
-}
-
-@include clampTemplate(h2-temp, 54px);
-@include clampTemplate(h3-temp, 54px);
-@include clampTemplate(h4-temp, 32px);
-@include clampTemplate(h5-temp, 26px);
-@include clampTemplate(h6-temp, 24px);
-@include clampTemplate(subtitle1-temp, 24px);
-@include clampTemplate(subtitle2-temp, 18px);
-@include clampTemplate(body1-temp, 24px);
-@include clampTemplate(body2-temp, 22px);
-@include clampTemplate(body-small-temp, 16px);
-
-@media (min-width: 768px) {
-  @include clampTemplateMd(h2-temp, 54px);
-  @include clampTemplateMd(h3-temp, 54px);
-  @include clampTemplateMd(h4-temp, 32px);
-  @include clampTemplateMd(h5-temp, 26px);
-  @include clampTemplateMd(h6-temp, 24px);
-  @include clampTemplateMd(subtitle1-temp, 24px);
-  @include clampTemplateMd(subtitle2-temp, 18px);
-  @include clampTemplateMd(body1-temp, 24px);
-  @include clampTemplateMd(body2-temp, 22px);
-  @include clampTemplateMd(body-small-temp, 16px);
-}
-
-@media (min-width: 992px) {
-  @include clampTemplateLg(h2-temp, 54px);
-  @include clampTemplateLg(h3-temp, 54px);
-  @include clampTemplateLg(h4-temp, 32px);
-  @include clampTemplateLg(h5-temp, 26px);
-  @include clampTemplateLg(h6-temp, 24px);
-  @include clampTemplateLg(subtitle1-temp, 24px);
-  @include clampTemplateLg(subtitle2-temp, 18px);
-  @include clampTemplateLg(body1-temp, 24px);
-  @include clampTemplateLg(body2-temp, 22px);
-  @include clampTemplateLg(body-small-temp, 16px);
-}
-
-@media (min-width: 1200px) {
-  @include clampTemplateXl(h2-temp, 54px);
-  @include clampTemplateXl(h3-temp, 54px);
-  @include clampTemplateXl(h4-temp, 32px);
-  @include clampTemplateXl(h5-temp, 26px);
-  @include clampTemplateXl(h6-temp, 24px);
-  @include clampTemplateXl(subtitle1-temp, 24px);
-  @include clampTemplateXl(subtitle2-temp, 18px);
-  @include clampTemplateXl(body1-temp, 24px);
-  @include clampTemplateXl(body2-temp, 22px);
-  @include clampTemplateXl(body-small-temp, 16px);
-}
-
-@for $i from 1 through 20 {
-  .mt-#{$i * 5}p,
-  .my-#{$i * 5}p,
-  .m-#{$i * 5}p {
-    margin-top: #{$i * 5}px;
-  }
-  .mb-#{$i * 5}p,
-  .my-#{$i * 5}p,
-  .m-#{$i * 5}p {
-    margin-bottom: #{$i * 5}px;
-  }
-  .ml-#{$i * 5}p,
-  .mx-#{$i * 5}p,
-  .m-#{$i * 5}p {
-    margin-left: #{$i * 5}px;
-  }
-  .mr-#{$i * 5}p,
-  .mx-#{$i * 5}p,
-  .m-#{$i * 5}p {
-    margin-right: #{$i * 5}px;
-  }
-
-  @media (min-width: 576px) {
-    .mt-sm-#{$i * 5}p,
-    .my-sm-#{$i * 5}p,
-    .m-sm-#{$i * 5}p {
-      margin-top: #{$i * 5}px;
-    }
-    .mb-sm-#{$i * 5}p,
-    .my-sm-#{$i * 5}p,
-    .m-sm-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px;
-    }
-    .ml-sm-#{$i * 5}p,
-    .mx-sm-#{$i * 5}p,
-    .m-sm-#{$i * 5}p {
-      margin-left: #{$i * 5}px;
-    }
-    .mr-sm-#{$i * 5}p,
-    .mx-sm-#{$i * 5}p,
-    .m-sm-#{$i * 5}p {
-      margin-right: #{$i * 5}px;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .mt-md-#{$i * 5}p,
-    .my-md-#{$i * 5}p,
-    .m-md-#{$i * 5}p {
-      margin-top: #{$i * 5}px;
-    }
-    .mb-md-#{$i * 5}p,
-    .my-md-#{$i * 5}p,
-    .m-md-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px;
-    }
-    .ml-md-#{$i * 5}p,
-    .mx-md-#{$i * 5}p,
-    .m-md-#{$i * 5}p {
-      margin-left: #{$i * 5}px;
-    }
-    .mr-md-#{$i * 5}p,
-    .mx-md-#{$i * 5}p,
-    .m-md-#{$i * 5}p {
-      margin-right: #{$i * 5}px;
-    }
-  }
-
-  @media (min-width: 992px) {
-    .mt-lg-#{$i * 5}p,
-    .my-lg-#{$i * 5}p,
-    .m-lg-#{$i * 5}p {
-      margin-top: #{$i * 5}px;
-    }
-    .mb-lg-#{$i * 5}p,
-    .my-lg-#{$i * 5}p,
-    .m-lg-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px;
-    }
-    .ml-lg-#{$i * 5}p,
-    .mx-lg-#{$i * 5}p,
-    .m-lg-#{$i * 5}p {
-      margin-left: #{$i * 5}px;
-    }
-    .mr-lg-#{$i * 5}p,
-    .mx-lg-#{$i * 5}p,
-    .m-lg-#{$i * 5}p {
-      margin-right: #{$i * 5}px;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .mt-xl-#{$i * 5}p,
-    .my-xl-#{$i * 5}p,
-    .m-xl-#{$i * 5}p {
-      margin-top: #{$i * 5}px;
-    }
-    .mb-xl-#{$i * 5}p,
-    .my-xl-#{$i * 5}p,
-    .m-xl-#{$i * 5}p {
-      margin-bottom: #{$i * 5}px;
-    }
-    .ml-xl-#{$i * 5}p,
-    .mx-xl-#{$i * 5}p,
-    .m-xl-#{$i * 5}p {
-      margin-left: #{$i * 5}px;
-    }
-    .mr-xl-#{$i * 5}p,
-    .mx-xl-#{$i * 5}p,
-    .m-xl-#{$i * 5}p {
-      margin-right: #{$i * 5}px;
-    }
-  }  
-
-
-
-
-  .pt-#{$i * 5}p,
-  .py-#{$i * 5}p,
-  .p-#{$i * 5}p {
-    padding-top: #{$i * 5}px;
-  }
-  .pb-#{$i * 5}p,
-  .py-#{$i * 5}p,
-  .p-#{$i * 5}p {
-    padding-bottom: #{$i * 5}px;
-  }
-  .pl-#{$i * 5}p,
-  .px-#{$i * 5}p,
-  .p-#{$i * 5}p {
-    padding-left: #{$i * 5}px;
-  }
-  .pr-#{$i * 5}p,
-  .px-#{$i * 5}p,
-  .p-#{$i * 5}p {
-    padding-right: #{$i * 5}px;
-  }
-
-  @media (min-width: 576px) {
-    .pt-sm-#{$i * 5}p,
-    .py-sm-#{$i * 5}p,
-    .p-sm-#{$i * 5}p {
-      padding-top: #{$i * 5}px;
-    }
-    .pb-sm-#{$i * 5}p,
-    .py-sm-#{$i * 5}p,
-    .p-sm-#{$i * 5}p {
-      padding-bottom: #{$i * 5}px;
-    }
-    .pl-sm-#{$i * 5}p,
-    .px-sm-#{$i * 5}p,
-    .p-sm-#{$i * 5}p {
-      padding-left: #{$i * 5}px;
-    }
-    .pr-sm-#{$i * 5}p,
-    .px-sm-#{$i * 5}p,
-    .p-sm-#{$i * 5}p {
-      padding-right: #{$i * 5}px;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .pt-md-#{$i * 5}p,
-    .py-md-#{$i * 5}p,
-    .p-md-#{$i * 5}p {
-      padding-top: #{$i * 5}px;
-    }
-    .pb-md-#{$i * 5}p,
-    .py-md-#{$i * 5}p,
-    .p-md-#{$i * 5}p {
-      padding-bottom: #{$i * 5}px;
-    }
-    .pl-md-#{$i * 5}p,
-    .px-md-#{$i * 5}p,
-    .p-md-#{$i * 5}p {
-      padding-left: #{$i * 5}px;
-    }
-    .pr-md-#{$i * 5}p,
-    .px-md-#{$i * 5}p,
-    .p-md-#{$i * 5}p {
-      padding-right: #{$i * 5}px;
-    }
-  }
-
-  @media (min-width: 992px) {
-    .pt-lg-#{$i * 5}p,
-    .py-lg-#{$i * 5}p,
-    .p-lg-#{$i * 5}p {
-      padding-top: #{$i * 5}px;
-    }
-    .pb-lg-#{$i * 5}p,
-    .py-lg-#{$i * 5}p,
-    .p-lg-#{$i * 5}p {
-      padding-bottom: #{$i * 5}px;
-    }
-    .pl-lg-#{$i * 5}p,
-    .px-lg-#{$i * 5}p,
-    .p-lg-#{$i * 5}p {
-      padding-left: #{$i * 5}px;
-    }
-    .pr-lg-#{$i * 5}p,
-    .px-lg-#{$i * 5}p,
-    .p-lg-#{$i * 5}p {
-      padding-right: #{$i * 5}px;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .pt-xl-#{$i * 5}p,
-    .py-xl-#{$i * 5}p,
-    .p-xl-#{$i * 5}p {
-      padding-top: #{$i * 5}px;
-    }
-    .pb-xl-#{$i * 5}p,
-    .py-xl-#{$i * 5}p,
-    .p-xl-#{$i * 5}p {
-      padding-bottom: #{$i * 5}px;
-    }
-    .pl-xl-#{$i * 5}p,
-    .px-xl-#{$i * 5}p,
-    .p-xl-#{$i * 5}p {
-      padding-left: #{$i * 5}px;
-    }
-    .pr-xl-#{$i * 5}p,
-    .px-xl-#{$i * 5}p,
-    .p-xl-#{$i * 5}p {
-      padding-right: #{$i * 5}px;
-    }
-  }  
-}
-.opacity-70pc { opacity: 0.7;}
-.opacity-80pc { opacity: 0.8;}
-/// TEMPORARY END
-
 .multiselect-dropdown .dropdown-btn .selected-item {
   margin-top: 1px;
   margin-bottom: 1px;
+}
+
+.show-more-inline::after {
+  content: 'show more';
+  font-size: 13px;
+  margin-left: 15px;
+  color: $colorPrimary;
+  border-bottom: solid 1px $colorPrimary;
+  white-space: nowrap;
+}
+
+.post-content {
+  position: relative;
+  overflow: hidden;
+
+  &.shorten {
+    max-height: 200px;
+
+    &.hidden::before {
+      content: 'show more';
+      display: block;
+      font-size: 13px;
+      color: $colorPrimary;
+      width: 100%;
+      text-align: center;
+      bottom: 10px;
+      position: absolute;
+      z-index: 2;
+    }
+    &.hidden::after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100px;
+      background: rgb(255,255,255);
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%, rgba(255,255,255,1) 100%);
+    }
+  }
+
+  * {
+    margin-bottom: 0;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto!important;
+    margin: 15px auto;
+  }
+
+  iframe {
+    max-width: 800px;
+    display: block;
+    margin: 15px auto;
+    width: 100%;
+    height: 250px;
+
+    @media (min-width: 768px) {
+      height: 350px;
+    }
+
+    @media (min-width: 992px) {
+      height: 400px;
+    }
+  }
+
+  h1 {
+    /** h5 */
+    font-size: 20px!important;
+    font-weight: 700!important;
+    line-height: 26px!important;
+    letter-spacing: 0.2px!important;
+  }
+
+  h2 {
+    /** h6 */
+    font-size: 18px!important;
+    font-weight: 500!important;
+    line-height: 24px!important;
+    letter-spacing: 0.2px!important;
+  }
+
+  h3, h4, h5, h6 {
+    /** subtitle1 with fontWeightBold*/
+    font-size: 16px!important;
+    font-weight: 600!important;
+    line-height: 24px!important;
+    letter-spacing: 0.25px!important;
+
+  }
+
+}
+
+.contenteditable {
+  outline: none;
+  word-break: break-word;
+}
+.contenteditable:empty:before {
+  color: $colorGsPlaceholder;
+  content: attr(data-placeholder);
 }

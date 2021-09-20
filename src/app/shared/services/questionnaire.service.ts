@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { IUserDetail } from 'src/app/models/user-detail';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QuestionnaireService {
 
+  questionnaireOf(type: QuestionnairesType) {
+    return this[type] || null;
+  }
 
   private personalMatch: QuestionnaireMapPersonalMatch;
   private profileService: QuestionnairesProfileService;
@@ -71,7 +75,7 @@ export class QuestionnaireService {
   }
 
   /** get questionnaire for myService tab in profileManagement */
-  public getProfileService(role: RoleType): Promise<QuestionnairesProfileService> {
+  public getProfileService(role: IUserDetail['roles']): Promise<QuestionnairesProfileService> {
     return new Promise( async (resolve, reject) => {
       if(this.profileService) {
         resolve(this.profileService);
@@ -114,7 +118,7 @@ export class QuestionnaireService {
   }
 
   /** get questionnaire for profile-practitioner page */
-  public getProfilePractitioner(role: RoleType): Promise<QuestionnaireMapProfilePractitioner> {
+  public getProfilePractitioner(role: IUserDetail['roles']): Promise<QuestionnaireMapProfilePractitioner> {
     return new Promise( async (resolve, reject) => {
       if(this.profilePractitioner) {
         resolve(this.profilePractitioner);
@@ -209,7 +213,7 @@ export class QuestionnaireService {
     });
   }
 
-  private getQuestionnaires(type: RoleType = null, filter: QuestionnaireFilter = null): Promise<Questionnaire[]> {
+  private getQuestionnaires(type: IUserDetail['roles'] = null, filter: QuestionnaireFilter = null): Promise<Questionnaire[]> {
     return new Promise((resolve, reject) => {
       let path = `questionare/get-questions`;
       if(type) { path = path + `?type=${type}`}
@@ -268,7 +272,6 @@ export class QuestionnaireService {
 
 type QuestionnaireFilter = 'health' | 'gender' | 'age' | 'goal';
 type QuestionnaireType = 'typeOfProvider';
-type RoleType = 'U' | 'SP' | 'C';
 
 export interface QuestionnaireAnswer {
   _id: string;
@@ -281,7 +284,7 @@ export interface QuestionnaireAnswer {
 export interface Questionnaire {
   _id: string;
   answers: QuestionnaireAnswer[];
-  type: RoleType[];
+  type: IUserDetail['roles'];
 
   slug: string;
   question_type?: string;
@@ -322,3 +325,6 @@ export type QuestionnairesProfileService = {
 export type QuestionnaireMapSitemap = {
   typeOfProvider: Questionnaire,
 }
+
+type QuestionnairesType = 'personalMatch' | 'profileService' | 'profilePractitioner' | 'sitemap';
+

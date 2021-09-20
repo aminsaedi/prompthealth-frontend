@@ -1,51 +1,3 @@
-/// TEMPORARY TODO: DELETE LATER
-:host {
-  color: rgba(41, 49, 72, 1)!important;
-}
-.bg-background {
-  background: rgba(239, 243, 247, 1);
-}
-
-.border-line {
-  border-color: rgba(214, 216, 231, 1);
-}
-
-.text-placeholder {
-  color: rgba(160, 163, 189, 1);
-}
-
-.btn.btn-primary {
-  padding: 17px 25px;
-  background: rgba(12, 116, 255, 1)!important;
-  &:hover {
-    background: rgba(0, 85, 199, 1)!important;
-  }
-}
-
-.btn.btn-outline {
-  padding: 17px 25px;
-  border: solid 1px rgba(12, 116, 255, 1)!important;
-  color: rgba(12, 116, 255, 1)!important;
-  background-color: transparent!important;
-  &:hover {
-    background: rgba(12, 116, 255, 1)!important;
-    color: white!important;
-  }
-}
-
-.btn.btn-text {
-  padding: 17px 25px;
-  border: solid 1px transparent!important;
-}
-
-.fa-facebook-f,
-.fa-twitter,
-.fa-linkedin-in {
-  font-size: 30px;
-}
-
-/// TEMPORARY END
-
 .color-dummy {
   background-color: rgba(160, 163, 189, 1);
   color: rgba(160, 163, 189, 1);
@@ -192,3 +144,6 @@
   }
 }
 
+.icon-social{
+  font-size: 30px;
+}

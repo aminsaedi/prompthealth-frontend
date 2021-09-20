@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { IOptionCheckboxGroup, OptionCheckboxGroup } from '../form-item-checkbox-group/form-item-checkbox-group.component';
 import { Category, CategoryService } from '../services/category.service';
 
 @Component({
@@ -14,10 +15,13 @@ export class FormItemServiceComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() submitted: boolean = false;
   @Input() controller: FormGroup = new FormGroup({});
+  @Input() option: IOptionCheckboxGroupService = {};
+
 
   @Output() changeValue = new EventEmitter<string[]>();
 
   public categories: Category[];
+  public _option: OptionCheckboxGroupService;
 
   getFormArray(name: string){ return this.controller.controls[name] as FormArray; }
 
@@ -26,6 +30,8 @@ export class FormItemServiceComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this._option = new OptionCheckboxGroupService(this.option);
+
     this.controller.setControl('root', new FormArray([]));
 
     const cats = await this._catService.getCategoryAsync();
@@ -43,6 +49,10 @@ export class FormItemServiceComponent implements OnInit {
     this.controller.valueChanges.subscribe(()=>{
       this.getSelected(true);
     });
+  }
+
+  deselectAll() {
+    this.controller.reset();
   }
 
   getSelected(emit: boolean = false){
@@ -89,5 +99,17 @@ export class FormItemServiceComponent implements OnInit {
         this.getFormArray(cat._id).controls.forEach(c => { c.setValue(false); });
       })
     });
+  }
+}
+
+export interface IOptionCheckboxGroupService extends IOptionCheckboxGroup{
+  hideSub?: boolean;
+}
+
+export class OptionCheckboxGroupService extends OptionCheckboxGroup implements IOptionCheckboxGroupService {
+  
+  get hideSub() { return (this.data.showInlineWhenEnabled === true || this.data.hideSub === true) ? true : false; }
+  constructor(protected data: IOptionCheckboxGroupService = {}) {
+    super(data);
   }
 }

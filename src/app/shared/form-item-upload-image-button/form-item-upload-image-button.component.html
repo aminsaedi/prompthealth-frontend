@@ -1,8 +1,7 @@
-<button 
+<button type="button" 
 *ngIf="!disabled"
-type="button" 
-class="btn px-5 text-blue border-blue font-regular position-relative" 
-[ngClass]="{disabled: isUploading}"
+class="btn small position-relative" 
+[ngClass]="{'btn-outline': !submitted, 'btn-error': (!!submitted && !!controller.errors), 'btn-success': (!!submitted && !controller.errors), 'disabled': isUploading}"
 >
   Upload {{label | titlecase}}
   <input #uploadImageSelector
@@ -13,6 +12,12 @@ class="btn px-5 text-blue border-blue font-regular position-relative"
   >
 </button>
 <div class="mt-2">
-  <img class="preview" *ngIf="controller.value" [src]="baseURLImage + controller.value" [alt]="label">
+  <img 
+  *ngIf="controller.value" 
+  class="preview" 
+  [src]="baseURLImage + controller.value + '?ver=1.0.2'" 
+  [alt]="label"
+  crossorigin="anonymous"
+  >
 </div>
 <form-item-errors [controller]="controller" [label]="label" [submitted]="submitted"></form-item-errors>

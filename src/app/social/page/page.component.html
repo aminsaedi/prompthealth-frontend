@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row align-items-start">
+    <section class="col-12 col-md-2 col-xl-2">
+      <div class="text-md-right">
+        <button 
+        class="btn btn-text-body small" 
+        [disabled]="!post"
+        (click)="goback()"
+        >
+          <i iconPh="arrow-left"></i>
+          <span>Back</span>
+        </button>
+      </div>
+    </section>
+    <section class="col-12 col-md-10 col-xl-8">
+      <div 
+      *ngIf="!post"
+      class="mt-80p text-center"
+      >
+        <loader></loader>
+      </div>
+      <ng-container *ngIf="post">
+        <card 
+        [post]="post" 
+        [shorten]="false"
+        [option]="{openCommentsOnInit: true, showLinkToDetail: false}"
+        ></card>  
+      </ng-container>
+    </section>        
+  </div>
+</div>

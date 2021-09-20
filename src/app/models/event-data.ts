@@ -10,7 +10,7 @@ export class EventData {
   get link() { return this.data.joinEventLink; }
   get status() { return this._status; }
   get isFinished() { return (this.status == 'finished'); }
-  get isVitual() { return true; }
+  get isVirtual() { return true; }
   get eventOn() { return this.getVenueFromURL(); }
 
   private _startAt: Date;

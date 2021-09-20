@@ -189,7 +189,6 @@ export class ListComponent implements OnInit {
   }
 
   fetchPosts(taxonomyType: TaxonomyType, id: string, page: number = 1): Promise<boolean> {
-    console.log('fetch', taxonomyType, id, page)
     return new Promise((resolve, reject) => {
       const params: IBlogSearchQuery = {};
       if (taxonomyType == 'video') {
@@ -222,6 +221,7 @@ export class ListComponent implements OnInit {
 
     if(page == 1) {
       this.archive = this._mService.postsOf(id, 1, 4, 8);
+      console.log(this.archive);
     } else {
       this.archive = this._mService.postsOf(id, page, 0, 12);
     }

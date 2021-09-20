@@ -1,5 +1,5 @@
-<h3 class="mb-3">Reviews and Ratings 
-  <span class="pull-right" *ngIf="earnedPoint && userInfo.roles=='U'">Point Earned: {{earnedPoint}}</span></h3> 
+<h4 class="mb-3">Reviews and Ratings 
+  <span class="pull-right" *ngIf="earnedPoint && userInfo.roles=='U'">Point Earned: {{earnedPoint}}</span></h4> 
   <div class="" *ngIf = "rating; else noData">
     <div class="p-3 shadow mb-3 d-flex Reviewsbox" *ngFor="let rate of rating| paginate: { id: 'review',
     itemsPerPage: 5,

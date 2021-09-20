@@ -13,7 +13,8 @@ export class SocialButtonsComponent implements OnInit {
     linkedin: 'https://www.linkedin.com/company/prompthealth/',
     instagram: 'https://www.instagram.com/prompthealth/',
     spotify: 'https://open.spotify.com/show/41ZlPBco8J5LNyrVE5Zg5k',
-    tiktok: 'https://www.tiktok.com/@prompthealth',
+    // tiktok: 'https://www.tiktok.com/@prompthealth',
+    tiktok: null,
     youtube: 'https://www.youtube.com/channel/UCnMigPMOdit9i6koo3-VSMg',
     clubhouse: 'https://www.clubhouse.com/club/prompthealth',
   }

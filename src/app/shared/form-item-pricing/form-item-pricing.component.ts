@@ -57,7 +57,7 @@ export class FormItemPricingComponent implements OnInit {
   }
 }
 
-const priceRange = [
+export const priceRange = [
   { id: 'price1', label: 'Not Critical', value: 'Not Critical', minmax: [-100, 0] },
   { id: 'price2', label: '< $50', value: '< $50', minmax: [0, 50] },
   { id: 'price3', label: '$50-100', value: '$50-100', minmax: [50, 100] },

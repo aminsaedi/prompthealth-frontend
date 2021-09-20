@@ -1,37 +1,18 @@
-<div class="card p-3 text-center rounded-15p font-small">
-  <div class="img-wrapper mb-3" [ngClass]="{verified: p.isVerified}">
-    <user-image [verifiedUser]="p.isVerified" [image]="p.image" [alt]="p.name" [borderWidthVerified]="3">
-    </user-image>
+<div class="card p-3 text-center rounded-12p align-items-center">
+  <div class="img-wrapper mb-20p">
+    <user-image
+    style="width: 70px;"
+    [verified]="p.isVerified"
+    [shapedCircle]='false'
+    [image]="p.image"
+    [alt]="p.name"
+    [borderWidthVerified]="1"
+    [badgeSize]="28"
+    ></user-image>
   </div>
-  <div class="price-tag bg-tagblue font-weight-bold" *ngIf="p.price">{{p.price}}</div>
-  <div class="button-compare form-check">
-    <input type="checkbox" class="form-check-input" [id]="'compare-' + p.id"
-      [(ngModel)]="p.isCheckedForCompare" (change)="onChangeCompareCheckbox()">
-    <label class="form-check-label" [for]="'compare-' + p.id">Compare</label>
-  </div>
-
-  <p class="mb-1 clamp-1line font-weight-bold">{{p.title}}</p>
-  <p class="font-weight-bold font-bigger mb-0 title">
-    <i class="fas fa-clinic-medical pr-1" *ngIf="p?.isCentre"></i>
-    {{p.name}}
-  </p>
-  <ul class="d-flex justify-content-center indicators list-unstyled p-0 mt-2 mb-3">
-    <li><i class="fas fa-video" *ngIf="p.provideVirtual"></i></li>
-  </ul>
-  <star-rate class="my-3" [rate]="p.rating" margin="small" size="small"></star-rate>
-  <p class="mb-2 clamp-1line font-big" *ngIf="!p.isCentre">{{p.organization}}</p>
-  <!-- <p class="mb-2 clamp-1line font-big" *ngIf="p.isCentre">{{p.phone}}</p> -->
-  <p class="mb-2 address">{{p.address}}</p>
-  <p class="mb-3" *ngIf="showDistance && (p.distance !== null)">
-    <b>
-      {{p.distance | number :
-      '1.1-2'}}
-      km away from you
-    </b>
-  </p>
-  <div>
-    <a class="btn border-darkblue text-darkblue rounded-10p" [routerLink]="['/practitioners/', p.id]">
-      Check Profile
-    </a>
-  </div>
+  <h6 class="subtitle1 mb-1 clamp-1line">{{p.name}}</h6>
+  <div class="subtitle2 text-primary-dark clamp-1line mb-5p">{{p.price}}</div>
+  <star-rate class="mb-10p mb-md-15p" [rate]="p.rating" margin="small" size="small"></star-rate>
+  <div class="subtitle1 mb-20p mb-md-40p clamp-1line text-label">{{p.title}}</div>
+  <a class="btn btn-outline small" [routerLink]="['/community/profile', p._id]">Check Profile</a>
 </div>

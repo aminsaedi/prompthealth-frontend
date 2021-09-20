@@ -1,0 +1,189 @@
+<section class="bg-primary-light">
+  <div class="container">
+    <div class="row flex-md-row justify-content-between align-items-center">
+      <div class="col-12 col-md-7 col-xl-6 my-30p">
+        <h6 class="text-primary">For Providers</h6>
+        <h2 class="h3 h2-lg mb-25p">
+          Reach more new patients<br>Grow your practice
+        </h2>
+        <p class="text-label mb-30p">
+          PromptHealth helps providers reach more new patients for in-person visits, video visits or both.
+        </p>
+        <button 
+        class="btn btn-primary"
+        (click)="scrollTo(anchorPlans)"
+        >Join us Now</button>
+      </div>
+      <div class="col-12 col-md-5 my-30p">
+        <img 
+        class="w-100 image-shadow rounded-12p" 
+        src="/assets/img/about/top-provider.png" 
+        alt=""
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container mt-100p mb-50p">
+  <ul class="row list-unstyled">
+    <li 
+    *ngFor="let feature of features" 
+    class="mb-50p col-12 col-md-6 col-xl-4"
+    >
+      <div class="mb-25p">
+        <i [iconPh]="feature.icon" style="font-size: 30px;"></i>
+      </div>
+      <h4 class="h4-md clamp-2line">{{feature.title}}</h4>
+      <p class="text-label">{{feature.content}}</p>
+    </li>
+  </ul>
+</section>
+
+<section class="container">
+  <div class="text-center">
+    <h2 class="h3 h2-md">It’s easy to get started</h2>
+    <p class="mt-20p">Free 14-day trial on best plan - No Credit Card Requeired</p>
+    <div class="mt-60p mb-40p">
+      <a #anchorPlans class="scroll-anchor"></a>
+      <div 
+      class="d-inline-block position-relative ml-70p ml-md-0p"
+      style="width: 170px"
+      >
+        <div class="discount-popup body-small text-body">
+          20% Discount
+        </div>      <switch 
+        [labels]="['Annualy', 'Monthly']"
+        (changeState)="onChangeDuration($event)"
+        ></switch>
+      </div>  
+    </div>
+  </div>
+
+  <div class="row">
+    <div 
+    *ngFor="let plan of plans | keyvalue:keepOriginalOrder; let i = index"
+    class="col-12 col-lg-4 mb-20p mb-lg-0p"
+    >
+      <div 
+      class="card h-100 text-left rounded12p p-15p p-md-30p px-lg-15p px-xl-30p rounded-12p"
+      [ngClass]="{active: plan.key == 'provider'}"
+      >
+        <div 
+        *ngIf="plan.value.label"
+        class="label body1"
+        >
+          {{plan.value.label}}
+        </div>
+        <div clas="mb-10p">
+          <i 
+          [iconPh]="plan.value.icon"
+          style="font-size: 30px"
+          class="text-primary"
+          ></i>
+        </div>
+        <h4 class="mb-0">{{plan.value.title}}</h4>
+        <p class="mb-0 body2 text-label">{{plan.value.subtitle}}</p>
+
+        <h2 
+        *ngIf="plan.value.data"
+        class="my-25p"
+        >
+          <ng-container *ngIf="!plan.value">  </ng-container>
+          <ng-container *ngIf="plan.value && isDurationMonthly">${{plan.value.data.price}}</ng-container>
+          <ng-container *ngIf="plan.value && !isDurationMonthly">${{plan.value.data.yearlyPrice}}</ng-container>
+
+          <span class="h4 text-label">
+            <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
+            <ng-container *ngIf="!isDurationMonthly">/yr</ng-container>
+          </span>
+        </h2>
+
+        <ul class="list-unstyled pl-25p plan-features flex-grow-1">
+          <ng-container *ngFor="let feature of planFeatures; let j = index">
+            <li 
+            *ngIf="isFeatureShowable(j, plan.key)"
+            class="position-relative mb-20p subtitle2"
+            >  
+              <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
+              <span>{{feature.item}}</span>
+            </li>  
+          </ng-container>
+        </ul>
+
+        <button 
+        *ngIf="isNotLoggedIn"
+        class="btn"
+        [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
+        (click)="onClickSignup(plan.key)"
+        >
+          <ng-container *ngIf="plan.key == 'basic'">Sign up FREE</ng-container>
+          <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
+          <ng-container *ngIf="plan.key == 'centre'">Select</ng-container>
+        </button>
+
+        <ng-container *ngIf="isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')">
+          <button 
+          class="btn"
+          [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
+          [disabled]="isLoading"
+          (click)="onClickCheckout(plan.key)"
+          >
+            <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
+            <ng-container *ngIf="plan.key != 'provider'">Select</ng-container>
+          </button>  
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="text-center mt-70p mb-100p">
+  <div class="d-inline-block">
+    <scroll-indicator [scrollTo]="anchorPlanFeatures"></scroll-indicator>
+  </div>
+</section>
+
+<section class="container">
+  <a #anchorPlanFeatures class="scroll-anchor"></a>
+  <table-plan-feature 
+  [planFeatures]="planFeatures"
+  [plans]="plans"
+  ></table-plan-feature>
+</section>
+
+<section class="container my-100p position-relative">
+  <a 
+  id="faq" 
+  style="top: -100px; position: absolute;"
+  ></a>
+  <div class="row justify-content-center">
+    <div class="col-12 col-xl-10">
+      <h2 class="h3 h2-md mb-50p text-center">
+        Frequently Asked Questions
+      </h2>
+      
+      <ul class="list-unstyled mb-0">
+        <li 
+        *ngFor="let faq of faqs;"
+        class="mb-20p"
+        >
+          <faq-item [data]="faq"></faq-item>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{shrink: isCouponShrink}"
+  (click)="expandCoupon()">
+
+  <div class="d-flex justify-content-between align-items-center mb-10p">
+    <div class="subtitle1 mb-0">You have coupon!</div>
+    <button class="btn btn-shrink" (click)="shrinkCoupon($event)">
+      <i iconPh="chevron-right" class="large"></i>
+    </button>
+  </div>
+
+  <card-coupon [couponData]="couponData"></card-coupon>
+</div>

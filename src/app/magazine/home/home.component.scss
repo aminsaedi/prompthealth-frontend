@@ -1,32 +1,4 @@
-////// TEMPORARY TODO: REMOVE LATER
-:host {
-  color: rgba(41, 49, 72, 1)!important;
-}
-
-.bg-primary {
-  background: rgba(12, 116, 255, 1);
-}
-
-.text-primary {
-  color: rgba(12, 116, 255, 1);
-}
-
-.bg-body {
-  background: rgba(41, 49, 72, 1)
-}
-.bg-line {
-  background: rgba(214, 216, 231, 1);
-}
-.text-placeholder {
-  color: rgba(160, 163, 189, 1);
-}
-.opacity-30pc {
-  opacity: 0.3;
-}
-.rounded-12p {
-  border-radius: 12px;
-}
-////// TEMPORARY END TODO: REMOVE LATER
+@import '../../../assets/scss/variables';
 
 .scroll-horizontal-container {
   padding: 0 15px 5px;
@@ -36,13 +8,13 @@
     padding-left: calc((100vw - #{$maxWidth} + 23px) / 2)
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: $breakpointMd) {
     @include paddingLeft(720px);
   }
-  @media (min-width: 992px) {
+  @media (min-width: $breakpointLg) {
     @include paddingLeft(960px);
   }
-  @media (min-width: 1200px) {
+  @media (min-width: $breakpointXl) {
     @include paddingLeft(1150px);
   }
 }
@@ -61,7 +33,7 @@
       width: 100%;
       top: 100%;
       left: 0;
-      border-bottom: solid 1px var(--ph-blue);
+      border-bottom: solid 1px $colorPrimary;
       transition: transform 200ms;
       transform: scaleX(0);
       transform-origin: right;
@@ -73,7 +45,7 @@
   }
 
   li.active{
-    color: var(--ph-blue);
+    color: $colorPrimary;
 
     &::after {
       transform: scaleX(1);
@@ -105,7 +77,7 @@ a.on-black:hover {
     }
   }
 
-  @media (min-width: 992px) {
+  @media (min-width: $breakpointLg) {
     grid-template-columns: 5fr 3fr;
     grid-template-rows: 1fr 1fr;
   
@@ -131,7 +103,7 @@ a.on-black:hover {
     display: block;
     padding-top: 60%;
 
-    @media (min-width: 992px) {
+    @media (min-width: $breakpointLg) {
       content: none;
     }
 

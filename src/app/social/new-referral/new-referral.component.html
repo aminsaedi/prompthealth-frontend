@@ -1,0 +1,67 @@
+<form (ngSubmit)="publish()">
+  <div class="container-fluid container-md">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-9 col-xl-8">
+        <div class="bg-white pt-15p px-15p pt-md-20p px-md-20p rounded-md-12p editor-container">
+          <div class="d-flex justify-content-between align-items-center mb-20p">
+            <h5 class="mb-0">
+              <span *ngIf="isReview">Write a review</span>
+              <span *ngIf="isRecommend">Write a recommendation</span>
+            </h5>
+            <button 
+            class="btn btn-text-body small px-0"
+            type="button"
+            (click)="goback()"
+            >Cancel</button>
+          </div>
+
+          <div class="mb-20p d-flex">
+            <profile-image
+            size="60"
+            [image]="profile.profileImage"
+            ></profile-image>
+            <div class="ml-10p">              
+              <h6 class="subtitle1 mb-0">{{profile.name}}</h6>
+              <p class="body2 text-label clamp-2line">{{profile.description}}</p>
+            </div>
+          </div>
+
+          <div class="mb-30p">
+            <form-item-textarea
+            name="referral"
+            label="Referral"
+            placeholder="Write your comment..."
+            [controller]="form"
+            [max]="referralMaxLength"
+            [submitted]="isSubmitted"
+            [option]="{rows: 10}"
+            ></form-item-textarea>
+          </div>
+
+          <div class="text-right pb-20p">
+            <input 
+            type="submit" 
+            value="Publish" 
+            class="btn btn-primary"
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div 
+*ngIf="isUploading"
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Uploading...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

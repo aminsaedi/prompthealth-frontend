@@ -1,3 +1,36 @@
+import { IFormItemSearchData } from "../models/form-item-search-data";
+
+export const locationsNested: IFormItemSearchData[] = [
+  {id: 'bc', label: 'British Columbia', selectable: false, subitems: [
+    {id: 'abbotsford', label: 'Abbotsford'},
+    {id: 'burnaby', label: 'Burnaby'},
+    {id: 'comox', label: 'Comox'},
+    {id: 'coquitlam', label: 'Coquitlam'},
+    {id: 'duncan', label: 'Duncan'},
+    {id: 'kelowna', label: 'Kelowna'},
+    {id: 'richmond', label: 'Richmond'},
+    {id: 'surrey', label: 'Surrey'},
+    {id: 'vancouver', label: 'Vancouver'},
+    {id: 'victoria', label: 'Victoria'},
+    {id: 'white_rock', label: 'White Rock'},
+  ]},
+  {id: 'on', label: 'Ontario', selectable: false, subitems: [
+    {id: 'hamilton', label: 'Hamilton'},
+    {id: 'kitchener', label: 'Ketchener'},
+    {id: 'mississauga', label: 'Mississauga'},
+    {id: 'ottawa', label: 'Ottawa'},
+    {id: 'toronto', label: 'Toronto'},
+    {id: 'vaughan', label: 'Vaughan'},
+  ]},
+  {id: 'mb', label: 'Manitoba', selectable: false, subitems: [
+    {id: 'winnipeg', label: 'Winnipeg'},
+  ]},
+  {id: 'ab', label: 'Alberta', selectable: false, subitems: [
+    {id: 'calgary', label: 'Calgary'},
+    {id: 'edmonton', label: 'Edmonton'},
+  ]}
+];
+
 class LocationData {
   lat: number;
   lng: number;
@@ -38,3 +71,38 @@ export const locations: {[k:string]: LocationData} = {
   calgary: new LocationData( 51.040915,-114.065465, 100, 11),
 }
 
+export function getLabelByCityId (id: CityId) {
+  const list = id.split('_');
+
+  for(var i=0; i<list.length; i++){
+    list[i] = list[i].charAt(0).toUpperCase() + list[i].slice(1);
+  }
+
+  let label = list.join(' ');
+  return label;
+}
+
+export type CityId = 
+'abbotsford' | 
+'burnaby' | 
+'comox' |
+'coquitlam' |
+'duncan' |
+'kelowna' |
+'richmond' |
+'surrey'| 
+'vancouver' |
+'victoria' |
+'white_rock' |
+
+'hamilton' |
+'kitchener' |
+'mississauga' |
+'ottawa' |
+'toronto' |
+'vanghan' |
+
+'winnipeg' |
+
+'calgary' |
+'edmonton';

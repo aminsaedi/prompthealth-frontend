@@ -1,28 +1,27 @@
-<ngx-spinner bdColor="#fff" size="medium" color="#fff">
+<!-- <ngx-spinner bdColor="#fff" size="medium" color="#fff">
   <p style="font-size: 20px; color: white" class="loaderbg">
     <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
   </p>
-</ngx-spinner>
+</ngx-spinner> -->
 
-<section class="container-fluid bg-blue py-3 py-md-4" [routerLink]="['./']"
+<section class="container-fluid bg-primary py-3 py-md-4" [routerLink]="['./']"
   [queryParams]="{virtual: !isVirtual}" queryParamsHandling='merge' style="user-select: none">
   <div class="max-w-1200">
     <div class="d-flex flex-nowwrap align-items-center">
 
-      <div>
+      <div class="text-light">
         <div class="banner d-flex flex-column flex-md-row flex-md-nowrap align-items-md-center"
           [ngClass]="{sticked: isFinderSticked}">
-          <span *ngIf="!isVirtual" class="text-light font-mg-big pr-3 pr-lg-5">We provide online/virtual services</span>
-          <span *ngIf="isVirtual" class="text-light font-mg-big pr-3 pr-lg-5">Showing services with virtual options
-            only</span>
-          <span class="bg-orange px-3 py-2 mt-2 mt-md-0 rounded font-italic">
+          <span *ngIf="!isVirtual" class="h5 mb-0 pr-3 pr-lg-5">We provide online/virtual services</span>
+          <span *ngIf="isVirtual" class="h5 mb-0 pr-3 pr-lg-5">Showing services with virtual options only</span>
+          <span class="bg-orange text-body px-3 py-2 mt-2 mt-md-0 rounded font-italic">
             Look for
-            <i class="fas fa-video px-1"></i>
+            <i class="px-1 large text-green" iconPh="video-camera"></i>
             to find virtual services
           </span>
         </div>
-        <p *ngIf="isVirtual" class="mt-2 mb-0 text-light">Go back to view all services</p>
-        <p *ngIf="!isVirtual" class="mt-2 mb-0 text-light">Click to view Virtual options only</p>
+        <p *ngIf="isVirtual" class="mt-2 mb-0">Go back to view all services</p>
+        <p *ngIf="!isVirtual" class="mt-2 mb-0">Click to view Virtual options only</p>
       </div>
 
       <div class="arrow-right flex-shrink-0 flex-grow-0 ml-3 ml-lg-5"></div>
@@ -36,18 +35,22 @@
   <div class="max-w-1200">
     <div class="d-flex align-items-center mb-3">
       <h2 class="text-blue-gradient font-weight-normal mb-0 expert-finder">Expert Finder</h2>
-      <a class="btn btn-outline-primary p-2 px-md-4 ml-md-3 rounded-10p link-to-personal-match" [routerLink]="['/personal-match']">Start <span class="text-nowrap">Personal Match</span></a>
+      <a class="btn btn-primary small ml-md-3" [routerLink]="['/personal-match']">Start <span class="text-nowrap">Personal Match</span></a>
     </div>
     <ul *ngIf="isMainFilterOn" class="filters m-0 d-flex flex-nowrap list-unstyled pt-2 pb-3">
-      <li *ngIf="keyword && keyword.length > 0" class="main text-nowrap rounded mr-3">
-        <span class="px-3">{{keyword}}</span>
-        <button class="btn" (click)="removeKeyword()"><i class="fas fa-times"></i></button>
+      <li *ngIf="keyword && keyword.length > 0" class="main text-nowrap rounded mr-3 border-primary">
+        <span class="px-2 body-small">{{keyword}}</span>
+        <button class="btn btn-icon small py-1 text-primary-dark bg-primary-light" (click)="removeKeyword()">
+          <i iconPh="cross"></i>
+        </button>
       </li>
 
       <ng-container *ngFor="let id of listingPayload?.services; let i = index;">
-        <li *ngIf="!!getServiceName(id)" class="main text-nowrap rounded mr-3">
-          <span class="px-2">{{getServiceName(id)}}</span>
-          <button class="btn" (click)="removeService(i)"><i class="fas fa-times"></i></button>
+        <li *ngIf="!!getServiceName(id)" class="main text-nowrap rounded mr-3 border-primary">
+          <span class="px-2 body-small">{{getServiceName(id)}}</span>
+          <button class="btn btn-icon small py-1 text-primary-dark bg-primary-light" (click)="removeService(i)">
+            <i iconPh="cross"></i>
+          </button>
         </li>  
       </ng-container>
 
@@ -72,26 +75,26 @@
     <ul *ngIf="!isVirtual" class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
       <li *ngFor="let f of filters; let i = index;">
         <button [id]="'filter-' + f._id"
-          class="btn border-darkblue text-darkblue text-nowrap py-1 px-4 rounded-pill mr-3"
+          class="btn btn-outline small text-nowrap rounded-pill mr-3"
           [ngClass]="{focus: (filterTarget && filterTarget._id == f._id), active: f.active}"
           (click)="setFilterTarget(i)">{{f.item_text}}</button>
       </li>
       <li>
-        <button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button>
+        <button class="btn btn-text-black small text-nowrap" (click)="removeFilterAll()"><u>Clear All</u></button>
       </li>
       <li class="pl-4 sticky-right" *ngIf="isApplyFilterButtonShown"  [@fade]>
-        <button class="btn btn-primary py-1 button-filter-apply" (click)="updateFilterAll()" #buttonApplyFilter>Apply</button>
+        <button class="btn btn-primary small button-filter-apply" (click)="updateFilterAll()" #buttonApplyFilter>Apply</button>
       </li>
     </ul>
     <ul *ngIf="!!isVirtual" class="filters pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
       <li *ngFor="let f of filters; let i = index;">
         <button [id]="'filter-' + f._id" *ngIf="f._id !== 'location'"
-          class="btn border-darkblue text-darkblue text-nowrap py-1 px-4 rounded-pill mr-3"
+          class="btn btn-outline small text-nowrap rounded-pill mr-3"
           [ngClass]="{focus: (filterTarget && filterTarget._id == f._id), active: f.active}"
           (click)="setFilterTarget(i)">{{f.item_text}}</button>
       </li>
       <li>
-        <button class="btn text-under text-nowrap py-1" (click)="removeFilterAll()"><u>Clear All</u></button>
+        <button class="btn btn-text-black small text-nowrap" (click)="removeFilterAll()"><u>Clear All</u></button>
       </li>
       <li class="pl-3 sticky-right" *ngIf="isApplyFilterButtonShown"  [@fade] >
         <button class="btn btn-primary py-1 button-filter-apply" (click)="updateFilterAll()" #buttonApplyFilter>Apply</button>
@@ -104,8 +107,9 @@
         <ul class="pt-2 pb-3 m-0 d-flex flex-nowrap list-unstyled">
           <li class="position-relative mr-3" *ngFor="let p of compareList">
             <img class="rounded" [src]="p.image" [alt]="p.name" crossorigin="anonymous">
-            <button class="btn position-absolute" (click)="removeProfessionalFromCompare(p.id)"><i
-                class="fas fa-times font-bigger"></i></button>
+            <button class="btn btn-icon small position-absolute" (click)="removeProfessionalFromCompare(p.id)">
+              <i iconPh="cross" class="large"></i>
+            </button>
           </li>
         </ul>
         <div class="flex-grow-0 gelx-shrink-0">
@@ -120,13 +124,13 @@
 
 <div (clickOutside)="onClickOutsideOfFilter($event)">
 
-  <filter-dropdown-location class="position-fixed shadow rounded-15p blur filter-dropdown"
+  <filter-dropdown-location class="position-fixed shadow rounded-12p blur filter-dropdown"
     *ngIf="filterTarget && (filterTarget._id == 'location')" [@slideVertical] [ngStyle]="getFilterDropdownPosition()"
     [data]="filterTarget.data" (changeValue)="updateFilterActiveStatus(filterTarget)"
     (changeState)="onChangeStateFilterMenu($event)"
   ></filter-dropdown-location>
 
-  <filter-dropdown-select class="position-fixed shadow rounded-15p blur filter-dropdown"
+  <filter-dropdown-select class="position-fixed shadow rounded-12p blur filter-dropdown"
     *ngIf="filterTarget && (filterTarget.type == 'radio' || filterTarget.type == 'checkbox')" [@slideVertical]
     [ngStyle]="getFilterDropdownPosition()" [target]="filterTarget._id"
     [multiple]="(filterTarget.type == 'checkbox')? true: false" [options]="filterTarget.options"
@@ -134,13 +138,13 @@
   ></filter-dropdown-select>
 </div>
 
-<section class="bg-lightblue">
+<section class="bg-primary-light">
   <div class="container py-3" *ngIf="isVirtual">
     <ng-container *ngIf="pages.data">
       <div>
         <p class="font-italic" *ngIf="pages.data.length > 0">Here are the options we found for you</p>
-        <p class="font-italic font-big no-one-found" *ngIf="pages.data.length == 0">
-          There is no one available in your geographical area with your search criteria right now. <br><br>
+        <p class="font-italic no-one-found" *ngIf="pages.data.length == 0">
+          There is no one available in your geographical area with your search criteria right now. <br>
           Be sure to check back as our network is growing everyday!
         </p>
       </div>            
@@ -165,8 +169,8 @@
       <ng-container *ngIf="pages.data">
         <div class="w-100 container-fluid">
           <p class="font-italic" *ngIf="pages.data.length > 0">Here are the options we found for you</p>
-          <p class="font-italic font-big no-one-found" *ngIf="pages.data.length == 0">
-            There is no one available in your geographical area with your search criteria right now. <br><br>
+          <p class="font-italic no-one-found" *ngIf="pages.data.length == 0">
+            There is no one available in your geographical area with your search criteria right now. <br>
             Be sure to check back as our network is growing everyday!
           </p>
         </div>
@@ -192,7 +196,7 @@
           <p class="opacity-0">Here are the options we found for you</p>
         </div>
         <div class="card-container" *ngFor="let i of [0,1,2,3,4,5]">
-          <div class="card rounded-15p">
+          <div class="card rounded-12p">
             <card-dummy></card-dummy>
           </div>
         </div>
@@ -230,23 +234,22 @@
         </agm-marker>
       </agm-map>
       <div class="map-controller d-flex justify-content-between">
-        <button class="btn d-none d-lg-block bg-white font-regular rounded-10p" (click)="toggleMapSize()">
-          <span *ngIf="!isMapSizeBig">
-            <i class="fas fa-chevron-left"></i>
-          </span>
-          <span *ngIf="isMapSizeBig" class="text-nowrap">
-            <i class="fas fa-chevron-right"></i>
-            Show list
-          </span>
+        <button *ngIf="!isMapSizeBig" class="btn btn-icon small d-none d-lg-block bg-white rounded-12p bt-white shadow" (click)="toggleMapSize()">
+          <i iconPh="arrow-left" class="text-body large"></i>
+        </button>
+        <button *ngIf="isMapSizeBig" class="btn btn-text small d-none d-lg-block bg-white rounded-12p text-nowrap shadow" (click)="toggleMapSize()">
+          <i iconPh="arrow-right" class="text-body large"></i>
+          <span class="text-body">Show list</span>
         </button>
         
-        <button class="btn btn-search-in-this-area bg-white font-regular rounded-10p text-nowrap" (click)="onClickSearchInThisArea()">
-          Search in this area
+        <button class="btn btn-text small text-body btn-search-in-this-area bg-white rounded-12p text-nowrap shadow" (click)="onClickSearchInThisArea()">
+          <span class="body1">Search in this area</span>
         </button>
 
-        <button class="btn font-regular btn-get-location rounded-10p bg-white" [disabled]="isGettingCurrentLocation"
-        (click)="onClickGetLocationButton()" [ngClass]="{active: isGettingCurrentLocation}"><i
-          class="fas fa-crosshairs"></i></button>
+        <button class="btn btn-icon small rounded-12p bg-white shadow" [disabled]="isGettingCurrentLocation"
+        (click)="onClickGetLocationButton()" [ngClass]="{active: isGettingCurrentLocation}">
+          <i class="text-body large" iconPh="gps"></i>
+        </button>
 
       </div>
     </div>
@@ -255,102 +258,16 @@
 
 </section>
 
-
-<!-- <section class="container-fluid bg-lightblue" id="professionalList">
-  <div class="row align-items-start">
-    <div class="col-12 d-md-block pt-5 min-h-100-finder" [ngClass]="listingContainerClass">
-      <div class="container-fluid postiion-relative">
-        <ng-container *ngIf="!pages.data">
-          <p class="opacity-0">Here are the options we found for you</p>
-          <ul class="professionals list-unstyled row">
-            <li class="col-12 mb-3" *ngFor="let i of [0,1,2,3,4,5]" [ngClass]="listingItemClass">
-              <div class="card p-1 border-blue rounded-15p">
-                <card-dummy></card-dummy>
-              </div>
-            </li>
-          </ul>
-        </ng-container>
-
-        <ng-container *ngIf="pages.data && pages.data.length == 0">
-          <p class="font-italic font-big no-one-found">
-            There is no one available in your geographical area with your search criteria right now. <br><br>
-            Be sure to check back as our network is growing everyday!
-          </p>
-        </ng-container>
-
-        <ng-container *ngIf="pages.data && pages.data.length > 0">
-          <p class="font-italic">Here are the options we found for you</p>
-          <ul class="professionals list-unstyled row" *ngIf="pages.data">
-            <li class="col-12 mb-3" *ngFor="let p of pages.data[pages.current - 1]" [ngClass]="listingItemClass">
-              <div class="card p-3 text-center border-blue rounded-15p font-small">
-                <div class="img-wrapper mb-3" [ngClass]="{verified: p.isVerified}">
-                  <user-image [verifiedUser]="p.isVerified" [image]="p.image" [alt]="p.name" [borderWidthVerified]="3">
-                  </user-image>
-                </div>
-                <div class="price-tag bg-tagblue font-weight-bold" *ngIf="p.price">{{p.price}}</div>
-                <div class="button-compare form-check">
-                  <input type="checkbox" class="form-check-input" [id]="'compare-' + p.id"
-                    [(ngModel)]="p.isCheckedForCompare" (change)="updateCompareList()">
-                  <label class="form-check-label" [for]="'compare-' + p.id">Compare</label>
-                </div>
-
-                <p class="mb-1 clamp-1line font-weight-bold">{{p.title}}</p>
-                <p class="font-weight-bold font-bigger mb-0 title">
-                  <i class="fas fa-clinic-medical pr-1" *ngIf="p?.isCentre"></i>
-                  {{p.name}}
-                </p>
-                <ul class="d-flex justify-content-center indicators list-unstyled p-0 mt-2 mb-3">
-                  <li><i class="fas fa-video" *ngIf="p.provideVirtual"></i></li>
-                </ul>
-                <star-rate class="my-3" [rate]="p.rating" margin="small" size="small"></star-rate>
-                <p class="mb-2 clamp-1line font-big" *ngIf="!p.isCentre">{{p.organization}}</p>
-                <p class="mb-2 clamp-1line font-big" *ngIf="p.isCentre">{{p.phone}}</p>
-                <p class="mb-2 address">{{p.address}}</p>
-                <p class="mb-3" *ngIf="!isVirtual && (p.distance !== null || p.distance !== undefined)">
-                  <b>
-                    {{p.distance | number :
-                    '1.1-2'}}
-                    km away from you
-                  </b>
-                </p>
-                <div>
-                  <a class="btn border-darkblue text-darkblue rounded-10p" [routerLink]="['/practitioners/', p.id]">Check
-                    Profile</a>
-                </div>
-              </div>
-            </li>
-          </ul>
-
-          
-        </ng-container>
-      </div>
-    </div>
-    <div class="col-12 col-md-6 d-none d-md-block sticky-to-finder h-100--finder bg-white" *ngIf="!isVirtual"
-      [ngClass]="{'d-none': !isMapView, 'col-lg-9': isMapSizeBig, 'col-lg-3 col-xl-4': !isMapSizeBig}">
-      
-
-      <ul class="map-controller-right list-unstyled mb-0">
-        <li>
-          <button class="btn d-none d-lg-block text-blue font-biggest" (click)="toggleMapSize()">
-            <i *ngIf="!isMapSizeBig" class="fas fa-expand"></i>
-            <i *ngIf="isMapSizeBig" class="fas fa-compress"></i>
-          </button>
-        </li>
-        <li>
-          <button class="btn text-blue font-biggest btn-get-location" [disabled]="isGettingCurrentLocation"
-            (click)="onClickGetLocationButton()" [ngClass]="{active: isGettingCurrentLocation}"><i
-              class="fas fa-crosshairs"></i></button>
-        </li>
-      </ul>
-
-      <button class="btn btn-search-in-this-area bg-white font-small rounded-pill" (click)="searchInThisArea()">Search
-        in this area</button>
-    </div>
-  </div>
-
-</section> -->
-
-<button class="btn switch-ui d-lg-none font-regular text-blue rounded-pill bg-blue text-light" *ngIf="!isVirtual" (click)="toggleView()">
-  <span *ngIf="!isMapView"><i class="fas fa-map-marked-alt"></i> <span class="pl-2">Map</span></span>
-  <span *ngIf="isMapView"><i class="fas fa-list"></i> <span class="pl-2">List</span></span>
-</button>
+<div class="ui-controller text-center d-lg-none">
+  <button class="btn btn-primary rounded-pill shaddow" *ngIf="!isVirtual" (click)="toggleView()">
+    <ng-container *ngIf="!isMapView">
+      <i iconPh="map-view"></i>
+      <span>Map</span>
+    </ng-container>
+  
+    <ng-container *ngIf="isMapView">
+      <i iconPh="layers"></i>
+      <span>List</span>
+    </ng-container>
+  </button>
+</div>

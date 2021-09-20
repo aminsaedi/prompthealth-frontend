@@ -1,0 +1,14 @@
+@import '../../../assets/scss/variables';
+
+.ph-stat-container {
+  margin-top: 26px;
+
+  img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    top: 0; 
+    left: 0; 
+    filter: brightness(0.85) contrast(0.8);
+  }
+}

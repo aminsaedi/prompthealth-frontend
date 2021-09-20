@@ -1,0 +1,18 @@
+@import '../../../assets/scss/variables';
+
+:host::ng-deep {
+  .ql-toolbar {
+    display: none;
+  }
+  .ql-editor {
+    padding: 0;
+
+    &.ql-blank::before {
+      font-style: normal;
+      font-size: 16px;
+      line-height: 24px;
+      left: 0;
+      color: $colorGsPlaceholder;
+    }
+  }
+}

@@ -1,0 +1,55 @@
+<div class="mb-15p">
+  <card-item-eyecatch [post]="post"></card-item-eyecatch>
+</div>
+
+<div class="d-flex align-items-center justify-content-between mb-20p">
+  <div class="d-flex flex-nowrap">
+    <a
+    [routerLink]="['/community/profile', post?.authorId]"
+    (click)="markCurrentPosition()"
+    >
+      <profile-image [image]="post?.authorImage"></profile-image>
+    </a>
+    <div class="info-container ml-10p">
+      <a 
+      [routerLink]="['/community/profile', post?.authorId]"
+      (click)="markCurrentPosition()"
+      >
+        <h6 class="subtitle2 mb-0 text-body">
+          {{post?.authorName}}
+  
+          <i 
+          *ngIf="post?.authorVerified"
+          iconPh="verified" class="text-primary large ml-5p"
+          ></i>
+        </h6>        
+      </a>
+      <div class="body2 text-label">
+        {{post?.createdAt | date:'dd.MM.yyyy'}}
+      </div>
+    </div>
+  </div>
+
+  <div class="text-label">
+    <span class="mr-10p">
+      <i iconPh="timer" class="mr-1"></i>
+      <span *ngIf="post" class="subtitle2">
+        <span>{{post.readLengthLabel}}</span>
+        <span class="d-none d-md-inline"> read</span>            
+      </span>
+    </span>
+
+    <!-- <button 
+    class="btn btn-icon-grey small py-5p"
+    (click)="_onClickButton($event, 'post-menu')"
+    >
+      <i iconPh="more-horiz"></i>
+    </button>   -->
+  </div>
+
+</div>
+
+<h2 
+class="h4"
+[ngClass]="{'clamp-1line': shorten}"
+>{{post.title}}</h2>

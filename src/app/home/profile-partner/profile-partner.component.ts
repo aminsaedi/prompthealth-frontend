@@ -55,7 +55,7 @@ export class ProfilePartnerComponent implements OnInit {
 
       if(this.profile){
         const cat = await this._catService.getCategoryAsync();
-        this.profile.populateService(cat);  
+        // this.profile.populateService(cat);  
       }
     });
   }

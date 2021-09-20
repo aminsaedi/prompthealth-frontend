@@ -6,13 +6,14 @@ export interface IUserDetail {
   /** general */
   _id?: string;
   userId?: string;
-  roles?: string; /** U | SP | C | P */
+  roles?: 'U' | 'SP' | 'C' | 'P' | 'SA';
 
   firstName?: string;
   lastName?: string;
   fname?: string;
   lname?: string;
   profileImage?: string;
+  cover?: string;
   email?: string;
   displayEmail?: string;
   address?: string;
@@ -23,6 +24,11 @@ export interface IUserDetail {
   placeId?: string; /** google place id */
   
   phone?: string;
+
+  follow?: {
+    following: number;
+    followed: number;
+  };
 
   isApproved?: boolean;
   isDeleted?: boolean;
@@ -63,7 +69,8 @@ export interface IUserDetail {
   certification?: string;
   exactPricing?: number;
   price_per_hours?: string;
-
+  acceptsInsurance?: string;
+  seeOtherRegion?: string;
 
 
   /** for SP | C | P */

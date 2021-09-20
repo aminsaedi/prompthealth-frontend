@@ -1,7 +1,6 @@
 import { Injectable, Optional, RendererFactory2, ViewEncapsulation, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-// import { FlashMessagesService } from 'ngx-flash-messages';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PreviousRouteService } from './previousUrl.service';
 import { BehaviorService } from './behavior.service';
@@ -9,7 +8,7 @@ import { BehaviorService } from './behavior.service';
 
 // import { SocialAuthService } from 'angularx-social-login';
 
-import { throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 
 // import 'rxjs/add/operator/toPromise';
 import { catchError, map } from 'rxjs/operators';
@@ -26,7 +25,10 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { IAddonPlan } from 'src/app/models/addon-plan';
 import { ICouponData } from 'src/app/models/coupon-data';
-import { RequestOptions } from '@angular/http';
+import { ToastrService } from 'ngx-toastr';
+import { Professional } from 'src/app/models/professional';
+import { SocialService } from 'src/app/social/social.service';
+import { AngularFireMessaging } from '@angular/fire/messaging';
 
 declare var jQuery: any;
 
@@ -38,15 +40,8 @@ export class User {
 
 @Injectable()
 export class SharedService {
-  rootUrl: string = environment.config.API_URL;
-  // baseUrl: string = environment.config.API_URL;
-  type: any;
-  personalMatch;
   constructor(
-    // private authService: SocialAuthService,
     private _router: Router,
-    private rendererFactory: RendererFactory2,
-    // private _flashMessagesService: FlashMessagesService,
     private spinner: NgxSpinnerService,
     private previousRouteService: PreviousRouteService,
     private _bs: BehaviorService,
@@ -54,14 +49,61 @@ export class SharedService {
     private _stripeService: StripeService,
     private _postManager: PostManagerService,
     private _profileManager: ProfileManagementService,
+    private _socialManager: SocialService,
+    private _toastr: ToastrService,
+    private angularFireMessaging: AngularFireMessaging,
 
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
-    this.type = this._uService.localStorage.getItem('roles');
+    this.receiveMessage();
+    // console.log('fcm loaded');
+    // this.type = this._uService.localStorage.getItem('roles');
+  }
+  currentMessage = new BehaviorSubject(null);
+
+  rootUrl: string = environment.config.API_URL;
+  // baseUrl: string = environment.config.API_URL;
+  // type: any;
+  personalMatch;
+  private compareList: Professional[] = [];
+
+  requestPermission(user: User) {
+    this.angularFireMessaging.requestToken.subscribe(
+      (token) => {
+        // console.log(token);
+        this.post({ token, deviceType: 'web' }, 'notification/save-token').toPromise().then(res => {
+          // console.log('token saved to db', res);
+        });
+      },
+      (err) => {
+        console.error('Unable to get permission to notify.', err);
+      }
+    );
+  }
+  receiveMessage() {
+    this.angularFireMessaging.messages.subscribe(
+      (payload: any) => {
+        console.log('new message received. ', payload);
+        this.currentMessage.next(payload);
+        // const notification: { title: string, body: string, image: string } = payload.notification;
+        // const noti = new Notification(notification.title, {
+        //   body: notification.body,
+        //   image: notification.image
+        // });
+      });
   }
 
+  async logout(navigate: boolean = true) {
+    // console.log(token);
+    await this.angularFireMessaging.getToken.toPromise().then(token => {
+      this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
+        console.log('Cleared fcm token');
+      });
+    }).catch(error => {
+      console.error(error);
+    });
 
-  logout(navigate: boolean = true) {
+    this._socialManager.dispose();
     this._postManager.dispose();
     this._profileManager.dispose();
 
@@ -69,22 +111,21 @@ export class SharedService {
 
     ls.removeItem('token');
     ls.removeItem('loginID');
-    // localStorage.removeItem('isPayment');
     ls.removeItem('user');
     ls.removeItem('roles');
     ls.removeItem('isVipAffiliateUser');
-    // this.authService.signOut();
-    this.showAlert('Logout Sucessfully', 'alert-success');
-    this._bs.setUserData({});
 
+    this._bs.setUserData(null);
+    this._toastr.success('Logged out successfully');
     ls.setItem('userType', 'U');
     if (navigate) {
-      this._router.navigate(['/auth/login']);
+      this._router.navigate(['/']);
     }
   }
 
   get(path, setParams = {}) {
-    if (!this.type) {
+    const token = this._uService.localStorage.getItem('token');
+    if (!token) {
       const url = this.rootUrl + path;
       return this.http.get(url);
     } else {
@@ -231,6 +272,18 @@ export class SharedService {
     return this.http.post(this.rootUrl + path, body, { headers });
   }
 
+  uploadMultipleImages(images: { file: File | Blob, filename: string }[], userId: string, imageLocation: string) {
+    const data = new FormData();
+    data.append('imgLocation', imageLocation);
+    data.append('_id', userId);
+    images.forEach(image => {
+      data.append('images', image.file, image.filename);
+    });
+
+    const path = (images.length == 1) ? 'common/imgUpload' : 'common/imgMultipleUpload';
+    return this.imgUpload(data, path);
+  }
+
   imgUploadPut(body, path) {
     let headers = this.getAuthorizationHeader();
     headers = headers.delete('Content-Type');
@@ -363,7 +416,7 @@ export class SharedService {
     const code = err.code;
     const message = err.message;
 
-    if ((code == 401 && message == 'authorization')) {
+    if (code === 401 && message === 'authorization') {
       this._uService.localStorage.removeItem('token');
       // this.showAlert('Session Expired.', 'alert-danger')
       // this._router.navigate(['/auth/business']);
@@ -379,6 +432,12 @@ export class SharedService {
     return this.personalMatch;
   }
   clearPersonalMatch() { this.personalMatch = null; }
+  setCompareList(compareList: Professional[] = []) {
+    this.compareList = compareList;
+  }
+  getCompareList() {
+    return this.compareList;
+  }
 
   /*This function is use to get access token from cookie. */
   getAccessToken(): string {

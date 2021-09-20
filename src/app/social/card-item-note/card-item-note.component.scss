@@ -1,0 +1,15 @@
+@import '../../../assets/scss/variables';
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 10px;
+}
+
+.btn-group { 
+  @media (min-width: $breakpointLg) {
+    button.btn, a.btn { 
+      width: 200px!important; 
+    }
+  }
+}

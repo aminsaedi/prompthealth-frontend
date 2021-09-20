@@ -1,12 +1,50 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
-  <div class="row mb-4">
-    <div class="col-md-4 mt-0">
-      <label>
-        Service
-        <span class="text-danger">*</span>  
+  <div class="row mb-5 justify-content-end">
+    <div class="col-12">
+      <label class="mb-3">
+        Are you a private practitioner or do you take insurance?
       </label>
     </div>
-    <div class="col-md-8">
+    <div class="col-12 col-md-11">
+      <form-item-checkbox-group
+      id="insurance"
+      type="selectbox"
+      label=""
+      [controller]="f.acceptsInsurance"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      [selections]="selectionsInsuranceType"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+
+  <div class="row mb-5 justify-content-end">
+    <div class="col-12">
+      <label class="mb-3">
+        Are you able to see people from other regions?
+      </label>
+    </div>
+    <div class="col-12 col-md-11">
+      <form-item-checkbox-group
+      id="seeOtherRegion"
+      type="selectbox"
+      label=""
+      [controller]="f.seeOtherRegion"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      [selections]="selectionsSeeOtherRegion"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+
+  <div class="row mb-5 justify-content-end">
+    <div class="col-12">
+      <label class="mb-3">
+        Service
+        <span class="text-danger">*</span>
+      </label>
+    </div>
+    <div class="col-12 col-md-11">
       <form-item-service
       [col2]="true"
       [disabled]="disabled"
@@ -17,14 +55,14 @@
     </div>
   </div>
 
-  <div class="row mb-4">
-    <div class="col-md-4 mt-0">
-      <label>
+  <div class="row mb-5 justify-content-end">
+    <div class="col-12">
+      <label class="mb-3">
         Status Of Customer's Health
         <span class="text-danger">*</span>
       </label>
     </div>
-    <div class="col-md-8">
+    <div class="col-12 col-md-11">
       <form-item-customer-health
       *ngIf="selectionsCustomerHealth"
       [col2]="true"
@@ -38,14 +76,14 @@
     </div>
   </div>
 
-  <div class="row mb-4">
-    <div class="col-md-4 mt-0">
-      <label class="mb-4">
+  <div class="row mb-5 justify-content-end">
+    <div class="col-12 mt-0">
+      <label class="mb-3">
         Treatment Modality
         <!-- <span class="text-danger">*</span> -->
       </label>
     </div>
-    <div class="col-md-8">
+    <div class="col-12 col-md-11">
       <form-item-checkbox-group
       *ngIf="selectionsTreatmentModality"
       id="treatmentModality"
@@ -60,14 +98,14 @@
     </div>
   </div>
 
-  <div class="row mb-4">
-    <div class="col-md-4 mt-0">
-      <label class="mb-4">
+  <div class="row mb-5 justify-content-end">
+    <div class="col-12 mt-0">
+      <label class="mb-3">
         Type Of Provider
         <!-- <span class="text-danger">*</span> -->
       </label>
     </div>
-    <div class="col-md-8">
+    <div class="col-12 col-md-11">
       <form-item-checkbox-group
       *ngIf="selectionsTypeOfProvider"
       id="typeOfProvider"
@@ -83,8 +121,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-8">
+    <div class="col-12">
       <p *ngIf="!disabled" class="font-italic bg-lightgrey p-3 line-height-1_5">
         Please only pick what's applicable to you to allow proper matching.
         We'll regularly review for inappropriate profiles
@@ -92,7 +129,7 @@
     </div>
   </div>
 
-  <div class="col-md-12 text-right" *ngIf="!disabled" [ngClass]="{'d-none': hideSubmit}">
+  <div class="col-12 text-right" *ngIf="!disabled" [ngClass]="{'d-none': hideSubmit}">
     <button class="btn btn-primary">Submit</button>
   </div>
 </form>

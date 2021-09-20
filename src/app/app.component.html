@@ -1,1 +1,23 @@
 <router-outlet></router-outlet>
+
+<div
+*ngIf="isAlertUploadingInBackgroundShown"
+[@slideVertical]
+class="alert-uploading-background rounded-md-12p p-15p py-md-25p px-md-40p text-white"
+[ngClass]="{'bg-body': isUploadingInBackground, 'bg-success': isUploadingDoneInBackground}"
+(click)="onClickAlertUploadingInBackground()"
+>
+  <ng-container *ngIf="isUploadingInBackground">
+    <div class="d-flex align-items-center">
+      <loader color="white"></loader>
+      <span class="subtitle1 ml-15p">Uploading...</span>    
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="isUploadingDoneInBackground">
+    <div class="subtitle1">
+      <i iconPh="thumbs-up"></i>
+      <span class="ml-5p">Well done!</span>
+    </div>
+  </ng-container>
+</div>

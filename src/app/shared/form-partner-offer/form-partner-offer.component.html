@@ -1,6 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <section class="mb-4">
-    <div *ngIf="disabled && !!f.isFree.value">Offer For Free</div>
+    <div *ngIf="disabled && !!f.isFree.value" class="subtitle1">Offer For Free</div>
     <form-item-checkbox 
     *ngIf="!disabled"
     [controller]="f.isFree" 
@@ -12,10 +12,10 @@
 
   <ng-container *ngIf="!f.isFree.value">
     <section class="mb-4">
-      <h4>Price Range</h4>
+      <h6>Price Range</h6>
       <div class="d-inline-block">
         <label *ngFor="let i of [1,2,3,4,5]" class="price-range" [for]="'price' + i">
-          <i class="fas fa-dollar-sign" [ngClass]="{active: (i <= f.priceLevel.value)}"></i>
+          <i iconPh="dollar" class="large" [ngClass]="{active: (i <= f.priceLevel.value)}"></i>
           <input class="d-none" [id]="'price' + i" type="radio" [value]="i" formControlName="priceLevel" [attr.disabled]="disabled ? 'disabled' : null">
         </label>  
       </div>
@@ -23,7 +23,7 @@
     </section>
   
     <section class="mb-4">
-      <h4>Enter your price range</h4>
+      <h6>Enter your price range</h6>
       <div class="row align-items-center">
         <div class="col">
           <form-item-input
@@ -54,8 +54,8 @@
 
 
   <section class="mt-5 mb-4">
-    <p class="font-big font-weight-400">(Enter below if it's available)</p>
-    <h4>Link to signup for your product/service</h4>
+    <h5 class="opacity-60pc">(Enter below if it's available)</h5>
+    <h6 class="subtitle1">Link to signup for your product/service</h6>
     <form-item-input
     name="website"
     label="Signup page" 
@@ -70,7 +70,7 @@
   </section>
 
   <section class="mb-4">
-    <h4>Offer</h4>
+    <h6>Offer</h6>
     <ng-container *ngFor="let o of offers">
       <div class="row mb-2 align-items-center">
         <div class="col-4">
@@ -81,7 +81,7 @@
           [name]="o.id + 'Check'" 
           [label]="o.label"
           ></form-item-checkbox>
-          <span *ngIf="disabled">{{o.label}}</span>
+          <span *ngIf="disabled" class="subtitle1">{{o.label}}</span>
         </div>
         <div class="col">
           <form-item-input

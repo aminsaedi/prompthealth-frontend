@@ -1,0 +1,68 @@
+<div class="d-flex justify-content-between">
+  <div class="d-flex flex-nowrap">
+    <button
+    class="btn btn-text-grey small px-0"
+    type="button"
+    (click)="onClickLike($event)"
+    [disabled]="isUploading"
+    >
+      <i 
+      [iconPh]="'heart' + (isLiked ? '-filled' :'')" 
+      class="large"
+      [ngClass]="{'text-error': post.isLiked}"
+      ></i>
+      <span>{{post.numLikes}}</span>
+    </button>
+  
+    <button 
+    class="btn btn-text-grey small px-0 ml-20p ml-md-30p"
+    (click)="onClickComment($event)"
+    >
+      <i iconPh="comment" class="large"></i>
+      <span>{{post.numComments}}</span>
+    </button>
+
+    <button-share
+    facebook twitter linkedin email
+    [url]="FRONTEND_URL + post.linkToPost"
+    title="Check out my content on PromptHealth!"
+    [text]=""
+    [label]="isViewSm ? '' : 'Share'"
+    btnClass="btn btn-text-grey small px-0 ml-20p ml-md-30p"
+    ></button-share>
+  </div>
+
+  <!-- <div>
+    <button 
+    class="btn btn-text-grey small px-0"
+    (click)="onClickBookmark($event)"
+    >
+      <span>
+        <span>Save</span>
+        <span *ngIf="isBookmarked">d</span>
+      </span>
+      <i 
+      [iconPh]="'bookmark-' + (isBookmarked ? 'minus' : 'plus')"
+      class="large"
+      [ngClass]="{'text-success': isBookmarked}"
+      ></i>
+    </button>
+  </div> -->
+</div>
+
+<div 
+*ngIf="isFormCommentShown" 
+[@expandVertical]
+class="overflow-hidden"
+>
+  <div class="pt-10p">
+    <form-item-comment
+    [controller]="f.body"
+    [disabled]="isUploading"
+    [option]="{hideCancel: true}"
+    (onSubmit)="onSubmitComment()"
+    ></form-item-comment>    
+  </div>
+
+  <card-item-comment [post]="post"></card-item-comment>
+</div>

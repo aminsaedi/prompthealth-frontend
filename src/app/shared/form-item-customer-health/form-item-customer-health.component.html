@@ -1,17 +1,29 @@
 <ng-container *ngIf="mode == 'form'">
-  <ul class="list-unstyled checkbox-group-root" *ngIf="disabled">
+  <ul 
+  *ngIf="disabled"
+  class="list-unstyled checkbox-group-root" 
+  [ngClass]="{inline: _option.showInlineWhenDisabled, 'block-with-zero-margin': _option.showBlockWithZeroMarginWhenDisabled}"
+  >
     <ng-container *ngFor="let item of selectionList; let i = index;">
-      <li *ngIf="getFormArray('root').controls[i].value">
-        {{item.label}}
+      <li 
+      *ngIf="getFormArray('root').controls[i].value"
+      [attr.data-separator]="_option.inlineSeparator"
+      class="body1"
+      >
+        <span>{{item.label}}</span>
   
         <ul 
         *ngIf="getFormArray('root').controls[i].value && item.child"
-        class="checkbox-group-sub pl-3 list-unstyled"
-        [ngClass]="{col2: col2}"
+        class="checkbox-group-sub list-unstyled"
+        [ngClass]="{col2: col2, inline: _option.showInlineSubWhenDisabled, 'block-with-zero-margin': _option.showBlockSubWithZeroMarginWhenDisabled, 'pl-3': !_option.removeIndentSub}"
         >
           <ng-container *ngFor="let itemSub of item.child; let j = index;">
-            <li *ngIf="getFormArray(item.id).controls[j].value">
-              {{itemSub.label}}
+            <li 
+            *ngIf="getFormArray(item.id).controls[j].value"
+            [attr.data-separator]="_option.inlineSeparator"
+            [ngClass]="(_option.fontSmallSub ? 'body2' : 'body1')"
+            >
+              <span>{{itemSub.label}}</span>
             </li>
           </ng-container>
         </ul>
@@ -58,19 +70,23 @@
 <ul class="tags-horizontal m-0 list-unstyled d-flex flex-nowrap" *ngIf="mode == 'tag' && data && data.length > 0">
   <ng-container *ngFor="let item of selectionList; let i = index;">
     <li *ngIf="getFormArray('root').controls[i].value"
-    class="main text-nowrap rounded mr-3 position-relative"
+    class="main text-nowrap rounded mr-3 position-relative border-primary"
     >
-      <span class="px-3">{{item.label}}</span>
-      <label class="btn m-0" [for]="item.id"><i class="fas fa-times"></i></label>
+      <span class="px-2 body-small">{{item.label}}</span>
+      <label class="btn btn-icon small py-1 m-0 text-primary-dark bg-primary-light" [for]="item.id">
+        <i iconPh="cross"></i>
+      </label>
       <input [id]="item.id" type="checkbox" class="d-none" [formControl]="getFormArray('root').controls[i]" (change)="onChange()">
     </li>
     <ng-container *ngIf="item.child">
       <ng-container *ngFor="let itemSub of item.child; let j = index">
         <li *ngIf="getFormArray(item.id).controls[j].value"
-        class="main text-nowrap rounded mr-3 position-relative"
+        class="main text-nowrap rounded mr-3 position-relative border-primary"
         >
-          <span class="px-3">{{itemSub.label}}</span>
-          <label class="btn m-0" [for]="itemSub.id"><i class="fas fa-times"></i></label>
+          <span class="px-2 body-small">{{itemSub.label}}</span>
+          <label class="btn btn-icon small py-1 m-0 text-primary-dark bg-primary-light" [for]="itemSub.id">
+            <i iconPh="cross"></i>
+          </label>
           <input [id]="itemSub.id" type="checkbox" class="d-none" [formControl]="getFormArray(item.id).controls[j]" (change)="onChange()">
         </li>
       </ng-container>

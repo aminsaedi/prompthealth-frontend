@@ -1,0 +1,45 @@
+<div 
+class="audio-player"
+[ngStyle]="audioStyle"
+[ngClass]="audioClass"
+>
+  <div class="d-flex align-items-center">
+    <button
+    class="btn btn-play-control"
+    (click)="togglePlayerState($event)"
+    [disabled]="!isPlayerReady"
+    >
+      <i [iconPh]="isPlayerPlaying ? 'pause' : 'play'"></i>
+    </button>
+
+    <div class="audio-progress-bar flex-grow-1 mx-15p">
+      <div class="bar"></div>
+      <div class="bar-overlay"
+      [ngStyle]="{width: currentTimePercent + '%'}"
+      ></div>
+      <ng-container>
+        <span class="label-audio-duration-current subtitle2 text-label">
+          {{currentTime | duration}}
+        </span>
+        <span class="label-audio-duration subtitle2 text-label">
+          {{duration | duration}}
+        </span>   
+      </ng-container>
+    </div>
+
+    <button
+    *ngIf="currentTime > 0"
+    class="btn btn-play-control btn-replay"
+    (click)="onClickReplay($event)"
+    >
+      <i iconPh="replay"></i>
+    </button>
+  </div>
+</div>
+
+<audio
+#audioPlayer
+class="d-none"
+>
+  <source [src]="_src" type="audio/wav">
+</audio>   

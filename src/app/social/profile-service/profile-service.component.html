@@ -1,0 +1,80 @@
+<div 
+*ngIf="!(profile && questionnaires)"
+class="mt-100p text-center"
+>
+  <loader></loader>
+</div>
+
+<div 
+*ngIf="profile && questionnaires"
+class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
+>
+  <div class="mb-30p">
+    <h6>Type of Provider:</h6>
+    <form-item-checkbox-group
+    id="type_of_provider"
+    label="Type of provider"
+    [data]="profile.allServiceId"
+    [selectionsByQuestionnaire]="questionnaires.typeOfProvider"
+    [disabled]="true"
+    [option]="optionFormCheckboxGroup"
+    ></form-item-checkbox-group>
+  </div>
+
+  <div class="mb-30p">
+    <h6>Treatment Modalities:</h6>
+    <form-item-checkbox-group
+    id="treatment_modality"
+    label="Treatment modality"
+    [data]="profile.allServiceId"
+    [selectionsByQuestionnaire]="questionnaires.treatmentModality"
+    [disabled]="true"
+    [option]="optionFormCheckboxGroup"
+    ></form-item-checkbox-group>
+  </div>
+
+  <div class="mb-30p">
+    <h6>Health Status:</h6>
+    <form-item-customer-health
+    type="detail"
+    [data]="profile.allServiceId"
+    [selections]="questionnaires.customerHealth.answers"
+    [disabled]="true"
+    [col2]="false"
+    [option]="optionNestedFormCheckboxGroup"
+    ></form-item-customer-health>  
+  </div>
+
+  <div class="mb-30p">
+    <h6>Service Delivery:</h6>
+    <form-item-checkbox-group
+    id="service_delivery"
+    label="Service delivery"
+    [data]="profile.serviceOfferIds"
+    [selectionsByQuestionnaire]="questionnaires.serviceDelivery"
+    [disabled]="true"
+    [option]="{showBlockWithZeroMarginWhenDisabled: true}"
+    ></form-item-checkbox-group>
+
+    <p class="body2 text-placeholder my-5p " *ngIf="profile.seeOtherRegion">
+      ** This practitioner can't see patients who are out of {{profile.state}}
+    </p>
+
+    <p 
+    *ngIf="profile.provideVirtual"
+    class="body2 text-placeholder my-5p" 
+    >
+      ** Virtual/Online services may not be available to all locations. Please inquire the service provider for confirmation.
+    </p>
+  </div>
+
+  <div class="mb-30p">
+    <h6>Services:</h6>
+    <form-item-service
+    [data]="profile.allServiceId"
+    [disabled]="true"
+    [col2]="false"
+    [option]="optionNestedFormCheckboxGroup"
+    ></form-item-service>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+<div 
+class="bg-background"
+style="min-height: 100vh;"
+>
+  <div class="sticky-top" style="z-index: 90;">
+    <header-social></header-social>
+    <div 
+    *ngIf="user && !user.isApproved && this.isMessageBeingApprovedShownIfNeeded"
+    class="bg-line overflow-hidden"
+    (click)="onClickAlertBeingApproved()"
+    [@expandVertical]
+    >
+      <div class="container py-15p d-flex align-items-center justify-content-between">
+        <p class="mb-0">
+          Your profile is being reviewed by our administrator and won't be shown in 
+          <ng-container *ngIf="user.role == 'P'">product listing page</ng-container>
+          <ng-container *ngIf="user.role != 'P'">Expert Finder </ng-container>
+          just yet.
+        </p>
+        <i iconPh="cross"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt-30p pb-100p">
+    <router-outlet></router-outlet>
+  </div>  
+</div>
+
+<modal-event></modal-event>
+<modal-user-menu></modal-user-menu>
+
+
+
+<modal 
+id="login-menu" 
+#modalLoginMenu
+>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Login</span>
+    <button class="btn pr-0 btn-icon" (click)="modalLoginMenu.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+    <form-auth [staySamePage]="true" (changeState)="onChangeLoginState($event)"></form-auth>
+  </div>
+</modal>
+
+
+<modal
+id="more-menu"
+#modalMoreMenu
+>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">What items should be added?</span>
+    <button class="btn pr-0 btn-icon" (click)="modalMoreMenu.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+  </div>
+</modal>
+
+<modal
+id="post-menu"
+#modalPostMenu
+>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <div 
+    class="d-flex"
+    [ngClass]="(postTitleForModal ? 'algin-items-start' : 'align-items-center')"
+    >
+      <profile-image [image]="postForModal?.authorImage"></profile-image>
+      <div class="mx-3">
+        <span class="subtitle2 text-label">{{postForModal?.author}}</span>
+        <span 
+        *ngIf="postTitleForModal"
+        class="h5 h4-md mb-0 flex-grow-1 clamp-1line"
+        >{{postTitleForModal}}</span>
+      </div>
+    </div>
+    <button class="btn pr-0 btn-icon" (click)="modalPostMenu.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+    <ul class="list-unstyled">
+      <li>
+        <button class="btn btn-text-body px-0">Report as spam</button>
+      </li>
+      <li>
+        <button class="btn btn-text-body px-0">Mark as not interested</button>
+      </li>
+    </ul>
+  </div>
+</modal>
+
+<modal
+id="subscirbe-menu"
+#modalSubscribeMenu
+>
+
+</modal>

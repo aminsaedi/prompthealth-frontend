@@ -1,0 +1,163 @@
+@import '../../../assets/scss/variables';
+
+.editor-container {
+  margin: -30px -15px -100px;
+
+  @media (min-width: $breakpointMd) {
+    margin: 0;
+    border-radius: 8px;
+  }
+}
+
+.cover-image-container {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  border: dashed $colorGsLine;
+  background: $colorPrimaryLight;
+
+  &::after {
+    display: block;
+    content: '';
+    padding-top: 35%;
+  }
+
+  input[type=file] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+    
+  .cover-image-placeholder{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .cover-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .btn-remove-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}
+
+.form-control.title, 
+.form-control.description.simple {
+  background: $colorPrimaryLight;
+  border-color: rgba($colorPrimary, 0.12);
+
+  &:disabled {
+    background: $colorGsBackground;
+    color: $colorGsPlaceholder;
+  }
+
+  &::placeholder {
+    color: $colorGsPlaceholder;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1.5px $colorPrimary;
+  }
+
+  &.error {
+    background: $colorErrorLight;
+    border-color: $colorError;
+  
+    &:focus {
+      box-shadow: 0 0 0 1.5px $colorError;
+    }  
+  }
+
+  &.success {
+    background: $colorSuccessLight;
+    border-color: $colorSuccess;
+  
+    &:focus {
+      box-shadow: 0 0 0 1.5px $colorSuccess;
+    }
+  }
+}
+
+:host::ng-deep {
+  .form-control.description.simple {
+    .ql-toolbar {
+      display: none;
+    }
+
+    .ql-editor {
+      padding: 0;
+
+      &.ql-blank::before{
+        left: 0;
+      }
+    }
+  }
+
+  .form-control.description.rich {
+    padding: 0!important;
+
+    .ql-toolbar {
+      border: none;
+      border-bottom: solid 1px $colorGsLine;
+
+      @media (max-width: $breakpointLg - 1) {
+        overflow: auto;
+      }
+  
+      button {
+        @media (max-width: $breakpointLg - 1) {
+          margin: 10px;
+        }
+      }  
+    }
+  }
+
+  .ql-editor.ql-blank::before {
+    font-style: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: $colorGsPlaceholder;
+  }
+
+  .ql-snow .ql-editor img {
+    max-width: 80%;
+    @media (min-width: $breakpointMd) {
+      max-width: 60%;
+    }
+  }
+}
+
+.button-bottom-group {
+  margin: 0 -15px;
+  padding: 10px 15px 0;
+
+  @media(min-width: $breakpointMd) {
+    margin: 0 -20px;
+    padding: 10px 20px;
+    border-radius: 0 0 8px 8px;
+  }
+}
+
+.sticky-left {
+  position: sticky;
+  left: 0;
+}
+
+.modal-view{
+  .modal-drop {
+    backdrop-filter: none;
+  }
+}

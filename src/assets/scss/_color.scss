@@ -1,0 +1,121 @@
+@import './variables';
+
+.text-primary { color: $colorPrimary!important; }
+.text-primary-dark { color: $colorPrimaryDark; }
+.text-primary-light { color: $colorPrimaryLight; }
+
+.text-secondary { color: $colorSecondary!important; }
+.text-secondary-dark { color: $colorSecondaryDark; }
+.text-secondary-light { color: $colorSecondaryLight; }
+
+.text-yellow { color: $colorYellow; }
+.text-yellow-dark { color: $colorYellowDark; }
+.text-yellow-light { color: $colorYellowLight; }
+
+.text-error,
+.text-danger { color: $colorError; }
+.text-error-dark,
+.text-danger-dark { color: $colorErrorDark; }
+.text-error-light,
+.text-error-light { color: $colorErrorLight; }
+
+.text-success { color: $colorSuccess; }
+.text-success-dark { color: $colorSuccessDark; }
+.text-success-light { color: $colorSuccessLight; }
+
+.text-black,
+.text-dark { color: $colorGsBlack!important; }
+.text-body { color: $colorGsBody!important; }
+.text-label { color: $colorGsLabel; }
+.text-placeholder { color: $colorGsPlaceholder; }
+.text-line { color: $colorGsLine; }
+.text-background { color: $colorGsBackground; }
+.text-white
+.text-light { color: $colorGsWhite; }
+
+/** border color */
+.border-primary { border-color: $colorPrimary!important; }
+.border-primary-dark { border-color: $colorPrimaryDark!important; }
+.border-primary-light { border-color: $colorPrimaryLight!important; }
+.border-primary-light-dark { border-color: rgba($colorPrimary, 0.12)!important;}
+
+.border-secondary { border-color: $colorSecondary!important; }
+.border-secondary-dark { border-color: $colorSecondaryDark!important; }
+.border-secondary-light { border-color: $colorSecondaryLight!important; }
+
+.border-yellow { border-color: $colorYellow!important; }
+.border-yellow-dark { border-color: $colorYellowDark!important; }
+.border-yellow-light { border-color: $colorYellowLight!important; }
+
+.border-error,
+.border-danger { border-color: $colorError!important; }
+.border-error-dark,
+.border-danger-dark { border-color: $colorErrorDark!important; }
+.border-error-light,
+.border-error-light { border-color: $colorErrorLight!important; }
+
+.border-success { border-color: $colorSuccess!important; }
+.border-success-dark { border-color: $colorSuccessDark!important; }
+.border-success-light { border-color: $colorSuccessLight!important; }
+
+.border-black,
+.border-dark { border-color: $colorGsBlack!important; }
+.border-body { border-color: $colorGsBody!important; }
+// .border-label { border-color: $colorGsLabel!important; }
+// .border-placeholder { border-color: $colorGsPlaceholder!important; }
+.border-line { border-color: $colorGsLine!important; }
+.border-background { border-color: $colorGsBackground; }
+.border-white,
+.border-light { border-color: $colorGsWhite!important; }
+
+@media (min-width:$breakpointLg) {
+  .border-lg-line { border-color: $colorGsLine!important; }
+}
+
+
+/** background color */
+.bg-primary { background-color: $colorPrimary!important; }
+.bg-primary-dark { background-color: $colorPrimaryDark!important; }
+.bg-primary-light { background-color: $colorPrimaryLight!important; }
+
+.bg-secondary { background-color: $colorSecondary!important; }
+.bg-secondary-dark { background-color: $colorSecondaryDark!important; }
+.bg-secondary-light { background-color: $colorSecondaryLight!important; }
+
+.bg-yellow { background-color: $colorYellow!important; }
+.bg-yellow-dark { background-color: $colorYellowDark!important; }
+.bg-yellow-light { background-color: $colorYellowLight!important; }
+
+.bg-error,
+.bg-danger { background-color: $colorError!important; }
+.bg-error-dark,
+.bg-danger-dark { background-color: $colorErrorDark!important; }
+.bg-error-light,
+.bg-error-light { background-color: $colorErrorLight!important; }
+
+.bg-success { background-color: $colorSuccess!important; }
+.bg-success-dark { background-color: $colorSuccessDark!important; }
+.bg-success-light { background-color: $colorSuccessLight!important; }
+
+.bg-black,
+.bg-dark { background-color: $colorGsBlack!important; }
+.bg-body { background-color: $colorGsBody!important; }
+// .bg-label { background-color: $colorGsLabel!important; }
+// .bg-placeholder { background-color: $colorGsPlaceholder!important; }
+.bg-line { background-color: $colorGsLine; }
+.bg-background { background-color: $colorGsBackground!important;; }
+.bg-white,
+.bg-light { background-color: $colorGsWhite!important;; }
+
+.bg-facebook { background-color: $colorFacebook!important; }
+.bg-twitter { background-color: $colorTwitter!important; }
+.bg-instagram { background-color: $colorInstagram!important; }
+.bg-linkedin { background-color: $colorLinkedin!important; }
+.bg-tiktok { background-color: $colorTiktok!important; }
+.bg-youtube { background-color: $colorYoutube!important; }
+
+.color-dummy {
+  background: $colorGsPlaceholder;
+  color: $colorGsPlaceholder;
+  opacity: 0.2;
+}

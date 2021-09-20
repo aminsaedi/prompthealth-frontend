@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="row align-items-start mt-after-header">
+  <div class="row align-items-start my-40p">
     <section class="col-12 col-md-6 col-lg-7 col-xl-8 pt-3 position-sm-relative sticky-top d-md-flex flex-column mainview">
       <div class="d-lg-inline-flex align-items-center mb-3 mb-lg-0 flex-grow-0">
         <h2>{{profile?.name}}</h2>
@@ -29,7 +29,7 @@
       <!-- <div class="image-grid flex-grow-1" [ngClass]="'item-count-' + profile?.countProductImages">
         <ng-container *ngFor="let imageData of profile?.productImages; let i = index">
           <div class="position-relative" [ngClass]="'item-' + i" (click)="changeImageViewerTarget(i)">
-            <img class="rounded-10p" [src]="imageData.url" >
+            <img class="rounded-12p" [src]="imageData.url" >
           </div>  
         </ng-container>
       </div> -->
@@ -42,14 +42,14 @@
       <div class="sidebar-tab sticky-top blur pt-3">
         <ul class="list-unstyled d-flex text-center mb-0">
           <li *ngFor="let tab of ['About', 'Review']; let i = index;" 
-          class="py-3 text-ph-blue font-big"
+          class="py-3 text-primary h6"
           [ngClass]="{active: (currentTabIndex == i)}"
           (click)="changeTabIndex(i)"
           >{{tab}}</li>
         </ul> 
-        <div class="highlighter bg-ph-blue" [ngClass]="'index-' + currentTabIndex"></div>
+        <div class="highlighter bg-primary" [ngClass]="'index-' + currentTabIndex"></div>
       </div>
-      <div class="bg-lightblue rounded-10p mt-3 py-5 overflow-hidden position-relative">
+      <div class="bg-primary-light rounded-12p mt-3 py-5 overflow-hidden position-relative">
         <div *ngIf="currentTabIndex == 0">
           <div class="px-4">
             <div class="profile-image-container">
@@ -57,7 +57,7 @@
             </div>
             <h3 class="mt-3 mb-4">{{profile?.name}}</h3>
             <p class="whitespace-prewrap" [ngClass]="{'clamp-4line': isDescriptionClamped}">{{profile?.description}}</p>            
-            <button class="btn text-ph-blue pl-0 font-regular" (click)="toggleDescriptionLength()">
+            <button class="btn btn-text small pl-0" (click)="toggleDescriptionLength()">
               <u *ngIf="isDescriptionClamped">See full profile</u>
               <u *ngIf="!isDescriptionClamped">See less profile</u>
             </button>
@@ -66,60 +66,60 @@
           <table class="table table-borderless table-hover px-2 mt-3">
             <tbody>
               <tr *ngIf="profile?.address">
-                <td class="pl-4 text-ph-blue text-center"><i class="fas fa-map-marker-alt font-big"></i></td>
+                <td class="pl-4 subtitle1 text-center"><i iconPh="pin" class="large"></i></td>
                 <td class="text-left pl-0">{{profile.address}}</td>
               </tr>
               <tr *ngIf="profile?.phone">
-                <td class="pl-4 text-ph-blue text-center"><i class="fas fa-phone font-big"></i></td>
+                <td class="pl-4 subtitle1 text-center"><i iconPh="smartphone" class="large"></i></td>
                 <td class="text-left pl-0">{{profile.phone}}</td>
               </tr>
               <tr *ngIf="profile?.email">
-                <td class="pl-4 text-ph-blue text-center"><i class="far fa-envelope font-big"></i></td>
+                <td class="pl-4 subtitle1 text-center"><i iconPh="email" class="large"></i></td>
                 <td class="text-left pl-0"><a [href]="'mailto:' + profile.email" class="clamp-1line">{{profile.email}}</a></td>
               </tr>
               <tr *ngIf="profile?.website">
-                <td class="pl-4 text-ph-blue text-center"><i class="fas fa-globe font-big"></i></td>
+                <td class="pl-4 subtitle1 text-center"><i iconPh="globe" class="large"></i></td>
                 <td class="text-left pl-0"><a [href]="profile.website" target="_blank">{{profile.websiteLabel}}</a></td>
               </tr>
             </tbody>
           </table>
   
-          <ul *ngIf="profile?.service" class="list-unstyled d-flex flex-wrap justify-content-start mx-4">
+          <!-- <ul *ngIf="profile?.service" class="list-unstyled d-flex flex-wrap justify-content-start mx-4">
             <li *ngFor="let s of profile.service" 
-            class="text-ph-blue border-ph-blue p-2 mr-2 mb-3 font-weight-400 rounded-lg font-small"
+            class="btn btn-outline bg-primary-light text-primary small mr-2 mb-3"
             >{{s[0]}}</li>
-          </ul>
+          </ul> -->
   
           <table class="table table-borderless table-hover px-2 mt-3">
             <tbody>
               <tr *ngIf="profile?.coupon" class="font-weight-bold">
-                <td class="pl-4 text-ph-blue">Coupon</td>
+                <td class="pl-4 text-primary subtitle1">Coupon</td>
                 <td class="pl-0">{{profile.coupon}}</td>
               </tr>
               <tr *ngIf="profile?.sampleLink" class="font-weight-bold">
-                <td class="pl-4 text-ph-blue">Sample</td>
+                <td class="pl-4 text-primary subtitle1">Sample</td>
                 <td class="pl-0"><a [href]="profile.sampleLink" target="_blank">{{profile.sampleLinkLabel}}</a></td>
               </tr>
               <tr *ngIf="profile?.affiliateLink" class="font-weight-bold">
-                <td class="pl-4 text-ph-blue">Affiliate</td>
+                <td class="pl-4 text-primary subtitle1">Affiliate</td>
                 <td class="pl-0"><a [href]="profile.affiliateLink" target="_blank">{{profile.affiliateLinkLabel}}</a></td>
               </tr>
               <tr *ngIf="profile?.trialLink" class="font-weight-bold">
-                <td class="pl-4 text-ph-blue">Trial</td>
+                <td class="pl-4 text-primary subtitle1">Trial</td>
                 <td class="pl-0"><a [href]="profile.trialLink" target="_blank">{{profile.trialLinkLabel}}</a></td>
               </tr>
             </tbody>
           </table>
   
           <div class="text-center mx-4" *ngIf="profile?.signupURL">
-            <a class="btn btn-ph-blue rounded w-100 font-regular" [href]="profile.signupURL" target="_blank">Sign up</a>
+            <a class="btn btn-primary w-100" [href]="profile.signupURL" target="_blank">Sign up</a>
           </div>
   
           <div class="share-menu-container" *ngIf="profile">
             <button-share
             facebook twitter linkedin pinterest email
             label=""
-            btnClass="btn font-big color-inherit"
+            btnClass="btn btn-icon color-inherit"
             menuPosition="right"
             [url]="urlCurrent"
             [title]="'Check out our favorite product ' + profile?.name" 
@@ -140,13 +140,13 @@
               <div class="d-flex flex-nowrap align-items-start mb-2">
                 <img class="user" [src]="r.profile_photo_url" alt="">
                 <div class="ml-2 mb-1 flex-grow-1">
-                  <span class="font-weight-400">{{r.author_name}}</span><br>
+                  <span class="subtitle1">{{r.author_name}}</span><br>
                   <star-rate [rate]="r.rating" size="small" margin="narrow"></star-rate>
                 </div>
               </div>
-              <p class="font-small">{{r.text}}</p>
-              <div class="text-right font-small">
-                {{r.relative_time_description}}
+              <p class="body2">{{r.text}}</p>
+              <div class="text-right body-small">
+                <span class="opacity-60pc">{{r.relative_time_description}}</span>
                 <img class="badge-google" src="/assets/img/logo-google.png" alt="" width="30">
               </div>
             </li>

@@ -41,15 +41,18 @@
     <div class="max-w-1200 button-group">
       <div class="row justify-content-between">
         <div class="col-5 col-md-3">
-          <button class="btn rounded btn-lg btn-block" *ngIf="currentIdx != 0" type="button"
+          <button class="btn btn-outline btn-block" *ngIf="currentIdx != 0" type="button"
             (click)="onClickNavigation('back')">Back</button>
         </div>
         <div class="d-none d-md-block col-md-1"></div>
         <div class="col-5 col-md-3">
-          <button class="btn rounded btn-lg btn-block" (click)="onClickNavigation('next')">
-            <span *ngIf="currentIdx == data.length - 1">Submit</span>
-            <span *ngIf="currentIdx < data.length - 1">Next</span>
+          <button *ngIf="currentIdx < data.length - 1" class="btn btn-outline btn-block" (click)="onClickNavigation('next')">
+            Next
           </button>
+          <button *ngIf="currentIdx == data.length - 1" class="btn btn-primary btn-block" (click)="onClickNavigation('next')">
+            Submit
+          </button>
+
         </div>
         <div class="d-none d-md-block col-md-5"></div>
       </div>

@@ -1,169 +1,34 @@
-<section class="heightHF-100 pt-4 pb-4">
-  <div class="container">
-    <h2 class="text-center ttle-bott-bor mb-5">
-      Frequently Asked Questions (FAQ)
-    </h2>
+<section class="container my-50p my-md--100p">
+  <div class="row justify-content-center">
+    <div class="col-12 col-xl-10">
+      <h2 class="h3 h2-md mb-70p text-center">
+        Frequently Asked Questions
+      </h2>
 
-    <div class="accordion mt-4" id="accordionExample">
-      <div class="card border-0 shadow-sm overflow-hidden rounded-sm mb-2">
-        <div
-          id="headingOne"
-          class="card-header bg-transparent align"
-          type="button"
-          data-toggle="collapse"
-          data-target="#collapseOne"
-          aria-expanded="true"
-          aria-controls="collapseOne"
-        >
-          <i class="fa fa-plus"></i>
-          <i class="fa fa-minus"></i>
-          How does PromptHealth work?
-        </div>
-
-        <div
-          id="collapseOne"
-          class="collapse show"
-          aria-labelledby="headingOne"
-          data-parent="#accordionExample"
-        >
-          <div class="card-body">
-            It is easy. Both users and providers sign up and enter their
-            information and get matched with each other.
-          </div>
-        </div>
-      </div>
-      <div class="card border-0 shadow-sm overflow-hidden rounded-sm mb-2">
-        <div
-          id="headingTwo"
-          class="card-header collapsed bg-transparent"
-          type="button"
-          data-toggle="collapse"
-          data-target="#collapseTwo"
-          aria-expanded="false"
-          aria-controls="collapseTwo"
-        >
-          <i class="fa fa-plus"></i>
-          <i class="fa fa-minus"></i>
-          How does the payment work?
-        </div>
-
-        <div
-          id="collapseTwo"
-          class="collapse"
-          aria-labelledby="headingTwo"
-          data-parent="#accordionExample"
-        >
-          <div class="card-body">
-            It is free for users. <br />
-
-            The basic profile for providers or centers is free to allow them to
-            test it out. <br />
-
-            The professional profile for providers and centers has a monthly
-            subscription fee with many features. <br />
-
-            The Enterprise option is for businesses with a large number of
-            users, providers or centers. This would be appropriate for
-            employers, medical centers and/or insurers. The price varies
-            depending on the requirements.
-          </div>
+      <div class="text-center mb-20p mb-md-40p">
+        <div class="d-inline-block">
+          <h4 class="h3-md">For Wellness Seeker</h4>
+          <div class="text-left">
+            <a 
+            routerLink="/plans" 
+            fragment="faq"
+            class="subtitle1">
+              <i iconPh="info"></i>
+              <span class="ml-5p">Are you a wellness provider?</span>
+            </a>
+          </div>  
         </div>
       </div>
 
-      <div class="card border-0 shadow-sm overflow-hidden rounded-sm mb-2">
-        <div
-          id="headingThree"
-          class="card-header collapsed bg-transparent"
-          type="button"
-          data-toggle="collapse"
-          data-target="#collapseThree"
-          aria-expanded="false"
-          aria-controls="collapseThree"
+      
+      <ul class="list-unstyled mb-0">
+        <li 
+        *ngFor="let faq of faqs;"
+        class="mb-20p"
         >
-          <i class="fa fa-plus"></i>
-          <i class="fa fa-minus"></i>
-          What does the user get?
-        </div>
-
-        <div
-          id="collapseThree"
-          class="collapse"
-          aria-labelledby="headingThree"
-          data-parent="#accordionExample"
-        >
-          <div class="card-body">
-            The users get connected with a curated list of providers based on
-            selected criteria and location. They can navigate the site as a
-            guest without signing but will not have access to all the features
-            on the dashboard. Once they sign in, they get access to a dashboard
-            to send and receive notifications and have access to rewards.
-          </div>
-        </div>
-      </div>
-      <div class="card border-0 shadow-sm overflow-hidden rounded-sm mb-2">
-        <div
-          id="headingFour"
-          class="card-header collapsed bg-transparent"
-          type="button"
-          data-toggle="collapse"
-          data-target="#collapseFour"
-          aria-expanded="false"
-          aria-controls="collapseFour"
-        >
-          <i class="fa fa-plus"></i>
-          <i class="fa fa-minus"></i>
-          What does the provider get?
-        </div>
-
-        <div
-          id="collapseFour"
-          class="collapse"
-          aria-labelledby="headingFour"
-          data-parent="#accordionExample"
-        >
-          <div class="card-body">
-            The providers get connected with the users based on selected
-            criteria and location. Free profiles will just have basic
-            information. The professional profiles will give access to a
-            dashboard to send and receive notifications and offer rewards to
-            enhance engagement.
-          </div>
-        </div>
-      </div>
-      <div class="card border-0 shadow-sm overflow-hidden rounded-sm mb-2">
-        <div
-          id="headingFive"
-          class="card-header collapsed bg-transparent"
-          type="button"
-          data-toggle="collapse"
-          data-target="#collapseFive"
-          aria-expanded="false"
-          aria-controls="collapseFive"
-        >
-          <i class="fa fa-plus"></i>
-          <i class="fa fa-minus"></i>
-          What are the cancellation and refund policies?
-        </div>
-
-        <div
-          id="collapseFive"
-          class="collapse"
-          aria-labelledby="headingFiive"
-          data-parent="#accordionExample"
-        >
-          <div class="card-body">
-            The membership plans are billed on a monthly basis. You may cancel
-            at any time. You’ll continue to have access until the end of your
-            payment date. Since this is a membership plan, there will be no
-            refund for the current billing period.
-          </div>
-        </div>
-      </div>
+          <faq-item [data]="faq"></faq-item>
+        </li>
+      </ul>
     </div>
-
-
-
-
-
   </div>
 </section>

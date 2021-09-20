@@ -1,0 +1,24 @@
+<div
+class="p-20p rounded-12p border border-line faq-item overflow-hidden"
+[ngClass]="{active: data.opened}"
+(click)="open()"
+>
+  <h6 class="h5-md mb-0 d-flex justify-content-between"> 
+    <span>{{data.q}}</span>
+    <button
+    class="btn btn-icon pr-0 py-0"
+    (click)="toggleState($event)"
+    >
+      <i 
+      iconPh="chevron-down"
+      class="text-placeholder"
+      ></i>
+    </button>
+  </h6>
+  <div
+  *ngIf="data.opened" 
+  [@expandVertical]
+  >
+    <p class="mb-0 pt-10p" [innerHTML]="data.a"></p>
+  </div>
+</div>

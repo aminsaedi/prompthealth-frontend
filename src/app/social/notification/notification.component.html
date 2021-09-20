@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row align-items-start">
+    <section class="col-12 col-md-2 col-xl-2">
+      <div class="text-md-right">
+        <button 
+        class="btn btn-text-body small px-0 pt-0" 
+        (click)="goback()"
+        >
+          <i iconPh="arrow-left"></i>
+          <span>Back</span>
+        </button>
+      </div>
+    </section>
+    <section class="col-12 col-md-10 col-xl-8">
+      <card-notification>
+        <div 
+        *ngIf="notifications.length > 0"
+        class="text-center py-30p"
+        >
+          <button 
+          class="btn btn-text-grey small"
+          [disabled]="isUploading || notifications.length == 0"
+          (click)="archiveAllNotifications()"
+          >Archive all notifications</button>
+        </div>
+      </card-notification>
+    </section>        
+  </div>
+</div>

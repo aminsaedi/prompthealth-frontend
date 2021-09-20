@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SharedService } from '../../../shared/services/shared.service';
+import { ProfileManagementService } from '../profile-management.service';
 
 @Component({
   selector: 'app-videos-blogs',
@@ -11,7 +12,7 @@ import { SharedService } from '../../../shared/services/shared.service';
   styleUrls: ['./videos-blogs.component.scss']
 })
 export class VideosBlogsComponent implements OnInit {
-  userId: '';
+  userId = '';
   videosForm: FormGroup;
   videosList;
   addMore = false;
@@ -27,6 +28,7 @@ export class VideosBlogsComponent implements OnInit {
     private sharedService: SharedService,
     private toastrService: ToastrService,
     private _router: Router,
+    private _profileService: ProfileManagementService,
     private _uService: UniversalService
   ) {
   }
@@ -38,30 +40,35 @@ export class VideosBlogsComponent implements OnInit {
       title: 'Manage videos | PromptHealth',
     });
 
-    this.userId = JSON.parse(localStorage.getItem('user'))._id;
+    const profile = this._profileService.user;
+    this.userId = profile._id;
+    this.videosList = profile.videos;
+    this.totalItems = this.videosList.length;
+
     this.videosForm = this._fb.group({
       data: this._fb.array([this.initItemRows()])
     });
-    this.getProfileDetails();
+    // this.getProfileDetails();
   }
   get url(): FormArray {
     return this.videosForm.get('url') as FormArray;
   }
-  getProfileDetails() {
-    const path = `user/get-profile/${this.userId}`;
-    this.sharedService.get(path).subscribe((res: any) => {
-      if (res.statusCode === 200) {
-        this.videosList = res.data[0].videos;
-        this.totalItems = this.videosList.length;
+  // getProfileDetails() {
+  //   const path = `user/get-profile/${this.userId}`;
+  //   this.sharedService.get(path).subscribe((res: any) => {
+  //     if (res.statusCode === 200) {
+  //       console.log(res);
+  //       this.videosList = res.data[0].videos;
+  //       this.totalItems = this.videosList.length;
 
-      } else {
-        this.sharedService.checkAccessToken(res.message);
-      }
-    }, err => {
+  //     } else {
+  //       this.sharedService.checkAccessToken(res.message);
+  //     }
+  //   }, err => {
 
-      this.sharedService.checkAccessToken(err);
-    });
-  }
+  //     this.sharedService.checkAccessToken(err);
+  //   });
+  // }
   initItemRows() {
     return this._fb.group({
       // list all your form controls here, which belongs to your form array
@@ -86,12 +93,15 @@ export class VideosBlogsComponent implements OnInit {
     this.sharedService.post(payload, path).subscribe((res: any) => {
       this.sharedService.loader('hide');
       if (res.statusCode === 200) {
-        this.getProfileDetails();
+        console.log(res);
+        // this.getProfileDetails();
         this.toastrService.success(res.message);
         this.addMore = false;
-        this.videosForm = this._fb.group({
-          data: this._fb.array([this.initItemRows()])
-        });
+        this.videosList = this.videosList.concat(this.videosForm.value.data);
+
+        // this.videosForm = this._fb.group({
+        //   data: this._fb.array([this.initItemRows()])
+        // });
         // this._router.navigate(['/home']);
       } else {
         this.toastrService.error(res.message);

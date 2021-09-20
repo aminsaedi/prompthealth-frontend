@@ -28,7 +28,7 @@
                 <a href="{{ video.url }}" target="_blank">{{ video.url }}</a>
             </td>
             <td>
-                <button (click)="deleteVideo(video._id)" class="btn btn-danger"><i class="fa fa-minus-square" aria-hidden="true"></i></button>
+                <button (click)="deleteVideo(video._id)" class="btn btn-error small"><i iconPh="trash" class="large"></i></button>
             </td>
         </tr>
     </tbody>
@@ -67,8 +67,8 @@
           </div>
         </div>
         <div class="form-group col-sm-2">
-            <button type="button" (click)="addNewRow()" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-            <button *ngIf="i >= 1" (click)="deleteRow(i)" class="btn btn-danger"><i class="fa fa-minus-square" aria-hidden="true"></i></button>
+            <button type="button" (click)="addNewRow()" class="btn btn-primary small"><i iconPh="plus" class="large"></i></button>
+            <button *ngIf="i >= 1" (click)="deleteRow(i)" class="btn btn-error small"><i iconPh="trash" class="large"></i></button>
         </div>
       </div>
     </div>

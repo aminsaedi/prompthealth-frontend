@@ -1,7 +1,76 @@
-:host{
+@import "../../../assets/scss/variables";
+
+.input-group{
   font-size: 16px;
+
+  color: $colorGsBlack;
+  background: $colorPrimaryLight;
+  border: solid 1px rgba($colorPrimary, 0.12); 
+
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  
+  &:focus-within {
+    box-shadow: 0 0 0 1.5px $colorPrimary;
+  }
+
+  &.error {
+    background: $colorErrorLight;
+    border-color: $colorError;
+  
+    &:focus-within {
+      box-shadow: 0 0 0 1.5px $colorError;
+    }
+  }
+
+  &.success {
+    background: $colorSuccessLight;
+    border-color: $colorSuccess;
+
+    &:focus-within {
+      box-shadow: 0 0 0 1.5px $colorSuccess;
+    }
+  }
+  
+  &.transparent{
+    border-color: transparent!important;
+    background-color: transparent!important;
+    &:focus-within {
+      box-shadow: none;
+    }
+  }
+
+  &.disabled {
+    background-color: $colorGsBackground!important;
+    border-color: $colorGsLine;
+  }
 }
 
-.form-control{
-  font-size: 1em;
+// input should be no style because parent (input-group) has style
+.form-control {
+  background: transparent;
+  border: none;
+
+  &:disabled {
+    color: $colorGsPlaceholder;
+  }
+
+  &::placeholder {
+    color: $colorGsPlaceholder;
+  }
+
+  &:focus {
+    box-shadow: none;
+  }
 }
+
+// for prepend / append
+.input-group-text { 
+  border: none;
+  background: transparent; 
+  padding: 0 0 0 15px;
+  
+  .input-group-append & {
+    padding: 0 15px 0 0;
+  }
+}
+

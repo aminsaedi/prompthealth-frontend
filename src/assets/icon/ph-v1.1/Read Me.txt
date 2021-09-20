@@ -1,0 +1,64 @@
+MESSAGE TO YUKI
+SHOULD CREATE FOLLOWING ICONS IN ICOMOON NEXT TIME
+1) icon-heart-outline
+2) icon-heart-filled
+3) icon-star-outline
+4) icon-star-filled
+5) icon-checkbox-square-outline
+6) icon-lightning-outline / icon-lightning-filled
+7) icon-text-block-outline
+8) icon-user-check-outline
+9) icon-cast-outline
+10) icon-thumbs-up-outline
+11) icon-verified-outline
+12) icon-file-outline
+13) icon-note-text-outline
+14) icon-info-outline
+
+MESSAGE FROM YUKI
+
+EXAMPLE:
+ex) 
+<i class="icon-chevron-right text-danger">
+  <span class="path1"></span>
+  <span class="path2"></span>
+</i>
+
+** most icon needs path1 and path2 in i tag.
+** you can set font color and size adding class to i tag.
+
+
+VERSION HISTORY:
+[1.1]
+added following new icons.
+* category icon - mood (mood/mental health)
+* social icons
+* finances (see assets in figma)
+* grid (see assets in figma)
+* security (see assets in figma)
+* images (see assets in figma)
+* editor (see assets in figma)
+* playlist-plus, shuffle, soundwave in audiovisual (see assets in figma)
+
+
+
+
+
+TO ME:
+BEFORE RELEASE, I SHOULD DO FOLLOWING
+  DELETE ALL COLOR SETTING IN CSS FILE FOR BETTER USE CASE.
+  you can use this regEx to delete all color setting 
+  ^\s*color:\s.+;\s*\n
+
+
+
+
+
+
+Open *demo.html* to see a list of all the glyphs in your font along with their codes/ligatures.
+
+To use the generated font in desktop programs, you can install the TTF font. In order to copy the character associated with each icon, refer to the text box at the bottom right corner of each glyph in demo.html. The character inside this text box may be invisible; but it can still be copied. See this guide for more info: https://icomoon.io/#docs/local-fonts
+
+You won't need any of the files located under the *demo-files* directory when including the generated font in your own projects.
+
+You can import *selection.json* back to the IcoMoon app using the *Import Icons* button (or via Main Menu → Manage Projects) to retrieve your icon selection.

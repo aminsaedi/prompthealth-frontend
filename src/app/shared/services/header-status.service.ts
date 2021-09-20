@@ -31,6 +31,13 @@ export class HeaderStatusService {
      this.emitHeaderStatus('levelMenuSm', i);
    }
 
+   hideShadow() {
+     this.emitHeaderStatus('isShadowShown', false);
+   }
+   showShadow() {
+     this.emitHeaderStatus('isShadowShown', true);
+   }
+  
    setPriceType(type: PriceType) {
      this.emitHeaderStatus('priceType', type);
    }

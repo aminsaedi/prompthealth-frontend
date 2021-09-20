@@ -1,0 +1,31 @@
+@import  '../../../assets/scss/variables';
+
+.selections {
+  z-index: 10;
+  max-height: 200px;
+  overflow: auto;
+  li {
+    a, 
+    span {
+      display: inline-block;
+      padding: 12px 15px;
+
+      &.active {
+        background-color: $colorPrimaryLight;
+        color: $colorPrimaryDark !important;
+      }
+    }
+
+    a:hover {
+      background-color: $colorPrimaryLight;
+      color: $colorPrimaryDark !important;     
+    }
+  }
+
+  .sub li {
+    a,
+    span {
+      padding: 12px 15px 12px 25px;
+    }
+  }
+}

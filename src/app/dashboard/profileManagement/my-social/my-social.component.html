@@ -4,9 +4,9 @@
   </p>
 </ngx-spinner>
 
-<h3 class="mb-4">
+<h4 class="mb-4">
   SNS Account
-</h3>
+</h4>
 
 <section class="mb-5">
   <!-- <p class="font-big mb-3">Please tap icon and add your social media account to show on your profile.</p> -->
@@ -87,7 +87,7 @@
     name="url"
     label="URL"
     autocapitalize="off"
-    aria-autocomplete="url"
+    autocomplete="url"
     type="url"
     [controller]="form"
     [submitted]="isSubmitted"
@@ -95,7 +95,7 @@
     
     <div class="mt-3">
       <input class="btn btn-primary mr-3" type="submit" [value]="isActive(target.type) ? 'Update' : 'Add'">
-      <button *ngIf="isActive(target.type)" class="btn btn-secondary" type="button" (click)="onClear()">Clear</button>
+      <button *ngIf="isActive(target.type)" class="btn btn-error" type="button" (click)="onClear()">Clear</button>
     </div>
   </form>
 </section>

@@ -153,7 +153,7 @@ const routes: Routes = [
     // canActivate: [RegisterQuestionnaireCompleteGuard,],
   },
 
-  { path: 'my-posts', loadChildren: () => PostManagerModule },
+  // { path: 'my-posts', loadChildren: () => PostManagerModule },
 
 
   { path: 'subscriptionplan',   redirectTo: '/plans' },

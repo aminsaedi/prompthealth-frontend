@@ -36,7 +36,7 @@ export class ButtonShareComponent implements OnInit {
       case 'twitter'   : link = 'https://twitter.com/share?url=' + this.url; break;
       case 'linkedin'  : link = 'https://www.linkedin.com/sharing/share-offsite/?url=' + this.url; break;
       case 'pinterest' : link = `https://www.pinterest.com/pin/create/button/?url=${this.url}&media=${this.media}&description=${this.text}`; break;
-      case 'envelope'  : link = `mailto:?subject=${this.title}&body=${this.text}%0D%0A%0D%0A${this.url}`; break;
+      case 'email'     : link = `mailto:?subject=${this.title}&body=${this.text}%0D%0A%0D%0A${this.url}`; break;
     }
     return link;
   }
@@ -58,8 +58,10 @@ export class ButtonShareComponent implements OnInit {
     if(this.email !== null) { this.socials.push(email); }
   }
 
-  onClickButton() {
-
+  onClickButton(e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
+    
     /** if mobile, show native action sheet */
     /** if desktop, show sharePalette */
     /** desktop is not good to use native action sheet, because people don't install social apps in desktop */
@@ -119,11 +121,11 @@ type WebShareOption = {
   url?: string,
 }
 
-type ShareType = 'facebook' | 'twitter' | 'pinterest' | 'linkedin' | 'envelope';
+type ShareType = 'facebook' | 'twitter' | 'pinterest' | 'linkedin' | 'email';
 type ShareItem = {id: ShareType, label: string};
 
 const facebook: ShareItem = {id: 'facebook', label: 'Facebook'};
 const twitter: ShareItem = {id: 'twitter', label: 'Twitter'};
 const pinterest: ShareItem = {id: 'pinterest', label: 'Pinterest'};
 const linkedin: ShareItem = {id: 'linkedin', label: 'LinkedIn'};
-const email: ShareItem = {id: 'envelope', label: 'Email'};
+const email: ShareItem = {id: 'email', label: 'Email'};

@@ -1,8 +1,3 @@
-:host {
-  font-size: 16px; 
-  line-height: 1.5em;
-}
-
 @mixin textGradient($c1, $c2){
   background: -webkit-linear-gradient(135deg, $c1 0%, $c2 100%);
   -webkit-background-clip: text;
@@ -20,10 +15,6 @@
   @include textGradient(#95b3ef, #6f3bef);
 }
 
-.text-dark-blue{
-  color: #213f7a;
-}
-
 .practitioner-name {
   min-width: 280px;
   white-space: pre-wrap;
@@ -31,15 +22,6 @@
   vertical-align: bottom;
 }
 
-@media (max-width: 768px){
-  h2 { font-size: 28px; }
-  h3 { font-size: 22px; }    
-}
-
-
-.ambassador-container {
-  top: 64px;
-}
 
 .input-link{
   position: relative;

@@ -1,23 +1,14 @@
-:host{
-  font-size: 16px;
-}
-
-h4{
-  font-size: 1em;
-  font-weight: 500;
-  margin-top: 12px;
-}
-
+@import '../../../assets/scss/variables';
 
 label.price-range{
-  font-size: 25px;
-  padding: 10px 15px;  
   &:first-child{ padding-left: 0; }
+  padding: 10px;
+  margin-right: 10px;
 
   i{
     color: #B1B1B1;
     &.active{ 
-      color: var(--ph-blue);
+      color: $colorPrimary;
       -webkit-text-stroke: 1px; 
     }
   }  

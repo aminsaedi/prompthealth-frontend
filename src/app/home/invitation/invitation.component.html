@@ -1,82 +1,67 @@
 <ng-container *ngIf="couponData">
-  <section class="container mt-5">
-    <h2 class="text-center">
+  <section class="container my-80p text-center">
+    <h2 class="h3 h2-md mb-50p">
       A Gift For You From Us
     </h2>
-    <div class="d-flex justify-content-center">
-
+    <div>
       <img class="img-thumbnail" style="max-width: 250px;" src="{{couponData.metadata.logo}}" alt="Coupon Logo"
         *ngIf="couponData.metadata.logo">
     </div>
+
+    <div class="w-100 mt-50p" style="max-width: 400px; margin: auto;">
+      <h4 class="text-center mb-3">
+        Sign up today and we offer you discount coupon.
+      </h4>
+      <card-coupon [couponData]="couponData"></card-coupon>    
+    </div>
   </section>
 
-  <section class="container" *ngIf="!user">
-    <div style="width: 100%; max-width: 400px; margin: 50px auto">
-      <ng-container *ngTemplateOutlet="coupon"></ng-container>
-    </div>
-
+  <section class="container my-50p" *ngIf="!user">
     <div class="mt-5 row justify-content-center">
       <div class="col-12 col-md-5 text-center mb-4">
         <h5>Do you have an account?</h5>
         <a [routerLink]="['/auth/login']" [queryParams]="{nextKeyword: 'buyplan'}"
-          class="btn btn-outline-primary w-100 font-regular">Log in and see plans</a>
+          class="btn btn-outline w-100">Log in and see plans</a>
       </div>
 
       <div class="col-12 col-md-5 text-center">
         <h5>You are not member yet?</h5>
         <div class="mb-3" *ngIf="isApplicableTo('SP') || isApplicableTo('C')">
-          <a routerLink="/plans" class="btn btn-outline-primary w-100 font-regular">Sign up as Practitioner</a>
+          <a routerLink="/plans" class="btn btn-primary w-100">Sign up as Practitioner</a>
         </div>
         <div class="mb-3" *ngIf="isApplicableTo('P')">
-          <a routerLink="/plans/product" [queryParams]="{nextKeyword: 'buyplan'}" class="btn btn-outline-primary w-100 font-regular">Sign up as Product/Service</a>
+          <a routerLink="/plans/product" [queryParams]="{nextKeyword: 'buyplan'}" class="btn btn-primary w-100">Sign up as Product/Service</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="container" *ngIf="user">
-    <div class="mb-5" style="width: 100%; max-width: 400px; margin: 50px auto;">
-      <ng-container *ngTemplateOutlet="coupon"></ng-container>
-    </div>
-
+  <section class="container my-50p" *ngIf="user">
     <div *ngIf="(user.roles == 'U' || !isApplicableTo(user.roles)); then messageClient; else messageProfessional"></div>
     <ng-template #messageClient>
-
-      <p class="text-center font-big">
+      <p class="text-center subtitle1">
         This coupon is not applicable for your user type.<br>
         Would you like to have another account to use the coupon?
       </p>
 
       <div class="row flex-column justify-content-center align-items-center">
         <div class="col-12 col-md-5 mb-3" *ngIf="isApplicableTo('SP') || isApplicableTo('C')">
-          <button class="btn btn-outline-primary w-100 font-regular" (click)="logoutAndSignup('SP')">Sign up as Practitioner</button>
+          <button class="btn btn-primary w-100" (click)="logoutAndSignup('SP')">Sign up as Practitioner</button>
         </div>
         <div class="col-12 col-md-5" *ngIf="isApplicableTo('P')">
-          <button class="btn btn-outline-primary w-100 font-regular" (click)="logoutAndSignup('P')">Sign up as Product/Service</button>
+          <button class="btn btn-primary w-100" (click)="logoutAndSignup('P')">Sign up as Product/Service</button>
         </div>
 
         <div class="my-3">OR</div>
         <ng-container *ngTemplateOutlet="messageProfessional"></ng-container>
-
       </div>
-
     </ng-template>
+
     <ng-template #messageProfessional>
-      <div class="text-center">
+      <div class="text-center mb-30p">
         <a [routerLink]="[(user.roles == 'P') ? '/plans/product' : '/plans']"
-          class="btn btn-outline-primary font-regular">See our plans</a>
+          class="btn btn-outline">See our plans</a>
       </div>
     </ng-template>
   </section>
 </ng-container>
-
-<ng-template #coupon>
-  <h4 class="text-center mb-3">
-    <!-- Sign up today and take an additional {{couponData.percent_off}}% off any PromptHealth plan -->
-    Sign up today and we offer you discount coupon.
-    <!-- You have a coupon!<br>
-    Use it on our great premium plans today -->
-  </h4>
-
-  <card-coupon [couponData]="couponData"></card-coupon>
-</ng-template>

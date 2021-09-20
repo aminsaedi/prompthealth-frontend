@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { validators } from 'src/app/_helpers/form-settings';
@@ -24,9 +24,12 @@ export class FormPractitionerServiceComponent implements OnInit {
 
   public form: FormGroup;
   public isSubmitted: boolean = false;
+  // public questionnaireMap: {[k: string]: Questionnaire}; 
   public selectionsCustomerHealth: Questionnaire;
   public selectionsTreatmentModality: CheckboxSelectionItem[];;
   public selectionsTypeOfProvider: CheckboxSelectionItem[];
+  public selectionsInsuranceType: CheckboxSelectionItem[] = selectionsInsuranceType;
+  public selectionsSeeOtherRegion: CheckboxSelectionItem[] = selectionsSeeOtherRegion;
 
   get f(){ return this.form.controls; }
   getFormArray(name: string){ return this.form.controls[name] as FormArray; }
@@ -43,9 +46,13 @@ export class FormPractitionerServiceComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+
     await this._catService.getCategoryAsync()
 
     this.form = this._fb.group({
+      acceptsInsurance: new FormControl(this.data.acceptsInsurance || null),
+      seeOtherRegion: new FormControl(this.data.seeOtherRegion || null),
+
       service: new FormGroup({}, validators.service),
       treatmentModality: new FormArray([], validators.treatmentModality),
       typeOfProvider: new FormArray([], validators.typeOfProvider),
@@ -53,6 +60,7 @@ export class FormPractitionerServiceComponent implements OnInit {
     })
 
     const questionnaires = await this._qService.getProfileService(this.data.roles as ('SP' | 'C'));
+    // this.questionnaireMap = questionnaires;
     this.selectionsCustomerHealth = questionnaires.customerHealth;
 
     const selectionsTreatmentModality: CheckboxSelectionItem[] = [];
@@ -85,9 +93,11 @@ export class FormPractitionerServiceComponent implements OnInit {
 
     const services = [];
     this.formItemCheckboxGroupComponents.forEach(item=> {
-      item.getSelected().forEach(id=>{
-        services.push(id);
-      });
+      if(item.id.match(/treatmentModality|typeOfProvider/)) {
+        item.getSelected().forEach(id=>{
+          services.push(id);
+        });  
+      }
     });
     this.formServiceComponent.getSelected().forEach(id=>{
       services.push(id);
@@ -96,11 +106,26 @@ export class FormPractitionerServiceComponent implements OnInit {
       services.push(id);
     });
 
-    const data = {
+    const data: IUserDetail = {
       _id: this.data._id,
       services: services,
+      acceptsInsurance: this.f.acceptsInsurance.value,
+      seeOtherRegion: this.f.seeOtherRegion.value,
     };
 
     this.submitForm.emit(data);
   }
 }
+
+const selectionsInsuranceType = [
+  {id: 'neither',   label: 'Not applicable',  value: null},
+  {id: 'private',   label: 'Private',         value: 'private'},
+  {id: 'insurance', label: 'Insurance',       value: 'insurance'},
+  {id: 'both',      label: 'Both',            value: 'both'},
+];
+
+const selectionsSeeOtherRegion = [
+  {id: 'state', label: 'Yes', value: null},
+  {id: 'no',    label: 'No',  value: 'state'},
+
+]

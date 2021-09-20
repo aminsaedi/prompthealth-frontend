@@ -1,0 +1,71 @@
+<section class="my-100p">
+  <div class="text-center">
+    <div 
+    class="d-inline-block border border-line p-15p p-md-30p rounded-12p bg-background"
+    style="width: 96vw; max-width: 600px;"
+    >
+      <ng-container *ngIf="centre && !isTaggedDone">
+        <h4 class="h3-md">You are joining the team</h4>
+        <div class="d-inline-block">
+          <profile-image [image]="centre.profileImage" [size]="120"></profile-image>
+          <div class="subtitle1 mt-10p">{{centre.name}}</div>  
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between mt-50p">
+          <a 
+          routerLink="/community/feed"
+          class="btn btn-text-grey mr-15p"
+          >Cancel</a>
+          <button 
+          class="btn btn-primary ml-15p"
+          (click)="onClickJoinTeam()"
+          >Yes, join the team</button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="isTaggedDone && isTaggedSuccess">
+        <h4 class="h3-md">Welcome to the team</h4>
+        <div class="d-flex justify-content-center">
+          <div style="flex: 0 0 48%; margin-right: 2%">
+            <div class="d-inline-block">
+              <profile-image [image]="centre.profileImage" [size]="120"></profile-image>
+            </div>
+            <div class="subtitle1">{{centre.name}}</div>  
+          </div>
+          <div style="flex: 0 0 48%; margin-left: 2%;">
+            <div class="d-inline-block ">
+              <profile-image [image]="user.profileImage" [size]="120"></profile-image>
+            </div>
+            <div class="subtitle1">{{user.name}}</div>  
+          </div>  
+        </div>  
+      </ng-container>
+
+      <ng-container *ngIf="isTaggedDone && errorMessageTagged">
+        <h4 class="h3-md">Hmm... Something went wrong</h4>
+        <p class="text-error mt-50p subtitle1">{{errorMessageTagged}}</p>
+        <a 
+        routerLink="/community/feed"
+        class="btn btn-text-grey"
+        ><u>Go back</u></a>
+      </ng-container>
+    </div>
+  </div>
+</section>
+
+
+
+<div 
+*ngIf="!!isLoading"
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Please wait...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

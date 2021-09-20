@@ -1,0 +1,92 @@
+<div 
+class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
+[ngClass]="{'shadow': !shorten}"
+>
+  <a 
+  [id]="'card-' + post._id" 
+  #anchor
+  style="top: -100px; position: absolute;"
+  ></a>
+
+  <ng-container *ngIf="_option.showLinkToDetail">
+    <a 
+    [routerLink]="[post.linkToPost]" 
+    class="text-body"
+    (click)="markCurrentPosition()"
+    >
+      <ng-container *ngTemplateOutlet="clickableArea"></ng-container>
+    </a>
+  </ng-container>
+  <ng-container *ngIf="!_option.showLinkToDetail">
+    <ng-container *ngTemplateOutlet="clickableArea"></ng-container>
+  </ng-container>
+
+  <div class="py-10p border-top border-line">
+    <card-item-toolbar #toolbar [post]="post"></card-item-toolbar>
+  </div>    
+</div>
+
+<ng-template #clickableArea>
+  <div>
+    <card-item-note 
+    *ngIf="post.isNote" 
+    [post]="post" 
+    [shorten]="shorten"
+    (onClickButton)="onClickButton($event)"
+    ></card-item-note>
+    
+    <card-item-event 
+    *ngIf="post.isEvent" 
+    [post]="post" 
+    [shorten]="shorten"
+    (onClickButton)="onClickButton($event)"
+    ></card-item-event>
+
+    <card-item-article 
+    *ngIf="post.isArticle" 
+    [post]="post" 
+    [shorten]="shorten"
+    (onClickButton)="onClickButton($event)"
+    ></card-item-article>
+
+    <div class="mb-10p">
+      <div #content
+      class="post-content"
+      [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
+      [innerHTML]="post.descriptionSanitized"
+      ></div>
+    </div>
+
+    <ul 
+    class="list-unstyled mb-10p" 
+    *ngIf="images"
+    >
+      <li 
+      *ngFor="let image of images" 
+      [ngClass]="shorten ? 'image-container-40pc rounded-12p overflow-hidden' : 'image-container'"
+      >
+        <img [src]="image" alt="">
+      </li>
+    </ul>
+
+    <div *ngIf="voice">
+      <audio-player [src]="voice"></audio-player>
+    </div>
+
+    <div
+    *ngIf="post.tags && !shorten && topics"
+    class="mt-20p mb-10p"
+    >
+      <!-- <h6 class="subtitle1 mb-5p">Topics</h6> -->
+      <div class="mb-0 list-unstyled topics">
+        <ng-container *ngFor="let item of topics">
+          <a
+          *ngIf="post.tags.includes(item._id)" 
+          class="body2 text-body rounded-pill mr-10p mb-10p border border-body d-inline-block"
+          style="padding: 2px 8px"
+          >{{item.item_text}}</a>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>

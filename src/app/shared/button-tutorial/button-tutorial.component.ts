@@ -11,7 +11,7 @@ export class ButtonTutorialComponent implements OnInit {
   @Input() label: string; /** label for button */
   @Input() title: string; /** title for modal  */
   @Input() type: TutorialType;
-  @Input() buttonClass: string = 'btn-outline-primary rounded-10p py-2 px-4';
+  @Input() buttonClass: string = 'btn-outline small';
 
   @ViewChild('videoPlayer') videoPlayer: ElementRef;
   @ViewChild('tutorialModal') public tutorialModal: ModalDirective;

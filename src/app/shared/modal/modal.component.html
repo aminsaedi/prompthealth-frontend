@@ -1,0 +1,14 @@
+<div class="modal-view" *ngIf="isShown">
+  <div 
+  class="modal-drop"
+  [ngClass]="{'disable-user-action': _option.disableCloseByClickingDrop}"
+  (click)="goBack()"
+  ></div>
+  <div 
+  class="modal-body"
+  [ngStyle]="bodyStyle"
+  [ngClass]="{'expanded-sm': _option.expandedSm}"
+  >
+    <ng-content></ng-content>
+  </div>
+</div>

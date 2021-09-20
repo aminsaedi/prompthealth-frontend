@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class RegistrationComponent implements OnInit {
     private route: ActivatedRoute,
     private _router: Router,
     private _uService: UniversalService,
-  ) { }
+    private _headerStatusService: HeaderStatusService,
+    ) { }
 
   ngOnInit() {
     this.route.params.subscribe(param => {
@@ -34,6 +36,15 @@ export class RegistrationComponent implements OnInit {
 
     this._uService.setMeta(this._router.url, {
       title: 'Registration | PromptHealth',
-    })
+    });
   }
+
+  changeHeaderShadowStatus(isShown: boolean) {
+    console.log(isShown);
+    if(isShown) {
+      this._headerStatusService.showShadow();
+    } else {
+      this._headerStatusService.hideShadow();
+    }
+  }  
 }

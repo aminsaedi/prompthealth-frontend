@@ -5,6 +5,7 @@ import { ProfileManagementService } from '../profile-management.service';
 import { ToastrService } from 'ngx-toastr';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { pattern } from 'src/app/_helpers/pattern';
+import { IUserDetail } from 'src/app/models/user-detail';
 
 @Component({
   selector: 'app-wrapper',
@@ -17,7 +18,7 @@ export class WrapperComponent implements OnInit {
     private _managementService: ProfileManagementService,
     private _toastr: ToastrService,
   ) { }
-  public profile;
+  public profile: IUserDetail;
   public isPremium = false; /** if the user is vip or subscribe plans, true. */
   public isPhLinkFieldShown = false;
   public formPhListedLink: FormControl;
@@ -200,7 +201,7 @@ export class WrapperComponent implements OnInit {
         this.setListing(this.profile);
 
         const neverAskCompleteRegistration = localStorage.getItem('neverAskCompleteRegistration');
-        if (this.profile.questionnaireCompleted === false && neverAskCompleteRegistration !== 'true') {
+        if (this.profile.questionnaireCompleted === false && neverAskCompleteRegistration !== 'true' && this.profile.roles != 'U' && this.profile.roles != 'SA') {
           this.alertModal.show();
         }
       } catch (error) {
@@ -284,10 +285,17 @@ export class WrapperComponent implements OnInit {
             this.reviewTab(true),
           ];
           break;
+        case 'SA':
+          this.listing = [
+            this.profileTab(true),
+            this.passwordTab(true),
+            this.serviceTab(true),
+          ];
+          break;
         case 'SP':
           if (this.isPremium) {
             this.listing = [
-              this.myPostsTab(true),
+              // this.myPostsTab(true),
               this.performanceTab(true),
               this.profileTab(true),
               this.passwordTab(true),
@@ -305,7 +313,7 @@ export class WrapperComponent implements OnInit {
 
           } else {
             this.listing = [
-              this.myPostsTab(true),
+              // this.myPostsTab(true),
               this.profileTab(true),
               this.passwordTab(true),
               this.serviceTab(true),
@@ -324,7 +332,7 @@ export class WrapperComponent implements OnInit {
         case 'C':
           if (this.isPremium) {
             this.listing = [
-              this.myPostsTab(true),
+              // this.myPostsTab(true),
               this.performanceTab(true),
               this.profileTab(true),
               this.passwordTab(true),
@@ -344,7 +352,7 @@ export class WrapperComponent implements OnInit {
             this.listing.push(this.paymentTab(true));
           } else {
             this.listing = [
-              this.myPostsTab(true),
+              // this.myPostsTab(true),
               this.profileTab(true),
               this.passwordTab(true),
               this.serviceTab(true),
@@ -365,7 +373,7 @@ export class WrapperComponent implements OnInit {
 
         case 'P':
           this.listing = [
-            this.myPostsTab(true),
+            // this.myPostsTab(true),
             this.partnerProfileTab(true),
             this.passwordTab(true),
             this.partnerServiceTab(true),

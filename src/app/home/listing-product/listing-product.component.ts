@@ -33,7 +33,7 @@ export class ListingProductComponent implements OnInit {
     return p;
   }
 
-  public partners: Partner[];
+  public products: Partner[];
   public totalCount: number;
 
   public formSearch: FormControl;
@@ -54,12 +54,12 @@ export class ListingProductComponent implements OnInit {
   @HostListener ('window:resize') onWindowResize(){
     if(this.timer){ clearTimeout(this.timer); }
     this.timer = setTimeout(() => {
-      this.isViewSmall = (window.innerWidth < 768) ? true : false;
+      this.isViewSmall = (window.innerWidth < 992) ? true : false;
     }, 300);
   }
 
   async ngOnInit() {
-    this.isViewSmall = (window.innerWidth < 768) ? true: false; 
+    this.isViewSmall = (window.innerWidth < 992) ? true: false; 
     this._uService.setMeta(this._router.url, {
       title: 'Products and Services | PromptHealth',
       description: 'Discover our favorite innovative health apps, products and services. Find promo codes, free samples and reviews.',
@@ -70,21 +70,22 @@ export class ListingProductComponent implements OnInit {
     });
 
     this.formSearch = new FormControl();
-    this.getPartners();
+    this.getProducts();
   }
 
-  getPartners(): Promise<boolean> {
+  getProducts(): Promise<boolean> {
+    this.products = null;
     return new Promise((resolve, reject) => {
       let path = 'partner/get-all';
       this._sharedService.loader('show');
       this._sharedService.postNoAuth(this.searchData.json, path).subscribe((res: any) => {
         this._sharedService.loader('hide');
         if(res.statusCode == 200){
-          const partners = [];
+          const products = [];
           res.data.data.forEach((data: any) => {
-            partners.push(new Partner(data));
+            products.push(new Partner(data));
           });
-          this.partners = partners;
+          this.products = products;
           this.totalCount = res.data.total;
           resolve(true);
         }else{
@@ -98,16 +99,16 @@ export class ListingProductComponent implements OnInit {
     });
   }
 
-  sortPartners(data: {id: PartnerSortByType, isDesc: boolean}){
+  sortProducts(data: {id: PartnerSortByType, isDesc: boolean}){
     this.searchData.setValue('sortBy', data.id);
-    this.getPartners();
+    this.getProducts();
   }
 
   onApplyFilter(listing: boolean = true){
     this.searchData.setValue('services', this.formItemServiceComponent.getSelected());
     this.hideFilter();
     if(listing){
-      this.getPartners();
+      this.getProducts();
     }
   }
 
@@ -116,7 +117,7 @@ export class ListingProductComponent implements OnInit {
     this.formItemServiceComponent.reset();
     this.hideFilter();
     if(listing){
-      this.getPartners();
+      this.getProducts();
     }
   }
 
@@ -125,7 +126,7 @@ export class ListingProductComponent implements OnInit {
 
   onSearchSet(){
     this.searchData.setValue('keyword', this.formSearch.value);
-    this.getPartners();
+    this.getProducts();
   }
 
   onChangeFilter(services: string[]){
@@ -158,7 +159,7 @@ export class ListingProductComponent implements OnInit {
 
   changePage(i: number){
     this.searchData.setValue('page', i);
-    this.getPartners();
+    this.getProducts();
   }
 }
 

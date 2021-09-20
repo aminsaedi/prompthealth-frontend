@@ -1,40 +1,56 @@
-<h5 class="mb-3">
-  <span *ngIf="authType == 'signin'">Sign in to PromptHealth</span>
-  <span *ngIf="authType == 'signup'">Create An Account</span>
-</h5>
-
 <section>
-  <a class="btn btn-google w-100 mb-2 font-weight-bold" (click)="signinWith('google')"><i class="fab fa-google"></i>
-    Sign in with Google</a>
+  <button class="btn btn-google w-100 mb-3 small"
+  (click)="signinWith('google')"
+  >
+    <i iconPh="google" class="mr-2"></i>
+    <span>Sign in with Google</span>
+  </button>
 
-  <a class="btn btn-facebook w-100 mb-2 font-weight-bold" (click)="signinWith('facebook')"><i
-      class="fab fa-facebook-square"></i> Sign in with Facebook</a>
+  <a class="btn btn-facebook w-100 mb-2 small" 
+  (click)="signinWith('facebook')"
+  >
+    <i iconPh="facebook" class="mr-2"></i>
+    <span>Sign in with Facebook</span>
+  </a>
   <hr />
 </section>
 
 <section>
   <form [formGroup]="form" (ngSubmit)="signinEmail()">
+    <div 
+    *ngIf="authType == 'signup'"
+    class="mb-3"
+    >
+      <label class="subtitle2">You are...</label>
+      <form-item-input 
+      name="type" 
+      type="text" 
+      [disabled]="true"
+      [controller]="formRole"
+      ></form-item-input>
+      
+    </div>
     <div class="mb-3">
-      <label>Email Address <span class="text-danger">*</span></label>
+      <label class="subtitle2">Email Address <span class="text-danger">*</span></label>
       <form-item-input name="email" type="email" label="Email Address" placeholder="Enter your email"
         autocomplete="email" autocapitalize="off" [submitted]="isSubmitted" [controller]="f.email"></form-item-input>
     </div>
 
     <div class="mb-3">
-      <label>Password <span class="text-danger">*</span></label>
+      <label class="subtitle2">Password <span class="text-danger">*</span></label>
       <form-item-input name="password" label="Password" type="password" placeholder="Enter your password"
         [autocomplete]="(authType == 'signin') ? 'current-password' : 'new-password'" [submitted]="isSubmitted"
         [controller]="f.password"></form-item-input>
     </div>
 
     <div class="mb-3" *ngIf="authType == 'signup'">
-      <label>Confirm Password <span class="text-danger">*</span></label>
+      <label class="subtitle2">Confirm Password <span class="text-danger">*</span></label>
       <form-item-input name="confirmPassword" label="Password" type="password" placeholder="Confirm your password"
         autocomplete="new-password" [submitted]="isSubmitted" [controller]="f.confirm_password"></form-item-input>
     </div>
 
     <div class="mb-3" *ngIf="authType == 'signup'">
-      <label>
+      <label class="subtitle2">
         How did you hear about us?
         <!-- <span class="text-danger">*</span> -->
       </label>
@@ -43,27 +59,38 @@
     </div>
 
     <div class="mb-3" *ngIf="authType == 'signup'">
-      <form-item-checkbox class="font-small" name="t_c" label="I agree to the terms of service and privacy policy"
-        [controller]="f.t_c"></form-item-checkbox>
-      <form-item-errors [controller]="f.t_c" label="Agreement" [submitted]="isSubmitted"></form-item-errors>
+      <form-item-checkbox
+      label="I agree to the <a href='/terms' target='_blank'>terms of service</a> and <a href='/terms' target='_blank'>privacy policy</a>"
+      [controller]="f.t_c"
+      ></form-item-checkbox>
+      <form-item-errors
+      [controller]="f.t_c"
+      label="Agreement"
+      [submitted]="isSubmitted"
+      ></form-item-errors>
     </div>
 
     <div class="mb-2">
-      <input class="btn btn-success w-100" type="submit" [value]="(authType == 'signin') ? 'Sign In' : 'Sign Up'">
+      <input 
+      class="btn btn-primary w-100"
+      type="submit"
+      [disabled]="isLoading"
+      [value]="(authType == 'signin') ? 'Sign In' : 'Sign Up'"
+      >
     </div>
-
-    <div class="text-right font-small mb-3" *ngIf="authType == 'signin'">
-      <a [routerLink]="['/auth/forgot-password']" class="text-primary font-weight medium">Forgot Password?</a>
+ 
+    <div class="text-right mb-3" *ngIf="authType == 'signin'">
+      <a [routerLink]="['/auth/forgot-password']" class="btn btn-text-black small pr-0">Forgot Password?</a>
     </div>
 
     <div *ngIf="authType == 'signin'">
       <hr>
-      <a [routerLink]="['/auth/registration/U']" class="btn btn-outline-secondary w-100">Create Account</a>
+      <a [routerLink]="['/auth/registration/U']" class="btn btn-text small w-100">Create Account</a>
     </div>
 
     <div *ngIf="authType == 'signup'">
       <hr>
-      <a [routerLink]="['/auth/login']" class="btn btn-outline-secondary w-100">Have an account? Login</a>
+      <a [routerLink]="['/auth/login']" class="btn btn-text small w-100">Have an account? Login</a>
     </div>
   </form>
 </section>

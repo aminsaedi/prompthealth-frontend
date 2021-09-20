@@ -1,0 +1,25 @@
+<div 
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+  <div class="modal-body px-0 pt-30p pt-md-40p" style="width: 250px">
+    <div class="title-container">
+      <h5 class="h4-md text-center">{{label}}</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+
+    <div 
+    *ngIf="closable"
+    class="text-center mt-20p mb-10p"
+    >
+      <button
+      class="btn btn-text-grey small text-nowrap"
+      (click)="close()"
+      >
+        <u>Continue in background</u>
+      </button>
+    </div>
+  </div>
+</div>

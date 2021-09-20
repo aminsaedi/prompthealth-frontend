@@ -1,0 +1,19 @@
+@import '../../../../assets/scss/variables';
+
+.feature-table {
+  .col-title {
+    flex: 1 0 31%;
+
+    &.feature-item {
+      @media (max-width: $breakpointMd - 1) {
+        flex: 1 0 100%;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+    }
+  }
+
+  .col-item {
+    flex: 1 0 23%;
+  }
+}

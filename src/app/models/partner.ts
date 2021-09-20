@@ -49,13 +49,13 @@ export class Partner extends Professional implements IPartner{
   private _imageViewerDataProduct: ImageViewerData;
   private _createdAt: Date;
 
-  constructor(private data: any){
+  constructor(protected data: any){
     super(data._id, data);
     
     this._imageViewerDataProduct = {images: []};
     if(data.image){
       data.image.forEach((image: string) => {
-        this._imageViewerDataProduct.images.push( {url: this._baseURLImage + image} );
+        this._imageViewerDataProduct.images.push( {url: this._s3 + image} );
       });
     }
 

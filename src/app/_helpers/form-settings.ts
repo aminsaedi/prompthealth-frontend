@@ -1,4 +1,5 @@
 import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Blog } from '../models/blog';
 import { formatStringToDate } from './date-formatter';
 import { pattern } from './pattern';
 
@@ -11,6 +12,9 @@ export const minmax = {
   professionalTitleMax: 30,
   professionalOrganizationMax: 200,
   certificationMax: 200,
+  bookingNoteMax: 500,
+  referralMin: 10,
+  referralMax: 500,
 };
 
 
@@ -170,6 +174,22 @@ const validatorPatternURL = (): ValidatorFn => {
   };
 };
 
+const validatorNoteHasAtLeastOneField = (): ValidatorFn => {
+  return function validate(formGroup: FormGroup) {
+    const g = formGroup.controls;
+    let description = (g.description.value as string || '');
+    description = description.replace(/<[^>]*>?/gm, '').trim();
+
+    const image = g.images.value as {file: File|Blog, filename: string};
+    const voice = g.voice.value as string;
+    if(!description && !image && !voice) {
+      return {noteHasAtLeastOneField: true};
+    } else {
+      return null;
+    }
+  }
+}
+
 
 const validatorFirstNameClient = [Validators.maxLength(minmax.nameMax), Validators.required];
 const validatorLastNameClient = [Validators.maxLength(minmax.nameMax)];
@@ -187,7 +207,7 @@ const validatorExactPricingRequired = [Validators.pattern(pattern.price), Valida
 const validatorTextarea = [Validators.maxLength(minmax.textareaMax)];
 
 export const validators = {
-  profileImageProvider: validatorRequired,
+  profileImageProvider: [],
   nameCentre: validatorNameSP,
   nameProvider: validatorNameSP,
   namePartner: validatorNameSP,
@@ -202,6 +222,7 @@ export const validators = {
   addressClient: [],
   website: validatorUrl,
   bookingURL: validatorUrl,
+  socialLink: [Validators.required, validatorPatternURL()],
   professionalTitle: validatorProfessionalTitle,
   professionalOrganization: validatorProfessionalOrganization,
   certification: validatorCertification,
@@ -220,24 +241,43 @@ export const validators = {
 
   personalMatchGender: validatorRequired,
   personalMatchAgeRange: validatorRequired,
-
+  
+  passwordOld: [Validators.required],
   password: validatorPatternPassword(),
   accredit: validatorRequiredTrue,
 
+  /** booking form */
+  bookingName: validatorFirstNameClient,
+  bookingEmail: validatorEmail,
+  bookingPhone: [Validators.pattern(pattern.phone), Validators.minLength(minmax.phoneMin), Validators.maxLength(minmax.phoneMax), Validators.required],
+  bookingDateTime: [validatorPatternDateTime(), validatorComparePostEventStartTime(), Validators.required],
+  bookingNote: [Validators.maxLength(minmax.bookingNoteMax)],
+
+  /** contact form */
+  contactName: validatorFirstNameClient,
+  contactEmail: validatorEmail,
+  contactMessage: [Validators.maxLength(minmax.bookingNoteMax)],
 
   /** blog post for users */
   publishPostDescription: [Validators.required],
   publishPostEventStartTime: [Validators.required, validatorPatternDateTime(), validatorComparePostEventStartTime()],
   publishPostEventEndTime: [Validators.required, validatorPatternDateTime()],
   publishPostEventLink: [Validators.required, validatorPatternURL()],
+  publishPostEventAddress: [Validators.required],
   savePostTitle: [Validators.required],
   savePostDescription: [],
   savePostCategory: [Validators.required],
   savePostEventStartTime: [validatorPatternDateTime(), validatorComparePostEventStartTime()],
   savePostEventEndTime: [validatorPatternDateTime()],
   savePostEventLink: [validatorPatternURL()],
+  savePostEventAddress: [],
   savePostAuthorId: [Validators.required],
   savePostVideoLink: [Validators.pattern(pattern.urlVideo)],
   savePostPodcastLink: [Validators.pattern(pattern.urlPodcast)],
   savePost: [validatorComparePostEventEndTime()], // for formGroup validator
-};
+
+  /** social */
+  comment: [Validators.required],
+  note: [validatorNoteHasAtLeastOneField()],
+  referral: [Validators.required, Validators.maxLength(minmax.referralMax), Validators.minLength(minmax.referralMin)],
+}

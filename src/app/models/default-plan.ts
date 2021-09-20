@@ -1,3 +1,22 @@
+export type PlanTypePractitioner = 'basic' | 'provider' | 'centre';
+export type PlanTypeProduct = 'productBasic' | 'productAdvanced'
+export type PlanType = PlanTypePractitioner | PlanTypeProduct;
+
+export interface IPlanData {
+  id: string;
+  icon: string;
+  title: string;
+  subtitle: string;
+  label: string;
+  data: IDefaultPlan;
+}
+
+export interface IPlanFeatureData {
+  item: string;
+  targetPlan: PlanType[];
+  detail: string;
+}
+
 /** default plan data type fetched from server by calling the api 'user/get-plans' */
 export interface IDefaultPlan {
   _id: string;

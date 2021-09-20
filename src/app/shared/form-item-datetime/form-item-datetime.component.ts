@@ -1,14 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { formatDateTimeDataToDate, formatDateToDateTimeData, formatStringToDateTimeData } from 'src/app/_helpers/date-formatter';
 import { pattern } from 'src/app/_helpers/pattern';
-import { slideVerticalAnimation } from '../../_helpers/animations';
+import { expandVerticalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
 
 @Component({
   selector: 'form-item-datetime',
   templateUrl: './form-item-datetime.component.html',
   styleUrls: ['./form-item-datetime.component.scss'],
-  animations: [slideVerticalAnimation]
+  animations: [slideVerticalAnimation, expandVerticalAnimation]
 })
 export class FormItemDatetimeComponent implements OnInit {
 
@@ -18,16 +18,23 @@ export class FormItemDatetimeComponent implements OnInit {
   @Input() stepMinute = 15;
   @Input() stepHour = 1;
 
-  @Input() disabled = false;
-
-  public isPickerShown = false;
+  @Input() label: string;
+  @Input() disabled: boolean = false;
+  @Input() submitted: boolean = false;
 
   @Output() changeValue = new EventEmitter<Date>();
+
+  get sizeS() { return !!(!window || window.innerWidth < 768); }
+
+  public isPickerShown = false;
 
   public fDate: FormControl;
   public fTime: FormControl;
 
   public dateTime: DateTimeData;
+
+  @ViewChild('formBlur') private formBlur: ElementRef;
+
   constructor(
   ) { }
 
@@ -100,6 +107,9 @@ export class FormItemDatetimeComponent implements OnInit {
       this.initDateTimePicker(this.controller.value);
     }
     this.isPickerShown = true;
+    if(this.sizeS && this.formBlur.nativeElement) {
+      (this.formBlur.nativeElement as HTMLDivElement).focus();
+    }
   }
   hidePicker() { this.isPickerShown = false; }
 }

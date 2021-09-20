@@ -1,112 +1,97 @@
-<section
-  class="pt-6 pb-6 text-center bg-cover bg-overlay text-light"
-  style="background-image: url(assets/img/background3.jpg);"
->
-  <div class="container">
-    <h2 class="text-uppercase mb-3">Get in Touch</h2>
-    <p class="h4 font-weight-normal">
-      Please complete and submit the form below to contact us with your
-      questions, comments or requests.
-    </p>
+<section class="container my-80p text-center">
+  <h1 class="h2 h1-md">Get in touch</h1>
+  <div class="body1 text-label mb-30p">We are here for you! How can we help?</div>
+  <div class="d-inline-block">
+    <social-buttons></social-buttons>
+  </div>
+
+  <div class="row justify-content-center align-items-start mt-80p">
+    <div class="col-12 col-md-7 col-xl-6 text-left">
+      <form (ngSubmit)="onSubmit()">
+        <div class="mb-20p">
+          <label class="subtitle2 text-label">Your name</label>
+          <form-item-input
+          name="Name"
+          label="Name"
+          autocomplete="on"
+          [controller]="f.name"
+          [submitted]="isSubmitted"
+          ></form-item-input>
+        </div>
+        <div class="mb-20p">
+          <label class="subtitle2 text-label">Your email</label>
+          <form-item-input
+          type="email"
+          name="Email"
+          label="Email"
+          autocomplete="on"
+          autocapitalize="off"
+          [controller]="f.email"
+          [submitted]="isSubmitted"
+          ></form-item-input>
+        </div>
+        <div class="mb-20p">
+          <label class="subtitle2 text-label">Your message</label>
+          <form-item-textarea
+          name="Message"
+          label="Message"
+          autocomplete="off"
+          [controller]="f.message"
+          [submitted]="isSubmitted"
+          [max]="maxMessage"
+          ></form-item-textarea>
+        </div>
+        <div class="text-right">
+          <input 
+          type="submit" 
+          value="Send Message"
+          class="btn btn-primary"
+          [disabled]="isUploading"
+          >
+        </div>
+      </form>
+    </div>
+    <div class="col-12 col-md-5 col-xl-4">
+      <div class="position-relative ph-stat-container overflow-hidden rounded-12p">
+        <img 
+        class="position-absolute" 
+        src="assets/img/contact/contact.png" 
+        alt=""
+        >
+        <ul class="my-40p mx-15p mx-lg-30p list-unstyled text-left position-relative">
+          <li class="p-20p mb-10p rounded-8p bg-white">
+            <i iconPh="pin" class="large mr-5p"></i>
+            <span>Vancouver, BC</span>
+          </li>
+          <li class="p-20p mb-10p rounded-8p bg-white">
+            <i iconPh="smartphone" class="large mr-5p"></i>
+            <span>1-855-855-6885</span>
+          </li>
+          <li class="p-20p rounded-8p bg-white">
+            <i iconPh="mail" class="large mr-5p"></i>
+            <a href="mailto:info@prompthealth.ca" class="text-body">info@prompthealth.ca</a>
+          </li>
+        </ul>  
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="pt-4 pb-4 bg-light">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-7">
-        <h4 class="text-uppercase font-weight-bold">Contact Us</h4>
-        <hr />
-        <form (ngSubmit)="submit()" [formGroup]="contactForm">
-          <div class="form-row">
-            <div class="col-md-6 mb-3">
-              <label>Name <span class="text-danger">*</span></label>
-              <input
-                type="text"
-                class="form-control"
-                id="name"
-                formControlName="name"
-                name="name"
-                [ngClass]="{ 'is-invalid': submitted && ff.name.errors }"
-              />
-              <div *ngIf="ff.name.errors" class="invalid-feedback">
-                <div *ngIf="ff.name.errors.required">Name is required</div>
-              </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label>Email <span class="text-danger">*</span></label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                formControlName="email"
-                name="email"
-                [ngClass]="{ 'is-invalid': submitted && ff.email.errors }"
-              />
-              <div *ngIf="ff.email.errors" class="invalid-feedback">
-                <div *ngIf="ff.email.errors.required">Email is required</div>
-                <div *ngIf="ff.email.errors.email">
-                  Email must be a valid email address
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12 mb-3">
-              <label>Message <span class="text-danger">*</span></label>
-              <textarea
-                class="form-control"
-                id="message"
-                formControlName="message"
-                name="message"
-                [ngClass]="{ 'is-invalid': submitted && ff.message.errors }"
-                style="min-height: 150px;"
-              ></textarea>
-              <div *ngIf="ff.message.errors" class="invalid-feedback">
-                <div *ngIf="ff.message.errors.required">
-                  Message is required
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12 text-right mb-3">
-              <a [routerLink]="['/']" class="btn btn-secondary mr-2">
-                Back
-              </a>
-              <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-5">
-        <h4 class="text-uppercase font-weight-bold">Contact Detail</h4>
-        <hr />
-        <div class="check_ul1 h6 font-weight-normal">
-          <div class="mb-4">
-            <span>PromptHealth Inc<br /></span>
-          </div>
-          <div class="mb-4 fa fa-map-marker">
-            <span>Vancouver, BC<br /></span>
-          </div>
-
-          <div class="mb-4 fa fa-phone">
-            <span><a href="tel:1-855-855-6885" class="text-primary"> 1-855-855-6885</a></span>
-          </div>
-
-          <div class="mb-4 fa fa-envelope">
-            <span>
-              <a href="mailto:info@prompthealth.ca" class="text-primary"
-              >info@prompthealth.ca</a
-            ></span>
-          </div>
-        </div>
-
-        <hr />
-        <div class="mb-3 h4"> 
-          
-          <a class="text-linkedIn mr-2"  href="https://www.linkedin.com/login" target="_blank"><i class="fab fa-linkedin"></i></a>
-          <a class="text-linkedIn mr-2"  href="https://www.facebook.com/PromptHealth/?modal=admin_todo_tour" target="_blank" 
-            ><i class="fab fa-facebook-square"></i></a>
-          <a class="text-linkedIn mr-2" href="https://www.instagram.com/prompthealth/"><i class="fab fa-instagram-square"></i></a>
-        </div>
-      </div>
+<section class="container my-100p">
+  <div class="row justify-content-center">
+    <div class="col-12 col-xl-10">
+      <h2 class="h3 h2-md mb-50p text-center">
+        Frequently Asked Questions
+      </h2>
+      
+      <ul class="list-unstyled mb-0">
+        <li 
+        *ngFor="let faq of faqs;"
+        class="mb-20p"
+        >
+          <faq-item [data]="faq"></faq-item>
+        </li>
+      </ul>
     </div>
   </div>
 </section>

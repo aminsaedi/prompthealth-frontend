@@ -1,12 +1,17 @@
+@import '../../../assets/scss/variables';
+
 :host{
   display: inline-block;
   width: 100px;
 }
 
+.rounded-rect {
+  border-radius: 30%;
+}
+
 .image-container{
   position: relative;
   width: 100%;
-  border-style: solid;
 
   &::after{
     content: '';
@@ -26,10 +31,17 @@ img{
   background: white;
 }
 
-badge-verified {
+i {
   position: absolute;
   top: 84%;
   left: 89%;
   transform: translate(-50%, -50%);
   transform-origin: center;
+
+  ::ng-deep {
+    .path1::before{
+      color: $colorPrimaryLight;
+      opacity: 1;
+    }
+  }
 }

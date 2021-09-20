@@ -1,10 +1,38 @@
-/// TEMPORARY TODO: REMOVE LATER
-$colorPrimary: rgba(12, 116, 255, 1);
-/// TEMPORARY END
+@import "../../../assets/scss/variables";
 
-:host{
-  font-size: 16px;
+.checkbox-group.inline {
+    display: block;
+    li.item-disabled {
+        display: inline-block;
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+
+        &:not(:last-child)::after {
+            content: attr(data-separator);
+            white-space: pre;
+        }
+    }
+
+    li.item {
+        display: inline-block;
+        margin: 10px 20px 10px 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+
+        &:llast-child {
+            margin-right: 0;
+        }
+    }
 }
+
+.checkbox-group.block-with-zero-margin {
+    >li {
+      margin: 0;
+      flex: 0 0 100%;
+    }
+}
+
 
 .selectbox.active{ z-index: 15; }
 
@@ -57,7 +85,8 @@ ul.selectbox-selections{
     border: solid 1px #ced4da;
     position: absolute;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
+    max-height: 200px;
     background: white;
 
     top: calc(100% - 4px);
@@ -74,17 +103,32 @@ ul.selectbox-selections{
         }    
     }
 
-    li{ 
-        position: relative;
-        z-index: 1; 
-    }
+    // li{ 
+    //     position: relative;
+    //     z-index: 1; 
+    // }
 
-    li button{
-        width: 100%;
-        border-radius: 0;
-        &:focus{
-            color: white;
-            background: $colorPrimary;
+    // li button{
+    //     width: 100%;
+    //     border-radius: 0;
+    //     &:focus{
+    //         color: white;
+    //         background: $colorPrimary;
+    //     }
+    // }
+
+
+    li {        
+        button {
+            display: inline-block;
+            padding: 12px 15px;
+            width: 100%;
+    
+            &:hover, 
+            &:focus {
+                background-color: $colorPrimaryLight;
+                color: $colorPrimaryDark !important;     
+            }
         }
     }
 }

@@ -4,8 +4,8 @@ class="btn"
 [ngClass]="buttonClass"
 (click)="tutorialModal.show()"
 >
-  <i class="fas fa-video pr-2"></i>
-  {{label}}
+  <i iconPh="video-camera"></i>
+  <span>{{label}}</span>
 </button>
 
 <!-- Modal tutorial -->
@@ -32,11 +32,11 @@ aria-hidden="true"
         </h5>
         <button 
         type="button" 
-        class="close" 
+        class="close btn btn-icon" 
         aria-label="Close" 
         (click)="tutorialModal.hide()"
         >
-          <span aria-hidden="true">&times;</span>
+          <i iconPh="cross" class="large"></i>
         </button>
       </div>
       <div class="modal-body text-center pb-4">

@@ -1,0 +1,9 @@
+@import '../../../assets/scss/variables';
+
+.editor-container {
+  margin: -30px -15px -100px;
+
+  @media (min-width: $breakpointMd) {
+    margin: 0;
+  }
+}

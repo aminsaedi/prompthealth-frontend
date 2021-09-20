@@ -1,0 +1,45 @@
+<div class="d-flex align-items-start">
+  <profile-image size="42" [image]="userImage"></profile-image>
+
+  <div class="ml-10p flex-grow-1" *ngIf="user">
+    <div class="bg-background px-15p py-10p rounded-8p">
+      <quill-editor
+      [styles]="{minHeight: '24px', border: 'none', fontSize: '16px'}"
+      placeholder="Write your thought..."
+      [formControl]="controller"
+      >
+        <div quill-editor-toolbar></div>
+      </quill-editor>
+    </div>
+
+    <div class="mt-10p d-flex">
+      <button
+      *ngIf="!_option.hideCancel"
+      class="btn btn-text-grey small px-0 mr-20p"
+      (click)="onClickCancel($event)"
+      >Cancel</button>
+      
+      <input #submit
+      *ngIf="user"
+      type="submit"
+      class="btn btn-text-body small px-0"
+      value="Send"
+      (click)="onClickSubmit($event)"
+      [disabled]="controller.invalid || !user || disabled"
+      >
+    </div>
+  </div>
+
+  <div 
+  *ngIf="!user"
+  class="align-self-center ml-10p"
+  >
+    <button 
+    *ngIf="!user"
+    type="buttton"
+    class="btn btn-outline small"
+    (click)="onClickButtonLogin()"
+    >Login to comment</button>  
+  </div>
+</div>
+

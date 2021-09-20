@@ -1,0 +1,269 @@
+<header
+class="pt-5p py-md-0p border-bottom border-line bg-white"
+[ngClass]="{hide: !isHeaderShown}"
+style="z-index: 100;"
+>
+  <div class="container">
+    <div class="row justify-content-between align-items-center">
+      <div class="col-2 col-lg-3">
+        <div class="d-flex align-items-center">
+          <button 
+          class="btn btn-icon-grey small pl-0 d-xl-none"
+          (click)="showMenu('mobile')"
+          >
+            <i iconPh="menu" class="large"></i>
+          </button>
+    
+          <a routerLink="/community" class="d-flex flex-nowrap align-items-stretch">
+            <img class="d-lg-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20">
+            <img class="d-none d-lg-block logo-lg" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="30">
+          </a>
+        </div>    
+      </div>
+      <div class="col-10 col-lg-9">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="taxonomy-types">
+            <div class="d-none d-md-block">
+              <a routerLink="/community/feed" class="btn small px-0 py-20p subtitle1 mr-20p mr-xl-40p" #rla1="routerLinkActive" routerLinkActive [ngClass]="rla1.isActive ? 'btn-text active' : 'btn-text-grey'">Home</a>
+              <a routerLink="/community/article" class="btn small px-0 py-20p subtitle1 mr-20p mr-xl-40p" #rla2="routerLinkActive" routerLinkActive [ngClass]="rla2.isActive ? 'btn-text active' : 'btn-text-grey'">Article</a>
+              <a routerLink="/community/media" class="btn small px-0 py-20p subtitle1 mr-20p mr-xl-40p" #rla4="routerLinkActive" routerLinkActive [ngClass]="(rla4.isActive ? 'btn-text active' : 'btn-text-grey')">Media</a>
+              <a routerLink="/community/event" class="btn small px-0 py-20p subtitle1" #rla3="routerLinkActive" routerLinkActive [ngClass]="rla3.isActive ? 'btn-text active' : 'btn-text-grey'">Event</a>
+            </div>
+          </div>
+          <div class="d-flex flex-row-reverse flex-xl-row align-items-center">
+            <a class="btn btn-primary small ml-15p ml-xl-0p" routerLink="/practitioners">Find practitioners</a>
+            <button 
+            class="btn btn-icon-grey small ml-15p d-none d-md-block"
+            (click)="showMenu('search')"
+            >
+              <i iconPh="search" class="large"></i>
+            </button>
+            <div 
+            *ngIf="user" 
+            class="ml-5p d-none d-xl-block position-relative"
+            (clickOutside)="hideNotificationSummary()"
+            >
+              <button 
+              class="btn btn-icon-grey small position-relative"
+              (click)="toggleNotificationSummary()"
+              >
+                <ng-container *ngTemplateOutlet="notification"></ng-container>
+              </button>
+
+              <div 
+              *ngIf="isNotificationSummaryShown"
+              class="notification-summary-container shadow"
+              [@fade]
+              >
+                <card-notification [option]="{showOnly: 5}">
+                  <div class="text-center px-20p py-10p border-top border-line">
+                    <a
+                    class="btn btn-text small"
+                    routerLink="/community/notification"
+                    (click)="hideNotificationSummary()"
+                    >View all</a>
+                  </div>
+                </card-notification>
+              </div>
+            </div>
+            <div class="ml-xl-15p">
+              <profile-image 
+              *ngIf="user"
+              class="cursor-pointer"
+              [size]="sizeS ? 35 : 40"
+              [image]="userImage"
+              (click)="onClickProfileIcon()"
+              ></profile-image>
+              <button
+              *ngIf="!user" 
+              class="btn btn-text-grey small px-0"
+              (click)="onClickProfileIcon()"
+              >Login</button>
+            </div>
+            <!-- <button 
+            class="btn btn-icon-grey small d-none d-xl-inline-block ml-15p pr-0"
+            (click)="onClickButtonMore()"
+            >
+              <i iconPh="more-horiz" class="large"></i>
+            </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container d-flex justify-content-between align-items-end d-md-none">
+    <div class="taxonomy-types">
+      <a routerLink="/community/feed" class="btn small px-0 py-5p pb-5p subtitle1 mr-20p" #rla1="routerLinkActive" routerLinkActive [ngClass]="rla1.isActive ? 'btn-text active' : 'btn-text-grey'">Home</a>
+      <a routerLink="/community/article" class="btn small px-0 py-5p subtitle1 mr-20p" #rla2="routerLinkActive" routerLinkActive [ngClass]="rla2.isActive ? 'btn-text active' : 'btn-text-grey'">Article</a>
+      <a routerLink="/community/media" class="btn small px-0 py-5p subtitle1 mr-20p" #rla4="routerLinkActive" routerLinkActive [ngClass]="(rla4.isActive ? 'btn-text active' : 'btn-text-grey')">Media</a>
+      <a routerLink="/community/event" class="btn small px-0 py-5p subtitle1" #rla3="routerLinkActive" routerLinkActive [ngClass]="rla3.isActive ? 'btn-text active' : 'btn-text-grey'">Event</a>
+    </div>  
+    <button 
+    class="btn btn-icon-grey small pr-0 pb-5p mt-5p"
+    (click)="showMenu('search')"
+    >
+      <i iconPh="search" class="large"></i>
+    </button>
+  </div>
+</header>
+
+<div class="menu-slide-horizontal"
+*ngIf="isMenuMobileShown"
+[@slideHorizontalReverse]
+>
+  <div class="menu-drop"
+  (click)="hideMenu()"
+  ></div>
+  <div class="menu-body">
+    <div class="container d-flex justify-content-between align-items-center py-20p border-bottom">
+      <div class="d-flex align-items-center">
+        <profile-image size="40" [image]="userImage"></profile-image>
+        <div class="subtitle2 ml-10p">{{userName}}</div>
+      </div>
+
+      <ng-container *ngIf="user">
+        <button 
+        class="btn btn-icon-grey small position-relative"
+        (click)="navigateTo(['/community/notification'], true)"
+        >
+          <ng-container *ngTemplateOutlet="notification"></ng-container>
+        </button>
+      </ng-container>
+
+    </div>
+    <div class="container">
+      <list-item
+      *ngFor="let topic of topics"
+      [leading]="iconOf(topic)"
+      leadingClass="text-primary"
+      action="chevron-right"
+      actionClass="text-primary"
+      (onTap)="changeTopics(topic)"
+      >
+        <div class="subtitle2">{{topic.item_text}}</div>
+      </list-item>  
+
+      <div class="bg-primary p-20p rounded-8p mt-15p mb-50p">
+        <div class="text-white h5 mb-20p" style="font-weight: 400;">
+          Need a 
+          <b>Personal </b> 
+          Match?
+        </div>
+        <a routerLink="/personal-match" class="btn btn-secondary">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div 
+*ngIf="isMenuSearchShown"
+class="menu-slide-vertical"
+[@slideVerticalReverse]
+>
+  <div 
+  class="menu-drop"
+  (click)="hideMenu()"
+  ></div>
+  <div class="menu-body">
+    <div class="container py-25p py-md-15p">
+      <form (ngSubmit)="search(formSearch.value)">
+        <form-item-input
+        #searchbar
+        name="search"
+        prependIcon="search"
+        type="text"
+        placeholder="Search..."
+        [controller]="formSearch"
+        [option]="{transparent: true, showRemoveButton: true}"
+        ></form-item-input>  
+      </form>
+    </div>
+  </div>
+
+  <div 
+  *ngIf="searchResult"
+  [@expandVertical]
+  class="p-10p py-md-20p px-md-30p bg-white position-relative mt-0 mt-md-30p rounded-md-12p overflow-auto"
+  style="max-width: 500px; margin: auto; max-height: 500px;"
+  >
+    <div 
+    *ngIf="searchResult.users && searchResult.users.length > 0"
+    class="mb-10p"
+    >
+      <h6 class="mb-20p">Users</h6>
+      <ul class="list-unstyled">
+        <li 
+        *ngFor="let u of searchResult.users"
+        class="mb-15p"
+        >
+          <a 
+          [routerLink]="['/community/profile', u._id]"
+          [replaceUrl]="true"
+          class="d-flex align-items-start text-body"
+          (click)="resetSearch()"
+          >
+            <profile-image [image]="u.profileImage"></profile-image>
+            <div class="ml-10p">
+              <div class="subtitle2 clamp-1line">{{u.name}}</div>
+              <div class="body2 clamp-1line text-label">{{u.description}}</div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="searchResult.blogs && searchResult.blogs.length > 0">
+      <h6 class="mb-20p">Contents</h6>
+      <ul class="list-unstyled">
+        <li 
+        *ngFor="let b of searchResult.blogs"
+        class="mb-15p"
+        >
+          <a 
+          [routerLink]="[b.linkToPost]"
+          [replaceUrl]="true"
+          (click)="resetSearch()"
+          class="text-body d-flex align-items-start"
+          >
+            <div class="mr-10p">
+              <profile-image 
+              [image]="b._image ? b._image : (b.images && b.images.length > 0) ? b.images[0] : null"
+              [option]="{dummyClass: 'text-white', dummyIcon: (b.isNote ? 'comment-2' : b.isArticle ? 'file' : b.isEvent ? 'calendar' : null), dummyBgClass: (b.isNote ? 'bg-success' : b.isArticle ? 'bg-yellow' : b.isEvent ? 'bg-error' : 'bg-white')}"
+              ></profile-image>
+            </div>
+            <div>
+              <div
+              *ngIf="b.title"
+              class="subtitle2 clamp-1line"
+              >{{b.title}}</div>
+              <div
+              class="body2 clamp-2line"
+              [ngClass]="{'text-label': b.title}"
+              [innerHTML]="b.summary"
+              ></div>  
+            </div>
+          </a>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="mt-50p text-center" *ngIf="isSearchLoading">
+    <loader color="white"></loader>
+  </div>
+
+</div>
+
+
+<ng-template #notification>
+  <i iconPh="bell" class="large"></i>
+  <div 
+  *ngIf="numUnreadNotifications > 0"
+  class="notification-count bg-error text-white body-small rounded-4p"
+  >
+    <span>{{numUnreadNotifications}}</span>
+  </div>
+</ng-template>

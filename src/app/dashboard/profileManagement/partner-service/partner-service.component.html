@@ -4,14 +4,14 @@
   </p>
 </ngx-spinner>
 
-<h3 class="mb-3">
+<h4 class="mb-3">
   Service
   <button 
   *ngIf="profile"
   class="btn btn-primary pull-right" 
   (click)="toggleEdit()"
   >Edit</button>
-</h3>
+</h4>
 
 <div class="mt-5" *ngIf="profile">
   <form (ngSubmit)="update()">
@@ -23,7 +23,7 @@
     ></form-partner-service>
 
     <div class="mt-3 text-right" *ngIf="isEditing">
-      <input class="btn btn-ph-blue" type="submit" value="Update">
+      <input class="btn btn-primary" type="submit" value="Update">
     </div>
   </form>
 </div>
