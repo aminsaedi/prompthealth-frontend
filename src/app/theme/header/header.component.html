@@ -140,7 +140,7 @@
   </button>
   <ul class="menu-item font-weight-bold" [ngClass]="{before: (levelMenuSm > 0), after: (levelMenuSm < 0)}">
     <li><a class="text-blue" [routerLink]="'/'" (click)="hideMenu()">Home</a></li>
-    <li><a class="text-blue" (click)="scrollMenuSm(1)">Find Practioners</a></li>
+    <li><a class="text-blue" (click)="scrollMenuSm(1)">Find Practitioners</a></li>
     <li><a class="text-blue" [routerLink]="['/products']" (click)="hideMenu()">Products/Services</a></li>
     <li *ngIf="priceType != null">
       <a *ngIf="priceType == 'practitioner'" class="text-blue" [routerLink]="['/plans']" (click)="hideMenu()">Pricing</a>
