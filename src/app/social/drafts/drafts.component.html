@@ -25,6 +25,14 @@
           >
             <card-post-draft [post]="d"></card-post-draft>
           </ul>
+
+          <div class="text-center">
+            <button 
+            *ngIf="!isLoading && existsMore"
+            class="btn btn-text-body small"
+            (click)="fetchDrafts()"
+            >Load more</button>  
+          </div>
         </div>
       </ng-container>
 

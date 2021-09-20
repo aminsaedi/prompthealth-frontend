@@ -18,6 +18,8 @@ export class DraftsComponent implements OnInit {
 
   public drafts: ISocialPost[];
   public isLoading: boolean = false;
+  public existsMore: boolean = true;
+  public countPerPage = 20;
 
   constructor(
     private _location: Location,
@@ -26,26 +28,7 @@ export class DraftsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.isLoading = true;
-    const query = new SocialPostGetAllQuery({status: ['DRAFT']});
-    this._sharedService.get('note/get-by-author' + query.toQueryParamsString()).subscribe((res: IGetSocialContentsByAuthorResult) => {
-      if(res.statusCode == 200) {
-        this.drafts = res.data.map(item => 
-          item.contentType == 'ARTICLE' ? new SocialArticle(item) :
-          item.contentType == 'EVENT' ? new SocialEvent(item) :
-          item.contentType == 'NOTE' ? new SocialNote(item) :
-          new SocialPostBase(item)
-        );
-      } else {
-        console.log(res.message);
-        this.drafts = [];
-      }
-    }, error => {
-      console.log(error);
-      this.drafts = [];
-    }, () => {
-      this.isLoading = false;
-    });
+    this.fetchDrafts();
   }
 
   goback() {
@@ -57,4 +40,37 @@ export class DraftsComponent implements OnInit {
     }
   }
 
+  fetchDrafts() {
+    this.isLoading = true;
+    const query = new SocialPostGetAllQuery({
+      status: ['DRAFT'], 
+      contentType: ['ARTICLE', 'EVENT'], 
+      count: this.countPerPage,
+      page: this.drafts ? Math.ceil(this.drafts.length / this.countPerPage) + 1 : 1,
+    });
+    this._sharedService.get('note/get-by-author' + query.toQueryParamsString()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+      if(res.statusCode == 200) {
+        if(!this.drafts) {
+          this.drafts = [];
+        }
+        res.data.forEach(item => {
+          this.drafts.push(          
+            item.contentType == 'ARTICLE' ? new SocialArticle(item) :
+            item.contentType == 'EVENT' ? new SocialEvent(item) :
+            item.contentType == 'NOTE' ? new SocialNote(item) :
+            new SocialPostBase(item)
+          );
+        });
+        this.existsMore = !!(res.data.length == this.countPerPage);
+      } else {
+        console.log(res.message);
+        this.existsMore = false;
+      }
+    }, error => {
+      console.log(error);
+      this.existsMore = false;
+    }, () => {
+      this.isLoading = false;
+    });
+  }
 }
