@@ -22,6 +22,7 @@ export const environment = {
     FRONTEND_BASE: 'http://localhost:4200',
 
     APPLE_TEAM_ID: '8JS3W47P32',
+    GOOGLE_CLIENT_ID: '911768983583-lqklmh43d4mjclrkgbtbof9th5251po1.apps.googleusercontent.com',
     APPLE_CLIENT_ID: 'com.prompthealthtest',
 
     FACEBOOK_APP_ID: '373355990729755',

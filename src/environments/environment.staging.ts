@@ -20,6 +20,7 @@ export const environment = {
 
     APPLE_TEAM_ID: '8JS3W47P32',
     APPLE_CLIENT_ID: 'com.prompthealthtest',
+    GOOGLE_CLIENT_ID: '911768983583-lqklmh43d4mjclrkgbtbof9th5251po1.apps.googleusercontent.com',
     FACEBOOK_APP_ID: '373355990729755',
 
     disableAnalytics: true,
