@@ -47,6 +47,8 @@ export class DraftsComponent implements OnInit {
       contentType: ['ARTICLE', 'EVENT'], 
       count: this.countPerPage,
       page: this.drafts ? Math.ceil(this.drafts.length / this.countPerPage) + 1 : 1,
+      sortBy: 'createdAt',
+      order: 'asc',
     });
     this._sharedService.get('note/get-by-author' + query.toQueryParamsString()).subscribe((res: IGetSocialContentsByAuthorResult) => {
       if(res.statusCode == 200) {

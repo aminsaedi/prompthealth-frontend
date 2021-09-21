@@ -31,11 +31,15 @@
     </div>
 
 
-    <h4 class="mt-15p mb-20p">
-      <i *ngIf="post.isArticle" iconPh="file" class="mr-5p text-label"></i>
-      <i *ngIf="post.isEvent" iconPh="calendar" class="mr-5p text-label"></i>
-      <span>{{post.title}}</span>
-    </h4>
+    <div class="mt-15p mb-20p">
+      <h4>
+        <i *ngIf="post.isArticle" iconPh="file" class="mr-5p text-label"></i>
+        <i *ngIf="post.isEvent" iconPh="calendar" class="mr-5p text-label"></i>
+        <span>{{post.title}}</span>
+      </h4>
+      <div class="body2 text-label">{{post.createdAt | date:'dd.MM.yyyy'}}</div>
+    </div>
+
 
     <div class="mb-20p">
       <div #content
