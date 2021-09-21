@@ -179,6 +179,7 @@ export class EditorComponent implements OnInit {
 
   onInputTitle(e: InputEvent) {
     let val = this.f.title.value;
+
     // for android
     //// cannot detect insertParagraph sometime on android.
     //// if new paragraph is inserted, remove it and focus editor.
@@ -188,6 +189,13 @@ export class EditorComponent implements OnInit {
       if(this.contentEditor) {
         this.contentEditor.focus();
       }
+    }
+
+    // if user paste html contents, remove tags and format.
+    const regexTag = /<\/?[^>]+(>|$)/g;
+    if(val.match(regexTag)) {
+      val = val.replace(regexTag, '').replace(/\s{2,}/, " ").trim();
+      this.f.title.setValue(val);
     }
   }
 
@@ -209,7 +217,7 @@ export class EditorComponent implements OnInit {
 
   onChangeStartDateTime () {
     const start: Date = formatStringToDate(this.f.eventStartTime.value);
-    const end: Date = formatStringToDate(this.f.eventEndTime.value);
+    const end: Date = formatStringToDate(this.f.evetEndTime.value);
 
     if(start) {
       this.minDateTimeEventEnd = {
@@ -255,11 +263,12 @@ export class EditorComponent implements OnInit {
 
   async save(status: ISocialPost['status']) {
     this.isSubmitted = true;
+    this._editorService.format();
+
+    const publish = status == 'DRAFT' ? false : true;
+    this._editorService.validate(publish);
 
     const form = this._editorService.form;   
-    const publish = status == 'DRAFT' ? false : true;
-
-    this._editorService.validate(publish);
     if(form.invalid) {
       this._toastr.error('There are several items that require your attention.');
       return;
@@ -291,8 +300,6 @@ export class EditorComponent implements OnInit {
 
     // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
     const req =  this._sharedService.post(payload, 'blog/create');
-
-
     req.subscribe((res: any) => {
       this.isUploading = false;
       if(res.statusCode === 200) {
