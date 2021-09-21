@@ -94,6 +94,15 @@ export class EditorService {
     return this.form;
   }
 
+  format() {
+    const f = this.form.controls;
+    const title = f.title.value || '';
+    const desc = f.description.value || '';
+
+    f.title.setValue(title.replace(/\&nbsp;/g, ''));
+    f.description.setValue(desc.replace(/(<p><br><\/p>)+$/, ''));
+  }
+
   // for ARTICLE | EVENt 
   // (NOTE does not need validate)
   // TODO: add PROMO validation process
