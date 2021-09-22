@@ -2,21 +2,17 @@ export const environment = {
   production: false,
   config: {
     APP_NAME: 'Wellness',
-    // server
-    BASE_URL: 'https://s5319.prompthealth.ca/api/v1/',
+
+    BASE_URL: 'https://s5319.prompthealth.ca/',
     API_URL: 'https://s5319.prompthealth.ca/api/v1/',
 
-    // BASE_URL: 'https://prompthealth.ca:4200/',
-    // API_URL: 'https://prompthealth.ca:3000/api/v1/',
+    FRONTEND_BASE: 'https://s5319.prompthealth.ca',
+    BACKEND_BASE: 'http://127.0.0.1:3000', // used only for proxy
+
     stripeKey: 'pk_test_51HMSVQHzvKsIv7FcySpZJiaqJEpFyeV4T1fqzmTaIMKAt8VoIcSFNOoy0xChuIec3fotWjF00FAMMNI5MZRvr10X00NqhMqjLR',
     AWS_S3: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/',
-
-    //  BASE_URL: 'https://prompthealth.ca/',
-    //  //API_URL: 'https://api.prompthealth.ca/api/v1/',
-    //  API_URL: 'https://api.prompthealth.ca/api/v1/',
     // stripeKey: 'pk_live_51HMSVQHzvKsIv7FclCIgEYNrD4tlvjzZRTDx43Y54pVY3vjQ8MhFuOntQMY094MZ49bDzOdFf2A2tkYdTwSag9ij00xDUu4xnU'
 
-    FRONTEND_BASE: 'http://3.12.81.245:4200',
 
     APPLE_TEAM_ID: '8JS3W47P32',
     APPLE_CLIENT_ID: 'com.prompthealthtest',
