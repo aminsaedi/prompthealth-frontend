@@ -96,11 +96,16 @@ export class EditorService {
 
   format() {
     const f = this.form.controls;
-    const title = f.title.value || '';
-    const desc = f.description.value || '';
 
-    f.title.setValue(title.replace(/\&nbsp;/g, ''));
-    f.description.setValue(desc.replace(/(<p><br><\/p>)+$/, ''));
+    if(f.title) {
+      const title = f.title.value || '';
+      f.title.setValue(title.replace(/\&nbsp;/g, ''));
+    }
+
+    if(f.description) {
+      const desc = f.description.value || '';
+      f.description.setValue(desc.replace(/(<p><br><\/p>)+$/, ''));
+    }
   }
 
   // for ARTICLE | EVENt 
