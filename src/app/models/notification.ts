@@ -30,19 +30,15 @@ export class SocialNotification implements ISocialNotification{
 
   get linkToTarget() {
     let link = '';
-    if(this.data.type == 'tag-provider') {
-      link = '/dashboard/profilemanagement/add-professionals';
-    } else {
-      if(this.data.link) {
-        switch(this.data.type) {
-          case 'new-recommend':
-          case 'new-review':
-          case 'following': link = '/community/profile/' + this.data.link; break;
-          case 'new-note':
-          case 'new-article':
-          case 'new-event': link = '/community/content/' + this.data.link; break;
-        }      
-      }
+    switch(this.data.type) {
+      case 'following': link = '/community/followers'; break;
+
+      case 'tag-provider': link = '/dashboard/profilemanagement/add-professionals'; break;
+      case 'password-change': link = '/dashboard/profilemanagement/my-password'; break;
+
+      case 'new-review':
+      case 'new-recommend': link = '/community/profile/' + this.userId + '/review'; break;
+      default: link = this.data.link; break;
     }
     return link;
   }
@@ -51,6 +47,7 @@ export class SocialNotification implements ISocialNotification{
   private _image: string;
 
   constructor(private data: ISocialNotification) {
+
     if(data.type == 'password-change' || data.type == 'tag-provider') {
       this._image = '/assets/img/logo-sm-white.png';
     } else {
