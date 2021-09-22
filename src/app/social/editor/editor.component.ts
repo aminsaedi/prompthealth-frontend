@@ -217,7 +217,7 @@ export class EditorComponent implements OnInit {
 
   onChangeStartDateTime () {
     const start: Date = formatStringToDate(this.f.eventStartTime.value);
-    const end: Date = formatStringToDate(this.f.evetEndTime.value);
+    const end: Date = formatStringToDate(this.f.eventEndTime.value);
 
     if(start) {
       this.minDateTimeEventEnd = {
