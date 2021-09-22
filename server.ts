@@ -68,7 +68,7 @@ export function app() {
   }));
 
   /** api proxy */
-  const apiProxy = proxy('/api', {target: environment.config.BACKEND_BASE});
+  const apiProxy = proxy('/api', {target: environment.config.BACKEND_BASE, changeOrigin: false});
   server.use('/api', apiProxy);
 
   /** client side rendering */

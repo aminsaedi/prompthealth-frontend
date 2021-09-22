@@ -7,7 +7,8 @@ export const environment = {
     API_URL: 'https://api.prompthealth.ca/api/v1/',
 
     FRONTEND_BASE: 'https://prompthealth.ca',
-    BACKEND_BASE: 'https://prompthealth.ca:3001',
+    BACKEND_BASE: 'http://127.0.0.1:3001', // used only for proxy
+
 
     stripeKey: 'pk_live_51HMSVQHzvKsIv7FclCIgEYNrD4tlvjzZRTDx43Y54pVY3vjQ8MhFuOntQMY094MZ49bDzOdFf2A2tkYdTwSag9ij00xDUu4xnU',
     AWS_S3: 'https://prompt-images.s3.us-east-2.amazonaws.com/',

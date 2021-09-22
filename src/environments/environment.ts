@@ -11,7 +11,7 @@ export const environment = {
     API_URL: 'http://localhost:4200/api/v1/',
 
     FRONTEND_BASE: 'http://localhost:4200',
-    BACKEND_BASE: 'http://localhost:3000', // used only for proxy
+    BACKEND_BASE: 'http://127.0.0.1:3000', // used only for proxy
 
     stripeKey: 'pk_test_51HMSVQHzvKsIv7FcySpZJiaqJEpFyeV4T1fqzmTaIMKAt8VoIcSFNOoy0xChuIec3fotWjF00FAMMNI5MZRvr10X00NqhMqjLR',
     AWS_S3: 'https://prompt-images-test.s3.us-east-2.amazonaws.com/',
