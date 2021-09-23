@@ -50,23 +50,14 @@
             </div>
           </li> -->
 
-          <li 
-          *ngIf="!isLoggedIn" 
-          class="mx-15p d-none d-lg-block"
-          >
-            <a routerLink="/auth/login" class="text-body">Login</a> 
-            / 
+          <li *ngIf="!isLoggedIn" class="mx-15p d-none d-lg-block">
+            <a routerLink="/auth/login" class="text-body">Login</a>
+            /
             <a routerLink="/auth/registration/u" class="text-body">Register</a>
           </li>
 
-          <li 
-          *ngIf="isLoggedIn" 
-          class="mx-10p mx-lg-15p cursor-pointer"
-          >
-            <profile-image 
-            [image]="user?.profileImageFull"
-            (click)="onClickUserIcon()"
-            ></profile-image>
+          <li *ngIf="isLoggedIn" class="mx-10p mx-lg-15p cursor-pointer">
+            <profile-image [image]="user?.profileImageFull" (click)="onClickUserIcon()"></profile-image>
           </li>
           <li class="ml-10p ml-lg-15p">
             <a routerLink="/community/feed" class="btn btn-primary small">
@@ -90,10 +81,7 @@
   <div class="py-5p py-md-15p container">
     <div class="d-flex justify-content-end align-items-center">
       <div *ngIf="user" class="mx-10p">
-        <profile-image 
-        [image]="user?.profileImage"
-        (click)="onClickUserIcon()"
-        ></profile-image>
+        <profile-image [image]="user?.profileImage" (click)="onClickUserIcon()"></profile-image>
       </div>
       <a routerLink="/community" class="btn btn-primary small ml-10p">
         <i iconPh="users"></i>
@@ -110,15 +98,15 @@
     <div class="menu-inner">
       <div class="container">
         <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/')">
-          <div class="subtitle1" >Home</div>  
+          <div class="subtitle1">Home</div>
         </list-item>
 
         <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/practitioners')">
-          <div class="subtitle1">Find Practioners</div>  
+          <div class="subtitle1">Find Practitioners</div>
         </list-item>
 
         <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/about')">
-          <div class="subtitle1">About</div>  
+          <div class="subtitle1">About</div>
         </list-item>
 
         <!-- <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/products')">
@@ -126,7 +114,7 @@
         </list-item> -->
 
         <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/plans')">
-          <div class="subtitle1">Get listed</div>  
+          <div class="subtitle1">Get listed</div>
         </list-item>
 
         <!-- <list-item action="chevron-down" (onTap)="onClickGetListed()">
@@ -159,7 +147,7 @@
         </list-item>
       </div>
     </div>
-  </div> 
+  </div>
 </div>
 
 <modal-user-menu></modal-user-menu>
