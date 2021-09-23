@@ -231,7 +231,7 @@ export class HomeComponent implements OnInit {
   public blogs: Blog[];
   async getBlog() {
     const query = new SocialPostSearchQuery({count: 3, contentType: 'ARTICLE'});
-    this._sharedService.getNoAuth('/note/get-by-author/' + environment.config.idSA + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+    this._sharedService.getNoAuth('note/get-by-author/' + environment.config.idSA + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
       if(res.statusCode === 200) {
         const blogs = [];
         res.data.forEach(d => {

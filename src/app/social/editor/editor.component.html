@@ -101,6 +101,7 @@
               [styles]="{minHeight: (isArticle ? '360px' : '72px'), border: 'none'}"
               placeholder="Type..."
               [formControl]="f.description"
+              (onEditorCreated)="onEditorCreated($event)"
               (onEditorChanged)="onEditorChanged($event)"
               >
                 <div quill-editor-toolbar class="sticky-top bg-white" style="z-index: 95">
