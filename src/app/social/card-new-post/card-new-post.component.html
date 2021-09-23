@@ -44,12 +44,13 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
       </div>
       <div *ngIf="audioSaved"
       class="position-relative d-inline-block border border-line rounded-4p preview-file"
+      (click)="onClickButtonAudio()"
       >
         <i iconPh="mic" class="icon-file-type"></i>
         <button 
         type="button"
         class="btn btn-icon-body small blur p-5p btn-remove-media"
-        (click)="onClickButtonRemoveAudio()"
+        (click)="onClickButtonRemoveAudio($event)"
         >
           <i iconPh="cross"></i>
         </button>  

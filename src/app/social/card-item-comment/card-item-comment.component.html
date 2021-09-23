@@ -37,7 +37,7 @@
           <h6 class="subtitle2">{{data.author.firstName}} {{data.author.lastName}}</h6>
         </ng-container>
         
-        <p class="body2 mb-5p">
+        <p class="body2 mb-5p comment-body">
           <b *ngIf="data.replyTo">@{{nameReplyTo(data.replyTo)}} </b>
           <span [innerHTML]="data.body"></span>
         </p>
