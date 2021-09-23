@@ -237,6 +237,12 @@ export class EditorComponent implements OnInit {
   }
 
   onChangeEndDateTime(e: Date) {
+    const start: Date = formatStringToDate(this.f.eventStartTime.value);
+    const end: Date = formatStringToDate(this.f.eventEndTime.value);
+
+    if(start && end && (start.getTime() - end.getTime() > 0)) {
+      this.f.eventStartTime.setValue(formatDateToString(end));
+    }
   } 
 
   onChangeEventType(online: boolean) {
@@ -282,7 +288,7 @@ export class EditorComponent implements OnInit {
       imageUploaded = true;
     } catch(error) {
       console.log(error);
-      this._toastr.error('Could not upload image. Please try later');
+      this._toastr.error('Could not upload media. Please try later');
       this.isUploading = false;
     }
     if(!imageUploaded) {
@@ -304,7 +310,12 @@ export class EditorComponent implements OnInit {
       this.isUploading = false;
       if(res.statusCode === 200) {
         this.isSubmitted = false;
-        this._toastr.success('Updated successfully');
+
+        if(status == 'APPROVED') {
+          this._toastr.success('Published successfully');
+        } else if (status == 'DRAFT') {
+          this._toastr.success('Saved as draft successfully');
+        }
         this._editorService.resetForm();
         this.imagePreview = null;
         this.formItemService.deselectAll();
