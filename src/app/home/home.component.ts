@@ -254,35 +254,35 @@ const appFeatureItems = [
   [
     {
       icon: 'verified-outline', 
-      title: 'Search for health and wellness practitioners',
-      content: 'Use personalized filters to find your best match',
+      title: 'Search for health and wellness practitioners.',
+      content: 'Use personalized filters to find your best match.',
     },
     {
       icon: 'checkbox-square-outline',
-      title: 'Compare and book',
-      content: 'Read reviews and make informed decisions about your care when booking appointments',
+      title: 'Compare and book.',
+      content: 'Read reviews and make informed decisions about your care when booking appointments.',
     },
     {
       icon: 'users-outline',
-      title: 'Stay connected with your favourite experts',
-      content: 'Get notified when experts you follow share new content',
+      title: 'Stay connected with your favourite experts.',
+      content: 'Get notified when experts you follow share new content.',
     }
   ],
   [
     {
       icon: 'book-open-outline',
-      title: 'Browse and learn from our content library',
-      content: 'View by category and filter by media type to find expert-created content that matters to you',
+      title: 'Browse and learn from our content library.',
+      content: 'View by category and filter by media type to find expert-created content that matters to you.',
     },
     {
       icon: 'tags-2-outline',
-      title: 'Discover select deals on expert-recommended products',
-      content: 'Browse our product offerings page for deals to support your health and wellness journey',
+      title: 'Discover select deals on expert-recommended products.',
+      content: 'Browse our product offerings page for deals to support your health and wellness journey. (Coming soon)',
     },
     {
       icon: 'shield-check-outline',
-      title: 'Safe & Secure',
-      content: 'Your privacy and security is ensured',
+      title: 'Safe & Secure.',
+      content: 'Your privacy and security is ensured.',
     }
   ],
 ]
@@ -300,7 +300,7 @@ const introductionPostType = {
     color: 'bg-error',
 
     title: 'Events',
-    content: 'Attend in-person or virtual events hosted by practitioners.',
+    content: 'Attend virtual or in-person events hosted by practitioners',
   },
   article: {
     icon: 'file',
@@ -317,11 +317,11 @@ const introductionPostType = {
     content: 'Listen to informative audio and get empowered.',
   },
   video: {
-    icon: 'play-circle',
+    icon: 'image-3',
     color: 'bg-secondary',
 
-    title: 'Videos',
-    content: 'Watch fun, educational health and wellness content.',
+    title: 'Images',
+    content: 'Easy to read content for visual learners.',
   }
 }
 

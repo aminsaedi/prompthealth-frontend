@@ -61,11 +61,18 @@
   }
 }
 
-// .circle-for-testimonial {
-//   position: absolute;
-//   top: 5%;
-//   right: 0;
-// }
+.circle-for-testimonial {
+  position: absolute;
+  left: -5%;
+  top: -200px;
+  width: 300px;
+
+  @media (min-width: $breakpointLg) {
+    width: 400px;
+    top: 5%;
+    left: 5%;
+  }
+}
 
 .expert-finder-scroll-horizontal {
   padding: 25px 15px;
