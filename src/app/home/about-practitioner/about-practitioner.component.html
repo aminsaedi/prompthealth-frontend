@@ -12,7 +12,7 @@
         <button 
         class="btn btn-primary"
         (click)="scrollTo(anchorPlans)"
-        >Join us Now</button>
+        >Join Us Now</button>
       </div>
       <div class="col-12 col-md-5 my-30p">
         <img 
@@ -43,7 +43,7 @@
 <section class="container">
   <div class="text-center">
     <h2 class="h3 h2-md">It’s easy to get started</h2>
-    <p class="mt-20p">Free 14-day trial on best plan - No Credit Card Requeired</p>
+    <p class="mt-20p">Free 14-day trial on our professional plan - no credit card required.</p>
     <div class="mt-60p mb-40p">
       <a #anchorPlans class="scroll-anchor"></a>
       <div 
@@ -53,7 +53,7 @@
         <div class="discount-popup body-small text-body">
           20% Discount
         </div>      <switch 
-        [labels]="['Annualy', 'Monthly']"
+        [labels]="['Annually', 'Monthly']"
         (changeState)="onChangeDuration($event)"
         ></switch>
       </div>  
@@ -117,9 +117,9 @@
         [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
         (click)="onClickSignup(plan.key)"
         >
-          <ng-container *ngIf="plan.key == 'basic'">Sign up FREE</ng-container>
-          <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
-          <ng-container *ngIf="plan.key == 'centre'">Select</ng-container>
+          <ng-container *ngIf="plan.key == 'basic'">Sign-up Free</ng-container>
+          <ng-container *ngIf="plan.key == 'provider'">Sign-up</ng-container>
+          <ng-container *ngIf="plan.key == 'centre'">Sign-up</ng-container>
         </button>
 
         <ng-container *ngIf="isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')">

@@ -195,7 +195,7 @@ const features = [
   {
     icon: 'user-check-outline',
     title: 'Share information on topics you are an expert in.',
-    content: 'Health misinformation online is a huge problem today. We are serious about making sure those providing health information are accredited and trusted. We prioritize verifying our providers to remain a credible and helpful health resource for the public.',
+    content: 'Health misinformation online is a huge problem today. We are serious about making sure those providing health information can be trusted. We prioritize verifying our providers to remain a credible and helpful health resource for the public.',
   },
   {
     icon: 'cast-outline',
