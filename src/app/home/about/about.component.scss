@@ -67,6 +67,7 @@
 .holistic-images-container {
   width: 100%;
   position: relative;
+  display: grid;
   &:after {
     content: '';
     display: block;
