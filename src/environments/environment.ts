@@ -7,8 +7,8 @@ export const environment = {
   config: {
     APP_NAME: 'Wellness',
 
-    BASE_URL: 'http://localhost:4200/',
-    API_URL: 'http://localhost:4200/api/v1/',
+    BASE_URL: 'http://localhost:3000/',
+    API_URL: 'http://localhost:3000/api/v1/',
 
     FRONTEND_BASE: 'http://localhost:4200',
     BACKEND_BASE: 'http://127.0.0.1:3000', // used only for proxy
