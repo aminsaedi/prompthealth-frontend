@@ -30,8 +30,6 @@ import { Professional } from 'src/app/models/professional';
 import { SocialService } from 'src/app/social/social.service';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 
-declare var jQuery: any;
-
 export class User {
   constructor(
     public email: string,

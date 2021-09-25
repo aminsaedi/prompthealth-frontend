@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { BehaviorService } from '../../../shared/services/behavior.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
 import { ProfileManagementService } from '../profile-management.service';
@@ -32,7 +31,6 @@ export class MyProfileComponent implements OnInit {
     private toastr: ToastrService,
     private _bs: BehaviorService,
     private _sharedService: SharedService,
-    private modalService: NgbModal,
     private spinner: NgxSpinnerService,
     private _profileService: ProfileManagementService,
     private _router: Router,
@@ -79,13 +77,13 @@ export class MyProfileComponent implements OnInit {
   }
 
 
-  deleteProfile(content) {
-    this.modalref = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', size: 'sm' });
-    this.modalref.result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-    });
-  }
+  // deleteProfile(content) {
+  //   this.modalref = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', size: 'sm' });
+  //   this.modalref.result.then((result) => {
+  //     this.closeResult = `Closed with: ${result}`;
+  //   }, (reason) => {
+  //   });
+  // }
 
   removeProfile() {
     this.spinner.show();

@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { IAddonPlan } from '../../models/addon-plan';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
-import { AddonSelectCategoryComponent } from '../addon-select-category/addon-select-category.component';
 import { CategoryService } from '../services/category.service';
 import { SharedService } from '../services/shared.service';
 import { ToastrService } from 'ngx-toastr';
@@ -102,7 +100,7 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
 
   constructor(
     private _profileService: ProfileManagementService,
-    private _modalService: NgbModal,
+    // private _modalService: NgbModal,
     private _catService: CategoryService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
@@ -133,28 +131,28 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
       return;
     }
 
-    if (this.data.name === 'The Networker') {
-      const cat = await this._catService.getCategoryAsync();
+    // if (this.data.name === 'The Networker') {
+    //   const cat = await this._catService.getCategoryAsync();
 
-      const modalRef = this._modalService.open(AddonSelectCategoryComponent, {
-        centered: true
-      });
+    //   const modalRef = this._modalService.open(AddonSelectCategoryComponent, {
+    //     centered: true
+    //   });
 
-      modalRef.componentInstance.categories = cat;
-      // this._changeDetector.markForCheck();
-      modalRef.result.then(res => {
-        const metadata = this._catService.categoryList[res];
-        delete metadata.subCategory;
-        metadata.userType = this.data.userType;
-        // this.checkoutAddonPlan(metadata);
-        this.checkout(metadata);
-      }).catch(error => {
-        console.log(error);
-      });
-    } else {
-      this.checkout();
-        // this.checkoutAddonPlan();
-    }
+    //   modalRef.componentInstance.categories = cat;
+    //   // this._changeDetector.markForCheck();
+    //   modalRef.result.then(res => {
+    //     const metadata = this._catService.categoryList[res];
+    //     delete metadata.subCategory;
+    //     metadata.userType = this.data.userType;
+    //     // this.checkoutAddonPlan(metadata);
+    //     this.checkout(metadata);
+    //   }).catch(error => {
+    //     console.log(error);
+    //   });
+    // } else {
+    //   this.checkout();
+    //     // this.checkoutAddonPlan();
+    // }
   }
 
   private async checkout(metadata = null) {

@@ -6,9 +6,6 @@ import { SharedService } from '../../shared/services/shared.service';
 import { PreviousRouteService } from '../../shared/services/previousUrl.service';
 import { FormGroup, FormBuilder, Validators, NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-// import { environment } from 'src/environments/environment';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-// import { AddonSelectCategoryComponent } from '../addon-select-category/addon-select-category.component';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { IAddonPlan } from '../../models/addon-plan';
 import { IDefaultPlan } from 'src/app/models/default-plan';
@@ -16,7 +13,6 @@ import { slideHorizontalAnimation } from 'src/app/_helpers/animations';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { ICouponData } from 'src/app/models/coupon-data';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
-// declare var jQuery: any;
 
 
 @Component({
@@ -79,15 +75,9 @@ export class SubscriptionPlanComponent implements OnInit {
   profile;
 
   constructor(
-    private previousRouteService: PreviousRouteService,
     private _router: Router,
-    private _route: ActivatedRoute,
     private _sharedService: SharedService,
-    private cd: ChangeDetectorRef,
-    private toastr: ToastrService,
     private fb: FormBuilder,
-    private stripeService: StripeService,
-    private _modalService: NgbModal,
     public catService: CategoryService,
     private _uService: UniversalService,
     private _headerStatusService: HeaderStatusService,
