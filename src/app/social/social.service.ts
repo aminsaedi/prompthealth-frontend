@@ -26,6 +26,14 @@ export class SocialService {
   selectedProfileChanged(): Observable<Professional> {
     return this._selectedProfileChanged.asObservable();
   }
+
+  /** CAUTION: THIS IS TEMPORARY SOLUTION */
+  /** only when content is deleted, the change will be sent to listeners */
+  private _postCacheChanged = new Subject<void>();
+  postCacheChanged(): Observable<void> {
+    return this._postCacheChanged.asObservable();
+  }
+
   setProfile(p: Professional) { 
     this._selectedProfile = p; 
     this._selectedProfileChanged.next(p);
@@ -172,6 +180,21 @@ export class SocialService {
       content.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(content.description));
       this.postCache.dataMap[data._id] = content;
     }
+  }
+
+  removeCacheSingle(data: ISocialPost) {
+    for(let key in this.postCache.dataPerTaxonomy) {
+      if(key != 'users') {
+        const cache: IPostsPerTaxonomy = this.postCache.dataPerTaxonomy[key];
+        cache.data = cache.data ? cache.data.filter(item => item._id != data._id) : null;
+      } else {
+        const cache: IProfileWithPosts = this.postCache.dataPerTaxonomy.users[data.authorId];
+        if(cache) {
+          cache.postdata = cache.postdata.filter(item => item._id != data._id);
+        }
+      }
+    }
+    this._postCacheChanged.next();
   }
 
   saveCacheProfile(data: Professional) {

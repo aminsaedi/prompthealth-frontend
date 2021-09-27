@@ -65,6 +65,49 @@ id="more-menu"
 </modal>
 
 <modal
+id="delete-post-alert"
+#modalDeletePostAlert
+>
+  <div class="text-right">
+
+    <button class="btn pr-0 btn-icon" (click)="modalDeletePostAlert.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+    <div class="text-center mb-40p">
+      <h4>Delete content</h4>
+      <p class="text-label">Are you sure you want to delete this content?</p>  
+    </div>
+
+    <div class="d-flex algin-items-start justify-content-center mb-60p">
+      <profile-image [image]="postForModal?.authorImage"></profile-image>
+      <div class="mx-3">
+        <span class="subtitle2 text-label">{{postForModal?.authorName}}</span>
+        <span 
+        *ngIf="postTitleForModal"
+        class="subtitle1 mb-0 flex-grow-1 clamp-1line"
+        >{{postTitleForModal}}</span>
+      </div>
+    </div>  
+    
+    <div class="d-flex justify-content-between">
+      <button 
+      class="btn btn-error small"
+      (click)="onClickDeleteContent(postForModal)"
+      [disabled]="isDeletingContent"
+      >Yes, Delete</button>
+      <button 
+      class="btn btn-text-grey"
+      (click)="modalDeletePostAlert.hide()"
+      [disabled]="isDeletingContent"
+      >Cancel</button>
+    </div>
+  </div>
+</modal>
+
+<!-- <modal
 id="post-menu"
 #modalPostMenu
 >
@@ -97,7 +140,7 @@ id="post-menu"
       </li>
     </ul>
   </div>
-</modal>
+</modal> -->
 
 <modal
 id="subscirbe-menu"

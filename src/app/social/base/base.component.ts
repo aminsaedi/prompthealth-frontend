@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { IResponseData } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
+import { SocialService } from '../social.service';
 
 @Component({
   selector: 'app-base',
@@ -27,14 +30,16 @@ export class BaseComponent implements OnInit {
     const d: ISocialPost = this._modalService.data;
     if(d && (d.isArticle || d.isEvent)) {
       return d.title;
-    } else {
-      return null;
+    } else if(d) {
+      return d.summary;
     }
   }
 
+  public isDeletingContent: boolean = false;
+
   private isPopState: boolean = false;
   public isMessageBeingApprovedShownIfNeeded = true;
-
+  
   private subscriptionRouterEvent: Subscription; 
   
   private urlPrev: {
@@ -49,6 +54,8 @@ export class BaseComponent implements OnInit {
     private _sharedService: SharedService,
     private _modalService: ModalService,
     private _uService: UniversalService,
+    private _socialService: SocialService,
+    private _toastr: ToastrService,
   ) { }
 
   ngOnDestroy() {
@@ -131,5 +138,30 @@ export class BaseComponent implements OnInit {
   onClickAlertBeingApproved() {
     this._uService.sessionStorage.setItem('hide_alert_being_approved', 'true');
     this.isMessageBeingApprovedShownIfNeeded = false;
+  }
+
+  onClickDeleteContent(p: ISocialPost) {
+    if(this.user && this.user._id == p.authorId) {
+      this.isDeletingContent = true;
+
+      this._sharedService.deleteContent('note/delete/' + p._id).subscribe((res: IResponseData) => {
+        if(res.statusCode == 200) {
+          this._modalService.hide();
+          this._socialService.removeCacheSingle(p);
+          this._toastr.success('Deleted content successfully');
+        } else {
+          console.log(res);
+          this._toastr.error('Could not delete. Please try again later');
+        }
+      }, (error) => {
+        console.log(error);
+        this._toastr.error('Could not delete. Please try again later.');
+      }, () => {
+        this.isDeletingContent = false;
+      });        
+    } else {
+      this._toastr.error('You are not eligible to delete this content.');
+      this._modalService.hide();
+    }
   }
 }
