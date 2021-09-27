@@ -44,6 +44,7 @@ import { GuardIfNotLoggedInGuard } from '../auth/guard-if-not-logged-in.guard';
 import { NewReferralComponent } from './new-referral/new-referral.component';
 import { GuardIfNotProfileSelectedGuard } from './guard-if-not-profile-selected.guard';
 import { GuardIfNewReferralIncompletedGuard } from '../guard-if-new-referral-incompleted.guard';
+import { PopupPostMenuComponent } from './popup-post-menu/popup-post-menu.component';
 
 
 const routes: Routes = [
@@ -121,6 +122,7 @@ const routes: Routes = [
     FollowListComponent,
     ProfileFollowListComponent,
     NewReferralComponent,
+    PopupPostMenuComponent,
   ],
   providers: [
     CategoryService,
