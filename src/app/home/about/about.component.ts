@@ -114,6 +114,24 @@ const holisticImages = [
 
 const teamData = [
   {
+    name: 'Bob Mehr',
+    title: 'Advisor',
+    image: 'bob.jpg',
+    content: 'Bob is the president of Pure Integrative Pharmacy, chain of 17 pharmacies across BC with years of experience in healthcare as a pharmacist and business leader.',
+  },
+  {
+    name: 'Jan Simon',
+    title: 'Advisor',
+    image: 'jan.jpg',
+    content: 'Jan is a managing partner at Vonzeo capital and university lecturer in finance at top business schools including IESE and Simon Fraser.',
+  },
+  {
+    name: 'Peter Valadkhan',
+    title: 'Technical lead',
+    image: 'peter.jpg',
+    content: 'Peter is an experienced software developer with a PHD in computer science and university lecturer at Simon Fraser University leading the technical development.',
+  },  
+  {
     name: 'Jasmine Marahar',
     title: 'Product Manager',
     image: 'jasmine.png',
