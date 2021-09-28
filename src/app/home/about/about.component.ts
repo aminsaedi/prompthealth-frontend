@@ -129,8 +129,14 @@ const teamData = [
     name: 'Peter Valadkhan',
     title: 'Technical lead',
     image: 'peter.jpg',
-    content: 'Peter is an experienced software developer with a PHD in computer science and university lecturer at Simon Fraser University leading the technical development.',
-  },  
+    content: 'Peter is an experienced software developer with a PHD in computer science and university lecturer at University of the Fraser Valley leading the technical development.',
+  },
+  {
+    name: 'Renee Bigelow',
+    title: 'Marketing Consultant & Fractional CMO',
+    image: 'renee.jpg',
+    content: '20+ years experience leading marketing teams with speciality in technology and SaaS & Media and Marketing Services SMBs',
+  }, 
   {
     name: 'Jasmine Marahar',
     title: 'Product Manager',
