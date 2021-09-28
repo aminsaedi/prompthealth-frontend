@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from '../_helpers/form-settings';
 import { Profile } from '../models/profile';
-import { formatStringToDate, formatStringToDateTimeData } from '../_helpers/date-formatter';
+import { formatDateToDateTimeData, formatDateToString, formatStringToDate, formatStringToDateTimeData } from '../_helpers/date-formatter';
 import { ISocialPost } from '../models/social-post';
 
 
@@ -64,8 +64,8 @@ export class EditorService {
     const d: ISocialPost = this._originalData;
     
     if (type == 'EVENT') {
-      const startTime = d && d.eventStartTime ? formatStringToDateTimeData(d.eventStartTime) : null;
-      const endTime = d && d.eventEndTime ? formatStringToDateTimeData(d.eventEndTime) : null;
+      const startTime = d && d.eventStartTime ? formatDateToString(new Date(d.eventStartTime)) : null;
+      const endTime = d && d.eventEndTime ? formatDateToString(new Date(d.eventEndTime)) : null;
 
       this._form = new FormGroup({
         status: new FormControl(d ? d.status : 'DRAFT'),
@@ -187,7 +187,7 @@ export class SaveQuery implements ISaveQuery {
   get eventEndTime() { return this.data.eventEndTime ? formatStringToDate(this.data.eventEndTime as string) : null; }
   get eventType() { return this.data.eventType || 'ONLINE'; }
   get joinEventLink() { return this.data.joinEventLink || null; }
-  get eventAddress() { return this.data.eventAddress || null; }
+  get eventAddress() { return this.data.eventType == 'OFFLINE' && this.data.eventAddress ? this.data.eventAddress : null; }
   
   get image() { return this.data.image || null; }
   get images() { return this.data.images || []; }
@@ -198,24 +198,29 @@ export class SaveQuery implements ISaveQuery {
       contentType: this.contentType,
       authorId: this.authorId,
 
+      description: this.description,
+      tags: this.tags,
+
       ... (this._id) && {_id: this._id},
+
+      ... (this.contentType == 'NOTE') && {
+        images: this.images,
+        voice: this.voice,
+      },
+      
       ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {
         status: this.status,
         image: this.image,
+        title: this.title,
       }, 
 
-      ... (this.title) && {title: this.title},
-      ... (this.description) && {description: this.description},
-      ... (this.images.length > 0) && {images: this.images},
-      ... (this.voice) && {voice: this.voice},
-
-      ... (this.tags.length > 0) && {tags: this.tags},
-
-      ... (this.contentType == 'EVENT' && this.eventType) && {eventType: this.eventType},
-      ... (this.joinEventLink) && {joinEventLink: this.joinEventLink},
-      ... (this.eventStartTime) && {eventStartTime: this.eventStartTime},
-      ... (this.eventEndTime) && {eventEndTime: this.eventEndTime},
-      ... (this.eventAddress) && {eventAddress: this.eventAddress},
+      ... (this.contentType == 'EVENT') && {
+        eventType: this.eventType,
+        joinEventLink: this.joinEventLink,
+        eventStartTime: this.eventStartTime,
+        eventEndTime: this.eventEndTime,
+        eventAddress: this.eventAddress,
+      }
     };
     return data;
   }

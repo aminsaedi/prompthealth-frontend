@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -47,11 +47,17 @@ export class CardItemEventComponent implements OnInit {
   _onClickButton(e: Event, buttonName: string) {
     e.stopPropagation();
     e.preventDefault();
-    this.isPopupPostMenuShown = true;
+    this.onClickButton.emit(buttonName);
   }
 
   markCurrentPosition() {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
+  }
+
+  onClickButtonPopupPostMenu(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.isPopupPostMenuShown = true;
   }
 
   onPopupPostMenuClosed() {

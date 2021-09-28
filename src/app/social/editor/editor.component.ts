@@ -17,6 +17,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString, formatStringToDate } from 'src/app/_helpers/date-formatter';
 import { environment } from 'src/environments/environment';
 import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
+import { SocialService } from '../social.service';
 
 @Component({
   selector: 'app-editor',
@@ -80,6 +81,7 @@ export class EditorComponent implements OnInit {
     private _headerService: HeaderStatusService,
     private _toastr: ToastrService,
     private _uService: UniversalService,
+    private _socialService: SocialService,
   ) { }
 
   ngOnDestroy() {
@@ -287,12 +289,14 @@ export class EditorComponent implements OnInit {
 
   async publish() {
     try {
-      await this.save('APPROVED');
+      const data = await this.save('APPROVED');
       this._toastr.success(this.isPublished ? 'Updated successfully' : 'Published successfully');
       
       this._editorService.dispose();
+      this._socialService.updateCacheSingle(data);
       this.goback();
     } catch (error) {
+      console.log(error);
       this._toastr.error(error);
     }
   }
@@ -305,8 +309,8 @@ export class EditorComponent implements OnInit {
   
       const form = this._editorService.form;   
       if(form.invalid) {
-        this._toastr.error('');
         reject('There are several items that require your attention.');
+        return;
       }
   
       this.isUploading = true;

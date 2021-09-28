@@ -20,9 +20,12 @@ export class SocialEvent extends SocialArticle implements ISocialPost {
   
   constructor(protected data: ISocialPost) {
     super(data);
-    
-    this._startAt = (this.data.eventStartTime) ?  new Date(this.data.eventStartTime) : null;
-    this._endAt = (this.data.eventEndTime) ? new Date(this.data.eventEndTime) : null;
+    this.setEventStatus(data);
+  }
+
+  setEventStatus(data: ISocialPost) {
+    this._startAt = (data.eventStartTime) ?  new Date(data.eventStartTime) : null;
+    this._endAt = (data.eventEndTime) ? new Date(data.eventEndTime) : null;
     
     const now = new Date();
     let status: string;
@@ -88,5 +91,15 @@ export class SocialEvent extends SocialArticle implements ISocialPost {
     }
     
     return venue;
+  }
+
+  updateWith(data: ISocialPost) {
+    super.updateWith(data);
+    this.data.eventStartTime = data.eventStartTime;
+    this.data.eventEndTime = data.eventEndTime;
+    this.data.joinEventLink = data.joinEventLink;
+    this.data.eventAddress = data.eventAddress;
+    this.data.eventType = data.eventType;
+    this.setEventStatus(data);
   }
 }
