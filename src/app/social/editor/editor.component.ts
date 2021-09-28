@@ -31,6 +31,10 @@ export class EditorComponent implements OnInit {
   get isArticle() { return this.editorType == 'ARTICLE'; }
   get user() { return this._profileService.profile; }
   get isEditMode() { return this._editorService.existsData; }
+  get isPublished(): boolean { 
+    const status = this._editorService.originalData ? this._editorService.originalData.status : 'DRAFT';
+    return status == 'APPROVED' || status == 'HIDDEN';
+  }
 
   get imagePreview() {
     return this._imagePreview ? this._imagePreview :
@@ -101,6 +105,7 @@ export class EditorComponent implements OnInit {
         default: this.editorType = null; 
       }
 
+
       this._editorService.init(
         this.editorType, 
         this.user,
@@ -137,7 +142,7 @@ export class EditorComponent implements OnInit {
     });
   }
 
-  onClickCancel() {
+  goback() {
     const state = this._location.getState() as any;
     if(state.navigationId == 1) {
       this._router.navigate(['/community/feed']);
@@ -188,6 +193,7 @@ export class EditorComponent implements OnInit {
 
   onInputTitle(e: InputEvent) {
     let val = this.f.title.value;
+
     // for android
     //// cannot detect insertParagraph sometime on android.
     //// if new paragraph is inserted, remove it and focus editor.
@@ -197,6 +203,13 @@ export class EditorComponent implements OnInit {
       if(this.contentEditor) {
         this.contentEditor.focus();
       }
+    }
+
+    // if user paste html contents, remove tags and format.
+    const regexTag = /<\/?[^>]+(>|$)/g;
+    if(val.match(regexTag)) {
+      val = val.replace(regexTag, '').replace(/\s{2,}/, " ").trim();
+      this.f.title.setValue(val);
     }
   }
 
@@ -238,6 +251,12 @@ export class EditorComponent implements OnInit {
   }
 
   onChangeEndDateTime(e: Date) {
+    const start: Date = formatStringToDate(this.f.eventStartTime.value);
+    const end: Date = formatStringToDate(this.f.eventEndTime.value);
+
+    if(start && end && (start.getTime() - end.getTime() > 0)) {
+      this.f.eventStartTime.setValue(formatDateToString(end));
+    }
   } 
 
   onChangeEventType(online: boolean) {
@@ -254,76 +273,92 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  saveAsDraft() {
-    this.save('DRAFT');
-  }
-
-  publish() {
-    this.save('APPROVED')
-  }
-
-  async save(status: ISocialPost['status']) {
-    this.isSubmitted = true;
-
-    const form = this._editorService.form;   
-    const publish = status == 'DRAFT' ? false : true;
-
-    this._editorService.validate(publish);
-    if(form.invalid) {
-      this._toastr.error('There are several items that require your attention.');
-      return;
-    }
-
-    this.isUploading = true;
-
-    let imageUploaded = false;
+  async saveAsDraft() {
     try {
-      await this.uploadImagesIfNeeded();
-      imageUploaded = true;
+      const data = await this.save('DRAFT');
+      this._toastr.success('Saved as draft successfully');
+
+      this._editorService.setData(data);
+      this._editorService.unlockEditor();
     } catch(error) {
-      console.log(error);
-      this._toastr.error('Could not upload image. Please try later');
-      this.isUploading = false;
+      this._toastr.error(error);
     }
-    if(!imageUploaded) {
-      return false;
+  }
+
+  async publish() {
+    try {
+      await this.save('APPROVED');
+      this._toastr.success(this.isPublished ? 'Updated successfully' : 'Published successfully');
+      
+      this._editorService.dispose();
+      this.goback();
+    } catch (error) {
+      this._toastr.error(error);
     }
+  }
 
-    const data: ISaveQuery = form.value;
-    const tags = this.formItemService.getSelected();
-    if(tags.length > 0) {
-      data.tags = tags;
-    }
-    data.status = status;
-
-    const payload: ISaveQuery = new SaveQuery(data).toJson();
-    console.log(payload);
-    const req =  this.isEditMode ? this._sharedService.put(payload, `blog/update/${this._editorService.originalData._id}`) : this._sharedService.post(data, 'blog/create');
-
-    req.subscribe((res: IContentCreateResult) => {
-      console.log(res);
-      this.isUploading = false;
-      if(res.statusCode === 200) {
-        this.isSubmitted = false;
-
-        if(status == 'APPROVED') {
-          this._editorService.dispose();
-          this._imagePreview = null;
-          this.formItemService.deselectAll();
-          this.formCheckboxOnlineEvent.setValue(true);
-        } else if(status == 'DRAFT') {
-          this._editorService.unlockEditor();
-        };
-
-        this._toastr.success('Updated successfully');
-
-      } else {
-        this._toastr.error(res.message);
+  save(status: ISocialPost['status']): Promise<ISocialPost> {
+    return new Promise(async (resolve, reject) => {
+      this.isSubmitted = true;
+      this._editorService.format();
+      this._editorService.validate( status == 'DRAFT' ? false : true );
+  
+      const form = this._editorService.form;   
+      if(form.invalid) {
+        this._toastr.error('');
+        reject('There are several items that require your attention.');
       }
-    }, (err) => {
-      console.log(err);
-      this.isUploading = false;
-      this._toastr.error(err);
+  
+      this.isUploading = true;
+  
+      let imageUploaded = false;
+      try {
+        await this.uploadImagesIfNeeded();
+        imageUploaded = true;
+      } catch(error) {
+        console.log(error);
+        this.isUploading = false;
+        reject('Could not upload media. Please try later');
+      }
+      if(!imageUploaded) {
+        return false;
+      }
+  
+      const data: ISaveQuery = form.value;
+      const tags = this.formItemService.getSelected();
+      if(tags.length > 0) {
+        data.tags = tags;
+      }
+      data.status = status;
+  
+      const payload: ISaveQuery = new SaveQuery(data).toJson();
+      const req =  this.isEditMode ? this._sharedService.put(payload, `blog/update/${this._editorService.originalData._id}`) : this._sharedService.post(data, 'blog/create');
+  
+      req.subscribe((res: IContentCreateResult) => {
+        this.isUploading = false;
+        if(res.statusCode === 200) {
+          this.isSubmitted = false;
+  
+          if(status == 'APPROVED') {
+            // this._imagePreview = null;
+            // this.formItemService.deselectAll();
+            // this.formCheckboxOnlineEvent.setValue(true);
+          
+            // this._toastr.success( this.isPublished ? ' Updated sccessfully' : 'Published successfully');
+          } else if(status == 'DRAFT') {
+            // this._editorService.setData(res.data);
+          };
+
+          resolve(res.data);
+  
+        } else {
+          reject(res.message);
+        }
+      }, (err) => {
+        console.log(err);
+        this.isUploading = false;
+        reject(err);
+      });
     });
   }
 

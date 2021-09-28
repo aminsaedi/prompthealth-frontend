@@ -39,12 +39,28 @@
       </span>
     </span>
 
-    <!-- <button 
-    class="btn btn-icon-grey small py-5p"
-    (click)="_onClickButton($event, 'post-menu')"
+    <div 
+    *ngIf="eligibleToShowPostMenu"
+    class="position-relative d-inline-block"
     >
-      <i iconPh="more-horiz"></i>
-    </button>   -->
+      <button 
+      class="btn btn-icon-grey small"
+      (click)="_onClickButton($event, 'post-menu')"
+      >
+        <i iconPh="more-horiz"></i>
+      </button>
+      <div
+      [@fadeFast]
+      *ngIf="isPopupPostMenuShown"
+      class="position-absolute mt-5p" 
+      style="right: -5px;"
+      >
+        <popup-post-menu 
+        [post]="post"
+        (onClose)="onPopupPostMenuClosed()"
+        ></popup-post-menu>
+      </div>  
+    </div>
   </div>
 
 </div>

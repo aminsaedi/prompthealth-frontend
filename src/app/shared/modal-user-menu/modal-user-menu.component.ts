@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { ModalService } from '../services/modal.service';
@@ -11,12 +11,13 @@ import { SharedService } from '../services/shared.service';
 })
 export class ModalUserMenuComponent implements OnInit {
 
+  @Input() staySamePageWhenLogout: boolean = true;
+
   get user() { return this._profileService.profile; }
   get userRole() { return this.user ? this.user.role : null; }
   get userId() { return this.user ? this.user._id : ''; }
   get userCoverImage() { return this.coverImageTemp ? this.coverImageTemp : this.user ? this.user.coverImage : ''; };
   get userProfileImage() { return this.profileImageTemp ? this.profileImageTemp : this.user ? this.user.profileImageFull : ''; };
-
 
   public isUploading = false;
 
@@ -43,7 +44,7 @@ export class ModalUserMenuComponent implements OnInit {
   }
 
   onClickUserMenuItemLogout() {
-    this._sharedService.logout();
+    this._sharedService.logout(!this.staySamePageWhenLogout);
     this._modalService.hide();
   }
 

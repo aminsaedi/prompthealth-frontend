@@ -1,4 +1,6 @@
-<section class="bg-primary-light">
+<section class="bg-primary-light overflow-hidden position-relative py-20p py-lg-80p">
+  <div class="circle-for-video circle-secondary" parallax intensity="0.5"></div>
+
   <div class="container">
     <div class="row flex-md-row justify-content-between align-items-center">
       <div class="col-12 col-md-7 col-xl-6 my-30p">
@@ -12,14 +14,16 @@
         <button 
         class="btn btn-primary"
         (click)="scrollTo(anchorPlans)"
-        >Join us Now</button>
+        >Join Us Now</button>
       </div>
       <div class="col-12 col-md-5 my-30p">
-        <img 
-        class="w-100 image-shadow rounded-12p" 
-        src="/assets/img/about/top-provider.png" 
-        alt=""
-        >
+        <div class="image-shadow">
+          <img 
+          class="w-100 rounded-12p position-relative" 
+          src="/assets/img/about/top-provider.png" 
+          alt=""
+          >  
+        </div>
       </div>
     </div>
   </div>
@@ -43,7 +47,7 @@
 <section class="container">
   <div class="text-center">
     <h2 class="h3 h2-md">It’s easy to get started</h2>
-    <p class="mt-20p">Free 14-day trial on best plan - No Credit Card Requeired</p>
+    <p class="mt-20p">Free 14-day trial on our paid plans. Just cancel before the trial period is over!</p>
     <div class="mt-60p mb-40p">
       <a #anchorPlans class="scroll-anchor"></a>
       <div 
@@ -53,7 +57,7 @@
         <div class="discount-popup body-small text-body">
           20% Discount
         </div>      <switch 
-        [labels]="['Annualy', 'Monthly']"
+        [labels]="['Annually', 'Monthly']"
         (changeState)="onChangeDuration($event)"
         ></switch>
       </div>  
@@ -117,9 +121,9 @@
         [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
         (click)="onClickSignup(plan.key)"
         >
-          <ng-container *ngIf="plan.key == 'basic'">Sign up FREE</ng-container>
-          <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
-          <ng-container *ngIf="plan.key == 'centre'">Select</ng-container>
+          <ng-container *ngIf="plan.key == 'basic'">Sign-up Free</ng-container>
+          <ng-container *ngIf="plan.key == 'provider'">Sign-up</ng-container>
+          <ng-container *ngIf="plan.key == 'centre'">Sign-up</ng-container>
         </button>
 
         <ng-container *ngIf="isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')">

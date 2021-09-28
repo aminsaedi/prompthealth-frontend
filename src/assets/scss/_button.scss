@@ -109,6 +109,9 @@
 .btn.btn-text-error {
   @include btnText($colorError, $colorErrorDark);
 }
+.btn.btn-text-light {
+  @include btnText($colorGsWhite, $colorGsLine);
+}
 
 
 

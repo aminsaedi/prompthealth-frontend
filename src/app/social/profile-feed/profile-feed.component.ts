@@ -21,6 +21,8 @@ export class ProfileFeedComponent implements OnInit {
   get profile() { return this._socialService.selectedProfile; }
 
   public posts: ISocialPost[];
+  private subscriptionCacheChange: Subscription;
+
 
   @HostListener('window:scroll', ['$event']) async onWindowScroll(e: Event) {
     if(!this.isLoading && this.isMorePosts && document.body && this.posts && this.posts.length > 0) {
@@ -50,12 +52,24 @@ export class ProfileFeedComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+
+    if(this.subscriptionCacheChange) {
+      this.subscriptionCacheChange.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
-     this.onProfileChanged();
+    this.onProfileChanged();
     this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
       this.onProfileChanged();
+    });
+
+    this.observeCacheChange();
+  }
+
+  observeCacheChange() {
+    this.subscriptionCacheChange = this._socialService.postCacheChanged().subscribe(() => {
+      this.initPosts();
     });
   }
 

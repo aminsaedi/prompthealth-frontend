@@ -126,6 +126,8 @@ export class CardItemCommentComponent implements OnInit {
       this._modalService.show('login-menu');
     } else {
       this.f.replyTo.setValue(this.targetCommentIdForReply);
+      this.f.body.setValue((this.f.body.value || '').replace(/(<p><br><\/p>)+$/, ''));
+
       this.isUploading = true;
       this._sharedService.post(this.form.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
         this.isUploading = false;

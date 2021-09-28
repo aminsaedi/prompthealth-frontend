@@ -10,6 +10,7 @@ global['HTMLElement'] = {};
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
+import * as proxy from 'http-proxy-middleware';
 import { join } from 'path';
 
 import { existsSync } from 'fs';
@@ -19,6 +20,7 @@ import * as domino from 'domino';
 import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 import { routerSitemap } from './src/app/app.server.sitemap.module';
+import { environment } from 'src/environments/environment';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
@@ -65,6 +67,10 @@ export function app() {
     maxAge: '1y'
   }));
 
+  /** api proxy */
+  const apiProxy = proxy('/api', {target: environment.config.BACKEND_BASE, changeOrigin: false});
+  server.use('/api', apiProxy);
+
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/dashboard',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
@@ -94,7 +100,7 @@ export function app() {
           console.log('SSR error. something went wrong: ');
           console.log(err)
         }
-        showMeta(req.originalUrl, html);
+        // showMeta(req.originalUrl, html);
         res.send(html);
       }
     );

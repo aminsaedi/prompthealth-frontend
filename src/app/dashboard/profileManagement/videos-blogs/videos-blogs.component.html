@@ -1,47 +1,52 @@
-<h4 class="mb-3">Video Listing 
-    <button *ngIf="videosList && videosList.length" (click)="addMore = !addMore" class="btn btn-primary add-more">Add More</button>
-</h4>
-<table class="table table-hover comparetable" *ngIf="videosList && videosList.length">
-    <thead>
-        <tr>
-            <th>
-                <h5>Title</h5>
-            </th>
-            <th>
-                <h5>URL</h5>
-            </th>
-            <th>
-                <h5>Delete</h5>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let video of videosList  | paginate: { id: 'video',
-        itemsPerPage: 5,
-        currentPage: currentPage,
-        totalItems: totalItems 
-        }; let i=index">
-            <td>
-                {{ video.title }}
-            </td>
-            <td>
-                <a href="{{ video.url }}" target="_blank">{{ video.url }}</a>
-            </td>
-            <td>
-                <button (click)="deleteVideo(video._id)" class="btn btn-error small"><i iconPh="trash" class="large"></i></button>
-            </td>
-        </tr>
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="3" *ngIf="totalItems > 5">
-                <pagination-controls
-                    id="video" 
-                    (pageChange)="currentPage = $event"></pagination-controls>
-            </td>
-        </tr>
-    </tfoot>
-</table>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="m-0">Video Listing</h4>
+    <button *ngIf="videosList && videosList.length" (click)="addMore = !addMore" class="btn btn-primary small m-0">Add More</button>    
+</div>
+
+<div class="overflow-auto" style="max-width: 100%">
+    <table class="table table-hover comparetable" *ngIf="videosList && videosList.length">
+        <thead>
+            <tr>
+                <th>
+                    <h5>Title</h5>
+                </th>
+                <th>
+                    <h5>URL</h5>
+                </th>
+                <th>
+                    <h5>Delete</h5>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let video of videosList  | paginate: { id: 'video',
+            itemsPerPage: 5,
+            currentPage: currentPage,
+            totalItems: totalItems 
+            }; let i=index">
+                <td>
+                    {{ video.title }}
+                </td>
+                <td>
+                    <a href="{{ video.url }}" target="_blank">{{ video.url }}</a>
+                </td>
+                <td>
+                    <button (click)="deleteVideo(video._id)" class="btn btn-error small"><i iconPh="trash" class="large"></i></button>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" *ngIf="totalItems > 5">
+                    <pagination-controls
+                        id="video" 
+                        (pageChange)="currentPage = $event"></pagination-controls>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
 <hr *ngIf="addMore && videosList && videosList.length == 0">
 <form *ngIf="addMore || videosList && videosList.length == 0" (ngSubmit)="saveVideos()" [formGroup]="videosForm">
     <!-- {{ url.errors?.required }} -->

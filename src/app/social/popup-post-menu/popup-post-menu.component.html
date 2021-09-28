@@ -1,0 +1,26 @@
+<div class="popup-drop"
+(click)="hidePopup($event)"
+></div>
+<div class="bg-body p-10p popup-body rounded-8p">
+  <ul class="text-white list-unstyled text-nowrap mb-0">
+    <li>
+      <button 
+      class="btn btn-text-light small"
+      (click)="editContent($event)"
+      >
+        <i iconPh="edit"></i>
+        <span>Edit this content</span>  
+      </button>
+    </li>
+
+    <li>
+      <button 
+      class="btn btn-text-error small"
+      (click)="deleteContent($event)"
+      >
+        <i iconPh="trash"></i>
+        <span>Delete this content</span>  
+      </button>
+    </li>
+  </ul>
+</div>

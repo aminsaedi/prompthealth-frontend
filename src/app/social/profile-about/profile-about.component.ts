@@ -138,6 +138,16 @@ export class ProfileAboutComponent implements OnInit {
     });
   }
 
+  countupSocial(type: string) {
+    this._sharedService.postNoAuth({
+      _id: this.profile._id,
+      type,
+    }, 'user/update-social-count').subscribe((res) => {
+      console.log(res);
+    });
+  }
+
+
   isStaffSelected(p: Professional) {
     return !!(this.selectedStaffIds.indexOf(p._id) >= 0);
   }

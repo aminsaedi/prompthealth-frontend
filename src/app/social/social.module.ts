@@ -46,6 +46,7 @@ import { GuardIfNotProfileSelectedGuard } from './guard-if-not-profile-selected.
 import { GuardIfNewReferralIncompletedGuard } from '../guard-if-new-referral-incompleted.guard';
 import { CardPostDraftComponent } from './card-post-draft/card-post-draft.component';
 import { GuardIfDataNotSetGuard } from './guard-if-data-not-set.guard';
+import { PopupPostMenuComponent } from './popup-post-menu/popup-post-menu.component';
 
 
 const routes: Routes = [
@@ -128,6 +129,7 @@ const routes: Routes = [
     ProfileFollowListComponent,
     NewReferralComponent,
     CardPostDraftComponent,
+    PopupPostMenuComponent,
   ],
   providers: [
     CategoryService,

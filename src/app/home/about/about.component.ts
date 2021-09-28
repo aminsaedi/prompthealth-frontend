@@ -17,12 +17,15 @@ export class AboutComponent implements OnInit {
   
   public teamData = teamData;
   public topImages = topImages;
+  public holisticImages = holisticImages;
   public idxSelectedMember = -1;
 
+  public isOnHolistic = false;
   public isOnTeam = false;
 
   public countImagesLoaded = 0;
   public disableAnimationTop = false;
+  public disableAnimationHolistic = false;
   public disableAnimationTeam = false;
   
 
@@ -55,6 +58,19 @@ export class AboutComponent implements OnInit {
     }
   }
 
+  onHolisticIntersected(enter: boolean) {
+    if(enter) {
+      this.holisticImages = holisticImages;
+      setTimeout(() => {
+        this.disableAnimationHolistic = true;
+      }, 500);
+    } else {
+      this.disableAnimationHolistic = false;
+      this.holisticImages = [];
+    }
+
+  }
+
   onTeamIntersected(enter: boolean) {
     if(enter) {
       this.teamData = teamData;
@@ -83,10 +99,18 @@ export class AboutComponent implements OnInit {
 }
 
 const topImages = [
+  '/assets/img/about/top-0.png',
   '/assets/img/about/top-1.png',
-  '/assets/img/about/top-2.png',
-  '/assets/img/about/top-3.png'
-]
+  '/assets/img/about/top-2.png'
+];
+
+const holisticImages = [
+  '/assets/img/about/holistic-0.png',
+  '/assets/img/about/holistic-1.png',
+  '/assets/img/about/holistic-2.png',
+  '/assets/img/about/holistic-3.png',
+  '/assets/img/about/holistic-4.png',
+];
 
 const teamData = [
   {
@@ -99,25 +123,25 @@ const teamData = [
     name: 'Jaden Kim',
     title: 'Digital Marketing and Social Media Manager',
     image: 'jaden.png',
-    content: 'Jaden joined the team in May, with a background in social media and marketing, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue her passion for marketing and making healthcare more accessible. Working at PromptHealth means a lot to her, as she feels strongly about the value that PromptHealth can bring to people.'
+    content: 'Jaden joined the team in May, with a background in social media and marketing, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue her passion for marketing and making health services more accessible. Working at PromptHealth means a lot to her, as she feels strongly about the value that PromptHealth can bring to people.'
   },
-  {
-    name: 'Leah King',
-    title: 'Digital Marketing and Communications Manager',
-    image: 'leah.png',
-    content: 'Leah joined the team in May 2021, eager to use her background in marketing to propel PromptHealth’s mission to help others in their health and wellness journeys. With an experience of the difficulties our current healthcare system entails when seeking healthcare, Leah sees the immense value PromptHealth can bring to people.'
-  },
-  {
-    name: 'Evan Wang',
-    title: 'Account Relationship Manager',
-    image: 'evan.png',
-    content: 'Evan joined the team in August 2021 with a running record of sales experiences to unveil and expand the myriad of health services for those in need. In the process of completing his bachelor’s degree in commerce, he is seeking to emulate his values of altruism and service by assisting those who practice health. Generating channels for service providers gives him purpose and has proven to be his vocation.'
-  },
+  // {
+  //   name: 'Leah King',
+  //   title: 'Digital Marketing and Communications Manager',
+  //   image: 'leah.png',
+  //   content: 'Leah joined the team in May 2021, eager to use her background in marketing to propel PromptHealth’s mission to help others in their health and wellness journeys. With an experience of the difficulties our current healthcare system entails when seeking healthcare, Leah sees the immense value PromptHealth can bring to people.'
+  // },
+  // {
+  //   name: 'Evan Wang',
+  //   title: 'Account Relationship Manager',
+  //   image: 'evan.png',
+  //   content: 'Evan joined the team in August 2021 with a running record of sales experiences to unveil and expand the myriad of health services for those in need. In the process of completing his bachelor’s degree in commerce, he is seeking to emulate his values of altruism and service by assisting those who practice health. Generating channels for service providers gives him purpose and has proven to be his vocation.'
+  // },
   {
     name: 'Otto Hu',
     title: 'Software Developer',
     image: 'otto.png',
-    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, practitioners and product companies.',
+    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, practitioners and product companies.'
   },
   {
     name: 'Takayuki Hiraishi',

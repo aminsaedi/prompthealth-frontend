@@ -108,11 +108,11 @@ export class FormAuthComponent implements OnInit, OnChanges {
 
       this._sharedService.socialSignin(data, type).subscribe((res: any) => {
         this._sharedService.loader('hide');
-        this.isLoading = false;
 
         if (res.statusCode === 200) {
           this.afterLogin(res.data);
         } else {
+          this.isLoading = false;
           this._toastr.error(res.message);
         }
       }, error => {
@@ -152,12 +152,12 @@ export class FormAuthComponent implements OnInit, OnChanges {
     const subscription = (this.authType === 'signin') ? this._sharedService.login(data) : this._sharedService.register(data);
     subscription.subscribe((res: any) => {
       this._sharedService.loader('hide');
-      this.isLoading = false;
 
       if (res.statusCode == 200) {
         this.afterLogin(res.data);
       } else {
         this._toastr.error(res.message);
+        this.isLoading = false;
       }
     }, error => {
       console.log(error);
@@ -177,18 +177,15 @@ export class FormAuthComponent implements OnInit, OnChanges {
     this._sharedService.addCookie('isVipAffiliateUser', userinfo.isVipAffiliateUser);
     this._sharedService.addCookieObject('user', userinfo);
 
-    this._socialService.dispose();
-    this._profileService.getProfileDetail(userinfo);
-
     const taggedCentreId = this._uService.sessionStorage.getItem('tag_by_centre');
     if (taggedCentreId && role == 'SP') {
       this._uService.sessionStorage.removeItem('tag_by_centre');
       // TODO: connect this SP and C
     }
 
-
     this._socialService.dispose();
     await this._profileService.getProfileDetail(userinfo);
+    this.isLoading = false;
 
     this._bs.setUserData(userinfo);
 

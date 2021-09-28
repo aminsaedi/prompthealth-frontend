@@ -1,4 +1,4 @@
-<section class="bg-primary-light overflow-hidden">
+<section class="bg-primary-light overflow-hidden py-20p py-lg-80p">
   <div class="container position-relative">
     <div 
     class="circle-for-about circle-secondary" 
@@ -29,10 +29,11 @@
           About
         </h6>
         <h1 class="h3 h2-xl mb-20p">
-          We are on a journey to revolutionize the health and wellness experience.
+          We are here to empower you along your wellness journey.
         </h1>
         <p class="text-label">
-          We are here to facilitate your wellness journey by connecting you with health providers that fit your personal needs. We want to help you make informed decisions about your health by providing you with learning resources from accredited providers.
+          We want to facilitate your wellness journey by connecting you with holistic health providers that fit your personal needs and preferences.<br>
+          Our goal is to provide those looking to improve their health with resources and practitioners that approach wellness from a holistic perspective. 
         </p>
       </div>
     </div>
@@ -42,10 +43,10 @@
 <div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="changeHeaderShadowStatus($event)"></div>
 <section class="overflow-hidden" style="max-width: 100vw">
   <div class="container my-80p my-md-100p">
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-8 py-md-50p">
-        <h2 class="h5 h3-md mb-30p">
-          It is our mission to help people seeking care reach informed decisions about their health by providing credible educational resources and personalized care options. 
+    <div class="row py-md-50p justify-content-between">
+      <div class="col-12 col-md-7 col-lg-8 col-xl-7">
+        <h2 class="h4 h3-md mb-30p">
+          We are on a mission to reimagine the wellness journey for Canadians.  
         </h2>
         <p class="text-label position-relative explanation">
           <svg
@@ -60,10 +61,52 @@
           </svg>
     
           <span class="position-relative">
-            On PromptHealth, you have the option of filtering through providers based on criteria that you choose, or searching with keywords in the search bar. We then connect you with all in person and virtual accredited solutions for care, allowing you to make informed decisions about your wellness journey.
+            One size does not fit all, especially when it comes to choosing a wellness service or provider. We want people to feel empowered through their journey by being aware of different options for care.<br>
+            Helping Candians feel <span class="text-body">empowered</span> through their wellness journey, <span class="text-body">not overwhelmed</span> - the way it should be when we are taking care of ourselves. 
           </span>
         </p>
       </div>
+
+      <div class="col-12 col-md-5 col-lg-4 mt-15p mt-md-0p">
+        <div class="bg-primary-light rounded-12p pt-45p pb-30p px-25p px-md-15p px-xl-25p position-relative">
+          <i 
+          iconPh="quotes-2" 
+          class="text-primary-dark position-absolute"
+          style="top: -20px; left: 10px; font-size: 50px;"
+          ></i>
+          <b class="explanation" style="font-size: 17px;">
+            On PromptHealth, you have the option of filtering through providers based on categories that are important to you, searching with keywords, or doing a personal match quiz that easily gives you a personalized list of wellness providers. 
+          </b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="intersection-observer" intersectionObserver rootMargin="-70% 0px 10000px 0px" (changeStatus)="onHolisticIntersected($event)"></div>
+<section class="container mb-80p mb-md-100p">
+  <div class="row">
+    <div class="col-12 col-md-6 order-2 order-md-1">
+      <div class="holistic-images-container">
+        <ul 
+        class="holistic-images p-0 m-0 list-unstyled"
+        [@slideVerticalStagger]="holisticImages.length"
+        [@.disabled]="disableAnimationHolistic"  
+        >
+          <li 
+          *ngFor="let image of holisticImages"
+          class="overflow-hidden rounded-12p position-relative item"
+          >
+            <img [src]="image" alt="">
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 order-1 order-md-2">
+      <h2 class="h3 h2-md mb-20p">Why a holistic approach?</h2>
+      <p class="explanation">
+        Feeling unwell in one aspect of ourselves - mind, body, or spirit - can make us feel unwell in other aspects. We believe that approaching wellness in a way that addresses the whole self is the best way to achieve optimal health. 
+      </p>
     </div>
   </div>
 </section>
@@ -72,22 +115,24 @@
   <div class="row justify-content-center">
     <div class="col-12 col-lg-11 bg-primary-light rounded-12p">
       <div class="p-15p p-md-40p px-lg-100p">
-        <h4 class="text-center mb-20p">History</h4>
+        <h4 class="text-center mb-20p">The Company</h4>
         <p class="explanation">
+          In our traditional healthcare system, finding treatment is often illness-focused and does not take into account all the elements of our wellbeing - mental, physical, social, emotional, and spiritual health. Instead, it only treats symptoms. PromptHealth was created to solve the gap between people seeking preventative care, and the wellness practitioners who provide complementary solutions to traditional healthcare. 
+          <br><br>
+          In a world where people seek health information online, we are enabling trusted practitioners to share their knowledge and resources to those seeking wellness solutions, all in one place. Our app acts as a social platform that allows users to find and learn from wellness providers in whatever media format they prefer, including notes, voices, events, and articles. 
+          <br><br>
+
           <img 
           src="/assets/img/logo-sm.png" 
           alt="PromptHealth"
-          class="d-inline-block"
+          class="d-inline-block mr-5p"
           style="margin-top: -5px;"
-          height="25"
+          height="20"
           >
-          <span class="text-primary">PromptHealth </span>
-          is an online platform revolutionizing the health and wellness experience. 
-          It started off as a two-sided marketplace where people could personalize their search options and connect with different practitioner types proven to help with a specific cause. 
-          Now, with the help of our network of practitioners and further technology development, PromptHealth is the go-to social app and site to provide people with the educational resources they need to make informed decisions about their health, in an engaging format. 
-          PromptHealth acts as a ‘personal assistant’ that takes the challenge out of accessing and navigating the care you need. 
-          Rather than assuming people know what their options are for care and leaving them to find one specific type of practitioner, PromptHealth analyzes the users health goal or concern to connect them with all accredited solutions for care. 
-          Our mission is to help people seeking care reach informed decisions about their health by providing credible educational resources and personalized care options. 
+          <b>
+            <span class="text-primary">PromptHealth </span>
+            seeks to educate people on all of their care options, empowering them with the knowledge and resources to facilitate their wellness journey.  
+          </b>
         </p>
       </div>
     </div>
@@ -96,7 +141,7 @@
 
 <section class="container my-80p my-md-100p">
   <div class="row justify-content-center">
-    <div class="col-12 col-lg-11 col-xl-10">
+    <div class="col-12">
       <h4>The Founder</h4>
       <div class="row justify-content-between">
         <div class="col-12 col-md-9 col-lg-8 order-2 order-md-1 mt-20p mt-md-0p">
@@ -110,7 +155,10 @@
             Since then, the team has grown to over 10 people - all on the same mission to help people seeking care reach informed decisions about their health. 
           </p>    
         </div>
-        <div class="col-12 col-md-3 image-container order-1 order-md-2">
+        <div 
+        class="col-12 col-md-3 image-container order-1 order-md-2"
+        style="min-height: 360px;"
+        >
           <img src="/assets/img/about/hedieh.png" alt="Hedieh Safiyari" class="cover-md">
         </div>
       </div>      
@@ -121,7 +169,7 @@
 <div class="intersection-observer" intersectionObserver rootMargin="-40% 0px 10000px 0px" (changeStatus)="onTeamIntersected($event)"></div>
 <section class="container my-80p my-md-100p">
   <div class="row justify-content-center py-md-50p">
-    <div class="col-12 col-lg-10">
+    <div class="col-12 col-lg-12">
       <div class="d-md-flex justify-content-between align-items-end mb-50p">
         <h2 class="h3 h2-md mb-0">
           Some of the people <div class="d-none d-md-block"></div>
@@ -138,10 +186,10 @@
       >
         <div
         *ngFor="let member of teamData; let i = index"
-        class="col-12 col-md-6 col-xl-4 mb-50p cursor-pointer"
+        class="col-12 col-md-6 col-lg-4 mb-50p cursor-pointer"
         (click)="onMemberClicked(i)"
         >
-          <div class="image-container-100pc image-container-md-130pc image-container-lg-100pc image-container-xl-130pc mb-20p rounded-12p overflow-hidden member-image-container">
+          <div class="image-container-100pc image-container-md-130pc image-container-lg-130pc image-container-xl-100pc mb-20p rounded-12p overflow-hidden member-image-container">
             <img
             [src]="'/assets/img/about/' + member.image"
             [alt]="member.name"
@@ -166,8 +214,8 @@
       <div class="col-12 col-lg-10">
         <div class="d-xl-flex justify-content-between align-items-center">
           <h2 class="h3 h2-md mb-0">
-            Have questions, or want to <div class="d-none d-xl-block"></div>
-            talk about working with us?
+            Have questions, or <div class="d-none d-xl-block"></div>
+            feedback for us?
           </h2>
           <a routerLink="/contact-us" class="btn btn-outline mt-20p mt-xl-0p px-50p text-nowrap">Contact us</a>
         </div>

@@ -227,11 +227,13 @@ export class HeaderComponent implements OnInit {
       this.fetchNotification();
     }
 
-    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(status => {
-      if(status == 'loggedIn') {
-        this.fetchNotification();
-      }
-    });
+    if(status != 'loggedIn') {
+      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(status => {
+        if(status == 'loggedIn' && !this._socialService.doneInitNotification) {
+          this.fetchNotification();
+        }
+      });  
+    }
   }
 
   fetchNotification() {
