@@ -46,21 +46,10 @@ export class Profile implements IProfile {
 
   get firstName() { return (this.data.firstName || this.data.fname || '').trim(); }
   get lastName() { return (this.data.lastName || this.data.lname || '').trim(); }
-  get name() {
-    const nameArray = [];
-    if(this.firstName.length > 0) { nameArray.push(this.firstName); }
-    if(this.lastName.length > 0) { nameArray.push(this.lastName); }
-    return nameArray.join(' ').trim();
-  }
-  get nickname() {
-    let name = '(No Name)';
-    if (this.firstName.length > 0) { 
-      name = this.firstName; 
-    } else if (this.lastName.length > 0) {
-      name = this.lastName;
-    }
-    return name;
-  }
+  get name() { return [this.firstName, this.lastName].join(' ').trim() || this._noname(); } //fullname
+  get nickname() { return this.firstName || this.lastName || this._noname(); }
+
+  private _noname() { return 'User-' + this._id.substr(0,5); }
 
   get description() { return this.data.product_description || this.data.description || ''; }
 
