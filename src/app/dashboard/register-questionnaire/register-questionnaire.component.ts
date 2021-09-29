@@ -131,6 +131,9 @@ export class RegisterQuestionnaireComponent implements OnInit {
       const data = this._qService.getUser();
       data.questionnaireCompleted = true;
 
+      // profileImage will be updated at uploading image. so profileImage should not be updated here.
+      delete data.profileImage;
+
       this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
         this._sharedService.loader('hide');
         if(res.statusCode == 200){
