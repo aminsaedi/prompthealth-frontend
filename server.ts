@@ -70,7 +70,11 @@ export function app() {
   /** api proxy */
   const apiProxy = proxy('/api', {target: environment.config.BACKEND_BASE, changeOrigin: false});
   server.use('/api', apiProxy);
-  server.use('/stripe', apiProxy);
+
+  /** stripe proxy */
+  const stripeProxy = proxy('/stripe', {target: environment.config.BACKEND_BASE, changeOrigin: false});
+  server.use('/stripe', stripeProxy);
+
 
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
