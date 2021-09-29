@@ -18,6 +18,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
+import { environment } from 'src/environments/environment';
 import { SocialService } from '../social.service';
 
 @Component({
@@ -32,6 +33,7 @@ export class ProfileComponent implements OnInit {
   get sizeM() { return !this.sizeS && (window.innerWidth < 992) ? true : false; }
   get f() { return this.formBooking.controls; }
   get isProfileMyself() { return this.user && this.user._id == this.profileId; }
+  get isProfilePH() { return this.profileId == environment.config.idSA; }
   get user() { return this._profileService.profile; }
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
 

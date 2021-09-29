@@ -55,6 +55,7 @@
             class="grid-3 text-right text-nowrap"
             >
               <button 
+              *ngIf="!isProfilePH"
               class="btn small ml-10p"
               [ngClass]="(isFollowing ? 'btn-primary' : 'btn-outline')"
               [disabled]="isFollowLoading"
