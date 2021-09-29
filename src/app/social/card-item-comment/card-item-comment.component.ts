@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { Profile } from 'src/app/models/profile';
 import { ICommentCreateResult } from 'src/app/models/response-data';
 import { ISocialComment, ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
@@ -69,7 +70,7 @@ export class CardItemCommentComponent implements OnInit {
     let name = null;
     for(let c of this.post.comments) {
       if(c._id == id) {
-        name = c.author.firstName;
+        name = (c.author as Profile).nickname;
         break;
       }
     }

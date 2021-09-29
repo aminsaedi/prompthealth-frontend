@@ -193,7 +193,7 @@ export interface ISocialComment {
   like?: number;
   blogId?: string;
   authorId?: string;
-  author?: IUserDetail;
+  author?: IUserDetail | Profile;
   replyTo?: string;
   createdAt?: string|Date;
 
@@ -213,6 +213,6 @@ class SocialComment implements ISocialComment {
   private _author: Profile;
 
   constructor(private data: ISocialComment) {
-    this._author = new Profile(data.author);
+    this._author = new Profile(data.author as IUserDetail);
   }
 }
