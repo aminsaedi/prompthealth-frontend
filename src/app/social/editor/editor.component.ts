@@ -282,6 +282,10 @@ export class EditorComponent implements OnInit {
     this.f.eventType.setValue(online ? 'ONLINE' : 'OFFLINE');
   }
 
+  onAudioSaved(data: AudioData) {
+    this.audioSaved = data;
+  }
+
   /** trigger when editor tool bar is sticked to top */
   changeStickyStatus(isSticked: boolean) {
     if (isSticked) { 
