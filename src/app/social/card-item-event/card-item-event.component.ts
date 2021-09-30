@@ -47,7 +47,7 @@ export class CardItemEventComponent implements OnInit {
   _onClickButton(e: Event, buttonName: string) {
     e.stopPropagation();
     e.preventDefault();
-    this.onClickButton.emit(buttonName);
+    this.isPopupPostMenuShown = true;
   }
 
   markCurrentPosition() {

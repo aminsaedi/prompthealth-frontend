@@ -31,10 +31,10 @@
         class="text-body"
         (click)="markCurrentPosition()"
         >
-          <h6 class="subtitle2">{{data.author.firstName}} {{data.author.lastName}}</h6>
+          <h6 class="subtitle2">{{data.author.nickname}}</h6>
         </a>
         <ng-container *ngIf="data.author.isU">
-          <h6 class="subtitle2">{{data.author.firstName}} {{data.author.lastName}}</h6>
+          <h6 class="subtitle2">{{data.author.nickname}}</h6>
         </ng-container>
         
         <p class="body2 mb-5p comment-body">
