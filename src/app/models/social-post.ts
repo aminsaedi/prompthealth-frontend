@@ -218,6 +218,7 @@ class SocialComment implements ISocialComment {
   get author() { return this._author || {}}
 
   get replyTo() { return this.data.replyTo; }
+  get createdAt(): Date { return new Date(this.data.createdAt as string); }
 
   private _author: Profile;
 
