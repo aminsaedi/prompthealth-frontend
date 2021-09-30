@@ -27,13 +27,9 @@ export class CardItemCommentComponent implements OnInit {
     if(!this.post || !this.post.comments) {
       return null;
     } else {
-      const comments = [];
-      this.post.comments.forEach(c => {
-        if(!c.replyTo) {
-          comments.push(c);
-        }
-      });
-      return comments;
+      return this.post.comments
+        .filter(item => !item.replyTo)
+        .sort((a,b) => (b.createdAt as Date).getTime() - (a.createdAt as Date).getTime() );
     }
   }
 
@@ -41,13 +37,9 @@ export class CardItemCommentComponent implements OnInit {
     if(!this.post || !this.post.comments) {
       return null;
     } else {
-      const replies = [];
-      this.post.comments.forEach(c => {
-        if(c.replyTo == id) {
-          replies.push(c);
-        }
-      });
-      return replies;
+      return this.post.comments
+        .filter(item => item.replyTo == id)
+        .sort((a,b) => (b.createdAt as Date).getTime() - (a.createdAt as Date).getTime() );
     }
   }
 
