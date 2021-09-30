@@ -1,0 +1,90 @@
+@import '../../../assets/scss/variables';
+
+.btn-play-control {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  background: $colorGsPlaceholder;
+  color: white;
+  i {
+    position: absolute;
+    font-size: 18px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.label-audio-duration-current {
+  position: absolute;
+  margin-top: 10px;
+  top: 100%;
+  left: 0;
+}
+.label-audio-duration {
+  position: absolute;
+  margin-top: 10px;
+  top: 100%;
+  right: 0;
+}
+
+.btn-record-control {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 56px;
+  background: $colorError;
+  color: white;
+
+  i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 30px;
+    transform: translate(-50%, -50%);  
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.audio-progress-bar{
+  position: relative;
+  margin: 6px 0;
+  height: 30px;
+  .audio-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/img/social/audio-progress.png');
+    background-position: left center;
+    background-size: auto 100%;
+
+    &.done {
+      width: 0%;
+      background-image: url('/assets/img/social/audio-progress-done.png');
+      animation-duration: 1.2s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+  }
+
+  &.recording {
+    .done {
+      animation-name: audio-record-progress;
+    }
+  }
+}
+
+@keyframes audio-record-progress {
+    0% { width: 0%; }
+  100% { width: 100%; }
+}

@@ -43,7 +43,8 @@ export class PopupPostMenuComponent implements OnInit {
 
     const route = 
       this.post.isArticle ?  ['/community/editor/article', this.post._id] :
-      this.post.isEvent ? ['/community/editor/event', this.post._id] : 
+      this.post.isEvent ? ['/community/editor/event', this.post._id] :
+      this.post.isNote ? ['community/editor/note', this.post._id] : 
       ['community/editor/article', this.post._id];
 
     this._router.navigate(route);

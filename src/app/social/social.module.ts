@@ -47,6 +47,7 @@ import { GuardIfNewReferralIncompletedGuard } from '../guard-if-new-referral-inc
 import { CardPostDraftComponent } from './card-post-draft/card-post-draft.component';
 import { GuardIfDataNotSetGuard } from './guard-if-data-not-set.guard';
 import { PopupPostMenuComponent } from './popup-post-menu/popup-post-menu.component';
+import { ModalVoiceRecorderComponent } from './modal-voice-recorder/modal-voice-recorder.component';
 
 
 const routes: Routes = [
@@ -81,6 +82,7 @@ const routes: Routes = [
     { path: 'editor/event', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard]},
     { path: 'editor/article/:id', component: EditorComponent, data: {type: 'article'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},
     { path: 'editor/event/:id', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},    
+    { path: 'editor/note/:id', component: EditorComponent, data: {type: 'note'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},    
     { path: 'editor', redirectTo: 'editor/article' },
 
     { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
@@ -133,6 +135,7 @@ const routes: Routes = [
     NewReferralComponent,
     CardPostDraftComponent,
     PopupPostMenuComponent,
+    ModalVoiceRecorderComponent,
   ],
   providers: [
     CategoryService,

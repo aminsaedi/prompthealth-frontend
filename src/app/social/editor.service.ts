@@ -94,9 +94,9 @@ export class EditorService {
       this._form = new FormGroup({
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        description: new FormControl(),
-        images: new FormControl(), // TODO: need change to FormArray in ver2.1
-        voice: new FormControl(),
+        description: new FormControl(d ? d.description : ''),
+        images: new FormControl(d?.images?.length > 0 ? d.images[0] : null), // TODO: need change to FormArray in ver2.1
+        voice: new FormControl(d?.voice ? d.voice : null),
       }, validators.note);
     }
 

@@ -17,6 +17,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString, formatStringToDate } from 'src/app/_helpers/date-formatter';
 import { environment } from 'src/environments/environment';
 import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
+import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.component';
 import { SocialService } from '../social.service';
 
 @Component({
@@ -30,6 +31,7 @@ export class EditorComponent implements OnInit {
   get f() {return this._editorService.form.controls; }
   get isEvent() { return this.editorType == 'EVENT'; }
   get isArticle() { return this.editorType == 'ARTICLE'; }
+  get isNote() { return this.editorType == 'NOTE'; }
   get user() { return this._profileService.profile; }
   get isEditMode() { return this._editorService.existsData; }
   get isPublished(): boolean { 
@@ -64,6 +66,8 @@ export class EditorComponent implements OnInit {
   public tagsInitial: string[] = [];
   public minDateTimeEventStart: DateTimeData;
   public minDateTimeEventEnd: DateTimeData;
+
+  public audioSaved: AudioData = null;
 
   private _s3 = environment.config.AWS_S3;
   private subscriptionLoginStatus: Subscription;
@@ -104,14 +108,26 @@ export class EditorComponent implements OnInit {
       switch(data.type) {
         case 'article': this.editorType = 'ARTICLE'; break;
         case 'event': this.editorType = 'EVENT'; break;
-        default: this.editorType = null; 
+        case 'note': this.editorType = 'NOTE'; break;
+        default: this.editorType = null;
       }
-
 
       this._editorService.init(
         this.editorType, 
         this.user,
       );
+
+      /** for note */
+      if(this.f.voice.value) {
+        console.log(this.f.voice.value);
+        fetch(this._s3 + this.f.voice.value).then(async res =>{
+
+          const blob = await res.blob();
+          this.audioSaved = new AudioData({blob: blob, title: null});
+          console.log(this.audioSaved)
+        });
+      }
+
 
       const isOnline = this.f.eventType ? this.f.eventType.value == 'ONLINE' : false;
       this.formCheckboxOnlineEvent = new FormControl(isOnline);

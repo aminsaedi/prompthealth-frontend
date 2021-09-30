@@ -18,6 +18,12 @@
                 <ng-container *ngIf="isEditMode">Edit </ng-container>
                 an article
               </span>
+
+              <span *ngIf="isNote">
+                <ng-container *ngIf="!isEditMode">Write </ng-container>
+                <ng-container *ngIf="isEditMode">Edit </ng-container>
+                a note
+              </span>
             </h5>
             <button 
             class="btn btn-text-body small px-0"
@@ -25,7 +31,10 @@
             (click)="goback()"
             >Cancel</button>
           </div>
-          <div class="cover-image-container cursor-pointer overflow-hidden">
+          <div 
+          *ngIf="isArticle || isEvent"
+          class="cover-image-container cursor-pointer overflow-hidden"
+          >
             <div *ngIf="imagePreview">
               <img [src]="imagePreview" class="cover-image">
               <button 
@@ -54,7 +63,10 @@
             </div>  
           </div>        
         
-          <div class="mt-15p">
+          <div 
+          *ngIf="isArticle || isEvent"
+          class="mt-15p"
+          >
             <label class="subtitle2 text-label">
               <span *ngIf="isEvent">Event name</span>
               <span *ngIf="isArticle">Main title</span>
@@ -76,7 +88,10 @@
             </div>
           </div>
             
-          <div class="mt-15p" *ngIf="isEvent">
+          <div 
+          *ngIf="isEvent"
+          class="mt-15p" 
+          >
             <div class="row">
               <div class="col-12 col-md">
                 <label class="subtitle2 text-label">Start at</label>
@@ -106,7 +121,7 @@
             <label class="subtitle2 text-label">Description</label>
             <div 
             class="form-control description"
-            [ngClass]="{'simple': isEvent, 'rich': isArticle, 'error': (isSubmitted && f.description.invalid), 'success': (isSubmitted && f.description.valid)}"
+            [ngClass]="{'simple': (isEvent || isNote) , 'rich': isArticle, 'error': (isSubmitted && f.description.invalid), 'success': (isSubmitted && f.description.valid)}"
             >
               <quill-editor
               [styles]="{minHeight: (isArticle ? '360px' : '72px'), border: 'none'}"
@@ -252,3 +267,8 @@ class="modal-view"
     </div>
   </div>
 </div>
+
+<modal-voice-recorder
+[audioData]="audioSaved"
+(onSave)="onAudioSaved($event)"
+></modal-voice-recorder>
