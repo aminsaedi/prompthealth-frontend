@@ -140,7 +140,6 @@ export class ListComponent implements OnInit {
       setTimeout(() => {
         this.posts = posts;
         this._changeDetector.detectChanges();
-        console.log('set posts from cache')
       }, 100);
     } else {
       try {

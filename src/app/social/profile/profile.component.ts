@@ -503,7 +503,6 @@ export class ProfileComponent implements OnInit {
 
   checkFollowStatus() {
     if(this.isFollowLoading || !this.user || this.isProfileMyself) {
-      console.log('do not start checkFollowStatus');
       return;
     }
 
@@ -521,7 +520,6 @@ export class ProfileComponent implements OnInit {
 
   checkBellStatus() {
     if(this.isBellLoading || !this.user || this.isProfileMyself) {
-      console.log('checking follow status is not ready yet');
       return;
     }
 
