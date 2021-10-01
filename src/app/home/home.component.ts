@@ -1,12 +1,22 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from '../shared/services/shared.service';
 import { HeaderStatusService } from '../shared/services/header-status.service';
-import { environment } from 'src/environments/environment';
-// import { Partner } from '../models/partner';
-// import { PartnerSearchFilterQuery } from '../models/partner-search-filter-query';
 import { UniversalService } from '../shared/services/universal.service';
+import { Category, CategoryService } from '../shared/services/category.service';
 import { IUserDetail } from '../models/user-detail';
+import { CategoryViewerController } from '../models/category-viewer-controller';
+import { expandAllAnimation, expandVerticalAnimation, slideVerticalStaggerAnimation } from '../_helpers/animations';
+import { Professional } from '../models/professional';
+import { CityId, getLabelByCityId } from '../_helpers/location-data';
+import { BlogSearchQuery, IBlogSearchResult } from '../models/blog-search-query';
+import { Blog } from '../models/blog';
+import { FeaturedExpertController } from '../models/featured-expert-controller';
+import { smoothHorizontalScrolling } from '../_helpers/smooth-scroll';
+import { environment } from 'src/environments/environment';
+import { SocialPostSearchQuery } from '../models/social-post-search-query';
+import { IGetSocialContentsByAuthorResult } from '../models/response-data';
+import { SocialArticle } from '../models/social-article';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -14,238 +24,89 @@ import { IUserDetail } from '../models/user-detail';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  animations: [expandVerticalAnimation, expandAllAnimation, slideVerticalStaggerAnimation],
 })
 export class HomeComponent implements OnInit {
+
+  get sizeL() { return window && window.innerWidth >= 992; }
+
   constructor(
     private router: Router,
-    // private formBuilder: FormBuilder, /** NO NEED */
+    private _catService: CategoryService,
     private _sharedService: SharedService,
     private _headerStatusService: HeaderStatusService,
-    // private toastr: ToastrService,
     private _uService: UniversalService,
-    // _el: ElementRef,
-  ) {
-    // this.elHost = _el.nativeElement;
-  }
+    private _changeDetector: ChangeDetectorRef,
+  ) { }
 
-  // get f() {
-  //   return this.homeForm.controls;
-  // } /** NO NEED */
 
-  // @ViewChild('searchGlobal') 
-  // public searchGlobalElementRef: ElementRef; /** NO NEED */
+  private timerResize: any = null;
+  private previousScreenWidth: number = 0;
 
-  // token = ''; /** NO NEED */
-  // days: any; /** NO NEED */
-  // hours: any; /** NO NEED */
-  // minutes: any; /** NO NEED */
-  // seconds: any; /** NO NEED */
-  // private future: Date; /** NO NEED */
-  // private futureString: string; /** NO NEED */
-  // private message: string; /** NO NEED */
-  // private geoCoder; /** NO NEED */
-  // homeForm: FormGroup; /** NO NEED */
-  // submitted = false; /** NO NEED */
-  // roles = ''; /** NO NEED */
-  // zipCodeSearched; /** NO NEED */
-  // lat; /** NO NEED */
-  // long; /** NO NEED */
-  AWS_S3 = '';
-  // _host = environment.config.BASE_URL; /** NO NEED */
-  id: any;
-  // showPersonalMatch = true; /** NO NEED */
-
-  // private elHost: HTMLElement;
-
-  introBannerItems = {
-    '5eb1a4e199957471610e6ce8': {
-      name: 'menwomen',
-      bgImg: 'assets/img/rec_pictures/menwomen.png',
-      thumbnail: 'assets/img/rec_pictures/menwomen-thumb.png',
-      title: 'Women/Men\'s health',
-      features: [],
-      description: 'When it comes to hormones, there are gender specific services for you!'
-    },
-    '5eb1a4e199957471610e6ce5': {
-      name: 'skin',
-      bgImg: 'assets/img/rec_pictures/skinrejuv.png',
-      thumbnail: 'assets/img/rec_pictures/skinrejuv-thumb.png',
-      title: 'Skin rejuvenation',
-      features: [],
-      description: 'Whether it’s a relaxing facial or a total skin transformation, we’ve got you\
-      covered.'
-    },
-    '5eb1a4e199957471610e6ce6': {
-      name: 'immune',
-      bgImg: 'assets/img/rec_pictures/immunesys.png',
-      thumbnail: 'assets/img/rec_pictures/immunesys-thumb.png',
-      title: 'Immune system and energy',
-      features: [],
-      description: 'Natural remedies, supplements, or energy healing… you’ve come\
-      to the right place.'
-    },
-    '5eb1a4e199957471610e6ce2': {
-      name: 'nutrition',
-      bgImg: 'assets/img/rec_pictures/nutrition.png',
-      thumbnail: 'assets/img/rec_pictures/nutrition-thumb.png',
-      title: 'Nutrition',
-      features: [],
-      description: 'It’s not always about weight management, sometimes we have a specific need when it\
-      comes to our nutrition that needs to be fulfilled.'
-    },
-
-    '5eb1a4e199957471610e6ce0': {
-      name: 'preventative',
-      bgImg: 'assets/img/rec_pictures/preventative.png',
-      thumbnail: 'assets/img/rec_pictures/preventative-thumb.png',
-      title: 'Preventative health',
-      features: [],
-      description: 'This refers to your overall physical health, including medical, oral, hearing and vision'
-    },
-    '5eb1a4e199957471610e6ce4': {
-      name: 'sleep',
-      bgImg: 'assets/img/rec_pictures/sleep.png',
-      thumbnail: 'assets/img/rec_pictures/sleep-thumb.png',
-      title: 'Sleep',
-      features: [],
-      description: 'There are many different solutions for a better night\'s sleep, \
-        whether it\'s a medical treetment or natural remedies, there\'s something for everyone.'
-    },
-    '5eb1a4e199957471610e6ce1': {
-      name: 'mood',
-      bgImg: 'assets/img/rec_pictures/mood.png',
-      thumbnail: 'assets/img/rec_pictures/mood-thumb.png',
-      title: 'Mood/mental health',
-      features: [],
-      description: 'Mental health is a big part of our overall well being, and there are many\
-      different approaches to it.You don’t necessarily have to have a mood disorder, anyone can\
-      benefit from motivation and mindfulness, and we encourage that.'
-    },
-    '5eb1a4e199957471610e6ce7': {
-      name: 'painmanagement',
-      bgImg: 'assets/img/rec_pictures/painmanagement.png',
-      thumbnail: 'assets/img/rec_pictures/painmanagement-thumb.png',
-      title: 'Pain management',
-      features: [],
-      description: 'There are many different practitioners offering solutions for pain management, and some are even more \
-      specialized in certain areas.'
-    },
-    '5eb1a4e199957471610e6ce3': {
-      name: 'fitness',
-      bgImg: 'assets/img/rec_pictures/fitness.png',
-      thumbnail: 'assets/img/rec_pictures/fitness-thumb.png',
-      features: [],
-      title: 'Fitness',
-      description: 'We all have different needs ranging from strength training, aerobic, flexibility, cardio, \
-      and we’ve got something for everyone'
-    }
-  };
-  currentIntroIndex = '5eb1a4e199957471610e6ce8';
-
-  allIntroBannerKeys = Object.keys(this.introBannerItems);
-  currentKeyIndex = 0;
-  howPhWorks = [
-    {
-      imgUrl: 'assets/img/how-ph-works/search.png',
-      title: 'Search',
-      body: 'To go broad, search by your goal, to be more particular, get a personal match, or if you already \
-      know what you are looking for, search by treatment types.',
-      remark: '**select <b class=\"text-green\"> by location</b> or <b class=\"text-orange\">remote</b>'
-    },
-    {
-      imgUrl: 'assets/img/how-ph-works/filter.png',
-      title: 'Filter',
-      body: 'Apply filters to your search to narrow down the options in your geographic area. Choose to select\
-       preferences such as experience \
-      level, language, price, specialization with age group, practitioner gender, and more! ',
-    },
-    {
-      imgUrl: 'assets/img/how-ph-works/book.png',
-      title: 'Compare',
-      body: 'Do side by side comparisons and check out ratings and reviews written by both clients and other \
-       health professionals in order to help you find the best practitioner or product.',
-    },
-    {
-      imgUrl: 'assets/img/how-ph-works/session.png',
-      title: 'Connect',
-      body: 'Directly request a booking with your preferred availability. \
-      Enjoy your treatment with relaxation and ease. Build your dashboard of providers and services \
-      for future reference.',
-    }
-    // {
-    //   imgUrl: 'assets/img/how-ph-works/book.png',
-    //   title: 'Booking',
-    //   body: 'Directly request a booking with your preferred availability.',
-    // },
-    // {
-    //   imgUrl: 'assets/img/how-ph-works/session.png',
-    //   title: 'Session',
-    //   body: 'Enjoy your treatment with relaxation and ease. Build your dashboard of providers and services\
-    //    for future reference.',
-    // },
-  ];
-  // public homePageFeatures = {}; /** NO NEED */
-  // public partnersFeatured: Partner[];
-
-  private timerResize: any;
-  public featuredImageData = {
-    badgeSize: 20,
-    borderWidthVerified: 3,
-  };
-
-  // private timerCarouselPartner: any; 
-  public keepOriginalOrder = (a, b) => a.key;
-  @HostListener('window:resize', ['$event']) windowResize(e: Event) {
-    if (this.timerResize) { clearTimeout(this.timerResize); }
-    this.timerResize = setTimeout(() => {
-      if (window.innerWidth < 992) {
-        this.featuredImageData.badgeSize = 35,
-          this.featuredImageData.borderWidthVerified = 5;
-      } else {
-        this.featuredImageData.badgeSize = 30,
-          this.featuredImageData.borderWidthVerified = 4;
+  @HostListener('window:resize', ['$event']) WindowResize(e: Event) {
+    if(this.categories && window.innerWidth && window.innerWidth != this.previousScreenWidth) {
+      this.previousScreenWidth = window.innerWidth;
+      this.categoryController.disposeAll();
+        
+      if(this.timerResize) {
+        clearTimeout(this.timerResize);
       }
-    }, 500);
+  
+      this.timerResize = setTimeout(() => {
+        this.categoryController = new CategoryViewerController(this.categories);
+        this.featuredExpertController.initLayout();
+        this._changeDetector.detectChanges();
+      }, 500);   
+    }
   }
+  
+  changeHeaderShadowStatus(isShown: boolean) {
+    if(isShown) {
+      this._headerStatusService.showShadow();
+    } else {
+      this._headerStatusService.hideShadow();
+    }
+  }
+
+  ngAfterViewInit() {
+    if(!this._uService.isServer) {
+      this.elExpertFinderScrollHorizontal.nativeElement.scrollTo({left: 10000});
+    }
+  }
+
   // eventbriteCheckout(event) {
   //   registerEvent(146694387863, (res) => {
   //     // console.log(res);
   //   });
   // }
-  async ngOnInit() {
+
+
+  ngOnInit() {
     this._uService.setMeta(this.router.url, {
       title: 'PromptHealth | Your health and wellness personal assistant',
       description: 'Take control of your health with options tailored to you',
     });
 
-    const ls = this._uService.localStorage;
-    this.AWS_S3 = environment.config.AWS_S3;
-    // this.roles = ls.getItem('roles') ? ls.getItem('roles') : ''; /** NO NEED */
-    ls.removeItem('searchedAddress');
-    // this.token = ls.getItem('token'); /** NO NEED */
-    // if (this.token) { /** NO NEED */
-    //   if (this.roles === 'SP' || this.roles === 'C') {
-    //     this.showPersonalMatch = false;
-    //   } else {
-    //     this.showPersonalMatch = true;
-    //   }
-    // }
-    // this.homeForm = this.formBuilder.group({
-    //   email: ['', [Validators.required, Validators.email]]
-    // }); /** NO NEED */
+    this._catService.getCategoryAsync().then((cats => {
+      this.categories = cats;
+      this.categoryController = new CategoryViewerController(this.categories);
+    }));
 
-    // this.getPartnersFeatured();
-    // this.timer(); /** NO NEED */
+    const cityIdsFeatured: CityId[] = ['toronto', 'vancouver', 'victoria', 'hamilton', 'richmond', 'burnaby', 'calgary', 'winnipeg'];
+    const citiesFeatured: {id: CityId, label: string}[] = [];
+    for(let id of cityIdsFeatured) {
+      citiesFeatured.push({id: id, label: getLabelByCityId(id)});
+    }
+    this.citiesFeatured = citiesFeatured;
+
+    this.getBlog();
 
     if (!this._uService.isServer) {
-      await this.getHomePageFeatures(); /** need to reinstate after many practitioners buy addonPlan */
+      // await this.getHomePageFeatures(); /** need to reinstate after many practitioners buy addonPlan */
       this.getPractitionersFeatured(); /** temporary solition */
-      this.id = setInterval(() => {
-        // this.timer();
-        this.currentKeyIndex = (this.currentKeyIndex + 1) % 9;
-      }, 10000);
     }
+
   }
 
   /** need to reinstate after many practitioners buy addonPlan */
@@ -253,166 +114,251 @@ export class HomeComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this._sharedService.getNoAuth('/addonplans/get-featured', { roles: ['SP', 'C'] }).toPromise().then((res: any) => {
         res.data.forEach(item => {
-          if (this.introBannerItems[item.category_id]) {
-            this.introBannerItems[item.category_id].features.push(item);
-          }
         });
         resolve(true);
       });  
     });
   }
 
+
+  /** CATEGORIES */
+  private categories: Category[];
+  public categoryController: CategoryViewerController;
+  /** CATEGORIES END */
+
+
+  /** EXPERT FINDER */
+  public featuredExpertController: FeaturedExpertController = new FeaturedExpertController();
+  @ViewChild('expertFinderScrollHorizontal') private elExpertFinderScrollHorizontal: ElementRef;
+
   /** temporary solution to fill featured practitioners */
   getPractitionersFeatured() {
     this._sharedService.getNoAuth('user/get-paid-spc').subscribe((res: any) => {
       if (res.statusCode === 200) {
-        const users: IUserDetail[] = res.data;
-        const usersMapByCategory: { [k: string]: any[] } = {};
-        for (const key of Object.keys(this.introBannerItems)) {
-          usersMapByCategory[key] = [];
-          for (const u of users) {
-            if (u.services.includes(key)) {
-              usersMapByCategory[key].push(u);
-            }
-          }
-        }
-
-        const shuffle = (array: any[]) => {
-          for (let i = array.length - 1; i >= 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-          }
-          return array;
-        };
-
-        Object.keys(this.introBannerItems).forEach(key => {
-          usersMapByCategory[key] = shuffle(usersMapByCategory[key]);
-          for (const u of usersMapByCategory[key]) {
-            this.introBannerItems[key].features.push({ userId: u });
-            if (this.introBannerItems[key].features.length >= 8) { break; }
-          }
+        const users: Professional[] = [];
+        res.data.forEach((d: IUserDetail) => {
+          users.push(new Professional(d._id, d));
         });
+        this.featuredExpertController.addData(users);
       }
     }, (error) => { console.log(error); });
   }
 
-  // async getPartnersFeatured() {
-  //   return new Promise((resolve, reject) => {
-  //     const query = new PartnerSearchFilterQuery({ featured: true, count: 7 });
-  //     const path = 'partner/get-all';
-  //     this._sharedService.postNoAuth(query.json, path).subscribe((res: any) => {
-  //       if (res.statusCode == 200) {
-  //         const partners = [];
+  onEnterExpertFinder(isLeaving: boolean) {
+    if(!isLeaving) {
+      const el = this.elExpertFinderScrollHorizontal.nativeElement as HTMLElement;
+      const start = el.scrollLeft;
+      if(start > 0) {
+        smoothHorizontalScrolling(el, Math.floor(start * 2 / 9), -start, start);
+      }
+    }
+  }
+  /** EXPERT FINDER END */
 
-  //         res.data.data.forEach((data: any) => {
-  //           partners.push(new Partner(data));
-  //         });
+  /** TESTIMONIAL */
+  public testimonials = [];
+  public disabledAnimationTestimonials = false;
 
-  //         this.partnersFeatured = partners;
-  //         // this.startCarouselPartners();
-  //         resolve(true);
-  //       } else {
-  //         reject(res.message);
-  //       }
-  //     }, error => {
-  //       console.log(error);
-  //       reject('There are some error please try after some time.');
-  //     });
-  //   });
-  // }
-  // startCarouselPartners() {
-  //   if (this.timerCarouselPartner) { clearInterval(this.timerCarouselPartner); }
+  onIntersectTestimonial(enter: boolean) {
+    if(enter) {
+      this.testimonials = testimonials;
+      setTimeout(() => {
+        this.disabledAnimationTestimonials = true;
+      });
+    } else {
+      this.disabledAnimationTestimonials = false;
+      this.testimonials = [];
+    }
+  }
+  /** TESTIMONIAL END */
 
-  //   const target = this.elHost.querySelector('#carousel-partner-1') as HTMLElement;
-  //   const partners = target.querySelectorAll('.carousel-partner-item');
-  //   this.timerCarouselPartner = setInterval(() => {
-  //     // partners.forEach(p => {
-  //     // });
-  //     target.scrollBy(1, 0);
-  //   }, 25);
 
-  //   const target2 = this.elHost.querySelector('#carousel-partner-2') as HTMLElement;
-  //   setTimeout(() => {
-  //     const partner = target2.querySelector('.carousel-partner-item');
-  //     const wPartner = partner.getBoundingClientRect().width;
-  //     // console.log(wPartner);
-  //     this.timerCarouselPartner = setInterval(() => {
-  //       target2.scrollBy({ left: wPartner * ((window.innerWidth < 768) ? 2 : 4), behavior: 'smooth' });
-  //     }, 5000);
-  //   }, 1000);
-  // }
+  /** COMMUNITY */
+  public introductionPostType = introductionPostType;
+  /** COMMUNITY END */
 
-  switchTab(selectedKey: string) {
-    this.currentKeyIndex = this.allIntroBannerKeys.indexOf(selectedKey);
+  /** APP */
+  isAppFeatureSelected(index: number) {
+    return this.selectedAppFeature === index;
+  }
+  get isAppFeatureLeftSelected() {
+    return this.selectedAppFeature === 0 || (this.selectedAppFeature > 0 && this.selectedAppFeature < 3);
+  }
+  get isAppFeatureRightSelected() {
+    return this.selectedAppFeature >= 3;
+  }
+  
+  public appFeatureItems = appFeatureItems;
+  public selectedAppFeature: number = null;
+  public isOnAppFeature: boolean = false;
+  @ViewChildren('appFeatureSwitcher') private appFeatureSwitchers: QueryList<ElementRef>;
+
+  onIntersectAppFeature(enter: boolean) {
+    this.isOnAppFeature = enter;
   }
 
-  // findDoctor() { /** NO NEED */
-  //   this.lat = 0 + this._uService.localStorage.getItem('ipLat');
-  //   this.long = 0 + this._uService.localStorage.getItem('ipLong');
-  //   this.router.navigate(['/doctor-filter'], { queryParams: { lat: this.lat, long: this.long } });
-  // }
+  onIntersectAppFeatureItem(select: boolean, index: number) {
+    if(this.isOnAppFeature) {
+      if(select) {
+        this.selectedAppFeature = index;
+      } else if(index > 0) {
+        this.selectedAppFeature = index - 1;
+      } else {
+        this.selectedAppFeature = null;
+      }    
+    } else {
+      this.selectedAppFeature = null;
+    }
+  }
+  
+  onClickAppFeatureItem(index: number) {
+    if(!this._uService.isServer) {
+      let topEl = (this.appFeatureSwitchers.toArray()[index].nativeElement as HTMLDivElement).getBoundingClientRect().top;
+      // if(this.selectedAppFeature > index)
+      window.scrollTo({top: topEl + window.scrollY});
+      setTimeout(() => {
+        this.selectedAppFeature = index;
+      }, 10)  
+    }
+  }
+  /** APP END */
 
-  // questionnaire() { /** NO NEED */
-  //   if (this.token) {
-  //     this.router.navigate(['/personal-match']);
-  //   } else {
-  //     this.router.navigate(['/personal-match']);
-  //     // this.router.navigate(['auth/login/u']);
-  //     // this.toastr.warning("Please login first.")
-  //   }
-  // }
+  /** CITIES */
+  public citiesFeatured: {id: CityId, label: string}[];
+  /** CITIES END */
 
-  // submit() { /** NO NEED */
-  //   // alert("here");
+  /** BLOGS */
+  public blogs: Blog[];
+  async getBlog() {
+    const query = new SocialPostSearchQuery({count: 3, contentType: 'ARTICLE'});
+    this._sharedService.getNoAuth('note/get-by-author/' + environment.config.idSA + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+      if(res.statusCode === 200) {
+        const blogs = [];
+        res.data.forEach(d => {
+          blogs.push(new SocialArticle(d));
+        });
+        this.blogs = blogs;
+      } else {
+        console.log(res.message);
+        this.blogs = [];
+      }
+    }, (error) => {
+      console.log(error);
+      this.blogs= [];
+    });
+  }
+  /** BLOGS END */
+}
 
-  //   this.submitted = true;
-  //   const data = JSON.stringify(this.homeForm.value);
+const appFeatureItems = [
+  [
+    {
+      icon: 'verified-outline', 
+      title: 'Find trusted wellness providers based on your personalized needs.',
+      content: 'Do a personal match or use search filter options.',
+    },
+    {
+      icon: 'checkbox-square-outline',
+      title: 'Browse and learn from our content library.',
+      content: 'View resources by category and filter by media type to find expert created content that matters to you.',
+    },
+    {
+      icon: 'users-outline',
+      title: 'Compare and book.',
+      content: 'Read reviews and make informed decisions about your care.',
+    }
+  ],
+  [
+    {
+      icon: 'book-open-outline',
+      title: 'Stay connected with your favourite experts.',
+      content: 'Appointment go well? Follow your provider’s page for updates and additional resources.',
+    },
+    {
+      icon: 'tags-2-outline',
+      title: 'Safe & Secure.',
+      content: 'Your privacy and security is ensured. PIPEDA/HIPPA approved.',
+    },
+    {
+      icon: 'shield-check-outline',
+      title: 'COMING SOON: Discover select deals on recommended products.',
+      content: 'Browse through wellness products recommended by the experts themselves.',
+    }
+  ],
+]
 
-  //   // this._sharedService.loader('show');
-  //   this._sharedService.contactus(data).subscribe(
-  //     (res: any) => {
-  //       // this._sharedService.loader('hide');
-  //       if (res.success) {
-  //         this.toastr.success(res.message);
-  //         this.homeForm.reset();
-  //         this.submitted = false;
-  //       } else {
-  //         this.toastr.error(res.message);
-  //       }
-  //     },
-  //     error => {
-  //       this.toastr.error('Please check your email id.');
-  //       // this._sharedService.loader('hide');
-  //     }
-  //   );
-  // }
+const introductionPostType = {
+  note: {
+    icon: 'comment-2',
+    color: 'bg-success',
 
-  // timer() { /** NO NEED */
-  //   const deadline = new Date('June 5, 2020 15:37:25').getTime();
+    title: 'Notes',
+    content: 'Quick health and wellness reads.',
+  },
+  event: {
+    icon: 'calendar',
+    color: 'bg-error',
 
-  //   const now = new Date().getTime();
-  //   const t = deadline - now;
-  //   const days = Math.floor(t / (1000 * 60 * 60 * 24));
-  //   const hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  //   const minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-  //   const seconds = Math.floor((t % (1000 * 60)) / 1000);
+    title: 'Events',
+    content: 'Attend virtual or in-person events hosted by providers.',
+  },
+  article: {
+    icon: 'file',
+    color: 'bg-yellow',
 
-  //   this.days = days;
-  //   this.hours = hours;
-  //   this.minutes = minutes;
-  //   this.seconds = seconds;
-  // }
+    title: 'Articles',
+    content: 'Dive deep into different topics.',
+  },
+  voice: {
+    icon: 'mic',
+    color: 'bg-primary',
 
-  // learnMore() { /** NO NEED */
-  //   if (this.token) {
-  //     this.router.navigate(['plans']);
-  //   } else {
-  //     this.router.navigate(['plans']);
-  //   }
-  // }
+    title: 'Voices',
+    content: 'Get to know your provider before meeting with audio recordings.',
+  },
+  video: {
+    icon: 'image-3',
+    color: 'bg-secondary',
 
-
-  showMenu() {
-    this._headerStatusService.showNavMenu();
+    title: 'Images',
+    content: 'Easy to read content for visual learners.',
   }
 }
+
+const testimonials = [
+  {
+    // name: 'Gary Prihar',
+    name: 'Move Health',
+    location: 'Surrey, BC',
+    profileId: '60074ebd998cd73c49680be9',
+    image: '/assets/img/testimonial/movehealth.png',
+    body: 'We are beyond pleased with our decision to partner with Prompt Health.  Their innovative approach to matching patients with health providers has helped accelerate our multi-disciplinary wellness business.',
+    link: 'https://www.movehealthandwellness.com/',
+    // numFollowers: 981,
+    // numPosts: 96,
+    // rating: 5,
+  },
+  {
+    // name: 'Nikki Laframboise',
+    name: 'Connect Health',
+    location: 'Vancouver, BC',
+    profileId: '6047dc101c38b73a74c11e51',
+    image: '/assets/img/testimonial/connecthealth.png',
+    body: 'Prompt Health has helped us immensely with our social media marketing while our team has been busy focusing on patient care. We really appreciate their help and all they have assisted us with since joining. -The Connect Health Team.',
+    link: 'https://www.connecthealthcare.ca',
+    // numFollowers: 143,
+    // numPosts: 90,
+    // rating: 5,
+  },
+  {
+    name: 'Nourishme',
+    location: 'Vancouver, BC',
+    profileId: '60954a833f3c8b158749d053',
+    image: '/assets/img/testimonial/nourishme.png',
+    body: 'Prompt Health is a wonderful health tool to connect people with integrative and functional practitioners. We are excited to collaborate with them!',
+    link: 'https://nourishme.ca',
+    // numFollowers: 981,
+    // numPosts: 96,
+    // rating: 5,
+  }
+];

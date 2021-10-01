@@ -1,4 +1,17 @@
-<div *ngIf="imageUrl" class="image-container rounded-circle" [ngStyle]="containerStyle">
-  <img class="rounded-circle" [src]="imageUrl" [alt]="alt" crossorigin="anonymous">
-  <badge-verified *ngIf="verifiedUser && showBadge" class="badge" [ngStyle]="badgeStyle"></badge-verified>  
+<div *ngIf="imageUrl" 
+class="image-container" 
+>
+  <img 
+  [ngClass]="[shapedCircle ? 'rounded-circle' : 'rounded-rect' ]"
+  [ngStyle]="imageStyle"
+  [src]="imageUrl" 
+  [alt]="alt" 
+  crossorigin="anonymous"
+  >
+  <i 
+  iconPh="verified"
+  *ngIf="verified"
+  class="text-primary"
+  [ngStyle]="badgeStyle"
+  ></i>
 </div>

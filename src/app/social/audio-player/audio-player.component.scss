@@ -1,0 +1,73 @@
+@import '../../../assets/scss/variables';
+
+
+.audio-player {
+  padding: 20px 20px 45px;
+  border-radius: 8px;
+  background: $colorPrimaryDark;
+
+  .btn-play-control {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    background: $colorGsWhite;
+    i {
+      position: absolute;
+      color: $colorPrimaryDark;
+      font-size: 18px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .btn-replay {
+    background: rgba($colorGsBlack, 0.8);
+    i {
+      color: $colorGsWhite;
+    }
+  }
+
+  .label-audio-duration-current {
+    position: absolute;
+    margin-top: 10px;
+    top: 100%;
+    left: 0;
+    color: $colorGsWhite;
+  }
+  .label-audio-duration {
+    position: absolute;
+    margin-top: 10px;
+    top: 100%;
+    right: 0;
+    color: $colorGsWhite;
+  }
+
+
+  .audio-progress-bar{
+    position: relative;
+    height: 30px;
+
+    [class^=bar] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      opacity: 0.3;
+
+      background-color: white;
+      mask-image: url('/assets/img/social/audio-progress.svg');
+      mask-size: 110px 30px;
+
+      &.bar-overlay {
+        width: 0%;
+        opacity: 1;
+        animation-duration: 1.2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+    }
+  }
+}

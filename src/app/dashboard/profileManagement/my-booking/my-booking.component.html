@@ -4,7 +4,7 @@
   </p>
 </ngx-spinner>
 
-<h3 class="mb-3">My Bookings</h3>
+<h4 class="mb-3">My Bookings</h4>
 <div *ngIf="(bookingList && bookingList.length > 0); then booking; else noData"></div>
 <ng-template #booking>
   <div class="table-responsive mb-3">
@@ -143,7 +143,7 @@
                   </button>
                   <button
                     (click)="updateBooking(book._id, 2)"
-                    class="btn btn-danger mr-1"
+                    class="btn btn-error mr-1"
                   >
                     Reject
                   </button>
@@ -252,7 +252,7 @@
               This doctor is no longer available.
             </ng-template>
           </td>
-          <td style="text-align: center;">
+          <td class="text-nowrap" style="text-align: center;">
             <div class="d-block" [ngSwitch]="book.status">
               <div *ngSwitchCase="0">
                 <button
@@ -263,7 +263,7 @@
                 </button>
                 <button
                   (click)="updateBooking(book._id, 2)"
-                  class="btn btn-danger mr-1"
+                  class="btn btn-error mr-1"
                 >
                   Reject
                 </button>

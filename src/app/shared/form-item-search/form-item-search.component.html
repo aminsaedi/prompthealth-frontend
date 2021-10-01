@@ -1,0 +1,44 @@
+<div #container class="position-relative" (clickOutside)="onClickOutside($event)">
+  <form-item-input
+  [name]="name"
+  [label]="label"
+  [placeholder]="placeholder"
+  [controller]="controller"
+  [prependIcon]="prependIcon"
+  [disabled]="disabled"
+  [submitted]="submitted"
+  [option]="option"
+  (onFocus)="onChangeFocusStatus($event)"
+  (onChangeValue)="onChangeValue($event)"
+  [autocomplete]="autocomplete"
+  ></form-item-input>
+  
+  <ul 
+  #selections
+  *ngIf="_searchDataFiltered && _searchDataFiltered.length > 0 && _isSelectionsShown"
+  class="position-absolute selections list-unstyled border rounded w-100 bg-white m-0 p-0" 
+  >
+    <ng-template *ngTemplateOutlet="nestedSelections; context: {$implicit: _searchDataFiltered}"></ng-template>
+  </ul>    
+</div>
+
+
+<ng-template #nestedSelections let-data>
+  <ng-container *ngFor="let d of data; let i = index">
+    <li class="list-unstyled">
+      <span *ngIf="!d.selectable" class="subtitle2 text-placeholder">{{d.label}}</span>
+      <a 
+      *ngIf="d.selectable"
+      class="d-block text-body subtitle2"
+      [ngClass]="{active: (d.id == _idDataFocused)}"
+      (click)="selectData(d)"
+      >{{d.label}}</a>
+    </li>
+
+    <ul *ngIf="d.hasSubitems" class="sub p-0 m-0">
+      <ng-template *ngTemplateOutlet="nestedSelections; context: {$implicit: d.subitems}"></ng-template>
+    </ul>
+
+  </ng-container>
+</ng-template>
+

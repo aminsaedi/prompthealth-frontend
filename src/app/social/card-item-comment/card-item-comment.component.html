@@ -1,0 +1,95 @@
+<div>
+  <div 
+  *ngIf="post && !post.isCommentDoneInit"
+  class="py-30p text-center"
+  >
+    <loader></loader>
+  </div>
+
+  <div *ngFor="let c of comments">
+    <ng-container *ngTemplateOutlet="comment; context:{$implicit:c, indent: false}"></ng-container>
+  </div>
+</div>
+
+<ng-template #comment let-data let-indent="indent">
+  <div class="d-flex mt-20p" [ngClass]="{indent: indent}">
+    <a 
+    *ngIf="!data.author.isU"
+    [routerLink]="['/community/profile', data.author._id]"
+    (click)="markCurrentPosition()"
+    >
+      <profile-image size="42" [image]="data.author.profileImage"></profile-image>
+    </a>
+    <ng-container *ngIf="data.author.isU">
+      <profile-image size="42" [image]="data.author.profileImage"></profile-image>
+    </ng-container>
+    <div class="ml-10p flex-grow-1">
+      <div class="rounded-8p px-15p pt-15p pb-5p d-inline-block bg-background">    
+        <a 
+        *ngIf="!data.author.isU"
+        [routerLink]="['/community/profile', data.author._id]"
+        class="text-body"
+        (click)="markCurrentPosition()"
+        >
+          <h6 class="subtitle2">{{data.author.nickname}}</h6>
+        </a>
+        <ng-container *ngIf="data.author.isU">
+          <h6 class="subtitle2">{{data.author.nickname}}</h6>
+        </ng-container>
+        
+        <div class="body2 mb-5p comment-body">
+          <b *ngIf="data.replyTo">@{{nameReplyTo(data.replyTo)}} </b>
+          <span [innerHTML]="data.body"></span>
+        </div>
+        <div class="d-flex">
+          <!-- <button
+          class="btn btn-text-grey small px-0 mr-20p"
+          type="button"
+          >
+            <i [iconPh]="'heart'"></i>
+            <span *ngIf="data.like > 0" class="ml-5p">{{data.like}}</span>
+          </button> -->
+          <button 
+          class="btn btn-text-grey small px-0"
+          (click)="onClickReply(data)"
+          >Reply</button>
+        </div>
+      </div>
+
+      <div 
+      *ngIf="targetCommentIdForReply == data._id"
+      class="mt-10p"
+      >
+        <form-item-comment
+        [controller]="f.body"
+        [disabled]="isUploading"
+        (onCancel)="onCancelReply()"
+        (onSubmit)="onSubmitReply()"
+        ></form-item-comment>
+      </div>
+
+      <div *ngIf="hasReply(data._id)">
+        <button *ngIf="!isReplyOpened(data._id)"
+        class="btn btn-text small px-0"
+        (click)="onClickShowReply(data._id)"
+        >
+        <i iconPh="chevron-down"></i>
+        <span>Show replies</span>
+        </button>
+
+        <button *ngIf="isReplyOpened(data._id)"
+        class="btn btn-text small px-0"
+        (click)="onClickHideReply(data._id)"
+        >
+        <i iconPh="chevron-up"></i>
+        <span>Hide replies</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="isReplyOpened(data._id)">
+    <ng-container *ngFor="let r of repliesOf(data._id)">
+      <ng-content *ngTemplateOutlet="comment; context:{$implicit:r, indent: true}"></ng-content>
+    </ng-container>  
+  </ng-container>
+</ng-template>

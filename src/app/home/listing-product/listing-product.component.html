@@ -1,77 +1,60 @@
-<ngx-spinner bdColor="#fff" size="medium" color="#fff">
-  <p style="font-size: 20px; color: white" class="loaderbg">
-    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
-  </p>
-</ngx-spinner>
-
-<section class="hero text-light">
-  <div class="position-relative container pt-5">
-    <div class="pt-3">
-      <h2 class="pt-5 pb-2">Our Favourite Health Products and Services</h2>
-      <!-- <div class="row">
-        <div class="col-12 col-md-8">
-          <p class="">Coming soon...wellness products and services. Please check back soon to explore our featured companies.</p>
-        </div>
-      </div> -->
-    </div>
-  </div>
-</section>
+<div class="container my-30p">
+  <h3>Health Products</h3>
+</div>
 
 <ng-template #filterTop>
-  <div class="pt-3 px-3 pb-2 position-relative">
-    <h4 class="text-ph-blue font-weight-400 mb-3">Filter Categories</h4>
+  <div class="pt-3 px-3 pb-2 position-relative bg-primary-light">
+    <h5 class="text-primary-dark mb-3">Filter Categories</h5>
     <div class="d-flex justify-content-between align-items-center">
-      <button class="btn btn-ph-blue px-4" (click)="onApplyFilter()">Apply</button>
-      <button class='btn' (click)="onResetFilter()">Clear</button>
+      <button class="btn btn-primary small" (click)="onApplyFilter()">Apply</button>
+      <button class='btn btn-text small text-body' (click)="onResetFilter()">Clear</button>
     </div>
-    <button class="btn btn-close text-ph-blue d-md-none font-bigger" (click)="hideFilter()"><i class="fas fa-times"></i></button>
+    <button class="btn btn-icon btn-close small d-lg-none" (click)="hideFilter()"><i class="large" iconPh="cross"></i></button>
   </div>    
 </ng-template>
 
-<div class="container mt-5">
+<div class="container">
   <div class="intersection-observer" intersectionObserver (changeStatus)="onChangeStickyStatus($event)"></div>
   <div class="row">
-    <section class="col-12 col-md-4 col-lg-4 col-xl-3 d-none d-md-block">
-      <div class="bg-lightblue">
-        <div class="sticky-top bg-white">
-          <div class="pt-3">
-            <form-item-input 
-            name="search"
-            label="search"
-            placeholder="What area are you looking for?"
-            prependIcon="fas fa-search"
-            [controller]="formSearch"
-            (keyup.enter)="onSearchSet()"
-            ></form-item-input>  
-          </div>
-          <div class="bg-lightblue">
-            <ng-container *ngTemplateOutlet="filterTop"></ng-container>
-          </div>
-        </div>
+    <section class="col-12 col-lg-4 d-none d-lg-block">
+      <div class="sticky-top py-3">
+        <form-item-input 
+        name="search"
+        label="search"
+        placeholder="What area are you looking for?"
+        prependIcon="search"
+        [controller]="formSearch"
+        (keyup.enter)="onSearchSet()"
+        ></form-item-input>
 
-        <div class="pb-3 px-3 pt-3" *ngIf="!isViewSmall">
-          <form-item-service 
-          [col2]="false" 
-          [data]="filterServices"
-          ></form-item-service>
+        <div class="bg-primary-light mt-2 rounded-4p">
+          <ng-container *ngTemplateOutlet="filterTop"></ng-container>
+          <div class="pb-3 px-3 pt-3" *ngIf="!isViewSmall">
+            <form-item-service 
+            [col2]="false" 
+            [data]="filterServices"
+            ></form-item-service>
+          </div>      
         </div>
       </div>
     </section>
 
-    <section class="col-12 col-md-8 col-lg-8 col-xl-9">
+    <section class="col-12 col-lg-8">
       <div class="mb-3 sticky-top pt-3 pb-2 blur" (clickOutside)="hideFilter()">
-        <div class="position-relative d-md-none">
+        <div class="position-relative d-lg-none">
           <form-item-input 
           name="search"
           label="search"
           placeholder="What area are you looking for?"
-          prependIcon="fas fa-search"
+          prependIcon="search"
           [controller]="formSearch"
           (click)="showFilter()"
           (keyup.enter)="onSearchSet()"
           ></form-item-input>  
-          <div class="position-absolute w-100 px-3 bg-lightblue z-index-10" *ngIf="isFilterShown && isViewSmall">
-            <ng-container *ngTemplateOutlet="filterTop"></ng-container>
+          <div class="position-absolute w-100 px-3 mt-2 bg-primary-light z-index-10 rounded-4p pb-2" *ngIf="isFilterShown && isViewSmall">
+            <div class="pb-4">
+              <ng-container *ngTemplateOutlet="filterTop"></ng-container>
+            </div>
             <div class="form-item-service-sm">
               <form-item-service 
               class="form-item-service-sm" 
@@ -82,12 +65,12 @@
         </div>
         <div class="d-flex justify-content-end pt-3">
           <div class="d-flex align-items-center">
-            <div class="mr-3 whitespace-nowrap font-weight-400">Sort by:</div>
+            <div class="mr-3 text-nowrap body1">Sort by:</div>
             <ul class="d-flex flex-nowrap sorts list-unstyled p-0 m-0">
-              <li *ngFor="let data of sortData" class="position-relative whitespace-nowrap">
-                <button class="btn font-regular text-ph-blue" 
+              <li *ngFor="let data of sortData" class="position-relative text-nowrap">
+                <button class="btn btn-text small text-body" 
                 [ngClass]="{active: (currentSortTarget == data.id)}" 
-                (click)="sortPartners(data)"
+                (click)="sortProducts(data)"
                 >{{data.label}}</button>
               </li>
             </ul>
@@ -95,25 +78,21 @@
         </div>
       </div>
 
-      <!-- <p class="text-dark font-big font-italic mb-5" style="line-height: 1.5em;">Coming soon...wellness products and services. Please check back soon to explore our featured companies.</p> -->
-
-      <p *ngIf="!partners" class="message-dummy">Here are the options we found for you</p>
-      <ul class="row list-unstyled partners" *ngIf="!partners">
-        <li class="col-12 col-md-6 col-xl-4 mb-4" *ngFor="let i of [0,1,2,3]">
-          <card-dummy class="rounded-10p"></card-dummy>
+      <ul class="row list-unstyled products" *ngIf="!products">
+        <li class="col-12 col-md-6 mb-30p" *ngFor="let i of [0,1,2,3]">
+          <card-dummy class="rounded-12p border"></card-dummy>
         </li>
       </ul>
 
-      <p *ngIf="partners && partners.length > 0" class="font-italic">Here are the options we found for you</p>
-      <ul class="partners list-unstyled row" *ngIf="partners && partners.length > 0">
-        <li *ngFor="let p of partners;"
-        class="col-12 col-md-6 col-xl-4 mb-4"
-        >
-          <card-partner [data]='p'></card-partner>  
+      <ul class="products list-unstyled row" *ngIf="products && products.length > 0">
+        <li *ngFor="let p of products;" class="col-12 col-md-6 mb-30p">
+          <div class="partner">
+            <card-product [data]='p'></card-product>
+          </div>
         </li>
       </ul>
 
-      <p *ngIf="partners && partners.length == 0" class="font-italic font-big">
+      <p *ngIf="products && products.length == 0" class="font-italic">
         There is no one available with your search criteria right now.
         <br><br>
         Be sure to check back as our network is growing everyday!
@@ -121,16 +100,18 @@
 
       <div class="text-center" *ngIf="countPageTotal > 1">
         <ul class="paginator list-unstyled d-inline-flex flex-nowrap align-items-center">
-          <li><button class="btn" (click)="backPage()">
-            <i class="fas fa-chevron-left font-bigger text-ph-blue"></i>
-          </button></li>
+          <li>
+            <button class="btn btn-icon small" (click)="backPage()">
+              <i iconPh="chevron-left" class="large"></i>
+            </button>
+         </li>
           <li *ngFor="let i of paginator;">
-            <button class="btn text-ph-blue px-2" (click)="changePage(i)">
+            <button class="btn btn-icon small" (click)="changePage(i)">
               <div class="btn-circle" [ngClass]="{active: (currentPage == i) }"></div>
             </button>
           </li>
-          <li><button class="btn" (click)="nextPage()">
-            <i class="fas fa-chevron-right font-bigger text-ph-blue"></i>
+          <li><button class="btn btn-icon small" (click)="nextPage()">
+            <i iconPh="chevron-right" class="large"></i>
           </button></li>
         </ul>
       </div>

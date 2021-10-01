@@ -1,13 +1,14 @@
 <form (ngSubmit)="onSubmit()">
   <div class="mb-3">
+    <h6>Select your type</h6>
     <form-item-checkbox-group
     *ngIf="!_option.hideUserType"
     id="usertype"
-    type="selectbox"
+    type="radio"
     label="User type"
     [controller]="f.userType"
     [submitted]="isSubmitted"
-    [selections]="[{id: 'default', label: 'Please select your type', value: '', disabled: true}, {id: 'seeker', label: 'Wellness Seeker', value: 'seeker'}, {id: 'provider', label: 'Wellness Provider', value: 'provider'}]"
+    [selections]="[{id: 'seeker', label: 'Wellness Seeker', value: 'seeker'}, {id: 'provider', label: 'Wellness Provider', value: 'provider'}]"
     ></form-item-checkbox-group>
   </div>
   <div class="mb-3">
@@ -52,7 +53,7 @@
     label="Region"
     placeholder="Region (Country)"
     [controller]="f.region"
-    prependIcon="fas fa-search"
+    prependIcon="search"
     [submitted]="isSubmitted"
     autocomplete="off"
     ></form-item-input>

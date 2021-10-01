@@ -1,33 +1,63 @@
-<ul class="checkbox-group" *ngIf="type != 'selectbox'">
-  <ng-container *ngFor="let item of selectionList; let i = index">
-    <ng-container *ngIf="disabled">
-      <li *ngIf="type == 'checkbox' && data?.includes(item.value)">{{item.label}}</li>
-      <li *ngIf="type == 'radio' && item.value == controller.value">{{item.label}}</li>  
-    </ng-container>
-    <ng-container *ngIf="!disabled">
-      <li *ngIf="type == 'checkbox'">
-        <form-item-checkbox
-        type="checkbox"
-        [name]="item.id"
-        [value]="item.value"
-        [group]="id"
-        [label]="item.label"
-        [controller]="controls[i]"
-        ></form-item-checkbox>    
-      </li>
-      <li *ngIf="type == 'radio'">
-        <form-item-checkbox
-        type="radio"
-        [name]="item.id"
-        [value]="item.value"
-        [group]="id"
-        [label]="item.label"
-        [controller]="controller"
-        ></form-item-checkbox>
-      </li>
-    </ng-container>
+<ng-container *ngIf="type != 'selectbox'">
+  <ng-container *ngIf="disabled">
+    <ul
+    class="checkbox-group"
+    [ngClass]="{'inline': _option.showInlineWhenDisabled, 'block-with-zero-margin': _option.showBlockWithZeroMarginWhenDisabled}"
+    >
+      <ng-container *ngFor="let item of selectionList; let i = index">
+        <li
+        *ngIf="(type == 'checkbox' && data?.includes(item.value) || (type == 'radio' && item.value == controller.value))"
+        [attr.data-separator]="_option.inlineSeparator"
+        class="item-disabled body1"
+        >
+          <i 
+          *ngIf="_option.iconPreWhenDisabled" 
+          [iconPh]="_option.iconPreWhenDisabled"
+          class="mr-5p text-placeholder"
+          ></i>
+          <span>{{item.label}}</span>
+        </li>
+      </ng-container>
+    </ul>
   </ng-container>
-</ul>
+
+  <ng-container *ngIf="!disabled">
+    <ul
+    class="checkbox-group"
+    [ngClass]="{'inline': _option.showInlineWhenEnabled}"
+    >
+      <ng-container *ngFor="let item of selectionList; let i = index">
+        <li
+        *ngIf="type == 'checkbox'"
+        class="item"
+        >
+          <form-item-checkbox
+          type="checkbox"
+          [name]="item.id"
+          [value]="item.value"
+          [group]="id"
+          [label]="item.label"
+          [controller]="controls[i]"
+          ></form-item-checkbox>
+        </li>
+        <li
+        *ngIf="type == 'radio'"
+        class="item"
+        >
+          <form-item-checkbox
+          type="radio"
+          [name]="item.id"
+          [value]="item.value"
+          [group]="id"
+          [label]="item.label"
+          [controller]="controller"
+          ></form-item-checkbox>
+        </li>
+      </ng-container>
+
+    </ul>
+  </ng-container>
+</ng-container>
 
 <div 
 *ngIf="type == 'selectbox'"
@@ -36,7 +66,7 @@ class="position-relative d-inline-block selectbox"
 (clickOutside)="toggleSelectionsVisibility('hide')"
 >
   <button 
-  class="selected rounded" 
+  class="selected rounded body1" 
   [ngClass]="{'not-selectable': (idxItemSelected >= 0 && selectionList[idxItemSelected].disabled)}"
   type="button" 
   [attr.disabled]="disabled ? 'disabled' : null"
@@ -50,7 +80,7 @@ class="position-relative d-inline-block selectbox"
   *ngIf="isSelectionsVisible" 
   >
     <li *ngFor="let item of selectionList; let i = index;">
-      <button class="btn" [focus]="isItemFocused(i)" (click)="select(i)" type="button" [ngClass]="{'not-selectable': item.disabled}"
+      <button class="btn btn-text-black subtitle2" [focus]="isItemFocused(i)" (click)="select(i)" type="button" [ngClass]="{'not-selectable': item.disabled}"
         (keydown)="onKeyDownOnItem($event)">{{item.label}}</button>
     </li>
   </ul>

@@ -1,45 +1,529 @@
-<section class="bg-accent ">
-
-  <!-- <agm-map [latitude]="lat" [longitude]="long" [scrollwheel]="true" [fullscreenControl]="true" [mapTypeId]="'hybrid'">
-    <agm-marker [latitude]="lat" [longitude]="long"></agm-marker>
-  </agm-map> -->
+<section class="bg-primary-light py-40p pt-md-90p pb-md-70p overflow-hidden">
   <div class="container">
-    <div class="row pt-3" style="min-height: 50rem;">
-      <div class="col-lg-5 col-md-6 order-2 order-md-0 align-self-end">
-        <img src="assets/img/holdphone.png" class="img-fluid" />
-      </div>
-      <div class="col-12 col-md-6 col-lg-7 mb-3 mb-lg-0 align-self-center pl-lg-5 mt-4 mt-md-0">
-        <h4 class="font-weight-400 text-light platform-message" style="color: #1055a5;">
-          <!-- A smart concierge care service to guide you choose the right
-          practitioner -->
-          Your health and wellness personal assistant
-        </h4>
-        <h1 class="ph-title text-gradient-on-blue mb-4">
-          Take control of your health with options tailored to you
-        </h1>
-
-        <div class="mt-3">
-          <a class="btn btn-home px-5" [routerLink]="['/personal-match']">Get Started</a>
+    <div class="row">
+      <div class="col-12 col-lg-7" style="z-index: 1">
+        <h6 class="h6 text-primary mb-20p">Discover. Learn. Connect.</h6>
+        <h2 class="h3 h2-md mb-30p">Your health and wellness personal assistant</h2>
+        <h6 class="h6 opacity-70pc mb-50p">Find vetted wellness providers and start your health journey today.</h6>
+        
+        <div class="bg-white color-border-primary-light-dark border rounded-lg mb-50p">
+          <search-bar></search-bar>
         </div>
-        <div class="my-5">
-          <div class="font-bigger font-md-biggest font-weight-400 text-gradient-on-blue mb-3">Personalize. Compare.
-            Connect.</div>
-          <div class="d-flex d-md-inline-flex justify-content-start align-items-center flex-nowrap">
-            <a href="https://apps.apple.com/ca/app/prompthealth/id1532951934" target="_blank" class="mr-md-3">
-              <img class="badge-appstore-top" src="/assets/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
-                alt="Download on app store">
-            </a>
-            <a href='https://play.google.com/store/apps/details?id=com.prompthealth&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
-              target="_blank">
-              <img class="badge-playstore-top" alt='Get it on Google Play'
-                src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' />
-            </a>
+
+        <ul class="row list-unstyled">
+          <li class="col-12 col-md-4">
+            <h5 class="text-secondary">
+              <i iconPh="checkbox-square-outline"></i>
+            </h5>
+            <p class="opacity-70pc">
+              Discover options with personalized filters.
+            </p>
+          </li>
+          <li class="col-12 col-md-4">
+            <h5 class="text-secondary">
+              <i iconPh="checkbox-square-outline"></i>
+            </h5>
+            <p class="opacity-70pc">
+              Learn with resources from the experts themselves.
+            </p>
+          </li>
+          <li class="col-12 col-md-4">
+            <h5 class="text-secondary">
+              <i iconPh="checkbox-square-outline"></i>
+            </h5>
+            <p class="opacity-70pc">
+              Get connected using our personal match quiz.
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="position-relative mt-50p">
+          <div class="circle-for-video circle-secondary" parallax intensity="0.5"></div>
+          <div class="video-container position-relative rounded-12p overflow-hidden">
+            <video src="assets/video/video2.mp4" controls></video>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="changeHeaderShadowStatus($event)"></div>
+<section class="bg-primary-lighter py-65p">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 col-lg-4">
+        <h4 class="d-flex flex-nowrap align-items-center">
+          <i iconPh="heart-filled" class="text-secondary mr-2 large text-primary-dark "></i>
+          <span>Our partners: </span>
+        </h4>    
+      </div>
+      <div class="col-12 col-lg-8 mt-4 mt-lg-0">
+        <div class="row align-items-center">
+          <div class="col-6 col-md-4 col-lg-4">
+            <a href="https://purepharmacy.com/" target="_blank">
+              <img src="/assets/img/partners/pure-pharmacy.png" alt="" style="width: 90%; height: auto;">
+            </a>    
+          </div>
+          <div class="col-6 col-md-4 col-lg-4">
+            <a href="https://inbodycanada.ca/" target="_blank">
+              <img src="/assets/img/partners/inbody-canada.jpeg" alt="" style="width: 90%; height: auto;">
+            </a>    
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-50p">
+    <div class="row align-items-center">
+      <div class="col-12 col-lg-4">
+        <h4 class="d-flex flex-nowrap align-items-center">
+          <i iconPh="heart-filled" class="text-secondary mr-2 large text-primary-dark "></i>
+          <span>As featured in: </span>
+        </h4>    
+      </div>
+      <div class="col-12 col-lg-8 mt-4 mt-lg-0">
+        <div class="row align-items-center">
+          <div class="col-6 col-md-4 col-lg-4">
+            <a href="https://lifesciencesbc.ca/members/personalized-healthcare-with-prompt-health-the-new-wave-of-health-and-wellness/" target="_blank">
+              <img src="/assets/img/medias/life-sciences.png" alt="" style="width: 90%; height: auto;">
+            </a>    
+          </div>
+          <div class="col-6 col-md-4 col-lg-4">
+            <a href="https://medcitynews.com/2021/02/prompt-health-is-creating-marketplace-for-smart-referrals/" target="_blank">
+              <img src="/assets/img/medias/medcity-news.png" alt="" style="width: 90%; height: auto;">
+            </a>    
+          </div>
+          <div class="col-6 col-md-4 col-lg-4 mt-30p mt-md-0p">
+            <a href="https://ca.style.yahoo.com/one-size-does-not-fit-231700679.html" target="_blank">
+              <img src="/assets/img/medias/yahoo-life.png" alt="" style="width: 90%; height: auto;">
+            </a>    
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- category start -->
+<section class="container my-40p my-md-100p">
+  <ul class="row list-unstyled p-0">
+    <ng-container *ngFor="let dataPerRow of categoryController?.dataPerRows; let i = index;">
+      <li *ngFor="let cat of dataPerRow.categories; let j = index;" class="col-12 col-md-6 col-xl-4">
+        <list-item
+        [leading]="categoryController.getIconOf(cat)"
+        leadingClass="text-primary-dark"
+        [leadingStyle]="{fontSize: '30px'}"
+        action="chevron-down"
+        actionClass="text-primary btn btn-icon"
+        [actionStyle]="{transform: 'rotateX(' + ((categoryController.isCategorySelected(i, j)) ? -180 : 0) + 'deg)', transition: 'transform 250ms'}"
+        (onTap)="categoryController.onTapMainCategory(i, j)"
+        >
+          <h5 class="subtitle1 mb-0">{{cat.item_text}}</h5>
+          <div class="body2 color-gs-label clamp-1line">{{categoryController.subCategoriesString(cat)}}</div>  
+        </list-item>  
+      </li>
+
+      <li *ngIf="dataPerRow.categoryInjected != null"
+      class="col-12 subcategory-injector overflow-hidden"
+      [@expandVertical]
+      (@expandVertical.done)="categoryController.onAnimationDone()"
+      >
+        <ul class="row list-unstyled p-0">
+          <li class="col-12 col-md-6 col-xl-4">
+            <a [routerLink]="['/practitioners', 'category', dataPerRow.categoryInjected._id]">
+              <list-item
+              [leading]="categoryController.getIconOf(dataPerRow.categoryInjected)"
+              leadingClass="text-placeholder"
+              [leadingStyle]="{fontSize: '30px'}"
+              action="arrow-right"
+              actionClass="text-primary btn btn-icon"
+              >
+                <div class="subtitle1 text-body">All of {{dataPerRow.categoryInjected.item_text}}</div>
+              </list-item>
+            </a>
+          </li>
+          <li class="col-12 col-md-6 col-xl-4" *ngFor="let sub of dataPerRow.categoryInjected.subCategory; let j = index;">
+            <a [routerLink]="['/practitioners', 'category', sub._id]">
+              <list-item
+              [leading]="categoryController.getIconOf(dataPerRow.categoryInjected)"
+              leadingClass="text-placeholder"
+              [leadingStyle]="{fontSize: '30px'}"
+              action="arrow-right"
+              actionClass="text-primary btn btn-icon"
+              >
+                <div class="subtitle1 text-body">{{sub.item_text}}</div>
+              </list-item>        
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ng-container>
+  </ul>
+
+  <!-- <div class="d-flex h6 mt-50p">
+    <i iconPh="question" class="text-primary large mr-2"></i>
+    <div class="d-md-flex flex-nowrap">
+      <h6>Are you a wellness Provider?</h6>
+      <a class="mt-3 mt-md-0 ml-md-3" routerLink="/sitemaps" fragment="type-of-provider">Click To See All 38 Provider Types</a>  
+    </div>
+  </div> -->
+</section>
+<!-- category end -->
+
+<!-- expert finder start -->
+<section class="mt-100p">
+  <div class="container mb-25p">
+    <h2>Expert Finder</h2>
+    <div class="row align-items-end justify-content-between">
+      <p class="col-12 col-md-8 col-lg-7 mb-md-0">
+        Searching for care options can be difficult. 
+        Browse our providers and discover a vetted wellness provider that is right for you.
+      </p>
+      <div class="col-12 col-md text-md-right">
+        <a class="btn btn-text body1 pl-0 pr-md-0 pb-md-0" routerLink="/practitioners">
+            <u>Find Practitioners</u>
+          <i iconPh="arrow-right-circle"></i>
+        </a>
+      </div>
+    </div>  
+  </div>
+
+  <div class="container">
+    <div class="row mb-3" *ngIf="!featuredExpertController || !featuredExpertController.includePersonalMatchInFirstRow">
+      <div class="col-12">
+        <ng-container *ngTemplateOutlet="cardPersonalMatch"></ng-container>
+      </div>
+    </div>
+  </div>
+
+  
+  <div *ngIf="!!featuredExpertController" class="expert-finder-scroll-horizontal" #expertFinderScrollHorizontal>
+  <div class="intersection-observer" intersectionObserver rootMargin="10000px 0px -500px 0px" (changeStatus)="onEnterExpertFinder($event)"></div>
+    <ul *ngFor="let dataPerRow of featuredExpertController.dataPerRows; let i = index"
+    class="d-flex align-items-stretch flex-nowrap list-unstyled expert-finder-container"
+    >
+      <li
+      *ngIf="!!featuredExpertController.includePersonalMatchInFirstRow && i == 0"
+      class="personal-match-container mr-15p"
+      >
+        <ng-container *ngTemplateOutlet="cardPersonalMatch"></ng-container>
+      </li>
+
+      <li 
+      *ngFor="let p of dataPerRow" 
+      class="mr-15p"
+      >
+        <card-practitioner *ngIf="p" 
+        [data]="p" 
+        [showDistance]="false"
+        ></card-practitioner>
+
+        <div *ngIf="!p" 
+        class="card h-100 rounded-12p" 
+        ><card-dummy></card-dummy></div>  
+      </li>
+    </ul>
+  </div>
+
+  <ng-template #cardPersonalMatch>
+    <div class="card card-personal-match align-items-center bg-primary h-100 rounded-12p personal-match p-3 text-white text-center">
+      <div class="mt-5p mb-10p">
+        <i iconPh="checkbox-square" style="font-size: 45px;"></i>
+      </div>
+      <h6 class="mb-15p">Need a personal match?</h6>
+      <p class="body2">
+        Get matched with and compare health and wellness practitioners tailored to 
+        your specific health and wellness goals, preferences, and needs.
+      </p>  
+      <a class="btn btn-black" routerLink="/personal-match">Get Started</a>
+    </div>
+  </ng-template>
+</section>
+<!-- expert finder end -->
+
+<!-- #community -->
+<section class="overflow-hidden" style="max-width: 100vw;">
+  <div class="container mt-100p mb-100p">
+    <div class="row align-items-center">
+      <div class="col-12 col-lg-5 col-xl-6 order-lg-2">
+        <h6 class="text-primary mb-10p mb-md-20p mb-lg-10p mb-xl-20p">Our community</h6>
+        <h2 class="h3 h2-md mb-25p">Connect and learn from wellness experts near you.</h2>
+        <p class="mb-60p">
+          Discover their philosophy to wellness, services, and treatment modalities. Use our social features to connect, engage, and learn about your chosen provider before booking with them.
+        </p>
+        <a
+        routerLink="/community/feed"
+        class="btn btn-primary"
+        >
+          See our community
+        </a>
+      </div>
+      <div class="col-12 col-lg-7 col-xl-6 my-20p my-lg-0p order-lg-1 ">
+        <div class="d-flex bg-primary-light py-15p rounded-12p post-types-container position-relative">
+
+          <div class="mx-5p mx-md-20p mx-lg-10p mx-xl-20p mt-50p mt-lg-0p" style="flex: 0 1 33%">
+            <ng-container *ngTemplateOutlet="cardPostType; context: {data: introductionPostType.note}"></ng-container>
+            <ng-container *ngTemplateOutlet="cardPostType; context: {data: introductionPostType.voice}"></ng-container>
+          </div>
+          <div class="mt-lg-50p" style="flex: 0 1 33%">
+            <ng-container *ngTemplateOutlet="cardPostType; context: {data: introductionPostType.event}"></ng-container>
+            <ng-container *ngTemplateOutlet="cardPostType; context: {data: introductionPostType.article}"></ng-container>
+          </div>
+          <div class="mx-5p mx-md-20p mx-lg-10p mx-xl-20p mt-30p" style="flex: 0 1 33%">
+            <div class="text-center">
+              <img src="/assets/img/home/community-people.png" alt="" class="mb-30p">  
+            </div>
+            <ng-container *ngTemplateOutlet="cardPostType; context: {data: introductionPostType.video}"></ng-container>
+          </div>
+        </div>
+      </div>
+      <ng-template #cardPostType let-data="data">
+        <div class="card rounded-12p py-20p px-10p my-5p my-md-20p my-lg-10p my-xl-20p">
+          <div class="mb-10p mb-md-20p">
+            <div
+            class="d-inline-block rounded-8p icon-container"
+            [ngClass]="data.color"
+            >
+              <i [iconPh]="data.icon" class="text-white center" style="font-size: 25px;"></i>
+            </div>
+          </div>
+          <h5 class="h6 mb-0 h5-md mb-md-10p">{{data.title}}</h5>
+          <p class="body2 body1-md mb-0 text-label">{{data.content}}</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</section>
+
+<!-- testimonial start-->
+<div class="intersection-observer" intersectionObserver rootMargin="-70% 0px 10000px 0px" (changeStatus)="onIntersectTestimonial($event)"></div>
+<section class="bg-primary-light py-100p position-relative overflow-hidden">
+  <div class="circle-for-testimonial circle-secondary" parallax intensity="0.3"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-xl-4">
+        <h2>What people think of us</h2>
+        <p class="subtitle1 opacity-70pc mb-45p">When our members are happy, we are too.</p>
+        <!-- <a class="btn btn-primary">Read More Testimonials</a> -->
+      </div>
+
+      <div 
+      class="col-12 col-xl-8 d-flex px-10p px-lg-0p flex-nowrap overflow-auto overflow-lg-visible" 
+      [@slideVerticalStagger]="testimonials.length"
+      [@.disabled]="disabledAnimationTestimonials"
+      >
+        <div 
+        *ngFor="let testimonial of testimonials"
+        class="mr-15p card-testimonial-container"
+        >
+          <card-testimonial [data]="testimonial"></card-testimonial>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- testimonial end-->
+
+<!-- #app -->
+<section class="my-100p">
+  <div class="container text-center">
+    <h2 class="h4 h2-md">
+      <span class="text-primary">+476</span> 
+      providers. <br>
+      Conncect together.
+    </h2>
+    <p class="mb-50p">
+      <span class="opacity-70pc">
+        Find trusted wellness practitioners based on your personalized needs. 
+        <br>
+        PromptHealth is the social app helping you find health and wellness information provided by vetted practitioners. 
+      </span>
+    </p>  
+  </div>
+
+  <div class="position-relative app-sticky-section-container">
+    <div class="intersection-observer" intersectionObserver rootMargin="-200px 0px 10000px 0px" (changeStatus)="onIntersectAppFeature($event)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-0" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 0)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-1" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 1)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-2" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 2)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-3" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 3)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-4" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 4)"></div>
+    <div #appFeatureSwitcher class="intersection-observer app-feature-switcher-5" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectAppFeatureItem($event, 5)"></div>  
+
+    <div class="mt-30p mt-md-50p sticky-top app-sticky-section container-md">
+      <div class="d-flex justify-content-center align-items-center flex-nowrap">
+        <a href="https://apps.apple.com/ca/app/prompthealth/id1532951934" target="_blank" class="mr-md-3">
+          <img class="badge-appstore-top" src="/assets/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
+            alt="Download on app store">
+        </a>
+        <a href='https://play.google.com/store/apps/details?id=com.prompthealth&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
+          target="_blank">
+          <img class="badge-playstore-top" alt='Get it on Google Play'
+            src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' />
+        </a>
+      </div>
+
+      <div class="app-feature-canvas">
+        <div
+        class="d-flex align-items-start justify-content-center app-features-container"
+        [ngClass]="{'focus-left': isAppFeatureLeftSelected, 'focus-right': isAppFeatureRightSelected}"
+        >
+          <ul class="list-unstyled app-features mb-0 mr-md-50p mr-xl-90p text-right">
+            <li
+            *ngFor="let item of appFeatureItems[0]; let i = index;"
+            class="mb-15p p-10p p-md-20p mb-lg-30p mx-lg-15p rounded-12p"
+            [ngClass]="{'active bg-white': isAppFeatureSelected(i)}"
+            (click)="onClickAppFeatureItem(i)"
+            >
+              <div>
+                <i
+                [iconPh]="item.icon"
+                [ngClass]="{'text-primary': isAppFeatureSelected(i)}"
+                ></i>
+              </div>
+              <div
+              *ngIf="(sizeL || isAppFeatureSelected(i))"
+              [@expandVertical]
+              >
+                <div class="content">
+                  <h5 class="mb-10p" [innerHTML]="item.title"></h5>
+                  <p
+                  *ngIf="isAppFeatureSelected(i)"
+                  [@expandVertical]
+                  class="text-label mb-0"
+                  >{{item.content}}</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class="image-app-container">
+            <div class="d-none d-lg-block">
+              <div class="circle-for-app circle-border"></div>
+              <div class="circle-for-app inner circle-border"></div>
+            </div>
+            <div class="position-relative overflow-hidden">
+              <img 
+              class="mobile-inner splash" 
+              [ngClass]="{scaleup: selectedAppFeature !== null}"
+              src="assets/img/home/app-feature-splash.png"
+              >
+              <!-- <ng-container *ngFor="let i of [0,1,2,3,4,5]">
+                <img 
+                class="mobile-inner item"
+                [ngClass]="{'active': i == 0 || selectedAppFeature >= i}"
+                [src]="'assets/img/home/app-feature-item-' + i + '.png'"
+                >  
+              </ng-container> -->
+              <img 
+              class="mobile-inner item"
+              [ngClass]="{'active': selectedAppFeature >= 0}"
+              [src]="'assets/img/home/app-feature-item.png'"
+              >  
+            <img class="mobile-body position-relative" src="assets/img/home/app-feature-body.png" alt="PromptHealth app is available on App Store and Google Play">  
+            </div>
+          </div>
+          <ul class="list-unstyled app-features mb-0 ml-md-50p ml-xl-90p">
+            <li
+            *ngFor="let item of appFeatureItems[1]; let i = index;"
+            class="mb-15p p-10p p-md-20p mb-lg-30p mx-lg-15p rounded-12p"
+            [ngClass]="{'active bg-white': isAppFeatureSelected(i + 3)}"
+            (click)="onClickAppFeatureItem(i+3)"
+            >
+              <div>
+                <i
+                [iconPh]="item.icon"
+                [ngClass]="{'text-primary': isAppFeatureSelected(i + 3)}"
+                ></i>
+              </div>
+        
+              <div
+              *ngIf="(sizeL || isAppFeatureSelected(i + 3))"
+              [@expandVertical]
+              >
+                <div class="content">
+                  <h5 class="mb-10p" [innerHTML]="item.title"></h5>
+                  <p
+                  *ngIf="isAppFeatureSelected(i + 3)"
+                  [@expandVertical]
+                  class="text-label mb-0"
+                  >{{item.content}}</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <ul class="d-lg-none list-unstyled d-flex justify-content-center app-feature-controller">
+          <ng-container *ngFor="let group of appFeatureItems; let i = index;">
+            <li *ngFor="let item of group; let j = index;">
+              <button
+              class="btn small"
+              [ngClass]="isAppFeatureSelected(i * 3 + j) ? 'btn-icon' : 'btn-icon-grey'"
+              (click)="onClickAppFeatureItem(i * 3 + j)"
+              >
+                <i [iconPh]="item.icon"></i>
+              </button>
+            </li>
+          </ng-container>
+        </ul>
+            </div>
+      </div>
+  </div>
+</section>
+<!-- app end-->
+
+<!-- Find by city start -->
+<section class="container my-100p">
+  <h2 class="mb-30p">Find By City</h2>
+  <ul class="list-unstyled row">
+    <li class="col-6 col-md-4 col-lg-3" *ngFor="let city of citiesFeatured">
+      <a [routerLink]="['/practitioners', 'area', city.id]">
+        <list-item
+        action="arrow-right"
+        >
+          <div class="subtitle1 text-body">{{city.label}}</div>
+        </list-item>  
+      </a>
+    </li>
+  </ul>
+</section>
+<!-- Find by city end-->
+
+<!-- blogs start-->
+<section class="container my-100p">
+  <h2 class="mb-30p">Our Blogs</h2>
+  <ul class="row list-unstyled mb-0">
+    <ng-container *ngIf="!blogs">
+      <li class="col-12 col-md-4 mb-20p" *ngFor="let i of [0,1,2]">
+        <div class="card"><card-dummy></card-dummy></div>
+      </li>
+    </ng-container>
+    <ng-container *ngIf="blogs">
+      <li class="col-12 col-md-4 mb-20p" *ngFor="let b of blogs">
+        <a [routerLink]="[b.linkToPost]">
+          <div class="bg-background rounded-12p p-20p">
+            <div class="body-small text-primary mb-10p">{{b.createdAt | date: 'longDate'}}</div>
+            <h6 class="h6 clamp-2line mb-10p text-body">{{b.title}}</h6>
+            <p class="body1 clamp-3line text-body">{{b.summary}}</p>
+            <div class="text-right">
+              <button class="btn btn-text pr-0 pb-0">
+                <u>Read</u>
+                <i iconPh="arrow-right-circle" class="large"></i>
+              </button>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+</section>
+
+
+
+
 <!-- event section -->
 <!-- <section class="info-banner py-2">
   <div class="container text-white">
@@ -60,375 +544,3 @@
   </div>
 
 </section> -->
-<!-- map section  -->
-<!-- <section class="pt-6 pb-6 position-relative bg-light">
-  <div
-    class="bg-cover leftbgimage d-none d-md-block"
-    style="background-image: url(assets/img/map.png);height: 300px;"
-  ></div>
-  <div class="container position-relative">
-    <div class="row">
-      <div class="col-lg-6 col-md-12">
-        <img src="assets/img/map.png" class="w-100 d-block d-md-none shadow" />
-      </div>
-      <div class="col-lg-6 col-md-12">
-        <div
-          class="h5 font-weight-light mb-0 p-5 shadow"
-          style="min-height: 320px;background-color: #fff;"
-        >
-          <h2 class="ttle-bott-bor">
-            Find the right practitioner with our interactive map
-          </h2>
-          PromptHealth’s free platform and mobile app connects you to the
-          nearest curated list of health and wellness practitioners based on
-          your needs, with an easy to use interactive map.
-        </div>
-      </div>
-    </div>
-  </div>
-</section> -->
-
-<!-- clients and professionals boxes -->
-<section class="pt-5 pb-5">
-  <div class="container">
-    <div class="row">
-      <div class="col-6 col-md-3 mb-3 d-none d-md-block ">
-        <div class="d-flex flex-column justify-content-center h-100">
-          <div class="text-center align-self-center mb-3 text-primary">
-            <b>
-              Health Seeker
-            </b>
-          </div>
-          <a [routerLink]="['/auth/registration', 'u']" class="btn btn-home">
-            Sign up for free
-          </a>
-        </div>
-      </div>
-      <div class="col-12 col-md-6 mb-3">
-        <img src="assets/img/signup.png" alt="signup-img" class="img-fluid">
-      </div>
-      <!-- show two buttons side by side on small screen -->
-      <div class="col-6 col-md-3 mb-3 d-md-none">
-        <div class="d-flex flex-column justify-content-center h-100">
-          <div class="text-center align-self-center mb-3 text-primary">
-            <b>
-              Health Seeker
-            </b>
-          </div>
-          <a [routerLink]="['/auth/registration', 'u']" class="btn btn-home">
-            Sign up for free
-          </a>
-        </div>
-      </div>
-      <div class="col-6 col-md-3 mb-3">
-        <div class="d-flex flex-column justify-content-center h-100">
-
-          <div class="text-center align-self-center mb-3 text-primary">
-            <b>
-              Health Provider
-            </b>
-          </div>
-          <a href="" [routerLink]="['/plans']" class="btn btn-home">
-            Learn more
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<get-featured-tab></get-featured-tab>
-<!-- 'background': 'linear-gradient(180deg, #3377C5 0%, rgba(255, 255, 255, 0) 100%), url(' + introBannerItems[currentIntroIndex].bgImg + ') no-repeat 50%', -->
-<section class="bg-gradient py-5 recBackground" style="min-height: 50vh;" [ngStyle]="{
-  'background': 'url(' + introBannerItems[allIntroBannerKeys[currentKeyIndex]].bgImg + ') no-repeat 50%',
-  'transition': 'background-image 600ms ease-in-out 0s'
-}" id="introsection">
-  <div class="position-absolute background-gradient"></div>
-  <div class="container h-100">
-    <div class="row">
-      <div class="col">
-        <h2 class="text-white ">
-          <b>
-            Explore our Featured Services
-          </b>
-        </h2>
-      </div>
-    </div>
-
-    <div class="intro-content-area">
-      <div class="tab-row">
-        <span *ngFor="let item of this.introBannerItems | keyvalue: keepOriginalOrder">
-          <input [ngModel]="allIntroBannerKeys[currentKeyIndex]" (change)="switchTab(item.key)"
-            class="switch-tab switch" id="{{item.value.name}}" name="introbanner" type="radio" [value]="item.key" />
-          <label class="tab" for="{{item.value.name}}">
-            <img src="{{item.value.thumbnail}}" alt="{{item.value.title+': '+item.value.description}}"
-              class="img-thumbnail rounded intro-thumbnail">
-          </label>
-        </span>
-      </div>
-
-      <div class="col-12">
-        <div class="row">
-          <div class="col-12 col-lg-4 p-5" style="min-height: 30vh">
-            <h3 class="text-gradient">
-              {{this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].title}}
-            </h3>
-            <p class="about-us-body-font">
-              {{this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].description}}
-            </p>
-          </div>
-          <div class="col-12 col-lg-8 p-5">
-            <h4 class="text-primary">You might like</h4>
-            <div class="featured row">
-              <!-- <div *ngIf="item.value.features.length>0">
-
-              </div>
-              <ng-template>
-
-              </ng-template> -->
-              <div class="col-6 col-md-3 mt-3"
-                *ngFor="let feature of this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].features">
-                <a *ngIf="feature.userId" [routerLink]="['/practitioners/', feature.userId._id]">
-                  <div class="featured-image">
-                    <user-image class="w-100" [verifiedUser]="feature.userId.verifiedBadge" [showBadge]="true"
-                      [badgeSize]="featuredImageData.badgeSize" [borderWidth]="1"
-                      [borderWidthVerified]="featuredImageData.borderWidthVerified" [alt]="feature.userId.firstName"
-                      [image]="feature.userId.profileImage ? AWS_S3 + '350x220/' + feature.userId.profileImage : 'assets/img/default_user.jpg'">
-                    </user-image>
-                  </div>
-                  <div class="text-center mt-1 text-dark" style="height: 38px;">
-                    {{feature.userId.firstName}} {{feature.userId.lastName}}
-                  </div>
-                </a>
-              </div>
-
-              <div *ngIf="this.introBannerItems[allIntroBannerKeys[currentKeyIndex]].features.length===0">
-                <a class="col-6 col-md-3 col-lg-4" [routerLink]="['/plans']" fragment="addon">
-                  Get featured
-                  <!-- <img src="assets/img/get-featured.png" class="w-100" /> -->
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Partner Section  -->
-<section class="position-relative py-5">
-  <!-- <div class="container">
-    <h3 class="text-ph-blue mb-4">Our Featured Partners</h3>
-    <div class="row align-items-center mb-4">
-      <div class="col-6 col-md-4">
-        <a href="https://purepharmacy.com/" target="_blank">
-          <img src="/assets/img/pure_pharmacy_logo.png" alt="" style="width: 100%; height: auto;">
-        </a>
-      </div>
-      <div class="col-6 col-md-4 pb-3">
-        <a class="btn btn-home font-big font-weight-400 rounded-10p" [routerLink]="['plans/product']">Become a partner</a>
-      </div>
-    </div>    
-  </div> -->
-
-  <div class="container">
-    <h3 class="text-ph-blue mb-5">Our Featured Partners</h3>
-  </div>
-  <div class="d-flex align-items-center flex-nowrap partners-featured" id="carousel-partner-1">
-    <div class="col-6 col-md-4 col-lg-3">
-      <a href="https://purepharmacy.com/" target="_blank">
-        <img src="/assets/img/pure_pharmacy_logo.png" alt="" style="width: 90%; height: auto;">
-      </a>
-    </div>
-    <div class="col-6 col-md-4 col-lg-3">
-      <a href="https://inbodycanada.ca/" target="_blank">
-        <img src="/assets/img/partners/inbody-canada.jpeg" alt="" style="width: 90%; height: auto;">
-      </a>      
-    </div>
-
-    <!-- disabled this section for now -->
-    <!-- <div class="col-6 col-md-4 col-lg-3 carousel-partner-item" *ngFor="let p of partnersFeatured;">
-      <a [routerLink]="['/partners', p.id]">
-        <img [src]="p.image" [alt]="p.name" style="width: 100%; height: auto;">
-      </a>
-    </div> -->
-
-    <!-- <div class="col-6 col-md-4 col-lg-3 text-center">
-      <a class="btn btn-home font-big font-weight-400 rounded-10p" [routerLink]="['plans/product']">Become a partner</a>
-    </div> -->
-  </div>
-
-  <!-- this is test to show a lot of partners -->
-  <!-- <div class="d-flex align-items-stretch flex-nowrap partners-featured py-3" id="carousel-partner-2">
-    <div class="col-6 col-md-3 carousel-partner-item" *ngFor="let p of partnersFeatured;">
-      <a class="card rounded" [routerLink]="['partners', p.id]">
-        <div class="cover">
-          <img [src]="(p.countProductImages > 0) ? p.productImages[0].url : p.image" [alt]="p.name">
-        </div>
-        <div class="px-3 py-4">
-          <div class="profile-image">
-            <img [src]="p.image" [alt]="p.name">
-          </div>
-          <p class="font-big text-dark mt-3 mb-0">This is our valuable partner. Their product is awesome. Please try.</p>
-        </div>
-      </a>
-    </div>  
-  </div> -->
-
-</section>
-
-<!-- About section -->
-<section class="position-relative pt-0 pt-lg-2 pb-0 pb-lg-2" id="aboutsection">
-  <div class="py-5" style="background-color: #EDF4FF;">
-    <div class="container">
-      <!-- about us row -->
-      <div class="row my-3">
-        <div class="col-12 col-md-5 col-lg-5 mb-3 mb-lg-0">
-          <video width="100%" height="100%" class="" controls>
-            <source src="assets/video/video2.mp4" type="video/mp4" />
-
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="col-12 col-md-1 col-lg-2 d-flex flex-column justify-content-center text-center">
-          <h2 class="text-gradient">
-            X
-          </h2>
-        </div>
-        <div class="col-12 col-md-6 col-lg-5 d-flex flex-column justify-content-center">
-          <h3 class="text-primary">
-            About Us
-          </h3>
-          <p class="about-us-body-font">
-            <!-- Everybody has different health and wellness goals. You would typically
-          ask around, lookup directories or Google search for different health
-          professionals. These are called blind referrals as we are all
-          different and one size does not fit all. With PromptHealth, people
-          can now use one search engine to get smart suggestions that meet their
-          health and wellness needs. They have the option to make it as
-          personalized as possible based on their health risks, background and
-          preferences. Using one easy to use platform and app, clients connect
-          with practitioners, services and products at their convenience. -->
-            PromptHealth is an application that connects people to Canadian accredited medical and holistic health
-            services, based on individualized needs and with the choice of virtual or location-based matches. Prompt
-            Health is your online ‘personal assistant’ that takes the challenge out of accessing and navigating the care
-            you need.
-          </p>
-        </div>
-      </div>
-
-      <!-- what make us unique row-->
-      <div class="row my-3 py-3">
-        <div class="col-12 text-center ph-title text-gradient-light mb-4" style="font-size: 3em !important;">
-          What makes us unique?
-        </div>
-
-        <div class="col-12 col-md-5 col-lg-5 mb-3 mb-lg-0">
-          <img src="assets/img/makes-us-unique.png" alt="people cheer" class="img-fluid">
-        </div>
-        <div class="d-none d-md-block col-md-1 col-lg-2">
-        </div>
-        <div class="col-12 col-md-6 col-lg-5 d-flex flex-column justify-content-center">
-
-          <p class="about-us-body-font">
-            We do the screening or the “triage” for you using our algorithm to provide you with <b
-              class="blue-bold">smart
-              referrals</b>, helping
-            you to find your care with <b class="blue-bold">ease</b> and <b class="blue-bold">confidence</b>.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- how it works section -->
-<section id="how-it-works" class="py-5">
-  <div class="container dot-bg">
-    <div class="row">
-      <div class="col">
-        <h2 class="ph-title text-gradient">How PromptHealth Works</h2>
-      </div>
-    </div>
-    <div class="row my-3" *ngFor="let item of howPhWorks; let i = index">
-      <div class="col-12 col-md-6 d-flex justify-content-center my-2 my-md-0" [ngClass]="{'order-md-2': i % 2 === 1}">
-        <img src="{{item.imgUrl}}" alt="{{item.title}}" class="img-fluid">
-      </div>
-      <div class="col-12 col-md-6 d-flex flex-column justify-content-center" [ngClass]="{'order-md-1': i % 2 === 1}">
-        <h3 class="text-primary text-center text-md-left">{{item.title}}</h3>
-        <p class="about-us-body-font">
-          {{item.body}}
-        </p>
-        <p *ngIf="item.remark" [innerHTML]="item.remark"> </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- quote section -->
-<section id="quotesection" class="my-5">
-  <div class="container">
-    <div class="row">
-      <div class="col quote-block">
-        <span style="font-size: 4em; color: #406FBF;">“</span>
-        <p class="quote-font p-3">
-          We believe the journey to the healthier you should be personalized, as one size does not fit all. Prompt
-          Health uses technology to modernize
-          and transform the client’s journey so you no longer have to blindly connect with services.
-        </p>
-        <span style="font-size: 4em; color: #406FBF; float: right;">”</span>
-
-      </div>
-    </div>
-    <div class="row">
-      <div class="col d-flex justify-content-center">
-        <div class="mt-2">
-          <div class="d-flex justify-content-center">
-            <img src="assets/img/imgpsh_fullsize_anim.jpg" class="shadow rounded-circle mb-3 testimonials-avtar">
-          </div>
-          <h5 class="text-primary text-uppercase text-center">Hedieh Safiyari, Founder/CEO</h5>
-          <div class="text-center">MBA, MSc</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- app comminng soon section -->
-<section class="pt-3 pt-lg-5 pb-0 pb-lg-5">
-  <div class="container">
-    <div class="coming-soon-bottom-bar">
-      <div class="row align-items-center">
-
-        <div class="col-12 col-md-7">
-          <h1 class="text-center text-primary text-ph-blue" style="padding-top: 2rem;">
-            <span class="">PromptHealth APP</span>
-            <br>
-            <span class="font-weight-normal font-smaller font-italic">DOWNLOAD NOW</span>
-          </h1>
-
-          <div class="mt-5 mt-md-3 d-md-flex justify-content-center align-items-center text-center">
-            <div>
-              <a href="https://apps.apple.com/ca/app/prompthealth/id1532951934" target="_blank" class="mr-md-3">
-                <img class="badge-appstore" src="/assets/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
-                  alt="Download on app store">
-              </a>
-            </div>
-            <div>
-              <a href='https://play.google.com/store/apps/details?id=com.prompthealth&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
-                target="_blank">
-                <img class="badge-playstore" alt='Get it on Google Play'
-                  src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' />
-              </a>
-            </div>
-          </div>
-
-        </div>
-        <div class="col-12 col-md-5 mt-5 mt-md-0">
-          <img src="assets/img/app-iphone.png" alt="prompthealth app is available" class="image-app">
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>

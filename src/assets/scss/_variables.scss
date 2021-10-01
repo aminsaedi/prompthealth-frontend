@@ -1,15 +1,54 @@
-//fonts
-@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap");
+$breakpointSm: 576px;
+$breakpointMd: 768px;
+$breakpointLg: 992px;
+$breakpointXl: 1200px;
 
+$colorPrimary: #0C74FF;
+$colorPrimaryDark: #0055C7;
+$colorPrimaryLight: #E9F2FF;
+
+$colorSecondary: #00C2FF;
+$colorSecondaryDark: #00B2EA;
+$colorSecondaryLight: #E8FBFF;
+
+$colorYellow: #FDB813;
+$colorYellowDark: #A47300;
+$colorYellowLight: #FCEBC2;
+
+$colorError: #EA4242;
+$colorErrorDark: #BB1313;
+$colorErrorLight: #FBECEC;
+
+$colorSuccess: #12C132;
+$colorSuccessDark: #079020;
+$colorSuccessLight: #E8F9EB;
+
+/** greyscale */
+$colorGsBlack: #04122D;
+$colorGsBody: #293148;
+$colorGsLabel: #838790;
+$colorGsPlaceholder: #A0A3BD;
+$colorGsLine: #D6D8E7;
+$colorGsBackground: #EFF3F7;
+$colorGsWhite: #FFFFFF;
+
+/** social media */
+$colorGoogle: #db4437;
+$colorGoogleLight: #ea5f54;
+$colorFacebook: #3b5998;
+$colorFacebookLight: #3c6acb;
+$colorTwitter: #1DA1F2;
+$colorLinkedin: #2867B2;
+$colorInstagram: #E1306C;
+$colorTiktok: #69C9D0;
+$colorYoutube: #FF0000;
+
+//fonts (previous design)
 $accentColor: #B7D3F3;
 $primaryColor: #4274BA;
 $primaryColorhover: #5683c2;
-$facebookColor: #3b5998;
 $linkedInColor: #0e76a8;
 $instaColor: #3f729b;
-$googleColor: #db4437;
-$facebookColorH: #3c6acb;
-$googleColorH: #ea5f54;
 $secondaryColor: #6d6e71;
 $secondaryColorhover: #525458;
 $themeFont: "Roboto", sans-serif;

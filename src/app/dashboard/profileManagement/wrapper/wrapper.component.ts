@@ -3,8 +3,9 @@ import { FormControl, Validators } from '@angular/forms';
 import { SharedService } from '../../../shared/services/shared.service';
 import { ProfileManagementService } from '../profile-management.service';
 import { ToastrService } from 'ngx-toastr';
-import { pattern } from '../../../_helpers/form-settings';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { pattern } from 'src/app/_helpers/pattern';
+import { IUserDetail } from 'src/app/models/user-detail';
 
 @Component({
   selector: 'app-wrapper',
@@ -17,7 +18,7 @@ export class WrapperComponent implements OnInit {
     private _managementService: ProfileManagementService,
     private _toastr: ToastrService,
   ) { }
-  public profile;
+  public profile: IUserDetail;
   public isPremium = false; /** if the user is vip or subscribe plans, true. */
   public isPhLinkFieldShown = false;
   public formPhListedLink: FormControl;
@@ -151,7 +152,7 @@ export class WrapperComponent implements OnInit {
     title: 'Offer',
     link: 'partner-offer',
     active,
-  });
+  })
 
   public myPostsTab = (active) => ({
     description: 'Add & Edit your posts',
@@ -173,15 +174,15 @@ export class WrapperComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    
+
     this.formQuestionnaireCompletedNeverAsk = new FormControl();
     this.formPhListedLink = new FormControl('', [Validators.required, Validators.pattern(this.patternURL)]);
 
     this.formQuestionnaireCompletedNeverAsk.valueChanges.subscribe(val => {
-      if(val) {
+      if (val) {
         localStorage.setItem('neverAskCompleteRegistration', 'true');
       } else {
-        localStorage.removeItem('neverAskCompleteRegistration')
+        localStorage.removeItem('neverAskCompleteRegistration');
       }
     });
 
@@ -199,15 +200,14 @@ export class WrapperComponent implements OnInit {
         this.setUserPremiumStatus();
         this.setListing(this.profile);
 
-        let neverAskCompleteRegistration = localStorage.getItem('neverAskCompleteRegistration');
-        if(this.profile.questionnaireCompleted === false && neverAskCompleteRegistration !== 'true') {
+        const neverAskCompleteRegistration = localStorage.getItem('neverAskCompleteRegistration');
+        if (this.profile.questionnaireCompleted === false && neverAskCompleteRegistration !== 'true' && this.profile.roles != 'U' && this.profile.roles != 'SA') {
           this.alertModal.show();
         }
-      }
-      catch(error){ 
+      } catch (error) {
         console.log(error);
       }
-    }else{
+    } else {
       console.log('cannot find user data in localstorage');
     }
 
@@ -285,10 +285,17 @@ export class WrapperComponent implements OnInit {
             this.reviewTab(true),
           ];
           break;
+        case 'SA':
+          this.listing = [
+            this.profileTab(true),
+            this.passwordTab(true),
+            this.serviceTab(true),
+          ];
+          break;
         case 'SP':
           if (this.isPremium) {
             this.listing = [
-              this.myPostsTab(true),
+              // this.myPostsTab(true),
               this.performanceTab(true),
               this.profileTab(true),
               this.passwordTab(true),
@@ -306,7 +313,7 @@ export class WrapperComponent implements OnInit {
 
           } else {
             this.listing = [
-              this.myPostsTab(true),
+              // this.myPostsTab(true),
               this.profileTab(true),
               this.passwordTab(true),
               this.serviceTab(true),
@@ -325,7 +332,7 @@ export class WrapperComponent implements OnInit {
         case 'C':
           if (this.isPremium) {
             this.listing = [
-              this.myPostsTab(true),
+              // this.myPostsTab(true),
               this.performanceTab(true),
               this.profileTab(true),
               this.passwordTab(true),
@@ -345,7 +352,7 @@ export class WrapperComponent implements OnInit {
             this.listing.push(this.paymentTab(true));
           } else {
             this.listing = [
-              this.myPostsTab(true),
+              // this.myPostsTab(true),
               this.profileTab(true),
               this.passwordTab(true),
               this.serviceTab(true),
@@ -366,7 +373,7 @@ export class WrapperComponent implements OnInit {
 
         case 'P':
           this.listing = [
-            this.myPostsTab(true),
+            // this.myPostsTab(true),
             this.partnerProfileTab(true),
             this.passwordTab(true),
             this.partnerServiceTab(true),

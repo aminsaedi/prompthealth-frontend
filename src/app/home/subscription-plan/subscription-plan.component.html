@@ -22,12 +22,12 @@
 <div class="container-fluid my-5">
   <div class="max-w-1200 d-md-flex align-items-center">
     <price-range-switcher (change)="changePriceRange($event)"></price-range-switcher>
-    <span class="pt-3 pt-md-0 pl-md-3 pl-lg-5 font-italic text-blue font-big d-block d-md-inline-block">save 20% with
+    <span class="pt-3 pt-md-0 pl-md-3 pl-lg-5 m-0 font-italic text-primary h6 d-block d-md-inline-block">save 20% with
       yearly subscription</span>
 
-    <div class="d-inline-block mt-3 mt-md-0 ml-md-3 ml-lg-5">
+    <!-- <div class="d-inline-block mt-3 mt-md-0 ml-md-3 ml-lg-5">
       <button-tutorial type="signup" label="How To Signup" title="How To signup"></button-tutorial>
-    </div>
+    </div> -->
   </div>
 </div>
 
@@ -59,8 +59,13 @@
 
 <div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{shrink: isCouponShrink}"
   (click)="expandMessageCoupon()">
-  <div class="mb-2 font-weight-400">You have coupon!</div>
-  <card-coupon [couponData]="couponCode" style="font-size: 11px;"></card-coupon>
 
-  <button class="btn btn-shrink" (click)="shrinkMessageCoupon($event)"><i class="fas fa-minus"></i></button>
+  <div class="d-flex justify-content-between align-items-center mb-10p">
+    <div class="subtitle1 mb-0">You have coupon!</div>
+    <button class="btn btn-shrink" (click)="shrinkMessageCoupon($event)">
+      <i iconPh="chevron-right" class="large"></i>
+    </button>
+  </div>
+
+  <card-coupon [couponData]="couponCode"></card-coupon>
 </div>

@@ -1,17 +1,18 @@
 <header 
-class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparent"
+class="sticky-top py-10p py-md-15p border-bottom border-line bg-background bg-lg-white"
+style="z-index: 100;"
 (clickOutside)="hideTagMenu()"
 >
   <div class="container">
     <div class="d-flex justify-content-between align-items-center">
       <a routerLink="/magazines" class="d-flex flex-nowrap align-items-stretch">
-        <img class="d-lg-none" src="assets/img/logo-sm-new.png" alt="PromptHealth" width="auto" height="20">
-        <img class="d-none d-lg-block logo-lg" src="assets/img/logo-new.png" alt="PromptHealth" width="auto" height="30">
+        <img class="d-lg-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20">
+        <img class="d-none d-lg-block logo-lg" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="30">
         <div class="mx-1 mx-md-3 border-right border-body"></div>
-        <span class="align-self-center text-dark subtitle2-temp">Resource</span>
+        <span class="align-self-center text-dark subtitle2">Resources</span>
       </a>
       <nav class="d-flex align-items-center">
-        <ul class="d-none d-lg-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2-temp text-body">
+        <ul class="d-none d-lg-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2 text-body">
           <!-- category list -->
           <li class="mx-10p" *ngFor="let cat of categories">
             <a *ngIf="!isCategoryEvent(cat)" class="text-body" [routerLink]="['/magazines/category', cat.slug]">{{cat.title}}</a>
@@ -29,18 +30,16 @@ class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparen
           <li class="mx-10p" *ngIf="tags && tags.length > 0">
             <a class="text-body cursor-pointer" (click)="toggleTagMenu()">
               <span>All topics</span>
-              <i class="fas fa-chevron-down icon-show-category ml-2" [ngClass]="{active: isTagMenuShown}"></i>
+              <i iconPh="chevron-down" class="icon-show-category ml-2" [ngClass]="{active: isTagMenuShown}"></i>
             </a>
           </li>
         </ul>
         <div class="ml-10p ml-md-30p">
-          <a routerLink="/practitioners" class="btn btn-primary">Find practitioners</a>
+          <a routerLink="/practitioners" class="btn btn-primary small">Find practitioners</a>
         </div>
         <div class="d-lg-none ml-15p w-30p text-right">
-          <!-- <a class="btn btn-icon small pr-0" (click)="showMenu()"> -->
           <a class="btn btn-icon small pr-0" routerLink="/magazines/menu">
-            <!-- <i iconPh="menu" class="large"></i> -->
-            <i class="fas fa-bars"></i>
+            <i iconPh="menu" class="large"></i>
           </a>
         </div>  
       </nav>
@@ -50,7 +49,7 @@ class="py-10p py-md-15p border-bottom border-line bg-background bg-lg-transparen
     <ul class="row list-unstyled pt-20p mb-0">
       <li class="col-4 col-lg-3 py-2" *ngFor="let tag of tags">
         <a 
-        class="py-2 subtitle2-temp text-body" 
+        class="py-2 subtitle2 text-body" 
         [routerLink]="['/magazines/tag', tag.slug]"
         (click)="hideTagMenu()" 
         >{{tag.title}}</a>

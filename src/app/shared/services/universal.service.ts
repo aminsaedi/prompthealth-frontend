@@ -26,6 +26,7 @@ export class UniversalService {
   }
 
   get isServer(){ return isPlatformServer(this.p); }
+  get isBrowser() { return !isPlatformServer(this.p); }
 
   setMeta(path: string, meta: MetaData = {}){
 
@@ -65,17 +66,17 @@ export class UniversalService {
     // this._meta.updateTag({property: 'og:image:width', content: meta.imageWidth.toString()});
     // this._meta.updateTag({property: 'og:image:height', content: meta.imageWidth.toString()});
     this._meta.updateTag({property: 'og:image:alt', content: meta.imageAlt});
-  }  
+  }
 }
 
 class LocalStorage implements Storage {
   [name: string]: any;
   readonly length: number;
   clear(): void {}
-  getItem(key: string): string | null {return undefined;}
+  getItem(key: LocalStorageKeyType): string | null {return undefined;}
   key(index: number): string | null {return undefined;}
-  removeItem(key: string): void {}
-  setItem(key: string, value: string): void {}
+  removeItem(key: LocalStorageKeyType): void {}
+  setItem(key: LocalStorageKeyType, value: string): void {}
 }
 
 
@@ -93,3 +94,5 @@ export interface MetaData {
 }
 
 type TwitterCardType = 'summary' | 'summary_large_image';
+
+type LocalStorageKeyType = 'hide_alert_being_approved' | string;

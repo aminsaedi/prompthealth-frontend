@@ -1,16 +1,8 @@
-:host{
-  font-size: 16px;
-  color: var(--ph-black-bold);
-}
-
-.bg-lightblue{ background: #EDF4FF; }
 .position-sm-relative{
   @media (max-width:767px){
     position: relative;
   }
 }
-$marginTopAfterHeader: 40px;
-.mt-after-header{ margin-top: $marginTopAfterHeader; }
 
 /** mainview */
 @import '../../../assets/scss/responsive_variables';
@@ -19,10 +11,10 @@ $marginTopAfterHeader: 40px;
   @media (min-width: 768px){
     /** set height for medium view or more to set height for image-grid */
     /** (doesn't have to be exact value) */
-    height: calc(100vh - #{$headerHeightLoggedinLg + $marginTopAfterHeader + 30});
+    height: calc(100vh - #{$headerHeightLoggedinLg + 40 + 30});
   }
   @media (min-width: 1200px) {
-    height: calc(100vh - #{$headerHeightLoggedinXl + $marginTopAfterHeader + 30});
+    height: calc(100vh - #{$headerHeightLoggedinXl + 40 + 30});
   }
 }
 
@@ -132,10 +124,6 @@ $marginTopAfterHeader: 40px;
     object-fit: contain;
     object-position: left;
   }  
-}
-
-.table{
-  a{ color: inherit; }
 }
 
 .share-menu-container{

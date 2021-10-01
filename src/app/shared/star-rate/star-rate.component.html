@@ -1,13 +1,20 @@
-<span class="star-container" *ngIf="!simple" [ngClass]="{'size-s': (size == 'small'), 'size-l': (size == 'big')}">
+<span class="star-container" *ngIf="!simple" [ngClass]="{'size-xs': (size == 'smaller'), 'size-s': (size == 'small'), 'size-l': (size == 'big')}">
     <ng-container *ngFor="let i of [1,2,3,4,5]">
-        <i class="fas "
+        <i [iconPh]="sign"
         *ngIf="rate >= i || !showActiveOnly"
-        [ngClass]="[iconMargin, iconType, iconActive(i)]"
+        [ngClass]="[iconMargin, iconActive(i)]"
+        [ngStyle]="{color: color}"
         ></i>        
     </ng-container>
 </span>
 
-<span *ngIf="simple" class="star-container simple" [ngClass]="{'size-s': (size == 'small'), 'size-l': (size == 'big')}">
-    <i class="fas fa-star"></i>
-    <span class="rate">{{rate}}</span>
+<span 
+*ngIf="simple"
+class="subtitle1" 
+>
+    <i 
+    [iconPh]="sign" 
+    [ngStyle]="{color: color}"
+    ></i>
+    <span class="text-body">{{rate}}</span>
 </span>

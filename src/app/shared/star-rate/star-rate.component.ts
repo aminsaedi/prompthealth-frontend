@@ -10,9 +10,10 @@ export class StarRateComponent implements OnInit {
   @Input() rate: number = 0;
   @Input() margin: string = 'regular' /** regular | big | small | none */
   @Input() simple: boolean = false;
-  @Input() size: string = 'regular'; /** regular | big | small */
-  @Input() sign: string = 'star'; /** star | dollar */
+  @Input() size: string = 'regular'; /** regular | big | small | smaller*/
+  @Input() sign: string = 'star-filled'; /** star-filled | dollar */
   @Input() showActiveOnly: boolean = true;
+  @Input() color: string = null;
   
   constructor() { }
 
@@ -22,14 +23,6 @@ export class StarRateComponent implements OnInit {
       case 'regular': c.push('mr-2'); break;
       case 'big': c.push('mr-3'); break;
       case 'small': c.push('mr-1'); break;
-    }
-    return c.join(' ');
-  }
-  get iconType() {
-    const c = [];
-    switch(this.sign){
-      case 'star': c.push('fa-star'); break;
-      case 'dollar': c.push('fa-dollar-sign'); break;
     }
     return c.join(' ');
   }

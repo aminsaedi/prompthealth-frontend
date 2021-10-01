@@ -3,7 +3,7 @@
     <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
   </p>
 </ngx-spinner>
-<h3>
+<h4>
   My Amenities
   <button
     *ngIf="savedAminities && savedAminities.length"
@@ -12,7 +12,7 @@
   >
     Add More
   </button>
-</h3>
+</h4>
 <hr>
 <!-- <p style="color:#4a86ab"><i class="fas fa-star-of-life"></i>  Invite a colleague and give them 10% discount to join and receive 10% discount towards your subscription after they join.</p> -->
 <hr>
@@ -50,8 +50,8 @@
         </div>
       </td>
       <td width="10%">
-        <button (click)="deleteAmenity(aminity._id)" class="btn btn-danger">
-          <i class="fa fa-minus-square" aria-hidden="true"></i>
+        <button (click)="deleteAmenity(aminity._id)" class="btn btn-danger small">
+          <i iconPh="trash" class="large"></i>
         </button>
       </td>
     </tr>
@@ -105,7 +105,7 @@
             <!-- <a (click)="removefromList(url)" class="fa fa-times"></a>  -->
           </div>
         </div>
-        <div class="upload-input btn btn-primary">
+        <div class="upload-input btn btn-outline">
           <input
             type="file"
             name="profile"

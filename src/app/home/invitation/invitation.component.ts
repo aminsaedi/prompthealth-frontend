@@ -56,7 +56,6 @@ export class InvitationComponent implements OnInit {
 
   logoutAndSignup(role: string) {
     this._sharedService.logout();
-    this._toaster.success('You are logged out.')
 
     const route = ['plans'];
     if(role == 'P') {

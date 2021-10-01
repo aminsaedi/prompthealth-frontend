@@ -11,22 +11,21 @@ import { SharedModule } from '../shared/shared.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PaginationModule, PaginationConfig } from 'ngx-bootstrap/pagination';
 import { GuardIfPostNotSavedGuard } from './guard-if-post-not-saved.guard';
-import { ContenteditableValueAccessor } from './contenteditable.directive';
 
 
 const routes: Routes = [
-  { path: 'create', component: EditorComponent, canDeactivate: [GuardIfPostNotSavedGuard]},
+  { path: 'create', component: EditorComponent, canDeactivate: [GuardIfPostNotSavedGuard] },
   { path: 'edit/:id', component: EditorComponent, canDeactivate: [GuardIfPostNotSavedGuard] },
   { path: '', redirectTo: '1' },
   { path: ':page', component: ListComponent },
-]
+];
 
 @NgModule({
-  declarations: [ListComponent, EditorComponent, ContenteditableValueAccessor],
+  declarations: [ListComponent, EditorComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     FormsModule,
     NgbModule,
     NgxSpinnerModule,
@@ -36,10 +35,10 @@ const routes: Routes = [
       modules: {
         toolbar: [
           ['bold', 'italic', 'underline', 'clean'],
-          [{ 'list': 'ordered'}, { 'list': 'bullet' }, 'blockquote'],       
-          [{ 'header': 1 }, { 'header': 2 }],              
-          [{ 'color': [] }, { 'background': [] }],       
-          ['link', 'image', 'video']                      
+          [{ list: 'ordered' }, { list: 'bullet' }, 'blockquote'],
+          [{ header: 1 }, { header: 2 }],
+          [{ color: [] }, { background: [] }],
+          ['link', 'image', 'video']
         ],
       },
     }),

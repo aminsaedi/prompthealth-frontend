@@ -1,22 +1,21 @@
 <div class="menu-button d-flex align-items-center"
   *ngIf="ui == 'button'"
-  [class]="buttonDirection"
+  [ngClass]="[buttonDirection]"
   [ngStyle]="styleButton"
 >
   <user-image
-  [showBadge]="false"
-  [verifiedUser]="isVerified()"
+  [verified]="false"
   [image]="getImage()"
   [alt]="getName()"
   [borderWidthVerified]="2"
   [shadowVerified]="null"
   ></user-image>  
-  <div class="user-info text-ellipsis font-small">
+  <div class="user-info max-w-150p text-ellipsis subtitle2">
     <span class="text-nowrap">{{getName()}}</span>
   </div>
 </div>
 
-<div class="menu text-left font-weight-normal"
+<div class="menu text-left"
   *ngIf="ui == 'menu'"
   [ngStyle]="styleMenu"
 >
@@ -24,8 +23,7 @@
     [ngStyle]="styleHeader"
   >
     <user-image
-    [showBadge]="false"
-    [verifiedUser]="isVerified()"
+    [verified]="false"
     [image]="getImage()"
     [alt]="getName()"
     [borderWidthVerified]="0"
@@ -33,11 +31,11 @@
     ></user-image>
 
     <div class="user-info">
-      <div class="text-nowrap mb-1 d-flex align-items-center">
-        <badge-verified class="mr-2" *ngIf="isVerified()"></badge-verified>
+      <div class="text-nowrap mb-1 subtitle1">
+        <i iconPh="verified" class="mr-2" *ngIf="isVerified()"></i>
         {{getName()}}
       </div>
-      <div class="text-nowrap font-small m-0">{{getEmail()}}</div>
+      <div class="text-nowrap body2 m-0">{{getEmail()}}</div>
     </div>  
   </div>
 
@@ -46,26 +44,23 @@
   >
     <div>
       <a *ngIf="hasProfile()" 
-        (click)="onClose()"
-        class="btn font-regular pl-0 py-2 text-nowrap" 
-        [routerLink]="[ ((user.roles == 'P') ? '/products' : '/practitioners'), getId()]"
+        (click)="onClickMenuItem((user.roles == 'P' ? '/products/' : '/practitioners/') + getId())"
+        class="btn btn-text small pl-0 text-nowrap text-body" 
       >See my profile</a>
     </div>
     <div>
-      <a class="btn font-regular pl-0 py-2 text-nowrap" 
-        (click)="onClose()"  
-        [routerLink]="['/dashboard/profilemanagement/']"
+      <a class="btn btn-text small pl-0 text-nowrap text-body" 
+        (click)="onClickMenuItem('/dashboard/profilemanagement/' + (user.roles == 'P' ? 'partner-profile' : 'my-profile'))"  
       >My Dashboard</a>
     </div>
     <div>
       <a *ngIf="hasProfile()"
-      class="btn font-regular pl-0 py-2 text-nowrap" 
-      (click)="onClose()"  
-      [routerLink]="['/dashboard/profilemanagement/my-posts']"
+      class="btn btn-text small pl-0 py-2 text-nowrap text-body" 
+      (click)="onClickMenuItem('/dashboard/profilemanagement/my-posts')"  
       >See my posts</a>
     </div>
     <div>
-      <button class="btn font-regular pl-0 py-2 text-nowrap logout" (click)="onClickLogout(); onClose();">Logout</button>
+      <button class="btn btn-text-error small pl-0 py-2 text-nowrap" (click)="onClickLogout();">Logout</button>
     </div>  
   </div>
 </div>

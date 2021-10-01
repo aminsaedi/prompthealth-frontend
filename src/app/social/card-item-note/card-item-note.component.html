@@ -1,0 +1,46 @@
+  <div class="d-flex justify-content-between mb-20p">
+    <div class="d-flex flex-nowrap">
+      <a [routerLink]="['/community/profile', post?.authorId]">
+        <profile-image [image]="post?.authorImage"></profile-image>
+      </a>
+      <div class="info-container ml-10p">
+        <a [routerLink]="['/community/profile', post?.authorId]">
+          <h6 class="subtitle2 mb-0 text-body">
+            {{post?.authorName}}
+    
+            <i 
+            *ngIf="post?.authorVerified"
+            iconPh="verified" 
+            class="text-primary large ml-5p"></i>
+          </h6>        
+        </a>
+        <div class="body2 text-label">
+          {{post?.createdAt | date:'dd.MM.yyyy'}}
+        </div>
+      </div>
+    </div>
+
+    <div 
+    *ngIf="eligibleToShowPostMenu"
+    class="position-relative"
+    >
+      <button 
+      class="btn btn-icon-grey small"
+      (click)="_onClickButton($event, 'post-menu')"
+      >
+        <i iconPh="more-horiz"></i>
+      </button>
+      <div
+      [@fadeFast]
+      *ngIf="isPopupPostMenuShown"
+      class="position-absolute mt-5p" 
+      style="right: -5px;"
+      >
+        <popup-post-menu 
+        [post]="post"
+        (onClose)="onPopupPostMenuClosed()"
+        ></popup-post-menu>
+      </div>  
+    </div>
+
+  </div>

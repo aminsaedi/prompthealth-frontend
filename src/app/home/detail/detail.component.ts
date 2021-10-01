@@ -16,13 +16,15 @@ import { Subscription } from 'rxjs';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
+import { Location } from '@angular/common';
+import { minmax, validators } from 'src/app/_helpers/form-settings';
 
 
 const expandTitleAnimation = trigger('expandTitle', [
-  state('shrink', style({ height: '1.2em' })),
+  state('shrink', style({ height: '1em' })),
   state('expand', style({ height: 'auto' })),
   transition('shrink=>expand', animate('600ms ease', style({ height: '*' }))),
-  transition('expand=>shrink', style({ height: '1.2em' }))
+  transition('expand=>shrink', style({ height: '1em' }))
 ]);
 
 const expandSubtitleAnimation = trigger('expandSubtitle', [
@@ -55,13 +57,13 @@ export class DetailComponent implements OnInit {
     private _bs: BehaviorService,
     private _uService: UniversalService,
     private _qService: QuestionnaireService,
+    private _location: Location,
     el: ElementRef,
   ) { this.host = el.nativeElement; }
 
   get f() { return this.bookingForm.controls; }
 
   @ViewChild('closebutton') closebutton;
-  @ViewChild('loginModal') public loginModal: ModalDirective;
 
   /** for Tab */
   public indexTabItem = 0;
@@ -86,7 +88,7 @@ export class DetailComponent implements OnInit {
 
   /** professionals section */
   public isGettingProfessional = false;
-  public isProfessionalsMoreExist = true;
+  public isStaffsMoreExist = true;
 
   /** for booking */
   public bookingForm: FormGroup;
@@ -96,12 +98,16 @@ export class DetailComponent implements OnInit {
   public minDateTime: DateTimeData;
   // public timingSelectedValue = ''; /* used at booking form */
   public submitted = false; /* used for form verification */
+  public maxBookingNote = minmax.bookingNoteMax;
+  public isBookingLoading: boolean = false;
 
   /** for general use */
   public userInfo: Professional = null;
   public isLoggedIn = false;
   private id: number;
   public questionnaires: QuestionnaireMapProfilePractitioner;
+  public isLoginMenuShown = false;
+  public isBookingMenuShown = false;
   private amenities: any[];
   private languageSet: QuestionnaireAnswer[]; /* used to populate languages that the professional can provide */
   private serviceDeliverySet: QuestionnaireAnswer[]; /* used to populate serviceDelivery that the professional can provide */
@@ -130,37 +136,36 @@ export class DetailComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const now = new Date();
-    // this.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 9, 0, 0);
-    // this.minDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
     this.minDateTime = {
-      year: now.getFullYear(), 
-      month: now.getMonth() + 1, 
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
       day: now.getDate() + 1,
       hour: 9,
       minute: 0
     };
 
 
-    this.bookingForm = this._fb.group({
-      name: new FormControl('', [Validators.required, Validators.maxLength(50), Validators.pattern(/\S+/)]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      phone: new FormControl('', [
-        Validators.required,
-        Validators.minLength(10),
-        Validators.maxLength(12),
-        Validators.pattern(/^[0-9][0-9\-]+[0-9]$/)
-      ]),
-      bookingDateTime: new FormControl('', [Validators.required]),
-      note: new FormControl('', [Validators.maxLength(250)])
+    this.bookingForm = new FormGroup({
+      name: new FormControl('', validators.bookingName),
+      email: new FormControl('', validators.bookingEmail),
+      phone: new FormControl('', validators.bookingPhone),
+      bookingDateTime: new FormControl('', validators.bookingDateTime),
+      note: new FormControl('', validators.bookingNote),
     });
+    console.log(this.bookingForm);
 
-    this.loginSubscription = this._bs.getUserData().subscribe((user: any) => {
-      this.roles = user.roles || '';
-      this.myId = user._id || '';
-      this.isLoggedIn = (user._id) ? true: false; 
+    this.loginSubscription = this._bs.getUserData().subscribe((user: IUserDetail) => {
+      this.roles = user ? user.roles : '';
+      this.myId = user ? user._id : '';
+      this.isLoggedIn = !!user;
     });
 
     // this.category = await this._catService.getCategoryAsync();
+
+    this._route.queryParams.subscribe((params: IQueryParams) => {
+      this.isLoginMenuShown = !!(params.modal == 'login');
+      this.isBookingMenuShown = !!(params.modal == 'booking');
+    });
 
     this._route.params.subscribe(async params => {
       this.id = params.id;
@@ -172,29 +177,20 @@ export class DetailComponent implements OnInit {
         // this.getCategoryServices()
       ];
       Promise.all(promiseAll).then(async () => {
-        // this.userInfo.populate('languages', this.languageSet);
-        // this.userInfo.populate('serviceDelivery', this.serviceDeliverySet);
-        // this.userInfo.populate('availability', this.availabilitySet);
-        // this.userInfo.setAmenities(this.amenities);
-        // this.userInfo.populateService(this.category);
-        // this.userInfo.populate('ageRange', this.ageRangeSet);
-        // this.userInfo.setServiceCategory('typeOfProvider', this.typeOfProvider);
-        // this.userInfo.setServiceCategory('treatmentModality', this.treatmentModality);
-        // this.userInfo.setServiceCategory('healthStatus', this.healthStatus);
+        this.userInfo.setAmenities(this.amenities);
 
         this.questionnaires = await this._qService.getProfilePractitioner(this.userInfo.role as ('SP' | 'C'));
-        
+
         this.userInfo.videos.forEach(v => {
           const ytIframeHtml = this._embedService.embed(v.url);
           ytIframeHtml.title = v.title;
           this.iframe.push(ytIframeHtml);
-        });    
+        });
 
-        this.getEndosements();
         this.getProducts();
         this.getReviews();
 
-        if (this.userInfo.isCentre) { this.getProfessionals(); }
+        if (this.userInfo.isC) { this.getProfessionals(); }
 
         const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.userInfo.allServiceId);
         const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.userInfo.serviceOfferIds);
@@ -205,7 +201,7 @@ export class DetailComponent implements OnInit {
           pageType: 'article',
           image: this.userInfo.imageFull,
           imageType: this.userInfo.imageType,
-          imageAlt: this.userInfo.name,  
+          imageAlt: this.userInfo.name,
         });
       })
         .catch(err => {
@@ -219,7 +215,15 @@ export class DetailComponent implements OnInit {
       // this.getProfileQuestion();
     });
   }
+  async incBookingCount() {
+    this._sharedService.post({ _id: this.userInfo.id }, '/booking/gain-booking-count').subscribe(res => {
+      console.log(res);
+    }, err => {
+      console.error(err);
+    });
+    window.open(this.userInfo.bookingUrl, '_blank');
 
+  }
   getUserProfile(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const path = `user/get-profile/${this.id}`;
@@ -240,34 +244,6 @@ export class DetailComponent implements OnInit {
       });
     });
   }
-
-
-  // getProfileQuestion(): Promise<boolean> {
-  //   return new Promise((resolve, reject) => {
-  //     const path = `questionare/get-profile-questions`;
-  //     this._sharedService.getNoAuth(path).subscribe((res: any) => {
-  //       if (res.statusCode === 200) {
-  //         const questions = res.data;
-  //         questions.forEach((e: any) => {
-  //           console.log(e)
-  //           if (e.question_type === 'service' && e.slug === 'offer-your-services') {
-  //             this.serviceDeliverySet = e.answers;
-  //           }
-  //           if (e.question_type === 'service' && e.slug === 'languages-you-offer') {
-  //             this.languageSet = e.answers;
-  //           }
-  //           if (e.question_type === 'availability') {
-  //             this.availabilitySet = e.answers;
-  //           }
-  //         });
-  //         resolve(true);
-  //       } else { reject(res.message); }
-  //     }, err => {
-  //       console.log(err);
-  //       reject('There are some error please try after some time.');
-  //     });
-  //   });
-  // }
 
   getProducts() {
     this.products = [];
@@ -360,7 +336,7 @@ export class DetailComponent implements OnInit {
   getProfessionals() {
     // default count is 20
     const count = 4;
-    const lenProfessional = this.userInfo.professionals.length || 0;
+    const lenProfessional = this.userInfo.staffs.length || 0;
     const page = Math.floor(lenProfessional / count) + 1;
 
     const path = `staff/get-all?userId=${this.userInfo.id}&count=${count}&page=${page}&frontend=0/`;
@@ -368,13 +344,13 @@ export class DetailComponent implements OnInit {
     this._sharedService.getNoAuth(path).subscribe((res: any) => {
       this.isGettingProfessional = false;
       if (res.statusCode === 200) {
-        const professionals = [];
+        const staffs = [];
 
         res.data.data.forEach((p: IUserDetail) => {
-          professionals.push(new Professional(p.userId, p));
+          staffs.push(new Professional(p.userId, p));
         });
-        this.userInfo.setProfessionals(professionals);
-        if (this.userInfo.professionals.length < page * count) { this.isProfessionalsMoreExist = false; }
+        this.userInfo.setStaffs(staffs);
+        if (this.userInfo.staffs.length < page * count) { this.isStaffsMoreExist = false; }
 
       } else {
         this._sharedService.checkAccessToken(res.message);
@@ -386,7 +362,7 @@ export class DetailComponent implements OnInit {
   }
 
   getEndosements() {
-    this.userInfo.setEndosements(endosementsDummy);
+    // this.userInfo.setEndosements(endosementsDummy);
     // todo: access to api and get real data
   }
 
@@ -395,12 +371,12 @@ export class DetailComponent implements OnInit {
     // this.timingSelectedValue = evt.target.value;
   }
 
-  bookApointment() {
+  onSubmitBooking() {
       this.submitted = true;
     if (this.bookingForm.invalid) {
+      this._toastr.error('There are several items that requires your attention');
       return;
     } else {
-        
       const formData = {
         ...this.bookingForm.value,
       };
@@ -409,22 +385,24 @@ export class DetailComponent implements OnInit {
         customerId: this.myId,
         ...formData,
       };
+
       // data.timing = this.timingSelectedValue;
       data.phone = data.phone.toString();
       data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
-      this._sharedService.loader('show');
+      this.isBookingLoading = true;
       const path = `booking/create`;
       this._sharedService.post(data, path).subscribe((res: any) => {
-        this._sharedService.loader('hide');
+        this.isBookingLoading = false;
         if (res.statusCode === 200) {
+          this.submitted = false;
           this._toastr.success(res.message);
-
-          this.closebutton.nativeElement.click();
+          this.hideBookingMenu();
         } else {
-          this._sharedService.showAlert(res.message, 'alert-danger');
+          this._toastr.error(res.message);
         }
       }, (error) => {
-        this._sharedService.loader('hide');
+        this.isBookingLoading = false;
+        this._toastr.error(error);
       });
     }
   }
@@ -465,22 +443,22 @@ export class DetailComponent implements OnInit {
   }
 
   changeTabTo(i: number) {
-    if(this.userInfo){
+    if (this.userInfo) {
       this.indexTabItem = i;
       const banner = this.host.querySelector('.banner');
       const rect = banner.getBoundingClientRect();
       window.scrollBy({ top: rect.top + rect.height, left: 0, behavior: 'smooth' });
-  
-      this._map.load().then(()=>{
+
+      this._map.load().then(() => {
         this.userInfo.setGoogleReviews();
-      });  
+      });
     }
   }
 
 
   sortReviewsBy(i: number) {
     this.indexSortReviews = i;
-    this.userInfo.sortReviewBy(i);
+    // this.userInfo.sortReviewBy(i);
   }
 
   toggleExpandProfessionalDesc() { this.isExpandProfessionals = !this.isExpandProfessionals; }
@@ -500,11 +478,37 @@ export class DetailComponent implements OnInit {
     });
   }
 
-  onChangeLoginState(state: string){
-    if(state == 'done'){
-      this.loginModal.hide();
+  showLoginMenu() {
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'login'}});
+  }
+
+  //TODO: if previous page is not prompthealth, do not location.back().
+  // instead, router.navgate with replaceUrl
+  hideLoginMenu() {
+    if(this.isLoginMenuShown) {
+      this._location.back();
     }
   }
+
+  onChangeLoginState(state: string){
+    if(state == 'done'){
+      this.hideLoginMenu();
+    }
+  }
+
+  showBookingMenu() {
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'booking'}});
+  }
+
+  //TODO: if previous page is not prompthealth, do not location.back().
+  // instead, router.navgate with replaceUrl
+  hideBookingMenu() {
+    if(this.isBookingMenuShown) {
+      this._location.back();
+    }
+  }
+
+
 }
 
 
@@ -556,3 +560,7 @@ const ageRangeSet: QuestionnaireAnswer[] = [
   { _id: '5eb1a4e199957471610e6cda', item_text: 'Adult (18+)' },
   { _id: '5eb1a4e199957471610e6cdb', item_text: 'Senior (>64)' },
 ];
+
+interface IQueryParams {
+  modal: 'login' | 'booking';
+}

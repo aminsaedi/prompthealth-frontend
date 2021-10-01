@@ -1,0 +1,79 @@
+<div class="container">
+  <div class="row align-items-start">
+    <section class="col-12 col-md-2 col-xl-2 sticky-top" style="top: 100px;">
+      <div class="text-md-right">
+        <button 
+        class="btn btn-text-body small"
+        (click)="goback()"
+        >
+          <i iconPh="arrow-left"></i>
+          <span>Back</span>
+        </button>
+      </div>
+    </section>
+    <section class="col-12 col-md-10 col-xl-8">
+      <div class="d-flex justify-content-center border-bottom border-line mb-15p">
+        <div class="text-body subtitle1 btn btn-text px-0 small">Followings</div>
+      </div>
+
+      <ng-container *ngIf="follows">
+        <ul class="bg-white rounded-8p px-15p px-md-30p list-unstyled">
+          <li *ngFor="let follow of follows; let i = index">
+            <div
+            class="d-flex py-20p py-md-30p"
+            [ngClass]="(i < follows.length - 1 ? 'border-bottom border-line' : '')"
+            >
+              <profile-image
+              [image]="follow.profileImage"
+              size=50
+              ></profile-image>
+              <div class="flex-grow-1 d-flex justify-content-between flex-wrap flex-md-nowrap ml-10p">
+                <div class="name-container">
+                  <div class="subtitle1">
+                    <span>{{follow.nickname}}</span>
+                    <i
+                    *ngIf="follow.isVerified"
+                    iconPh="verified"
+                    class="text-primary ml-5p"
+                    ></i>
+                  </div>
+                  <div class="body2 text-label description">{{follow.description}}</div>
+                </div>
+                <div
+                *ngIf="!follow.isU"
+                class="mt-10p mt-md-0p ml-md-30p"
+                >
+                  <a
+                  [routerLink]="['/community/profile', follow._id]"
+                  class="btn btn-outline small text-nowrap"
+                  >See profile</a>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div
+        *ngIf="follows && follows.length == 0"
+        class="subtitle1 mt-25p text-center"
+        >No data found.</div>
+
+        <div 
+        *ngIf="existsMore && !isLoading"
+        class="text-center"
+        >
+          <button
+          class="btn btn-text small"
+          (click)="fetchFollowData()"
+          >Load more</button>
+        </div>
+      </ng-container>
+
+      <div 
+      *ngIf="isLoading"
+      class="text-center mt-25p"
+      >
+        <loader></loader>
+      </div>
+    </section>        
+  </div>
+</div>

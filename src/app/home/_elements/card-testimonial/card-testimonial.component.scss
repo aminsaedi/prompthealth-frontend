@@ -1,0 +1,14 @@
+@import '../../../../assets/scss/variables';
+
+.image-container-100pc {
+  flex: 0 0 75px;
+  background: white;
+  border: solid 3px $colorSecondary;
+  border-radius: 75px;
+}
+
+.icon-quote {
+  top: -11px;
+  left: -9px;
+  font-size: 45px;
+}

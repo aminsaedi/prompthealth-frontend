@@ -1,28 +1,38 @@
+@import '../../../assets/scss/variables';
+
 :host{ 
     white-space: nowrap; 
-    color: #EFCA2E
 }
 
 .star-container{
     display: inline-block;
     height: 1em;
-
+    
     font-size: 20px;
-    &.simple{ font-size: 18px;}
+    &.size-xs { font-size: 14px; }
     &.size-s{  font-size: 16px; }
     &.size-l{  font-size: 24px; }
-}
 
-.fa-star, .fa-dollar-sign{
-    font-size: 1em;
+    i:first-child {
+        margin-left: 0!important;
+    }
+    i:last-child {
+        margin-right: 0!important;
+    }
 
-    &.inactive{
-        color: #DCDCDC;
+    i.inactive {
+        color: $colorGsPlaceholder;
     }
 }
 
-.fa-dollar-sign{
-    -webkit-text-stroke: 1px;
+i {
+    transition: color 300ms;
 }
 
-.rate{ font-size: 16px; }
+.icon-star-filled {
+    color: $colorYellow;
+}
+
+// .icon-star-filled, .icon-dollar{
+//     font-size: 1em;    
+// }

@@ -1,15 +1,16 @@
+@import '../../../assets/scss/variables';
+
 $h: 23px;
 $w: 55px;
 
-$blue: #3377C5; 
 button.switch{
     position: relative;
-    background: $blue;
+    background: $colorPrimary;
     height: $h;
     width: $w;
     padding: 0;
     box-sizing: content-box;
-    border: solid 3px $blue;
+    border: solid 3px $colorPrimary;
     border-radius: 100px;
 
     &::after{
@@ -35,7 +36,7 @@ button.switch{
     button+&{ padding: 0 0 0 10px; }
 
     &.active{
-        color: $blue;
+        color: $colorPrimary;
         text-stroke: 1px;
         -webkit-text-stroke: 1px;
     }

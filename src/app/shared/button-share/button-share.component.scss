@@ -10,6 +10,7 @@
 
 .share-menu{
   position: absolute;
+  z-index: 10;
   width: 200px;
   overflow: hidden;
   box-shadow: 0 0 5px #d1d1d1, 0 0 10px white;

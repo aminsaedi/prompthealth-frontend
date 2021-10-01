@@ -1,6 +1,27 @@
-<div class="form-check">
-  <input *ngIf="type == 'checkbox'" type="checkbox" [id]="name" class="form-check-input" [formControl]="controller" (change)="onChange()">
-  <input *ngIf="type == 'radio'" type="radio" [id]="name" class="form-check-input" [name]="group" [value]="value" [formControl]="controller" (change)="onChange()">
+<div class="d-flex justify-content-start align-items-start">
+  <div 
+  class="position-relative mr-1 check-container" 
+  style="margin-top: 3px;"
+  *ngIf="type == 'checkbox'"
+  >
+    <i [iconPh]="'checkbox' + (!!controller.value ? '-filled' : '')" 
+    class="position-relative"
+    [ngClass]="{'text-placeholder': !controller.value, 'text-primary': !!controller.value, 'text-error': !!controller.errors}"
+    ></i>
+    <input type="checkbox" [id]="name" class="form-check-controller" [formControl]="controller" (change)="onChange()">
+  </div>
 
-  <label [for]="name">{{label}}</label>  
+  <div 
+  class="position-relative mr-1 check-container" 
+  style="margin-top: 3px;"
+  *ngIf="type == 'radio'"
+  >
+    <i [iconPh]="'radiobutton' + (controller.value == value ? '-filled' : '')" 
+    class="position-relative"
+    [ngClass]="{'text-placeholder': (controller.value != value), 'text-primary': (controller.value == value), 'text-error': !!controller.errors}"
+    ></i>
+    <input type="radio" [id]="name" class="form-check-controller" [name]="group" [value]="value" [formControl]="controller" (change)="onChange()">
+  </div>
+
+  <label [for]="name" class="m-0 subtitle1" [innerHTML]="label"></label>  
 </div>

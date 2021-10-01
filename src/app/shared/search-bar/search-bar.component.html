@@ -1,0 +1,38 @@
+<form (ngSubmit)="_onSubmit()" class="opacity-0" [ngClass]="{'opacity-1': _afterViewInit}">
+  <div class="search-bar-inner justify-content-between align-items-stretch"
+  [ngClass]="{ 'align-horizontal':_option.fixAlignHorizontal }"
+  >
+    <ul class="searchboxes m-0 justify-content-between align-items-stretch p-0 flex-grow-1">
+      <li class="d-flex align-items-center flex-grow-1 py-5p py-md-0 searchbox">
+        <form-item-input
+        class="flex-grow-1"
+        name="search"
+        prependIcon="briefcase-doctor"
+        placeholder="Doctor Name, Type of Provider"
+        type="text"
+        [controller]="f.searchBySituation"
+        [option]="{transparent: true, showRemoveButton: true}"
+        ></form-item-input>
+
+      </li>
+  
+      <li class="d-flex align-items-center flex-grow-1 py-5p py-md-0 searchbox">
+        <form-item-search
+        #searchLocation
+        class="flex-grow-1"
+        name="search"
+        placeholder="City, Province, Postal Code"
+        type="text"
+        prependIcon="pin-filled"
+        [controller]="f.searchByLocation"
+        [searchData]="_cities"
+        [option]="{transparent: true, showSelectionsImmediately: true}"
+        ></form-item-search>  
+      </li>
+    </ul>
+
+    <div class="p-5p">
+      <input type="submit" class="btn btn-primary w-100" value="Find">
+    </div>
+  </div>
+</form>

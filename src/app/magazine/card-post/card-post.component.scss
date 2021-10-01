@@ -1,23 +1,8 @@
-/// TEMPORARY TODO: REMOVE LATER
-.text-placeholder {
-  color: rgba(160, 163, 189, 1);
-}
-.bg-placeholder {
-  background-color: rgba(160, 163, 189, 1);
-}
-.bg-background {
-  background: rgba(239, 243, 247, 1);
-}
-.text-background {
-  color: rgba(239, 243, 247, 1);
-}
-
 .color-dummy {
   background-color: rgba(160, 163, 189, 1);
   color: rgba(160, 163, 189, 1);
   opacity: 0.2;
 }
-/// TEMPORARY END
 
 .card-post {
   margin: 0 -10px;
@@ -83,6 +68,9 @@
     }
   }
   
+  .content-container {
+    word-break: break-word;
+  }
 
   .author,
   .author-dummy {

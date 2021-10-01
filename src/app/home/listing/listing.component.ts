@@ -17,6 +17,7 @@ import { getDistanceFromLatLng } from '../../_helpers/latlng-to-distance';
 import { CategoryService, Category } from '../../shared/services/category.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { locations } from 'src/app/_helpers/location-data';
+import { Blog } from 'src/app/models/blog';
 
 @Component({
   selector: 'app-listing',
@@ -72,6 +73,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   public filterTarget: Filter = null;
   public currentPage = 1;
   public professionals: Professional[] = null;
+  public blogs: Blog[] = null;
   public pages: { current: number, itemsPerPage: number, data: Professional[][] } = {
     current: 1,
     itemsPerPage: 12,
@@ -211,6 +213,19 @@ export class ListingComponent implements OnInit, OnDestroy {
 
   async initLocation() {
     const ls = this._uService.localStorage;
+
+    ////// TODO: THIS SECTION MIGHT NOT BE NEEDED ? (CONFLICT WHEN MERGED POST-BY-USERS INTO DESIGN-CHANGE)
+    this.calcMapBoundingRect(); 
+    this._headerService.hideShadow();
+
+    // if options which has to be fetched from server is not set correctly, fetch.
+    if (this.filters[3].options.length == 0 || this.filters[4].options.length == 0 || this.filters[4].options.length == 0) {
+      this.getProfileQuestion();
+    }
+    ////// TODO END
+    
+    
+    /** init geo location */
     const [latDefault, lngDefault] = [53.89, -111.25];
     const [ipLat, ipLng] = [ls.getItem('ipLat'), ls.getItem('ipLong')];
     let [lat, lng]: [number, number] = [null, null];
@@ -583,9 +598,6 @@ export class ListingComponent implements OnInit, OnDestroy {
             this.setFilterOptions('language', element);
             if (this.professionals && this.professionals.length > 0) {
               const languageSet = this.getFilter('language').options;
-              if (this.professionals && this.professionals.length > 0) {
-                this.professionals.forEach((p: Professional) => { p.populate('languages', languageSet); });
-              }
             }
           }
           if (element.question_type === 'availability') {
@@ -616,22 +628,51 @@ export class ListingComponent implements OnInit, OnDestroy {
     delete filterCopy.customer_health;
 
     if (showLoader) { this._sharedService.loader('show'); }
+    this.pages = {
+      current: 1,
+      itemsPerPage: 12,
+      data: null
+    };
     const path = 'user/filter';
     this._sharedService.postNoAuth(filterCopy, path).subscribe((res: any) => {
       if (res.statusCode === 200) {
+        
+        
         const professionals = [];
+        const blogs = [];
         const languageSet = this.getFilter('language').options;
+        console.log(res);
 
-        res.data.forEach((d: any) => {
-          const professional = new Professional(d.userId, d.userData, d.ans);
-          if(!this._uService.isServer){
-            professional.setMapIcon();            
+        res.data.dataArr.forEach((d: any) => {
+          if(d.slug){          
+            const blog = new Blog(d);
+            blogs.push(blog);
+          }else{
+            d.userData.tag = [];
+            
+            res.data.filter_name.some(function (item) {
+              if (item.id == d.userId){
+                d.userData.tag.push(item.type);
+              }              
+            });
+            
+            d.userData.tag = d.userData.tag.filter(function (elem, index, self) {
+              return index === self.indexOf(elem);
+            })
+
+            const professional = new Professional(d.userId, d.userData, d.ans);
+            if (!this._uService.isServer) {
+              professional.setMapIcon();
+            }
+            // if (languageSet && languageSet.length > 0) { professional.populate('languages', languageSet); }
+            professionals.push(professional);
           }
-          if (languageSet && languageSet.length > 0) { professional.populate('languages', languageSet); }
-          professionals.push(professional);
         });
+        
 
         this.professionals = professionals;
+        this.blogs = blogs;
+        console.log(blogs);
         // this.professionals = this.professionals.sort((a, b) => a.distance - b.distance);
 
         //        this.createNameList(this.doctorsListing); // todo: can be deleted
@@ -777,7 +818,6 @@ export class ListingComponent implements OnInit, OnDestroy {
               case 'your-offerings': categories.serviceOffering.push(e); break;
             }
           });
-          Object.keys(categories).forEach((k, i) => { p.setServiceCategory(k, categories[k]); });
           resolve(true);
         } else { reject('server error'); }
       },

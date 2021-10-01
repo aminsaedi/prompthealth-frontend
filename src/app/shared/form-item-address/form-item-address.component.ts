@@ -19,7 +19,7 @@ export class FormItemAddressComponent implements OnInit {
   @Output() selectAddress = new EventEmitter<void>();
 
 
-  get address(){ return this.controllerGroup.controls.address; }
+  get fAddress(){ return this.controllerGroup.controls.address; }
   
   private host: HTMLElement;
 

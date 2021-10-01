@@ -1,0 +1,109 @@
+<div class="container">
+  <div class="row align-items-stretch justify-content-between">
+    <!-- left -->
+    <section class="col-3 d-none d-xl-block">
+      <div class="sticky-top" style="top: 80px">
+        <div class="mb-20p" *ngIf="topics" [@expandVertical]>
+          <div class="bg-white rounded-8p px-20p">
+            <list-item
+            *ngFor="let topic of topics; let i = index"
+            [leading]="iconOf(topic)"
+            leadingClass="text-primary"
+            action="chevron-right"
+            actionClass="text-primary"
+            [option]="{hideBorderBottom: (i == topics.length - 1)}"
+            (onTap)="changeTopics(topic)"
+            >
+              <div class="subtitle2">{{topic.item_text}}</div>
+            </list-item>
+          </div>
+        </div>        
+      </div>
+    </section>
+
+    <!-- main center -->
+    <section class="col-12 col-md-7 col-xl-6">
+      <router-outlet></router-outlet>        
+    </section>
+      
+    <!-- right -->
+    <section class="d-none d-md-block col-5 col-lg-4 col-xl-3">
+      <div class="sticky-top" style="top: 80px;">
+        <div class="mb-20p">
+          <a [routerLink]="['/community/profile', idPH]">
+            <div class="p-20p rounded-8p bg-primary text-white d-flex justify-content-between align-items-center">
+              <div class="d-flex">
+                <profile-image image="/assets/img/logo-sm-white.png"></profile-image>
+                <div class="ml-15p">
+                  <h6 class="subtitle2 mb-0">PromptHealth</h6>
+                  <span class="body-small text-line">See our profile</span>
+                </div>
+              </div>
+              <i iconPh="arrow-right-circle" class="text-primary-light"></i>
+            </div>
+          </a>
+        </div>
+        <div class="mb-20p">
+          <div class="bg-white rounded-8p position-relative">
+            <img src="assets/img/social/personal-match.png" style="width: 100%; height: auto;">
+            <div class="position-absolute mt-30p mx-30p" style="top: 0">
+              <div class="h5 mb-20p" style="font-weight: 400;">
+                Need a
+                <b>Personal </b>
+                Match?
+              </div>
+              <a routerLink="/personal-match" class="btn btn-secondary small">
+                Get Started
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-white rounded-8p pt-20p px-20p">
+            <h6 class="subtitle2 border-bottom border-line pb-15p">
+              <i iconPh="verified" class="text-placeholder mr-15p"></i>
+              <span>Find Health Care Provider</span>
+            </h6>
+            <list-item
+            action="arrow-right-circle"
+            actionClass="text-placeholder"
+            [option]="{hideBorderBottom: true}"
+            (onTap)="navigateTo(['/sitemaps'])"
+            >
+              <div class="text-primary-dark subtitle1">By Area</div>
+              <span class="text-label body2">{{countCities}} cities (USA soon)</span>
+            </list-item>
+            <list-item
+            action="arrow-right-circle"
+            actionClass="text-placeholder"
+            [option]="{hideBorderBottom: true}"
+            (onTap)="navigateTo(['/sitemaps'], {fragment: 'type-of-provider'})"
+            >
+              <div class="text-primary-dark subtitle1">By Type Of Provider</div>
+              <span class="text-label body2">{{countTypeOfProviders}} provider types</span>
+            </list-item>
+          </div>
+        </div>
+
+        <div class="mt-50p">
+          <div>
+            <a routerLink="/" class="body-small text-label">Home</a>
+            <span> . </span>
+            <a routerLink="/practitioners" class="body-small text-label">Find practitioners</a>
+          </div>
+          <a routerLink="/policy" class="body-small text-label">Privacy Policy</a>
+          <span> . </span>
+          <a routerLink="/terms" class="body-small text-label">Terms & Conditions</a>
+          <span> . </span>
+          <a routerLink="/faq" class="body-small text-label">FAQ</a>
+        </div>
+        <div class="body-small text-placeholder mt-10p">©2021 PromptHealth</div>
+        <!-- <div class="bg-white rounded-8p p-20p">
+          <h6 class="subtitle2 pb-15p border-bottom border-line">Top Providers</h6>
+        </div> -->
+      </div>
+    </section>
+    
+  </div>
+</div>

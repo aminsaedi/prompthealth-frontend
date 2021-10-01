@@ -1,7 +1,6 @@
 import { Injectable, Optional, RendererFactory2, ViewEncapsulation, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-// import { FlashMessagesService } from 'ngx-flash-messages';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PreviousRouteService } from './previousUrl.service';
 import { BehaviorService } from './behavior.service';
@@ -9,7 +8,7 @@ import { BehaviorService } from './behavior.service';
 
 // import { SocialAuthService } from 'angularx-social-login';
 
-import { throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 
 // import 'rxjs/add/operator/toPromise';
 import { catchError, map } from 'rxjs/operators';
@@ -26,6 +25,10 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { IAddonPlan } from 'src/app/models/addon-plan';
 import { ICouponData } from 'src/app/models/coupon-data';
+import { ToastrService } from 'ngx-toastr';
+import { Professional } from 'src/app/models/professional';
+import { SocialService } from 'src/app/social/social.service';
+import { AngularFireMessaging } from '@angular/fire/messaging';
 
 declare var jQuery: any;
 
@@ -37,15 +40,8 @@ export class User {
 
 @Injectable()
 export class SharedService {
-  rootUrl: string = environment.config.API_URL;
-  // baseUrl: string = environment.config.API_URL;
-  type: any;
-  personalMatch;
   constructor(
-    // private authService: SocialAuthService,
     private _router: Router,
-    private rendererFactory: RendererFactory2,
-    // private _flashMessagesService: FlashMessagesService,
     private spinner: NgxSpinnerService,
     private previousRouteService: PreviousRouteService,
     private _bs: BehaviorService,
@@ -53,37 +49,83 @@ export class SharedService {
     private _stripeService: StripeService,
     private _postManager: PostManagerService,
     private _profileManager: ProfileManagementService,
+    private _socialManager: SocialService,
+    private _toastr: ToastrService,
+    private angularFireMessaging: AngularFireMessaging,
 
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
-    this.type = this._uService.localStorage.getItem('roles');
+    this.receiveMessage();
+    // console.log('fcm loaded');
+    // this.type = this._uService.localStorage.getItem('roles');
+  }
+  currentMessage = new BehaviorSubject(null);
+
+  rootUrl: string = environment.config.API_URL;
+  // baseUrl: string = environment.config.API_URL;
+  // type: any;
+  personalMatch;
+  private compareList: Professional[] = [];
+
+  requestPermission(user: User) {
+    this.angularFireMessaging.requestToken.subscribe(
+      (token) => {
+        // console.log(token);
+        this.post({ token, deviceType: 'web' }, 'notification/save-token').toPromise().then(res => {
+          // console.log('token saved to db', res);
+        });
+      },
+      (err) => {
+        console.error('Unable to get permission to notify.', err);
+      }
+    );
+  }
+  receiveMessage() {
+    this.angularFireMessaging.messages.subscribe(
+      (payload: any) => {
+        console.log('new message received. ', payload);
+        this.currentMessage.next(payload);
+        // const notification: { title: string, body: string, image: string } = payload.notification;
+        // const noti = new Notification(notification.title, {
+        //   body: notification.body,
+        //   image: notification.image
+        // });
+      });
   }
 
+  async logout(navigate: boolean = true) {
+    // console.log(token);
+    await this.angularFireMessaging.getToken.toPromise().then(token => {
+      this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
+        console.log('Cleared fcm token');
+      });
+    }).catch(error => {
+      console.error(error);
+    });
 
-  logout(navigate: boolean = true) {
+    this._socialManager.dispose();
     this._postManager.dispose();
     this._profileManager.dispose();
 
     const ls = this._uService.localStorage;
-  
+
     ls.removeItem('token');
     ls.removeItem('loginID');
-    // localStorage.removeItem('isPayment');
     ls.removeItem('user');
     ls.removeItem('roles');
     ls.removeItem('isVipAffiliateUser');
-    // this.authService.signOut();
-    this.showAlert('Logout Sucessfully', 'alert-success');
-    this._bs.setUserData({});
 
+    this._bs.setUserData(null);
+    this._toastr.success('Logged out successfully');
     ls.setItem('userType', 'U');
     if (navigate) {
-      this._router.navigate(['/auth/login']);
+      this._router.navigate(['/']);
     }
   }
 
   get(path, setParams = {}) {
-    if (!this.type) {
+    const token = this._uService.localStorage.getItem('token');
+    if (!token) {
       const url = this.rootUrl + path;
       return this.http.get(url);
     } else {
@@ -96,6 +138,19 @@ export class SharedService {
   getNoAuth(path: string, params = {}) {
     const url = this.rootUrl + path;
     return this.http.get(url, { params });
+  }
+  b64ToBlob(data: string) {
+    const regExContentType = /data:(image\/.+);base64/;
+    const contentType = data.match(regExContentType)[1];
+
+    const byteString = atob(data.split(',')[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: contentType });
   }
 
   downloadFile(filepath: string, filename: string = null): Promise<boolean> {
@@ -211,24 +266,22 @@ export class SharedService {
     });
   }
 
-  b64ToBlob(data: string) {
-    const regExContentType = /data:(image\/.+);base64/;
-    const contentType = data.match(regExContentType)[1];
-
-    const byteString = atob(data.split(',')[1]);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    
-    for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: contentType });
-  }
-
   imgUpload(body, path) {
     let headers = this.getAuthorizationHeader();
     headers = headers.delete('Content-Type');
     return this.http.post(this.rootUrl + path, body, { headers });
+  }
+
+  uploadMultipleImages(images: { file: File | Blob, filename: string }[], userId: string, imageLocation: string) {
+    const data = new FormData();
+    data.append('imgLocation', imageLocation);
+    data.append('_id', userId);
+    images.forEach(image => {
+      data.append('images', image.file, image.filename);
+    });
+
+    const path = (images.length == 1) ? 'common/imgUpload' : 'common/imgMultipleUpload';
+    return this.imgUpload(data, path);
   }
 
   imgUploadPut(body, path) {
@@ -244,7 +297,7 @@ export class SharedService {
   login(body) {
     const headers = this.getDefaultHeader();
     // return this.http.post(this.rootUrl + 'user/signinUser', body, { headers });
-    return this.http.post(this.rootUrl + 'user/signinUser', body, { headers }).pipe(
+    return this.http.post(this.rootUrl + 'oauth/withpassword', body, { headers }).pipe(
       map((response: any) => {
         return response;
       }),
@@ -277,9 +330,28 @@ export class SharedService {
     const headers = this.getDefaultHeader();
     return this.http.post(this.rootUrl + 'user/social-login-2', body, { headers });
   }
+  socialSignin(body, type) {
+    const headers = this.getDefaultHeader();
+    // console.log(headers);
+
+    switch (type) {
+      case 'google':
+        return this.http.get(this.rootUrl + 'oauth/googlesignin?access_token=' + body.authToken
+          + '&role=' + body.roles, {
+          headers
+        });
+      case 'facebook':
+        return this.http.get(this.rootUrl + 'oauth/facebooksignin?access_token=' + body.authToken
+          + '&role=' + body.roles, {
+          headers
+        });
+      default:
+        break;
+    }
+  }
   logingOut() {
     const headers = this.getAuthorizationHeader();
-    return this.http.delete(this.rootUrl + 'user/logout', { headers });
+    return this.http.delete(this.rootUrl + 'oauth/logout', { headers });
   }
   getSubscriptionPlan() {
     const date = new Date().getTime().toString();
@@ -328,6 +400,14 @@ export class SharedService {
   contactus(body) {
     return this.http.post(this.rootUrl + 'user/contactus', body);
   }
+  uploadImage(object) {
+    const headers = this.getAuthorizationHeader();
+    return this.http.post(this.rootUrl + 'upload', object, { headers });
+  }
+  uploadImage1(object) {
+    const headers = this.getAuthorizationHeader();
+    return this.http.post(this.rootUrl + 'upload', object, { headers });
+  }
   sendTop() {
     window.scrollTo(500, 0);
   }
@@ -336,7 +416,7 @@ export class SharedService {
     const code = err.code;
     const message = err.message;
 
-    if ((code == 401 && message == 'authorization')) {
+    if (code === 401 && message === 'authorization') {
       this._uService.localStorage.removeItem('token');
       // this.showAlert('Session Expired.', 'alert-danger')
       // this._router.navigate(['/auth/business']);
@@ -352,6 +432,12 @@ export class SharedService {
     return this.personalMatch;
   }
   clearPersonalMatch() { this.personalMatch = null; }
+  setCompareList(compareList: Professional[] = []) {
+    this.compareList = compareList;
+  }
+  getCompareList() {
+    return this.compareList;
+  }
 
   /*This function is use to get access token from cookie. */
   getAccessToken(): string {
@@ -475,13 +561,13 @@ export class SharedService {
   }
 
   isCouponApplicableTo(coupon: ICouponData, role: string): boolean {
-    if(!coupon) { return false; }
-    if(!coupon.metadata.roles || coupon.metadata.roles.length == 0) {
+    if (!coupon) { return false; }
+    if (!coupon.metadata.roles || coupon.metadata.roles.length == 0) {
       return true;
     } else {
       const rolesStr = coupon.metadata.roles.replace(/'/g, '"');
       const roles: string[] = JSON.parse(rolesStr);
-      if(roles.includes(role)) {
+      if (roles.includes(role)) {
         return true;
       } else {
         return false;
@@ -490,15 +576,15 @@ export class SharedService {
   }
 
   async checkoutPlan(
-    user: IUserDetail, 
-    plan: IDefaultPlan | IAddonPlan, 
+    user: IUserDetail,
+    plan: IDefaultPlan | IAddonPlan,
     type: StripeCheckoutType,
     monthly: boolean,
     metadata = {}, // this is for addon plan
     option: ICheckoutPlanOption = {}
-  ): Promise<{message: string, nextAction: string}> {
-    const result = {message: null, nextAction: null};
-    if(plan.price == 0 && plan.name == 'Basic') {
+  ): Promise<{ message: string, nextAction: string }> {
+    const result = { message: null, nextAction: null };
+    if (plan.price == 0 && plan.name == 'Basic') {
       try {
         result.message = await this.checkoutFreePlan(user, (plan as IDefaultPlan));
         result.nextAction = 'complete';
@@ -508,7 +594,7 @@ export class SharedService {
       }
     } else {
       try {
-        result.message =  await this.checkoutPremiumPlan(user, plan, type, monthly, metadata, option);
+        result.message = await this.checkoutPremiumPlan(user, plan, type, monthly, metadata, option);
         result.nextAction = 'stripe';
         return result;
       } catch (error) {
@@ -517,12 +603,11 @@ export class SharedService {
     }
   }
 
-  private checkoutFreePlan (user: IUserDetail, plan: IDefaultPlan): Promise<string> {
+  private checkoutFreePlan(user: IUserDetail, plan: IDefaultPlan): Promise<string> {
     return new Promise((resolve, reject) => {
-      const payload: IUserDetail = {_id: user._id, plan: plan};
+      const payload: IUserDetail = { _id: user._id, plan };
       this.post(payload, 'user/updateProfile').subscribe((res: any) => {
-        if(res.statusCode === 200) { resolve(res.message); } 
-        else { reject(res.message); }
+        if (res.statusCode === 200) { resolve(res.message); } else { reject(res.message); }
       }, err => {
         console.log(err);
         reject('There are some errors, please try again after some time!');
@@ -531,8 +616,8 @@ export class SharedService {
   }
 
   private checkoutPremiumPlan(
-    user: IUserDetail, 
-    plan: IDefaultPlan | IAddonPlan, 
+    user: IUserDetail,
+    plan: IDefaultPlan | IAddonPlan,
     type: StripeCheckoutType,
     monthly: boolean,
     metadata = null,
@@ -542,18 +627,18 @@ export class SharedService {
       const ss = this._uService.sessionStorage;
       const savedCoupon: ICouponData = JSON.parse(ss.getItem('stripe_coupon_code'));
       const _option = new CheckoutPlanOption(option, user.roles);
-  
+      console.log(user);
       const payload: IStripeCheckoutData = {
         cancel_url: _option.cancelUrl,
         success_url: _option.successUrl,
         userId: user._id,
         userType: user.roles,
         email: user.email,
-        plan: plan,
+        plan,
         isMonthly: monthly,
-        type: type,
+        type,
       };
-      if(metadata) {
+      if (metadata) {
         payload.metadata = metadata;
       }
 
@@ -563,11 +648,11 @@ export class SharedService {
       }
 
       this.post(payload, 'user/checkoutSession').subscribe((res: any) => {
-        if(res.statusCode === 200) {
+        if (res.statusCode === 200) {
           console.log(res.data);
           this._stripeService.changeKey(environment.config.stripeKey);
-  
-          if (res.data.type === 'checkout') {  
+
+          if (res.data.type === 'checkout') {
             this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
               console.log('success!');
             }, error => {
@@ -577,8 +662,8 @@ export class SharedService {
           } else if (res.data.type === 'portal') {
             console.log(res.data);
             location.href = res.data.url;
-            resolve('You already have this plan. Redirecting to billing portal.')
-          }  
+            resolve('You already have this plan. Redirecting to billing portal.');
+          }
         } else {
           console.log(res);
           reject(res.message);
@@ -596,7 +681,7 @@ export class SharedService {
   getReferrer() {
     const ref = document.referrer;
     let res: string;
-    if(!ref || ref.length  == 0) {
+    if (!ref || ref.length == 0) {
       res = 'direct';
     } else {
       res = ref.replace(/http(s)?:\/\//, '').replace(/\/.*$/, '');
@@ -616,17 +701,17 @@ interface ICheckoutPlanOption {
   showErrorMessage?: boolean;
 }
 
-class CheckoutPlanOption implements ICheckoutPlanOption{
+class CheckoutPlanOption implements ICheckoutPlanOption {
 
-    /** if user cancel, user cannot go back to questionnaire page, because data is already destroyed and user will be guarded to access */
-  get cancelUrl() { 
-    const url = location.origin + (this.data.cancelUrl ? this.data.cancelUrl : ( '/plans' + (this.role == 'P' ? '/product' : '') )); 
+  /** if user cancel, user cannot go back to questionnaire page, because data is already destroyed and user will be guarded to access */
+  get cancelUrl() {
+    const url = location.origin + (this.data.cancelUrl ? this.data.cancelUrl : ('/plans' + (this.role == 'P' ? '/product' : '')));
     return url + (this._showErrorMessage ? '?action=stripe-cancel' : '');
   }
 
   /** currently, practitioner complete page url is same as product complete page. */
-  get successUrl() { 
-    const url = location.origin + (this.data.successUrl ? this.data.successUrl : '/dashboard/register-product/complete'); 
+  get successUrl() {
+    const url = location.origin + (this.data.successUrl ? this.data.successUrl : '/dashboard/register-product/complete');
     return url + (this._showSuccessMessage ? '?action=stripe-success' : '');
   }
 

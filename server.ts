@@ -10,6 +10,7 @@ global['HTMLElement'] = {};
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
+import * as proxy from 'http-proxy-middleware';
 import { join } from 'path';
 
 import { existsSync } from 'fs';
@@ -19,6 +20,7 @@ import * as domino from 'domino';
 import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 import { routerSitemap } from './src/app/app.server.sitemap.module';
+import { environment } from 'src/environments/environment';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
@@ -60,9 +62,19 @@ export function app() {
   // app.get('/api/**', (req, res) => { });
   // Serve static files from /browser
   server.get('/bootstrap.min.css.map', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary not to try SSR because this file doesn't exist. */
+  server.get('/sockjs-node/iframe.html', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary not to try SSR because this file doesn't exist. */
   server.get('*.*', express.static(distFolder, {
     maxAge: '1y'
   }));
+
+  /** api proxy */
+  const apiProxy = proxy('/api', {target: environment.config.BACKEND_BASE, changeOrigin: false});
+  server.use('/api', apiProxy);
+
+  /** stripe proxy */
+  const stripeProxy = proxy('/stripe', {target: environment.config.BACKEND_BASE, changeOrigin: false});
+  server.use('/stripe', stripeProxy);
+
 
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
@@ -72,6 +84,13 @@ export function app() {
   server.use('/unsubscribe',           (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/404',                   (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/thankyou',              (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/join-team',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  
+  server.use('/community/create',      (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/community/followings',  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/community/followers',   (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/community/notification',(req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+
   
   // create sitemap dynamically (SSR)
   server.use('/sitemap', routerSitemap);

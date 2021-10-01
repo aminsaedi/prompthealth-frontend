@@ -1,39 +1,46 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { formatDateTimeDataToDate, formatDateToDateTimeData, formatStringToDateTimeData } from 'src/app/_helpers/date-formatter';
-import { pattern } from 'src/app/_helpers/form-settings';
-import {slideVerticalAnimation } from '../../_helpers/animations';
+import { pattern } from 'src/app/_helpers/pattern';
+import { expandVerticalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
 
 @Component({
   selector: 'form-item-datetime',
   templateUrl: './form-item-datetime.component.html',
   styleUrls: ['./form-item-datetime.component.scss'],
-  animations: [slideVerticalAnimation]
+  animations: [slideVerticalAnimation, expandVerticalAnimation]
 })
 export class FormItemDatetimeComponent implements OnInit {
 
-  @Input() controller: FormControl
+  @Input() controller: FormControl;
   @Input() minDateTime: DateTimeData;
 
-  @Input() stepMinute: number = 15;
-  @Input() stepHour: number = 1;
+  @Input() stepMinute = 15;
+  @Input() stepHour = 1;
 
+  @Input() label: string;
   @Input() disabled: boolean = false;
-
-  public isPickerShown = false;
+  @Input() submitted: boolean = false;
 
   @Output() changeValue = new EventEmitter<Date>();
+
+  get sizeS() { return !!(!window || window.innerWidth < 768); }
+
+  public isPickerShown = false;
 
   public fDate: FormControl;
   public fTime: FormControl;
 
   public dateTime: DateTimeData;
+
+  @ViewChild('formBlur') private formBlur: ElementRef;
+
   constructor(
   ) { }
 
   ngOnInit(): void {
     const datetime = formatStringToDateTimeData(this.controller.value);
-    if(datetime) {
+    if (datetime) {
       this.dateTime = datetime;
     } else if (this.minDateTime) {
       this.dateTime = this.minDateTime;
@@ -44,7 +51,7 @@ export class FormItemDatetimeComponent implements OnInit {
 
     this.fDate = new FormControl(this.dateTime);
     this.fTime = new FormControl(this.dateTime);
-    
+
     this.fDate.valueChanges.subscribe(() => {
       this.updateDateTime(true);
     });
@@ -66,10 +73,10 @@ export class FormItemDatetimeComponent implements OnInit {
         ...datetime
       });
     } else {
-      this.fDate.setValue ({
+      this.fDate.setValue({
         ... this.minDateTime
       });
-      this.fTime.setValue ({
+      this.fTime.setValue({
         ...this.minDateTime
       });
     }
@@ -77,12 +84,12 @@ export class FormItemDatetimeComponent implements OnInit {
   }
 
   /** update controller value by selecting by datetime picker */
-  updateDateTime(emit: boolean = false){
+  updateDateTime(emit: boolean = false) {
     const date: DateData = this.fDate.value;
     const time: TimeData = this.fTime.value;
 
     this.controller.setValue(date.year + '-' + ('0' + date.month).slice(-2) + '-' + ('0' + date.day).slice(-2) + ' ' + ('0' + time.hour).slice(-2) + ':' + ('0' + time.minute).slice(-2));
-    if(emit){
+    if (emit) {
       this.changeValue.emit(this.getFormattedValue());
     }
   }
@@ -95,27 +102,30 @@ export class FormItemDatetimeComponent implements OnInit {
     return datetime;
   }
 
-  showPicker(){ 
-    if(!this.isPickerShown) {
+  showPicker() {
+    if (!this.isPickerShown) {
       this.initDateTimePicker(this.controller.value);
     }
-    this.isPickerShown = true; 
+    this.isPickerShown = true;
+    if(this.sizeS && this.formBlur.nativeElement) {
+      (this.formBlur.nativeElement as HTMLDivElement).focus();
+    }
   }
-  hidePicker(){ this.isPickerShown = false; }
+  hidePicker() { this.isPickerShown = false; }
 }
 
-function copy(obj: {[k: string]: any}, key: string) {
+function copy(obj: { [k: string]: any }, key: string) {
   return JSON.parse(JSON.stringify(obj))[key];
 }
 
 interface DateData {
   year: number;
-  month:  number;
-  day:    number;
+  month: number;
+  day: number;
 }
 
 interface TimeData {
-  hour:   number;
+  hour: number;
   minute: number;
 }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { animate, transition, style, trigger } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 
 // const animation = trigger('carousel', [
 //   transition(':enter', [
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _uService: UniversalService,
+    private _headerStatusService: HeaderStatusService,
   ) { }
 
 
@@ -49,6 +51,14 @@ export class LoginComponent implements OnInit {
       title: 'Login | PromptHealth',
     })
   }
+
+  changeHeaderShadowStatus(isShown: boolean) {
+    if(isShown) {
+      this._headerStatusService.showShadow();
+    } else {
+      this._headerStatusService.hideShadow();
+    }
+  }  
 }
 
 interface QueryParams {

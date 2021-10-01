@@ -60,16 +60,16 @@ export class UserQuestionnaireItemSelectComponent implements OnInit {
       this._toastr.error('There is 1 item that requires your attention');
       return;
     }
-    let data: {[k:string]: string} = {};
+    let data: {[k:string]: string | string[]} = {};
     if(this.type == 'gender'){ data.gender = this.form.value; }
-    else if(this.type == 'age'){ data.age_range = this.form.value; }
+    else if(this.type == 'age'){ data.age_range = [this.form.value]; }
 
     switch(this.type){
       case 'gender':
         this._qService.updateUserTracking({gender: this.form.value});
         break;
       case 'age':
-        this._qService.updateUser({age_range: this.form.value});
+        this._qService.updateUser({age_range: [this.form.value]});
         this._qService.updateUserTracking({age_range: this.form.value});
     }
     this._qService.goNext(this._route);

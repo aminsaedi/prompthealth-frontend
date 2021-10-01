@@ -10,6 +10,7 @@ import { DashboardModule } from '../dashboard/dashboard.module';
 import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
 import { ThankuPageComponent } from './thanku-page/thanku-page.component';
 import { MagazineModule } from '../magazine/magazine.module';
+import { SocialModule } from '../social/social.module';
 
 const routes: Routes = [
 
@@ -26,14 +27,17 @@ const routes: Routes = [
         path: '',
         loadChildren: () => HomeModule
       },
+
+      // { path: 'community', loadChildren: () => SocialModule },
+      
       {
         path: 'magazines',
         loadChildren: () => MagazineModule,
       },
-      {
-        path: 'auth',
-        loadChildren: () => AuthModule,
-      },
+      // {
+      //   path: 'auth',
+      //   loadChildren: () => AuthModule,
+      // },
       {
         path: 'dashboard',
         loadChildren: () => DashboardModule,

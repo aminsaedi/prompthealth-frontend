@@ -3,13 +3,15 @@
     <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
   </p>
 </ngx-spinner>
-<section class="heightHF-100 pt-4 pb-4 d-flex justify-content-center align-items-center bg-blue">
-  <div class="container-fluid w-max-1200">
+<section class="heightHF-100 pt-4 pb-4 d-flex justify-content-center align-items-center bg-primary-light position-relative">
+  <div class="container">
+    <div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="changeHeaderShadowStatus($event)"></div>
     <div class="row m-0 justify-content-between bg-white rounded-lg overflow-hidden">
-      <div class="p-5 col-md-4 order-md-2 py-md-5 pr-md-5 pl-md-0">
+      <div class="py-4 px-2 col-md-4 order-md-2 py-md-5 pr-md-3 pl-md-0">
+        <h5 class="mb-4">Login to PromptHealth</h5>
         <form-auth [nextPage]="nextPage" [nextPageKeyword]="nextPageKeyword"></form-auth>
       </div>
-      <div class="overflow-hidden col-md-8 order-md-1 pt-5 pb-0 px-5">
+      <div class="overflow-hidden col-md-8 order-md-1 pt-5 pb-0 px-4 px-md-5">
         <ngx-slick-carousel [config]="slideConfig">
           <!-- <div ngxSlickItem *ngFor="let slide of slides" class="slide">
           <img src="{{ slide.img }}" alt="" width="100%">

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { SharedService } from './services/shared.service';
 import { PreviousRouteService } from './services/previousUrl.service';
@@ -50,10 +50,30 @@ import { FormItemDatetimeComponent } from './form-item-datetime/form-item-dateti
 import { FormItemUploadImageButtonComponent } from './form-item-upload-image-button/form-item-upload-image-button.component';
 import { AddonSelectCategoryComponent } from './addon-select-category/addon-select-category.component';
 import { ButtonShareComponent } from './button-share/button-share.component';
+import { ListItemComponent } from './list-item/list-item.component';
+import { SearchBarComponent } from './search-bar/search-bar.component';
+import { IconDirective } from './icon.directive';
+import { FormItemSearchComponent } from './form-item-search/form-item-search.component';
 import { ButtonGuidelineComponent } from './button-guideline/button-guideline.component';
 import { CardPractitionerComponent } from './card-practitioner/card-practitioner.component';
 import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.component';
 import { FormSubscribeComponent } from './form-subscribe/form-subscribe.component';
+import { ProfileImageComponent } from './profile-image/profile-image.component';
+import { ModalComponent } from './modal/modal.component';
+import { ContenteditableValueAccessor } from './contenteditable.directive';
+import { DurationPipe } from './pipes/duration.pipe';
+import { DistancePipe } from './pipes/distance.pipe';
+import { ParallaxDirective } from './parallax.directive';
+import { SwitchComponent } from './switch/switch.component';
+import { TimeAgoPipe } from './pipes/time-ago.pipe';
+import { ModalUserMenuComponent } from './modal-user-menu/modal-user-menu.component';
+import { ImageUploaderDirective } from './image-uploader.directive';
+import { LoaderComponent } from './loader/loader.component';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
+import { AlertUploadingComponent } from './alert-uploading/alert-uploading.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -62,7 +82,8 @@ import { FormSubscribeComponent } from './form-subscribe/form-subscribe.componen
     ReactiveFormsModule,
     ModalModule.forRoot(),
     NgbModule,
-
+    AngularFireMessagingModule,
+    AngularFireModule.initializeApp(environment.config.firebase),
     // FlashMessagesModule,
   ],
   providers: [
@@ -112,10 +133,26 @@ import { FormSubscribeComponent } from './form-subscribe/form-subscribe.componen
     FormItemUploadImageButtonComponent,
     AddonSelectCategoryComponent,
     ButtonShareComponent,
+    ListItemComponent,
+    SearchBarComponent,
+    IconDirective,
+    FormItemSearchComponent,
     ButtonGuidelineComponent,
     CardPractitionerComponent,
     SocialMediaKitComponent,
     FormSubscribeComponent,
+    ProfileImageComponent,
+    ModalComponent,
+    ContenteditableValueAccessor,
+    DurationPipe,
+    DistancePipe,
+    ParallaxDirective,
+    SwitchComponent,
+    TimeAgoPipe,
+    ModalUserMenuComponent,
+    ImageUploaderDirective,
+    LoaderComponent,
+    AlertUploadingComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -157,9 +194,24 @@ import { FormSubscribeComponent } from './form-subscribe/form-subscribe.componen
     FormItemDatetimeComponent,
     FormItemUploadImageButtonComponent,
     ButtonShareComponent,
+    ListItemComponent,
+    SearchBarComponent,
+    IconDirective,
     ButtonGuidelineComponent,
     CardPractitionerComponent,
     FormSubscribeComponent,
+    ProfileImageComponent,
+    ModalComponent,
+    ContenteditableValueAccessor,
+    DurationPipe,
+    DistancePipe,
+    ParallaxDirective,
+    SwitchComponent,
+    TimeAgoPipe,
+    ModalUserMenuComponent,
+    ImageUploaderDirective,
+    LoaderComponent,
+    AlertUploadingComponent,
   ]
 })
 export class SharedModule { }

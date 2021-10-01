@@ -14,7 +14,7 @@
 </div>
 
 
-<div class="container-fluid bg-grey-md">
+<div class="container-fluid bg-background-md">
   <!-- <div class="intersection-observer" intersectionObserver (changeStatus)="changeStickyStatus($event)"></div> -->
   <div class="row">   
     <section class="col-md-9 col-lg-8 mainview">
@@ -31,11 +31,11 @@
         
         <div class="sticky-bottom blur pt-3 pb-4 py-md-3 row btn-navigate-group">
           <div class="col text-left">
-            <button *ngIf="currentIdx != 0" (click)="onClickNavigation('back')" class="btn bg-blue text-white" >Back</button>
+            <button *ngIf="currentIdx != 0" (click)="onClickNavigation('back')" class="btn btn-outline" >Back</button>
           </div>
           <div class="col text-right">
-            <button *ngIf="currentIdx != data.length - 1" (click)="onClickNavigation('next')" class="btn bg-blue text-white" >Next</button>
-            <button *ngIf="currentIdx == data.length - 1" (click)="onClickNavigation('next')" class="btn text-blue border-blue" >Agree</button>  
+            <button *ngIf="currentIdx != data.length - 1" (click)="onClickNavigation('next')" class="btn btn-outline" >Next</button>
+            <button *ngIf="currentIdx == data.length - 1" (click)="onClickNavigation('next')" class="btn btn-primary" >Agree</button>  
           </div>
         </div>  
       </div>

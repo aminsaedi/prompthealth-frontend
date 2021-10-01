@@ -32,7 +32,7 @@ aria-hidden="true"
       <div class="modal-body p-0">
         <ng-container *ngIf="type == 'profile'">
           <div class="p-4 p-md-5">
-            <p class="font-big">
+            <p class="body1">
               We want to ensure you receive the best experience being a registered member of
               PromptHealth. To do so, we are enforcing profile guidelines to ensure our network remains
               professional and suitable for our wide range of clients.<br><br>
@@ -52,16 +52,16 @@ aria-hidden="true"
               <li class="mb-1">Do not advertise any third-party products. Your profile should only be used to showcase
               the services you provide as a professional.</li>
             </ul>
-            <p class="font-big">
-              <b>If you have any questions about creating your profile, please reach out to us at
-              <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a> or at (778) 316-3124.</b>
+            <p class="h6">
+              If you have any questions about creating your profile, please reach out to us at
+              <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a> or at (778) 316-3124.
             </p>
           </div>
         </ng-container>
 
         <ng-container *ngIf="type == 'ambassador'">
           <div class="pt-4 px-4 pt-md-5 px-md-5">
-            <p class="font-big">As a PromptHealth brand ambassador, you will:</p>
+            <p class="subtitle1">As a PromptHealth brand ambassador, you will:</p>
             <ul class="pb-4">
               <li class="mb-1">Post using resources in our Social Media Kit and tag us (@prompthealth)</li>
               <li class="mb-1">
@@ -79,15 +79,15 @@ aria-hidden="true"
             </ul>
           </div>
 
-          <div class="sticky-bottom blur py-2 px-4 px-md-4 rounded-15p">
+          <div class="sticky-bottom blur py-2 px-4 px-md-4 rounded-12p">
             <div class="d-flex justify-content-between pb-2">
               <h4 class="mb-0">Social Media Kit</h4>
-              <button class="btn px-0" (click)="expandBottom()" *ngIf="!isBottomExpanded">
-                <i class="fas fa-chevron-up mr-2 font-regular"></i>
+              <button class="btn btn-text small px-0" (click)="expandBottom()" *ngIf="!isBottomExpanded">
+                <i iconPh="chevron-up" class="mr-2"></i>
                 More
               </button>
-              <button class="btn px-0" (click)="shrinkBottom()" *ngIf="isBottomExpanded">
-                <i class="fas fa-chevron-down mr-2 font-regular"></i>
+              <button class="btn btn-text small px-0" (click)="shrinkBottom()" *ngIf="isBottomExpanded">
+                <i iconPh="chevron-down" class="mr-2"></i>
                 Less
               </button>
             </div>

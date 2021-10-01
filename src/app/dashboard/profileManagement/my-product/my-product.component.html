@@ -1,6 +1,6 @@
-<h3 class="mb-3">My Products
+<h4 class="mb-3">My Products
     <button *ngIf="product && product.length" (click)="addMore = !addMore" class="btn btn-primary add-more">Add More</button>
-</h3>
+</h4>
 <input  *ngIf="product && product.length" type="text" [(ngModel)]="productSearch" placeholder="Serach.." class="form-control searchBar"/>
 <table class="table table-hover addprofessionaltable w-100" *ngIf="product && product.length">
     <thead>
@@ -44,8 +44,8 @@
                 </div>
             </td>
             <td>
-                <button (click)="deleteProduct(prod._id)" class="btn btn-danger mr-1 p-2"><i class="fa fa-minus-square" aria-hidden="true"></i></button>
-                <button (click)="editProduct(prod)" class="btn btn-primary p-2"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                <button (click)="deleteProduct(prod._id)" class="btn btn-error small mr-1"><i iconPh="trash"></i></button>
+                <button (click)="editProduct(prod)" class="btn btn-primary small">Edit</button>
             </td>
         </tr>
     </tbody>

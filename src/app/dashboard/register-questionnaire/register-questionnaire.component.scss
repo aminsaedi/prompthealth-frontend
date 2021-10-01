@@ -1,9 +1,6 @@
-
-.bg-blue{ background: var(--ph-blue); }
-.text-blue{ color: var(--ph-blue); }
-.border-blue{ border: solid 1px var(--ph-blue); }
-.bg-grey-md{ 
-  @media (min-width: 768px){ background:#f3f3f3; }
+@import "../../../assets/scss/variables";
+.bg-background-md{ 
+  @media (min-width: 768px){ background: $colorGsBackground; }
 }
 
 @import '../../../assets/scss/responsive_variables';

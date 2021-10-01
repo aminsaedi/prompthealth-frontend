@@ -1,0 +1,34 @@
+<div class="bg-white rounded-8p overflow-hidden">
+  <div class="row flex-row">
+    <div class="col-12 col-lg py-30p pl-30p pr-30p pr-lg-0">
+      <h4 class="mb-30p">
+        Connect and stay engaged with
+        your wellness community.
+      </h4>
+      <p class="opacity-70pc mb-30p" style="line-height: 28px;">
+        Subscribe to the PromptHealth magazine
+        to learn from our experts including fitness advice,
+        recipes, mindfulness tips, and so much more.
+      </p>
+      <form (ngSubmit)="onSubmit()">
+        <div class="mb-20p">
+          <form-item-input
+          type="email"
+          placeholder="Your email address..."
+          [controller]="form"
+          [submitted]="isSubmitted"
+          ></form-item-input>
+        </div>
+        <input type="submit" class="btn btn-primary w-100" value="Subscribe FREE">
+      </form>
+    </div>
+    <div class="col-12 col-lg-5 image-container">
+      <img 
+      src="/assets/img/social/subscribe.jpg" 
+      alt=""
+      class="cover"
+      style="object-position: right"
+      >
+    </div>
+  </div>
+</div>

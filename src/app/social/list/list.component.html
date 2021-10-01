@@ -1,0 +1,47 @@
+<card-new-post 
+*ngIf="isEligibleToPost"
+(onPublished)="onPublishNewPost($event)"
+></card-new-post>
+
+<ng-container *ngFor="let n of newPosts; let j = index">
+  <div [@expandVertical]>
+    <div class="pb-15p">
+      <card
+      class="pointer-events: initial;"
+      [post]="n"
+      [shorten]="true"
+      ></card>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngFor="let p of posts; let i = index">
+  <div 
+  class="mb-15p" 
+  [@fade]
+  >
+    <card 
+    class="pointer-events: initial;"
+    [post]="p" 
+    [shorten]="true"
+    [option]="{showLinkToDetail: true}"
+    ></card>
+  </div>
+
+  <div *ngIf="p && i == 1" class="mb-15p">
+      <card-subscribe></card-subscribe>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="posts && posts.length == 0">
+  <div class="mb-15p subtitle1 text-body">
+    No contents found...<br>
+    Please try again later.
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isLoading">
+  <div class="mt-100p text-center">
+    <loader></loader>
+  </div>
+</ng-container>

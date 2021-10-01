@@ -2,13 +2,16 @@ import { SafeHtml } from "@angular/platform-browser";
 import { environment } from "src/environments/environment";
 import { IBlogCategory } from "./blog-category";
 import { EventData } from "./event-data";
+import { IUserDetail } from "./user-detail";
 
 export interface IBlog {
   _id: string;
   slug: string;
   title: string;
   description: string;
-  author: string;
+  author: string; // name (used in admin)
+  authorId: string | {firstName: string, lastName: string, profileImage: string, _id: string };
+
   readLength?: number;
 
   image: string;
@@ -21,6 +24,8 @@ export interface IBlog {
   
   categoryId?: IBlogCategory;
   tags?: IBlogCategory[];
+
+  createdRole?: IUserDetail['roles'];
   
   createdAt: string; /** could be Date? */
 
@@ -68,8 +73,10 @@ export class Blog implements IBlog {
 
   get tags() { return this.data.tags; }
 
-  get author() { return this.data.author; }
-  get authorImage() { return 'assets/img/logo-sm-square.png'}
+  get author() { return (this.data.authorId && typeof this.data.authorId != 'string' && this.data.createdRole != 'SA') ? this.data.authorId.firstName : this.data.author; } //author name
+  get authorId(): string { return (typeof this.data.authorId == 'string') ? this.data.authorId : this.data.authorId ?  this.data.authorId._id : 'noid'; }
+  get authorRole(): IBlog['createdRole'] { return this.data.createdRole || null; }
+  get authorImage() { return (this.data.authorId && typeof this.data.authorId != 'string' && this.data.createdRole != 'SA' && this.data.authorId.profileImage) ? this.AWS_S3 + '350x220/' + this.data.authorId.profileImage : 'assets/img/logo-sm-square.png'}
 
   get createdAt() { return this.data.createdAt; }
 
@@ -79,7 +86,7 @@ export class Blog implements IBlog {
   private AWS_S3 = environment.config.AWS_S3;
 
   private _readLength: number;
-  private _summary: string;
+  protected _summary: string;
   private _description: SafeHtml;
   private _videosEmbedded: SafeHtml [] = [];
   private _podcastsEmbedded: SafeHtml [] = [];
@@ -92,7 +99,7 @@ export class Blog implements IBlog {
   constructor(protected data: IBlog) {
     const desc = data.description || '';
     this._summary = desc.replace(/<\/?[^>]+(>|$)/g, '').replace(/\s{2,}/, " ");
-
+    
     /** calculate readLength if it's 0 */
     if(data.readLength > 0) {
       this._readLength = data.readLength;

@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { FormItemTextfieldOption, IFormItemTextfieldOption } from 'src/app/models/form-item-textfield-option';
 
 @Component({
   selector: 'form-item-input',
@@ -22,10 +23,46 @@ export class FormItemInputComponent implements OnInit {
   @Input() controller: FormControl;
   @Input() max: number = null;
 
+  @Input() option: IFormItemTextfieldOption = {};
+
+  @Output() onFocus = new EventEmitter<boolean>()
+  @Output() onChangeValue = new EventEmitter<string>();
+
+  @ViewChild('input') private input: ElementRef;
+
+  public _type: string;
+  public _option: FormItemTextfieldOption;
 
   constructor() { }
 
   ngOnInit(): void {
+    this._type = this.type;
+    this._option = new FormItemTextfieldOption(this.option);
+    this.controller.valueChanges.subscribe(val => {
+      this.onChangeValue.emit(val);
+    });
   }
 
+  focus() {
+    if(this.input && this.input.nativeElement) {
+      (this.input.nativeElement as HTMLInputElement).focus();
+    }
+  }
+
+  _onFocus(){
+    this.onFocus.emit(true);
+  }
+
+  _onBlur(){
+    this.onFocus.emit(false);
+  }
+
+  onClickLock() {
+    this._type = (this._type == 'text') ? 'password' : 'text';
+  }
+
+  onClickReset() {
+    this.controller.setValue('');
+  }
 }
+

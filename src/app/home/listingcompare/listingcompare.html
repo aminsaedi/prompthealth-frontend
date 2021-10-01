@@ -6,109 +6,130 @@
         <thead>
           <tr>
             <th class="border-0"></th>
-            <th *ngFor="let user of data" class="border-0">
-              <div class="avatartable">
-                <!-- <img src="assets/img/man-testimonial.jpg" class="w-100" /> -->
-                <img
-                  [src]=" AWS_S3 +user.userData?.profileImage"
-                  class="w-100"
-                  *ngIf="user.userData?.profileImage"
-                />
-                <img
-                  src="/assets/img/default_user.jpg"
-                  class="w-100 noimage"
-                  *ngIf="!user.userData?.profileImage"
-                />
+            <th *ngFor="let p of professionals" class="border-0">
+              <div class="avatartable text-center">
+                <div class="d-inline-block">
+                  <profile-image size=120 [image]="p.profileImage"></profile-image>
+                </div>
               </div>
             </th>
           </tr>
           <tr class="bg-primary text-light">
             <th class="table-active">Feature</th>
-            <th *ngFor="let user of data">
+            <th *ngFor="let p of professionals">
               <a 
-                [routerLink]="['/practitioners/', user.userId]"
-              >{{user.userData.firstName}} {{user.userData.lastName}}</a></th>
+                [routerLink]="['/community/profile/', p._id]"
+              >{{p.name}}</a></th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <th class="table-active">Location</th>
-            <td *ngFor="let user of data">{{user.userData.address}}</td>
+            <td *ngFor="let p of professionals">{{p.address}}</td>
           </tr>
 
           <tr>
             <th class="table-active">Contact Information</th>
-            <!-- <td *ngFor="let user of data">Email: {{user.userData.email }}, Phone: {{user.userData.phone}}</td> -->
-            <td *ngFor="let user of data"><div *ngIf="loggedInUser">Email: {{user.userData.email }},</div> Phone: {{user.userData.phone}}</td>
+            <td *ngFor="let p of professionals">
+              <div *ngIf="user">
+                Email: {{p.emailToDisplay }},
+              </div> 
+              Phone: {{p.phone}}
+            </td>
           </tr>
 
           <tr>
             <th class="table-active">Standard fee per hour</th>
-            <td *ngFor="let user of data">
-              {{user.userData.price_per_hours}}
+            <td *ngFor="let p of professionals">
+              {{p.priceFull}}
             </td>
           </tr>
 
           <tr>
             <th class="table-active">Languages</th>
-            <td *ngFor="let user of data">
-              <span *ngFor="let item of languageQuestion?.answers">
-                <span *ngFor="let profileItem of user.userData.languages; let i = index">
-                  <span *ngIf="item._id === profileItem">{{item.item_text}}  </span>
-                </span>
-              </span>
+            <td *ngFor="let p of professionals">
+              <form-item-checkbox-group
+              *ngIf="questionnaires"
+              id="languages"
+              label="Languages"
+              [data]="p.languagesId"
+              [selectionsByQuestionnaire]="questionnaires?.language"
+              [option]="optionFormCheckboxGroup"
+              [disabled]="true"
+              ></form-item-checkbox-group>
             </td>
           </tr>
           <tr class="bg-primary text-light">
             <th class="table-active">Type of Provider</th>
-            <td *ngFor="let user of data">
-
-            <span class="d-inline-block mr-2" *ngFor="let serv of user.serviceData">
-              {{serv.item_text}},
-            </span>
+            <td *ngFor="let p of professionals">
+              <form-item-checkbox-group
+              id="type_of_provider"
+              label="Type of provider"
+              [data]="p.allServiceId"
+              [selectionsByQuestionnaire]="questionnaires.typeOfProvider"
+              [disabled]="true"
+              [option]="optionFormCheckboxGroup"
+              ></form-item-checkbox-group>
             </td>
           </tr>
           <tr>
             <th>Treatment Modalities</th>
-            <td *ngFor="let user of data">
-
-            <span class="d-inline-block mr-2" *ngFor="let serv of user.treatmentModalities">
-              {{serv.item_text}},
-            </span>
+            <td *ngFor="let p of professionals">
+              <form-item-checkbox-group
+              *ngIf="questionnaires"
+              id="treatment_modality"
+              label="Treatment modality"
+              [data]="p.allServiceId"
+              [selectionsByQuestionnaire]="questionnaires.treatmentModality"
+              [disabled]="true"
+              [option]="optionFormCheckboxGroup"
+              ></form-item-checkbox-group>
             </td>
           </tr>
 
           <tr>
             <th class="table-active">Services</th>
-            <td *ngFor="let user of data"> 
-            <span class="d-inline-block mr-2" *ngFor="let serv of user.serviceType">
-              {{serv}},
-            </span>
-          </td>
+            <td *ngFor="let p of professionals"> 
+              <form-item-service
+              [data]="p.allServiceId"
+              [disabled]="true"
+              [col2]="false"
+              [option]="optionNestedFormCheckboxGroup"
+              ></form-item-service>
+            </td>
           </tr>
 
           <tr>
             <th class="table-active">Working Hours</th>
-            <td *ngFor="let user of data">
-              <span *ngFor="let item of avalibilityQuestion?.answers">
-                <span *ngFor="let profileItem of user.userData.typical_hours; let i = index">
-                  <span *ngIf="item._id === profileItem">{{item.item_text}}  </span>
-                </span>
-              </span>
+            <td *ngFor="let p of professionals">
+              <form-item-checkbox-group
+              *ngIf="questionnaires"
+              id="availability"
+              label="Availability"
+              [data]="p.availabilityIds"
+              [selectionsByQuestionnaire]="questionnaires.availability"
+              [disabled]="true"
+              [option]="optionFormCheckboxGroup"
+              ></form-item-checkbox-group>
             </td>
           </tr>
 
           <tr>
             <th class="table-active">Total Experience</th>
-            <td *ngFor="let user of data">
-              {{user.userData.years_of_experience}}
+            <td *ngFor="let p of professionals">
+              <form-item-checkbox-group
+              id="years_of_experience"
+              label="Experience"
+              [data]="p.yearsOfExperience"
+              [disabled]="true"
+              ></form-item-checkbox-group>  
             </td>
           </tr>
 
           <tr>
             <th class="table-active">Description</th>
-            <td *ngFor="let user of data">
-              {{user.userData.product_description}}
+            <td *ngFor="let p of professionals">
+              {{p.description}}
             </td>
           </tr>
         </tbody>

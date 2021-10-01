@@ -1,8 +1,8 @@
 <div (clickOutside)="hideMenu()">
   <button class="btn btn-share" (click)="toggleMenu()">
-    <i class="fas fa-share-alt text-ph-blue font-biggest"></i>
+    <i class="fas fa-share-alt text-primary font-biggest"></i>
   </button>
-  <ul *ngIf="isMenuShown" class="share-menu list-unstyled p-4 blur rounded-10p" [@expandVertical]>
+  <ul *ngIf="isMenuShown" class="share-menu list-unstyled p-4 blur rounded-12p" [@expandVertical]>
     <ng-container *ngFor="let social of socials">
       <li *ngIf="!(social.id == 'pinterest' && !media)">
         <a class="d-flex flex-nowrap align-items-center justify-content-start py-3 px-2"

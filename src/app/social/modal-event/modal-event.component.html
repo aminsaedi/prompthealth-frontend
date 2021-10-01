@@ -1,0 +1,79 @@
+
+<!-- modal: subscribe-menu -->
+<modal [bodyStyle]="{'max-width': '600px'}" id="subscribe-menu" #modalSubscribeMenu>
+  <div class="title-container d-flex justify-content-between align-items-start">
+    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Get instant access to health and wellness news and events</span>
+    <button 
+    class="btn pr-0 btn-icon" 
+    style="padding-top: 7px;"
+    (click)="modalSubscribeMenu.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+    <p class="body1 text-body mb-30p mb-md-60p">
+      <!-- Subscribe to receive a recap of our favourite tools and educational resources from our Virtual Summer Wellness Series! -->
+      Join us and subscribe to be notified of up to date health and wellness events and news!
+    </p>    
+    <div>
+      <form-subscribe 
+      #formSubscribe
+      [referrer]="'event_' + post?._id" 
+      [option]="{hideSubmitButton: true, hideUserType: true, defaultUserType: 'seeker', hideProfessionalTitle: true}"
+      (onSuccess)="onSuccessSubscribe()"
+      (onError)="onErrorSubscribe()"
+      ></form-subscribe>
+    </div>
+    <div class="text-center">
+      <div class="d-flex justify-content-between mt-45p">
+        <a
+        *ngIf="post?.link"
+        class="btn btn-text-black flex-shrink-1 mr-30p px-0 text-left"
+        [href]="post?.link"
+        target="_blank"
+        >skip</a>
+
+        <button
+        class="btn btn-primary flex-grow-1"
+        (click)="onSubmitSubscribe()"
+        [disabled]="isLoading"
+        >
+          <!-- Submit and join event -->
+          Subscribe to stay updated
+        </button>
+      </div>
+      <p 
+      *ngIf="isRedirecting" 
+      class="body-small mt-20p"
+      >You will be redirect to event page in {{timeRedirect}} seconds</p>
+    </div>
+  </div>
+</modal>
+
+<modal id="calendar-menu" #modalCalendarMenu> 
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Add to calendar</span>
+    <button class="btn pr-0 btn-icon" (click)="modalCalendarMenu.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container">
+    <p class="body1 mb-25p">Please select calendar type</p>
+    <ul class="list-unstyled">
+      <li  class="mb-15p">
+        <button class="btn btn-outline w-100" (click)="addToCalendar('ical')">iCalendar</button>
+      </li>
+      <li class="mb-15p">
+        <button class="btn btn-outline w-100" (click)="addToCalendar('google')">Google Calendar</button>
+      </li>
+      <li class="mb-15p">
+        <button class="btn btn-outline w-100" (click)="addToCalendar('outlook')">Outlook Calendar</button>
+      </li>
+      <li class="">
+        <button class="btn btn-outline w-100" (click)="addToCalendar('yahoo')">Yahoo Calendar</button>
+      </li>
+    </ul>
+  </div>
+</modal>

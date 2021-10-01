@@ -1,0 +1,17 @@
+<div 
+class="profile-image-container"
+[ngClass]="(image ? '' : _option.dummyBgClass)" 
+[ngStyle]="{width: size + 'px', borderRadius: radius + 'px'}"
+>
+  <img 
+  *ngIf="image" 
+  [src]="image"
+  [alt]="alt" 
+  crossorigin="anonymous"
+  >
+  <i *ngIf="!image" 
+  [iconPh]="_option.dummyIcon"
+  [ngClass]="_option.dummyClass"
+  [ngStyle]="{fontSize: _option.dummySize + 'px'}"
+  ></i>
+</div>

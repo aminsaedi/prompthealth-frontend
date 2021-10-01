@@ -1,0 +1,103 @@
+<div class="mb-15p">
+  <card-item-eyecatch [post]="post"></card-item-eyecatch>
+</div>
+
+<div class="d-flex justify-content-between align-items-start">
+  <h2
+  class="h4 mb-0"
+  [ngClass]="{'clamp-1line': shorten}"
+  >{{post.title}}</h2>
+  <div 
+    *ngIf="eligibleToShowPostMenu"
+    class="position-relative d-inline-block"
+    >
+      <button 
+      class="btn btn-icon-grey small"
+      (click)="_onClickButton($event, 'post-menu')"
+      >
+        <i iconPh="more-horiz"></i>
+      </button>
+      <div
+      [@fadeFast]
+      *ngIf="isPopupPostMenuShown"
+      class="position-absolute mt-5p" 
+      style="right: -5px;"
+      >
+        <popup-post-menu 
+        [post]="post"
+        (onClose)="onPopupPostMenuClosed()"
+        ></popup-post-menu>
+      </div>  
+    </div>
+</div>
+
+<div class="d-flex align-items-center justify-content-between my-20p">
+  <a 
+  [routerLink]="['/community/profile', post?.authorId]"
+  (click)="markCurrentPosition()"
+  >
+    <h6 class="d-flex align-items-center subtitle2">
+      <profile-image [image]="post.authorImage" size="32"></profile-image>
+      <span class="ml-10p text-body">{{post.authorName}}</span>
+      <i 
+      *ngIf="post.authorVerified"
+      iconPh="verified" 
+      class="text-primary large ml-5p"
+      ></i>
+    </h6>
+  </a>
+
+  <div class="d-flex align-items-center">
+    <div
+    class="status-indicator mr-2"
+    [ngClass]="{'bg-success': !post?.isFinished, 'bg-danger': post?.isFinished}"
+    ></div>
+    <span class="opacity-70pc body2">{{post?.openStatus | titlecase}}</span>  
+  </div>
+</div>
+
+<ul class="list-unstyled mb-30p">
+  <li class="subtitle2 text-label mb-10p">
+
+    <ng-container *ngIf="post?.isVirtual">
+      <i iconPh="video-camera" class="mr-5p"></i>
+      <span *ngIf="post?.isVirtual">
+        <ng-container *ngIf="post?.venue">On {{post.venue | titlecase}}</ng-container>
+        <ng-container *ngIf="!post?.venue">Virtual event</ng-container>
+      </span>
+    </ng-container>
+    <ng-container *ngIf="!post?.isVirtual">
+      <i iconPh="pin" class="mr-5p"></i>
+      <span>
+        <ng-container *ngIf="post?.venue">At {{post.venue | titlecase}}</ng-container>
+      </span>
+    </ng-container>
+  </li>
+  <li class="subtitle2 text-label">
+    <i iconPh="calendar"></i>
+    <span>
+      {{post?.startAt | date:'dd/M/yyyy hh:mm a'}} - 
+      {{post?.endAt | date:'dd/M/yyyy hh:mm a'}} (your local time)
+    </span>
+  </li>
+</ul>
+
+<div class="d-flex flex-column flex-lg-row align-items-stretch justify-content-lg-center btn-group mb-30p">
+  <div class="mr-lg-25p">
+    <button 
+    *ngIf="!alreadySubscribed"
+    (click)="_onClickButton($event, 'subscribe-menu')" 
+    class="btn btn-primary w-100"
+    >Subscribe</button>
+    <a 
+    *ngIf="alreadySubscribed"
+    [href]="post?.link"
+    target="_blank"
+    class="btn btn-primary w-100"
+    >Join now</a>
+  </div>
+  
+  <div class="mx-lg-25p mt-15p mt-lg-0p">
+    <button class="btn btn-outline w-100" (click)="_onClickButton($event, 'calendar-menu')">Add to calendar</button>
+  </div>
+</div>

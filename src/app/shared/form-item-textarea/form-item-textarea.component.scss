@@ -1,13 +1,40 @@
-:host{
+@import "../../../assets/scss/variables";
+
+.form-control {
   font-size: 16px;
+  color: $colorGsBody;
+  background: $colorPrimaryLight;
+  border-color: rgba($colorPrimary, 0.12);
+  height: auto;
+
+  &:disabled {
+    background: $colorGsBackground;
+    color: $colorGsPlaceholder;
+  }
+
+  &::placeholder {
+    color: $colorGsPlaceholder;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1.5px $colorPrimary;
+  }
 }
 
-.errors{
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.form-control.error {
+  background: $colorErrorLight;
+  border-color: $colorError;
+
+  &:focus {
+    box-shadow: 0 0 0 1.5px $colorError;
+  }
 }
 
-.form-control{
-  font-size: 1em;
+.form-control.success {
+  background: $colorSuccessLight;
+  border-color: $colorSuccess;
+
+  &:focus {
+    box-shadow: 0 0 0 1.5px $colorSuccess;
+  }
 }

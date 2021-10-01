@@ -10,8 +10,8 @@
     <section class="border-bottom sticky-top bg-white">
       <div class="container-fluid">
         <div class="d-flex justify-content-between py-5p">
-          <a routerLink="/dashboard/profilemanagement/my-posts" class="btn">
-            <i class="fas fa-arrow-left"></i>
+          <a routerLink="/dashboard/profilemanagement/my-posts" class="btn btn-icon small pl-0 text-body">
+            <i iconPh="arrow-left"></i>
           </a>
 
           <div>
@@ -19,30 +19,30 @@
             *ngIf="post?.slug"
             [routerLink]="['/magazines', post.slug]"
             target="_blank"
-            class="btn mr-10p"
+            class="btn btn-text small mr-10p mr-md-30p text-body px-0"
             >View</a>
             <input
             type="submit"
-            class="btn btn-outline mr-10p"
-            [ngClass]="{'btn-primary': f.status.value !== 'DRAFT'}"
+            class="btn small mr-10p"
+            [ngClass]="{'btn-primary': f.status.value !== 'DRAFT', 'btn-outline': f.status.value == 'DRAFT'}"
             [value]="(f.status.value === 'DRAFT') ? 'Save' : 'Update'"
             [disabled]="this.isUploading || !this.user || f.status.value === 'HIDDEN'"
             >
             <button
             *ngIf="f.status.value === 'DRAFT'"
-            class="btn btn-primary mr-10p"
+            class="btn btn-primary small mr-10p"
             type="button"
             (click)="onSubmit(true)"
             [disabled]="this.isUploading || !this.user"
             >Publish</button>
     
             <button 
-            class="btn d-lg-none" 
+            class="btn d-lg-none small px-5p" 
             type="button"
             [ngClass]="{'btn-secondary': isSettingShown}"
             (click)="toggleSettingPanel()"
             >
-              <i class="fas fa-cog"></i>
+              <i iconPh="gear"></i>
             </button>  
           </div>
         </div>
@@ -62,7 +62,7 @@
             </div>
 
             <div 
-            class="contenteditable title h4-temp h2-temp-md mb-15p mb-md-30p"
+            class="contenteditable title h4 h2-md mb-15p mb-md-30p"
             data-placeholder="Enter title..."
             contenteditable 
             [formControl]="f.title"
@@ -135,11 +135,11 @@
         [ngClass]="{shown: isSettingShown}"
         >
           <div class="mb-20p">
-            <h6 class="subtitle1-temp">Status</h6>
-            <div class="body1-temp">{{statusNameOf(f.status.value)}}</div>
+            <h6 class="subtitle1">Status</h6>
+            <div class="body1">{{statusNameOf(f.status.value)}}</div>
             <div 
             *ngIf="f.status.value == 'PENDING'"
-            class="bg-background mt-10p p-2 body-small-temp"
+            class="bg-background mt-10p p-2 body-small"
             >
               <span class="opacity-70pc">
                 This post is not published yet. 
@@ -148,7 +148,7 @@
             </div>
             <div 
             *ngIf="f.status.value == 'REJECTED'"
-            class="bg-warning-light text-warning-dark mt-10p p-2 body-small-temp"
+            class="bg-warning-light text-warning-dark mt-10p p-2 body-small"
             >
               <span>
                 This post has been rejected. 
@@ -159,12 +159,12 @@
             <button
             *ngIf="f.status.value !== 'DRAFT'"
             type="button"
-            class="btn btn-outline mr-10p px-0"
+            class="btn btn-text-black small mr-10p px-0"
             (click)="draftPost()"
             ><u>Change status to draft</u></button>
           </div>
           <div class="mb-20p">
-            <h6 class="subtitle1-temp">Category</h6>
+            <h6 class="subtitle1">Category</h6>
             <ng-multiselect-dropdown
             placeholder="..."
             [settings]="dropdownSettingCategories"
@@ -179,7 +179,7 @@
           </div>
   
           <div class="mb-20p">
-            <h6 class="subtitle1-temp">Topics</h6>
+            <h6 class="subtitle1">Topics</h6>
             <ng-multiselect-dropdown
             placeholder="..."
             [settings]="dropdownSettingTags"
@@ -193,7 +193,7 @@
           </div>
   
           <div class="mb-20p">
-            <h6 class="subtitle1-temp">Thumbnail</h6>
+            <h6 class="subtitle1">Thumbnail</h6>
             <ng-multiselect-dropdown
             placeholder="Thumbnail type..."
             [settings]="dropdownSetting"
@@ -257,41 +257,34 @@
           </div>
  
           <div style="margin-bottom: 350px;" *ngIf="isEventShown">
-            <h6 class="subtitle1-temp">Event data</h6>
+            <h6 class="subtitle1">Event data</h6>
             <div class="mb-15p">
-              <div class="subtitle2-temp">Start at</div>
+              <div class="subtitle2">Start at</div>
               <form-item-datetime
+              label="Start time"
               [controller]="f.eventStartTime"
               [minDateTime]="minDateTimeEventStart"
               (changeValue)="onChangeStartDateTime()"
-              ></form-item-datetime>
-              <form-item-errors
-              [controller]="f.eventStartTime"
-              label="Start time"
               [submitted]="isSubmitted"
-              ></form-item-errors>
+              ></form-item-datetime>
             </div>
 
             <div class="mb-15p">
-              <div class="subtitle2-temp">End at</div>
+              <div class="subtitle2">End at</div>
               <form-item-datetime
+              label="End time"
               [controller]="f.eventEndTime"
               [minDateTime]="minDateTimeEventEnd"
               (changeValue)="onChangeEndDateTime($event)"
+              [submitted]="isSubmitted"
               ></form-item-datetime>
               <form-item-errors
-              [controller]="f.eventEndTime"
-              label="End time"
-              [submitted]="isSubmitted"
-              ></form-item-errors>
-              <form-item-errors
               [controller]="form"
-              label="Start time"
               [submitted]="isSubmitted"
               ></form-item-errors>
             </div>
             <div class="mb-15p">
-              <div class="subtitle2-temp">Event link</div>
+              <div class="subtitle2">Event link</div>
               <form-item-input
               label="Link"
               type="url"

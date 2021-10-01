@@ -3,52 +3,124 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 // import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from '../../models/user-detail';
+import { Profile } from 'src/app/models/profile';
+import { Observable, Subject } from 'rxjs';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { IGetProfileResult } from 'src/app/models/response-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileManagementService {
 
-  private profileDetail: IUserDetail;
+  private _user: IUserDetail = null;
+  private _profile: Profile = null;
 
+  get profile(): Profile { return this._profile || null; }
+  get user(): IUserDetail { return this._user || null; }
+
+  private _loginStatusChanged = new Subject<LoginStatusType>();
+  private _loginStatus: LoginStatusType;
+
+  get loginStatus() { return this._loginStatus; }
+
+  loginStatusChanged(): Observable<LoginStatusType> {
+    return this._loginStatusChanged.asObservable();
+  }
 
   constructor( 
     private http: HttpClient,
+    private _uService: UniversalService,
     // private _bs: BehaviorService,
-  ) {}
+  ) {
+    if(this._uService.isServer) {
+      this._loginStatus = 'notLoggedIn';
+    } else {
+      this._loginStatus = 'notChecked';
+      this.init();
+    }
+  }
 
   dispose(){ 
-    this.profileDetail = null; 
+    this._user = null; 
+    this._profile = null;
+    if(!this._uService.isServer) {
+      const ls = this._uService.localStorage;
+      ls.removeItem('token');
+      ls.removeItem('loginID');
+      ls.removeItem('user');
+      ls.removeItem('roles');
+      ls.removeItem('isVipAffiliateUser');
+    }
+    this.changeLoginStatus('notLoggedIn');
   }
+
+  setData(u: IUserDetail) {
+    this._user = u;
+    this._profile = new Profile(u);
+    this.changeLoginStatus('loggedIn');
+  }
+
+  update(u: IUserDetail) {
+    Object.keys(u).forEach(key => {
+      if(key != '_id'){
+        this._user[key] = u[key];
+      }
+    });
+    this._profile = new Profile(this._user);
+  }
+
+  init() {
+    const userStr = this._uService.localStorage.getItem('user');
+    if(!userStr) {
+      console.log('userStr not existed')
+      this.dispose();
+    } else {
+      this.changeLoginStatus('loggingIn');
+      this.getProfileDetail(JSON.parse(userStr)).then(
+        () => {}, 
+        () =>{
+        this.dispose();
+      })
+    }
+  }
+
+  changeLoginStatus(status: LoginStatusType) {
+    this._loginStatus = status;
+    this._loginStatusChanged.next(status);
+  }
+
 
   /** this is called by header at first access and set the userdata from server in this service. and then someplace will use the data which is stored here */
   getProfileDetail(user: IUserDetail): Promise<IUserDetail>{
     const id = user._id;
-    const role = user.roles.toLowerCase();
-
+    const role = user.roles;
+    this.changeLoginStatus('loggingIn');
+    
     return new Promise((resolve, reject) => {
-      if(this.profileDetail && this.profileDetail._id == id){ 
-        resolve(this.profileDetail); 
+      if(this._user && this._user._id == id){ 
+        this.setData(this._user);
+        resolve(this._user);
       }else{
-        const path = environment.config.API_URL + ((role == 'p') ? 'partner/get/' : 'user/get-profile/') + id;
+        const path = environment.config.API_URL + 'user/get-profile/';
         const headers = new HttpHeaders()
           .set('Authorization', localStorage.getItem('token'))
           .set('Content-Type', 'application/json');
 
-        this.http.get( path, {headers} ).subscribe((res: any)=>{
-          if(res.statusCode === 200 && res.data.length > 0){
-            this.profileDetail = res.data[0];
-            // this._bs.setUserVerifiedStatus(this.profileDetail.verifiedBadge);
-            resolve(this.profileDetail);
-          }
-          else{ 
+        this.http.get( path, {headers} ).subscribe((res: IGetProfileResult)=>{
+          if(res.statusCode == 200) {
+            this.setData(res.data);
+            resolve(this._user);
+          } else{ 
             checkAccessToken(res);
+            this.dispose();
             reject('cannot find user data');             
           }
         },
         err => { 
           console.log(err);
           checkAccessToken(err);
+          this.dispose();
           reject('cannot connect to server'); 
         });
       }
@@ -64,3 +136,5 @@ function checkAccessToken(err: any){
     }  
   }
 }
+
+export type LoginStatusType = 'loggingIn' | 'loggedIn' | 'notLoggedIn' | 'notChecked';

@@ -1,13 +1,13 @@
 <section class="bg-cover detailbanner bg-overlay" style="background-image: url(assets/img/professional-banner.png);">
   <div class="container text-center text-light">
-    <h2>Profile Management</h2>
+    <h3>Profile Management</h3>
 
     <button-tutorial
     *ngIf="profile?.roles != 'U'"
     type="dashboard"
     label="tutorial"
     title="How To Use Dashboard"
-    buttonClass="btn-primary rounded-10p py-2 px-4"
+    buttonClass="btn-primary small shadow"
     ></button-tutorial>
   </div>
 </section>
@@ -18,16 +18,18 @@
       <!-- -- {{ userInfo }} -->
       <!-- -- {{ profile | json }}  -->
       <div class="row upgrade-header align-items-center" *ngIf="userInfo.roles !== 'U' && profile && !isPremium">
-        <div class="col-sm-12 text-center ">
-          <div style="color:#4a86ab" class="d-flex lead w-100">
-            <span class="m-auto">
-              <i class="fas fa-fire"></i> Upgrade to
-              Premium
-              to get all the
-              exclusive features <span><i class="fas fa-long-arrow-alt-right"></i></span>
-            </span>
-            <a class="ml-auto btn btn-primary align-middle" [routerLink]="linkToSubscription">Upgrade to
-              Premium</a>
+        <div class="col-12">
+          <div class="d-flex flex-column flex-md-row justify-content-between justify-content-lg-center align-items-md-center">
+            <h6 class="text-primary-dark h6 d-flex align-items-center mb-10p mb-md-0p mr-lg-10p">
+              <i iconPh="fire" class="mr-5p"></i>
+              <span>
+                <span>Upgrade to Premium to get all the exclusive features</span> 
+                <i class="d-none d-md-inline" iconPh="arrow-right"></i>   
+              </span>
+            </h6>
+            <a class="btn btn-primary" [routerLink]="linkToSubscription">
+              Upgrade to Premium
+            </a>
           </div>
         </div>
 
@@ -40,21 +42,25 @@
             <li class="nav-item" *ngFor="let list of listing">
               <button class="nav-link d-flex flex-between" [disabled]=!list.active [routerLink]="list.link"
                 [routerLinkActive]="['active']">
-                <div class="flex-grow-1 d-flex align-items-center flex-wrap">
+                <div class="flex-grow-1 d-flex align-items-center justify-content-between flex-wrap">
                   <span class="lead">
                     <b>{{ list.title }}</b>
                   </span>
-                  <div *ngIf="list.title == 'Profile' && profile?.isVipAffiliateUser"
-                    class="icon-vip font-small rounded ml-3">
-                    <i class="fas fa-ribbon"></i>
-                    <span class="pl-2">VIP</span>
-                  </div>
-                  <div *ngIf="list.description" style=" font-size: 12px;" class="w-100">
+                  <span 
+                  *ngIf="list.title == 'Profile' && profile?.isVipAffiliateUser"
+                  class="icon-vip caption rounded px-5p py-1"
+                  >
+                    <i iconPh="award"></i>
+                    <span class="pl-1">VIP</span>
+                  </span>
+
+                  <div *ngIf="list.description" class=" mt-5p w-100 caption">
                     {{list.description}}
                   </div>
                 </div>
-                <div style="color:#4a86ab; font-size: 10px;" class="pull-right mr-2" *ngIf="!list.active"><i
-                    class="fas fa-star-of-life"></i></div>
+                <div class="text-right text-body" *ngIf="!list.active">
+                  <i iconPh="lock"></i>
+                </div>
               </button>
             </li>
           </ul>
@@ -64,7 +70,7 @@
           <!-- Tab panes -->
           <div class="tab-content py-3">
             <ng-container *ngIf="profile && profile.roles != 'P' && profile.roles != 'U'">
-              <div class="bg-grey p-4 mb-3 font-italic font-big" *ngIf="!profile.isApproved">
+              <div class="bg-background p-4 mb-3 font-italic" *ngIf="!profile.isApproved">
                 <p>
                   Your profile is being reviewed by our administrator and won't be shown in listing just yet.
                 </p>
@@ -74,7 +80,7 @@
 
                 <button-guideline
                 label="See Profile Guidelines"
-                buttonClass="btn btn-primary"
+                buttonClass="btn btn-primary small"
                 ></button-guideline>
                 
               </div>
@@ -150,7 +156,7 @@ aria-hidden="true"
         </button>
       </div>
       <div class="modal-body text-center pb-4 px-md-5">
-        <p class="font-big mt-3 mb-5">
+        <p class="mt-3 mb-5">
           You can restart questionnaire to complete your profile.
            <br><br>
           Would you like to restart?

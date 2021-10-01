@@ -10,6 +10,7 @@ import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { IDefaultPlan } from 'src/app/models/default-plan';
+import { ProfileManagementService } from '../profileManagement/profile-management.service';
 
 @Component({
   selector: 'app-register-questionnaire',
@@ -32,6 +33,7 @@ export class RegisterQuestionnaireComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _qService: RegisterQuestionnaireService,
+    private _profileService: ProfileManagementService,
     private _headerService: HeaderStatusService,
     private _toastr: ToastrService,
     private _sharedService: SharedService,
@@ -129,10 +131,14 @@ export class RegisterQuestionnaireComponent implements OnInit {
       const data = this._qService.getUser();
       data.questionnaireCompleted = true;
 
+      // profileImage will be updated at uploading image. so profileImage should not be updated here.
+      delete data.profileImage;
+
       this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
         this._sharedService.loader('hide');
         if(res.statusCode == 200){
           this._bsService.setUserData(res.data);
+          this._profileService.update(data);
           resolve(res.data);
         }else{
           reject(res.message);
@@ -155,15 +161,20 @@ export class RegisterQuestionnaireComponent implements OnInit {
   }  
 
   retrieveSelectedPlan(): IDefaultPlan {
-    let planSelected: IDefaultPlan = null;
-    const planStr = this._uService.sessionStorage.getItem('selectedPlan');
-    if(planStr) {
-      const plan: IDefaultPlan = JSON.parse(planStr);
-      if(plan.userType.includes(this.userRole)) {
-        planSelected = plan;
+    const user = this._profileService.user;
+    if (user.plan) {
+      return user.plan;
+    } else {
+      let planSelected: IDefaultPlan = null;
+      const planStr = this._uService.sessionStorage.getItem('selectedPlan');
+      if(planStr) {
+        const plan: IDefaultPlan = JSON.parse(planStr);
+        if(plan.userType.includes(this.userRole)) {
+          planSelected = plan;
+        }
       }
+      return planSelected;  
     }
-    return planSelected;
   }
 }
 

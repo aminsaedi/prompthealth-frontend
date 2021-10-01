@@ -1,3 +1,5 @@
+@import '../../../assets/scss/variables';
+
 .text-blue{ color: #3377C5; }
 .text-pink{ color: #A759B3; }
 
@@ -20,11 +22,9 @@
   position: fixed;
   bottom: 30px;
   right: 0;
-  // background: white;
   width: 300px;
-  padding: 20px 20px 20px 30px;
+  padding: 10px 20px 20px 30px;
   border-radius: 10px 0 0 10px;
-  // background: var(--ph-blue);
   border: solid 2px #ececec;
   border-right-width: 0;
 
@@ -33,13 +33,7 @@
 
   &.shrink {
     transform: translateX(calc(100% - 30px));
-    background: var(--ph-blue);
+    background: $colorPrimary;
     border-color: transparent;
-  }
-
-  .btn-shrink {
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 }

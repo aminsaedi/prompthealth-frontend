@@ -7,12 +7,14 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class UserImageComponent implements OnInit {
 
-  @Input() verifiedUser: boolean = false;
-  @Input() image: string;
+  @Input() verified: boolean = false;
+  @Input() image: string;  
   @Input() alt: string;
+  @Input() shapedCircle: boolean = true;
+  @Input() badgeSize: number = 32;
+  @Input() option: IUserImageOption;
 
-  @Input() showBadge: boolean = true;
-
+  /** not needed start */
   @Input() borderColor: string = '#B9B9B9';
   @Input() borderColorVerified: string = '#277ee2';
 
@@ -21,19 +23,17 @@ export class UserImageComponent implements OnInit {
 
   @Input() shadow = null;
   @Input() shadowVerified = "0 0 3px #307dd6";
-
-  @Input() badgeSize: number = 32;
+  /** not needed end */
 
 
   get imageUrl(){
     return !this.image ? null : (this.image.match(/\?ver/)) ? this.image : this.image + '?ver=1.0.2';
   }
 
-  get containerStyle() {
+  get imageStyle() {
     return {
-      borderWidth: (this.verifiedUser ? this.borderWidthVerified : this.borderWidth) + 'px',
-      borderColor: this.verifiedUser ? this.borderColorVerified : this.borderColor,
-      boxShadow: this.verifiedUser ? this.shadowVerified : this.shadow,
+      border: this.verified ? this._option.borderVerified : this._option.border,
+      boxShadow: this.verified ? this._option.shadowVerified : this._option.shadow, 
     }
   }
 
@@ -45,7 +45,28 @@ export class UserImageComponent implements OnInit {
 
   constructor() { }
 
+  private _option: UserImageOption;
   ngOnInit(): void {
+    this._option = new UserImageOption(this.option);
   }
 
+}
+
+interface IUserImageOption {
+  border?: string;
+  shadow?: string;
+
+  borderVerified?: string;
+  shadowVerified?: string;
+
+  badgeSize?: number;
+}
+
+class UserImageOption implements IUserImageOption{
+  get border() { return this.data.border ? this.data.border : 'none'; }
+  get shadow() { return this.data.shadow ? this.data.shadow : 'none'; }
+  get borderVerified() { return this.data.borderVerified ? this.data.borderVerified : 'none'; }
+  get shadowVerified() { return this.data.shadowVerified ? this.data.shadowVerified : 'none'; }
+
+  constructor(private data: IUserImageOption = {}) {}
 }

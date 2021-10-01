@@ -1,10 +1,11 @@
 {
   "/api": {
-    "target": "https://api.prompthealth.ca/api/v1",
-    "secure": true,
-    "changeOrigin": true,
-    "pathRewrite": {
-      "^/api": ""
-    }
+    "target": "http://127.0.0.1:3000",
+    "secure": false
+  },
+  
+  "/stripe": {
+    "target": "http://127.0.0.1:3000",
+    "secure": false
   }
 }

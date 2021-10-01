@@ -9,9 +9,18 @@ import { CommonModule } from "@angular/common";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { ModalModule } from "ngx-bootstrap/modal";
+import { SocialModule } from './social/social.module';
+import { AuthModule } from './auth/auth.module';
 
 
 const routes: Routes = [
+  {
+    path: 'community',
+    loadChildren: () => SocialModule,
+  },
+  { path: 'auth', 
+    loadChildren: () => AuthModule,
+  },
   {
     path: '',
     loadChildren: () => ThemeModule

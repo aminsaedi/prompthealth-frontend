@@ -1,0 +1,4718 @@
+@font-face {
+  font-family: 'ph';
+  src:
+    url('fonts/ph.ttf?om8hjp') format('truetype'),
+    url('fonts/ph.woff?om8hjp') format('woff'),
+    url('fonts/ph.svg?om8hjp#ph') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+i {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'ph' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-lock-2-slash .path1:before {
+  content: "\ec58";
+  opacity: 0.16;
+}
+.icon-lock-2-slash .path2:before {
+  content: "\ec59";
+  margin-left: -1em;
+}
+.icon-lock-slash .path1:before {
+  content: "\ec5a";
+  opacity: 0.16;
+}
+.icon-lock-slash .path2:before {
+  content: "\ec5b";
+  margin-left: -1em;
+}
+.icon-lock .path1:before {
+  content: "\ec5c";
+  opacity: 0.16;
+}
+.icon-lock .path2:before {
+  content: "\ec5d";
+  margin-left: -1em;
+}
+.icon-key .path1:before {
+  content: "\ec5e";
+  opacity: 0.16;
+}
+.icon-key .path2:before {
+  content: "\ec5f";
+  margin-left: -1em;
+}
+.icon-shield .path1:before {
+  content: "\ec60";
+  opacity: 0.16;
+}
+.icon-shield .path2:before {
+  content: "\ec61";
+  margin-left: -1em;
+}
+.icon-shield-cross .path1:before {
+  content: "\ec62";
+  opacity: 0.16;
+}
+.icon-shield-cross .path2:before {
+  content: "\ec63";
+  margin-left: -1em;
+}
+.icon-server .path1:before {
+  content: "\ec64";
+  opacity: 0.16;
+}
+.icon-server .path2:before {
+  content: "\ec65";
+  margin-left: -1em;
+}
+.icon-lock-2-opened .path1:before {
+  content: "\ec66";
+  opacity: 0.16;
+}
+.icon-lock-2-opened .path2:before {
+  content: "\ec67";
+  margin-left: -1em;
+}
+.icon-scan .path1:before {
+  content: "\ec68";
+  opacity: 0.16;
+}
+.icon-scan .path2:before {
+  content: "\ec69";
+  margin-left: -1em;
+}
+.icon-eye-slash .path1:before {
+  content: "\ec6a";
+  opacity: 0.16;
+}
+.icon-eye-slash .path2:before {
+  content: "\ec6b";
+  margin-left: -1em;
+}
+.icon-lock-2 .path1:before {
+  content: "\ec6c";
+  opacity: 0.16;
+}
+.icon-lock-2 .path2:before {
+  content: "\ec6d";
+  margin-left: -1em;
+}
+.icon-face-id .path1:before {
+  content: "\ec6e";
+  opacity: 0.16;
+}
+.icon-face-id .path2:before {
+  content: "\ec6f";
+  margin-left: -1em;
+}
+.icon-server-2 .path1:before {
+  content: "\ec70";
+  opacity: 0.16;
+}
+.icon-server-2 .path2:before {
+  content: "\ec71";
+  margin-left: -1em;
+}
+.icon-bug .path1:before {
+  content: "\ec72";
+  opacity: 0.16;
+}
+.icon-bug .path2:before {
+  content: "\ec73";
+  margin-left: -1em;
+}
+.icon-lock-opened .path1:before {
+  content: "\ec74";
+  opacity: 0.16;
+}
+.icon-lock-opened .path2:before {
+  content: "\ec75";
+  margin-left: -1em;
+}
+.icon-eye .path1:before {
+  content: "\ec76";
+  opacity: 0.16;
+}
+.icon-eye .path2:before {
+  content: "\ec77";
+  margin-left: -1em;
+}
+.icon-shield-check .path1:before {
+  content: "\ec78";
+  opacity: 0.16;
+}
+.icon-shield-check .path2:before {
+  content: "\ec79";
+  margin-left: -1em;
+}
+.icon-shield-check-outline:before {
+  content: "\ec79";
+}
+
+.icon-fingerprint .path1:before {
+  content: "\ec7a";
+  opacity: 0.16;
+}
+.icon-fingerprint .path2:before {
+  content: "\ec7b";
+  margin-left: -1em;
+}
+.icon-lightning .path1:before {
+  content: "\ec7c";
+  opacity: 0.16;
+}
+.icon-lightning .path2:before {
+  content: "\ec7d";
+  margin-left: -1em;
+}
+.icon-lightning-outline:before {
+  content: "\ec7d";
+}
+.icon-lightning-filled .path1:before {
+  content: "\ec7c";
+}
+.icon-lightning-filled .path2:before {
+  content: "\ec7d";
+  margin-left: -1em;
+}
+
+.icon-camera-slash .path1:before {
+  content: "\ec7e";
+  opacity: 0.16;
+}
+.icon-camera-slash .path2:before {
+  content: "\ec7f";
+  margin-left: -1em;
+}
+.icon-image-upload .path1:before {
+  content: "\ec80";
+  opacity: 0.16;
+}
+.icon-image-upload .path2:before {
+  content: "\ec81";
+  margin-left: -1em;
+}
+.icon-apperture .path1:before {
+  content: "\ec82";
+  opacity: 0.16;
+}
+.icon-apperture .path2:before {
+  content: "\ec83";
+  margin-left: -1em;
+}
+.icon-image-check .path1:before {
+  content: "\ec84";
+  opacity: 0.16;
+}
+.icon-image-check .path2:before {
+  content: "\ec85";
+  margin-left: -1em;
+}
+.icon-image-plus .path1:before {
+  content: "\ec86";
+  opacity: 0.16;
+}
+.icon-image-plus .path2:before {
+  content: "\ec87";
+  margin-left: -1em;
+}
+.icon-image-slash .path1:before {
+  content: "\ec88";
+  opacity: 0.16;
+}
+.icon-image-slash .path2:before {
+  content: "\ec89";
+  margin-left: -1em;
+}
+.icon-image .path1:before {
+  content: "\ec8a";
+  opacity: 0.16;
+}
+.icon-image .path2:before {
+  content: "\ec8b";
+  margin-left: -1em;
+}
+.icon-color-filter .path1:before {
+  content: "\ec8c";
+  opacity: 0.16;
+}
+.icon-color-filter .path2:before {
+  content: "\ec8d";
+  margin-left: -1em;
+}
+.icon-camera .path1:before {
+  content: "\ec8e";
+  opacity: 0.16;
+}
+.icon-camera .path2:before {
+  content: "\ec8f";
+  margin-left: -1em;
+}
+.icon-image-2 .path1:before {
+  content: "\ec90";
+  opacity: 0.16;
+}
+.icon-image-2 .path2:before {
+  content: "\ec91";
+  margin-left: -1em;
+}
+.icon-image-edit .path1:before {
+  content: "\ec92";
+  opacity: 0.16;
+}
+.icon-image-edit .path2:before {
+  content: "\ec93";
+  margin-left: -1em;
+}
+.icon-image-3 .path1:before {
+  content: "\ec94";
+  opacity: 0.16;
+}
+.icon-image-3 .path2:before {
+  content: "\ec95";
+  margin-left: -1em;
+}
+.icon-image-cross .path1:before {
+  content: "\ec96";
+  opacity: 0.16;
+}
+.icon-image-cross .path2:before {
+  content: "\ec97";
+  margin-left: -1em;
+}
+.icon-lightning-slash .path1:before {
+  content: "\ec98";
+  opacity: 0.16;
+}
+.icon-lightning-slash .path2:before {
+  content: "\ec99";
+  margin-left: -1em;
+}
+.icon-image-download .path1:before {
+  content: "\ec9a";
+  opacity: 0.16;
+}
+.icon-image-download .path2:before {
+  content: "\ec9b";
+  margin-left: -1em;
+}
+.icon-grid .path1:before {
+  content: "\ec9c";
+  opacity: 0.16;
+}
+.icon-grid .path2:before {
+  content: "\ec9d";
+  margin-left: -1em;
+}
+.icon-slider-vertical-2 .path1:before {
+  content: "\ec9e";
+  opacity: 0.16;
+}
+.icon-slider-vertical-2 .path2:before {
+  content: "\ec9f";
+  margin-left: -1em;
+}
+.icon-padding .path1:before {
+  content: "\eca0";
+  opacity: 0.16;
+}
+.icon-padding .path2:before {
+  content: "\eca1";
+  margin-left: -1em;
+}
+.icon-elements-plus:before {
+  content: "\eca2";
+}
+.icon-elements-3-1 .path1:before {
+  content: "\eca3";
+  opacity: 0.16;
+}
+.icon-elements-3-1 .path2:before {
+  content: "\eca4";
+  margin-left: -1em;
+}
+.icon-crop .path1:before {
+  content: "\eca5";
+  opacity: 0.16;
+}
+.icon-crop .path2:before {
+  content: "\eca6";
+  margin-left: -1em;
+}
+.icon-align-bottom .path1:before {
+  content: "\eca7";
+  opacity: 0.16;
+}
+.icon-align-bottom .path2:before {
+  content: "\eca8";
+  margin-left: -1em;
+}
+.icon-transform .path1:before {
+  content: "\eca9";
+  opacity: 0.16;
+}
+.icon-transform .path2:before {
+  content: "\ecaa";
+  margin-left: -1em;
+}
+.icon-slider-vertical .path1:before {
+  content: "\ecab";
+  opacity: 0.16;
+}
+.icon-slider-vertical .path2:before {
+  content: "\ecac";
+  margin-left: -1em;
+}
+.icon-elements-4 .path1:before {
+  content: "\ecad";
+  opacity: 0.16;
+}
+.icon-elements-4 .path2:before {
+  content: "\ecae";
+  margin-left: -1em;
+}
+.icon-selection .path1:before {
+  content: "\ecaf";
+  opacity: 0.16;
+}
+.icon-selection .path2:before {
+  content: "\ecb0";
+  margin-left: -1em;
+}
+.icon-kanban .path1:before {
+  content: "\ecb1";
+  opacity: 0.16;
+}
+.icon-kanban .path2:before {
+  content: "\ecb2";
+  margin-left: -1em;
+}
+.icon-align-vertically .path1:before {
+  content: "\ecb3";
+  opacity: 0.16;
+}
+.icon-align-vertically .path2:before {
+  content: "\ecb4";
+  margin-left: -1em;
+}
+.icon-grid-08 .path1:before {
+  content: "\ecb5";
+  opacity: 0.16;
+}
+.icon-grid-08 .path2:before {
+  content: "\ecb6";
+  margin-left: -1em;
+}
+.icon-elements-3 .path1:before {
+  content: "\ecb7";
+  opacity: 0.16;
+}
+.icon-elements-3 .path2:before {
+  content: "\ecb8";
+  margin-left: -1em;
+}
+.icon-elements-2 .path1:before {
+  content: "\ecb9";
+  opacity: 0.16;
+}
+.icon-elements-2 .path2:before {
+  content: "\ecba";
+  margin-left: -1em;
+}
+.icon-grid-09 .path1:before {
+  content: "\ecbb";
+  opacity: 0.16;
+}
+.icon-grid-09 .path2:before {
+  content: "\ecbc";
+  margin-left: -1em;
+}
+.icon-fat-rows .path1:before {
+  content: "\ecbd";
+  opacity: 0.16;
+}
+.icon-fat-rows .path2:before {
+  content: "\ecbe";
+  margin-left: -1em;
+}
+.icon-grid-07 .path1:before {
+  content: "\ecbf";
+  opacity: 0.16;
+}
+.icon-grid-07 .path2:before {
+  content: "\ecc0";
+  margin-left: -1em;
+}
+.icon-elements .path1:before {
+  content: "\ecc1";
+  opacity: 0.16;
+}
+.icon-elements .path2:before {
+  content: "\ecc2";
+  margin-left: -1em;
+}
+.icon-grid-13 .path1:before {
+  content: "\ecc3";
+  opacity: 0.16;
+}
+.icon-grid-13 .path2:before {
+  content: "\ecc4";
+  margin-left: -1em;
+}
+.icon-align-horizontally .path1:before {
+  content: "\ecc5";
+  opacity: 0.16;
+}
+.icon-align-horizontally .path2:before {
+  content: "\ecc6";
+  margin-left: -1em;
+}
+.icon-align-right .path1:before {
+  content: "\ecc7";
+  opacity: 0.16;
+}
+.icon-align-right .path2:before {
+  content: "\ecc8";
+  margin-left: -1em;
+}
+.icon-grid-12 .path1:before {
+  content: "\ecc9";
+  opacity: 0.16;
+}
+.icon-grid-12 .path2:before {
+  content: "\ecca";
+  margin-left: -1em;
+}
+.icon-grid-06 .path1:before {
+  content: "\eccb";
+  opacity: 0.16;
+}
+.icon-grid-06 .path2:before {
+  content: "\eccc";
+  margin-left: -1em;
+}
+.icon-grid-10 .path1:before {
+  content: "\eccd";
+  opacity: 0.16;
+}
+.icon-grid-10 .path2:before {
+  content: "\ecce";
+  margin-left: -1em;
+}
+.icon-grid-04 .path1:before {
+  content: "\eccf";
+  opacity: 0.16;
+}
+.icon-grid-04 .path2:before {
+  content: "\ecd0";
+  margin-left: -1em;
+}
+.icon-iframe .path1:before {
+  content: "\ecd1";
+  opacity: 0.16;
+}
+.icon-iframe .path2:before {
+  content: "\ecd2";
+  margin-left: -1em;
+}
+.icon-elements-plus-1 .path1:before {
+  content: "\ecd3";
+  opacity: 0.16;
+}
+.icon-elements-plus-1 .path2:before {
+  content: "\ecd4";
+  margin-left: -1em;
+}
+.icon-grid-05 .path1:before {
+  content: "\ecd5";
+  opacity: 0.16;
+}
+.icon-grid-05 .path2:before {
+  content: "\ecd6";
+  margin-left: -1em;
+}
+.icon-grid-11 .path1:before {
+  content: "\ecd7";
+  opacity: 0.16;
+}
+.icon-grid-11 .path2:before {
+  content: "\ecd8";
+  margin-left: -1em;
+}
+.icon-grid-15 .path1:before {
+  content: "\ecd9";
+  opacity: 0.16;
+}
+.icon-grid-15 .path2:before {
+  content: "\ecda";
+  margin-left: -1em;
+}
+.icon-crop-rotate .path1:before {
+  content: "\ecdb";
+  opacity: 0.16;
+}
+.icon-crop-rotate .path2:before {
+  content: "\ecdc";
+  margin-left: -1em;
+}
+.icon-grid-14 .path1:before {
+  content: "\ecdd";
+  opacity: 0.16;
+}
+.icon-grid-14 .path2:before {
+  content: "\ecde";
+  margin-left: -1em;
+}
+.icon-grid-02 .path1:before {
+  content: "\ecdf";
+  opacity: 0.16;
+}
+.icon-grid-02 .path2:before {
+  content: "\ece0";
+  margin-left: -1em;
+}
+.icon-grid-16 .path1:before {
+  content: "\ece1";
+  opacity: 0.16;
+}
+.icon-grid-16 .path2:before {
+  content: "\ece2";
+  margin-left: -1em;
+}
+.icon-frame .path1:before {
+  content: "\ece3";
+  opacity: 0.16;
+}
+.icon-frame .path2:before {
+  content: "\ece4";
+  margin-left: -1em;
+}
+.icon-grid-03 .path1:before {
+  content: "\ece5";
+  opacity: 0.16;
+}
+.icon-grid-03 .path2:before {
+  content: "\ece6";
+  margin-left: -1em;
+}
+.icon-stack .path1:before {
+  content: "\ece7";
+  opacity: 0.16;
+}
+.icon-stack .path2:before {
+  content: "\ece8";
+  margin-left: -1em;
+}
+.icon-slider-horizontal-2 .path1:before {
+  content: "\ece9";
+  opacity: 0.16;
+}
+.icon-slider-horizontal-2 .path2:before {
+  content: "\ecea";
+  margin-left: -1em;
+}
+.icon-distribute-vertically .path1:before {
+  content: "\eceb";
+  opacity: 0.16;
+}
+.icon-distribute-vertically .path2:before {
+  content: "\ecec";
+  margin-left: -1em;
+}
+.icon-align-top .path1:before {
+  content: "\eced";
+  opacity: 0.16;
+}
+.icon-align-top .path2:before {
+  content: "\ecee";
+  margin-left: -1em;
+}
+.icon-slider-horizontal .path1:before {
+  content: "\ecef";
+  opacity: 0.16;
+}
+.icon-slider-horizontal .path2:before {
+  content: "\ecf0";
+  margin-left: -1em;
+}
+.icon-distribute-horizontally .path1:before {
+  content: "\ecf1";
+  opacity: 0.16;
+}
+.icon-distribute-horizontally .path2:before {
+  content: "\ecf2";
+  margin-left: -1em;
+}
+.icon-frame-bounds .path1:before {
+  content: "\ecf3";
+  opacity: 0.16;
+}
+.icon-frame-bounds .path2:before {
+  content: "\ecf4";
+  margin-left: -1em;
+}
+.icon-align-left .path1:before {
+  content: "\ecf5";
+  opacity: 0.16;
+}
+.icon-align-left .path2:before {
+  content: "\ecf6";
+  margin-left: -1em;
+}
+.icon-wallet-plus-1 .path1:before {
+  content: "\ecf7";
+  opacity: 0.16;
+}
+.icon-wallet-plus-1 .path2:before {
+  content: "\ecf8";
+  margin-left: -1em;
+}
+.icon-dollar:before {
+  content: "\ecf9";
+}
+.icon-credit-card-outcome .path1:before {
+  content: "\ecfa";
+  opacity: 0.16;
+}
+.icon-credit-card-outcome .path2:before {
+  content: "\ecfb";
+  margin-left: -1em;
+}
+.icon-dollar-circle .path1:before {
+  content: "\ecfc";
+  opacity: 0.16;
+}
+.icon-dollar-circle .path2:before {
+  content: "\ecfd";
+  margin-left: -1em;
+}
+.icon-euro-circle .path1:before {
+  content: "\ecfe";
+  opacity: 0.16;
+}
+.icon-euro-circle .path2:before {
+  content: "\ecff";
+  margin-left: -1em;
+}
+.icon-procent .path1:before {
+  content: "\ed00";
+  opacity: 0.16;
+}
+.icon-procent .path2:before {
+  content: "\ed01";
+  margin-left: -1em;
+}
+.icon-wallet-move .path1:before {
+  content: "\ed02";
+  opacity: 0.16;
+}
+.icon-wallet-move .path2:before {
+  content: "\ed03";
+  margin-left: -1em;
+}
+.icon-credit-card-minus .path1:before {
+  content: "\ed04";
+  opacity: 0.16;
+}
+.icon-credit-card-minus .path2:before {
+  content: "\ed05";
+  margin-left: -1em;
+}
+.icon-euro:before {
+  content: "\ed06";
+}
+.icon-credit-card-plus .path1:before {
+  content: "\ed07";
+  opacity: 0.16;
+}
+.icon-credit-card-plus .path2:before {
+  content: "\ed08";
+  margin-left: -1em;
+}
+.icon-wallet-plus .path1:before {
+  content: "\ed09";
+  opacity: 0.16;
+}
+.icon-wallet-plus .path2:before {
+  content: "\ed0a";
+  margin-left: -1em;
+}
+.icon-wallet .path1:before {
+  content: "\ed0b";
+  opacity: 0.16;
+}
+.icon-wallet .path2:before {
+  content: "\ed0c";
+  margin-left: -1em;
+}
+.icon-credit-card-scan .path1:before {
+  content: "\ed0d";
+  opacity: 0.16;
+}
+.icon-credit-card-scan .path2:before {
+  content: "\ed0e";
+  margin-left: -1em;
+}
+.icon-credit-card-slash .path1:before {
+  content: "\ed0f";
+  opacity: 0.16;
+}
+.icon-credit-card-slash .path2:before {
+  content: "\ed10";
+  margin-left: -1em;
+}
+.icon-cash .path1:before {
+  content: "\ed11";
+  opacity: 0.16;
+}
+.icon-cash .path2:before {
+  content: "\ed12";
+  margin-left: -1em;
+}
+.icon-credit-card .path1:before {
+  content: "\ed13";
+  opacity: 0.16;
+}
+.icon-credit-card .path2:before {
+  content: "\ed14";
+  margin-left: -1em;
+}
+.icon-credit-card-income .path1:before {
+  content: "\ed15";
+  opacity: 0.16;
+}
+.icon-credit-card-income .path2:before {
+  content: "\ed16";
+  margin-left: -1em;
+}
+.icon-pos .path1:before {
+  content: "\ed17";
+  opacity: 0.16;
+}
+.icon-pos .path2:before {
+  content: "\ed18";
+  margin-left: -1em;
+}
+.icon-procent-circle .path1:before {
+  content: "\ed19";
+  opacity: 0.16;
+}
+.icon-procent-circle .path2:before {
+  content: "\ed1a";
+  margin-left: -1em;
+}
+.icon-align-bottom1:before {
+  content: "\ed1b";
+}
+.icon-align-center-2:before {
+  content: "\ed1c";
+}
+.icon-align-center:before {
+  content: "\ed1d";
+}
+.icon-align-justify-2:before {
+  content: "\ed1e";
+}
+.icon-align-justify:before {
+  content: "\ed1f";
+}
+.icon-align-left-2:before {
+  content: "\ed20";
+}
+.icon-align-left1:before {
+  content: "\ed21";
+}
+.icon-align-right-2:before {
+  content: "\ed22";
+}
+.icon-align-middle:before {
+  content: "\ed23";
+}
+.icon-align-right1:before {
+  content: "\ed24";
+}
+.icon-align-top1:before {
+  content: "\ed25";
+}
+.icon-border-bottom .path1:before {
+  content: "\ed26";
+  opacity: 0.16;
+}
+.icon-border-bottom .path2:before {
+  content: "\ed27";
+  margin-left: -1em;
+}
+.icon-border-clear .path1:before {
+  content: "\ed28";
+  opacity: 0.16;
+}
+.icon-border-clear .path2:before {
+  content: "\ed29";
+  margin-left: -1em;
+}
+.icon-border-horizontal .path1:before {
+  content: "\ed2a";
+  opacity: 0.16;
+}
+.icon-border-horizontal .path2:before {
+  content: "\ed2b";
+  margin-left: -1em;
+}
+.icon-border-inner .path1:before {
+  content: "\ed2c";
+  opacity: 0.16;
+}
+.icon-border-inner .path2:before {
+  content: "\ed2d";
+  margin-left: -1em;
+}
+.icon-border-left .path1:before {
+  content: "\ed2e";
+  opacity: 0.16;
+}
+.icon-border-left .path2:before {
+  content: "\ed2f";
+  margin-left: -1em;
+}
+.icon-border-outer .path1:before {
+  content: "\ed30";
+  opacity: 0.16;
+}
+.icon-border-outer .path2:before {
+  content: "\ed31";
+  margin-left: -1em;
+}
+.icon-border-right .path1:before {
+  content: "\ed32";
+  opacity: 0.16;
+}
+.icon-border-right .path2:before {
+  content: "\ed33";
+  margin-left: -1em;
+}
+.icon-border-top .path1:before {
+  content: "\ed34";
+  opacity: 0.16;
+}
+.icon-border-top .path2:before {
+  content: "\ed35";
+  margin-left: -1em;
+}
+.icon-border-vertical .path1:before {
+  content: "\ed36";
+  opacity: 0.16;
+}
+.icon-border-vertical .path2:before {
+  content: "\ed37";
+  margin-left: -1em;
+}
+.icon-chart-bar .path1:before {
+  content: "\ed38";
+  opacity: 0.16;
+}
+.icon-chart-bar .path2:before {
+  content: "\ed39";
+  margin-left: -1em;
+}
+.icon-chart-column .path1:before {
+  content: "\ed3a";
+  opacity: 0.16;
+}
+.icon-chart-column .path2:before {
+  content: "\ed3b";
+  margin-left: -1em;
+}
+.icon-chart-line .path1:before {
+  content: "\ed3c";
+  opacity: 0.16;
+}
+.icon-chart-line .path2:before {
+  content: "\ed3d";
+  margin-left: -1em;
+}
+.icon-chart-pie .path1:before {
+  content: "\ed3e";
+  opacity: 0.16;
+}
+.icon-chart-pie .path2:before {
+  content: "\ed3f";
+  margin-left: -1em;
+}
+.icon-column-spacing .path1:before {
+  content: "\ed40";
+}
+.icon-column-spacing .path2:before {
+  content: "\ed41";
+  margin-left: -1em;
+  opacity: 0.16;
+}
+.icon-droplet-slash .path1:before {
+  content: "\ed42";
+  opacity: 0.16;
+}
+.icon-droplet-slash .path2:before {
+  content: "\ed43";
+  margin-left: -1em;
+}
+.icon-droplet .path1:before {
+  content: "\ed44";
+  opacity: 0.16;
+}
+.icon-droplet .path2:before {
+  content: "\ed45";
+  margin-left: -1em;
+}
+.icon-edit-2 .path1:before {
+  content: "\ed46";
+  opacity: 0.16;
+}
+.icon-edit-2 .path2:before {
+  content: "\ed47";
+  margin-left: -1em;
+}
+.icon-edit-3 .path1:before {
+  content: "\ed48";
+  opacity: 0.16;
+}
+.icon-edit-3 .path2:before {
+  content: "\ed49";
+  margin-left: -1em;
+}
+.icon-edit-slash .path1:before {
+  content: "\ed4a";
+  opacity: 0.16;
+}
+.icon-edit-slash .path2:before {
+  content: "\ed4b";
+  margin-left: -1em;
+}
+.icon-edit .path1:before {
+  content: "\ed4c";
+  opacity: 0.16;
+}
+.icon-edit .path2:before {
+  content: "\ed4d";
+  margin-left: -1em;
+}
+.icon-first-line-1 .path1:before {
+  content: "\ed4e";
+  opacity: 0.16;
+}
+.icon-first-line-1 .path2:before {
+  content: "\ed4f";
+  margin-left: -1em;
+}
+.icon-first-line-2 .path1:before {
+  content: "\ed50";
+  opacity: 0.16;
+}
+.icon-first-line-2 .path2:before {
+  content: "\ed51";
+  margin-left: -1em;
+}
+.icon-first-line-3:before {
+  content: "\ed52";
+}
+.icon-functions:before {
+  content: "\ed53";
+}
+.icon-indent-decrease:before {
+  content: "\ed54";
+}
+.icon-indent-first-line:before {
+  content: "\ed55";
+}
+.icon-indent-increase:before {
+  content: "\ed56";
+}
+.icon-letter-spacing-2:before {
+  content: "\ed57";
+}
+.icon-letter-spacing .path1:before {
+  content: "\ed58";
+  opacity: 0.16;
+}
+.icon-letter-spacing .path2:before {
+  content: "\ed59";
+  margin-left: -1em;
+}
+.icon-line-height-2:before {
+  content: "\ed5a";
+}
+.icon-line-height .path1:before {
+  content: "\ed5b";
+  opacity: 0.16;
+}
+.icon-line-height .path2:before {
+  content: "\ed5c";
+  margin-left: -1em;
+}
+.icon-link-1 .path1:before {
+  content: "\ed5d";
+  opacity: 0.16;
+}
+.icon-link-1 .path2:before {
+  content: "\ed5e";
+  margin-left: -1em;
+}
+.icon-link-2-1 .path1:before {
+  content: "\ed5f";
+  opacity: 0.16;
+}
+.icon-link-2-1 .path2:before {
+  content: "\ed60";
+  margin-left: -1em;
+}
+.icon-link-2 .path1:before {
+  content: "\ed61";
+  opacity: 0.16;
+}
+.icon-link-2 .path2:before {
+  content: "\ed62";
+  margin-left: -1em;
+}
+.icon-list-ordered-2:before {
+  content: "\ed63";
+}
+.icon-list-ordered-3:before {
+  content: "\ed64";
+}
+.icon-list-ordered:before {
+  content: "\ed65";
+}
+.icon-list-unordered-2 .path1:before {
+  content: "\ed66";
+  opacity: 0.16;
+}
+.icon-list-unordered-2 .path2:before {
+  content: "\ed67";
+  margin-left: -1em;
+}
+.icon-list-unordered-3 .path1:before {
+  content: "\ed68";
+  opacity: 0.16;
+}
+.icon-list-unordered-3 .path2:before {
+  content: "\ed69";
+  margin-left: -1em;
+}
+.icon-list-unordered-4:before {
+  content: "\ed6a";
+}
+.icon-list-unordered-5:before {
+  content: "\ed6b";
+}
+.icon-list-unordered:before {
+  content: "\ed6c";
+}
+.icon-page-break .path1:before {
+  content: "\ed6d";
+  opacity: 0.16;
+}
+.icon-page-break .path2:before {
+  content: "\ed6e";
+  margin-left: -1em;
+}
+.icon-paint-bucket .path1:before {
+  content: "\ed6f";
+  opacity: 0.16;
+}
+.icon-paint-bucket .path2:before {
+  content: "\ed70";
+  margin-left: -1em;
+}
+.icon-paint-tool .path1:before {
+  content: "\ed71";
+  opacity: 0.16;
+}
+.icon-paint-tool .path2:before {
+  content: "\ed72";
+  margin-left: -1em;
+}
+.icon-paperclip-2-slash:before {
+  content: "\ed73";
+}
+.icon-paperclip-2:before {
+  content: "\ed74";
+}
+.icon-paperclip-slash:before {
+  content: "\ed75";
+}
+.icon-paperclip:before {
+  content: "\ed76";
+}
+.icon-pen-tool-2 .path1:before {
+  content: "\ed77";
+  opacity: 0.16;
+}
+.icon-pen-tool-2 .path2:before {
+  content: "\ed78";
+  margin-left: -1em;
+}
+.icon-pen-tool .path1:before {
+  content: "\ed79";
+  opacity: 0.16;
+}
+.icon-pen-tool .path2:before {
+  content: "\ed7a";
+  margin-left: -1em;
+}
+.icon-pharagraph-spacing .path1:before {
+  content: "\ed7b";
+}
+.icon-pharagraph-spacing .path2:before {
+  content: "\ed7c";
+  margin-left: -1em;
+  opacity: 0.16;
+}
+.icon-printer-slash .path1:before {
+  content: "\ed7d";
+  opacity: 0.16;
+}
+.icon-printer-slash .path2:before {
+  content: "\ed7e";
+  margin-left: -1em;
+}
+.icon-printer .path1:before {
+  content: "\ed7f";
+  opacity: 0.16;
+}
+.icon-printer .path2:before {
+  content: "\ed80";
+  margin-left: -1em;
+}
+.icon-quotes-2 .path1:before {
+  content: "\ed81";
+  opacity: 0.16;
+}
+.icon-quotes-2 .path2:before {
+  content: "\ed82";
+  margin-left: -1em;
+}
+.icon-quotes .path1:before {
+  content: "\ed83";
+  opacity: 0.16;
+}
+.icon-quotes .path2:before {
+  content: "\ed84";
+  margin-left: -1em;
+}
+.icon-ruler .path1:before {
+  content: "\ed85";
+  opacity: 0.16;
+}
+.icon-ruler .path2:before {
+  content: "\ed86";
+  margin-left: -1em;
+}
+.icon-script:before {
+  content: "\ed87";
+}
+.icon-small-caps-2:before {
+  content: "\ed88";
+}
+.icon-small-caps:before {
+  content: "\ed89";
+}
+.icon-special-charachers:before {
+  content: "\ed8a";
+}
+.icon-text-2:before {
+  content: "\ed8b";
+}
+.icon-text-block .path1:before {
+  content: "\ed8c";
+  opacity: 0.16;
+}
+.icon-text-block .path2:before {
+  content: "\ed8d";
+  margin-left: -1em;
+}
+.icon-text-block-outline:before {
+  content: "\ed8d";
+}
+.icon-text-bold .path1:before {
+  content: "\ed8e";
+  opacity: 0.16;
+}
+.icon-text-bold .path2:before {
+  content: "\ed8f";
+  margin-left: -1em;
+}
+.icon-text-format .path1:before {
+  content: "\ed90";
+  opacity: 0.16;
+}
+.icon-text-format .path2:before {
+  content: "\ed91";
+  margin-left: -1em;
+}
+.icon-text-italic:before {
+  content: "\ed92";
+}
+.icon-text-slash-2:before {
+  content: "\ed93";
+}
+.icon-text-slash:before {
+  content: "\ed94";
+}
+.icon-text-strikethrough:before {
+  content: "\ed95";
+}
+.icon-text-underline:before {
+  content: "\ed96";
+}
+.icon-text:before {
+  content: "\ed97";
+}
+.icon-vector .path1:before {
+  content: "\ed98";
+  opacity: 0.16;
+}
+.icon-vector .path2:before {
+  content: "\ed99";
+  margin-left: -1em;
+}
+.icon-wrap-text:before {
+  content: "\ed9a";
+}
+.icon-facebook:before {
+  content: "\ec56";
+}
+.icon-pinterest:before {
+  content: "\eda0";
+}
+.icon-google:before {
+  content: "\ed9f";
+}
+.icon-clubhouse:before {
+  content: "\ec4f";
+}
+.icon-youtube:before {
+  content: "\ec50";
+}
+.icon-insta:before {
+  content: "\ec51";
+}
+.icon-spotify:before {
+  content: "\ec52";
+}
+.icon-tiktok:before {
+  content: "\ec53";
+}
+.icon-twitter:before {
+  content: "\ec54";
+}
+.icon-linkedin:before {
+  content: "\ec55";
+}
+.icon-briefcase-doctor:before {
+  content: "\ec4e";
+}
+.icon-toggle-on .path1:before {
+  content: "\e900";
+  opacity: 0.16;
+}
+.icon-toggle-on .path2:before {
+  content: "\e901";
+  margin-left: -1em;
+}
+.icon-search .path1:before {
+  content: "\e902";
+  opacity: 0.16;
+}
+.icon-search .path2:before {
+  content: "\e903";
+  margin-left: -1em;
+}
+.icon-receipt .path1:before {
+  content: "\e904";
+  opacity: 0.16;
+}
+.icon-receipt .path2:before {
+  content: "\e905";
+  margin-left: -1em;
+}
+.icon-activity-2:before {
+  content: "\e906";
+}
+.icon-bulb .path1:before {
+  content: "\e907";
+  opacity: 0.16;
+}
+.icon-bulb .path2:before {
+  content: "\e908";
+  margin-left: -1em;
+}
+.icon-megaphone .path1:before {
+  content: "\e909";
+  opacity: 0.16;
+}
+.icon-megaphone .path2:before {
+  content: "\e90a";
+  margin-left: -1em;
+}
+.icon-briefcase-2 .path1:before {
+  content: "\e90b";
+  opacity: 0.16;
+}
+.icon-briefcase-2 .path2:before {
+  content: "\e90c";
+  margin-left: -1em;
+}
+.icon-bed .path1:before {
+  content: "\e90d";
+  opacity: 0.16;
+}
+.icon-bed .path2:before {
+  content: "\e90e";
+  margin-left: -1em;
+}
+.icon-target .path1:before {
+  content: "\e90f";
+  opacity: 0.16;
+}
+.icon-target .path2:before {
+  content: "\e910";
+  margin-left: -1em;
+}
+.icon-crosshair .path1:before {
+  content: "\e911";
+  opacity: 0.16;
+}
+.icon-crosshair .path2:before {
+  content: "\e912";
+  margin-left: -1em;
+}
+.icon-airplay .path1:before {
+  content: "\e913";
+  opacity: 0.16;
+}
+.icon-airplay .path2:before {
+  content: "\e914";
+  margin-left: -1em;
+}
+.icon-inbox-out .path1:before {
+  content: "\e915";
+  opacity: 0.16;
+}
+.icon-inbox-out .path2:before {
+  content: "\e916";
+  margin-left: -1em;
+}
+.icon-sliders-horiz-2 .path1:before {
+  content: "\e917";
+  opacity: 0.16;
+}
+.icon-sliders-horiz-2 .path2:before {
+  content: "\e918";
+  margin-left: -1em;
+}
+.icon-wifi-slash:before {
+  content: "\e919";
+}
+.icon-tag-2 .path1:before {
+  content: "\e91a";
+  opacity: 0.16;
+}
+.icon-tag-2 .path2:before {
+  content: "\e91b";
+  margin-left: -1em;
+}
+.icon-umbrella .path1:before {
+  content: "\e91c";
+  opacity: 0.16;
+}
+.icon-umbrella .path2:before {
+  content: "\e91d";
+  margin-left: -1em;
+}
+.icon-emotion-sad .path1:before {
+  content: "\e91e";
+  opacity: 0.16;
+}
+.icon-emotion-sad .path2:before {
+  content: "\e91f";
+  margin-left: -1em;
+}
+.icon-checkbox-square .path1:before {
+  content: "\e920";
+  opacity: 0.16;
+}
+.icon-checkbox-square .path2:before {
+  content: "\e921";
+  margin-left: -1em;
+}
+.icon-checkbox-square-outline:before {
+  content: "\e921";
+}
+.icon-home .path1:before {
+  content: "\e922";
+  opacity: 0.16;
+}
+.icon-home .path2:before {
+  content: "\e923";
+  margin-left: -1em;
+}
+.icon-copyright .path1:before {
+  content: "\e924";
+  opacity: 0.16;
+}
+.icon-copyright .path2:before {
+  content: "\e925";
+  margin-left: -1em;
+}
+.icon-smartphone .path1:before {
+  content: "\e926";
+  opacity: 0.16;
+}
+.icon-smartphone .path2:before {
+  content: "\e927";
+  margin-left: -1em;
+}
+.icon-watch-2 .path1:before {
+  content: "\e928";
+  opacity: 0.16;
+}
+.icon-watch-2 .path2:before {
+  content: "\e929";
+  margin-left: -1em;
+}
+.icon-shopping-cart-2 .path1:before {
+  content: "\e92a";
+  opacity: 0.16;
+}
+.icon-shopping-cart-2 .path2:before {
+  content: "\e92b";
+  margin-left: -1em;
+}
+.icon-flag-2 .path1:before {
+  content: "\e92c";
+  opacity: 0.16;
+}
+.icon-flag-2 .path2:before {
+  content: "\e92d";
+  margin-left: -1em;
+}
+.icon-flag-3 .path1:before {
+  content: "\e92e";
+  opacity: 0.16;
+}
+.icon-flag-3 .path2:before {
+  content: "\e92f";
+  margin-left: -1em;
+}
+.icon-ticket .path1:before {
+  content: "\e930";
+  opacity: 0.16;
+}
+.icon-ticket .path2:before {
+  content: "\e931";
+  margin-left: -1em;
+}
+.icon-brackets:before {
+  content: "\e932";
+}
+.icon-tag .path1:before {
+  content: "\e933";
+  opacity: 0.16;
+}
+.icon-tag .path2:before {
+  content: "\e934";
+  margin-left: -1em;
+}
+.icon-briefcase .path1:before {
+  content: "\e935";
+  opacity: 0.16;
+}
+.icon-briefcase .path2:before {
+  content: "\e936";
+  margin-left: -1em;
+}
+.icon-inbox .path1:before {
+  content: "\e937";
+  opacity: 0.16;
+}
+.icon-inbox .path2:before {
+  content: "\e938";
+  margin-left: -1em;
+}
+.icon-plus-square .path1:before {
+  content: "\e939";
+  opacity: 0.16;
+}
+.icon-plus-square .path2:before {
+  content: "\e93a";
+  margin-left: -1em;
+}
+.icon-power:before {
+  content: "\e93b";
+}
+.icon-devices .path1:before {
+  content: "\e93c";
+  opacity: 0.16;
+}
+.icon-devices .path2:before {
+  content: "\e93d";
+  margin-left: -1em;
+}
+.icon-terminal .path1:before {
+  content: "\e93e";
+  opacity: 0.16;
+}
+.icon-terminal .path2:before {
+  content: "\e93f";
+  margin-left: -1em;
+}
+.icon-presentation-chart .path1:before {
+  content: "\e940";
+  opacity: 0.16;
+}
+.icon-presentation-chart .path2:before {
+  content: "\e941";
+  margin-left: -1em;
+}
+.icon-keyboard .path1:before {
+  content: "\e942";
+  opacity: 0.16;
+}
+.icon-keyboard .path2:before {
+  content: "\e943";
+  margin-left: -1em;
+}
+.icon-fire .path1:before {
+  content: "\e944";
+  opacity: 0.16;
+}
+.icon-fire .path2:before {
+  content: "\e945";
+  margin-left: -1em;
+}
+.icon-shopping-bag .path1:before {
+  content: "\e946";
+  opacity: 0.16;
+}
+.icon-shopping-bag .path2:before {
+  content: "\e947";
+  margin-left: -1em;
+}
+.icon-sliders-horiz .path1:before {
+  content: "\e948";
+  opacity: 0.16;
+}
+.icon-sliders-horiz .path2:before {
+  content: "\e949";
+  margin-left: -1em;
+}
+.icon-toggle-off .path1:before {
+  content: "\e94a";
+  opacity: 0.16;
+}
+.icon-toggle-off .path2:before {
+  content: "\e94b";
+  margin-left: -1em;
+}
+.icon-sort-text:before {
+  content: "\e94c";
+}
+.icon-box-2 .path1:before {
+  content: "\e94d";
+  opacity: 0.16;
+}
+.icon-box-2 .path2:before {
+  content: "\e94e";
+  margin-left: -1em;
+}
+.icon-brush .path1:before {
+  content: "\e94f";
+  opacity: 0.16;
+}
+.icon-brush .path2:before {
+  content: "\e950";
+  margin-left: -1em;
+}
+.icon-at:before {
+  content: "\e951";
+}
+.icon-thumbs-down .path1:before {
+  content: "\e952";
+  opacity: 0.16;
+}
+.icon-thumbs-down .path2:before {
+  content: "\e953";
+  margin-left: -1em;
+}
+.icon-archive .path1:before {
+  content: "\e954";
+  opacity: 0.16;
+}
+.icon-archive .path2:before {
+  content: "\e955";
+  margin-left: -1em;
+}
+.icon-bulb-slash .path1:before {
+  content: "\e956";
+  opacity: 0.16;
+}
+.icon-bulb-slash .path2:before {
+  content: "\e957";
+  margin-left: -1em;
+}
+.icon-keyboard-show .path1:before {
+  content: "\e958";
+  opacity: 0.16;
+}
+.icon-keyboard-show .path2:before {
+  content: "\e959";
+  margin-left: -1em;
+}
+.icon-tags-2 .path1:before {
+  content: "\e95a";
+  opacity: 0.16;
+}
+.icon-tags-2 .path2:before {
+  content: "\e95b";
+  margin-left: -1em;
+}
+.icon-tags-2-outline:before {
+  content: "\e95b";
+}
+
+.icon-planet .path1:before {
+  content: "\e95c";
+  opacity: 0.16;
+}
+.icon-planet .path2:before {
+  content: "\e95d";
+  margin-left: -1em;
+}
+.icon-book-open .path1:before {
+  content: "\e95e";
+  opacity: 0.16;
+}
+.icon-book-open .path2:before {
+  content: "\e95f";
+  margin-left: -1em;
+}
+.icon-book-open-outline:before {
+  content: "\e95f";
+}
+.icon-glasses-vr .path1:before {
+  content: "\e960";
+  opacity: 0.16;
+}
+.icon-glasses-vr .path2:before {
+  content: "\e961";
+  margin-left: -1em;
+}
+.icon-battery-charging .path1:before {
+  content: "\e962";
+  opacity: 0.16;
+}
+.icon-battery-charging .path2:before {
+  content: "\e963";
+  margin-left: -1em;
+}
+.icon-bed-2 .path1:before {
+  content: "\e964";
+  opacity: 0.16;
+}
+.icon-bed-2 .path2:before {
+  content: "\e965";
+  margin-left: -1em;
+}
+.icon-inbox-in .path1:before {
+  content: "\e966";
+  opacity: 0.16;
+}
+.icon-inbox-in .path2:before {
+  content: "\e967";
+  margin-left: -1em;
+}
+.icon-bookmark-minus .path1:before {
+  content: "\e968";
+  opacity: 0.16;
+}
+.icon-bookmark-minus .path2:before {
+  content: "\e969";
+  margin-left: -1em;
+}
+.icon-layers .path1:before {
+  content: "\e96a";
+  opacity: 0.16;
+}
+.icon-layers .path2:before {
+  content: "\e96b";
+  margin-left: -1em;
+}
+.icon-slash .path1:before {
+  content: "\e96c";
+  opacity: 0.16;
+}
+.icon-slash .path2:before {
+  content: "\e96d";
+  margin-left: -1em;
+}
+.icon-book .path1:before {
+  content: "\e96e";
+  opacity: 0.16;
+}
+.icon-book .path2:before {
+  content: "\e96f";
+  margin-left: -1em;
+}
+.icon-heart-slash .path1:before {
+  content: "\e970";
+  opacity: 0.16;
+}
+.icon-heart-slash .path2:before {
+  content: "\e971";
+  margin-left: -1em;
+}
+.icon-plug .path1:before {
+  content: "\e972";
+  opacity: 0.16;
+}
+.icon-plug .path2:before {
+  content: "\e973";
+  margin-left: -1em;
+}
+.icon-dashboard .path1:before {
+  content: "\e974";
+  opacity: 0.16;
+}
+.icon-dashboard .path2:before {
+  content: "\e975";
+  margin-left: -1em;
+}
+.icon-thermometer .path1:before {
+  content: "\e976";
+  opacity: 0.16;
+}
+.icon-thermometer .path2:before {
+  content: "\e977";
+  margin-left: -1em;
+}
+.icon-cast .path1:before {
+  content: "\e978";
+  opacity: 0.16;
+}
+.icon-cast .path2:before {
+  content: "\e979";
+  margin-left: -1em;
+}
+.icon-cast-outline:before {
+  content: "\e979";
+}
+.icon-flag .path1:before {
+  content: "\e97a";
+  opacity: 0.16;
+}
+.icon-flag .path2:before {
+  content: "\e97b";
+  margin-left: -1em;
+}
+.icon-battery-1 .path1:before {
+  content: "\e97c";
+  opacity: 0.16;
+}
+.icon-battery-1 .path2:before {
+  content: "\e97d";
+  margin-left: -1em;
+}
+.icon-battery .path1:before {
+  content: "\e97e";
+  opacity: 0.16;
+}
+.icon-battery .path2:before {
+  content: "\e97f";
+  margin-left: -1em;
+}
+.icon-sliders-vert-2 .path1:before {
+  content: "\e980";
+  opacity: 0.16;
+}
+.icon-sliders-vert-2 .path2:before {
+  content: "\e981";
+  margin-left: -1em;
+  opacity: 0.16;
+}
+.icon-sliders-vert-2 .path3:before {
+  content: "\e982";
+  margin-left: -1em;
+}
+.icon-newspaper .path1:before {
+  content: "\e983";
+  opacity: 0.16;
+}
+.icon-newspaper .path2:before {
+  content: "\e984";
+  margin-left: -1em;
+}
+.icon-emotion-smile .path1:before {
+  content: "\e985";
+  opacity: 0.16;
+}
+.icon-emotion-smile .path2:before {
+  content: "\e986";
+  margin-left: -1em;
+}
+.icon-sliders-vert .path1:before {
+  content: "\e987";
+  opacity: 0.16;
+}
+.icon-sliders-vert .path2:before {
+  content: "\e988";
+  margin-left: -1em;
+}
+.icon-bed-1 .path1:before {
+  content: "\e989";
+  opacity: 0.16;
+}
+.icon-bed-1 .path2:before {
+  content: "\e98a";
+  margin-left: -1em;
+}
+.icon-emotion-neutral .path1:before {
+  content: "\e98b";
+  opacity: 0.16;
+}
+.icon-emotion-neutral .path2:before {
+  content: "\e98c";
+  margin-left: -1em;
+}
+.icon-trophy .path1:before {
+  content: "\e98d";
+  opacity: 0.16;
+}
+.icon-trophy .path2:before {
+  content: "\e98e";
+  margin-left: -1em;
+}
+.icon-plus:before {
+  content: "\e98f";
+}
+.icon-check:before {
+  content: "\e990";
+}
+.icon-battery-3 .path1:before {
+  content: "\e991";
+  opacity: 0.16;
+}
+.icon-battery-3 .path2:before {
+  content: "\e992";
+  margin-left: -1em;
+}
+.icon-nut .path1:before {
+  content: "\e993";
+  opacity: 0.16;
+}
+.icon-nut .path2:before {
+  content: "\e994";
+  margin-left: -1em;
+}
+.icon-more-vert .path1:before {
+  content: "\e995";
+  opacity: 0.16;
+}
+.icon-more-vert .path2:before {
+  content: "\e996";
+  margin-left: -1em;
+}
+.icon-hard-drive .path1:before {
+  content: "\e997";
+  opacity: 0.16;
+}
+.icon-hard-drive .path2:before {
+  content: "\e998";
+  margin-left: -1em;
+}
+.icon-bluetooth:before {
+  content: "\e999";
+}
+.icon-headphones .path1:before {
+  content: "\e99a";
+  opacity: 0.16;
+}
+.icon-headphones .path2:before {
+  content: "\e99b";
+  margin-left: -1em;
+}
+.icon-filter-2 .path1:before {
+  content: "\e99c";
+  opacity: 0.16;
+}
+.icon-filter-2 .path2:before {
+  content: "\e99d";
+  margin-left: -1em;
+}
+.icon-email .path1:before {
+  content: "\e99e";
+  opacity: 0.16;
+}
+.icon-email .path2:before {
+  content: "\e99f";
+  margin-left: -1em;
+}
+.icon-wifi:before {
+  content: "\e9a0";
+}
+.icon-watch .path1:before {
+  content: "\e9a1";
+  opacity: 0.16;
+}
+.icon-watch .path2:before {
+  content: "\e9a2";
+  margin-left: -1em;
+}
+.icon-battery-2 .path1:before {
+  content: "\e9a3";
+  opacity: 0.16;
+}
+.icon-battery-2 .path2:before {
+  content: "\e9a4";
+  margin-left: -1em;
+}
+.icon-flashcard .path1:before {
+  content: "\e9a5";
+  opacity: 0.16;
+}
+.icon-flashcard .path2:before {
+  content: "\e9a6";
+  margin-left: -1em;
+}
+.icon-loader:before {
+  content: "\e9a7";
+}
+.icon-gear .path1:before {
+  content: "\e9a8";
+  opacity: 0.16;
+}
+.icon-gear .path2:before {
+  content: "\e9a9";
+  margin-left: -1em;
+}
+.icon-memory-card .path1:before {
+  content: "\e9aa";
+  opacity: 0.16;
+}
+.icon-memory-card .path2:before {
+  content: "\e9ab";
+  margin-left: -1em;
+}
+.icon-copy .path1:before {
+  content: "\e9ac";
+  opacity: 0.16;
+}
+.icon-copy .path2:before {
+  content: "\e9ad";
+  margin-left: -1em;
+}
+.icon-zoom-in .path1:before {
+  content: "\e9ae";
+  opacity: 0.16;
+}
+.icon-zoom-in .path2:before {
+  content: "\e9af";
+  margin-left: -1em;
+}
+.icon-glasses .path1:before {
+  content: "\e9b0";
+  opacity: 0.16;
+}
+.icon-glasses .path2:before {
+  content: "\e9b1";
+  margin-left: -1em;
+}
+.icon-sort-number:before {
+  content: "\e9b2";
+}
+.icon-bookmarks .path1:before {
+  content: "\e9b3";
+  opacity: 0.16;
+}
+.icon-bookmarks .path2:before {
+  content: "\e9b4";
+  margin-left: -1em;
+}
+.icon-rocket-2 .path1:before {
+  content: "\e9b5";
+  opacity: 0.16;
+}
+.icon-rocket-2 .path2:before {
+  content: "\e9b6";
+  margin-left: -1em;
+}
+.icon-broadcast:before {
+  content: "\e9b7";
+}
+.icon-inbox-filled .path1:before {
+  content: "\e9b8";
+  opacity: 0.16;
+}
+.icon-inbox-filled .path2:before {
+  content: "\e9b9";
+  margin-left: -1em;
+}
+.icon-sticker .path1:before {
+  content: "\e9ba";
+  opacity: 0.16;
+}
+.icon-sticker .path2:before {
+  content: "\e9bb";
+  margin-left: -1em;
+}
+.icon-award .path1:before {
+  content: "\e9bc";
+  opacity: 0.16;
+}
+.icon-award .path2:before {
+  content: "\e9bd";
+  margin-left: -1em;
+}
+.icon-zoom-out .path1:before {
+  content: "\e9be";
+  opacity: 0.16;
+}
+.icon-zoom-out .path2:before {
+  content: "\e9bf";
+  margin-left: -1em;
+}
+.icon-baby-carriage .path1:before {
+  content: "\e9c0";
+  opacity: 0.16;
+}
+.icon-baby-carriage .path2:before {
+  content: "\e9c1";
+  margin-left: -1em;
+}
+.icon-box .path1:before {
+  content: "\e9c2";
+  opacity: 0.16;
+}
+.icon-box .path2:before {
+  content: "\e9c3";
+  margin-left: -1em;
+}
+.icon-thumbs-up .path1:before {
+  content: "\e9c4";
+  opacity: 0.16;
+}
+.icon-thumbs-up .path2:before {
+  content: "\e9c5";
+  margin-left: -1em;
+}
+.icon-thumbs-up-outline:before {
+  content: "\e9c5";
+}
+.icon-checkbox-circle .path1:before {
+  content: "\e9c6";
+  opacity: 0.16;
+}
+.icon-checkbox-circle .path2:before {
+  content: "\e9c7";
+  margin-left: -1em;
+}
+.icon-emotion-happy .path1:before {
+  content: "\e9c8";
+  opacity: 0.16;
+}
+.icon-emotion-happy .path2:before {
+  content: "\e9c9";
+  margin-left: -1em;
+}
+.icon-send .path1:before {
+  content: "\e9ca";
+  opacity: 0.16;
+}
+.icon-send .path2:before {
+  content: "\e9cb";
+  margin-left: -1em;
+}
+.icon-speaker .path1:before {
+  content: "\e9cc";
+  opacity: 0.16;
+}
+.icon-speaker .path2:before {
+  content: "\e9cd";
+  margin-left: -1em;
+}
+.icon-loading-trolley .path1:before {
+  content: "\e9ce";
+  opacity: 0.16;
+}
+.icon-loading-trolley .path2:before {
+  content: "\e9cf";
+  margin-left: -1em;
+}
+.icon-truck .path1:before {
+  content: "\e9d0";
+  opacity: 0.16;
+}
+.icon-truck .path2:before {
+  content: "\e9d1";
+  margin-left: -1em;
+}
+.icon-more-horiz .path1:before {
+  content: "\e9d2";
+  opacity: 0.16;
+}
+.icon-more-horiz .path2:before {
+  content: "\e9d3";
+  margin-left: -1em;
+}
+.icon-infinity:before {
+  content: "\e9d4";
+}
+.icon-diskette .path1:before {
+  content: "\e9d5";
+  opacity: 0.16;
+}
+.icon-diskette .path2:before {
+  content: "\e9d6";
+  margin-left: -1em;
+}
+.icon-dashboard-2 .path1:before {
+  content: "\e9d7";
+  opacity: 0.16;
+}
+.icon-dashboard-2 .path2:before {
+  content: "\e9d8";
+  margin-left: -1em;
+}
+.icon-trash .path1:before {
+  content: "\e9d9";
+  opacity: 0.16;
+}
+.icon-trash .path2:before {
+  content: "\e9da";
+  margin-left: -1em;
+}
+.icon-emails .path1:before {
+  content: "\e9db";
+  opacity: 0.16;
+}
+.icon-emails .path2:before {
+  content: "\e9dc";
+  margin-left: -1em;
+}
+.icon-hashtag:before {
+  content: "\e9dd";
+}
+.icon-star .path1:before {
+  content: "\e9de";
+  opacity: 0.16;
+}
+.icon-star .path2:before {
+  content: "\e9df";
+  margin-left: -1em;
+}
+.icon-star-outline .path1:before {
+  content: "\e9de";
+  opacity: 0;
+}
+.icon-star-outline .path2:before {
+  content: "\e9df";
+  margin-left: -1em;
+}
+.icon-star-filled .path1:before {
+  content: "\e9de";
+  opacity: 1;
+}
+.icon-star-filled .path2:before {
+  content: "\e9df";
+  margin-left: -1em;
+}
+.icon-barchart .path1:before {
+  content: "\e9e0";
+  opacity: 0.16;
+}
+.icon-barchart .path2:before {
+  content: "\e9e1";
+  margin-left: -1em;
+}
+.icon-wrench .path1:before {
+  content: "\e9e2";
+  opacity: 0.16;
+}
+.icon-wrench .path2:before {
+  content: "\e9e3";
+  margin-left: -1em;
+}
+.icon-loader-2:before {
+  content: "\e9e4";
+}
+.icon-anchor .path1:before {
+  content: "\e9e5";
+  opacity: 0.16;
+}
+.icon-anchor .path2:before {
+  content: "\e9e6";
+  margin-left: -1em;
+}
+.icon-wheelchair .path1:before {
+  content: "\e9e7";
+  opacity: 0.16;
+}
+.icon-wheelchair .path2:before {
+  content: "\e9e8";
+  margin-left: -1em;
+}
+.icon-lifebuoy .path1:before {
+  content: "\e9e9";
+  opacity: 0.16;
+}
+.icon-lifebuoy .path2:before {
+  content: "\e9ea";
+  margin-left: -1em;
+}
+.icon-bookmark-plus .path1:before {
+  content: "\e9eb";
+  opacity: 0.16;
+}
+.icon-bookmark-plus .path2:before {
+  content: "\e9ec";
+  margin-left: -1em;
+}
+.icon-weighter-2 .path1:before {
+  content: "\e9ed";
+  opacity: 0.16;
+}
+.icon-weighter-2 .path2:before {
+  content: "\e9ee";
+  margin-left: -1em;
+}
+.icon-star-slash .path1:before {
+  content: "\e9ef";
+  opacity: 0.16;
+}
+.icon-star-slash .path2:before {
+  content: "\e9f0";
+  margin-left: -1em;
+}
+.icon-plus-circle .path1:before {
+  content: "\e9f1";
+  opacity: 0.16;
+}
+.icon-plus-circle .path2:before {
+  content: "\e9f2";
+  margin-left: -1em;
+}
+.icon-shopping-bag-2 .path1:before {
+  content: "\e9f3";
+  opacity: 0.16;
+}
+.icon-shopping-bag-2 .path2:before {
+  content: "\e9f4";
+  margin-left: -1em;
+}
+.icon-battery-slash .path1:before {
+  content: "\e9f5";
+  opacity: 0.16;
+}
+.icon-battery-slash .path2:before {
+  content: "\e9f6";
+  margin-left: -1em;
+}
+.icon-trash-2 .path1:before {
+  content: "\e9f7";
+  opacity: 0.16;
+}
+.icon-trash-2 .path2:before {
+  content: "\e9f8";
+  margin-left: -1em;
+}
+.icon-emotion-wow .path1:before {
+  content: "\e9f9";
+  opacity: 0.16;
+}
+.icon-emotion-wow .path2:before {
+  content: "\e9fa";
+  margin-left: -1em;
+}
+.icon-gift .path1:before {
+  content: "\e9fb";
+  opacity: 0.16;
+}
+.icon-gift .path2:before {
+  content: "\e9fc";
+  margin-left: -1em;
+}
+.icon-share .path1:before {
+  content: "\e9fd";
+  opacity: 0.16;
+}
+.icon-share .path2:before {
+  content: "\e9fe";
+  margin-left: -1em;
+}
+.icon-tags .path1:before {
+  content: "\e9ff";
+  opacity: 0.16;
+}
+.icon-tags .path2:before {
+  content: "\ea00";
+  margin-left: -1em;
+}
+.icon-gear-2 .path1:before {
+  content: "\ea01";
+  opacity: 0.16;
+}
+.icon-gear-2 .path2:before {
+  content: "\ea02";
+  margin-left: -1em;
+}
+.icon-modules .path1:before {
+  content: "\ea03";
+  opacity: 0.16;
+}
+.icon-modules .path2:before {
+  content: "\ea04";
+  margin-left: -1em;
+}
+.icon-activity .path1:before {
+  content: "\ea05";
+  opacity: 0.16;
+}
+.icon-activity .path2:before {
+  content: "\ea06";
+  margin-left: -1em;
+}
+.icon-filter:before {
+  content: "\ea07";
+}
+.icon-dumbell .path1:before {
+  content: "\ea08";
+  opacity: 0.16;
+}
+.icon-dumbell .path2:before {
+  content: "\ea09";
+  margin-left: -1em;
+}
+.icon-cross:before {
+  content: "\ea0a";
+}
+.icon-hashtag-circle .path1:before {
+  content: "\ea0b";
+  opacity: 0.16;
+}
+.icon-hashtag-circle .path2:before {
+  content: "\ea0c";
+  margin-left: -1em;
+}
+.icon-minus-circle .path1:before {
+  content: "\ea0d";
+  opacity: 0.16;
+}
+.icon-minus-circle .path2:before {
+  content: "\ea0e";
+  margin-left: -1em;
+}
+.icon-laptop .path1:before {
+  content: "\ea0f";
+  opacity: 0.16;
+}
+.icon-laptop .path2:before {
+  content: "\ea10";
+  margin-left: -1em;
+}
+.icon-sort-text-reverse:before {
+  content: "\ea11";
+}
+.icon-presentation-line .path1:before {
+  content: "\ea12";
+  opacity: 0.16;
+}
+.icon-presentation-line .path2:before {
+  content: "\ea13";
+  margin-left: -1em;
+}
+.icon-cut .path1:before {
+  content: "\ea14";
+  opacity: 0.16;
+}
+.icon-cut .path2:before {
+  content: "\ea15";
+  margin-left: -1em;
+  opacity: 0.16;
+}
+.icon-cut .path3:before {
+  content: "\ea16";
+  margin-left: -1em;
+}
+.icon-plug-slash .path1:before {
+  content: "\ea17";
+  opacity: 0.16;
+}
+.icon-plug-slash .path2:before {
+  content: "\ea18";
+  margin-left: -1em;
+}
+.icon-invoice .path1:before {
+  content: "\ea19";
+  opacity: 0.16;
+}
+.icon-invoice .path2:before {
+  content: "\ea1a";
+  margin-left: -1em;
+}
+.icon-bookmark-check .path1:before {
+  content: "\ea1b";
+  opacity: 0.16;
+}
+.icon-bookmark-check .path2:before {
+  content: "\ea1c";
+  margin-left: -1em;
+}
+.icon-keyboard-hide .path1:before {
+  content: "\ea1d";
+  opacity: 0.16;
+}
+.icon-keyboard-hide .path2:before {
+  content: "\ea1e";
+  margin-left: -1em;
+}
+.icon-bookmark .path1:before {
+  content: "\ea1f";
+  opacity: 0.16;
+}
+.icon-bookmark .path2:before {
+  content: "\ea20";
+  margin-left: -1em;
+}
+.icon-rocket .path1:before {
+  content: "\ea21";
+  opacity: 0.16;
+}
+.icon-rocket .path2:before {
+  content: "\ea22";
+  margin-left: -1em;
+}
+.icon-tablet .path1:before {
+  content: "\ea23";
+  opacity: 0.16;
+}
+.icon-tablet .path2:before {
+  content: "\ea24";
+  margin-left: -1em;
+}
+.icon-atom .path1:before {
+  content: "\ea25";
+  opacity: 0.16;
+}
+.icon-atom .path2:before {
+  content: "\ea26";
+  margin-left: -1em;
+}
+.icon-yin-yang .path1:before {
+  content: "\ea27";
+  opacity: 0.16;
+}
+.icon-yin-yang .path2:before {
+  content: "\ea28";
+  margin-left: -1em;
+}
+.icon-menu:before {
+  content: "\ea29";
+}
+.icon-processor .path1:before {
+  content: "\ea2a";
+  opacity: 0.16;
+}
+.icon-processor .path2:before {
+  content: "\ea2b";
+  margin-left: -1em;
+}
+.icon-weighter .path1:before {
+  content: "\ea2c";
+  opacity: 0.16;
+}
+.icon-weighter .path2:before {
+  content: "\ea2d";
+  margin-left: -1em;
+}
+.icon-shopping-cart .path1:before {
+  content: "\ea2e";
+  opacity: 0.16;
+}
+.icon-shopping-cart .path2:before {
+  content: "\ea2f";
+  margin-left: -1em;
+}
+.icon-mouse .path1:before {
+  content: "\ea30";
+  opacity: 0.16;
+}
+.icon-mouse .path2:before {
+  content: "\ea31";
+  margin-left: -1em;
+}
+.icon-shopping-basket .path1:before {
+  content: "\ea32";
+  opacity: 0.16;
+}
+.icon-shopping-basket .path2:before {
+  content: "\ea33";
+  margin-left: -1em;
+}
+.icon-bookmark-slash .path1:before {
+  content: "\ea34";
+  opacity: 0.16;
+}
+.icon-bookmark-slash .path2:before {
+  content: "\ea35";
+  margin-left: -1em;
+}
+.icon-monitor .path1:before {
+  content: "\ea36";
+  opacity: 0.16;
+}
+.icon-monitor .path2:before {
+  content: "\ea37";
+  margin-left: -1em;
+}
+.icon-minus:before {
+  content: "\ea38";
+}
+.icon-headphones-2 .path1:before {
+  content: "\ea39";
+  opacity: 0.16;
+}
+.icon-headphones-2 .path2:before {
+  content: "\ea3a";
+  margin-left: -1em;
+}
+.icon-weight .path1:before {
+  content: "\ea3b";
+  opacity: 0.16;
+}
+.icon-weight .path2:before {
+  content: "\ea3c";
+  margin-left: -1em;
+}
+.icon-sort-number-reverse:before {
+  content: "\ea3d";
+}
+.icon-swatchbook .path1:before {
+  content: "\ea3e";
+  opacity: 0.16;
+}
+.icon-swatchbook .path2:before {
+  content: "\ea3f";
+  margin-left: -1em;
+}
+.icon-send-2 .path1:before {
+  content: "\ea40";
+  opacity: 0.16;
+}
+.icon-send-2 .path2:before {
+  content: "\ea41";
+  margin-left: -1em;
+}
+.icon-heart .path1:before {
+  content: "\ea42";
+  opacity: 0.16;
+}
+.icon-heart .path2:before {
+  content: "\ea43";
+  margin-left: -1em;
+}
+.icon-heart-outline:before {
+  content: "\ea43";
+}
+.icon-heart-filled .path1:before {
+  content: "\ea42";
+  opacity: 1;
+}
+.icon-heart-filled .path2:before {
+  content: "\ea43";
+  margin-left: -1em;
+}
+
+.icon-user .path1:before {
+  content: "\ea44";
+  opacity: 0.16;
+}
+.icon-user .path2:before {
+  content: "\ea45";
+  margin-left: -1em;
+}
+.icon-user-square .path1:before {
+  content: "\ea46";
+  opacity: 0.16;
+}
+.icon-user-square .path2:before {
+  content: "\ea47";
+  margin-left: -1em;
+}
+.icon-user-arrow-top .path1:before {
+  content: "\ea48";
+  opacity: 0.16;
+}
+.icon-user-arrow-top .path2:before {
+  content: "\ea49";
+  margin-left: -1em;
+}
+.icon-user-arrow-bottom .path1:before {
+  content: "\ea4a";
+  opacity: 0.16;
+}
+.icon-user-arrow-bottom .path2:before {
+  content: "\ea4b";
+  margin-left: -1em;
+}
+.icon-user-cross .path1:before {
+  content: "\ea4c";
+  opacity: 0.16;
+}
+.icon-user-cross .path2:before {
+  content: "\ea4d";
+  margin-left: -1em;
+}
+.icon-user-arrow-bl .path1:before {
+  content: "\ea4e";
+  opacity: 0.16;
+}
+.icon-user-arrow-bl .path2:before {
+  content: "\ea4f";
+  margin-left: -1em;
+}
+.icon-user-plus .path1:before {
+  content: "\ea50";
+  opacity: 0.16;
+}
+.icon-user-plus .path2:before {
+  content: "\ea51";
+  margin-left: -1em;
+}
+.icon-user-arrow-tr .path1:before {
+  content: "\ea52";
+  opacity: 0.16;
+}
+.icon-user-arrow-tr .path2:before {
+  content: "\ea53";
+  margin-left: -1em;
+}
+.icon-user-minus .path1:before {
+  content: "\ea54";
+  opacity: 0.16;
+}
+.icon-user-minus .path2:before {
+  content: "\ea55";
+  margin-left: -1em;
+}
+.icon-user-alert .path1:before {
+  content: "\ea56";
+  opacity: 0.16;
+}
+.icon-user-alert .path2:before {
+  content: "\ea57";
+  margin-left: -1em;
+}
+.icon-user-circle .path1:before {
+  content: "\ea58";
+  opacity: 0.16;
+}
+.icon-user-circle .path2:before {
+  content: "\ea59";
+  margin-left: -1em;
+}
+.icon-user-check .path1:before {
+  content: "\ea5a";
+  opacity: 0.16;
+}
+.icon-user-check .path2:before {
+  content: "\ea5b";
+  margin-left: -1em;
+}
+.icon-user-check-outline:before {
+  content: "\ea5b";
+}
+.icon-user-arrow-right .path1:before {
+  content: "\ea5c";
+  opacity: 0.16;
+}
+.icon-user-arrow-right .path2:before {
+  content: "\ea5d";
+  margin-left: -1em;
+}
+.icon-users .path1:before {
+  content: "\ea5e";
+  opacity: 0.16;
+}
+.icon-users .path2:before {
+  content: "\ea5f";
+  margin-left: -1em;
+}
+.icon-users-outline:before {
+  content: "\ea5f";
+}
+.icon-clock-zzz .path1:before {
+  content: "\ea60";
+  opacity: 0.16;
+}
+.icon-clock-zzz .path2:before {
+  content: "\ea61";
+  margin-left: -1em;
+}
+.icon-clock-minus .path1:before {
+  content: "\ea62";
+  opacity: 0.16;
+}
+.icon-clock-minus .path2:before {
+  content: "\ea63";
+  margin-left: -1em;
+}
+.icon-stopwatch-slash .path1:before {
+  content: "\ea64";
+  opacity: 0.16;
+}
+.icon-stopwatch-slash .path2:before {
+  content: "\ea65";
+  margin-left: -1em;
+}
+.icon-clock-plus .path1:before {
+  content: "\ea66";
+  opacity: 0.16;
+}
+.icon-clock-plus .path2:before {
+  content: "\ea67";
+  margin-left: -1em;
+}
+.icon-calendar-person .path1:before {
+  content: "\ea68";
+  opacity: 0.16;
+}
+.icon-calendar-person .path2:before {
+  content: "\ea69";
+  margin-left: -1em;
+}
+.icon-speed .path1:before {
+  content: "\ea6a";
+  opacity: 0.16;
+}
+.icon-speed .path2:before {
+  content: "\ea6b";
+  margin-left: -1em;
+}
+.icon-clock-cross .path1:before {
+  content: "\ea6c";
+  opacity: 0.16;
+}
+.icon-clock-cross .path2:before {
+  content: "\ea6d";
+  margin-left: -1em;
+}
+.icon-calendar-event .path1:before {
+  content: "\ea6e";
+  opacity: 0.16;
+}
+.icon-calendar-event .path2:before {
+  content: "\ea6f";
+  margin-left: -1em;
+}
+.icon-calendar-plus .path1:before {
+  content: "\ea70";
+  opacity: 0.16;
+}
+.icon-calendar-plus .path2:before {
+  content: "\ea71";
+  margin-left: -1em;
+}
+.icon-stopwatch .path1:before {
+  content: "\ea72";
+  opacity: 0.16;
+}
+.icon-stopwatch .path2:before {
+  content: "\ea73";
+  margin-left: -1em;
+}
+.icon-calendar-dates .path1:before {
+  content: "\ea74";
+  opacity: 0.16;
+}
+.icon-calendar-dates .path2:before {
+  content: "\ea75";
+  margin-left: -1em;
+}
+.icon-time .path1:before {
+  content: "\ea76";
+  opacity: 0.16;
+}
+.icon-time .path2:before {
+  content: "\ea77";
+  margin-left: -1em;
+}
+.icon-calendar-note .path1:before {
+  content: "\ea78";
+  opacity: 0.16;
+}
+.icon-calendar-note .path2:before {
+  content: "\ea79";
+  margin-left: -1em;
+}
+.icon-calendar-number .path1:before {
+  content: "\ea7a";
+  opacity: 0.16;
+}
+.icon-calendar-number .path2:before {
+  content: "\ea7b";
+  margin-left: -1em;
+}
+.icon-clock-slash .path1:before {
+  content: "\ea7c";
+  opacity: 0.16;
+}
+.icon-clock-slash .path2:before {
+  content: "\ea7d";
+  margin-left: -1em;
+}
+.icon-clock-check .path1:before {
+  content: "\ea7e";
+  opacity: 0.16;
+}
+.icon-clock-check .path2:before {
+  content: "\ea7f";
+  margin-left: -1em;
+}
+.icon-timer-2 .path1:before {
+  content: "\ea80";
+  opacity: 0.16;
+}
+.icon-timer-2 .path2:before {
+  content: "\ea81";
+  margin-left: -1em;
+}
+.icon-clock .path1:before {
+  content: "\ea82";
+  opacity: 0.16;
+}
+.icon-clock .path2:before {
+  content: "\ea83";
+  margin-left: -1em;
+}
+.icon-calendar-minus .path1:before {
+  content: "\ea84";
+  opacity: 0.16;
+}
+.icon-calendar-minus .path2:before {
+  content: "\ea85";
+  margin-left: -1em;
+}
+.icon-calendar .path1:before {
+  content: "\ea86";
+  opacity: 0.16;
+}
+.icon-calendar .path2:before {
+  content: "\ea87";
+  margin-left: -1em;
+}
+.icon-history .path1:before {
+  content: "\ea88";
+  opacity: 0.16;
+}
+.icon-history .path2:before {
+  content: "\ea89";
+  margin-left: -1em;
+}
+.icon-timer .path1:before {
+  content: "\ea8a";
+  opacity: 0.16;
+}
+.icon-timer .path2:before {
+  content: "\ea8b";
+  margin-left: -1em;
+}
+.icon-calendar-arrow-right .path1:before {
+  content: "\ea8c";
+  opacity: 0.16;
+}
+.icon-calendar-arrow-right .path2:before {
+  content: "\ea8d";
+  margin-left: -1em;
+}
+.icon-calendar-cross .path1:before {
+  content: "\ea8e";
+  opacity: 0.16;
+}
+.icon-calendar-cross .path2:before {
+  content: "\ea8f";
+  margin-left: -1em;
+}
+.icon-bell-minus .path1:before {
+  content: "\eab4";
+  opacity: 0.16;
+}
+.icon-bell-minus .path2:before {
+  content: "\eab5";
+  margin-left: -1em;
+}
+.icon-question .path1:before {
+  content: "\eab6";
+  opacity: 0.16;
+}
+.icon-question .path2:before {
+  content: "\eab7";
+  margin-left: -1em;
+}
+.icon-bell-plus .path1:before {
+  content: "\eab8";
+  opacity: 0.16;
+}
+.icon-bell-plus .path2:before {
+  content: "\eab9";
+  margin-left: -1em;
+}
+.icon-notification-identifier .path1:before {
+  content: "\eaba";
+  opacity: 0.16;
+}
+.icon-notification-identifier .path2:before {
+  content: "\eabb";
+  margin-left: -1em;
+}
+.icon-bell .path1:before {
+  content: "\eabc";
+  opacity: 0.16;
+}
+.icon-bell .path2:before {
+  content: "\eabd";
+  margin-left: -1em;
+}
+.icon-cross-octangle .path1:before {
+  content: "\eabe";
+  opacity: 0.16;
+}
+.icon-cross-octangle .path2:before {
+  content: "\eabf";
+  margin-left: -1em;
+}
+.icon-info .path1:before {
+  content: "\eac0";
+  opacity: 0.16;
+}
+.icon-info .path2:before {
+  content: "\eac1";
+  margin-left: -1em;
+}
+.icon-info-outline:before {
+  content: "\eac1";
+}
+.icon-check-circle .path1:before {
+  content: "\eac2";
+  opacity: 0.16;
+}
+.icon-check-circle .path2:before {
+  content: "\eac3";
+  margin-left: -1em;
+}
+.icon-minus-octangle .path1:before {
+  content: "\eac4";
+  opacity: 0.16;
+}
+.icon-minus-octangle .path2:before {
+  content: "\eac5";
+  margin-left: -1em;
+}
+.icon-alert-circle .path1:before {
+  content: "\eac6";
+  opacity: 0.16;
+}
+.icon-alert-circle .path2:before {
+  content: "\eac7";
+  margin-left: -1em;
+}
+.icon-bell-check .path1:before {
+  content: "\eac8";
+  opacity: 0.16;
+}
+.icon-bell-check .path2:before {
+  content: "\eac9";
+  margin-left: -1em;
+}
+.icon-bell-slash .path1:before {
+  content: "\eaca";
+  opacity: 0.16;
+}
+.icon-bell-slash .path2:before {
+  content: "\eacb";
+  margin-left: -1em;
+}
+.icon-alert-triangle .path1:before {
+  content: "\eacc";
+  opacity: 0.16;
+}
+.icon-alert-triangle .path2:before {
+  content: "\eacd";
+  margin-left: -1em;
+}
+.icon-cross-circle .path1:before {
+  content: "\eace";
+  opacity: 0.16;
+}
+.icon-cross-circle .path2:before {
+  content: "\eacf";
+  margin-left: -1em;
+}
+.icon-alert-octangle .path1:before {
+  content: "\ead0";
+  opacity: 0.16;
+}
+.icon-alert-octangle .path2:before {
+  content: "\ead1";
+  margin-left: -1em;
+}
+.icon-redo-2:before {
+  content: "\ec26";
+}
+.icon-redo:before {
+  content: "\ec27";
+}
+.icon-reply-all:before {
+  content: "\ec28";
+}
+.icon-reply:before {
+  content: "\ec29";
+}
+.icon-trend-down:before {
+  content: "\ec2a";
+}
+.icon-trend-up:before {
+  content: "\ec2b";
+}
+.icon-undo-2:before {
+  content: "\ec2c";
+}
+.icon-undo:before {
+  content: "\ec2d";
+}
+.icon-code:before {
+  content: "\ec2e";
+}
+.icon-forward-all:before {
+  content: "\ec2f";
+}
+.icon-forward:before {
+  content: "\ec30";
+}
+.icon-maximize-1:before {
+  content: "\ec31";
+}
+.icon-maximize-2-1:before {
+  content: "\ec32";
+}
+.icon-maximize-2:before {
+  content: "\ec33";
+}
+.icon-maximize1:before {
+  content: "\ec34";
+}
+.icon-chevron-down:before {
+  content: "\ec35";
+}
+.icon-chevron-left:before {
+  content: "\ec36";
+}
+.icon-chevron-right:before {
+  content: "\ec37";
+}
+.icon-chevron-up:before {
+  content: "\ec38";
+}
+.icon-chevrons-down:before {
+  content: "\ec39";
+}
+.icon-chevrons-left:before {
+  content: "\ec3a";
+}
+.icon-chevrons-right:before {
+  content: "\ec3b";
+}
+.icon-chevrons-up:before {
+  content: "\ec3c";
+}
+.icon-arrow-left:before {
+  content: "\ec3d";
+}
+.icon-arrow-swap:before {
+  content: "\ec3e";
+}
+.icon-arrow-right:before {
+  content: "\ec3f";
+}
+.icon-arrow-top-left:before {
+  content: "\ec40";
+}
+.icon-arrow-top-right:before {
+  content: "\ec41";
+}
+.icon-arrow-top:before {
+  content: "\ec42";
+}
+.icon-arrow-corner-ccw-rt:before {
+  content: "\ec43";
+}
+.icon-arrow-corner-ccw-rb:before {
+  content: "\ec44";
+}
+.icon-arrow-corner-cw-rt:before {
+  content: "\ec45";
+}
+.icon-arrow-corner-cw-rb:before {
+  content: "\ec46";
+}
+.icon-arrow-corner-ccw-lb:before {
+  content: "\ec47";
+}
+.icon-arrow-corner-cw-lt:before {
+  content: "\ec48";
+}
+.icon-arrow-corner-cw-lb:before {
+  content: "\ec49";
+}
+.icon-arrow-corner-ccw-lt:before {
+  content: "\ec4a";
+}
+.icon-arrow-bottom-left:before {
+  content: "\ec4b";
+}
+.icon-arrow-bottom-right:before {
+  content: "\ec4c";
+}
+.icon-arrow-bottom:before {
+  content: "\ec4d";
+}
+.icon-import-2 .path1:before {
+  content: "\ead2";
+  opacity: 0.16;
+}
+.icon-import-2 .path2:before {
+  content: "\ead3";
+  margin-left: -1em;
+}
+.icon-arrow-right-curved-circle .path1:before {
+  content: "\ead4";
+  opacity: 0.16;
+}
+.icon-arrow-right-curved-circle .path2:before {
+  content: "\ead5";
+  margin-left: -1em;
+}
+.icon-import-3 .path1:before {
+  content: "\ead6";
+  opacity: 0.16;
+}
+.icon-import-3 .path2:before {
+  content: "\ead7";
+  margin-left: -1em;
+}
+.icon-arrows-move .path1:before {
+  content: "\ead8";
+  opacity: 0.16;
+}
+.icon-arrows-move .path2:before {
+  content: "\ead9";
+  margin-left: -1em;
+}
+.icon-arrow-top-circle .path1:before {
+  content: "\eada";
+  opacity: 0.16;
+}
+.icon-arrow-top-circle .path2:before {
+  content: "\eadb";
+  margin-left: -1em;
+}
+.icon-arrows-expand-2 .path1:before {
+  content: "\eadc";
+  opacity: 0.16;
+}
+.icon-arrows-expand-2 .path2:before {
+  content: "\eadd";
+  margin-left: -1em;
+}
+.icon-export .path1:before {
+  content: "\eade";
+  opacity: 0.16;
+}
+.icon-export .path2:before {
+  content: "\eadf";
+  margin-left: -1em;
+}
+.icon-arrows-move-2 .path1:before {
+  content: "\eae0";
+  opacity: 0.16;
+}
+.icon-arrows-move-2 .path2:before {
+  content: "\eae1";
+  margin-left: -1em;
+}
+.icon-rotate-cw .path1:before {
+  content: "\eae2";
+  opacity: 0.16;
+}
+.icon-rotate-cw .path2:before {
+  content: "\eae3";
+  margin-left: -1em;
+}
+.icon-arrow-bottom-circle .path1:before {
+  content: "\eae4";
+  opacity: 0.16;
+}
+.icon-arrow-bottom-circle .path2:before {
+  content: "\eae5";
+  margin-left: -1em;
+}
+.icon-log-in .path1:before {
+  content: "\eae6";
+  opacity: 0.16;
+}
+.icon-log-in .path2:before {
+  content: "\eae7";
+  margin-left: -1em;
+}
+.icon-refresh-cw .path1:before {
+  content: "\eae8";
+  opacity: 0.16;
+}
+.icon-refresh-cw .path2:before {
+  content: "\eae9";
+  margin-left: -1em;
+}
+.icon-refresh-cw-alert .path1:before {
+  content: "\eaea";
+  opacity: 0.16;
+}
+.icon-refresh-cw-alert .path2:before {
+  content: "\eaeb";
+  margin-left: -1em;
+}
+.icon-log-out .path1:before {
+  content: "\eaec";
+  opacity: 0.16;
+}
+.icon-log-out .path2:before {
+  content: "\eaed";
+  margin-left: -1em;
+}
+.icon-arrow-left-circle .path1:before {
+  content: "\eaee";
+  opacity: 0.16;
+}
+.icon-arrow-left-circle .path2:before {
+  content: "\eaef";
+  margin-left: -1em;
+}
+.icon-import .path1:before {
+  content: "\eaf0";
+  opacity: 0.16;
+}
+.icon-import .path2:before {
+  content: "\eaf1";
+  margin-left: -1em;
+}
+.icon-arrow-bottom-left-circle .path1:before {
+  content: "\eaf2";
+  opacity: 0.16;
+}
+.icon-arrow-bottom-left-circle .path2:before {
+  content: "\eaf3";
+  margin-left: -1em;
+}
+.icon-rotate-ccw .path1:before {
+  content: "\eaf4";
+  opacity: 0.16;
+}
+.icon-rotate-ccw .path2:before {
+  content: "\eaf5";
+  margin-left: -1em;
+}
+.icon-arrow-bottom-right-circle .path1:before {
+  content: "\eaf6";
+  opacity: 0.16;
+}
+.icon-arrow-bottom-right-circle .path2:before {
+  content: "\eaf7";
+  margin-left: -1em;
+}
+.icon-scale .path1:before {
+  content: "\eaf8";
+  opacity: 0.16;
+}
+.icon-scale .path2:before {
+  content: "\eaf9";
+  margin-left: -1em;
+}
+.icon-refresh-ccw .path1:before {
+  content: "\eafa";
+  opacity: 0.16;
+}
+.icon-refresh-ccw .path2:before {
+  content: "\eafb";
+  margin-left: -1em;
+}
+.icon-arrow-right-circle .path1:before {
+  content: "\eafc";
+  opacity: 0.16;
+}
+.icon-arrow-right-circle .path2:before {
+  content: "\eafd";
+  margin-left: -1em;
+}
+.icon-external-link-2 .path1:before {
+  content: "\eafe";
+  opacity: 0.16;
+}
+.icon-external-link-2 .path2:before {
+  content: "\eaff";
+  margin-left: -1em;
+}
+.icon-arrow-left-curved-circle .path1:before {
+  content: "\eb00";
+  opacity: 0.16;
+}
+.icon-arrow-left-curved-circle .path2:before {
+  content: "\eb01";
+  margin-left: -1em;
+}
+.icon-arrows-expand .path1:before {
+  content: "\eb02";
+  opacity: 0.16;
+}
+.icon-arrows-expand .path2:before {
+  content: "\eb03";
+  margin-left: -1em;
+}
+.icon-export-3 .path1:before {
+  content: "\eb04";
+  opacity: 0.16;
+}
+.icon-export-3 .path2:before {
+  content: "\eb05";
+  margin-left: -1em;
+}
+.icon-export-2 .path1:before {
+  content: "\eb06";
+  opacity: 0.16;
+}
+.icon-export-2 .path2:before {
+  content: "\eb07";
+  margin-left: -1em;
+}
+.icon-arrow-top-left-circle .path1:before {
+  content: "\eb08";
+  opacity: 0.16;
+}
+.icon-arrow-top-left-circle .path2:before {
+  content: "\eb09";
+  margin-left: -1em;
+}
+.icon-sign-out .path1:before {
+  content: "\eb0a";
+  opacity: 0.16;
+}
+.icon-sign-out .path2:before {
+  content: "\eb0b";
+  margin-left: -1em;
+}
+.icon-external-link .path1:before {
+  content: "\eb0c";
+  opacity: 0.16;
+}
+.icon-external-link .path2:before {
+  content: "\eb0d";
+  margin-left: -1em;
+}
+.icon-sign-in .path1:before {
+  content: "\eb0e";
+  opacity: 0.16;
+}
+.icon-sign-in .path2:before {
+  content: "\eb0f";
+  margin-left: -1em;
+}
+.icon-refresh-ccw-alert .path1:before {
+  content: "\eb10";
+  opacity: 0.16;
+}
+.icon-refresh-ccw-alert .path2:before {
+  content: "\eb11";
+  margin-left: -1em;
+}
+.icon-arrow-top-right-circle .path1:before {
+  content: "\eb12";
+  opacity: 0.16;
+}
+.icon-arrow-top-right-circle .path2:before {
+  content: "\eb13";
+  margin-left: -1em;
+}
+.icon-playlist-plus:before {
+  content: "\ed9b";
+}
+.icon-soundwave:before {
+  content: "\ed9c";
+}
+.icon-shuffle:before {
+  content: "\ed9d";
+}
+.icon-play-slowmotion .path1:before {
+  content: "\eb14";
+  opacity: 0.16;
+}
+.icon-play-slowmotion .path2:before {
+  content: "\eb15";
+  margin-left: -1em;
+}
+.icon-pause-circle .path1:before {
+  content: "\eb16";
+  opacity: 0.16;
+}
+.icon-pause-circle .path2:before {
+  content: "\eb17";
+  margin-left: -1em;
+}
+.icon-film-tape .path1:before {
+  content: "\eb18";
+  opacity: 0.16;
+}
+.icon-film-tape .path2:before {
+  content: "\eb19";
+  margin-left: -1em;
+}
+.icon-play-circle .path1:before {
+  content: "\eb1a";
+  opacity: 0.16;
+}
+.icon-play-circle .path2:before {
+  content: "\eb1b";
+  margin-left: -1em;
+}
+.icon-repeat .path1:before {
+  content: "\eb1c";
+  opacity: 0.16;
+}
+.icon-repeat .path2:before {
+  content: "\eb1d";
+  margin-left: -1em;
+}
+.icon-play-previous .path1:before {
+  content: "\eb1e";
+  opacity: 0.16;
+}
+.icon-play-previous .path2:before {
+  content: "\eb1f";
+  margin-left: -1em;
+}
+.icon-fast-rewind .path1:before {
+  content: "\eb20";
+  opacity: 0.16;
+}
+.icon-fast-rewind .path2:before {
+  content: "\eb21";
+  margin-left: -1em;
+}
+.icon-captions-1 .path1:before {
+  content: "\eb22";
+  opacity: 0.16;
+}
+.icon-captions-1 .path2:before {
+  content: "\eb23";
+  margin-left: -1em;
+}
+.icon-verified .path1:before {
+  content: "\eb24";
+  opacity: 0.16;
+}
+.icon-verified .path2:before {
+  content: "\eb25";
+  margin-left: -1em;
+}
+.icon-verified-outline:before {
+  content: "\eb25";
+}
+
+
+
+.icon-captions .path1:before {
+  content: "\eb26";
+  opacity: 0.16;
+}
+.icon-captions .path2:before {
+  content: "\eb27";
+  margin-left: -1em;
+}
+.icon-repeat-on .path1:before {
+  content: "\eb28";
+  opacity: 0.16;
+}
+.icon-repeat-on .path2:before {
+  content: "\eb29";
+  margin-left: -1em;
+}
+.icon-games .path1:before {
+  content: "\eb2a";
+  opacity: 0.16;
+}
+.icon-games .path2:before {
+  content: "\eb2b";
+  margin-left: -1em;
+}
+.icon-maximize .path1:before {
+  content: "\eb2c";
+  opacity: 0.16;
+}
+.icon-maximize .path2:before {
+  content: "\eb2d";
+  margin-left: -1em;
+}
+.icon-webcam-slash .path1:before {
+  content: "\eb2e";
+  opacity: 0.16;
+}
+.icon-webcam-slash .path2:before {
+  content: "\eb2f";
+  margin-left: -1em;
+}
+.icon-music-queue .path1:before {
+  content: "\eb30";
+  opacity: 0.16;
+}
+.icon-music-queue .path2:before {
+  content: "\eb31";
+  margin-left: -1em;
+}
+.icon-video-library .path1:before {
+  content: "\eb32";
+  opacity: 0.16;
+}
+.icon-video-library .path2:before {
+  content: "\eb33";
+  margin-left: -1em;
+}
+.icon-stop-circle .path1:before {
+  content: "\eb34";
+  opacity: 0.16;
+}
+.icon-stop-circle .path2:before {
+  content: "\eb35";
+  margin-left: -1em;
+}
+.icon-minimize .path1:before {
+  content: "\eb36";
+  opacity: 0.16;
+}
+.icon-minimize .path2:before {
+  content: "\eb37";
+  margin-left: -1em;
+}
+.icon-volume-cross .path1:before {
+  content: "\eb38";
+  opacity: 0.16;
+}
+.icon-volume-cross .path2:before {
+  content: "\eb39";
+  margin-left: -1em;
+}
+.icon-replay-15 .path1:before {
+  content: "\eb3a";
+  opacity: 0.16;
+}
+.icon-replay-15 .path2:before {
+  content: "\eb3b";
+  margin-left: -1em;
+}
+.icon-forward-5 .path1:before {
+  content: "\eb3c";
+  opacity: 0.16;
+}
+.icon-forward-5 .path2:before {
+  content: "\eb3d";
+  margin-left: -1em;
+}
+.icon-music-plus .path1:before {
+  content: "\eb3e";
+  opacity: 0.16;
+}
+.icon-music-plus .path2:before {
+  content: "\eb3f";
+  margin-left: -1em;
+}
+.icon-webcam .path1:before {
+  content: "\eb40";
+  opacity: 0.16;
+}
+.icon-webcam .path2:before {
+  content: "\eb41";
+  margin-left: -1em;
+}
+.icon-tv .path1:before {
+  content: "\eb42";
+  opacity: 0.16;
+}
+.icon-tv .path2:before {
+  content: "\eb43";
+  margin-left: -1em;
+}
+.icon-book-queue .path1:before {
+  content: "\eb44";
+  opacity: 0.16;
+}
+.icon-book-queue .path2:before {
+  content: "\eb45";
+  margin-left: -1em;
+}
+.icon-video-plus .path1:before {
+  content: "\eb46";
+  opacity: 0.16;
+}
+.icon-video-plus .path2:before {
+  content: "\eb47";
+  margin-left: -1em;
+}
+.icon-radio .path1:before {
+  content: "\eb48";
+  opacity: 0.16;
+}
+.icon-radio .path2:before {
+  content: "\eb49";
+  margin-left: -1em;
+}
+.icon-replay-10 .path1:before {
+  content: "\eb4a";
+  opacity: 0.16;
+}
+.icon-replay-10 .path2:before {
+  content: "\eb4b";
+  margin-left: -1em;
+}
+.icon-playlist .path1:before {
+  content: "\eb4c";
+  opacity: 0.16;
+}
+.icon-playlist .path2:before {
+  content: "\eb4d";
+  margin-left: -1em;
+}
+.icon-label-hd .path1:before {
+  content: "\eb4e";
+  opacity: 0.16;
+}
+.icon-label-hd .path2:before {
+  content: "\eb4f";
+  margin-left: -1em;
+}
+.icon-stop .path1:before {
+  content: "\eb50";
+  opacity: 0.16;
+}
+.icon-stop .path2:before {
+  content: "\eb51";
+  margin-left: -1em;
+}
+.icon-music-library .path1:before {
+  content: "\eb52";
+  opacity: 0.16;
+}
+.icon-music-library .path2:before {
+  content: "\eb53";
+  margin-left: -1em;
+}
+.icon-record .path1:before {
+  content: "\eb54";
+  opacity: 0.16;
+}
+.icon-record .path2:before {
+  content: "\eb55";
+  margin-left: -1em;
+}
+.icon-music-note .path1:before {
+  content: "\eb56";
+  opacity: 0.16;
+}
+.icon-music-note .path2:before {
+  content: "\eb57";
+  margin-left: -1em;
+}
+.icon-label-hq .path1:before {
+  content: "\eb58";
+  opacity: 0.16;
+}
+.icon-label-hq .path2:before {
+  content: "\eb59";
+  margin-left: -1em;
+}
+.icon-replay .path1:before {
+  content: "\eb5a";
+  opacity: 0.16;
+}
+.icon-replay .path2:before {
+  content: "\eb5b";
+  margin-left: -1em;
+}
+.icon-mic .path1:before {
+  content: "\eb5c";
+  opacity: 0.16;
+}
+.icon-mic .path2:before {
+  content: "\eb5d";
+  margin-left: -1em;
+}
+.icon-volume-mute .path1:before {
+  content: "\eb5e";
+  opacity: 0.16;
+}
+.icon-volume-mute .path2:before {
+  content: "\eb5f";
+  margin-left: -1em;
+}
+.icon-fast-forward .path1:before {
+  content: "\eb60";
+  opacity: 0.16;
+}
+.icon-fast-forward .path2:before {
+  content: "\eb61";
+  margin-left: -1em;
+}
+.icon-label-explicit .path1:before {
+  content: "\eb62";
+  opacity: 0.16;
+}
+.icon-label-explicit .path2:before {
+  content: "\eb63";
+  margin-left: -1em;
+}
+.icon-play .path1:before {
+  content: "\eb64";
+  opacity: 0.16;
+}
+.icon-play .path2:before {
+  content: "\eb65";
+  margin-left: -1em;
+}
+.icon-forward-10 .path1:before {
+  content: "\eb66";
+  opacity: 0.16;
+}
+.icon-forward-10 .path2:before {
+  content: "\eb67";
+  margin-left: -1em;
+}
+.icon-book-plus .path1:before {
+  content: "\eb68";
+  opacity: 0.16;
+}
+.icon-book-plus .path2:before {
+  content: "\eb69";
+  margin-left: -1em;
+}
+.icon-film-reel .path1:before {
+  content: "\eb6a";
+  opacity: 0.16;
+}
+.icon-film-reel .path2:before {
+  content: "\eb6b";
+  margin-left: -1em;
+}
+.icon-forward-15 .path1:before {
+  content: "\eb6c";
+  opacity: 0.16;
+}
+.icon-forward-15 .path2:before {
+  content: "\eb6d";
+  margin-left: -1em;
+}
+.icon-book-library .path1:before {
+  content: "\eb6e";
+  opacity: 0.16;
+}
+.icon-book-library .path2:before {
+  content: "\eb6f";
+  margin-left: -1em;
+}
+.icon-cd .path1:before {
+  content: "\eb70";
+  opacity: 0.16;
+}
+.icon-cd .path2:before {
+  content: "\eb71";
+  margin-left: -1em;
+}
+.icon-video-queue .path1:before {
+  content: "\eb72";
+  opacity: 0.16;
+}
+.icon-video-queue .path2:before {
+  content: "\eb73";
+  margin-left: -1em;
+}
+.icon-play-next .path1:before {
+  content: "\eb74";
+  opacity: 0.16;
+}
+.icon-play-next .path2:before {
+  content: "\eb75";
+  margin-left: -1em;
+}
+.icon-music-note-3 .path1:before {
+  content: "\eb76";
+  opacity: 0.16;
+}
+.icon-music-note-3 .path2:before {
+  content: "\eb77";
+  margin-left: -1em;
+}
+.icon-volume-high .path1:before {
+  content: "\eb78";
+  opacity: 0.16;
+}
+.icon-volume-high .path2:before {
+  content: "\eb79";
+  margin-left: -1em;
+}
+.icon-equalizer .path1:before {
+  content: "\eb7a";
+  opacity: 0.16;
+}
+.icon-equalizer .path2:before {
+  content: "\eb7b";
+  margin-left: -1em;
+}
+.icon-music-note-2 .path1:before {
+  content: "\eb7c";
+  opacity: 0.16;
+}
+.icon-music-note-2 .path2:before {
+  content: "\eb7d";
+  margin-left: -1em;
+}
+.icon-film-board .path1:before {
+  content: "\eb7e";
+  opacity: 0.16;
+}
+.icon-film-board .path2:before {
+  content: "\eb7f";
+  margin-left: -1em;
+}
+.icon-video-camera-slash .path1:before {
+  content: "\eb80";
+  opacity: 0.16;
+}
+.icon-video-camera-slash .path2:before {
+  content: "\eb81";
+  margin-left: -1em;
+}
+.icon-replay-5 .path1:before {
+  content: "\eb82";
+  opacity: 0.16;
+}
+.icon-replay-5 .path2:before {
+  content: "\eb83";
+  margin-left: -1em;
+}
+.icon-video-camera .path1:before {
+  content: "\eb84";
+  opacity: 0.16;
+}
+.icon-video-camera .path2:before {
+  content: "\eb85";
+  margin-left: -1em;
+}
+.icon-playlist-play .path1:before {
+  content: "\eb86";
+  opacity: 0.16;
+}
+.icon-playlist-play .path2:before {
+  content: "\eb87";
+  margin-left: -1em;
+}
+.icon-volume-low .path1:before {
+  content: "\eb88";
+  opacity: 0.16;
+}
+.icon-volume-low .path2:before {
+  content: "\eb89";
+  margin-left: -1em;
+}
+.icon-mic-slash .path1:before {
+  content: "\eb8a";
+  opacity: 0.16;
+}
+.icon-mic-slash .path2:before {
+  content: "\eb8b";
+  margin-left: -1em;
+}
+.icon-pause .path1:before {
+  content: "\eb8c";
+  opacity: 0.16;
+}
+.icon-pause .path2:before {
+  content: "\eb8d";
+  margin-left: -1em;
+}
+.icon-label-4k .path1:before {
+  content: "\eb8e";
+  opacity: 0.16;
+}
+.icon-label-4k .path2:before {
+  content: "\eb8f";
+  margin-left: -1em;
+}
+.icon-new-release .path1:before {
+  content: "\eb90";
+  opacity: 0.16;
+}
+.icon-new-release .path2:before {
+  content: "\eb91";
+  margin-left: -1em;
+}
+.icon-volume-slash .path1:before {
+  content: "\eb92";
+  opacity: 0.16;
+}
+.icon-volume-slash .path2:before {
+  content: "\eb93";
+  margin-left: -1em;
+}
+.icon-miniplayer .path1:before {
+  content: "\eb94";
+  opacity: 0.16;
+}
+.icon-miniplayer .path2:before {
+  content: "\eb95";
+  margin-left: -1em;
+}
+.icon-pain-management:before {
+  content: "\eb96";
+}
+.icon-sleep:before {
+  content: "\eb97";
+}
+.icon-nutritutan:before {
+  content: "\eb98";
+}
+.icon-immune-system:before {
+  content: "\eb99";
+}
+.icon-delay-aging:before {
+  content: "\eb9a";
+}
+.icon-fitness:before {
+  content: "\eb9c";
+}
+.icon-women-men-health:before {
+  content: "\eb9d";
+}
+.icon-comment-dots .path1:before {
+  content: "\eb9e";
+  opacity: 0.16;
+}
+.icon-comment-dots .path2:before {
+  content: "\eb9f";
+  margin-left: -1em;
+}
+.icon-comment-cancel .path1:before {
+  content: "\eba0";
+  opacity: 0.16;
+}
+.icon-comment-cancel .path2:before {
+  content: "\eba1";
+  margin-left: -1em;
+}
+.icon-comments-2 .path1:before {
+  content: "\eba2";
+  opacity: 0.16;
+}
+.icon-comments-2 .path2:before {
+  content: "\eba3";
+  margin-left: -1em;
+}
+.icon-comment-alert .path1:before {
+  content: "\eba4";
+  opacity: 0.16;
+}
+.icon-comment-alert .path2:before {
+  content: "\eba5";
+  margin-left: -1em;
+}
+.icon-comment-2-dots .path1:before {
+  content: "\eba6";
+  opacity: 0.16;
+}
+.icon-comment-2-dots .path2:before {
+  content: "\eba7";
+  margin-left: -1em;
+}
+.icon-comments .path1:before {
+  content: "\eba8";
+  opacity: 0.16;
+}
+.icon-comments .path2:before {
+  content: "\eba9";
+  margin-left: -1em;
+}
+.icon-comment-2-info .path1:before {
+  content: "\ebaa";
+  opacity: 0.16;
+}
+.icon-comment-2-info .path2:before {
+  content: "\ebab";
+  margin-left: -1em;
+}
+.icon-comment-check .path1:before {
+  content: "\ebac";
+  opacity: 0.16;
+}
+.icon-comment-check .path2:before {
+  content: "\ebad";
+  margin-left: -1em;
+}
+.icon-comment-2-plus .path1:before {
+  content: "\ebae";
+  opacity: 0.16;
+}
+.icon-comment-2-plus .path2:before {
+  content: "\ebaf";
+  margin-left: -1em;
+}
+.icon-comment-2-minus .path1:before {
+  content: "\ebb0";
+  opacity: 0.16;
+}
+.icon-comment-2-minus .path2:before {
+  content: "\ebb1";
+  margin-left: -1em;
+}
+.icon-comment-slash .path1:before {
+  content: "\ebb2";
+  opacity: 0.16;
+}
+.icon-comment-slash .path2:before {
+  content: "\ebb3";
+  margin-left: -1em;
+}
+.icon-comment-plus .path1:before {
+  content: "\ebb4";
+  opacity: 0.16;
+}
+.icon-comment-plus .path2:before {
+  content: "\ebb5";
+  margin-left: -1em;
+}
+.icon-comment-text .path1:before {
+  content: "\ebb6";
+  opacity: 0.16;
+}
+.icon-comment-text .path2:before {
+  content: "\ebb7";
+  margin-left: -1em;
+}
+.icon-comment-2-alert .path1:before {
+  content: "\ebb8";
+  opacity: 0.16;
+}
+.icon-comment-2-alert .path2:before {
+  content: "\ebb9";
+  margin-left: -1em;
+}
+.icon-comment-2-cancel .path1:before {
+  content: "\ebba";
+  opacity: 0.16;
+}
+.icon-comment-2-cancel .path2:before {
+  content: "\ebbb";
+  margin-left: -1em;
+}
+.icon-comment-2-text .path1:before {
+  content: "\ebbc";
+  opacity: 0.16;
+}
+.icon-comment-2-text .path2:before {
+  content: "\ebbd";
+  margin-left: -1em;
+}
+.icon-comment-2-question .path1:before {
+  content: "\ebbe";
+  opacity: 0.16;
+}
+.icon-comment-2-question .path2:before {
+  content: "\ebbf";
+  margin-left: -1em;
+}
+.icon-comment-2-slash .path1:before {
+  content: "\ebc0";
+  opacity: 0.16;
+}
+.icon-comment-2-slash .path2:before {
+  content: "\ebc1";
+  margin-left: -1em;
+}
+.icon-comment-minus .path1:before {
+  content: "\ebc2";
+  opacity: 0.16;
+}
+.icon-comment-minus .path2:before {
+  content: "\ebc3";
+  margin-left: -1em;
+}
+.icon-comment-2-check .path1:before {
+  content: "\ebc4";
+  opacity: 0.16;
+}
+.icon-comment-2-check .path2:before {
+  content: "\ebc5";
+  margin-left: -1em;
+}
+.icon-comment .path1:before {
+  content: "\ebc6";
+  opacity: 0.16;
+}
+.icon-comment .path2:before {
+  content: "\ebc7";
+  margin-left: -1em;
+}
+.icon-comment-2 .path1:before {
+  content: "\ebc8";
+  opacity: 0.16;
+}
+.icon-comment-2 .path2:before {
+  content: "\ebc9";
+  margin-left: -1em;
+}
+.icon-clipboard-plus .path1:before {
+  content: "\ebca";
+  opacity: 0.16;
+}
+.icon-clipboard-plus .path2:before {
+  content: "\ebcb";
+  margin-left: -1em;
+}
+.icon-folder-upload .path1:before {
+  content: "\ebcc";
+  opacity: 0.16;
+}
+.icon-folder-upload .path2:before {
+  content: "\ebcd";
+  margin-left: -1em;
+}
+.icon-folder-slash .path1:before {
+  content: "\ebce";
+  opacity: 0.16;
+}
+.icon-folder-slash .path2:before {
+  content: "\ebcf";
+  margin-left: -1em;
+}
+.icon-file-heart .path1:before {
+  content: "\ebd0";
+  opacity: 0.16;
+}
+.icon-file-heart .path2:before {
+  content: "\ebd1";
+  margin-left: -1em;
+}
+.icon-file-minus .path1:before {
+  content: "\ebd2";
+  opacity: 0.16;
+}
+.icon-file-minus .path2:before {
+  content: "\ebd3";
+  margin-left: -1em;
+}
+.icon-folder-check .path1:before {
+  content: "\ebd4";
+  opacity: 0.16;
+}
+.icon-folder-check .path2:before {
+  content: "\ebd5";
+  margin-left: -1em;
+}
+.icon-file-cross .path1:before {
+  content: "\ebd6";
+  opacity: 0.16;
+}
+.icon-file-cross .path2:before {
+  content: "\ebd7";
+  margin-left: -1em;
+}
+.icon-file .path1:before {
+  content: "\ebd8";
+  opacity: 0.16;
+}
+.icon-file .path2:before {
+  content: "\ebd9";
+  margin-left: -1em;
+}
+.icon-file-outline:before {
+  content: "\ebd9";
+}
+.icon-file-scan .path1:before {
+  content: "\ebda";
+  opacity: 0.16;
+}
+.icon-file-scan .path2:before {
+  content: "\ebdb";
+  margin-left: -1em;
+}
+.icon-file-text .path1:before {
+  content: "\ebdc";
+  opacity: 0.16;
+}
+.icon-file-text .path2:before {
+  content: "\ebdd";
+  margin-left: -1em;
+}
+.icon-folder-open .path1:before {
+  content: "\ebde";
+  opacity: 0.16;
+}
+.icon-folder-open .path2:before {
+  content: "\ebdf";
+  margin-left: -1em;
+}
+.icon-folder-music .path1:before {
+  content: "\ebe0";
+  opacity: 0.16;
+}
+.icon-folder-music .path2:before {
+  content: "\ebe1";
+  margin-left: -1em;
+}
+.icon-clipboard .path1:before {
+  content: "\ebe2";
+  opacity: 0.16;
+}
+.icon-clipboard .path2:before {
+  content: "\ebe3";
+  margin-left: -1em;
+}
+.icon-note-text .path1:before {
+  content: "\ebe4";
+  opacity: 0.16;
+}
+.icon-note-text .path2:before {
+  content: "\ebe5";
+  margin-left: -1em;
+}
+.icon-note-text-outline:before {
+  content: "\ebe5";
+}
+.icon-note .path1:before {
+  content: "\ebe6";
+  opacity: 0.16;
+}
+.icon-note .path2:before {
+  content: "\ebe7";
+  margin-left: -1em;
+}
+.icon-clipboard-cross .path1:before {
+  content: "\ebe8";
+  opacity: 0.16;
+}
+.icon-clipboard-cross .path2:before {
+  content: "\ebe9";
+  margin-left: -1em;
+}
+.icon-note-2 .path1:before {
+  content: "\ebea";
+  opacity: 0.16;
+}
+.icon-note-2 .path2:before {
+  content: "\ebeb";
+  margin-left: -1em;
+}
+.icon-folder-compressed .path1:before {
+  content: "\ebec";
+  opacity: 0.16;
+}
+.icon-folder-compressed .path2:before {
+  content: "\ebed";
+  margin-left: -1em;
+}
+.icon-file-draft .path1:before {
+  content: "\ebee";
+  opacity: 0.16;
+}
+.icon-file-draft .path2:before {
+  content: "\ebef";
+  margin-left: -1em;
+}
+.icon-clipboard-minus .path1:before {
+  content: "\ebf0";
+  opacity: 0.16;
+}
+.icon-clipboard-minus .path2:before {
+  content: "\ebf1";
+  margin-left: -1em;
+}
+.icon-folder-plus .path1:before {
+  content: "\ebf2";
+  opacity: 0.16;
+}
+.icon-folder-plus .path2:before {
+  content: "\ebf3";
+  margin-left: -1em;
+}
+.icon-file-download .path1:before {
+  content: "\ebf4";
+  opacity: 0.16;
+}
+.icon-file-download .path2:before {
+  content: "\ebf5";
+  margin-left: -1em;
+}
+.icon-file-move .path1:before {
+  content: "\ebf6";
+  opacity: 0.16;
+}
+.icon-file-move .path2:before {
+  content: "\ebf7";
+  margin-left: -1em;
+}
+.icon-file-slash .path1:before {
+  content: "\ebf8";
+  opacity: 0.16;
+}
+.icon-file-slash .path2:before {
+  content: "\ebf9";
+  margin-left: -1em;
+}
+.icon-folder-photo .path1:before {
+  content: "\ebfa";
+  opacity: 0.16;
+}
+.icon-folder-photo .path2:before {
+  content: "\ebfb";
+  margin-left: -1em;
+}
+.icon-folder-heart .path1:before {
+  content: "\ebfc";
+  opacity: 0.16;
+}
+.icon-folder-heart .path2:before {
+  content: "\ebfd";
+  margin-left: -1em;
+}
+.icon-file-check .path1:before {
+  content: "\ebfe";
+  opacity: 0.16;
+}
+.icon-file-check .path2:before {
+  content: "\ebff";
+  margin-left: -1em;
+}
+.icon-folder-minus .path1:before {
+  content: "\ec00";
+  opacity: 0.16;
+}
+.icon-folder-minus .path2:before {
+  content: "\ec01";
+  margin-left: -1em;
+}
+.icon-folder-cross .path1:before {
+  content: "\ec02";
+  opacity: 0.16;
+}
+.icon-folder-cross .path2:before {
+  content: "\ec03";
+  margin-left: -1em;
+}
+.icon-folder-download .path1:before {
+  content: "\ec04";
+  opacity: 0.16;
+}
+.icon-folder-download .path2:before {
+  content: "\ec05";
+  margin-left: -1em;
+}
+.icon-folder-cloud .path1:before {
+  content: "\ec06";
+  opacity: 0.16;
+}
+.icon-folder-cloud .path2:before {
+  content: "\ec07";
+  margin-left: -1em;
+}
+.icon-file-shredder .path1:before {
+  content: "\ec08";
+  opacity: 0.16;
+}
+.icon-file-shredder .path2:before {
+  content: "\ec09";
+  margin-left: -1em;
+}
+.icon-file-plus .path1:before {
+  content: "\ec0a";
+  opacity: 0.16;
+}
+.icon-file-plus .path2:before {
+  content: "\ec0b";
+  margin-left: -1em;
+}
+.icon-file-invoice .path1:before {
+  content: "\ec0c";
+  opacity: 0.16;
+}
+.icon-file-invoice .path2:before {
+  content: "\ec0d";
+  margin-left: -1em;
+}
+.icon-folder-move .path1:before {
+  content: "\ec0e";
+  opacity: 0.16;
+}
+.icon-folder-move .path2:before {
+  content: "\ec0f";
+  margin-left: -1em;
+}
+.icon-file-code .path1:before {
+  content: "\ec10";
+  opacity: 0.16;
+}
+.icon-file-code .path2:before {
+  content: "\ec11";
+  margin-left: -1em;
+}
+.icon-clipboard-slash .path1:before {
+  content: "\ec12";
+  opacity: 0.16;
+}
+.icon-clipboard-slash .path2:before {
+  content: "\ec13";
+  margin-left: -1em;
+}
+.icon-note-2-text .path1:before {
+  content: "\ec14";
+  opacity: 0.16;
+}
+.icon-note-2-text .path2:before {
+  content: "\ec15";
+  margin-left: -1em;
+}
+.icon-file-upload .path1:before {
+  content: "\ec16";
+  opacity: 0.16;
+}
+.icon-file-upload .path2:before {
+  content: "\ec17";
+  margin-left: -1em;
+}
+.icon-file-agreement .path1:before {
+  content: "\ec18";
+  opacity: 0.16;
+}
+.icon-file-agreement .path2:before {
+  content: "\ec19";
+  margin-left: -1em;
+}
+.icon-folder .path1:before {
+  content: "\ec1a";
+  opacity: 0.16;
+}
+.icon-folder .path2:before {
+  content: "\ec1b";
+  margin-left: -1em;
+}
+.icon-clipboard-check .path1:before {
+  content: "\ec1c";
+  opacity: 0.16;
+}
+.icon-clipboard-check .path2:before {
+  content: "\ec1d";
+  margin-left: -1em;
+}
+.icon-notebook .path1:before {
+  content: "\ec1e";
+  opacity: 0.16;
+}
+.icon-notebook .path2:before {
+  content: "\ec1f";
+  margin-left: -1em;
+}
+.icon-clipboard-text .path1:before {
+  content: "\ec20";
+  opacity: 0.16;
+}
+.icon-clipboard-text .path2:before {
+  content: "\ec21";
+  margin-left: -1em;
+}
+.icon-radiobutton:before {
+  content: "\ec22";
+}
+.icon-checkbox:before {
+  content: "\ec23";
+}
+.icon-checkbox-filled:before {
+  content: "\ec24";
+}
+.icon-radiobutton-filled:before {
+  content: "\ec25";
+}
+.icon-globe-2 .path1:before {
+  content: "\ea90";
+  opacity: 0.16;
+}
+.icon-globe-2 .path2:before {
+  content: "\ea91";
+  margin-left: -1em;
+}
+.icon-gps-slash .path1:before {
+  content: "\ea92";
+  opacity: 0.16;
+}
+.icon-gps-slash .path2:before {
+  content: "\ea93";
+  margin-left: -1em;
+}
+.icon-pin-2 .path1:before {
+  content: "\ea94";
+  opacity: 0.16;
+}
+.icon-pin-2 .path2:before {
+  content: "\ea95";
+  margin-left: -1em;
+}
+.icon-pin-3 .path1:before {
+  content: "\ea96";
+  opacity: 0.16;
+}
+.icon-pin-3 .path2:before {
+  content: "\ea97";
+  margin-left: -1em;
+}
+.icon-pin-check .path1:before {
+  content: "\ea98";
+  opacity: 0.16;
+}
+.icon-pin-check .path2:before {
+  content: "\ea99";
+  margin-left: -1em;
+}
+.icon-direction-2 .path1:before {
+  content: "\ea9a";
+  opacity: 0.16;
+}
+.icon-direction-2 .path2:before {
+  content: "\ea9b";
+  margin-left: -1em;
+}
+.icon-pin-slash .path1:before {
+  content: "\ea9c";
+  opacity: 0.16;
+}
+.icon-pin-slash .path2:before {
+  content: "\ea9d";
+  margin-left: -1em;
+}
+.icon-pin .path1:before {
+  content: "\ea9e";
+  opacity: 0.16;
+}
+.icon-pin .path2:before {
+  content: "\ea9f";
+  margin-left: -1em;
+}
+.icon-pin-filled:before {
+  content: "\ec57";
+}
+.icon-gps .path1:before {
+  content: "\eaa0";
+  opacity: 0.16;
+}
+.icon-gps .path2:before {
+  content: "\eaa1";
+  margin-left: -1em;
+}
+.icon-direction .path1:before {
+  content: "\eaa2";
+  opacity: 0.16;
+}
+.icon-direction .path2:before {
+  content: "\eaa3";
+  margin-left: -1em;
+}
+.icon-map-view .path1:before {
+  content: "\eaa4";
+  opacity: 0.16;
+}
+.icon-map-view .path2:before {
+  content: "\eaa5";
+  margin-left: -1em;
+}
+.icon-degrees .path1:before {
+  content: "\eaa6";
+  opacity: 0.16;
+}
+.icon-degrees .path2:before {
+  content: "\eaa7";
+  margin-left: -1em;
+}
+.icon-pin-cross .path1:before {
+  content: "\eaa8";
+  opacity: 0.16;
+}
+.icon-pin-cross .path2:before {
+  content: "\eaa9";
+  margin-left: -1em;
+}
+.icon-pin-minus .path1:before {
+  content: "\eaaa";
+  opacity: 0.16;
+}
+.icon-pin-minus .path2:before {
+  content: "\eaab";
+  margin-left: -1em;
+}
+.icon-compass .path1:before {
+  content: "\eaac";
+  opacity: 0.16;
+}
+.icon-compass .path2:before {
+  content: "\eaad";
+  margin-left: -1em;
+}
+.icon-globe .path1:before {
+  content: "\eaae";
+  opacity: 0.16;
+}
+.icon-globe .path2:before {
+  content: "\eaaf";
+  margin-left: -1em;
+}
+.icon-route .path1:before {
+  content: "\eab0";
+  opacity: 0.16;
+}
+.icon-route .path2:before {
+  content: "\eab1";
+  margin-left: -1em;
+}
+.icon-pin-plus .path1:before {
+  content: "\eab2";
+  opacity: 0.16;
+}
+.icon-pin-plus .path2:before {
+  content: "\eab3";
+  margin-left: -1em;
+}
+.icon-mood:before {
+  content: "\ed9e";
+}
+.icon-preventative-health:before {
+  content: "\eb9b";
+}

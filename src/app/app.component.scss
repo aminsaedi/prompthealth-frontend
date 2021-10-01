@@ -1,0 +1,16 @@
+@import '../assets/scss/variables';
+
+.alert-uploading-background {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100vw;
+  z-index: 1000;
+
+  @media (min-width: $breakpointMd) {
+    bottom: 30px;
+    right: 30px;
+    display: inline-block;
+    width: auto;
+  }
+}

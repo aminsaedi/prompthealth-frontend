@@ -10,7 +10,7 @@ export class ButtonGuidelineComponent implements OnInit {
 
   @Input() type: GuidelineType = 'profile'
   @Input() label: string = "Profile Guidelines";
-  @Input() buttonClass: string = 'btn btn-link';
+  @Input() buttonClass: string = 'btn btn-text';
 
  public isBottomExpanded: boolean = false;
 

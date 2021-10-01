@@ -1,0 +1,140 @@
+[class^=image-container-] {
+  position: relative;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  &::after {
+    content: '';
+    display: block;
+    position: relative;
+  }
+}
+
+.image-container {
+  position: relative;
+  img {
+    position: relative;
+    width: 100%;
+    height: auto;
+
+    &.cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &.cover-md {
+      @media (min-width: $breakpointMd) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;  
+      }
+    }
+  }
+}
+
+.image-container-30pc::after {
+  padding-top: 30%;
+}
+.image-container-33pc::after {
+  padding-top: 33%;
+}
+.image-container-35pc::after {
+  padding-top: 35%;
+}
+.image-container-40pc::after {
+  padding-top: 40%;
+}
+.image-container-100pc::after {
+  padding-top: 100%;
+}
+.image-container-110pc::after {
+  padding-top: 110%;
+}
+.image-container-130pc::after {
+  padding-top: 130%;
+}
+
+@media (min-width: $breakpointMd) {
+  .image-container-md-30pc::after {
+    padding-top: 30%;
+  }
+  .image-container-md-33pc::after {
+    padding-top: 33%;
+  }
+  .image-container-md-35pc::after {
+    padding-top: 35%;
+  }
+  .image-container-md-40pc::after {
+    padding-top: 40%;
+  }
+  .image-container-md-100pc::after {
+    padding-top: 100%;
+  }
+  .image-container-md-110pc::after {
+    padding-top: 110%;
+  }
+    .image-container-md-130pc::after {
+    padding-top: 130%;
+  }
+}
+
+@media (min-width: $breakpointLg) {
+  .image-container-lg-30pc::after {
+    padding-top: 30%;
+  }
+  .image-container-lg-33pc::after {
+    padding-top: 33%;
+  }
+  .image-container-lg-35pc::after {
+    padding-top: 35%;
+  }
+  .image-container-lg-40pc::after {
+    padding-top: 40%;
+  }
+  .image-container-lg-100pc::after {
+    padding-top: 100%;
+  }
+  .image-container-lg-110pc::after {
+    padding-top: 110%;
+  }
+  .image-container-lg-130pc::after {
+    padding-top: 130%;
+  }
+}
+
+@media (min-width: $breakpointXl) {
+  .image-container-xl-30pc::after {
+    padding-top: 30%;
+  }
+  .image-container-xl-33pc::after {
+    padding-top: 33%;
+  }
+  .image-container-xl-35pc::after {
+    padding-top: 35%;
+  }
+  .image-container-xl-40pc::after {
+    padding-top: 40%;
+  }
+  .image-container-xl-100pc::after {
+    padding-top: 100%;
+  }
+  .image-container-lg-110pc::after {
+    padding-top: 110%;
+  }
+  .image-container-xl-130pc::after {
+    padding-top: 130%;
+  }
+}

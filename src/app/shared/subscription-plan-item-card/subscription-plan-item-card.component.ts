@@ -22,7 +22,7 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
   @Input() data: IDefaultPlan;
   @Input() hideButton = false;
   @Input() discounted: number = null;
-  @Input() showFeatureOnly: boolean = false;
+  @Input() showFeatureOnly = false;
 
   @Input() isPriceMonthly = true;
   @Input() monthly = true;
@@ -73,7 +73,7 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
     if (!this._uService.isServer && ls.getItem('token')) {
       this.isLoggedIn = true;
       this.profile = JSON.parse(ls.getItem('user'));
-      this.profile = await this._profileService.getProfileDetail(this.profile);
+      // this.profile = await this._profileService.getProfileDetail(this.profile);
     } else {
       this.profile = null;
     }
@@ -136,21 +136,21 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
     } else {
       this._sharedService.loader('show');
 
-      try { 
-        const result = await this._sharedService.checkoutPlan(this.profile, this.data, 'default', this.monthly); 
+      try {
+        const result = await this._sharedService.checkoutPlan(this.profile, this.data, 'default', this.monthly);
         this._toastr.success(result.message);
-        switch(result.nextAction) {
+        switch (result.nextAction) {
           case 'complete':
             this._router.navigate(['/dashboard/register-product/complete']);
             break;
           case 'stripe':
-            //automatically redirect to stripe. nothing to do.
+            // automatically redirect to stripe. nothing to do.
             break;
         }
-      } catch(error){ 
-        this._toastr.error(error); 
-      } finally { 
-        this._sharedService.loader('hide'); 
+      } catch (error) {
+        this._toastr.error(error);
+      } finally {
+        this._sharedService.loader('hide');
       }
     }
   }
