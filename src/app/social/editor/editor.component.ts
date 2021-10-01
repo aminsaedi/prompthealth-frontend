@@ -1,4 +1,5 @@
 import { Location } from '@angular/common';
+import { HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +13,7 @@ import { ISocialPost } from 'src/app/models/social-post';
 import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString, formatStringToDate } from 'src/app/_helpers/date-formatter';
@@ -62,17 +64,19 @@ export class EditorComponent implements OnInit {
   private contentEditor: Quill;
 
   public isSubmitted: boolean = false;
+  public isLoadingVoice: boolean = false;
   public isUploading: boolean = false;
   public tagsInitial: string[] = [];
   public minDateTimeEventStart: DateTimeData;
   public minDateTimeEventEnd: DateTimeData;
 
-  public audioSaved: AudioData = null;
+  public audioPreview: AudioData = null;
+  public imagesPreview: (string|ArrayBuffer)[] = [];
 
   private _s3 = environment.config.AWS_S3;
   private subscriptionLoginStatus: Subscription;
 
-  // @ViewChild('inputMedia') private inputMedia: ElementRef;
+  @ViewChild('inputMedia') private inputMedia: ElementRef;
   @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
 
   constructor(
@@ -86,6 +90,7 @@ export class EditorComponent implements OnInit {
     private _toastr: ToastrService,
     private _uService: UniversalService,
     private _socialService: SocialService,
+    private _modalService: ModalService,
   ) { }
 
   ngOnDestroy() {
@@ -118,13 +123,18 @@ export class EditorComponent implements OnInit {
       );
 
       /** for note */
+      if(this.f.images.value) {
+        this.imagesPreview = [this._s3 + this.f.images.value];
+        console.log(this.imagesPreview);
+      }
       if(this.f.voice.value) {
-        console.log(this.f.voice.value);
-        fetch(this._s3 + this.f.voice.value).then(async res =>{
-
-          const blob = await res.blob();
-          this.audioSaved = new AudioData({blob: blob, title: null});
-          console.log(this.audioSaved)
+        this.isLoadingVoice = true;
+        this._sharedService.fetchFile(this.f.voice.value).then(res => {
+          this.audioPreview = new AudioData({blob: res, title: this.f.voice.value});
+          this.isLoadingVoice = false;
+        }, () => {
+          this.audioPreview = null;
+          this.isLoadingVoice = false;
         });
       }
 
@@ -191,7 +201,7 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  onClickButtonRemoveMedia() {
+  onClickButtonRemoveCoverImage() {
     this._imagePreview = null;
     this.f.image.setValue(null);
   }
@@ -282,8 +292,51 @@ export class EditorComponent implements OnInit {
     this.f.eventType.setValue(online ? 'ONLINE' : 'OFFLINE');
   }
 
+  onClickButtonMedia() {
+    const el = this.inputMedia.nativeElement as HTMLInputElement;
+    if(el) {
+      el.click();
+    }
+  }
+
+  onClickButtonAudio() {
+    this._modalService.show('audio-recorder');
+  }
+
+  async onSelectMedia(e: Event){
+    const files = (e.target as HTMLInputElement).files;
+    if(files && files.length > 0){
+      let image: {file: File | Blob, filename: string};
+
+      try { 
+        image = await this._sharedService.shrinkImageByFixedWidth(files[0], 800);
+        this.f.images.setValue(image);
+
+        const reader = new FileReader();
+        reader.readAsDataURL(image.file);
+        reader.onloadend = () => {
+          this.imagesPreview = [reader.result];
+        }
+      } catch(err){
+        console.log(err);
+        return;
+      }
+    }
+  }
+
+  onClickButtonRemoveMediaOf(i: number) {
+    this.imagesPreview.splice(i,1);
+  }
+
+  onClickButtonRemoveAudio() {
+    this.audioPreview = null;
+    this.f.voice.setValue(null);
+    this._editorService.lockEditor();
+  }
+
   onAudioSaved(data: AudioData) {
-    this.audioSaved = data;
+    this.audioPreview = data;
+    this.f.voice.setValue(data ? {file: data.file, filename: data.filename} : null);
   }
 
   /** trigger when editor tool bar is sticked to top */
@@ -356,7 +409,12 @@ export class EditorComponent implements OnInit {
       data.status = status;
   
       const payload: ISaveQuery = new SaveQuery(data).toJson();
-      const req =  this.isEditMode ? this._sharedService.put(payload, `blog/update/${this._editorService.originalData._id}`) : this._sharedService.post(data, 'blog/create');
+      const req = this.isNote ? this._sharedService.put(
+        payload, 
+        this.isEditMode ? `note/update/${this._editorService.originalData._id}` : `note/create`
+      ) :
+        this.isEditMode ? this._sharedService.put(payload, `blog/update/${this._editorService.originalData._id}`) : 
+        this._sharedService.post(data, 'blog/create');
   
       req.subscribe((res: IContentCreateResult) => {
         this.isUploading = false;
@@ -389,7 +447,15 @@ export class EditorComponent implements OnInit {
   uploadImagesIfNeeded(): Promise<void> {
     return new Promise( async (resolve, reject) => {
       const images = [];
-      if(this.f.image.value && typeof this.f.image.value != 'string') {
+      if(this.f.voice?.value && typeof this.f.voice.value != 'string') {
+        images.push(this.f.voice.value);
+      }
+
+      if(this.f.images?.value && typeof this.f.voice.value != 'string') {
+        images.push(this.f.images.value);
+      }
+
+      if(this.f.image?.value && typeof this.f.image.value != 'string') {
         images.push(this.f.image.value);
       }
 
@@ -415,10 +481,21 @@ export class EditorComponent implements OnInit {
           if(res.statusCode === 200) {
             const images = (typeof res.data == 'string') ? [res.data] : res.data;
 
-            if(typeof this.f.image.value != 'string') {
+            if(this.f.voice?.value && typeof this.f.voice.value != 'string') {
+              this.f.voice.setValue(images[0]);
+              images.splice(0,1);
+            }
+
+            if(this.f.images?.value && typeof this.f.images.value != 'string') {
+              this.f.images.setValue(images[0]);
+              images.splice(0,1);
+            }
+
+            if(this.f.image?.value && typeof this.f.image.value != 'string') {
               this.f.image.setValue(images[0]);
               images.splice(0,1);
             }
+
             if(matchImages && matchImages.length > 0) {
               matchImages.forEach((match, i) => {
                 desc = desc.replace(match, `<img src="${this._s3 + images[i]}">`);

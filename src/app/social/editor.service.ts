@@ -154,9 +154,7 @@ export class EditorService {
       f.eventAddress.updateValueAndValidity();
     }
 
-    if(this.editorType == 'NOTE') {
-      f.
-    }
+    // note doesn't have to change validation because it doesn't have status DRAFT
   }
 }
 
