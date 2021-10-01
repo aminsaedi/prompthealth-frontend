@@ -32,21 +32,18 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
     *ngIf="post.isNote" 
     [post]="post" 
     [shorten]="shorten"
-    (onClickButton)="onClickButton($event)"
     ></card-item-note>
     
     <card-item-event 
     *ngIf="post.isEvent" 
     [post]="post" 
     [shorten]="shorten"
-    (onClickButton)="onClickButton($event)"
     ></card-item-event>
 
     <card-item-article 
     *ngIf="post.isArticle" 
     [post]="post" 
     [shorten]="shorten"
-    (onClickButton)="onClickButton($event)"
     ></card-item-article>
 
     <div class="mb-10p">
