@@ -95,7 +95,12 @@ export class EditorService {
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
         description: new FormControl(d ? d.description : ''),
-        images: new FormControl(d?.images?.length > 0 ? d.images[0] : null), // TODO: need change to FormArray in ver2.1
+
+        // TODO: need change to FormArray in ver2.1
+        // value type: string (path in S3 | blob)
+        images: new FormControl(d?.images?.length > 0 ? d.images[0] : null), 
+
+        // value type: string (path in S3 | AudioData)
         voice: new FormControl(d?.voice ? d.voice : null),
       }, validators.note);
     }
@@ -147,6 +152,10 @@ export class EditorService {
       f.eventEndTime.updateValueAndValidity();
       f.joinEventLink.updateValueAndValidity();  
       f.eventAddress.updateValueAndValidity();
+    }
+
+    if(this.editorType == 'NOTE') {
+      f.
     }
   }
 }
