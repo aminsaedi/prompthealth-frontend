@@ -89,18 +89,18 @@ export class BaseComponent implements OnInit {
           }
         } else if(this.isPopState) {
           //do not scroll
-          console.log('popState');
+          // console.log('popState');
         } else if(urlCurrent.path.match(/community\/profile\/\w+\/post/)) {
           this.scrollToTop();
-          console.log('scrollToTop (on post single page)');
+          // console.log('scrollToTop (on post single page)');
         } else if(urlCurrent.path.match('profile') && this.urlPrev.path.match('profile')) {
           //do not scroll
-          console.log('routeChangedWithinProfile');
+          // console.log('routeChangedWithinProfile');
         } else if(urlCurrent.path == this.urlPrev.path) {
-          console.log('pathNotChanged');
+          // console.log('pathNotChanged');
         } else {
           this.scrollToTop();
-          console.log('scrollToTop');
+          // console.log('scrollToTop');
         }
 
         this.urlPrev = this.getURLset();

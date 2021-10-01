@@ -156,7 +156,7 @@ export class CardNewPostComponent implements OnInit {
   saveAudioRecord() {
     this.f.voice.setValue(this.audioData);
     this.audioSaved = this.audioData.copy();
-    console.log(this.audioSaved);
+    // console.log(this.audioSaved);
     this.modalAudioRecorder.goBack();
   }
 

@@ -143,7 +143,6 @@ export class ProfileAboutComponent implements OnInit {
       _id: this.profile._id,
       type,
     }, 'user/update-social-count').subscribe((res) => {
-      console.log(res);
     });
   }
 

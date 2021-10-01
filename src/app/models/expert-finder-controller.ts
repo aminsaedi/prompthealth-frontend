@@ -181,7 +181,6 @@ export class ExpertFinderController {
 
     let [lng, lat] = [0,0]
     this.professionalsAll.forEach(p => {
-      console.log(p.location);
       lng += p.location[0];
       lat += p.location[1];
     });

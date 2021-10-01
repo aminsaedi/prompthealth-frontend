@@ -246,7 +246,6 @@ export class EditorComponent implements OnInit {
   } 
 
   onChangeEventType(online: boolean) {
-    console.log('onChangeEventType')
     this.f.eventType.setValue(online ? 'ONLINE' : 'OFFLINE');
   }
 
@@ -353,7 +352,6 @@ export class EditorComponent implements OnInit {
       }
 
       if(images.length == 0) {
-        console.log('no image found');
         resolve();
       } else {
         this._sharedService.uploadMultipleImages(images, this.user._id, 'blogs').subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {

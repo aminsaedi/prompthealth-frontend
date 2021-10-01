@@ -73,7 +73,6 @@ export class ProfileManagementService {
   init() {
     const userStr = this._uService.localStorage.getItem('user');
     if(!userStr) {
-      console.log('userStr not existed')
       this.dispose();
     } else {
       this.changeLoginStatus('loggingIn');
