@@ -99,9 +99,9 @@ export class AboutComponent implements OnInit {
 }
 
 const topImages = [
-  '/assets/img/about/top-0.png',
-  '/assets/img/about/top-1.png',
-  '/assets/img/about/top-2.png'
+  '/assets/img/about/top-0.jpg',
+  '/assets/img/about/top-1.jpg',
+  '/assets/img/about/top-2.jpg'
 ];
 
 const holisticImages = [

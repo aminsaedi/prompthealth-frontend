@@ -86,6 +86,8 @@
     <div *ngIf="authType == 'signin'">
       <hr>
       <a [routerLink]="['/auth/registration/U']" class="btn btn-text small w-100">Create Account</a>
+      <div class="body2 text-center">Or</div>
+      <a routerLink="/plans" class="btn btn-text small w-100">Get listed on PromptHealth</a>
     </div>
 
     <div *ngIf="authType == 'signup'">
