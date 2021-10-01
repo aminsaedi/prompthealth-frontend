@@ -34,15 +34,15 @@
 </section>
 
 <section class="container mt-100p mb-50p">
-  <ul class="row list-unstyled">
+  <ul class="row list-unstyled justify-content-center">
     <li 
     *ngFor="let feature of features" 
-    class="mb-50p col-12 col-md-6 col-xl-4"
+    class="mb-50p col-12 col-md-6 col-xl-5"
     >
       <div class="mb-25p">
         <i [iconPh]="feature.icon" style="font-size: 30px;"></i>
       </div>
-      <h4 class="h4-md clamp-2line">{{feature.title}}</h4>
+      <h4 class="h4-md">{{feature.title}}</h4>
       <p class="text-label">{{feature.content}}</p>
     </li>
   </ul>
