@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 
@@ -10,26 +11,42 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 export class PopupPostMenuComponent implements OnInit {
 
   @Input() post: ISocialPost;
-  @Output() onClose = new EventEmitter<void>();
+
+  get eligibleToShowPostMenu() {
+    return !!(this.post && this.user && this.post.authorId == this.user._id)
+  }
+
+  get user() {
+    return this._profileService.user;
+  }
+
+  public isPopupPostMenuShown = false;
 
   constructor(
     private _modalService: ModalService,
+    private _profileService: ProfileManagementService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
   }
 
+  showPopup(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.isPopupPostMenuShown = true;
+    this._changeDetector.detectChanges();
+  }
+
   hidePopup(e: Event) {
     e.stopPropagation();
     e.preventDefault();
-    this.onClose.emit();
+    this.isPopupPostMenuShown = false;
+    this._changeDetector.detectChanges();
   }
 
   deleteContent(e: Event) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.hidePopup(e);
-    
+    this.hidePopup(e);    
     this._modalService.show('delete-post-alert', this.post);
   }
 }
