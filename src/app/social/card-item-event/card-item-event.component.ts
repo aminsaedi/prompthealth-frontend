@@ -34,7 +34,7 @@ export class CardItemEventComponent implements OnInit {
   showMenu(e: Event, menuName: string) {
     e.stopPropagation();
     e.preventDefault();
-    this._modalService.show(menuName);
+    this._modalService.show(menuName, this.post);
   }
 
   markCurrentPosition() {
