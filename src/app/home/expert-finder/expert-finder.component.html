@@ -16,7 +16,11 @@
     </div>
 
     <div class="mt-30p bg-primary-light rounded-8p border border-background">      
-      <search-bar #searchBar></search-bar>
+      <search-bar 
+      #searchBar 
+      [option]="{navigateToListing: false}"
+      (onSubmit)="onSearchBarSubmitted($event)"
+      ></search-bar>
       <div #blurSearchbar></div>
     </div>
 
@@ -156,7 +160,10 @@
               </div>
               <div class="grid-3 d-md-flex align-items-center">
                 <div>
-                  <span class="body1 text-label clamp-1line">
+                  <span 
+                  *ngIf="p.address" 
+                  class="body1 text-label clamp-1line"
+                  >
                     <i iconPh="pin"></i>
                     <span>{{p.address}}</span>
                   </span>
@@ -236,16 +243,19 @@
       (boundsChange)="onMapMoved($event)"
       >
 
-      <agm-marker 
-      *ngFor="let p of controller.professionalsAll; let i = index;" 
-      [longitude]="p.location[0]"
-      [latitude]="p.location[1]" 
-      [iconUrl]="p.mapIconUrl" 
-      [title]="p.mapLabel"
-      [zIndex]="100 - i" 
-      [visible]="p.isMapIconReady"
-      (markerClick)="onMapMarkerClicked(p)">
-      </agm-marker>
+      <ng-container *ngFor="let p of controller.professionalsAll; let i = index;">
+        <agm-marker
+        *ngIf="p.address"
+        [longitude]="p.location[0]"
+        [latitude]="p.location[1]" 
+        [iconUrl]="p.mapIconUrl" 
+        [title]="p.mapLabel"
+        [zIndex]="100 - i" 
+        [visible]="p.isMapIconReady"
+        (markerClick)="onMapMarkerClicked(p)">
+        </agm-marker>  
+      </ng-container>
+
     </agm-map>
 
     <div class="map-controller d-flex justify-content-between">
