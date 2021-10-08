@@ -8,11 +8,11 @@
   "description": "PromptHealth is an application that connects people to Canadian accredited medical and holistic health services.",
   "icons": [
     {
-      "src":"/android-chrome-192x192.png",
+      "src":"https://prompthealth.ca/assets/favicon/android-chrome-192x192.png",
       "sizes":"192x192",
       "type":"image/png"
     },{
-      "src":"/android-chrome-512x512.png",
+      "src":"https://prompthealth.ca/assets/favicon/android-chrome-512x512.png",
       "sizes":"512x512",
       "type":"image/png"
     }
