@@ -105,7 +105,7 @@ export class SearchBarComponent implements OnInit {
 
 }
 
-interface SearchKeywords {
+export interface SearchKeywords {
   searchBySituation: string;
   searchByLocation: string;
   searchByArea: string;
