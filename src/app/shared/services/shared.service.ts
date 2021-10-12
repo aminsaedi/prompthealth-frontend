@@ -114,7 +114,7 @@ export class SharedService {
     ls.removeItem('isVipAffiliateUser');
 
     this._bs.setUserData(null);
-    this._toastr.success('Logged out successfully');
+    // this._toastr.success('Logged out successfully');
     ls.setItem('userType', 'U');
     if (navigate) {
       this._router.navigate(['/']);
