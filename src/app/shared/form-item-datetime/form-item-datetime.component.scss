@@ -1,5 +1,31 @@
+@import '../../../assets/scss/variables';
 
 .datetime-picker {
   z-index: 50;
   border: solid 1px #e6e6e6;
+}
+
+::ng-deep {
+  .bs-datepicker {
+    box-shadow: none;
+  }
+
+  .bs-datepicker-container {
+    padding: 5px 0;
+  }
+
+  .theme-ph .bs-datepicker-head {
+    background: $colorPrimary;
+  }
+
+  .bs-datepicker-head {
+    button {
+      font-size: 15px;
+    }
+  }
+
+  .theme-ph .bs-datepicker-body table td span.selected {
+    background-color: $colorSecondary;
+  }
+
 }

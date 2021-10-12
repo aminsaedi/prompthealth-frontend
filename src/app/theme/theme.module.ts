@@ -13,8 +13,6 @@ import { FooterComponent } from './footer/footer.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-
-
 import { AuthService } from '../auth/auth.service';
 import { AuthGuardService } from '../auth/auth-gaurd.service';
 import { RoleGuardService } from '../auth/role-guard.service';
@@ -22,12 +20,10 @@ import { ThankuPageComponent } from './thanku-page/thanku-page.component';
 import { environment } from 'src/environments/environment';
 import { DashboardMenuComponent } from './dashboard-menu/dashboard-menu.component';
 import { BannerTopComponent } from './banner-top/banner-top.component';
-import { HeaderMagazineComponent } from './header-magazine/header-magazine.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    HeaderMagazineComponent,
     FooterComponent,
     LayoutComponent,
     SubscribeComponent,

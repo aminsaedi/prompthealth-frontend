@@ -11,18 +11,26 @@
   
   <div
   *ngIf="isPickerShown" 
+  class="overflow-hidden"
   [@expandVertical]
-  class="d-flex p-3 mt-2 flex-column align-items-center bg-white datetime-picker orverflow-hidden rounded-lg">
-    <ngb-datepicker 
-    [formControl]="fDate" 
-    [minDate]="minDateTime" 
-    ></ngb-datepicker>
-    
-    <ngb-timepicker 
-    [formControl]="fTime" 
-    [meridian]="true" 
-    [minuteStep]="stepMinute" 
-    [hourStep]="stepHour" 
-    ></ngb-timepicker>  
-  </div>  
+  >
+    <div
+    class="d-flex p-3 mt-2 flex-column align-items-center bg-white datetime-picker orverflow-hidden rounded-lg"
+    >
+      <bs-datepicker-inline 
+      [minDate]="_minDateTime" 
+      [bsConfig]="{showWeekNumbers: false, containerClass: 'theme-ph'}"
+      [minDate]="_minDateTime"
+      [(bsValue)]="form.date"
+      (bsValueChange)="updateDateTime(true)"
+      ></bs-datepicker-inline>
+  
+      <timepicker 
+      [(ngModel)]="form.time"
+      [minuteStep]="15"
+      (isValid)="updateDateTime(true)"
+  
+      ></timepicker>
+    </div>  
+  </div>
 </div>

@@ -3,15 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
-// import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import {
   GoogleLoginProvider,
   FacebookLoginProvider,
-  AmazonLoginProvider,
 } from 'angularx-social-login';
-// import { TooltipModule } from 'ngx-bootstrap/tooltip';
-// import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 import { AuthRoutingModule } from './auth-routing.module';
@@ -20,10 +16,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ContactUspageComponent } from './contact-uspage/contact-uspage.component';
 import { RegistrationComponent } from './registration/registration.component';
-import { LoginComponent } from '../auth/login/login.component';
 import { EnterpriseContactComponent } from './enterprise-contact/enterprise-contact.component';
-// import { NgxCarouselModule } from 'ngx-carousel';
-import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { FormAuthComponent } from './form-auth/form-auth.component';
 import { AuthComponent } from './auth/auth.component';
 import { environment } from 'src/environments/environment';
@@ -40,9 +33,6 @@ import { NgxStripeModule, StripeService } from 'ngx-stripe';
     SharedModule,
     FormsModule,
     NgxSpinnerModule,
-    // NgxCarouselModule,
-    SlickCarouselModule,
-    // NgxIntlTelInputModule,
     ReactiveFormsModule,
     SocialLoginModule,
     NgxStripeModule.forRoot(environment.config.stripeKey),
@@ -50,7 +40,6 @@ import { NgxStripeModule, StripeService } from 'ngx-stripe';
   declarations: [
     ContactUspageComponent,
     ForgotPasswordComponent,
-    LoginComponent,
     RegistrationComponent,
     EnterpriseContactComponent,
     FormAuthComponent,

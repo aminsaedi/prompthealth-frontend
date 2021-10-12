@@ -2,10 +2,6 @@ import { Component, OnInit, ViewChildren, ViewChild, QueryList } from '@angular/
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { BehaviorService } from '../../../shared/services/behavior.service';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-
 import { CategoryService } from '../../../shared/services/category.service';
 import { Questionnaire, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { IUserDetail } from 'src/app/models/user-detail';

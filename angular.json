@@ -31,11 +31,8 @@
               "src/manifest.json"
             ],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-              "node_modules/ngx-toastr/toastr.css",
-              "node_modules/slick-carousel/slick/slick.scss",
-              "node_modules/slick-carousel/slick/slick-theme.scss",
+              "./node_modules/ngx-toastr/toastr.css",
               "src/assets/scss/style.scss",
               "src/assets/icon/ph-v1.1/style.css",
               "./node_modules/quill/dist/quill.core.css",
@@ -43,12 +40,6 @@
               "./node_modules/quill/dist/quill.snow.css"
             ],
             "scripts": [
-              "src/assets/js/jquery-3.4.1.slim.min.js",
-              "src/assets/js/slick.js",
-              "src/assets/js/popper.min.js",
-              "src/assets/js/bootstrap.min.js",
-              "src/assets/js/main.js",
-              "src/assets/js/eventbrite.js",
               "./node_modules/quill/dist/quill.min.js"
             ]
           },
@@ -141,18 +132,10 @@
               "src/assets"
             ],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-              "node_modules/slick-carousel/slick/slick.scss",
-              "node_modules/slick-carousel/slick/slick-theme.scss",
               "src/assets/scss/style.scss"
             ],
             "scripts": [
-              "src/assets/js/jquery-3.4.1.slim.min.js",
-              "src/assets/js/slick.js",
-              "src/assets/js/popper.min.js",
-              "src/assets/js/bootstrap.min.js",
-              "src/assets/js/main.js"
             ]
           }
         },

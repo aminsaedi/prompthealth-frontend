@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-addon-select-category',
@@ -10,7 +9,8 @@ export class AddonSelectCategoryComponent implements OnInit {
   @Input() categories = [];
   selectedCategory = 0;
 
-  constructor(public modal: NgbActiveModal) { }
+  constructor(
+  ) { }
 
 
   ngOnInit(): void {

@@ -1,7 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { Blog } from 'src/app/models/blog';
 import { IBlogCategory } from 'src/app/models/blog-category';
 import { BlogSearchQuery, IBlogSearchQuery } from 'src/app/models/blog-search-query';
@@ -33,7 +32,7 @@ export class ListEventComponent implements OnInit {
   }
 
   get isDatePickerActive() { return this.queryParams && this.queryParams.datefrom;  }
-  convertNgbDateToDate(date: NgbDate) { return new Date(date.year, date.month - 1, date.day); }
+  convertNgbDateToDate(date: any) { return new Date(date.year, date.month - 1, date.day); }
 
 
   public latest: Blog;
@@ -55,10 +54,10 @@ export class ListEventComponent implements OnInit {
   public queryParams: IQueryParams;
   public isDatePickerShown: boolean = false;
 
-  public minDate: NgbDate;
-  public fromDate: NgbDate = null;
-  public toDate: NgbDate | null = null;
-  public hoveredDate: NgbDate | null = null;
+  public minDate: any;
+  public fromDate: any = null;
+  public toDate: any | null = null;
+  public hoveredDate: any | null = null;
   public displayMonths = 1;
 
   @HostListener('window:resize') onWindowResize() {
@@ -76,7 +75,7 @@ export class ListEventComponent implements OnInit {
 
   async ngOnInit() {
     const now = new Date();
-    this.minDate = new NgbDate( now.getFullYear(), now.getMonth() + 1, now.getDate() );
+    // this.minDate = new NgbDate( now.getFullYear(), now.getMonth() + 1, now.getDate() );
     this.setDisplayMonths();
 
     await this.initCategories();
@@ -103,16 +102,16 @@ export class ListEventComponent implements OnInit {
 
       if(params.datefrom) {
         const dateArray = params.datefrom.split('-');
-        this.fromDate = new NgbDate(Number(dateArray[0]),Number(dateArray[1]),  Number(dateArray[2]));
+        // this.fromDate = new NgbDate(Number(dateArray[0]),Number(dateArray[1]),  Number(dateArray[2]));
       } else {
-        this.fromDate = null;
+        // this.fromDate = null;
       }
 
       if(params.dateto) {
         const dateArray = params.dateto.split('-');
-        this.toDate = new NgbDate(Number(dateArray[0]),Number(dateArray[1]),  Number(dateArray[2]));
+        // this.toDate = new NgbDate(Number(dateArray[0]),Number(dateArray[1]),  Number(dateArray[2]));
       } else {
-        this.toDate = null;
+        // this.toDate = null;
       }
 
       this.orderBy = params.orderby || 'startAt';
@@ -221,46 +220,46 @@ export class ListEventComponent implements OnInit {
       return (b.event.endAt.getTime() > now.getTime());
     });
 
-    const filterByDateRange = upcoming.filter(b => {
-      const start = b.event.startAt;
-      if(!this.fromDate) {
-        return true;
-      } else if(!this.toDate) {
-        const target = this.convertNgbDateToDate(this.fromDate);
-        if(start.getFullYear() == target.getFullYear() && start.getMonth() == target.getMonth() && start.getDate() == target.getDate()) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        const from = this.convertNgbDateToDate(this.fromDate);
-        const to = this.convertNgbDateToDate(this.toDate);
-        to.setDate(to.getDate() + 1);
-        if(from.getTime() <= start.getTime() && start.getTime() < to.getTime()) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    });
+    // const filterByDateRange = upcoming.filter(b => {
+    //   const start = b.event.startAt;
+    //   if(!this.fromDate) {
+    //     return true;
+    //   } else if(!this.toDate) {
+    //     const target = this.convertNgbDateToDate(this.fromDate);
+    //     if(start.getFullYear() == target.getFullYear() && start.getMonth() == target.getMonth() && start.getDate() == target.getDate()) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   } else {
+    //     const from = this.convertNgbDateToDate(this.fromDate);
+    //     const to = this.convertNgbDateToDate(this.toDate);
+    //     to.setDate(to.getDate() + 1);
+    //     if(from.getTime() <= start.getTime() && start.getTime() < to.getTime()) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   }
+    // });
 
-    const sorted = filterByDateRange.sort((a,b) => {
-      const valA = a.event.startAt.getTime();
-      const valB = b.event.startAt.getTime();
-      if(this.order == 'asc') {
-        return valA - valB;
-      } else {
-        return valB - valA;
-      }
-    });
+    // const sorted = filterByDateRange.sort((a,b) => {
+    //   const valA = a.event.startAt.getTime();
+    //   const valB = b.event.startAt.getTime();
+    //   if(this.order == 'asc') {
+    //     return valA - valB;
+    //   } else {
+    //     return valB - valA;
+    //   }
+    // });
 
-    const offset = (this.pageCurrent - 1) * this.countPerPage; 
+    // const offset = (this.pageCurrent - 1) * this.countPerPage; 
 
-    this.upcoming = sorted.slice(offset, offset + this.countPerPage);
+    // this.upcoming = sorted.slice(offset, offset + this.countPerPage);
 
-    this.postTotal = upcoming.length;
-    this.pageTotal = Math.ceil(sorted.length / this.countPerPage);
-    this.setPaginators();
+    // this.postTotal = upcoming.length;
+    // this.pageTotal = Math.ceil(sorted.length / this.countPerPage);
+    // this.setPaginators();
   }
 
   onOrderChanged() {
@@ -368,11 +367,11 @@ export class ListEventComponent implements OnInit {
   }
 
   onDatePickerUpdated() {
-    const queryparams: IQueryParams = {...this.queryParams};
-    queryparams.datefrom = this.fromDate ? `${this.fromDate.year}-${this.fromDate.month}-${this.fromDate.day}` : null;
-    queryparams.dateto = this.toDate ? `${this.toDate.year}-${this.toDate.month}-${this.toDate.day}` : null;
+    // const queryparams: IQueryParams = {...this.queryParams};
+    // queryparams.datefrom = this.fromDate ? `${this.fromDate.year}-${this.fromDate.month}-${this.fromDate.day}` : null;
+    // queryparams.dateto = this.toDate ? `${this.toDate.year}-${this.toDate.month}-${this.toDate.day}` : null;
 
-    this.closeDatePicker(queryparams);
+    // this.closeDatePicker(queryparams);
   }
 
   closeDatePicker(next: IQueryParams) {
@@ -392,35 +391,35 @@ export class ListEventComponent implements OnInit {
     this.displayMonths = (window && window.innerWidth >= 768) ? 2 : 1;
   }
 
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
-      this.toDate = date;
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-    }
+  onDateSelection(date: any) {
+    // if (!this.fromDate && !this.toDate) {
+    //   this.fromDate = date;
+    // } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
+    //   this.toDate = date;
+    // } else {
+    //   this.toDate = null;
+    //   this.fromDate = date;
+    // }
   }
 
   resetDatePicker() {
-    this.fromDate = null;
-    this.toDate = null;
+    // this.fromDate = null;
+    // this.toDate = null;
   }
 
 
-  isHovered(date: NgbDate) {
-    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  isHovered(date: any) {
+     return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
   }
-  isDisabled(date: NgbDate) {
-    return date.before(this.minDate);
+  isDisabled(date: any) {
+     return date.before(this.minDate);
   }
 
-  isInside(date: NgbDate) {
+  isInside(date: any) {
     return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
   }
 
-  isRange(date: NgbDate) {
+  isRange(date: any) {
     return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
   }
   /** modalDatePicker END */
