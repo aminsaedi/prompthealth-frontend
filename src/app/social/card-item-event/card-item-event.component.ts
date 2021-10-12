@@ -1,20 +1,19 @@
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ISocialPost } from 'src/app/models/social-post';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'card-item-event',
   templateUrl: './card-item-event.component.html',
-  styleUrls: ['./card-item-event.component.scss']
+  styleUrls: ['./card-item-event.component.scss'],
 })
 export class CardItemEventComponent implements OnInit {
 
   @Input() post: ISocialPost;
   @Input() shorten: boolean = true;
-
-  @Output() onClickButton = new EventEmitter<string>();
 
   public alreadySubscribed: boolean = false;
 
@@ -22,8 +21,8 @@ export class CardItemEventComponent implements OnInit {
     private _route: ActivatedRoute,
     private _location: Location,
     private _uService: UniversalService,
+    private _modalService: ModalService,
   ) { }
-
 
 
   ngOnInit(): void {
@@ -32,13 +31,13 @@ export class CardItemEventComponent implements OnInit {
     });
   }
 
-  _onClickButton(e: Event, buttonName: string) {
+  showMenu(e: Event, menuName: string) {
     e.stopPropagation();
     e.preventDefault();
-    this.onClickButton.emit(buttonName);
+    this._modalService.show(menuName, this.post);
   }
 
   markCurrentPosition() {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
-  }
+  } 
 }

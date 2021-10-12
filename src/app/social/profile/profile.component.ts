@@ -18,6 +18,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
+import { environment } from 'src/environments/environment';
 import { SocialService } from '../social.service';
 
 @Component({
@@ -32,6 +33,7 @@ export class ProfileComponent implements OnInit {
   get sizeM() { return !this.sizeS && (window.innerWidth < 992) ? true : false; }
   get f() { return this.formBooking.controls; }
   get isProfileMyself() { return this.user && this.user._id == this.profileId; }
+  get isProfilePH() { return this.profileId == environment.config.idSA; }
   get user() { return this._profileService.profile; }
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
 
@@ -501,7 +503,6 @@ export class ProfileComponent implements OnInit {
 
   checkFollowStatus() {
     if(this.isFollowLoading || !this.user || this.isProfileMyself) {
-      console.log('do not start checkFollowStatus');
       return;
     }
 
@@ -519,7 +520,6 @@ export class ProfileComponent implements OnInit {
 
   checkBellStatus() {
     if(this.isBellLoading || !this.user || this.isProfileMyself) {
-      console.log('checking follow status is not ready yet');
       return;
     }
 
@@ -539,7 +539,7 @@ export class ProfileComponent implements OnInit {
 const profileMenusForProvider: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
   {id: 'service', label: 'Service', relativeLink: 'service', },
-  {id: 'feed',    label: 'Contents',    relativeLink: 'feed'},
+  {id: 'feed',    label: 'Posts',    relativeLink: 'feed'},
   {id: 'review',  label: 'Review',  relativeLink: 'review'},
 ];
 
@@ -551,7 +551,7 @@ const profileMenusForCompany: IProfileMenuItem[] = [
 
 const profileMenusForPH: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
-  {id: 'feed',    label: 'Contents',    relativeLink: 'feed'},
+  {id: 'feed',    label: 'Posts',    relativeLink: 'feed'},
   {id: 'review',  label: 'Review',  relativeLink: 'review'},
 ];
 

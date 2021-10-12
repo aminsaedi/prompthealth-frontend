@@ -625,7 +625,7 @@ export class SharedService {
       const ss = this._uService.sessionStorage;
       const savedCoupon: ICouponData = JSON.parse(ss.getItem('stripe_coupon_code'));
       const _option = new CheckoutPlanOption(option, user.roles);
-      console.log(user);
+      // console.log(user);
       const payload: IStripeCheckoutData = {
         cancel_url: _option.cancelUrl,
         success_url: _option.successUrl,
@@ -647,18 +647,18 @@ export class SharedService {
 
       this.post(payload, 'user/checkoutSession').subscribe((res: any) => {
         if (res.statusCode === 200) {
-          console.log(res.data);
+          // console.log(res.data);
           this._stripeService.changeKey(environment.config.stripeKey);
 
           if (res.data.type === 'checkout') {
             this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
-              console.log('success!');
+              // console.log('success!');
             }, error => {
               console.log(error);
             });
             resolve('Checking out...');
           } else if (res.data.type === 'portal') {
-            console.log(res.data);
+            // console.log(res.data);
             location.href = res.data.url;
             resolve('You already have this plan. Redirecting to billing portal.');
           }

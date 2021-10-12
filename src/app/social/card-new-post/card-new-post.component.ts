@@ -143,7 +143,9 @@ export class CardNewPostComponent implements OnInit {
     this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'audio-recorder'}});
   }
 
-  onClickButtonRemoveAudio() {
+  onClickButtonRemoveAudio(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
     this.audioSaved = null;
     this.f.voice.setValue('');
   }
@@ -154,7 +156,7 @@ export class CardNewPostComponent implements OnInit {
   saveAudioRecord() {
     this.f.voice.setValue(this.audioData);
     this.audioSaved = this.audioData.copy();
-    console.log(this.audioSaved);
+    // console.log(this.audioSaved);
     this.modalAudioRecorder.goBack();
   }
 
@@ -273,6 +275,7 @@ export class CardNewPostComponent implements OnInit {
   async onSubmit() {
     this.isSubmitted = true;
     this.f.authorId.setValue(this.user._id);
+    this._editorService.format();
 
     this.isUploading = true;
     this._uploadObserver.markAsUploading();
@@ -280,7 +283,7 @@ export class CardNewPostComponent implements OnInit {
       await this.uploadImagesIfNeeded();
     } catch(error) {
       console.log(error);
-      this._toastr.error('Could not upload image. Please try again later');
+      this._toastr.error('Could not upload media. Please try again later');
       this.isUploading = false;
       return;
     }
@@ -315,6 +318,7 @@ export class CardNewPostComponent implements OnInit {
         this.onPublished.emit(res.data as ISocialPost);
         this._editorService.resetForm();
         this.imagePreview = null;
+        this.audioSaved = null;
       } else {
         console.log(res.message);
         this._toastr.error('Could not upload note. Please try again later.')

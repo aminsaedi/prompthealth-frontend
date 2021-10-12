@@ -36,6 +36,7 @@ export class ListComponent implements OnInit {
   public isMorePosts: boolean = true;
 
   private subscriptionLoginStatus: Subscription;
+  private subscriptionCacheChange: Subscription;
 
   @HostListener('window:scroll', ['$event']) async onWindowScroll(e: Event) {
     if(!this.isLoading && this.isMorePosts && document.body && this.posts && this.posts.length > 0) {
@@ -66,6 +67,9 @@ export class ListComponent implements OnInit {
     if(this.subscriptionLoginStatus) {
       this.subscriptionLoginStatus.unsubscribe();
     }
+    if(this.subscriptionCacheChange) {
+      this.subscriptionCacheChange.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -73,8 +77,10 @@ export class ListComponent implements OnInit {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
       this.selectedTopicId = param.topicId;
       this.setMeta();
-      this.checkLoginStatusAndInitPost()
+      this.checkLoginStatusAndInitPost();
     });
+
+    this.observeCacheChange();
   }
 
   async setMeta() {
@@ -115,6 +121,12 @@ export class ListComponent implements OnInit {
     }
   }
 
+  observeCacheChange() {
+    this.subscriptionCacheChange = this._socialService.postCacheChanged().subscribe(() => {
+      this.initPosts();
+    });
+  }
+
 
   async initPosts() {
     this.disposeCacheIfNeeded();
@@ -128,7 +140,6 @@ export class ListComponent implements OnInit {
       setTimeout(() => {
         this.posts = posts;
         this._changeDetector.detectChanges();
-        console.log('set posts from cache')
       }, 100);
     } else {
       try {

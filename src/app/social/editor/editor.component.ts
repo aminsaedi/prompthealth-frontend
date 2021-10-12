@@ -179,6 +179,7 @@ export class EditorComponent implements OnInit {
 
   onInputTitle(e: InputEvent) {
     let val = this.f.title.value;
+
     // for android
     //// cannot detect insertParagraph sometime on android.
     //// if new paragraph is inserted, remove it and focus editor.
@@ -188,6 +189,13 @@ export class EditorComponent implements OnInit {
       if(this.contentEditor) {
         this.contentEditor.focus();
       }
+    }
+
+    // if user paste html contents, remove tags and format.
+    const regexTag = /<\/?[^>]+(>|$)/g;
+    if(val.match(regexTag)) {
+      val = val.replace(regexTag, '').replace(/\s{2,}/, " ").trim();
+      this.f.title.setValue(val);
     }
   }
 
@@ -229,10 +237,15 @@ export class EditorComponent implements OnInit {
   }
 
   onChangeEndDateTime(e: Date) {
+    const start: Date = formatStringToDate(this.f.eventStartTime.value);
+    const end: Date = formatStringToDate(this.f.eventEndTime.value);
+
+    if(start && end && (start.getTime() - end.getTime() > 0)) {
+      this.f.eventStartTime.setValue(formatDateToString(end));
+    }
   } 
 
   onChangeEventType(online: boolean) {
-    console.log('onChangeEventType')
     this.f.eventType.setValue(online ? 'ONLINE' : 'OFFLINE');
   }
 
@@ -255,11 +268,12 @@ export class EditorComponent implements OnInit {
 
   async save(status: ISocialPost['status']) {
     this.isSubmitted = true;
+    this._editorService.format();
+
+    const publish = status == 'DRAFT' ? false : true;
+    this._editorService.validate(publish);
 
     const form = this._editorService.form;   
-    const publish = status == 'DRAFT' ? false : true;
-
-    this._editorService.validate(publish);
     if(form.invalid) {
       this._toastr.error('There are several items that require your attention.');
       return;
@@ -273,7 +287,7 @@ export class EditorComponent implements OnInit {
       imageUploaded = true;
     } catch(error) {
       console.log(error);
-      this._toastr.error('Could not upload image. Please try later');
+      this._toastr.error('Could not upload media. Please try later');
       this.isUploading = false;
     }
     if(!imageUploaded) {
@@ -291,13 +305,16 @@ export class EditorComponent implements OnInit {
 
     // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
     const req =  this._sharedService.post(payload, 'blog/create');
-
-
     req.subscribe((res: any) => {
       this.isUploading = false;
       if(res.statusCode === 200) {
         this.isSubmitted = false;
-        this._toastr.success('Updated successfully');
+
+        if(status == 'APPROVED') {
+          this._toastr.success('Published successfully');
+        } else if (status == 'DRAFT') {
+          this._toastr.success('Saved as draft successfully');
+        }
         this._editorService.resetForm();
         this.imagePreview = null;
         this.formItemService.deselectAll();
@@ -335,7 +352,6 @@ export class EditorComponent implements OnInit {
       }
 
       if(images.length == 0) {
-        console.log('no image found');
         resolve();
       } else {
         this._sharedService.uploadMultipleImages(images, this.user._id, 'blogs').subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {

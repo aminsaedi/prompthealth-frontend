@@ -1,3 +1,15 @@
 .indent {
   margin-left: 52px;
 }
+
+::ng-deep {
+  .comment-body {
+    p{
+      margin: 0;
+    }
+    
+    p:first-child {
+      display: inline;
+    }
+  }
+}

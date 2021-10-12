@@ -231,7 +231,7 @@ export class HomeComponent implements OnInit {
   public blogs: Blog[];
   async getBlog() {
     const query = new SocialPostSearchQuery({count: 3, contentType: 'ARTICLE'});
-    this._sharedService.getNoAuth('/note/get-by-author/' + environment.config.idSA + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+    this._sharedService.getNoAuth('note/get-by-author/' + environment.config.idSA + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
       if(res.statusCode === 200) {
         const blogs = [];
         res.data.forEach(d => {
@@ -254,35 +254,35 @@ const appFeatureItems = [
   [
     {
       icon: 'verified-outline', 
-      title: 'Search for health and wellness practitioners',
-      content: 'Use personalized filters to find your best match',
+      title: 'Find trusted wellness providers based on your personalized needs.',
+      content: 'Do a personal match or use search filter options.',
     },
     {
       icon: 'checkbox-square-outline',
-      title: 'Compare and book',
-      content: 'Read reviews and make informed decisions about your care when booking appointments',
+      title: 'Browse and learn from our content library.',
+      content: 'View resources by category and filter by media type to find expert created content that matters to you.',
     },
     {
       icon: 'users-outline',
-      title: 'Stay connected with your favourite experts',
-      content: 'Get notified when experts you follow share new content',
+      title: 'Compare and book.',
+      content: 'Read reviews and make informed decisions about your care.',
     }
   ],
   [
     {
       icon: 'book-open-outline',
-      title: 'Browse and learn from our content library',
-      content: 'View by category and filter by media type to find expert-created content that matters to you',
+      title: 'Stay connected with your favourite experts.',
+      content: 'Appointment go well? Follow your provider’s page for updates and additional resources.',
     },
     {
       icon: 'tags-2-outline',
-      title: 'Discover select deals on expert-recommended products',
-      content: 'Browse our product offerings page for deals to support your health and wellness journey',
+      title: 'Safe & Secure.',
+      content: 'Your privacy and security is ensured. PIPEDA/HIPPA approved.',
     },
     {
       icon: 'shield-check-outline',
-      title: 'Safe & Secure',
-      content: 'Your privacy and security is ensured',
+      title: 'COMING SOON: Discover select deals on recommended products.',
+      content: 'Browse through wellness products recommended by the experts themselves.',
     }
   ],
 ]
@@ -293,14 +293,14 @@ const introductionPostType = {
     color: 'bg-success',
 
     title: 'Notes',
-    content: 'Read quick health tips and thoughts.',
+    content: 'Quick health and wellness reads.',
   },
   event: {
     icon: 'calendar',
     color: 'bg-error',
 
     title: 'Events',
-    content: 'Attend in-person or virtual events hosted by practitioners.',
+    content: 'Attend virtual or in-person events hosted by providers.',
   },
   article: {
     icon: 'file',
@@ -314,14 +314,14 @@ const introductionPostType = {
     color: 'bg-primary',
 
     title: 'Voices',
-    content: 'Listen to informative audio and get empowered.',
+    content: 'Get to know your provider before meeting with audio recordings.',
   },
   video: {
-    icon: 'play-circle',
+    icon: 'image-3',
     color: 'bg-secondary',
 
-    title: 'Videos',
-    content: 'Watch fun, educational health and wellness content.',
+    title: 'Images',
+    content: 'Easy to read content for visual learners.',
   }
 }
 

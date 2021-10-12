@@ -13,13 +13,28 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
     {{profile.description}}
   </p>
 
+  <div 
+  *ngIf="profile.socialLink.isAvailable"
+  class="mb-30p"
+  >
+    <div class="d-inline-block">
+      <social-buttons 
+      [data]="profile.socialLink.data" 
+      [size]="32" 
+      [margin]="'narrow'"
+      (clickButton)="countupSocial($event)"
+      ></social-buttons>  
+    </div>
+  
+  </div>
+
   <ng-container *ngIf="profile.isProvider">
     <div class="pt-30p border-top border-line">
       <div class="row">
         <div class="col-12">
           <div class="mb-20p">
             <h6>Fees:</h6>
-            <p>Standard Hourly Fees: $49</p>
+            <p>Standard Hourly Fees: {{profile.priceFull}}</p>
           </div>
     
           <div class="mb-20p">

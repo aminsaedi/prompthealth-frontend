@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { Profile } from 'src/app/models/profile';
 import { ICommentCreateResult } from 'src/app/models/response-data';
 import { ISocialComment, ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
@@ -26,13 +27,9 @@ export class CardItemCommentComponent implements OnInit {
     if(!this.post || !this.post.comments) {
       return null;
     } else {
-      const comments = [];
-      this.post.comments.forEach(c => {
-        if(!c.replyTo) {
-          comments.push(c);
-        }
-      });
-      return comments;
+      return this.post.comments
+        .filter(item => !item.replyTo)
+        .sort((a,b) => (b.createdAt as Date).getTime() - (a.createdAt as Date).getTime() );
     }
   }
 
@@ -40,13 +37,9 @@ export class CardItemCommentComponent implements OnInit {
     if(!this.post || !this.post.comments) {
       return null;
     } else {
-      const replies = [];
-      this.post.comments.forEach(c => {
-        if(c.replyTo == id) {
-          replies.push(c);
-        }
-      });
-      return replies;
+      return this.post.comments
+        .filter(item => item.replyTo == id)
+        .sort((a,b) => (b.createdAt as Date).getTime() - (a.createdAt as Date).getTime() );
     }
   }
 
@@ -69,7 +62,7 @@ export class CardItemCommentComponent implements OnInit {
     let name = null;
     for(let c of this.post.comments) {
       if(c._id == id) {
-        name = c.author.firstName;
+        name = (c.author as Profile).nickname;
         break;
       }
     }
@@ -126,6 +119,8 @@ export class CardItemCommentComponent implements OnInit {
       this._modalService.show('login-menu');
     } else {
       this.f.replyTo.setValue(this.targetCommentIdForReply);
+      this.f.body.setValue((this.f.body.value || '').replace(/(<p><br><\/p>)+$/, ''));
+
       this.isUploading = true;
       this._sharedService.post(this.form.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
         this.isUploading = false;

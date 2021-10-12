@@ -48,28 +48,28 @@ import { NgxStripeModule, StripeService } from 'ngx-stripe';
   exports: [FormAuthComponent],
   providers: [
     StripeService, {
-    provide: 'SocialAuthServiceConfig',
-    useValue: {
-      autoLogin: false,
-      providers: [
-        {
-          id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider(
-            '911768983583-hrth6fagg8em1oc6v6mkcv21bsoac0ar.apps.googleusercontent.com'
-          ),
-        },
-        {
-          id: FacebookLoginProvider.PROVIDER_ID,
-          provider: new FacebookLoginProvider(environment.config.FACEBOOK_APP_ID),
-        }
-        // {
-        //   id: AppleLoginProvider.PROVIDER_ID,
-        //   provider: new AppleLoginProvider(
-        //     environment.config.APPLE_CLIENT_ID
-        //   ),
-        // },
-      ],
-    } as SocialAuthServiceConfig,
-  }]
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              environment.config.GOOGLE_CLIENT_ID
+            ),
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider(environment.config.FACEBOOK_APP_ID),
+          }
+          // {
+          //   id: AppleLoginProvider.PROVIDER_ID,
+          //   provider: new AppleLoginProvider(
+          //     environment.config.APPLE_CLIENT_ID
+          //   ),
+          // },
+        ],
+      } as SocialAuthServiceConfig,
+    }]
 })
 export class AuthModule { }

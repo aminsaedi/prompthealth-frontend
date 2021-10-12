@@ -130,6 +130,7 @@ const routes: Routes = [
   
 
   // { path: 'practitioners/:id', component: DetailComponent }, 
+  {path: 'practitioners/:id', redirectTo: '/community/profile/:id'},
   { path: 'compare-practitioners', component: ListingcompareComponent},
 
   {

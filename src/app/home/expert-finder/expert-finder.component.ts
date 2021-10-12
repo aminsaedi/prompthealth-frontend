@@ -8,7 +8,7 @@ import { ExpertFinderController, FilterFieldName, IExpertFinderFilterParams, IEx
 import { Professional } from 'src/app/models/professional';
 import { IGetPractitionersResult } from 'src/app/models/response-data';
 import { FormItemCheckboxGroupComponent } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
-import { SearchBarComponent } from 'src/app/shared/search-bar/search-bar.component';
+import { SearchBarComponent, SearchKeywords } from 'src/app/shared/search-bar/search-bar.component';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
@@ -234,6 +234,12 @@ export class ExpertFinderComponent implements OnInit {
     const [path, query] = this._modalService.currentPathAndQueryParams;
     this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
     // this.search();
+  }
+
+  onSearchBarSubmitted(e: SearchKeywords) {
+    this.controller.updateFilterByKeywords(e);
+    const [path, query] = this._modalService.currentPathAndQueryParams;
+    this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
   }
   
   onMapZoomChanged(e: number) {

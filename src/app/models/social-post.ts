@@ -85,7 +85,16 @@ export class SocialPostBase implements ISocialPost {
   get contentType() { return this.data.contentType; }
   get status() { return this.data.status || null; }
 
-  get authorName() { return this.data.author ? this.data.author.firstName : ''; } //author name
+  get authorName() { 
+    let name = ''
+    if(this.data.author) {
+      name = [this.data.author.firstName, this.data.author.lastName].join(' ').trim();
+      if(!name) {
+        name = 'User-' + this.authorId.substr(0,5);
+      }
+    }
+    return name;      
+  }
   get authorId(): string { return (typeof this.data.author == 'string') ? this.data.author : this.data.author ?  this.data.author._id : 'noid'; }
   get authorImage() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.profileImage) ? this._s3 + '350x220/' + this.data.author.profileImage : 'assets/img/logo-sm-square.png'}
   get authorVerified() {return (this.data.author && typeof this.data.author != 'string' && this.data.author.verifiedBadge) ? true : false; }
@@ -193,7 +202,7 @@ export interface ISocialComment {
   like?: number;
   blogId?: string;
   authorId?: string;
-  author?: IUserDetail;
+  author?: IUserDetail | Profile;
   replyTo?: string;
   createdAt?: string|Date;
 
@@ -209,10 +218,11 @@ class SocialComment implements ISocialComment {
   get author() { return this._author || {}}
 
   get replyTo() { return this.data.replyTo; }
+  get createdAt(): Date { return new Date(this.data.createdAt as string); }
 
   private _author: Profile;
 
   constructor(private data: ISocialComment) {
-    this._author = new Profile(data.author);
+    this._author = new Profile(data.author as IUserDetail);
   }
 }

@@ -1,35 +1,27 @@
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ISocialPost } from 'src/app/models/social-post';
 
 @Component({
   selector: 'card-item-article',
   templateUrl: './card-item-article.component.html',
-  styleUrls: ['./card-item-article.component.scss']
+  styleUrls: ['./card-item-article.component.scss'],
 })
 export class CardItemArticleComponent implements OnInit {
 
   @Input() post: ISocialPost;
   @Input() shorten: boolean = true;
 
-  @Output() onClickButton = new EventEmitter<string>();
+  public isPopupPostMenuShown = false;
 
   constructor(
-    private _location: Location
+    private _location: Location,
   ) { }
 
   ngOnInit(): void {
   }
 
-  _onClickButton(e: Event, buttonName: string) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.onClickButton.emit(buttonName);
-  }
-
-
   markCurrentPosition() {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
   }
-
 }

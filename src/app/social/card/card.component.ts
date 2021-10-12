@@ -93,17 +93,6 @@ export class CardComponent implements OnInit {
     }
   }
   
-  onClickButton(buttonName: string) {
-    console.log(buttonName);
-    switch(buttonName) {
-      case 'post-menu':
-      case 'calendar-menu':
-      case 'subscribe-menu':
-        this._modalService.show(buttonName, this.post);
-        break;
-    }
-  }
-
   markCurrentPosition() {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
   }

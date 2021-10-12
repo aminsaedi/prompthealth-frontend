@@ -1,6 +1,7 @@
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { Params } from "@angular/router";
 import { priceRange } from "../shared/form-item-pricing/form-item-pricing.component";
+import { SearchKeywords } from "../shared/search-bar/search-bar.component";
 import { GeoLocationType } from "../shared/services/user-location.service";
 import { locations } from "../_helpers/location-data";
 import { findAbbrByFullnameOf, findFullnameByAbbrOf } from "../_helpers/questionnaire-answer-map";
@@ -162,9 +163,19 @@ export class ExpertFinderController {
     this.checkIfFilterApplied();
   }
 
-  updateFilter(id: FilterFieldName, data: string[] | boolean | number) {
+  updateFilter(id: FilterFieldName, data: string[] | boolean | number | string) {
     this['_' + id] = data;
     this.checkIfFilterApplied();
+  }
+
+  updateFilterByKeywords(keywords: SearchKeywords) {
+    this._keyword = keywords.searchBySituation;
+    this._keyloc = keywords.searchByLocation;
+    if(keywords.searchByArea) {
+      const area = locations[keywords.searchByArea];
+      this._keyloc = null;
+      this.updateFilterByMap({lat: area.lat, lng: area.lng, zoom: area.zoom, dist: area.distance});
+    }
   }
 
   updateFilterByUserLocation(location: GeoLocationType) {
@@ -181,7 +192,6 @@ export class ExpertFinderController {
 
     let [lng, lat] = [0,0]
     this.professionalsAll.forEach(p => {
-      console.log(p.location);
       lng += p.location[0];
       lat += p.location[1];
     });
@@ -396,7 +406,7 @@ export class ExpertFinderController {
 export type FilterFieldName = 
   'gender' | 'languageId' | 'serviceOfferIds' | 'typical_hours' | 'price_per_hours' | 'age_range' | 'services' | //string[]
   'rating' | 'lat' | 'lng' | 'zoom' | 'dist' |  // number
-  'keyword' | // string
+  'keyword' | 'keyloc' | // string
   'virtual'; // boolean
 
 interface IOptionExpertFinderController {

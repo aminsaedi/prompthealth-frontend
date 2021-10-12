@@ -112,9 +112,15 @@ export class Professional extends Profile implements IProfessional{
 
   get price() { return (this._priceRange.length >= 1) ? `$${this._priceRange[0]}+ / hr` : null; }
   get priceFull() { return (this._priceRange.length === 0) ? 'N/A' : '$' + this._priceRange.join(' - '); }
-  get website() { return this.p.website; }
+  get website() { 
+    //some legacy users have link without http prefix. if so, add it.
+    return (this.p.website && !this.p.website.match(/^http/)) ? 'http://' + this.p.website : this.p.website || null;
+  }
   get websiteLabel() { return this.getURLLabel(this.p.website); }
-  get bookingUrl() { return this.p.bookingURL || null; }
+  get bookingUrl() { 
+    //some legacy users have bookingURL without http prefix. if so, add it.
+    return (this.p.bookingURL && !this.p.bookingURL.match(/^http/)) ? 'http://' + this.p.bookingURL : this.p.bookingURL || null;
+  }
   get organization() { return this.p.professional_organization || null; }
   get certification() { return this.p.certification; }
   get yearsOfExperience() { return this.p.years_of_experience || null; }
@@ -208,7 +214,8 @@ export class Professional extends Profile implements IProfessional{
 
   getURLLabel(url: string = ''){
     let label = ''
-    const match = url.match(/https?:\/\/(?:www\.)?([^/]+)/);
+    // some legacy users have url without http prefix. it's better http:// is optional here.
+    const match = url.match(/(?:https?:\/\/)?(?:www\.)?([^/]+)/);
     if(url && match){ label = match[1]; }
     return label;
   }
