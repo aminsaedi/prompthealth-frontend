@@ -100,13 +100,14 @@ export class RegisterQuestionnaireComponent implements OnInit {
           try {
             const monthly = (this._uService.sessionStorage.getItem('selectedMonthly') === 'true') ? true : false;
             const result = await this._sharedService.checkoutPlan(user, plan, 'default', monthly);
-            this._toastr.success(result.message);
             switch(result.nextAction) {
               case 'complete':
-                this._router.navigate(['/dashboard/register-product/complete']);
+                this._router.navigate(['/community']);
+                this._toastr.success('Thank you for joining us. You can always upgrade your plan!');
                 break;
               case 'stripe':
                 //automatically redirect to stripe. nothing to do.
+                this._toastr.success(result.message);
                 break;
             }
           } catch(error) {
