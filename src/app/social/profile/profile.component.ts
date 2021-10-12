@@ -81,7 +81,7 @@ export class ProfileComponent implements OnInit {
   private subscriptionLoginStatus: Subscription;
 
   @ViewChild(FormItemDatetimeComponent) private formDateTimeComponent: FormItemDatetimeComponent;
-  @ViewChild('#modalBooking') private modalBooking: ModalComponent;
+  @ViewChild('modalBooking') private modalBooking: ModalComponent;
   @ViewChild('recommendationCarousel') private recommendationCarousel: ElementRef;
 
   constructor(
@@ -470,6 +470,10 @@ export class ProfileComponent implements OnInit {
         ...this.formBooking.value,
       };
 
+      console.log(this.modalBooking);
+
+      this.modalBooking.hide();
+      return;
       data.phone = data.phone.toString();
       data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
       this.isBookingLoading = true;
