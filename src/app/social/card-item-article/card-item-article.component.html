@@ -47,4 +47,5 @@
 <h2 
 class="h4"
 [ngClass]="{'clamp-1line': shorten}"
->{{post.title}}</h2>
+[innerHTML]="post.title"
+></h2>

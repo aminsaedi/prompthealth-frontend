@@ -6,7 +6,8 @@
   <h2
   class="h4 mb-0"
   [ngClass]="{'clamp-1line': shorten}"
-  >{{post.title}}</h2>
+  [innerHTML]="post.title"
+  ></h2>
   
   <popup-post-menu [post]="post"></popup-post-menu>
 </div>
