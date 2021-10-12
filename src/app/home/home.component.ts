@@ -277,7 +277,8 @@ const appFeatureItems = [
     {
       icon: 'tags-2-outline',
       title: 'Safe & Secure.',
-      content: 'Your privacy and security is ensured. PIPEDA/HIPPA approved.',
+      content: 'Your privacy and security is ensured.',
+      // content: 'Your privacy and security is ensured. PIPEDA/HIPPA approved.',
     },
     {
       icon: 'shield-check-outline',
