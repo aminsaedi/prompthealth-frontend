@@ -18,9 +18,9 @@ import { RegisterPartnerGeneralComponent } from './register-partner-general/regi
 import { RegisterPartnerServiceComponent } from './register-partner-service/register-partner-service.component';
 import { RegisterPartnerOfferComponent } from './register-partner-offer/register-partner-offer.component';
 import { RegisterPartnerTermComponent } from './register-partner-term/register-partner-term.component';
-import { RegisterQuestionnaireCompleteComponent } from './register-questionnaire-complete/register-questionnaire-complete.component';
+// import { RegisterQuestionnaireCompleteComponent } from './register-questionnaire-complete/register-questionnaire-complete.component';
 import { RegisterQuestionnaireGuard } from './register-questionnaire.guard';
-import { RegisterQuestionnaireCompleteGuard } from './register-questionnaire-complete.guard';
+// import { RegisterQuestionnaireCompleteGuard } from './register-questionnaire-complete.guard';
 import { AuthGuardService as AuthGuard } from '../auth/auth-gaurd.service';
 // import { UserQuestionnaireItemSelectComponent } from './user-questionnaire-item-select/user-questionnaire-item-select.component';
 // import { UserQuestionnaireItemSelectMultipleComponent } from './user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component';
@@ -149,7 +149,8 @@ const routes: Routes = [
   },
   {
     path: 'register-product/complete',
-    component: RegisterQuestionnaireCompleteComponent,
+    redirectTo: '/community',
+    // component: RegisterQuestionnaireCompleteComponent,
     // canActivate: [RegisterQuestionnaireCompleteGuard,],
   },
 

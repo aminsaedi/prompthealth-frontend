@@ -695,10 +695,10 @@ export class SharedService {
 type StripeCheckoutType = 'default' | 'addon';
 
 interface ICheckoutPlanOption {
-  cancelUrl?: string;
-  successUrl?: string;
-  showSuccessMessage?: boolean;
-  showErrorMessage?: boolean;
+  cancelUrl?: string; // default: '/plans' || '/plans/product'
+  successUrl?: string; // default: '/community'
+  showSuccessMessage?: boolean; // default true
+  showErrorMessage?: boolean; // default true
 }
 
 class CheckoutPlanOption implements ICheckoutPlanOption {
@@ -711,7 +711,7 @@ class CheckoutPlanOption implements ICheckoutPlanOption {
 
   /** currently, practitioner complete page url is same as product complete page. */
   get successUrl() {
-    const url = location.origin + (this.data.successUrl ? this.data.successUrl : '/dashboard/register-product/complete');
+    const url = location.origin + (this.data.successUrl ? this.data.successUrl : '/community');
     return url + (this._showSuccessMessage ? '?action=stripe-success' : '');
   }
 
