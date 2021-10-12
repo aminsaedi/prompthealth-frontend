@@ -190,7 +190,7 @@ export class FormAuthComponent implements OnInit, OnChanges {
     this._bs.setUserData(userinfo);
 
     this.isSubmitted = false;
-    let toastrMessage = 'Welcome!';
+    let toastrMessage = null;
     this._sharedService.requestPermission(userinfo);
     // this._ms.receiveMessage();
     if (!this.staySamePage) {
@@ -232,7 +232,9 @@ export class FormAuthComponent implements OnInit, OnChanges {
     }
 
     this.changeState.emit('done');
-    this._toastr.success(toastrMessage);
+    if(toastrMessage) {
+      this._toastr.success(toastrMessage);
+    }
   }
 }
 
