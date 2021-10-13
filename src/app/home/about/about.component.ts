@@ -151,7 +151,7 @@ const teamData = [
   },
   {
     name: 'Jersey Flores',
-    title: 'Customer success coordinator',
+    title: 'Customer Success Coordinator',
     image: 'jersey.jpg',
     content: 'Jersey recentetly joined PromptHealth as a Marketing and Communications student with a passion for healthy practices and bringing out each individual\'s best potential.',
   },  
