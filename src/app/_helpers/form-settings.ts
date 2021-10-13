@@ -100,6 +100,24 @@ const validatorPatternDateTime = (): ValidatorFn => {
   };
 };
 
+const validatorCompareBookingDateTime = (): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    const regex = new RegExp(pattern.datetime);
+    if (formControl.value && formControl.value.match(regex)) {
+      const now = new Date();
+      const start = formatStringToDate(formControl.value);
+
+      if (now.getTime() >= start.getTime()) {
+        return { bookingDateTimeLaterThanNow: true };
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  };
+};
+
 const validatorComparePostEventStartTime = (): ValidatorFn => {
   return function validate(formControl: FormControl) {
     const regex = new RegExp(pattern.datetime);
@@ -250,7 +268,7 @@ export const validators = {
   bookingName: validatorFirstNameClient,
   bookingEmail: validatorEmail,
   bookingPhone: [Validators.pattern(pattern.phone), Validators.minLength(minmax.phoneMin), Validators.maxLength(minmax.phoneMax), Validators.required],
-  bookingDateTime: [validatorPatternDateTime(), validatorComparePostEventStartTime(), Validators.required],
+  bookingDateTime: [validatorPatternDateTime(), validatorCompareBookingDateTime(), Validators.required],
   bookingNote: [Validators.maxLength(minmax.bookingNoteMax)],
 
   /** contact form */
