@@ -4,8 +4,12 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
+import { ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { formatDateToString } from 'src/app/_helpers/date-formatter';
 import { SharedService } from '../../../shared/services/shared.service';
+import { validators } from '../../../_helpers/form-settings';
 
 @Component({
   selector: 'app-my-booking',
@@ -13,6 +17,9 @@ import { SharedService } from '../../../shared/services/shared.service';
   styleUrls: ['./my-booking.component.scss']
 })
 export class MyBookingComponent implements OnInit {
+
+  get selectedBooking() { return this._modalService.data; }
+
   @ViewChild('closebutton') closebutton;
   @ViewChild('closeRatingbutton') closeRatingbutton;
   @ViewChild('reviewModal') reviewModal: ElementRef;
@@ -25,8 +32,13 @@ export class MyBookingComponent implements OnInit {
   public totalItems: number;
   public itemsPerPage = 10;
   public minDateTime: DateTimeData;
+  public isBookingRescheduleLoading: boolean = false;
+  public isBookingRatingLoading: boolean = false;
 
   @ViewChild(FormItemDatetimeComponent) formDateTimeComponent: FormItemDatetimeComponent;
+  @ViewChild(ModalComponent) private modalBookingReschedule: ModalComponent;
+  @ViewChild(ModalComponent) private modalBookingRating: ModalComponent;
+
   timingList = [
     { id: 'timing1', name: 'Morning' },
     { id: 'timing2', name: 'Afternoon' },
@@ -49,6 +61,7 @@ export class MyBookingComponent implements OnInit {
     private formBuilder: FormBuilder,
     private _router: Router,
     private _uService: UniversalService,  
+    private _modalService: ModalService,
   ) { }
 
   get f() { return this.bookingForm.controls; }
@@ -67,8 +80,7 @@ export class MyBookingComponent implements OnInit {
     };
 
     this.bookingForm = this.formBuilder.group({
-      // timing: new FormControl('', [Validators.required]),
-      bookingDateTime: new FormControl('', [Validators.required]),
+      bookingDateTime: new FormControl('', validators.bookingDateTime),
     });
     this.getBookingList();
   }
@@ -147,14 +159,15 @@ export class MyBookingComponent implements OnInit {
     this.timingSelectedValue = evt.target.value;
   }
 
-  rescheduleBooking(id) {
-    this.slectedBookingId = id;
+  rescheduleBooking(data: any) {
+    this._modalService.show('booking-reschedule', data);
+    const datetime = new Date(data.bookingDateTime);
+    this.f.bookingDateTime.setValue(formatDateToString(datetime));
   }
-  rescheduleBookingApi() {
-    console.log(this.bookingForm);
-    this.submitted = true;
+  onSubmitBookingReschedule() {
     this.submitted = true;
     if (this.bookingForm.invalid) {
+      this.toastr.error('There is an error that requires your attention.');
       return;
     }
     else {
@@ -162,28 +175,32 @@ export class MyBookingComponent implements OnInit {
         ...this.bookingForm.value,
       }
       let data = {
-        'id': this.slectedBookingId,
+        'id': this.selectedBooking._id,
         ...formData,
       };
       // data.timing = this.timingSelectedValue;
       data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
       // data.bookingDateTime = data.bookingDateTime.toString();
-      this._sharedService.loader('show');
+ 
       const path = `/booking/rescheduleBooking`
+      this.isBookingRescheduleLoading = true;
       this._sharedService.put(data, path).subscribe((res: any) => {
-        this._sharedService.loader('hide');
+        this.isBookingRescheduleLoading = false;
+        this.modalBookingReschedule.hide();
+  
         if (res.statusCode === 200) {
-          this.toastr.success(res.message);
-
+          this.toastr.success('Rescheduled booking. Please wait client\'s response');
           this.getBookingList();
-          this.closebutton.nativeElement.click();
         }
 
         else {
-          this._sharedService.showAlert(res.message, 'alert-danger');
+          this.toastr.error('Could not reschedule booking. Please try later');
+          console.log(res.message);
         }
       }, (error) => {
-        this._sharedService.loader('hide');
+        this.toastr.error('Could not reschedule booking. Please try later');
+        this.isBookingRescheduleLoading = false;
+        console.log(error);
       });
     }
   }
@@ -191,34 +208,37 @@ export class MyBookingComponent implements OnInit {
   ratingComponentClick(clickObj: any): void {
     this.ratingClicked = clickObj.rating
   }
-  showReviewModal(bookid) {
-    this.ratingPayload['drId'] = bookid.drId._id;
-    this.ratingPayload['bookingId'] = bookid._id;
+  showReviewModal(booking) {
+    this._modalService.show('booking-rating', booking)
   }
   submitRating() {
     this.ratingSubmited = true;
     const payload = {
-      ...this.ratingPayload,
+      drId: this.selectedBooking.drId._id,
+      bookingId: this.selectedBooking._id,
       userId: this.userId,
       rating: this.ratingClicked,
       review: this.review
     }
-    this._sharedService.loader('show');
     const path = decodeURI('user/add-rating/');
+    this.isBookingRatingLoading = true;
     this._sharedService.post(payload, path).subscribe((res: any) => {
-      this._sharedService.loader('hide');
+      this.isBookingRatingLoading = false;
+      
       if (res.statusCode === 200) {
         this.toastr.success(res.message);
+        this.modalBookingRating.hide();
 
         this.getBookingList();
-
-        this.closeRatingbutton.nativeElement.click();
       } else {
+        console.log(res.message);
         this.toastr.error(res.message);
 
       }
     }, err => {
-      this._sharedService.loader('hide');
+      this.isBookingRatingLoading = false;
+      this.toastr.error('Could not upload your review. Please try again');
+      console.log(err);
     });
   }
 }

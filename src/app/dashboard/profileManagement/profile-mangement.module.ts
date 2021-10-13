@@ -6,6 +6,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AgmCoreModule } from '@agm/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import 'rxjs';
 
@@ -70,6 +71,7 @@ import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
       libraries: ['places']
     }),
     ModalModule.forRoot(),
+    TabsModule.forRoot(),
     NgxPaginationModule, NgxSpinnerModule,
     SharedModule, NgxDatatableModule,
     CommonModule, ProfileManagementRoutingModule, ReactiveFormsModule, FormsModule, 

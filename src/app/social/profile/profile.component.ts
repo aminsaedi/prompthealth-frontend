@@ -470,10 +470,6 @@ export class ProfileComponent implements OnInit {
         ...this.formBooking.value,
       };
 
-      console.log(this.modalBooking);
-
-      this.modalBooking.hide();
-      return;
       data.phone = data.phone.toString();
       data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
       this.isBookingLoading = true;

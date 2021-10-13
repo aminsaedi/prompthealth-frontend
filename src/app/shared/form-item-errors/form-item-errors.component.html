@@ -11,6 +11,9 @@
   <li *ngIf="controller.errors.matchPatternDateTime">
     Date time is invalid. Please use calendar to select date time.
   </li>
+  <li *ngIf="controller.errors.bookingDateTimeLaterThanNow">
+    Booking date time must be later than current time.
+  </li>
   <li *ngIf="controller.errors.eventStartTimeLaterThanNow">
     Start time must be later than current time.
   </li>
