@@ -149,6 +149,12 @@ const teamData = [
     image: 'jaden.png',
     content: 'Jaden joined the team in May, with a background in social media and marketing, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue her passion for marketing and making health services more accessible. Working at PromptHealth means a lot to her, as she feels strongly about the value that PromptHealth can bring to people.'
   },
+  {
+    name: 'Jersey Flores',
+    title: 'Customer Success Coordinator',
+    image: 'jersey.jpg',
+    content: 'Jersey recentetly joined PromptHealth as a Marketing and Communications student with a passion for healthy practices and bringing out each individual\'s best potential.',
+  },  
   // {
   //   name: 'Leah King',
   //   title: 'Digital Marketing and Communications Manager',
