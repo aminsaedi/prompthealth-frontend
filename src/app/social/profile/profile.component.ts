@@ -296,7 +296,7 @@ export class ProfileComponent implements OnInit {
           this.profile.setTeam(res.data.center);
           resolve();
         } else {
-          console.log(res.message);
+          // console.log(res.message);
           resolve();
         }
       }, error => {

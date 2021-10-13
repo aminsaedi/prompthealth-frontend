@@ -26,7 +26,7 @@ export class SitemapComponent implements OnInit {
         if(fragment == 'type-of-provider' && this.typeOfProvider && this.typeOfProvider.nativeElement) {
           const el: HTMLAnchorElement = this.typeOfProvider.nativeElement;
           const elTop = el.getBoundingClientRect().top;
-          console.log(elTop)
+          // console.log(elTop)
           smoothWindowScrollTo(elTop);
         }          
       }, 100);
