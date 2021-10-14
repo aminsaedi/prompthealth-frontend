@@ -136,7 +136,7 @@ type UserType = 'client' | 'practitioner' | 'provider' | 'centre' | 'product';
 const planMenuData = [
   {
     title: 'Providers',
-    text: 'Celine Spino loves to cook and dine out. But a few years ago',
+    text: 'List your practice, get discovered by potential clients, and network within the local health and wellness community.',
     link: '/plans',
     icon: 'verified',
   }, {

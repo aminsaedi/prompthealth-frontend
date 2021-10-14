@@ -1,0 +1,39 @@
+<card-new-promo
+*ngIf="user"
+></card-new-promo>
+
+<div *ngIf="posts">
+  <ng-container *ngFor="let p of posts; let i = index">
+    <div 
+    class="mb-15p" 
+    [@fade]
+    >
+      <card 
+      class="pointer-events: initial;"
+      [post]="p" 
+      [shorten]="true"
+      [option]="{showLinkToDetail: true}"
+      ></card>
+    </div>
+  
+    <!-- <div *ngIf="p && i == 1" class="mb-15p">
+        <card-subscribe></card-subscribe>
+    </div> -->
+  </ng-container>
+  
+  <ng-container *ngIf="posts && posts.length == 0">
+    <div class="mb-15p subtitle1 text-body">
+      No contents found...<br>
+      Please try again later.
+    </div>
+  </ng-container>
+</div>
+
+
+<div 
+*ngIf="!profile || !posts"
+class="mt-30p text-center"
+>
+  <loader></loader>
+</div>
+

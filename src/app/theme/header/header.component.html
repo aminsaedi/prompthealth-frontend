@@ -12,18 +12,18 @@
           <li class="mx-15p d-none d-lg-block">
             <a routerLink="/practitioners" class="text-body">Find Practitioners</a>
           </li>
-          <!-- <li class="mx-15p d-none d-lg-block">
+          <li class="mx-15p d-none d-lg-block">
             <a routerLink="/products" class="text-body">Products</a>
-          </li> -->
+          </li>
           <li class="mx-10p d-none d-lg-block">
             <a routerLink="/about" class="text-body">About</a>
           </li>
 
-          <li class="mx-10p d-none d-lg-block">
+          <!-- <li class="mx-10p d-none d-lg-block">
             <a routerLink="/plans" class="text-body">Get Listed</a>
-          </li>
+          </li> -->
 
-          <!-- <li class="mx-15p d-none d-lg-block position-relative" (clickOutside)="hidePlanMenu()">
+          <li class="mx-15p d-none d-lg-block position-relative" (clickOutside)="hidePlanMenu()">
             <a class="text-body" (click)="onClickGetListed()">Get listed</a>
             <i iconPh="chevron-down" class="ml-5p"></i>
             <div 
@@ -48,7 +48,7 @@
                 </div>
               </a>
             </div>
-          </li> -->
+          </li>
 
           <li *ngIf="!isLoggedIn" class="mx-15p d-none d-lg-block">
             <a routerLink="/auth/login" class="text-body">Login</a>
@@ -109,15 +109,15 @@
           <div class="subtitle1">About</div>
         </list-item>
 
-        <!-- <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/products')">
+        <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/products')">
           <div class="subtitle1">Products/Services</div>  
-        </list-item> -->
-
-        <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/plans')">
-          <div class="subtitle1">Get Listed</div>
         </list-item>
 
-        <!-- <list-item action="chevron-down" (onTap)="onClickGetListed()">
+        <!-- <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/plans')">
+          <div class="subtitle1">Get Listed</div>
+        </list-item> -->
+
+        <list-item action="chevron-down" (onTap)="onClickGetListed()">
           <div class="subtitle1">Get listed</div>  
         </list-item>
 
@@ -136,7 +136,7 @@
             </div>
             <p class="mb-0 body2">{{item.text}}</p>
           </list-item>
-        </div> -->
+        </div>
 
         <list-item *ngIf="!isLoggedIn">
           <div>

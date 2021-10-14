@@ -114,7 +114,7 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'plans', component: AboutPractitionerComponent },
   // { path: 'plans', component: SubscriptionPlanComponent },
-  // { path: 'plans/product', component: AboutProductComponent },
+  { path: 'plans/product', component: AboutProductComponent },
   { path: 'subscriptionplan', redirectTo: '/plans'},
 
   { path: 'practitioners', component: ExpertFinderComponent },

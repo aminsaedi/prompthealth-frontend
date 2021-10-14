@@ -545,7 +545,7 @@ const profileMenusForProvider: IProfileMenuItem[] = [
 
 const profileMenusForCompany: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
-  {id: 'promotion', label: 'Discounts', relativeLink: 'promotion', },
+  {id: 'discount', label: 'Discounts', relativeLink: 'discount', },
   {id: 'review', label: 'Recommendation', relativeLink: 'review', },
 ];
 

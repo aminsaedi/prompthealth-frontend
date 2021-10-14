@@ -1,0 +1,28 @@
+<div 
+*ngIf="isEditorFocused"
+class="overlay"
+(click)="blurEditor()"
+></div>
+
+<div 
+class="rounded-8p bg-white body1 text-body mb-15p"
+[ngClass]="{focused: isEditorFocused}"
+>
+  <form (ngSubmit)="onSubmit()">
+    <div class="d-flex p-20p border-bottom border-line">
+      <profile-image [image]="userImage"></profile-image>
+      <div class="flex-grow-1 ml-10p"
+      scrollDetector
+      offset="200"
+      (detect)="blurEditor()"
+      #editor
+      >
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between p-20p">
+      <div class="d-flex"></div>
+      <button class="btn btn-primary small">Share</button>
+    </div>
+  </form>
+</div>
