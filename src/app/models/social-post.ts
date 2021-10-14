@@ -136,7 +136,7 @@ export class SocialPostBase implements ISocialPost {
 
   constructor(protected data: ISocialPost) {
     const desc = data.description || '';
-    this._summary = desc.replace(/<\/?[^>]+(>|$)/g, '').replace(/\s{2,}/, " ");
+    this._summary = desc.replace(/<\/?[^>]+(>|$)/g, ' ').replace(/\s{2,}/, " ").trim();
   }
 
   setSanitizedDescription(d: SafeHtml) {
