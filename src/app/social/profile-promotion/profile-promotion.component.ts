@@ -12,12 +12,12 @@ import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animati
 import { SocialService } from '../social.service';
 
 @Component({
-  selector: 'app-profile-discount',
-  templateUrl: './profile-discount.component.html',
-  styleUrls: ['./profile-discount.component.scss'],
+  selector: 'app-profile-promotion',
+  templateUrl: './profile-promotion.component.html',
+  styleUrls: ['./profile-promotion.component.scss'],
   animations: [fadeAnimation, expandVerticalAnimation],
 })
-export class ProfileDiscountComponent implements OnInit {
+export class ProfilePromotionComponent implements OnInit {
 
   get profile() { return this._socialService.selectedProfile; }
   get user() { return this._profileService.profile; }

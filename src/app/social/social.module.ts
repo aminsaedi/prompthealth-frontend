@@ -46,7 +46,7 @@ import { NewReferralComponent } from './new-referral/new-referral.component';
 import { GuardIfNotProfileSelectedGuard } from './guard-if-not-profile-selected.guard';
 import { GuardIfNewReferralIncompletedGuard } from '../guard-if-new-referral-incompleted.guard';
 import { PopupPostMenuComponent } from './popup-post-menu/popup-post-menu.component';
-import { ProfileDiscountComponent } from './profile-discount/profile-discount.component';
+import { ProfilePromotionComponent } from './profile-promotion/profile-promotion.component';
 import { CardNewPromoComponent } from './card-new-promo/card-new-promo.component';
 
 
@@ -56,7 +56,7 @@ const routes: Routes = [
       { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
       { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
       { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
-      { path: 'promotion', component: ProfileDiscountComponent, data: {order: 3}, canDeactivate: [GuardIfEditorLockedGuard] },
+      { path: 'promotion', component: ProfilePromotionComponent, data: {order: 3}, canDeactivate: [GuardIfEditorLockedGuard] },
       { path: 'event', component: ProfileFeedComponent, data: {order: 4, contentType: 'event'} },
       { path: 'review', component: ProfileReviewComponent, data: {order: 5} },
     ] },
@@ -129,7 +129,7 @@ const routes: Routes = [
     ProfileFollowListComponent,
     NewReferralComponent,
     PopupPostMenuComponent,
-    ProfileDiscountComponent,
+    ProfilePromotionComponent,
     CardNewPromoComponent,
   ],
   providers: [
