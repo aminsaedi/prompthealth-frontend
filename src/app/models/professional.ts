@@ -4,6 +4,7 @@ import { IUserDetail, IVideo } from './user-detail';
 import { IProfile, Profile } from './profile';
 import { ReviewData } from './review-data';
 import { IReferral, Referral } from './referral';
+import { ISocialPost } from './social-post';
 
 export interface IProfessional extends IProfile {
   id: IProfessional['_id']; /** old name (changed to _id) */
@@ -45,7 +46,6 @@ export interface IProfessional extends IProfile {
   recommendations: Referral[];
   recommendationsPreview: Referral[];
 
-
   team: Professional;
   staffs: Professional[];
   amenity: ImageViewerData; /** all amenities data */
@@ -82,6 +82,7 @@ export interface IProfessional extends IProfile {
   triedFetchingProduct: boolean;
   triedFetchingStaffs: boolean;
   triedFetchingTeam: boolean;
+
   eligibleFeatureStaffs: boolean;
   eligibleFeatureRecommendation: boolean;
 }
@@ -260,16 +261,15 @@ export class Professional extends Profile implements IProfessional{
   constructor(id: string, protected p: IUserDetail, private ans?: any) {
     super({...p, _id: id});
 
-    let phone: string;
-    if (!p.phone) {
-      phone = null;
-    } else if (p.phone.length === 0) {
-      phone = null;
-    } else if (p.phone.length === 10) {
-      phone = `(${p.phone.slice(0, 3)}) ${p.phone.slice(3, 6)}-${p.phone.slice(6)}`;
+    let phone: string = p.phone || '';
+    phone = phone.replace(/[^0-9\+]/g, '');
+
+    if (phone.length === 10) {
+      phone = `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`;
     } else {
       phone = p.phone;
     }
+
     this._phone = phone;
 
     let priceRange: string = p.exactPricing ? p.exactPricing.toString() : (p.price_per_hours || '');

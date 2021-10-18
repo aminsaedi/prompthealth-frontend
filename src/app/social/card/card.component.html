@@ -28,53 +28,39 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
 
 <ng-template #clickableArea>
   <div>
-    <card-item-note 
-    *ngIf="post.isNote" 
-    [post]="post" 
-    [shorten]="shorten"
-    ></card-item-note>
+    <ng-container *ngIf="post.isNote">
+      <card-item-note  
+      [post]="post" 
+      [shorten]="shorten"
+      ></card-item-note>
+    </ng-container>
+
+    <ng-container *ngIf="post.isEvent">
+      <card-item-event 
+      [post]="post" 
+      [shorten]="shorten"
+      ></card-item-event>  
+    </ng-container>
     
-    <card-item-event 
-    *ngIf="post.isEvent" 
-    [post]="post" 
-    [shorten]="shorten"
-    ></card-item-event>
+    <ng-container *ngIf="post.isArticle">
+      <card-item-article 
+      [post]="post" 
+      [shorten]="shorten"
+      ></card-item-article>  
+    </ng-container>
 
-    <card-item-article 
-    *ngIf="post.isArticle" 
-    [post]="post" 
-    [shorten]="shorten"
-    ></card-item-article>
+    <ng-container *ngIf="post.isPromo">
+      <card-item-promo
+      [post]="post" 
+      [shorten]="shorten"
+      ></card-item-promo>
+    </ng-container>
 
-    <div class="mb-10p">
-      <div #content
-      class="post-content"
-      [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
-      [innerHTML]="post.descriptionSanitized"
-      ></div>
-    </div>
-
-    <ul 
-    class="list-unstyled mb-10p" 
-    *ngIf="images"
-    >
-      <li 
-      *ngFor="let image of images" 
-      [ngClass]="shorten ? 'image-container-40pc rounded-12p overflow-hidden' : 'image-container'"
-      >
-        <img [src]="image" alt="">
-      </li>
-    </ul>
-
-    <div *ngIf="voice">
-      <audio-player [src]="voice"></audio-player>
-    </div>
-
+    <!-- topics -->
     <div
     *ngIf="post.tags && !shorten && topics"
     class="mt-20p mb-10p"
     >
-      <!-- <h6 class="subtitle1 mb-5p">Topics</h6> -->
       <div class="mb-0 list-unstyled topics">
         <ng-container *ngFor="let item of topics">
           <a

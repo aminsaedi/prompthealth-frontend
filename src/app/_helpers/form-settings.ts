@@ -15,6 +15,7 @@ export const minmax = {
   bookingNoteMax: 500,
   referralMin: 10,
   referralMax: 500,
+  promoCodeMax: 30,
 };
 
 
@@ -91,6 +92,18 @@ const validatorPatternPassword = (): ValidatorFn => {
 const validatorPatternDateTime = (): ValidatorFn => {
   return function validate(formControl: FormControl) {
     const regex = new RegExp(pattern.datetime);
+    if (!formControl.value || formControl.value.match(regex)) {
+      return null;
+    } else {
+      const errors = { matchPatternDateTime: true };
+      return errors;
+    }
+  };
+};
+
+const validatorPatternDate = (): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    const regex = new RegExp(pattern.date);
     if (!formControl.value || formControl.value.match(regex)) {
       return null;
     } else {
@@ -298,4 +311,7 @@ export const validators = {
   comment: [Validators.required],
   note: [validatorNoteHasAtLeastOneField()],
   referral: [Validators.required, Validators.maxLength(minmax.referralMax), Validators.minLength(minmax.referralMin)],
+
+  promoCode: [Validators.maxLength(minmax.promoCodeMax)],
+  promoExpireDate: [validatorPatternDate()],
 }

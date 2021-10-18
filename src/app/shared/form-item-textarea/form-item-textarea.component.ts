@@ -20,21 +20,26 @@ export class FormItemTextareaComponent implements OnInit {
   @Input() option: ITextareaOption = {};
 
   public rows: number;
+  public _option: TextareaOption;
 
   constructor() { }
 
   ngOnInit(): void {
-    const option = new TextareaOption(this.option);
-    this.rows = option.rows;
+    this._option = new TextareaOption(this.option);
+    this.rows = this._option.rows;
   }
 }
 
 interface ITextareaOption {
   rows?: number;
+  transparent?: boolean;
+  paddingZero?: boolean;
 }
 
 class TextareaOption implements ITextareaOption{
   get rows() { return this.data.rows || 3; }
+  get transparent() { return this.data.transparent || false; }
+  get paddingZero() { return this.data.paddingZero || false; }
 
   constructor(private data: ITextareaOption = {}) {}
 }

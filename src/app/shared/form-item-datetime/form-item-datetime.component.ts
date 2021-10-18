@@ -14,6 +14,8 @@ export class FormItemDatetimeComponent implements OnInit {
 
   @Input() controller: FormControl;
   @Input() minDateTime: DateTimeData;
+  @Input() placeholder: string = 'yyyy-mm-dd HH:MM'
+  @Input() dateOnly: boolean = false;
 
   @Input() stepMinute = 15;
   @Input() stepHour = 1;
@@ -53,9 +55,9 @@ export class FormItemDatetimeComponent implements OnInit {
   initDateTimePicker() {
     /** update using current controller value */
     const datetime = 
-    this.controller.value ? formatStringToDate(this.controller.value) :
-    this.minDateTime ? formatDateTimeDataToDate(this.minDateTime) :
-    new Date();
+      this.controller.value && formatStringToDate(this.controller.value) ? formatStringToDate(this.controller.value) :
+      this.minDateTime ? formatDateTimeDataToDate(this.minDateTime) :
+      new Date();
 
     this.form = { 
       ...{ date: datetime }, 
@@ -69,7 +71,7 @@ export class FormItemDatetimeComponent implements OnInit {
     const time: Date = this.form.time;
     const datetime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
 
-    this.controller.setValue(formatDateToString(datetime));
+    this.controller.setValue(formatDateToString(datetime, this.dateOnly));
     if (emit) {
       this.changeValue.emit(datetime);
     }

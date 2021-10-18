@@ -38,3 +38,15 @@
     box-shadow: 0 0 0 1.5px $colorSuccess;
   }
 }
+
+.form-control.padding-zero {
+  padding: 0!important;
+}
+
+.form-control.transparent {
+  border-color: transparent!important;
+  background-color: transparent!important;
+  &:focus {
+    box-shadow: none;
+  }
+}

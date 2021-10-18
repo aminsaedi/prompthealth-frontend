@@ -48,6 +48,7 @@ export interface ISocialPost {
   isNote?: boolean;
   isArticle?: boolean;
   isEvent?: boolean;
+  isPromo?: boolean;
   isMoreShown?: boolean;
   isLiked?: boolean;
   isBookmarked?: boolean;
@@ -76,6 +77,14 @@ export interface ISocialPost {
   isVirtual?: boolean;
   venue?: string;
   setSanitizedDescription?(s: SafeHtml): void;
+
+  /** SocialPromo */
+  availableUntil?: string | Date;
+  promo?: string;
+  isAvailable?: boolean;
+  code?: string;
+
+  decode?(): ISocialPost;
 
 }
 
@@ -113,6 +122,7 @@ export class SocialPostBase implements ISocialPost {
   get isNote() { return this.contentType == 'NOTE'; }
   get isArticle() { return this.contentType == 'ARTICLE'; }
   get isEvent() { return this.contentType == 'EVENT'; }
+  get isPromo() { return this.contentType == 'PROMO'; }
 
   get isLiked() { return !!this.data.liked; }
 
@@ -193,6 +203,10 @@ export class SocialPostBase implements ISocialPost {
       imageType = match ? ('image/' + match[1]) : '';  
     }
     return imageType;
+  }
+
+  decode() {
+    return this.data;
   }
 }
 

@@ -21,7 +21,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class ListComponent implements OnInit {
 
-  get isEligibleToPost() { return (this.user && this.user.role != 'U');}
   get user() { return this._profileService.profile; }
 
   public newPosts: ISocialPost[] = [];
@@ -98,6 +97,7 @@ export class ListComponent implements OnInit {
       case 'article': desc = `Larn about healthcare topics${topic ? ' about ' + topic : ''} and improve your health with us!`; break;
       case 'event': desc = `Find your favorite healthcare event${topic ? ' about ' + topic : ''} and join now!`; break;
       case 'media': desc = `Find your favorite quick tips${topic ? ' about ' + topic : ''} from best practitioners with voice, photos and media`; break;
+      case 'promotion': desc = `Find your favorite products`; break;
     } 
 
     this._uService.setMeta(this._router.url, {
@@ -184,6 +184,7 @@ export class ListComponent implements OnInit {
 
       let req: Observable<any>;
       if (tax == 'feed') {
+        params.excludeExpiredPromo = true;
         const query = new SocialPostSearchQuery(params);
         req = this._sharedService.get('note/get-feed' + query.toQueryParams());
       } else {
@@ -202,6 +203,11 @@ export class ListComponent implements OnInit {
             const now = new Date();
             params.eventTimeRange = [now.toISOString()];
           }
+        } else if(tax == 'promotion') {
+          params.contentType = 'PROMO';
+          params.excludeExpiredPromo = true;
+        } else {
+          console.log('oops. this taxonomy type is not implemented yet.: ', tax);
         }
 
         const query = new SocialPostSearchQuery(params);

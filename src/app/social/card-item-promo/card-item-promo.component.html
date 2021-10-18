@@ -1,0 +1,73 @@
+<div class="d-flex justify-content-between mb-20p">
+  <div class="d-flex flex-nowrap">
+    <a [routerLink]="['/community/profile', post?.authorId]">
+      <profile-image [image]="post?.authorImage"></profile-image>
+    </a>
+    <div class="info-container ml-10p">
+      <a [routerLink]="['/community/profile', post?.authorId]">
+        <h6 class="subtitle2 mb-0 text-body">
+          {{post?.authorName}}
+  
+          <i 
+          *ngIf="post?.authorVerified"
+          iconPh="verified" 
+          class="text-primary large ml-5p"></i>
+        </h6>        
+      </a>
+      <div class="body2 text-label">
+        {{post?.createdAt | date:'yyyy/MM/dd'}} ・ Promotion
+      </div>
+    </div>
+  </div>
+
+  <popup-post-menu [post]="post"></popup-post-menu>
+</div>
+
+<div class="mb-10p">
+  <div class="post-content">{{post.description}}</div>
+</div>
+
+<ul 
+class="list-unstyled mb-10p" 
+*ngIf="images.length>0"
+>
+  <li 
+  *ngFor="let image of images" 
+  [ngClass]="shorten ? 'image-container-40pc rounded-12p overflow-hidden' : 'image-container'"
+  >
+    <img [src]="image" alt="">
+  </li>
+</ul>
+
+<div class="text-center mb-30p">
+  <div
+  *ngIf="post.promo"
+  class="d-inline-block mb-10p rounded-4p code-container"
+  [ngClass]="post.isAvailable? 'bg-background border-body text-body' : 'border-error-dark bg-error-light text-error-dark opacity-50pc'"
+  (click)="onClickCode($event)"
+  >
+    <input 
+    #inputCode
+    type="text" 
+    [value]="post.promo"
+    readonly>
+
+    <div 
+    *ngIf="isCopiedMessageShown"
+    [@fadeFast]
+    class="copied-message bg-body text-white body1"
+    >
+      <span>Copied!</span>
+    </div>
+  </div>
+
+  <div *ngIf="post.availableUntil">
+    <ng-container *ngIf="post.isAvailable">
+      <span class="body2 text-label">Expires: {{post.availableUntil | date : 'yyyy/MM/dd'}}</span>
+    </ng-container>
+  
+    <ng-container *ngIf="!post.isAvailable">
+      <span class="body2 text-error">Expired</span>
+    </ng-container>  
+  </div>
+</div>
