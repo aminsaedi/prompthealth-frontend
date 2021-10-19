@@ -1,4 +1,4 @@
-<header class="bg-lightyellow py-5p py-md-15p" [ngClass]="{hide: !isHeaderShown, shadow: isShadowShown}">
+<header class="bg-lightyellow py-5p py-md-10p" [ngClass]="{hide: !isHeaderShown, shadow: isShadowShown}">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center">
       <div>
@@ -78,7 +78,7 @@
 
 <!-- Menu for Small view-->
 <div class="menu-sm bg-primary-light" *ngIf="isMenuSmShown">
-  <div class="py-5p py-md-15p container">
+  <div class="py-5p py-md-10p container">
     <div class="d-flex justify-content-end align-items-center">
       <div *ngIf="user" class="mx-10p">
         <profile-image [image]="user?.profileImage" (click)="onClickUserIcon()"></profile-image>

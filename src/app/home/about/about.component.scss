@@ -1,5 +1,12 @@
 @import '../../../assets/scss/variables';
 
+.hero-video {
+  video {
+    width: 100%;
+    height: auto;
+  }
+}
+
 .circle-for-about {
   position: absolute;
   width: 200px;
