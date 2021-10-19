@@ -32,6 +32,12 @@ export interface IProfile {
   isApproved: boolean;
   isVerified: boolean; /** verified for badge */
 
+  hasProfile: boolean;
+  isEligibleToCreateNote: boolean;
+  isEligibleToCreatePromo: boolean;
+  isEligibleToCreateArticle: boolean;
+  isEligibleToCreateEvent: boolean;
+
   linkToProfile: string;
 
   gender: string;
@@ -71,6 +77,13 @@ export class Profile implements IProfile {
   get isProvider() { return !!(this.isC || this.isSP); }
   get isP() { return !!(this.role == 'P'); }
   get isSA() { return !!(this.role == 'SA'); }
+
+  get hasProfile() { return !this.isU; }
+  get isEligibleToCreateNote() { return this.isProvider || this.isSA; }
+  get isEligibleToCreatePromo() { return this.isP; }
+  get isEligibleToCreateArticle() { return this.isProvider || this.isSA; }
+  get isEligibleToCreateEvent() { return !this.isU; }
+
 
   get isApproved() { return this.isU || this.isSA || this.data.isApproved; }
   get isVerified() { return this.isSA || this.data.verifiedBadge || false; }

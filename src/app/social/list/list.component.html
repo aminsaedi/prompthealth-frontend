@@ -1,5 +1,5 @@
 <card-new-post 
-*ngIf="isEligibleToPost"
+*ngIf="user?.isEligibleToCreateNote"
 (onPublished)="onPublishNewPost($event)"
 ></card-new-post>
 

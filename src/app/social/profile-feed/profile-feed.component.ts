@@ -8,7 +8,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { fadeAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../social.service';
 import { ISocialPost } from 'src/app/models/social-post';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-feed',
@@ -39,7 +39,7 @@ export class ProfileFeedComponent implements OnInit {
 
   private countPerPage = 20;
   private isMorePosts = true;
-  private isLoading = false;
+  public isLoading = false;
   private subscription: Subscription;
 
 
@@ -48,6 +48,7 @@ export class ProfileFeedComponent implements OnInit {
     private _sharedService: SharedService,
     private _uService: UniversalService,
     private _router: Router,
+    private _route: ActivatedRoute,
   ) { }
 
   ngOnDestroy() {
@@ -114,12 +115,19 @@ export class ProfileFeedComponent implements OnInit {
 
   fetchPosts(): Promise<ISocialPost[]> {
     return new Promise((resolve, reject) => {
+      const contentType = this._route.snapshot.data.contentType;
       const params: ISocialPostSearchQuery = {
         count: this.countPerPage,
         ... (this.posts && this.posts.length > 0) && {
           page: (Math.ceil(this.posts.length / this.countPerPage) + 1),
           timestamp: this.posts[this.posts.length -1].createdAt,
         },
+        ... (contentType) && { contentType: contentType.toUpperCase() },
+        ... (contentType == 'event') && {
+          sortBy: 'eventStartTime',
+          order: 'asc',
+          eventTimeRange: [new Date().toString()]
+        }
       }
       const query = new SocialPostSearchQuery(params);
 

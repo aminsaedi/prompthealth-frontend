@@ -100,7 +100,7 @@ id="user-menu"
     <div class="mt-15p">
       <div class="mb-5p">
         <a
-        *ngIf="!user.isU"
+        *ngIf="user.hasProfile"
         class="btn btn-text-body small px-0"
         (click)="onClickUserMenuItem(['/community/profile', userId])"
         >
@@ -110,7 +110,7 @@ id="user-menu"
       </div>
       <div class="mb-5p">
         <a
-        *ngIf="!user.isU"
+        *ngIf="user.isEligibleToCreateArticle"
         class="btn btn-text-body small px-0"
         (click)="onClickUserMenuItem(['/community/create/article'])"
         >
@@ -121,7 +121,7 @@ id="user-menu"
 
       <div class="mb-5p">
         <a
-        *ngIf="!user.isU"
+        *ngIf="user.isEligibleToCreateEvent"
         class="btn btn-text-body small px-0"
         (click)="onClickUserMenuItem(['/community/create/event'])"
         >

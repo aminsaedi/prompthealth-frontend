@@ -60,7 +60,7 @@ import { AboutPractitionerComponent } from './about-practitioner/about-practitio
 import { ScrollIndicatorComponent } from './_elements/scroll-indicator/scroll-indicator.component';
 import { FaqItemComponent } from './_elements/faq-item/faq-item.component';
 import { TablePlanFeatureComponent } from './_elements/table-plan-feature/table-plan-feature.component';
-import { AboutProductComponent } from './about-product/about-product.component';
+import { AboutCompanyComponent } from './about-company/about-company.component';
 import { TagProviderComponent } from './tag-provider/tag-provider.component';
 
 
@@ -114,7 +114,7 @@ import { TagProviderComponent } from './tag-provider/tag-provider.component';
     ScrollIndicatorComponent,
     FaqItemComponent,
     TablePlanFeatureComponent,
-    AboutProductComponent,
+    AboutCompanyComponent,
     TagProviderComponent,
     // ProfessionalRegisterComponent
   ],

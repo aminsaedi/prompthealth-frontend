@@ -1,0 +1,53 @@
+<card-new-promo
+*ngIf="isMyself"
+(onPublished)="onNewPromoPublished($event)"
+></card-new-promo>
+
+<ng-container *ngFor="let p of newPromos;">
+  <div [@expandVertical]>
+    <div class="pb-15p">
+      <card
+      class="pointer-events: initial;"
+      [post]="p"
+      [shorten]="true"
+      ></card>
+    </div>
+  </div>
+</ng-container>
+
+
+<div *ngIf="promos">
+  <ng-container *ngFor="let p of promos; let i = index">
+    <div 
+    class="mb-15p" 
+    [@fade]
+    >
+      <card 
+      class="pointer-events: initial;"
+      [post]="p" 
+      [shorten]="true"
+      [option]="{showLinkToDetail: true}"
+      ></card>
+    </div>
+  
+    <!-- <div *ngIf="p && i == 1" class="mb-15p">
+        <card-subscribe></card-subscribe>
+    </div> -->
+  </ng-container>
+  
+  <ng-container *ngIf="promos && promos.length == 0">
+    <div class="mb-15p subtitle1 text-body">
+      No contents found...<br>
+      Please try again later.
+    </div>
+  </ng-container>
+</div>
+
+
+<div 
+*ngIf="!profile || !promos || isLoading"
+class="mt-30p text-center"
+>
+  <loader></loader>
+</div>
+

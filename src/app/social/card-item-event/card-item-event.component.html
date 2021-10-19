@@ -82,3 +82,11 @@
     <button class="btn btn-outline w-100" (click)="showMenu($event, 'calendar-menu')">Add to calendar</button>
   </div>
 </div>
+
+<div class="mb-10p">
+  <div #content
+  class="post-content"
+  [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
+  [innerHTML]="post.descriptionSanitized"
+  ></div>
+</div>

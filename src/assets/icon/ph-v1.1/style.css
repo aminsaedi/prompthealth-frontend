@@ -2994,6 +2994,10 @@ i {
   content: "\eabd";
   margin-left: -1em;
 }
+.icon-bell-outline:before {
+  content: "\eabd";
+}
+
 .icon-cross-octangle .path1:before {
   content: "\eabe";
   opacity: 0.16;

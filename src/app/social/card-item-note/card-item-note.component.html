@@ -22,3 +22,26 @@
 
     <popup-post-menu [post]="post"></popup-post-menu>
   </div>
+
+  <div class="mb-10p">
+    <div
+    class="post-content"
+    [innerHTML]="post.descriptionSanitized"
+    ></div>
+  </div>
+
+  <ul 
+  class="list-unstyled mb-10p" 
+  *ngIf="images.length>0"
+  >
+    <li 
+    *ngFor="let image of images" 
+    [ngClass]="shorten ? 'image-container-40pc rounded-12p overflow-hidden' : 'image-container'"
+    >
+      <img [src]="image" alt="">
+    </li>
+  </ul>
+
+  <div *ngIf="voice">
+    <audio-player [src]="voice"></audio-player>
+  </div>

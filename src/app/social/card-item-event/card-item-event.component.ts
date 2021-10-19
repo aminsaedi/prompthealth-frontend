@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
@@ -15,7 +15,10 @@ export class CardItemEventComponent implements OnInit {
   @Input() post: ISocialPost;
   @Input() shorten: boolean = true;
 
+  @ViewChild('content') private content: ElementRef;
+
   public alreadySubscribed: boolean = false;
+  public isContentGradientShown: boolean = false;
 
   constructor(
     private _route: ActivatedRoute,
@@ -24,6 +27,10 @@ export class CardItemEventComponent implements OnInit {
     private _modalService: ModalService,
   ) { }
 
+  ngAfterViewInit() {
+    const el = this.content.nativeElement as HTMLDivElement;
+    this.isContentGradientShown = (el.clientHeight >= 200); 
+  }
 
   ngOnInit(): void {
     this._route.queryParams.subscribe(() => {

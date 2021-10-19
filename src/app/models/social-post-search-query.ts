@@ -12,6 +12,8 @@ export interface ISocialPostSearchQuery {
   hasImage?: boolean;
   hasVoice?: boolean;
   authorId?: string;
+  excludeExpiredPromo?: boolean;
+  excludePastEvent?: boolean;
 
 }
 
@@ -28,6 +30,8 @@ export class SocialPostSearchQuery implements ISocialPostSearchQuery {
   get eventTimeRange() { return this.data.eventTimeRange || null; }
   get authorId() { return this.data.authorId || null; }
   get contentType() { return this.data.contentType || null; }
+  get excludeExpiredPromo() { return this.data.excludeExpiredPromo || null; }
+  get excludePastEvent() { return this.data.excludePastEvent || null; }
 
   toJson() {
     const data: ISocialPostSearchQuery = {
@@ -42,6 +46,8 @@ export class SocialPostSearchQuery implements ISocialPostSearchQuery {
       ... (this.eventTimeRange) && {eventTimeRange: this.eventTimeRange},
       ... (this.authorId) && {authorId: this.authorId},
       ... (this.contentType) && {contentType: this.contentType},
+      ... (this.excludeExpiredPromo) && {excludeExpiredPromo: this.excludeExpiredPromo},
+      ... (this.excludePastEvent) && {excludePastEvent: this.excludePastEvent},
     };
     return data;
   }

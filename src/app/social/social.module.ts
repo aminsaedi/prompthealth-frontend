@@ -10,6 +10,7 @@ import { CardSubscribeComponent } from './card-subscribe/card-subscribe.componen
 import { CardItemEventComponent } from './card-item-event/card-item-event.component';
 import { ModalEventComponent } from './modal-event/modal-event.component';
 import { CardItemNoteComponent } from './card-item-note/card-item-note.component';
+import { CardItemPromoComponent } from './card-item-promo/card-item-promo.component';
 import { CardItemEyecatchComponent } from './card-item-eyecatch/card-item-eyecatch.component';
 import { CardItemArticleComponent } from './card-item-article/card-item-article.component';
 import { HomeComponent } from './home/home.component';
@@ -45,6 +46,8 @@ import { NewReferralComponent } from './new-referral/new-referral.component';
 import { GuardIfNotProfileSelectedGuard } from './guard-if-not-profile-selected.guard';
 import { GuardIfNewReferralIncompletedGuard } from '../guard-if-new-referral-incompleted.guard';
 import { PopupPostMenuComponent } from './popup-post-menu/popup-post-menu.component';
+import { ProfilePromotionComponent } from './profile-promotion/profile-promotion.component';
+import { CardNewPromoComponent } from './card-new-promo/card-new-promo.component';
 
 
 const routes: Routes = [
@@ -53,7 +56,9 @@ const routes: Routes = [
       { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
       { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
       { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
-      { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
+      { path: 'promotion', component: ProfilePromotionComponent, data: {order: 3}, canDeactivate: [GuardIfEditorLockedGuard] },
+      { path: 'event', component: ProfileFeedComponent, data: {order: 4, contentType: 'event'} },
+      { path: 'review', component: ProfileReviewComponent, data: {order: 5} },
     ] },
 
     { path: 'profile/:userid/followings', component: ProfileFollowListComponent, data: {type: 'following'}},
@@ -102,6 +107,7 @@ const routes: Routes = [
     CardItemEventComponent, 
     ModalEventComponent, 
     CardItemNoteComponent, 
+    CardItemPromoComponent,
     CardItemEyecatchComponent, 
     CardItemArticleComponent, 
     CardItemCommentComponent, 
@@ -123,6 +129,8 @@ const routes: Routes = [
     ProfileFollowListComponent,
     NewReferralComponent,
     PopupPostMenuComponent,
+    ProfilePromotionComponent,
+    CardNewPromoComponent,
   ],
   providers: [
     CategoryService,

@@ -119,16 +119,31 @@ caption, .caption { @include typography(12px, 16px, $fontWeightRegular, 0.2px); 
 @mixin clampTemplateMd($name, $height) {
   @for $i from 1 through 5{
     .#{$name}-md.clamp-#{$i}line {     @include clamp($i, $height); }
+    .#{$name}.clamp-md-#{$i}line {     
+      @media (min-width: $breakpointMd) {
+        @include clamp($i, $height);
+      }
+    }
   }
 }
 @mixin clampTemplateLg($name, $height) {
   @for $i from 1 through 5{
     .#{$name}-lg.clamp-#{$i}line {     @include clamp($i, $height); }
+    .#{$name}.clamp-lg-#{$i}line {     
+      @media (min-width: $breakpointLg) {
+        @include clamp($i, $height);
+      }
+    }
   }
 }
 @mixin clampTemplateXl($name, $height) {
   @for $i from 1 through 5{
     .#{$name}-xl.clamp-#{$i}line {     @include clamp($i, $height); }
+    .#{$name}.clamp-xl-#{$i}line {     
+      @media (min-width: $breakpointXl) {
+        @include clamp($i, $height);
+      }
+    }
   }
 }
 

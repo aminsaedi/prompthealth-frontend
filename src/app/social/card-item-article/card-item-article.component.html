@@ -49,3 +49,11 @@ class="h4"
 [ngClass]="{'clamp-1line': shorten}"
 [innerHTML]="post.title"
 ></h2>
+
+<div class="mb-10p">
+  <div #content
+  class="post-content"
+  [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
+  [innerHTML]="post.descriptionSanitized"
+  ></div>
+</div>

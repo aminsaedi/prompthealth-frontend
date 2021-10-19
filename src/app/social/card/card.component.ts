@@ -20,26 +20,11 @@ export class CardComponent implements OnInit {
 
   @Input() option: ICardOption = {};
 
-  get images() {
-    let images: string[] = null;
-    if(this.post && this.post.isNote) {
-      images = this.post.images;
-    }
-    return images;
-  }
-
-  get voice() {
-    let voice: string = null;
-    if(this.post && this.post.isNote) {
-      voice = this.post.voice || null;
-    }
-    return voice;
-  }
 
   get topics(): Category[] { return this._categoryService.categoryList; }
 
 
-  public isContentGradientShown: boolean = false;
+  // public isContentGradientShown: boolean = false;
   public _option: CardOption;
 
 
@@ -56,8 +41,8 @@ export class CardComponent implements OnInit {
   ) { }
 
   ngAfterViewInit() {
-    const el = this.content.nativeElement as HTMLDivElement;
-    this.isContentGradientShown = (el.clientHeight >= 200);
+    // const el = this.content.nativeElement as HTMLDivElement;
+    // this.isContentGradientShown = (el.clientHeight >= 200);
 
     if(this._option.openCommentsOnInit) {
       this.toolbar.showComment();
