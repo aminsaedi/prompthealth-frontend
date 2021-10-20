@@ -1,18 +1,24 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd, ActivationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { slideVerticalReverse100pcAnimation } from 'src/app/_helpers/animations';
+
 
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css']
+  styleUrls: ['./layout.component.css'],
+  animations: [slideVerticalReverse100pcAnimation]
 })
 export class LayoutComponent implements OnDestroy, OnInit {
 
   public showFooter = false;
+  public isHeaderShown = false;
+  public onHomepage: boolean;
+  public disableHeaderAnimation = true;
 
   private isInitial = true;
   private urlPrev: string = '';
@@ -24,6 +30,7 @@ export class LayoutComponent implements OnDestroy, OnInit {
     private _location: Location,
     private _headerService: HeaderStatusService,
     private _uService: UniversalService,
+    private _changeDetector: ChangeDetectorRef,
   ) {  }
 
   ngOnDestroy() {
@@ -33,9 +40,26 @@ export class LayoutComponent implements OnDestroy, OnInit {
   ngOnInit() {
     if(!this._uService.isServer) {
       this.scrollToTop();
+
+      this._headerService.observeHeaderStatus().subscribe(([key, val, animate]: [string, any, boolean]) => {
+        this.disableHeaderAnimation = !animate;
+
+        if(!animate) {
+          this[key] = val;
+          this._changeDetector.detectChanges();
+        } else {
+          setTimeout(() => {
+            this[key] = val;
+            this._changeDetector.detectChanges();
+          });
+        }
+        setTimeout(() => {
+          this.disableHeaderAnimation = true;
+        },500);
+      });
     }
 
-    this.checkFooterStatus();
+    this.changeStatusBasedOnPath();
 
     this.routerEventSubscription = this._router.events.subscribe((event) => {
       if (event instanceof ActivationStart) { 
@@ -44,7 +68,7 @@ export class LayoutComponent implements OnDestroy, OnInit {
       }
 
       if (event instanceof NavigationEnd) {
-        this.checkFooterStatus();
+        this.changeStatusBasedOnPath();
 
         if(event.url != '/' && event.url != '/auth/login') {
           setTimeout(()=> {
@@ -74,9 +98,12 @@ export class LayoutComponent implements OnDestroy, OnInit {
     });
   }
 
-  checkFooterStatus() {
+  changeStatusBasedOnPath() {
     const regexHideFooter = /(dashboard)/;
     this.showFooter = !this._location.path().match(regexHideFooter);
+
+    this.isHeaderShown = this._location.path() != '';
+    this.onHomepage = this._location.path() == '';
   }
 
   scrollToTop() {

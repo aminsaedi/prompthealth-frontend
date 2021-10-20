@@ -1,16 +1,98 @@
-<section class="bg-primary-light py-40p pt-md-90p pb-md-70p overflow-hidden">
-  <div class="container">
+<section class="bg-lightyellow pb-md-70p overflow-hidden position-relative">
+  <div class="circle-for-dim-1"></div>
+  <div class="circle-for-dim-2"></div>
+  <div class="dim-3"></div>
+  <div class="circle-for-dim-4"></div>
+
+  <div class="container py-5p py-md-10p position-relative" style="z-index: 2">
+    <div class="d-flex justify-content-between justify-content-lg-start align-items-center">
+      <div>
+        <a routerLink="/">
+          <img class="d-md-none d-lg-block d-xl-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20">
+          <img class="d-none d-md-block d-lg-none d-xl-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="25">
+        </a>
+      </div>
+      <nav>
+        <ul class="d-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2 text-body">
+          <li class="ml-30p mr-15p d-none d-lg-block">
+            <a routerLink="/practitioners" class="text-body">Find Practitioners</a>
+          </li>
+          <li class="mx-15p d-none d-lg-block">
+            <a routerLink="/products" class="text-body">Products</a>
+          </li>
+          <li class="mx-10p d-none d-lg-block">
+            <a routerLink="/about" class="text-body">About</a>
+          </li>
+
+          <li class="mx-15p d-none d-lg-block position-relative" (clickOutside)="hidePlanMenu()">
+            <a class="text-body" (click)="onClickGetListed()">Get listed</a>
+            <i iconPh="chevron-down" class="ml-5p"></i>
+            <div 
+            *ngIf="isPlanMenuShown"
+            [@fade]
+            class="px-30p bg-white rounded-12p shadow get-listed-md-container"
+            >
+              <a
+              *ngFor="let item of planMenuData;"
+              [routerLink]="[item.link]" 
+              (click)="hidePlanMenu()"
+              >
+                <div class="py-30p border-bottom border-line">
+                  <h6 class="d-flex">
+                    <span class="flex-grow-1">
+                      <i [iconPh]="item.icon" class="mr-10p text-primary-dark"></i>
+                      <span class="text-body">{{item.title}}</span>
+                    </span>
+                    <i iconPh="chevron-right" class="text-placeholder"></i>
+                  </h6>
+                  <p class="mb-0 body2 text-label">{{item.text}}</p>
+                </div>
+              </a>
+            </div>
+          </li>
+
+          <li *ngIf="!isLoggedIn" class="mx-15p d-none d-lg-block">
+            <a routerLink="/auth/login" class="text-body">Login</a>
+            /
+            <a routerLink="/auth/registration/u" class="text-body">Register</a>
+          </li>
+
+          <li *ngIf="isLoggedIn" class="mx-10p mx-lg-15p cursor-pointer">
+            <profile-image [image]="user?.profileImageFull" (click)="onClickUserIcon()"></profile-image>
+          </li>
+          <li class="ml-10p ml-lg-15p">
+            <a routerLink="/community/feed" class="btn btn-primary small">
+              <i iconPh="users"></i>
+              <span>Community</span>
+            </a>
+          </li>
+          <li class="d-lg-none">
+            <button class="btn btn-icon small pr-0 py-5p ml-10p" (click)="showMenuSm()">
+              <i iconPh="menu" class="large"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container py-40p pt-md-90p ">
     <div class="row">
       <div class="col-12 col-lg-7" style="z-index: 1">
-        <h6 class="h6 text-primary mb-20p">Discover. Learn. Connect.</h6>
-        <h2 class="h3 h2-md mb-30p">Your wellness navigator.</h2>
-        <h6 class="h6 opacity-70pc mb-50p">Find vetted wellness providers and start your health journey today.</h6>
+        <h6 
+        class="h6 text-primary-dark mb-20p"
+        style="font-weight: 400"
+        >Find vetted wellness providers and start your health journey today.</h6>
+        <h2 class="h3 h2-md mb-55p text-primary-dark">
+          Your 
+          <span class="handwritten-highlight">wellness</span> 
+          navigator.</h2>
         
         <div class="bg-white color-border-primary-light-dark border rounded-lg mb-50p">
           <search-bar></search-bar>
         </div>
 
-        <ul class="row list-unstyled">
+        <!-- <ul class="row list-unstyled">
           <li class="col-12 col-md-4">
             <h5 class="text-secondary">
               <i iconPh="checkbox-square-outline"></i>
@@ -35,78 +117,66 @@
               Get connected using our personal match quiz.
             </p>
           </li>
-        </ul>
+        </ul> -->
+
+        <div class="row align-items-center flex-lg-nowrap">
+          <div class="col-4 col-md col-lg-3 mb-15p">
+            <a href="https://purepharmacy.com/" target="_blank">
+              <img src="/assets/img/partners/pure-pharmacy.png" alt="" style="width: 98%; height: auto;" class="filter-black opacity-70pc">
+            </a>
+          </div>
+          <div class="col-4 col-md col-lg-3 mb-15p">
+            <a href="https://inbodycanada.ca/" target="_blank">
+              <img src="/assets/img/partners/inbody-canada.jpeg" alt="" style="width: 90%; height: auto;" class="filter-black opacity-70pc">
+            </a>    
+          </div>
+          <div class="col-4 d-md-none"></div>
+          <div class="col-4 col-md col-lg-3 mb-15p">
+            <a href="https://lifesciencesbc.ca/members/personalized-healthcare-with-prompt-health-the-new-wave-of-health-and-wellness/" target="_blank">
+              <img src="/assets/img/medias/life-sciences.png" alt="" style="width: 90%; height: auto;" class="filter-black opacity-70pc">
+            </a>    
+          </div>
+          <div class="col-4 col-md col-lg-3 mb-15p">
+            <a href="https://medcitynews.com/2021/02/prompt-health-is-creating-marketplace-for-smart-referrals/" target="_blank">
+              <img src="/assets/img/medias/medcity-news.png" alt="" style="width: 90%; height: auto;" class="filter-black opacity-70pc">
+            </a>    
+          </div>
+          <div class="col-4 col-md col-lg-3 mb-15p">
+            <img src="/assets/img/medias/canadian-insider.png" alt="" style="width: 90%; height: auto;" class="filter-black opacity-70pc">
+          </div>
+        </div>  
+
       </div>
       <div class="col">
-        <div class="position-relative mt-50p">
-          <div class="circle-for-video circle-secondary" parallax intensity="0.5"></div>
-          <div class="video-container position-relative rounded-12p overflow-hidden">
-            <video src="assets/video/video2.mp4" controls></video>
+        <div class="slideshow-container mt-30p mt-lg-0p">
+          <div class="slideshow mb-15p mb-lg-0p mr-lg-20p">
+            <div 
+            *ngFor="let item of slideshow; let i = index"
+            class="item overflow-hidden rounded-8p"
+            #slideshowItem
+            >
+              <img [src]="'assets/img/about/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;">
+            </div>
           </div>
-        </div>
+          <div class="slideshow">
+            <div class="slideshow mb-15p mb-lg-0p mr-lg-20p">
+              <div 
+              *ngFor="let item of slideshow; let i = index"
+              class="item-reverse overflow-hidden rounded-8p"
+              #slideshowReverseItem
+              >
+                <img [src]="'assets/img/about/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;">
+              </div>
+            </div>          
+          </div>  
+        </div>  
       </div>
     </div>
   </div>
-</section>
-
-<div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="changeHeaderShadowStatus($event)"></div>
-<section class="bg-primary-lighter py-65p">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-12 col-lg-4">
-        <h4 class="d-flex flex-nowrap align-items-center">
-          <i iconPh="heart-filled" class="text-secondary mr-2 large text-primary-dark "></i>
-          <span>Our partners: </span>
-        </h4>    
-      </div>
-      <div class="col-12 col-lg-8 mt-4 mt-lg-0">
-        <div class="row align-items-center">
-          <div class="col-6 col-md-4 col-lg-4">
-            <a href="https://purepharmacy.com/" target="_blank">
-              <img src="/assets/img/partners/pure-pharmacy.png" alt="" style="width: 90%; height: auto;">
-            </a>    
-          </div>
-          <div class="col-6 col-md-4 col-lg-4">
-            <a href="https://inbodycanada.ca/" target="_blank">
-              <img src="/assets/img/partners/inbody-canada.jpeg" alt="" style="width: 90%; height: auto;">
-            </a>    
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container mt-50p">
-    <div class="row align-items-center">
-      <div class="col-12 col-lg-4">
-        <h4 class="d-flex flex-nowrap align-items-center">
-          <i iconPh="heart-filled" class="text-secondary mr-2 large text-primary-dark "></i>
-          <span>As featured in: </span>
-        </h4>    
-      </div>
-      <div class="col-12 col-lg-8 mt-4 mt-lg-0">
-        <div class="row align-items-center">
-          <div class="col-6 col-md-4 col-lg-4">
-            <a href="https://lifesciencesbc.ca/members/personalized-healthcare-with-prompt-health-the-new-wave-of-health-and-wellness/" target="_blank">
-              <img src="/assets/img/medias/life-sciences.png" alt="" style="width: 90%; height: auto;">
-            </a>    
-          </div>
-          <div class="col-6 col-md-4 col-lg-4">
-            <a href="https://medcitynews.com/2021/02/prompt-health-is-creating-marketplace-for-smart-referrals/" target="_blank">
-              <img src="/assets/img/medias/medcity-news.png" alt="" style="width: 90%; height: auto;">
-            </a>    
-          </div>
-          <div class="col-6 col-md-4 col-lg-4 mt-30p mt-md-0p">
-            <img src="/assets/img/medias/canadian-insider.png" alt="" style="width: 90%; height: auto;">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </section>
 
 <!-- category start -->
+<div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="changeHeaderVisibility($event)"></div>
 <section class="container my-40p my-md-100p">
   <ul class="row list-unstyled p-0">
     <ng-container *ngFor="let dataPerRow of categoryController?.dataPerRows; let i = index;">
@@ -161,14 +231,6 @@
       </li>
     </ng-container>
   </ul>
-
-  <!-- <div class="d-flex h6 mt-50p">
-    <i iconPh="question" class="text-primary large mr-2"></i>
-    <div class="d-md-flex flex-nowrap">
-      <h6>Are you a wellness Provider?</h6>
-      <a class="mt-3 mt-md-0 ml-md-3" routerLink="/sitemaps" fragment="type-of-provider">Click To See All 38 Provider Types</a>  
-    </div>
-  </div> -->
 </section>
 <!-- category end -->
 

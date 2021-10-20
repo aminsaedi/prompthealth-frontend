@@ -13,12 +13,12 @@ export class HeaderStatusService {
    /** Header status and function for visibility */
    public observeHeaderStatus(): Observable<any>{ return this.headerStatusObserver; }
    private headerStatusObserver = new Subject<any>();
-   private emitHeaderStatus(key: string,val: any){
-     this.headerStatusObserver.next([key,val]); 
+   private emitHeaderStatus(key: string, val: any, animate: boolean = false){
+     this.headerStatusObserver.next([key,val, animate]); 
    }
  
-   hideHeader(){ this.emitHeaderStatus('isHeaderShown', false); }
-   showHeader(){this.emitHeaderStatus('isHeaderShown', true); }
+   hideHeader(animate: boolean = false){ this.emitHeaderStatus('isHeaderShown', false, animate); }
+   showHeader(animate: boolean = false){this.emitHeaderStatus('isHeaderShown', true, animate); }
    hideNavMenu(){
      this.emitHeaderStatus('isNavMenuShown', false)
      this.emitHeaderStatus('levelMenuSm', 0);

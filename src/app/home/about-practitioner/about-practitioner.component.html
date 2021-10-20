@@ -1,37 +1,11 @@
-<section class="bg-primary-light overflow-hidden position-relative py-20p py-lg-80p">
-  <div class="circle-for-video circle-secondary" parallax intensity="0.5"></div>
+<div class="hero-video overflow-hidden">
+  <video autoplay [muted]="true" loop playsinline poster="/assets/video/about-practitioner-thumbnail.png">
+    <source src="/assets/video/about-practitioner.mp4" type="video/mp4">
+    <source src="/assets/video/about-practitioner-thumbnail.png">
+  </video>
+</div>
 
-  <div class="container">
-    <div class="row flex-md-row justify-content-between align-items-center">
-      <div class="col-12 col-md-7 col-xl-6 my-30p">
-        <h6 class="text-primary">For Providers</h6>
-        <h2 class="h3 h2-lg mb-25p">
-          Connect with clients who appreciate your wellness philosophy.
-        </h2>
-        <p class="text-label mb-30p">
-          Get discovered. Share your expertise. Connect and engage. 
-        </p>
-        <button 
-        class="btn btn-primary"
-        (click)="scrollTo(anchorPlans)"
-        >Join Us Now</button>
-      </div>
-      <div class="col-12 col-md-5 my-30p">
-        <div class="position-relative">
-          <div 
-          class="image-shadow"
-          style="background-image: url(/assets/img/about/top-provider.jpg);"
-          ></div>
-          <img 
-          class="w-100 rounded-12p position-relative" 
-          src="/assets/img/about/top-provider.jpg" 
-          alt=""
-          >  
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <section class="container mt-100p mb-50p">
   <ul class="row list-unstyled justify-content-center">

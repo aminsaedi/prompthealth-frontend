@@ -1,5 +1,21 @@
 <div style="min-height: 100vh">
-    <div class="sticky-top" style="z-index: 90;">
+    <div 
+    *ngIf="!onHomepage && isHeaderShown"
+    class="sticky-top" 
+    style="z-index: 90;"
+    [@slideVertical100pc]
+    [@.disabled]="disableHeaderAnimation"
+    >
+        <app-header></app-header>
+    </div>
+
+    <div
+    *ngIf="!!onHomepage && isHeaderShown"
+    class="position-fixed w-100"
+    style="z-index: 90;"
+    [@slideVertical100pc]
+    [@.disabled]="disableHeaderAnimation"
+    >
         <app-header></app-header>
     </div>
     

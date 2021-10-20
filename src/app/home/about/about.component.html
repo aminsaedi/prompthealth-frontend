@@ -1,43 +1,9 @@
-<section class="bg-primary-light overflow-hidden py-20p py-lg-60p">
-  <div class="container position-relative">
-    <div 
-    class="circle-for-about circle-secondary" 
-    parallax
-    intensity="0.7"
-    ></div>
-    <div class="row align-items-center position-relative flex-column-reverse flex-md-row">
-      <div class="col-12 col-md-6 col-lg-7 my-30p">
-        <ul 
-        class="list-unstyled top-images position-relative mb-0" 
-        [@slideVerticalStagger]="countImagesLoaded"
-        [@.disabled]="disableAnimationTop"
-        >
-          <li 
-          *ngFor="let img of topImages;"
-          [ngClass]="{'show': isImageReady}"
-          >
-            <img
-            [hidden]="!isImageReady"
-            [src]="img" 
-            (load)="onImageLoaded()"
-            >  
-          </li>
-        </ul>  
-      </div>
-      <div class="col-12 col-md-6 col-lg-5 my-30p">
-        <h6 class="text-primary mb-20p">
-          About
-        </h6>
-        <h1 class="h3 h2-xl mb-20p">
-          We are here to empower you along your wellness journey.
-        </h1>
-        <p class="text-label">
-          We provide those looking to improve their health with resources and practitioners that approach wellness from a holistic perspective. 
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="hero-video overflow-hidden">
+  <video autoplay [muted]="true" loop playsinline poster="/assets/video/about-thumbnail.png">
+    <source src="/assets/video/about.mp4" type="video/mp4">
+    <source src="/assets/video/about-thumbnail.png">
+  </video>
+</div>
 
 <div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="changeHeaderShadowStatus($event)"></div>
 <section class="overflow-hidden" style="max-width: 100vw">
