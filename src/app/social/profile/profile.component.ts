@@ -86,7 +86,7 @@ export class ProfileComponent implements OnInit {
   public idxActiveRecommendationIndicator: number = 0;
   private timerRecommendationCarousel: any;
   
-  public countPromoPerPage: number = 2;
+  public countPromoPerPage: number = 20;
 
   public isBellLoading = false;
   public isFollowLoading = false;
