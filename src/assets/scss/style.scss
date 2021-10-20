@@ -47,6 +47,17 @@ a {
   cursor: pointer;
 }
 
+.hero-video {
+  width: 100vw;
+  max-height: 100vh;
+  video {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 60px);
+  }
+}
+
+
 [class^=circle-for] {
   &:after {
     content: '';

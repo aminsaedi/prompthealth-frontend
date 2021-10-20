@@ -1,5 +1,4 @@
 import { trigger, transition, animate, style, query, animateChild, group, stagger, state } from '@angular/animations';
-import { translate } from '@angular/localize/src/utils';
 
 export const fadeAnimation = trigger('fade', [
   transition(':enter', [
@@ -40,6 +39,16 @@ export const slideVerticalReverseAnimation = trigger('slideVerticalReverse', [
   ]),
   transition(':leave', [
     animate('300ms ease', style({opacity: 0, transform: 'translateY(-50px)'}))
+  ])
+]);
+
+export const slideVerticalReverse100pcAnimation = trigger('slideVertical100pc', [
+  transition(':enter', [
+    style({ display: 'block', opacity: 0, transform: 'translateY(-100%)'}),
+    animate('300ms ease', style({opacity: 1, transform: 'translateY(0)'}))
+  ]),
+  transition(':leave', [
+    animate('300ms ease', style({opacity: 0, transform: 'translateY(-100%)'}))
   ])
 ]);
 

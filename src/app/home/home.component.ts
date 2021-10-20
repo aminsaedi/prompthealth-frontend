@@ -1,12 +1,12 @@
 import { Component, OnInit, HostListener, ChangeDetectorRef, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from '../shared/services/shared.service';
 import { HeaderStatusService } from '../shared/services/header-status.service';
 import { UniversalService } from '../shared/services/universal.service';
 import { Category, CategoryService } from '../shared/services/category.service';
 import { IUserDetail } from '../models/user-detail';
 import { CategoryViewerController } from '../models/category-viewer-controller';
-import { expandAllAnimation, expandVerticalAnimation, slideVerticalStaggerAnimation } from '../_helpers/animations';
+import { expandAllAnimation, expandVerticalAnimation, fadeAnimation, slideVerticalStaggerAnimation } from '../_helpers/animations';
 import { Professional } from '../models/professional';
 import { CityId, getLabelByCityId } from '../_helpers/location-data';
 import { BlogSearchQuery, IBlogSearchResult } from '../models/blog-search-query';
@@ -17,6 +17,8 @@ import { environment } from 'src/environments/environment';
 import { SocialPostSearchQuery } from '../models/social-post-search-query';
 import { IGetSocialContentsByAuthorResult } from '../models/response-data';
 import { SocialArticle } from '../models/social-article';
+import { ProfileManagementService } from '../dashboard/profileManagement/profile-management.service';
+import { ModalService } from '../shared/services/modal.service';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -25,24 +27,39 @@ import { SocialArticle } from '../models/social-article';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  animations: [expandVerticalAnimation, expandAllAnimation, slideVerticalStaggerAnimation],
+  animations: [expandVerticalAnimation, expandAllAnimation, slideVerticalStaggerAnimation, fadeAnimation],
 })
 export class HomeComponent implements OnInit {
 
   get sizeL() { return window && window.innerWidth >= 992; }
+  get planMenuData() { return planMenuData; }
+  get user() { return this._profileService.profile; }
+  get isLoggedIn(): boolean { return !!this.user; }
 
   constructor(
-    private router: Router,
+    private _router: Router,
+    private _route: ActivatedRoute,
     private _catService: CategoryService,
     private _sharedService: SharedService,
     private _headerStatusService: HeaderStatusService,
     private _uService: UniversalService,
     private _changeDetector: ChangeDetectorRef,
+    private _profileService: ProfileManagementService,
+    private _modalService: ModalService,
   ) { }
 
+  public isPlanMenuShown = false;
+  public isPlanMenuSmShown = false;
+
+  public slideshow = slideshow;
+  public slideshowReverse = slideshow;
 
   private timerResize: any = null;
   private previousScreenWidth: number = 0;
+  
+  @ViewChildren('slideshowItem') private slideshowItems: QueryList<ElementRef>; 
+  @ViewChildren('slideshowReverseItem') private slideshowReverseItems: QueryList<ElementRef>; 
+
 
   @HostListener('window:resize', ['$event']) WindowResize(e: Event) {
     if(this.categories && window.innerWidth && window.innerWidth != this.previousScreenWidth) {
@@ -69,10 +86,25 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  changeHeaderVisibility(isShown: boolean) {
+    if(isShown) {
+      this._headerStatusService.showHeader(true);
+    } else {
+      this._headerStatusService.hideHeader(true);
+    }
+  }
+
+  ngOnDestroy() {
+    this._headerStatusService.showHeader(false);
+  }
+
   ngAfterViewInit() {
     if(!this._uService.isServer) {
       this.elExpertFinderScrollHorizontal.nativeElement.scrollTo({left: 10000});
     }
+
+    this.initSlideshow();
+
   }
 
   // eventbriteCheckout(event) {
@@ -83,7 +115,9 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
-    this._uService.setMeta(this.router.url, {
+    this._headerStatusService.hideHeader();
+
+    this._uService.setMeta(this._router.url, {
       title: 'PromptHealth | Your health and wellness personal assistant',
       description: 'Take control of your health with options tailored to you',
     });
@@ -120,6 +154,69 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  showMenuSm() {
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {menu: 'show'}});
+  }
+
+  onClickGetListed() {
+    this.isPlanMenuShown = !this.isPlanMenuShown;
+    this.isPlanMenuSmShown = !this.isPlanMenuSmShown;
+  }
+
+  hidePlanMenu() {
+    this.isPlanMenuShown = false;
+  }
+
+  onClickUserIcon() {
+    this._modalService.show('user-menu', this.user);
+  }
+
+  initSlideshow() {
+    if(this.slideshowItems.length > 0 && this.slideshowReverseItems.length > 0) {
+      let currentDistance = 0;
+      const distancePerMove = 0.2;
+
+      // this.moveSlideshow(this.slideshowItems.toArray(), currentDistance, false);
+      // this.moveSlideshow(this.slideshowReverseItems.toArray(), currentDistance, true);
+
+      setInterval(() => {
+        currentDistance += distancePerMove;
+        this.moveSlideshow(this.slideshowItems.toArray(), currentDistance, false);
+        this.moveSlideshow(this.slideshowReverseItems.toArray(), currentDistance, true);
+      }, 30);  
+    }
+    
+  }
+ 
+
+  moveSlideshow(items: ElementRef[], distance: number  = 0, reverse: boolean = false) {
+    let gap = 40;
+    let totalLength = (items.length - 1) * gap;
+    items.forEach((item, i) => {
+      const el = item.nativeElement as HTMLDivElement;
+      totalLength += this.sizeL ? el.clientHeight : el.clientWidth;
+    });
+
+    const distActual = distance % totalLength;
+
+
+    let initialPosition = 0;
+    items.forEach((item, i) => {
+      const el = item.nativeElement as HTMLDivElement;
+
+      let currentPosition = initialPosition - distActual;
+      if(currentPosition < - (this.sizeL ? el.clientHeight : el.clientWidth)){
+        currentPosition += totalLength + gap;
+      }
+
+      el.style.transform = `translate${this.sizeL ? 'Y' : 'X'}(${reverse ? -currentPosition : currentPosition}px)`;
+
+      initialPosition += this.sizeL ? el.clientHeight : el.clientWidth;
+      initialPosition += gap;
+    });
+
+
+  }
 
   /** CATEGORIES */
   private categories: Category[];
@@ -363,3 +460,32 @@ const testimonials = [
     // rating: 5,
   }
 ];
+
+const planMenuData = [
+  {
+    title: 'Providers',
+    text: 'List your practice, get discovered by potential clients, and network within the local health and wellness community.',
+    link: '/plans',
+    icon: 'verified',
+  }, {
+    title: 'Companies',
+    text: 'Celine Spino loves to cook and dine out. But a few years ago',
+    link: '/plans/product',
+    icon: 'briefcase-2',
+  }
+];
+
+const slideshow = [
+  'hedieh.png',
+  'bob.jpg',
+  'jan.jpg',
+  'peter.jpg',
+  'renee.jpg',
+  'jasmine.png',
+  'jaden.png',
+  'jersey.jpg',
+  'otto.png',
+  'takayuki.png',
+  'amin.png',
+  'reza.png',
+]
