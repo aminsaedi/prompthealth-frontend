@@ -239,7 +239,7 @@
                   *ngFor="let recommendation of profile.recommendationsPreview"
                   style="flex: 0 0 100%;"
                   >
-                    <p class="body1 clamp-3line">{{recommendation.body}}</p>
+                    <p class="body1 clamp-3line" style="white-space:pre-wrap;">{{recommendation.body}}</p>
                     <a 
                     class="body2 text-label"
                     [routerLink]="recommendation.fromLinkToProfile"
