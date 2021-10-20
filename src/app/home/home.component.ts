@@ -101,7 +101,9 @@ export class HomeComponent implements OnInit {
       this.elExpertFinderScrollHorizontal.nativeElement.scrollTo({left: 10000});
     }
 
-    this.initSlideshow();
+    if(this._uService.isBrowser){
+      this.initSlideshow();
+    }
 
   }
 
