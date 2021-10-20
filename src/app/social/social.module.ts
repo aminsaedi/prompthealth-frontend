@@ -48,7 +48,6 @@ import { GuardIfNewReferralIncompletedGuard } from '../guard-if-new-referral-inc
 import { PopupPostMenuComponent } from './popup-post-menu/popup-post-menu.component';
 import { ProfilePromotionComponent } from './profile-promotion/profile-promotion.component';
 import { CardNewPromoComponent } from './card-new-promo/card-new-promo.component';
-import { ProfileEventComponent } from './profile-event/profile-event.component';
 
 
 const routes: Routes = [
@@ -132,7 +131,6 @@ const routes: Routes = [
     PopupPostMenuComponent,
     ProfilePromotionComponent,
     CardNewPromoComponent,
-    ProfileEventComponent,
   ],
   providers: [
     CategoryService,
