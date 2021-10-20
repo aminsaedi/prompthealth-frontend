@@ -35,8 +35,6 @@ export class HomeComponent implements OnInit {
   get planMenuData() { return planMenuData; }
   get user() { return this._profileService.profile; }
   get isLoggedIn(): boolean { return !!this.user; }
-  get slideshow() { return slideshow; }
-  get slideshowReverse() { return slideshow; }
 
   constructor(
     private _router: Router,
@@ -51,6 +49,25 @@ export class HomeComponent implements OnInit {
   ) { }
 
   public isPlanMenuShown = false;
+  public isSlideshowReady = false;
+
+  public slideshow = [
+    'slideshow-1.png',
+    'slideshow-2.png',
+    'slideshow-3.png',
+    'slideshow-4.png',
+    'slideshow-5.png',
+    'slideshow-6.png',
+  ];
+
+  public slideshowReverse = [
+    'slideshow-4.png',
+    'slideshow-5.png',
+    'slideshow-6.png',
+    'slideshow-1.png',
+    'slideshow-2.png',
+    'slideshow-3.png',
+  ];
 
   private timerResize: any = null;
   private previousScreenWidth: number = 0;
@@ -180,6 +197,7 @@ export class HomeComponent implements OnInit {
         currentDistance += distancePerMove;
         this.moveSlideshow(this.slideshowItems.toArray(), currentDistance, false);
         this.moveSlideshow(this.slideshowReverseItems.toArray(), currentDistance, true);
+        this.isSlideshowReady = true;
       }, 30);  
     }
     
@@ -471,18 +489,3 @@ const planMenuData = [
     icon: 'briefcase-2',
   }
 ];
-
-const slideshow = [
-  'hedieh.png',
-  'bob.jpg',
-  'jan.jpg',
-  'peter.jpg',
-  'renee.jpg',
-  'jasmine.png',
-  'jaden.png',
-  'jersey.jpg',
-  'otto.png',
-  'takayuki.png',
-  'amin.png',
-  'reza.png',
-]

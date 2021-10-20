@@ -1,4 +1,4 @@
-<footer class="bg-primary-light pt-70p pb-55p">
+<footer class="bg-body pt-70p pb-55p">
   <div class="container">
     <section class="row mb-50p">
       <div class="mb-40p mb-lg-0 col-12 col-lg-1 col-xl-2 text-center">
@@ -9,26 +9,26 @@
       <div class="col-12 col-lg-11 col-xl-10 text-center text-lg-left">
         <div class="row">
           <div class="col-12 col-lg-3">
-            <div class="subtitle1 my-30p mt-lg-0">Find practitioners</div>
+            <div class="subtitle1 text-white my-30p mt-lg-0">Find practitioners</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
-              <li class="mb-3"><a class="body1 text-body" [routerLink]="['/practitioners/area/toronto']">In Toronto</a></li>
-              <li class="mb-3"><a class="body1 text-body" [routerLink]="['/practitioners/area/vancouver']">In Vancouver</a></li>
-              <li class="mb-3" *ngFor="let a of typeOfProviderListHighlight"><a class="body1 text-body" [routerLink]="['/practitioners/type/', a._id]">{{a.item_text}}</a></li>
-              <li class="mb-3"><a class="body1 text-body" [routerLink]="['/sitemaps']">See all cities & types</a></li>
+              <li class="mb-3"><a class="btn btn-text-lightgrey small p-0" [routerLink]="['/practitioners/area/toronto']">In Toronto</a></li>
+              <li class="mb-3"><a class="btn btn-text-lightgrey small p-0" [routerLink]="['/practitioners/area/vancouver']">In Vancouver</a></li>
+              <li class="mb-3" *ngFor="let a of typeOfProviderListHighlight"><a class="btn btn-text-lightgrey small p-0" [routerLink]="['/practitioners/type/', a._id]">{{a.item_text}}</a></li>
+              <li class="mb-3"><a class="btn btn-text-lightgrey small p-0" [routerLink]="['/sitemaps']">See all cities & types</a></li>
             </ul>
           </div>
 
           <div class="col-12 col-lg-3">
-            <div class="subtitle1 my-30p mt-lg-0">Services</div>
+            <div class="subtitle1 text-white my-30p mt-lg-0">Services</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
               <li class="mb-3">
-                <a routerLink="/plans" class="body1 text-body">Plans for practitioners</a>
+                <a routerLink="/plans" class="btn btn-text-lightgrey small p-0">Plans for practitioners</a>
               </li>
               <!-- <li class="mb-3">
                 <a routerLink="/plans/product" class="py-3 body1 text-body">Advertise your products</a>
               </li> -->
               <li class="mb-3">
-                <a routerLink="/subscribe/newsletter" class="py-3 body1 text-body">Newsletter</a>
+                <a routerLink="/subscribe/newsletter" class="btn btn-text-lightgrey small p-0">Newsletter</a>
               </li>
               <!-- <li class="mb-3">
                 <a routerLink="/ambassador-program" class="py-3 body1 text-body">Ambassador program</a>
@@ -37,25 +37,25 @@
           </div>
           
           <div class="col-12 col-lg-3">
-            <div class="subtitle1 my-30p mt-lg-0">PromptHealth</div>
+            <div class="subtitle1 text-white my-30p mt-lg-0">PromptHealth</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
               <li class="mb-3">
-                <a routerLink="/faq" class="py-3 body1 text-body">FAQ</a>
+                <a routerLink="/faq" class="btn btn-text-lightgrey small p-0">FAQ</a>
               </li>
               <li class="mb-3">
-                <a routerLink="/contact-us" class="py-3 body1 text-body">Contact Us</a>
+                <a routerLink="/contact-us" class="btn btn-text-lightgrey small p-0">Contact Us</a>
               </li>
               <li class="mb-3">
-                <a routerLink="/terms" class="body1 text-body">Terms & Conditions</a>
+                <a routerLink="/terms" class="btn btn-text-lightgrey small p-0">Terms & Conditions</a>
               </li>
               <li class="mb-3">
-                <a routerLink="/policy" class="py-3 body1 text-body">Privacy policy</a>
+                <a routerLink="/policy" class="btn btn-text-lightgrey small p-0">Privacy policy</a>
               </li>
             </ul>
           </div>
 
           <div class="col-12 col-lg-3">
-            <div class="subtitle1 my-30p mt-lg-0">PromptHealth app</div>
+            <div class="subtitle1 text-white my-30p mt-lg-0">PromptHealth app</div>
 
             <div class="mb-10p">
               <a href="https://apps.apple.com/ca/app/prompthealth/id1532951934" target="_blank">

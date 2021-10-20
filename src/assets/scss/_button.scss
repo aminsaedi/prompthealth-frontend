@@ -106,6 +106,9 @@
 .btn.btn-text-grey {
   @include btnText($colorGsLabel, $colorGsPlaceholder);
 }
+.btn.btn-text-lightgrey {
+  @include btnText($colorGsBackground, white);
+}
 .btn.btn-text-error {
   @include btnText($colorError, $colorErrorDark);
 }
