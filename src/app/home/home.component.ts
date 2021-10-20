@@ -35,6 +35,8 @@ export class HomeComponent implements OnInit {
   get planMenuData() { return planMenuData; }
   get user() { return this._profileService.profile; }
   get isLoggedIn(): boolean { return !!this.user; }
+  get slideshow() { return slideshow; }
+  get slideshowReverse() { return slideshow; }
 
   constructor(
     private _router: Router,
@@ -49,10 +51,6 @@ export class HomeComponent implements OnInit {
   ) { }
 
   public isPlanMenuShown = false;
-  public isPlanMenuSmShown = false;
-
-  public slideshow = slideshow;
-  public slideshowReverse = slideshow;
 
   private timerResize: any = null;
   private previousScreenWidth: number = 0;
@@ -154,13 +152,13 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /** HEADER FOR HOMEPAGE */
   showMenuSm() {
     this._router.navigate(['./'], {relativeTo: this._route, queryParams: {menu: 'show'}});
   }
 
   onClickGetListed() {
     this.isPlanMenuShown = !this.isPlanMenuShown;
-    this.isPlanMenuSmShown = !this.isPlanMenuSmShown;
   }
 
   hidePlanMenu() {
@@ -175,9 +173,6 @@ export class HomeComponent implements OnInit {
     if(this.slideshowItems.length > 0 && this.slideshowReverseItems.length > 0) {
       let currentDistance = 0;
       const distancePerMove = 0.2;
-
-      // this.moveSlideshow(this.slideshowItems.toArray(), currentDistance, false);
-      // this.moveSlideshow(this.slideshowReverseItems.toArray(), currentDistance, true);
 
       setInterval(() => {
         currentDistance += distancePerMove;
@@ -214,9 +209,9 @@ export class HomeComponent implements OnInit {
       initialPosition += this.sizeL ? el.clientHeight : el.clientWidth;
       initialPosition += gap;
     });
-
-
   }
+  /** HEADER FOR HOMEPAGE END */
+
 
   /** CATEGORIES */
   private categories: Category[];

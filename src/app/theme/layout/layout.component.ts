@@ -55,7 +55,6 @@ export class LayoutComponent implements OnDestroy, OnInit {
         }
         setTimeout(() => {
           this.disableHeaderAnimation = true;
-          console.log(this.disableHeaderAnimation);
         },500);
       });
     }
