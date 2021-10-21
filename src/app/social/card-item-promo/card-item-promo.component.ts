@@ -48,9 +48,11 @@ export class CardItemPromoComponent implements OnInit {
       this.isCopiedMessageShown = true;
 
       setTimeout(() => { this.isCopiedMessageShown = false; }, 2000);
-    }
+    }   
+  }
 
-    
+  onClickLink(e: Event) {
+    e.stopPropagation();
   }
 
 }

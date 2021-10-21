@@ -98,6 +98,7 @@ export class EditorService {
         promo: new FormControl('', validators.promoCode),
         availableUntil: new FormControl(null, validators.promoExpireDate),
         images: new FormControl(), // TODO: need change to FormArray in ver2.1
+        link: new FormControl('', validators.promoLink),
       });
     }
 
@@ -117,7 +118,8 @@ export class EditorService {
     }
 
     if(f.description) {
-      const desc = f.description.value || '';
+      let desc = f.description.value || '';
+      desc = desc.trim();
       f.description.setValue(desc.replace(/(<p><br><\/p>)+$/, ''));
     }
   }

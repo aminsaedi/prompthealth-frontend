@@ -314,4 +314,5 @@ export const validators = {
 
   promoCode: [Validators.maxLength(minmax.promoCodeMax)],
   promoExpireDate: [validatorPatternDate()],
+  promoLink: validatorUrl,
 }

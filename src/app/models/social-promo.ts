@@ -10,6 +10,8 @@ export class SocialPromo extends SocialNote implements ISocialPost {
     return this.data.availableUntil ? this.availableUntil.getTime() - now.getTime() > 0 : true;
   }
 
+  get link() { return this.data.link || null; }
+
   constructor(protected data: ISocialPost) {
     super(data);
   }

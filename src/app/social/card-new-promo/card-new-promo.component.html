@@ -44,36 +44,46 @@ class="rounded-8p bg-white body1 text-body mb-15p"
       </div>
     </div>
 
-    <div class="d-lg-flex justify-content-between align-items-start p-20p">
-      <div class="d-lg-flex flex-grow-1">
-        <div class="mr-lg-10p mb-10p mb-lg-0p flex-grow-1">
-          <label for="code" class="text-label subtitle2 clamp-1line">Discount code</label>
-          <form-item-input
-          name="code"
-          label="Discount code"
-          placeholder="Enter code"
-          [submitted]="isSubmitted"
-          autocapitalize="off"
-          [controller]="f.promo"
-          [max]="maxPromoCode"
-          ></form-item-input>
-        </div>
+    <div class="d-lg-flex justify-content-between align-items-start pt-20p px-20p">
+      <div class="mr-lg-10p mb-10p mb-lg-0p flex-grow-1">
+        <label for="code" class="text-label subtitle2 clamp-1line">Discount code</label>
+        <form-item-input
+        name="code"
+        label="Discount code"
+        placeholder="Enter code"
+        [submitted]="isSubmitted"
+        autocapitalize="off"
+        [controller]="f.promo"
+        [max]="maxPromoCode"
+        ></form-item-input>
+      </div>
 
-        <div class="mb-10p mb-lg-0p flex-grow-1">
-          <label for="date" class="subtitle2 text-label clamp-1line">Expire date</label>
-          <form-item-datetime
-          label="Expire date"
-          [submitted]="isSubmitted"
-          [controller]="f.availableUntil"
-          placeholder="yyyy-mm-dd"
-          [dateOnly]="true"
-          [minDateTime]="minDateTime"
-          ></form-item-datetime>
-        </div>
+      <div class="mb-10p mb-lg-0p flex-grow-1">
+        <label for="date" class="subtitle2 text-label clamp-1line">Expire date</label>
+        <form-item-datetime
+        label="Expire date"
+        [submitted]="isSubmitted"
+        [controller]="f.availableUntil"
+        placeholder="yyyy-mm-dd"
+        [dateOnly]="true"
+        [minDateTime]="minDateTime"
+        ></form-item-datetime>
       </div>
     </div>
 
-    <div class="d-flex px-20p pt-10p justify-content-between">
+    <div class="px-20p">
+      <label for="code" class="text-label subtitle2 clamp-1line">Link</label>
+      <form-item-input
+      name="code"
+      label="Discount code"
+      placeholder="https://your-website.com/awesome-product"
+      [submitted]="isSubmitted"
+      autocapitalize="off"
+      [controller]="f.link"
+      ></form-item-input>
+    </div> 
+
+    <div class="d-flex px-20p pt-20p justify-content-between">
       <div class="d-flex">
         <div>
           <button 
