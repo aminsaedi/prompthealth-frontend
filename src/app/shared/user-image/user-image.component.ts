@@ -27,7 +27,7 @@ export class UserImageComponent implements OnInit {
 
 
   get imageUrl(){
-    return !this.image ? null : (this.image.match(/\?ver/)) ? this.image : this.image + '?ver=1.0.2';
+    return !this.image ? null : (this.image.match(/\?ver/)) ? this.image : this.image + '?ver=2';
   }
 
   get imageStyle() {

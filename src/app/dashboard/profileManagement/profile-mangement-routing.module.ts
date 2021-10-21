@@ -114,10 +114,10 @@ const routes: Routes = [
         path: 'partner-profile',
         component: PartnerGeneralComponent,
       },
-      {
-        path: 'partner-offer',
-        component: PartnerOfferComponent,
-      },
+      // {
+      //   path: 'partner-offer',
+      //   component: PartnerOfferComponent,
+      // },
       { path: 'my-posts', loadChildren: () => PostManagerModule },
 
     ]

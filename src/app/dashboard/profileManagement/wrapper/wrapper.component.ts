@@ -377,7 +377,7 @@ export class WrapperComponent implements OnInit {
             this.partnerProfileTab(true),
             this.passwordTab(true),
             this.partnerServiceTab(true),
-            this.partnerOfferTab(true),
+            // this.partnerOfferTab(true),
             this.subscriptionTab(true),
             this.paymentTab(true),
           ];

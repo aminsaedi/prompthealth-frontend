@@ -114,7 +114,7 @@ export class Profile implements IProfile {
         data.image : 
         null;
 
-    this._profileImage = image ? image + '?ver=1.0.2' : null;
+    this._profileImage = image ? image + '?ver=2' : null;
     let imageType = '';
     if(image) {
       const regex = /\.(jpe?g|png)$/;

@@ -135,15 +135,15 @@ const routes: Routes = [
         component: RegisterPartnerServiceComponent,
         data: {index: 1}
       },
-      {
-        path: 'offer',
-        component: RegisterPartnerOfferComponent,
-        data: {index: 2}
-      },
+      // {
+      //   path: 'offer',
+      //   component: RegisterPartnerOfferComponent,
+      //   data: {index: 2}
+      // },
       {
         path: 'term',
         component: RegisterPartnerTermComponent,
-        data: {index: 3}
+        data: {index: 2}
       },
     ],
   },
