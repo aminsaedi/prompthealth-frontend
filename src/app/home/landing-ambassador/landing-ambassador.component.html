@@ -13,7 +13,7 @@
 
           <h4 class="text-primary-dark mb-3">Eligibility Criteria:</h4>
           <ol class="mb-4">
-            <li>You must be signed up as a practitioner on our platform.</li>
+            <li>You must be signed up as a provider on our platform.</li>
             <li>You must be an accredited health or wellness professional within Canada.</li>
           </ol>
 
@@ -50,7 +50,7 @@
           <div *ngIf="!user">
             <p>To get the referral link, you must sign up first.</p>
             <div class="mb-5 d-flex flex-column align-items-start">
-              <a class="btn btn-outline small" [routerLink]="['/plans']">Sign up as Practitioner</a>
+              <a class="btn btn-outline small" [routerLink]="['/plans']">Sign up as provider</a>
               <a class="btn btn-outline small mt-3" [routerLink]="['/plans/product']">Sign up as
                 Product/Service</a>
             </div>

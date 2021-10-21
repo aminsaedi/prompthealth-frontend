@@ -89,7 +89,7 @@ export class SubscriptionPlanComponent implements OnInit {
     const ls = this._uService.localStorage;
     const ss = this._uService.sessionStorage;
     this._uService.setMeta(this._router.url, {
-      title: 'Plans for practitioners | PromptHealth',
+      title: 'Plans for providers | PromptHealth',
       description: 'Join us to get exposed to clients. Subscribe premium plan to get more feature such as booking system, connect to google reviews / social medias, performance dashboard and more!',
       image: 'https://prompthealth.ca/assets/img/hero-subscription-plan-s.png',
       imageType: 'image/png',

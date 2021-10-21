@@ -310,7 +310,7 @@ class="bg-background p-4"
             <li class="mb-2 mb-md-3 pr-3 table-item" *ngFor="let item of userInfo?.serviceDelivery">{{item}}</li>
           </ul> -->
           <p class="font-small col-12 mb-0 " *ngIf="!!userInfo?.seeOtherRegion">
-            ** This practitioner can't see patients who are out of {{userInfo.state}}
+            ** This provider can't see patients who are out of {{userInfo.state}}
           </p>
           <p class="font-small col-12 mt-2 " *ngIf="userInfo?.provideVirtual">
             ** Virtual/Online services may not be available to all locations. Please inquire the service provider for confirmation.
