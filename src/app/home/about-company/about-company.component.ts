@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { first } from 'rxjs/operators';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { ICouponData } from 'src/app/models/coupon-data';
 import { IPlanData, IPlanFeatureData, PlanTypeProduct } from 'src/app/models/default-plan';
@@ -45,7 +46,21 @@ export class AboutCompanyComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _router: Router,
     private _toastr: ToastrService,
+    private _route: ActivatedRoute,
+    private _el: ElementRef,
   ) { }
+
+  ngAfterViewInit() {
+    this._route.fragment.pipe( first() ).subscribe(fragment => {
+      const el: HTMLElement = this._el.nativeElement.querySelector('#' + fragment);
+      if(el) {
+        setTimeout(() => {
+          const top = el.getBoundingClientRect().top;
+          smoothWindowScrollTo(top);  
+        }, 300); 
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.initPlans();

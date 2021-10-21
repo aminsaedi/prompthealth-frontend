@@ -394,7 +394,7 @@ const appFeatureItems = [
     },
     {
       icon: 'shield-check-outline',
-      title: 'COMING SOON: Discover select deals on recommended products.',
+      title: 'Discover select deals on recommended products.',
       content: 'Browse through wellness products recommended by the experts themselves.',
     }
   ],
@@ -484,7 +484,7 @@ const planMenuData = [
     icon: 'verified',
   }, {
     title: 'Companies',
-    text: 'Celine Spino loves to cook and dine out. But a few years ago',
+    text: 'Partner with us and we will promote you to our community with special deals, promotions and your events.',
     link: '/plans/product',
     icon: 'briefcase-2',
   }
