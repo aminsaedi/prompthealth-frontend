@@ -29,7 +29,7 @@ import { subscriptionPlanProductComponent } from './subscription-plan-product/su
 import { SharedModule } from '../shared/shared.module';
 import { NgxSocialShareModule } from 'ngx-social-share';
 import { GetFeaturedTabComponent } from './get-featured-tab/get-featured-tab.component';
-import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
+// import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
 import { ListingProductComponent } from './listing-product/listing-product.component';
 import { CardProductComponent } from './_elements/card-product/card-product.component';
 import { InvitationComponent } from './invitation/invitation.component';
@@ -86,7 +86,7 @@ import { TagProviderComponent } from './tag-provider/tag-provider.component';
     SubscriptionPlanComponent,
     subscriptionPlanProductComponent,
     GetFeaturedTabComponent,
-    ProfilePartnerComponent,
+    // ProfilePartnerComponent,
     ListingProductComponent,
     CardProductComponent,
     InvitationComponent,
