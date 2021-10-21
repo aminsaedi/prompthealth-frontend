@@ -29,6 +29,10 @@ export interface IGetPractitionersResult extends IResponseData {
   }
 }
 
+export interface IGetCompaniesResult extends IResponseData {
+  data: IUserDetail[];
+}
+
 export interface IGetPlansResult extends IResponseData {
   data: IDefaultPlan[]
 }
