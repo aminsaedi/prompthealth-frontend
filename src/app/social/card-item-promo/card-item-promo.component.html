@@ -25,6 +25,18 @@
 
 <div class="mb-10p">
   <div class="post-content" style="white-space:pre-wrap">{{post.description}}</div>
+  <div>
+    <a 
+    *ngIf="post.link"
+    [href]="post.link"
+    target="_blank"
+    class="body1 clamp-1line"
+    (click)="onClickLink($event)"
+    >
+      <i iconPh="external-link" class="text-primary mr-5p"></i>
+      <span>{{post.link}}</span>
+    </a>
+  </div>
 </div>
 
 <ul 

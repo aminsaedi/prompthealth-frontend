@@ -66,12 +66,14 @@ export interface ISocialPost {
   /** SocialArticle */
   readLength?: number;
   readLengthLabel?: string;
+
+  /** SocialEvent & SocialPromo */
+  link?: string;
   
   /** SocialEvent */
   startAt?: Date;
   endAt?: Date;
   duration?: number;
-  link?: string;
   openStatus?: string;
   isFinished?: boolean;
   isVirtual?: boolean;
