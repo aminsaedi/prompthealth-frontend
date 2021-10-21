@@ -247,15 +247,15 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
   provider: {
     id: 'provider',
     icon: 'verified-outline',
-    title: 'Providers',
-    subtitle: 'Get the most out of PromptHealth.',
+    title: 'Advanced',
+    subtitle: 'For solo providers.',
     label: 'Popular',
     data: null,
   },
   centre: {
     id: 'centre',
     icon: 'users-outline',
-    title: 'Centre',
+    title: 'Premium',
     subtitle: 'For centers with multiple providers.',
     label: null,
     data: null,
