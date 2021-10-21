@@ -265,9 +265,10 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
 const planFeatures: IPlanFeatureData[] = [
   {item: 'Get listed with a personalized profile', targetPlan: ['basic', 'provider', 'centre'], detail: null},
   {item: 'Follow and engage with other users', targetPlan: ['basic', 'provider', 'centre'], detail: null},
-  {item: 'Share your knowledge via voice memos, notes, articles, and events', targetPlan: ['basic', 'provider', 'centre'], detail: null},
+  {item: 'Share your knowledge via voice memos, notes, and images. articles, and events', targetPlan: ['basic', 'provider', 'centre'], detail: null},
   {item: 'Receive booking requests', targetPlan: ['basic', 'provider', 'centre'], detail: null},
 
+  {item: 'Share your knowledge via voice memos, notes, and images + articles, and events', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Inter referrals enabled', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Ratings and reviews', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Performance analytics', targetPlan: ['provider', 'centre'], detail: null},
