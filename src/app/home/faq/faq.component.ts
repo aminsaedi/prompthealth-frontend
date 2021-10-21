@@ -39,11 +39,11 @@ const faqs: IFAQItem[] = [
     opened: false,
   },
   {
-    q: 'How do I find a providers?', 
+    q: 'How do I find a provider?', 
     a: `PromptHealth has a number of ways for you to find the right wellness provider. 
       <ol>
         <li>You can simply scroll through and browse the providers listed on the marketplace based on location or virtual options.There are additional filters that help you narrow down your search. </li>
-        <li>You can start with the search bar and type in a providers type (e.g. chiropractor), condition (e.g. back pain), or search a specific provider (e.g. John Smith). You can also type in your zip code to refine searches to your general area. </li>
+        <li>You can start with the search bar and type in a provider type (e.g. chiropractor), condition (e.g. back pain), or search a specific provider (e.g. John Smith). You can also type in your zip code to refine searches to your general area. </li>
         <li>If you need a little more assistance, you can use the personal match to help you filter options based on your specific needs. </li>
       </ol>`,
     opened: false,
