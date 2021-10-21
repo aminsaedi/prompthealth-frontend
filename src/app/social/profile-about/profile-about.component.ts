@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { EmbedVideoService } from 'ngx-embed-video';
 import { Subscription } from 'rxjs';
@@ -38,7 +37,6 @@ export class ProfileAboutComponent implements OnInit {
     private _qService: QuestionnaireService,
     private _uService: UniversalService,
     private _router: Router,
-    private _sanitizer: DomSanitizer,
     private _embedService: EmbedVideoService,
   ) { }
 
