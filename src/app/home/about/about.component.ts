@@ -171,7 +171,7 @@ const teamData = [
     name: 'Otto Hu',
     title: 'Software Developer',
     image: 'otto.png',
-    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, practitioners and product companies.'
+    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, providers and product companies.'
   },
   {
     name: 'Takayuki Hiraishi',
