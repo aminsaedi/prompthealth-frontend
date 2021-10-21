@@ -107,6 +107,24 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
             >Show detail</button>
           </div>
 
+          <div
+          *ngIf="videos.length > 0"
+          class="mb-20p"
+          >
+          <h6>Video:</h6>
+          <ul class="list-unstyled row">
+            <li 
+            *ngFor="let v of videos"
+            class="col-12 col-lg-6"
+            >
+              <div 
+              class="video-container"
+              [innerHTML]="v"
+              ></div>
+            </li>
+          </ul>
+          </div>
+
           <div 
           class="mb-20p"
           *ngIf="profile.staffs.length > 0"
