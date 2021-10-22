@@ -64,8 +64,6 @@ export class ProfilePromotionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.setMeta();
-
     this.onProfileChanged();
     this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
       this.onProfileChanged();
