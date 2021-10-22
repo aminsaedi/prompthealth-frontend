@@ -1,5 +1,5 @@
 export type PlanTypePractitioner = 'basic' | 'provider' | 'centre';
-export type PlanTypeProduct = 'productBasic'
+export type PlanTypeProduct = 'productBasic' | 'productCustom'
 export type PlanType = PlanTypePractitioner | PlanTypeProduct;
 
 export interface IPlanData {
