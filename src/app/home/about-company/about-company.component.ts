@@ -186,6 +186,14 @@ const plans: {[k in PlanTypeProduct]: IPlanData} = {
     label: null,
     data: null,
   },
+  productCustom: {
+    id:'custom',
+    icon: 'file',
+    title: 'Customize',
+    subtitle: 'For customize',
+    label: null,
+    data: null,
+  }
   // productAdvanced: {
   //   id: 'advanced',
   //   icon: 'briefcase-2',
@@ -198,10 +206,13 @@ const plans: {[k in PlanTypeProduct]: IPlanData} = {
 
 const planFeatures: IPlanFeatureData[] = [
   {item: 'Create a personalized profile', targetPlan: ['productBasic'], detail: 'explain yourself here.'},
-
   {item: 'Create dynamic discounts and send notifications to wellness seekers and providers about new promotions', targetPlan: ['productBasic'], detail: 'explain yourself here.'},
   {item: 'Create events and send notifications to wellness seekers and providers about your upcoming summit, course or webinar', targetPlan: ['productBasic'], detail: 'explain yourself here.'},
   {item: 'Receive recommendations and endorsement from wellness providers', targetPlan: ['productBasic'], detail: 'explain yourself here.'},
+
+  {item: 'TEXT HERE', targetPlan: ['productCustom'], detail: null},
+  {item: 'TEXT HERE', targetPlan: ['productCustom'], detail: null},
+  {item: 'TEXT HERE', targetPlan: ['productCustom'], detail: null},
 ];
 
 const faqs: IFAQItem[] = [
