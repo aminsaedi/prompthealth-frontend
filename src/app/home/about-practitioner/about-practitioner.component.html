@@ -36,6 +36,7 @@
           20% Discount
         </div>      <switch 
         [labels]="['Annually', 'Monthly']"
+        [initialState]="'on'"
         (changeState)="onChangeDuration($event)"
         ></switch>
       </div>  
@@ -101,10 +102,10 @@
             </li>
           </ng-container>
 
-          <li class="position-relative mt-40p mb-20p subtitle2">
+          <!-- <li class="position-relative mt-40p mb-20p subtitle2">
             <i class="icon-pre text-primary" iconPh="megaphone"></i>
-            <a routerLink="/ambassador-program">Become ambassador and get credited</a>
-          </li>
+            <a routerLink="/ambassador-program">Become ambassador and get credit</a>
+          </li> -->
         </ul>
 
         <button 
@@ -131,6 +132,11 @@
         </ng-container>
       </div>
     </div>
+  </div>
+
+  <div class="mt-30p text-center body1">
+    Looking for Social media feature & promotion? 
+    <a class="ml-10p btn-text-primary" routerLink="/contact-us"><u>Contact us</u></a>
   </div>
 </section>
 

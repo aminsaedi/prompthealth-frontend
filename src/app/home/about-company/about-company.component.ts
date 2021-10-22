@@ -27,7 +27,7 @@ export class AboutCompanyComponent implements OnInit {
   public planFeatures = planFeatures;
   public faqs = faqs;
 
-  public isDurationMonthly: boolean = false;
+  public isDurationMonthly: boolean = true;
   public isLoading: boolean = false;
 
   public couponData: ICouponData = null;
@@ -189,7 +189,7 @@ const plans: {[k in PlanTypeProduct]: IPlanData} = {
   productCustom: {
     id:'custom',
     icon: 'rocket-outline',
-    title: 'Customize',
+    title: 'Custom',
     subtitle: '',
     label: null,
     data: null,

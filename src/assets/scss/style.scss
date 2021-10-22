@@ -55,6 +55,15 @@ a {
     color: $colorPrimaryDark;
     text-decoration: none;
   }
+
+  &.text-label {
+    color: $colorGsLabel;
+
+    &:hover,
+    &:not([href]):hover {
+      color: $colorGsPlaceholder;
+    }    
+  }
 }
 
 .cursor-pointer {
