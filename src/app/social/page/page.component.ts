@@ -81,9 +81,7 @@ export class PageComponent implements OnInit {
     if (this.post.isNote) {
       title = `A note from ${this.post.authorName} posted at ${formatDateToString(new Date(this.post.createdAt))}`;
     } else if (this.post.isPromo) {
-      const date: Date = this.post.availableUntil as Date;
-      const availableUntil = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
-      title = `Special discount offer from ${this.post.authorName}!${this.post.availableUntil ? (' Available until ' + formatDateToString(availableUntil, true)) : ''}`;
+      title = `Special discount offer from ${this.post.authorName}!${this.post.availableUntil ? (' Available until ' + formatDateToString(this.post.availableUntil as Date, true)) : ''}`;
     } else {
       title = this.post.title;
     }
