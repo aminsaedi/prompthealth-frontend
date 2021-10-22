@@ -32,8 +32,10 @@
       >
         <div class="discount-popup body-small text-body">
           20% Discount
-        </div>      <switch 
+        </div>      
+        <switch 
         [labels]="['Annualy', 'Monthly']"
+        [initialState]="'on'"
         (changeState)="onChangeDuration($event)"
         ></switch>
       </div>  
@@ -46,9 +48,13 @@
     class="col-12 col-lg-4 mb-20p mb-lg-0p"
     >
       <div 
-      class="card h-100 text-left rounded12p p-15p p-md-30p rounded-12p"
+      class="card h-100 text-left rounded12p p-15p p-md-30p rounded-12p position-relative"
       [ngClass]="{active: plan.key == 'productAdvanced'}"
       >
+        <a 
+        [id]="'plan-' + plan.key" 
+        style="top: -100px; position: absolute;"
+        ></a>
         <div 
         *ngIf="plan.value.label"
         class="label body1"
@@ -86,10 +92,10 @@
             </li>  
           </ng-container>
 
-          <li class="position-relative mt-40p mb-20p subtitle2">
+          <!-- <li class="position-relative mt-40p mb-20p subtitle2">
             <i class="icon-pre text-primary" iconPh="megaphone"></i>
-            <a routerLink="/ambassador-program">Become ambassador and get credited</a>
-          </li>
+            <a routerLink="/ambassador-program">Become ambassador and get credit</a>
+          </li> -->
         </ul>
 
         <ng-container *ngIf="plan.key == 'productBasic'">

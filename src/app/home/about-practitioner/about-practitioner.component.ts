@@ -29,7 +29,7 @@ export class AboutPractitionerComponent implements OnInit {
   public planFeatures = planFeatures;
   public faqs = faqs;
 
-  public isDurationMonthly: boolean = false;
+  public isDurationMonthly: boolean = true;
   public isLoading: boolean = false;
 
   public couponData: ICouponData = null;
