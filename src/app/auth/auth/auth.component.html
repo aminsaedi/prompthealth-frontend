@@ -88,34 +88,34 @@
 
         <a 
         *ngIf="roleType != 'SP' && roleType != 'C'"
-        routerLink="/plans"
+        [routerLink]="[getListedProvider.link]"
         class="text-body"
         style="flex-basis: 50%"
         >
           <div class="h-100 p-15p bg-white rounded-12p shadow my-15p my-lg-0p mx-lg-15p">
             <h6>
-              <i iconPh="verified" class="text-primary-dark mr-5p"></i>
-              <span>Wellness Providers</span>
+              <i [iconPh]="getListedProvider.icon" class="text-primary-dark mr-5p"></i>
+              <span>{{getListedProvider.title}}</span>
             </h6>
             <p class="mb-0">
-              List your practice, get discovered by potential clients, and network within the local health and wellness community. 
+              {{getListedProvider.text}}
             </p>
           </div>
         </a>
     
         <a 
         *ngIf="roleType != 'P'"
-        routerLink="/plans/product"
+        [routerLink]="[getListedCompany.link]"
         class="text-body"
         style="flex-basis: 50%"
         >
           <div class="h-100 p-15p bg-white rounded-12p shadow my-15p my-lg-0p mx-lg-15p">
             <h6>
-              <i iconPh="briefcase-2" class="text-primary-dark mr-5p"></i>
-              <span>Wellness Companies</span>
+              <i [iconPh]="getListedCompany.icon" class="text-primary-dark mr-5p"></i>
+              <span>{{getListedCompany.title}}</span>
             </h6>
             <p class="mb-0">
-              Partner with us and we will promote you to our community with special deals, promotions and your events.
+              {{getListedCompany.text}}
             </p>
           </div>
         </a>
