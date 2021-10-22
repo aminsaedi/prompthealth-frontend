@@ -180,17 +180,17 @@ const features = [
 const plans: {[k in PlanTypeProduct]: IPlanData} = {
   productBasic: {
     id: 'basic',
-    icon: 'file',
+    icon: 'shopping-bag-outline',
     title: 'Basic',
-    subtitle: 'For individual use',
+    subtitle: '',
     label: null,
     data: null,
   },
   productCustom: {
     id:'custom',
-    icon: 'file',
+    icon: 'rocket-outline',
     title: 'Customize',
-    subtitle: 'For customize',
+    subtitle: '',
     label: null,
     data: null,
   }
@@ -210,9 +210,9 @@ const planFeatures: IPlanFeatureData[] = [
   {item: 'Create events and send notifications to wellness seekers and providers about your upcoming summit, course or webinar', targetPlan: ['productBasic'], detail: 'explain yourself here.'},
   {item: 'Receive recommendations and endorsement from wellness providers', targetPlan: ['productBasic'], detail: 'explain yourself here.'},
 
-  {item: 'TEXT HERE', targetPlan: ['productCustom'], detail: null},
-  {item: 'TEXT HERE', targetPlan: ['productCustom'], detail: null},
-  {item: 'TEXT HERE', targetPlan: ['productCustom'], detail: null},
+  {item: 'Promotion on side panels of our social feed for custom duration of time', targetPlan: ['productCustom'], detail: null},
+  {item: 'Promotion on our social channels and podcast', targetPlan: ['productCustom'], detail: null},
+  {item: 'Promotion via monthly internal newsletter', targetPlan: ['productCustom'], detail: null},
 ];
 
 const faqs: IFAQItem[] = [

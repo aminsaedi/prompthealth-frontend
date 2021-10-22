@@ -1611,6 +1611,9 @@ i {
   content: "\e947";
   margin-left: -1em;
 }
+.icon-shopping-bag-outline:before {
+  content: "\e947";
+}
 .icon-sliders-horiz .path1:before {
   content: "\e948";
   opacity: 0.16;
@@ -2502,6 +2505,10 @@ i {
 .icon-rocket .path2:before {
   content: "\ea22";
   margin-left: -1em;
+}
+.icon-rocket-outline:before {
+  content: "\ea22";
+
 }
 .icon-tablet .path1:before {
   content: "\ea23";
