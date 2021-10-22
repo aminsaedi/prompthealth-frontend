@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
@@ -31,9 +32,7 @@ export class ProfilePromotionComponent implements OnInit {
   private isMorePromos = true;
   public isLoading = false;
 
-  // subscription or subscriptionCacheChange is not necessary here (not same as profile-feed)
-  // because html continuously reads this.promos, so when it's changed, automatically the change will be applied.
-
+  private subscription: Subscription;
 
   @HostListener('window:scroll', ['$event']) onWindowScroll(e: Event) {
     if(!this.isLoading && this.isMorePromos && document.body && this.promos && this.promos.length > 0) {
@@ -54,16 +53,40 @@ export class ProfilePromotionComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.subscription.unsubscribe();  
+
     if(this.newPromos?.length > 0) {
       for(let i = this.newPromos.length - 1; i>=0; i-- ) {
         this._socialService.saveCacheSingle(this.newPromos[i].decode(), this.profile._id);
       }
     }
+
   }
 
   ngOnInit(): void {
-
+    this.onProfileChanged();
+    this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
+      this.onProfileChanged();
+    });
   }
+
+
+  onProfileChanged() {
+    this.setMeta();
+  }
+
+  setMeta() {
+    if(this.profile) {
+      this._uService.setMeta(this._router.url, {
+        title: `Special offers from ${this.profile.name} | PromptHealth Community`,
+        description: `Check out special offers from ${this.profile.name}`,
+        image: this.profile.imageFull,
+        imageType: this.profile.imageType,
+        imageAlt: this.profile.name,
+      });  
+    }
+  }
+
 
   fetchPromos(): Promise<void> {
     return new Promise((resolve, reject) => {

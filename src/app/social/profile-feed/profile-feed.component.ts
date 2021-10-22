@@ -88,8 +88,10 @@ export class ProfileFeedComponent implements OnInit {
 
   setMeta() {
     if(this.profile) {
+      const contentType = this._route.snapshot.data.contentType;
+
       this._uService.setMeta(this._router.url, {
-        title: `Contents from ${this.profile.name}`,
+        title: (contentType == 'event' ? `Events` : `Contents`) + ` from ${this.profile.name} | PromptHealth Community`,
         description: `Check out healthcare contents provided by ${this.profile.name}`,
         image: this.profile.imageFull,
         imageType: this.profile.imageType,

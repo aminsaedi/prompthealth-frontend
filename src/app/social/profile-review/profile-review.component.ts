@@ -49,7 +49,7 @@ export class ProfileReviewComponent implements OnInit {
   setMeta() {
     if(this.profile) {
       this._uService.setMeta(this._router.url, {
-        title: `${this.profile.name} review`,
+        title: `${this.profile.name} review | PromptHealth Community`,
         description: `Check out how people evaluate ${this.profile.name}`,
         image: this.profile.imageFull,
         imageType: this.profile.imageType,
