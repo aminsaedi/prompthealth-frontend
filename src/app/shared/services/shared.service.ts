@@ -94,9 +94,11 @@ export class SharedService {
   async logout(navigate: boolean = true) {
     // console.log(token);
     await this.angularFireMessaging.getToken.toPromise().then(token => {
-      this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
-        console.log('Cleared fcm token');
-      });
+      if (token) {
+        this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
+          console.log('Cleared fcm token');
+        });
+      }
     }).catch(error => {
       console.error(error);
     });
