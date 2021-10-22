@@ -1,8 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
+// import { Partner } from 'src/app/models/partner';
+// import { IGetCompaniesResult } from 'src/app/models/response-data';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
+import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { locations } from 'src/app/_helpers/location-data';
 import { environment } from 'src/environments/environment';
@@ -17,12 +20,19 @@ import { SocialPostTaxonomyType } from '../social.service';
 export class HomeComponent implements OnInit {
 
   get topics() { return this._catService.categoryList; }
+  // get imageSponsor() {
+  //   return this.sponsor?.productImages?.length > 0 ? 
+  //     this.sponsor.productImages[0].url :
+  //       this.sponsor ? this.sponsor.profileImage : null;
+  // }
   
   public countTypeOfProviders: number;
   public countCities: number;
 
   public selectedTaxonomyType: SocialPostTaxonomyType;
   public idPH = environment.config.idSA;
+
+  // public sponsor: Partner;
 
 
   iconOf(topic: Category): string {
@@ -34,6 +44,7 @@ export class HomeComponent implements OnInit {
     private _location: Location,
     private _catService: CategoryService,
     private _qService: QuestionnaireService,
+    // private _sharedService: SharedService,
   ) { }
 
   
@@ -43,6 +54,11 @@ export class HomeComponent implements OnInit {
     });
 
     this.countCities = Object.keys(locations).length;
+    // this._sharedService.getNoAuth('company/get-random').subscribe((res: IGetCompaniesResult) => {
+    //   if(res.statusCode == 200) {
+    //     this.sponsor = new Partner(res.data[0]);
+    //   }
+    // });
   }
 
   navigateTo(route: string[], option: NavigationExtras = {}) {

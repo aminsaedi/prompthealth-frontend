@@ -1611,6 +1611,9 @@ i {
   content: "\e947";
   margin-left: -1em;
 }
+.icon-shopping-bag-outline:before {
+  content: "\e947";
+}
 .icon-sliders-horiz .path1:before {
   content: "\e948";
   opacity: 0.16;
@@ -2503,6 +2506,10 @@ i {
   content: "\ea22";
   margin-left: -1em;
 }
+.icon-rocket-outline:before {
+  content: "\ea22";
+
+}
 .icon-tablet .path1:before {
   content: "\ea23";
   opacity: 0.16;
@@ -2994,6 +3001,10 @@ i {
   content: "\eabd";
   margin-left: -1em;
 }
+.icon-bell-outline:before {
+  content: "\eabd";
+}
+
 .icon-cross-octangle .path1:before {
   content: "\eabe";
   opacity: 0.16;

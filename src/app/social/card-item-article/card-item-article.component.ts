@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ISocialPost } from 'src/app/models/social-post';
 
 @Component({
@@ -12,11 +12,19 @@ export class CardItemArticleComponent implements OnInit {
   @Input() post: ISocialPost;
   @Input() shorten: boolean = true;
 
+  @ViewChild('content') private content: ElementRef;
+
   public isPopupPostMenuShown = false;
+  public isContentGradientShown: boolean = false;
 
   constructor(
     private _location: Location,
   ) { }
+
+  ngAfterViewInit() {
+    const el = this.content.nativeElement as HTMLDivElement;
+    this.isContentGradientShown = (el.clientHeight >= 200);
+  }
 
   ngOnInit(): void {
   }

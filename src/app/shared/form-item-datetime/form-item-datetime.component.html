@@ -3,7 +3,7 @@
   [label]="label"
   [controller]="controller"
   (click)="showPicker()"
-  placeholder="yyyy-mm-dd HH:MM"
+  [placeholder]="placeholder"
   [disabled]="disabled"
   [submitted]="submitted"
   ></form-item-input>
@@ -26,6 +26,7 @@
       ></bs-datepicker-inline>
   
       <timepicker 
+      *ngIf="!dateOnly"
       [(ngModel)]="form.time"
       [minuteStep]="15"
       (isValid)="updateDateTime(true)"

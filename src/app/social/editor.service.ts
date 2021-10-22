@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from '../_helpers/form-settings';
 import { Profile } from '../models/profile';
-import { formatStringToDate } from '../_helpers/date-formatter';
+import { formatDateToString, formatStringToDate } from '../_helpers/date-formatter';
 import { ISocialPost } from '../models/social-post';
 
 
@@ -21,6 +21,7 @@ export class EditorService {
 
   constructor() { }
 
+  // this function should dispose form data. (reset is not enough.)
   dispose() {
     this.resetForm();
     this.unlockEditor();
@@ -45,6 +46,10 @@ export class EditorService {
 
     if(this.editorType == 'EVENT') {
       f.eventType.setValue('ONLINE');
+    }
+
+    if(this.editorType == 'PROMO') {
+      f.promo.setValue('');
     }
   }
 
@@ -85,6 +90,16 @@ export class EditorService {
         images: new FormControl(), // TODO: need change to FormArray in ver2.1
         voice: new FormControl(),
       }, validators.note);
+    } else if (type =='PROMO') {
+      this._form = new FormGroup({
+        contentType: new FormControl(type),
+        authorId: new FormControl(profile._id, validators.savePostAuthorId),
+        description: new FormControl('', validators.publishPostDescription),
+        promo: new FormControl('', validators.promoCode),
+        availableUntil: new FormControl(null, validators.promoExpireDate),
+        images: new FormControl(), // TODO: need change to FormArray in ver2.1
+        link: new FormControl('', validators.promoLink),
+      });
     }
 
     this._form.valueChanges.subscribe(() => {
@@ -103,7 +118,8 @@ export class EditorService {
     }
 
     if(f.description) {
-      const desc = f.description.value || '';
+      let desc = f.description.value || '';
+      desc = desc.trim();
       f.description.setValue(desc.replace(/(<p><br><\/p>)+$/, ''));
     }
   }

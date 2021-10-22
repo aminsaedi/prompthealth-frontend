@@ -58,7 +58,7 @@ export class RegisterQuestionnaireComponent implements OnInit {
       (this.userRole == 'P') ? [
         {label: 'General Information',     isComplete: false, route: 'general'},
         {label: 'Company Services',        isComplete: false, route: 'service'},
-        {label: 'Offer for PromptHealth',  isComplete: false, route: 'offer'},
+        // {label: 'Offer for PromptHealth',  isComplete: false, route: 'offer'},
         {label: 'Terms and Conditions',    isComplete: false, route: 'term'},
       ] : 
       (this.userRole == 'SP' || this.userRole == 'C') ? [

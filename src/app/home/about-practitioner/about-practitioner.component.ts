@@ -29,7 +29,7 @@ export class AboutPractitionerComponent implements OnInit {
   public planFeatures = planFeatures;
   public faqs = faqs;
 
-  public isDurationMonthly: boolean = false;
+  public isDurationMonthly: boolean = true;
   public isLoading: boolean = false;
 
   public couponData: ICouponData = null;
@@ -247,15 +247,15 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
   provider: {
     id: 'provider',
     icon: 'verified-outline',
-    title: 'Providers',
-    subtitle: 'Get the most out of PromptHealth.',
+    title: 'Advanced',
+    subtitle: 'For solo providers.',
     label: 'Popular',
     data: null,
   },
   centre: {
     id: 'centre',
     icon: 'users-outline',
-    title: 'Centre',
+    title: 'Premium',
     subtitle: 'For centers with multiple providers.',
     label: null,
     data: null,
@@ -265,9 +265,9 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
 const planFeatures: IPlanFeatureData[] = [
   {item: 'Get listed with a personalized profile', targetPlan: ['basic', 'provider', 'centre'], detail: null},
   {item: 'Follow and engage with other users', targetPlan: ['basic', 'provider', 'centre'], detail: null},
-  {item: 'Share your knowledge via voice memos, notes, articles, and events', targetPlan: ['basic', 'provider', 'centre'], detail: null},
   {item: 'Receive booking requests', targetPlan: ['basic', 'provider', 'centre'], detail: null},
 
+  {item: 'Share your knowledge via voice memos, notes, and images + articles, and events', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Inter referrals enabled', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Ratings and reviews', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Performance analytics', targetPlan: ['provider', 'centre'], detail: null},

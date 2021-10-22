@@ -48,6 +48,7 @@ export interface ISocialPost {
   isNote?: boolean;
   isArticle?: boolean;
   isEvent?: boolean;
+  isPromo?: boolean;
   isMoreShown?: boolean;
   isLiked?: boolean;
   isBookmarked?: boolean;
@@ -65,17 +66,27 @@ export interface ISocialPost {
   /** SocialArticle */
   readLength?: number;
   readLengthLabel?: string;
+
+  /** SocialEvent & SocialPromo */
+  link?: string;
   
   /** SocialEvent */
   startAt?: Date;
   endAt?: Date;
   duration?: number;
-  link?: string;
   openStatus?: string;
   isFinished?: boolean;
   isVirtual?: boolean;
   venue?: string;
   setSanitizedDescription?(s: SafeHtml): void;
+
+  /** SocialPromo */
+  availableUntil?: string | Date;
+  promo?: string;
+  isAvailable?: boolean;
+  code?: string;
+
+  decode?(): ISocialPost;
 
 }
 
@@ -99,7 +110,7 @@ export class SocialPostBase implements ISocialPost {
   get authorImage() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.profileImage) ? this._s3 + '350x220/' + this.data.author.profileImage : 'assets/img/logo-sm-square.png'}
   get authorVerified() {return (this.data.author && typeof this.data.author != 'string' && this.data.author.verifiedBadge) ? true : false; }
 
-  get coverImage() { return this.data.image ? this._s3 + this.data.image : (this.data.images && this.data.images.length > 0) ? this._s3 + this.data.images[0] : '/assets/img/logo-square-primary-light.png'; }
+  get coverImage() { return this.data.image ? this._s3 + this.data.image : (this.data.images && this.data.images.length > 0) ? this._s3 + this.data.images[0] : '/assets/img/logo-100x35-primary-light.png'; }
   get coverImageType() { return this.getImageTypeOf(this.coverImage); }
 
   get description() { return this.data.description || ''; }
@@ -113,6 +124,7 @@ export class SocialPostBase implements ISocialPost {
   get isNote() { return this.contentType == 'NOTE'; }
   get isArticle() { return this.contentType == 'ARTICLE'; }
   get isEvent() { return this.contentType == 'EVENT'; }
+  get isPromo() { return this.contentType == 'PROMO'; }
 
   get isLiked() { return !!this.data.liked; }
 
@@ -193,6 +205,10 @@ export class SocialPostBase implements ISocialPost {
       imageType = match ? ('image/' + match[1]) : '';  
     }
     return imageType;
+  }
+
+  decode() {
+    return this.data;
   }
 }
 

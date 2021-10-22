@@ -19,7 +19,7 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 // import { SubscriptionComponent } from './subscription/subscription.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 // import { subscriptionPlanProductComponent } from "./subscription-plan-product/subscription-plan-product.component";
-import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
+// import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
 import { ListingProductComponent } from './listing-product/listing-product.component';
 import { InvitationComponent } from './invitation/invitation.component';
 import { LandingClubhouseComponent } from "./landing-clubhouse/landing-clubhouse.component";
@@ -39,7 +39,7 @@ import { SitemapComponent } from "./sitemap/sitemap.component";
 import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
 import { AboutComponent } from "./about/about.component";
 import { AboutPractitionerComponent } from "./about-practitioner/about-practitioner.component";
-import { AboutProductComponent } from "./about-product/about-product.component";
+import { AboutCompanyComponent } from "./about-company/about-company.component";
 import { TagProviderComponent } from "./tag-provider/tag-provider.component";
 
 const routes: Routes = [
@@ -114,7 +114,7 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'plans', component: AboutPractitionerComponent },
   // { path: 'plans', component: SubscriptionPlanComponent },
-  // { path: 'plans/product', component: AboutProductComponent },
+  { path: 'plans/product', component: AboutCompanyComponent },
   { path: 'subscriptionplan', redirectTo: '/plans'},
 
   { path: 'practitioners', component: ExpertFinderComponent },
@@ -144,8 +144,9 @@ const routes: Routes = [
   ]},
 
   { path: 'products', component: ListingProductComponent, },
-  { path: 'products/:id', component: ProfilePartnerComponent },
-  { path: 'partners/:id', redirectTo: '/products/:id'},
+  // { path: 'products/:id', component: ProfilePartnerComponent },
+  { path: 'partners/:id', redirectTo: '/community/profile/:id'},
+  { path: 'products/:id', redirectTo: '/community/profile/:id'},
 
   { path: 'invitation', component: InvitationComponent }, /** invitation for webinars */
   { path: 'invitation/:id', component: LandingAmbassadorComponent, data: {type: 'client'}}, /** invitation for clients by ambassador */

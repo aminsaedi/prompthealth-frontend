@@ -1,7 +1,7 @@
 <div>
   <textarea 
   class="form-control" 
-  [ngClass]="{error: (controller.errors && submitted), success: (!controller.errors && submitted)}"
+  [ngClass]="{error: (controller.errors && submitted), success: (!controller.errors && submitted), 'transparent': _option.transparent, 'padding-zero': _option.paddingZero}"
   [id]="name"
   [formControl]="controller"
   [attr.disabled]="disabled ? 'disabled' : null"

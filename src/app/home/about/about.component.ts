@@ -116,25 +116,25 @@ const teamData = [
   {
     name: 'Bob Mehr',
     title: 'Advisor',
-    image: 'bob.jpg',
+    image: 'bob.png',
     content: 'Bob is the president of Pure Integrative Pharmacy, chain of 17 pharmacies across BC with years of experience in healthcare as a pharmacist and business leader.',
   },
   {
     name: 'Jan Simon',
     title: 'Advisor',
-    image: 'jan.jpg',
+    image: 'jan.png',
     content: 'Jan is a managing partner at Vonzeo capital and university lecturer in finance at top business schools including IESE and Simon Fraser.',
   },
   {
     name: 'Peter Valadkhan',
     title: 'Technical lead',
-    image: 'peter.jpg',
+    image: 'peter.png',
     content: 'Peter is an experienced software developer with a PHD in computer science and university lecturer at University of the Fraser Valley leading the technical development.',
   },
   {
     name: 'Renee Bigelow',
     title: 'Marketing Consultant & Fractional CMO',
-    image: 'renee.jpg',
+    image: 'renee.png',
     content: '20+ years experience leading marketing teams with speciality in technology and SaaS & Media and Marketing Services SMBs',
   }, 
   {
@@ -171,7 +171,7 @@ const teamData = [
     name: 'Otto Hu',
     title: 'Software Developer',
     image: 'otto.png',
-    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, practitioners and product companies.'
+    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, providers and product companies.'
   },
   {
     name: 'Takayuki Hiraishi',

@@ -1,4 +1,4 @@
-<header class="bg-primary-light py-5p py-md-15p" [ngClass]="{hide: !isHeaderShown, shadow: isShadowShown}">
+<header class="bg-white py-5p py-md-10p border-bottom border-line">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center">
       <div>
@@ -10,20 +10,20 @@
       <nav>
         <ul class="d-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2 text-body">
           <li class="mx-15p d-none d-lg-block">
-            <a routerLink="/practitioners" class="text-body">Find Practitioners</a>
+            <a routerLink="/practitioners" class="text-body">Find Providers</a>
           </li>
-          <!-- <li class="mx-15p d-none d-lg-block">
-            <a routerLink="/products" class="text-body">Products</a>
-          </li> -->
+          <li class="mx-15p d-none d-lg-block">
+            <a routerLink="/products" class="text-body">Companies</a>
+          </li>
           <li class="mx-10p d-none d-lg-block">
             <a routerLink="/about" class="text-body">About</a>
           </li>
 
-          <li class="mx-10p d-none d-lg-block">
+          <!-- <li class="mx-10p d-none d-lg-block">
             <a routerLink="/plans" class="text-body">Get Listed</a>
-          </li>
+          </li> -->
 
-          <!-- <li class="mx-15p d-none d-lg-block position-relative" (clickOutside)="hidePlanMenu()">
+          <li class="mx-15p d-none d-lg-block position-relative" (clickOutside)="hidePlanMenu()">
             <a class="text-body" (click)="onClickGetListed()">Get listed</a>
             <i iconPh="chevron-down" class="ml-5p"></i>
             <div 
@@ -48,7 +48,7 @@
                 </div>
               </a>
             </div>
-          </li> -->
+          </li>
 
           <li *ngIf="!isLoggedIn" class="mx-15p d-none d-lg-block">
             <a routerLink="/auth/login" class="text-body">Login</a>
@@ -77,8 +77,8 @@
 </header>
 
 <!-- Menu for Small view-->
-<div class="menu-sm bg-primary-light" *ngIf="isMenuSmShown">
-  <div class="py-5p py-md-15p container">
+<div class="menu-sm bg-white" *ngIf="isMenuSmShown">
+  <div class="py-5p py-md-10p container">
     <div class="d-flex justify-content-end align-items-center">
       <div *ngIf="user" class="mx-10p">
         <profile-image [image]="user?.profileImage" (click)="onClickUserIcon()"></profile-image>
@@ -102,22 +102,22 @@
         </list-item>
 
         <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/practitioners')">
-          <div class="subtitle1">Find Practitioners</div>
+          <div class="subtitle1">Find Providers</div>
         </list-item>
 
         <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/about')">
           <div class="subtitle1">About</div>
         </list-item>
 
-        <!-- <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/products')">
-          <div class="subtitle1">Products/Services</div>  
-        </list-item> -->
-
-        <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/plans')">
-          <div class="subtitle1">Get Listed</div>
+        <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/products')">
+          <div class="subtitle1">Companies</div>  
         </list-item>
 
-        <!-- <list-item action="chevron-down" (onTap)="onClickGetListed()">
+        <!-- <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/plans')">
+          <div class="subtitle1">Get Listed</div>
+        </list-item> -->
+
+        <list-item action="chevron-down" (onTap)="onClickGetListed()">
           <div class="subtitle1">Get listed</div>  
         </list-item>
 
@@ -136,7 +136,7 @@
             </div>
             <p class="mb-0 body2">{{item.text}}</p>
           </list-item>
-        </div> -->
+        </div>
 
         <list-item *ngIf="!isLoggedIn">
           <div>

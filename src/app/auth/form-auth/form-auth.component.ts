@@ -56,7 +56,7 @@ export class FormAuthComponent implements OnInit, OnChanges {
         case 'U': roleLabel = 'Wellness Seeker'; break;
         case 'SP':
         case 'C': roleLabel = 'Wellness Provider'; break;
-        case 'P': roleLabel = 'Company'; break;
+        case 'P': roleLabel = 'Wellness Company'; break;
       }
       this.formRole.setValue(roleLabel);
     }

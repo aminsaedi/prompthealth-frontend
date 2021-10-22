@@ -56,7 +56,7 @@ export class ModalComponent implements OnInit {
 
   goBack() {
     const state = this._location.getState() as any;
-    if(state.navigationId == 1) {
+    if(state?.navigationId == 1) {
       this.goNext();
     } else {
       this._location.back();

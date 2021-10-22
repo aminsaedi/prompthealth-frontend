@@ -2,19 +2,6 @@
 @import "../../../assets/scss/variables";
 
 
-header {
-  transition-property: transform box-shadow;
-  transition-duration: 400ms;
-
-  &.hide {
-    transform: translateY(-100%);
-  }
-  
-  &.shadow{
-    box-shadow: 0 2px 5px #d6dfea!important;
-  }
-}
-
 .get-listed-md-container {
   position: absolute;
   width: 280px;

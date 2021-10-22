@@ -12,6 +12,15 @@ export class CardItemNoteComponent implements OnInit {
   @Input() post: SocialNote;
   @Input() shorten: boolean = true;
 
+  get images(): string[] {
+    return this.post?.images || [];
+  }
+
+  get voice(): string {
+    return this.post?.voice || null;
+  }
+
+
   constructor(
     private _location: Location,
   ) { }

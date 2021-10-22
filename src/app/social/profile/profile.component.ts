@@ -8,7 +8,8 @@ import { ProfileManagementService } from 'src/app/dashboard/profileManagement/pr
 import { GetReferralsQuery } from 'src/app/models/get-referrals-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
-import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetStaffResult, IGetReferralsResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
+import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetStaffResult, IGetReferralsResult, IUnbellResult, IUnfollowResult, IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
+import { SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
@@ -36,6 +37,18 @@ export class ProfileComponent implements OnInit {
   get isProfilePH() { return this.profileId == environment.config.idSA; }
   get user() { return this._profileService.profile; }
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
+  get countAvailablePromos(): number {
+    const promos = this._socialService.promosOfUser(this.profileId);
+    let count = 0;
+    if(promos?.length > 0) {
+      promos.forEach(p => {
+        if(p.isAvailable) {
+          count ++;
+        }
+      });
+    }
+    return count;
+  }
 
   get canRecommend() {
     let canRecommend = false;
@@ -73,6 +86,7 @@ export class ProfileComponent implements OnInit {
   public idxActiveRecommendationIndicator: number = 0;
   private timerRecommendationCarousel: any;
   
+  public countPromoPerPage: number = 20;
 
   public isBellLoading = false;
   public isFollowLoading = false;
@@ -152,7 +166,7 @@ export class ProfileComponent implements OnInit {
         this.getQuestionnaire(),
       ];
 
-      Promise.all(promiseAll).then((vals) => {
+      Promise.all(promiseAll).then(async (vals) => {
         this.profile = vals[0];
         this.initRecommendation();
         this.setProfileMenu();
@@ -162,7 +176,12 @@ export class ProfileComponent implements OnInit {
           this.fetchTeam();
         }
 
+        if(this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
+          this.fetchPromos();
+        }
+
       }, error => {
+        console.log(error);
         this._router.navigate(['404'], {replaceUrl: true});
         this._toastr.error('Something went wrong.');
       });
@@ -304,6 +323,28 @@ export class ProfileComponent implements OnInit {
         resolve();
       });
     });
+  }
+
+  fetchPromos(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const query = new SocialPostSearchQuery({
+        order: 'desc',
+        count: this.countPromoPerPage,
+        contentType: 'PROMO',        
+      });
+      this._sharedService.get('note/get-by-author/' + this.profileId + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+        if(res.statusCode === 200) {
+          this._socialService.saveCachePromosOfUser(res.data, this.profileId);
+          resolve();
+        } else {
+          console.log(res.message);
+          reject();
+        }
+      }, error => {
+        console.log(error);
+        reject();
+      })
+    }); 
   }
 
   goback() {
@@ -498,6 +539,10 @@ export class ProfileComponent implements OnInit {
     this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe((res) => {
       this.checkFollowStatus();
       this.checkBellStatus();
+
+      if(this.profile?.isP && !this._socialService.promosOfUser(this.profileId)) {
+        this.fetchPromos();
+      }
     });
   }
 
@@ -546,6 +591,7 @@ const profileMenusForProvider: IProfileMenuItem[] = [
 const profileMenusForCompany: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
   {id: 'promotion', label: 'Discounts', relativeLink: 'promotion', },
+  {id: 'event', label: 'Event', relativeLink: 'event', },
   {id: 'review', label: 'Recommendation', relativeLink: 'review', },
 ];
 

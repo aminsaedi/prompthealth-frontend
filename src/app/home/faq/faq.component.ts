@@ -28,22 +28,22 @@ export class FAQComponent implements OnInit {
 const faqs: IFAQItem[] = [
   {
     q: 'What is PromptHealth?', 
-    a: `PromptHealth is an online platform revolutionizing the health and wellness experience. It started off as a two-sided marketplace where people could personalize their search options and connect with different practitioner types proven to help with a specific cause. Now, with the help of our network of practitioners and further technology development, PromptHealth is on track to be the go-to social app and site to provide people with the educational resources they need to make informed decisions about their health, in an engaging format. PromptHealth acts as a ‘personal assistant’ that takes the challenge out of accessing and navigating the care you need.`,
+    a: `PromptHealth is an online platform revolutionizing the health and wellness experience. It started off as a two-sided marketplace where people could personalize their search options and connect with different provider types proven to help with a specific cause. Now, with the help of our network of providers and further technology development, PromptHealth is on track to be the go-to social app and site to provide people with the educational resources they need to make informed decisions about their health, in an engaging format. PromptHealth acts as a ‘personal assistant’ that takes the challenge out of accessing and navigating the care you need.`,
     opened: false,
   },
   {
     q: 'How does PromptHealth work?', 
     a: `You can navigate PromptHealth based on your need or goal. You can search, compare options, learn from different options provided based on preferences, and ultimately connect and book with a provider fully informed. 
       <br><br>
-      Navigating the site and learning from different practitioners is easy to do with no login required. The only time you need to sign up is at the time of booking on the site or when using the app. `,
+      Navigating the site and learning from different providers is easy to do with no login required. The only time you need to sign up is at the time of booking on the site or when using the app. `,
     opened: false,
   },
   {
-    q: 'How do I find a practitioner?', 
+    q: 'How do I find a provider?', 
     a: `PromptHealth has a number of ways for you to find the right wellness provider. 
       <ol>
         <li>You can simply scroll through and browse the providers listed on the marketplace based on location or virtual options.There are additional filters that help you narrow down your search. </li>
-        <li>You can start with the search bar and type in a practitioner type (e.g. chiropractor), condition (e.g. back pain), or search a specific practitioner (e.g. John Smith). You can also type in your zip code to refine searches to your general area. </li>
+        <li>You can start with the search bar and type in a provider type (e.g. chiropractor), condition (e.g. back pain), or search a specific provider (e.g. John Smith). You can also type in your zip code to refine searches to your general area. </li>
         <li>If you need a little more assistance, you can use the personal match to help you filter options based on your specific needs. </li>
       </ol>`,
     opened: false,
@@ -54,7 +54,7 @@ const faqs: IFAQItem[] = [
     opened: false,
   },
   {
-    q: 'How do I book a practitioner?', 
+    q: 'How do I book a provider?', 
     a: 'Once you’ve found your provider out of the options you are provided, you can either directly book with them if they already have a direct booking system, or use our request booking form if they do not have a booking system. The payment process is handled by each provider directly as per their policy.',
     opened: false,
   },
@@ -70,7 +70,7 @@ const faqs: IFAQItem[] = [
     opened: false,
   },
   {
-    q: 'How does PromptHealth verify its practitioners?',
+    q: 'How does PromptHealth verify its providers?',
     a: 'We have done our due diligence by doing a qualitative review on each provider upon sign up to ensure credibility of information provided. The providers with a verified badge in the form of a blue check mark beside their names have provided proof of their certification.',
     opened: false,
   },

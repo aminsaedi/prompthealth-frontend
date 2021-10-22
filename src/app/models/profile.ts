@@ -32,6 +32,12 @@ export interface IProfile {
   isApproved: boolean;
   isVerified: boolean; /** verified for badge */
 
+  hasProfile: boolean;
+  isEligibleToCreateNote: boolean;
+  isEligibleToCreatePromo: boolean;
+  isEligibleToCreateArticle: boolean;
+  isEligibleToCreateEvent: boolean;
+
   linkToProfile: string;
 
   gender: string;
@@ -72,6 +78,13 @@ export class Profile implements IProfile {
   get isP() { return !!(this.role == 'P'); }
   get isSA() { return !!(this.role == 'SA'); }
 
+  get hasProfile() { return !this.isU; }
+  get isEligibleToCreateNote() { return this.isProvider || this.isSA; }
+  get isEligibleToCreatePromo() { return this.isP; }
+  get isEligibleToCreateArticle() { return this.isProvider || this.isSA; }
+  get isEligibleToCreateEvent() { return !this.isU; }
+
+
   get isApproved() { return this.isU || this.isSA || this.data.isApproved; }
   get isVerified() { return this.isSA || this.data.verifiedBadge || false; }
 
@@ -101,7 +114,7 @@ export class Profile implements IProfile {
         data.image : 
         null;
 
-    this._profileImage = image ? image + '?ver=1.0.2' : null;
+    this._profileImage = image ? image + '?ver=2' : null;
     let imageType = '';
     if(image) {
       const regex = /\.(jpe?g|png)$/;
