@@ -10,6 +10,24 @@ export interface IResponseData {
   data: any;
 }
 
+export interface IAuthResult extends IResponseData {
+  statusCode: number;
+  message: string;
+  data: {
+    _id: IUserDetail['_id'],
+    email: IUserDetail['email'],
+    loginToken: string,
+    lastLogin: string,
+    roles: IUserDetail['roles'],
+    firstName: IUserDetail['firstName'],
+    verifiedBadge: IUserDetail['verifiedBadge'],
+    profileImage: IUserDetail['profileImage'],
+    lastName: IUserDetail['lastName'],
+    favouriteBy: IUserDetail['favouriteBy'],
+    isVipAffiliateUser: IUserDetail['isVipAffiliateUser'],
+  }
+}
+
 export interface IGetProfileResult extends IResponseData{
   data: IUserDetail;
 }
