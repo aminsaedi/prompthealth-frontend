@@ -388,13 +388,14 @@ const appFeatureItems = [
     },
     {
       icon: 'tags-2-outline',
-      title: 'Safe & Secure.',
-      content: 'Your privacy and security is ensured.',
+      title: 'Find wellness events and workshops.',
+      content: '',
+      // content: 'Your privacy and security is ensured.',
       // content: 'Your privacy and security is ensured. PIPEDA/HIPPA approved.',
     },
     {
       icon: 'shield-check-outline',
-      title: 'Discover select deals on recommended products.',
+      title: 'Discover deals on recommended wellness products and services.',
       content: 'Browse through wellness products recommended by the experts themselves.',
     }
   ],
