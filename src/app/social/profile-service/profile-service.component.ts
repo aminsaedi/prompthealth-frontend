@@ -54,7 +54,7 @@ export class ProfileServiceComponent implements OnInit {
   setMeta() {
     if(this.profile) {
       this._uService.setMeta(this._router.url, {
-        title: `Service by ${this.profile.name}`,
+        title: `Service by ${this.profile.name} | PromptHealth Community`,
         description: `Check out what services ${this.profile.name} offers.`,
         image: this.profile.imageFull,
         imageType: this.profile.imageType,

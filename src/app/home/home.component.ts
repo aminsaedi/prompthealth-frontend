@@ -9,7 +9,6 @@ import { CategoryViewerController } from '../models/category-viewer-controller';
 import { expandAllAnimation, expandVerticalAnimation, fadeAnimation, slideVerticalStaggerAnimation } from '../_helpers/animations';
 import { Professional } from '../models/professional';
 import { CityId, getLabelByCityId } from '../_helpers/location-data';
-import { BlogSearchQuery, IBlogSearchResult } from '../models/blog-search-query';
 import { Blog } from '../models/blog';
 import { FeaturedExpertController } from '../models/featured-expert-controller';
 import { smoothHorizontalScrolling } from '../_helpers/smooth-scroll';
@@ -19,6 +18,7 @@ import { IGetSocialContentsByAuthorResult } from '../models/response-data';
 import { SocialArticle } from '../models/social-article';
 import { ProfileManagementService } from '../dashboard/profileManagement/profile-management.service';
 import { ModalService } from '../shared/services/modal.service';
+import { getListedMenu } from '../_helpers/get-listed-menu';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -32,7 +32,7 @@ import { ModalService } from '../shared/services/modal.service';
 export class HomeComponent implements OnInit {
 
   get sizeL() { return window && window.innerWidth >= 992; }
-  get planMenuData() { return planMenuData; }
+  get planMenuData() { return getListedMenu; }
   get user() { return this._profileService.profile; }
   get isLoggedIn(): boolean { return !!this.user; }
 
@@ -101,7 +101,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  changeHeaderVisibility(isShown: boolean) {
+  onIntersectCategory(isShown: boolean) {
     if(isShown) {
       this._headerStatusService.showHeader(true);
     } else {
@@ -153,7 +153,7 @@ export class HomeComponent implements OnInit {
 
     this.getBlog();
 
-    if (!this._uService.isServer) {
+    if (this._uService.isBrowser) {
       // await this.getHomePageFeatures(); /** need to reinstate after many practitioners buy addonPlan */
       this.getPractitionersFeatured(); /** temporary solition */
     }
@@ -473,19 +473,5 @@ const testimonials = [
     // numFollowers: 981,
     // numPosts: 96,
     // rating: 5,
-  }
-];
-
-const planMenuData = [
-  {
-    title: 'Providers',
-    text: 'List your practice, get discovered by potential clients, and network within the local health and wellness community.',
-    link: '/plans',
-    icon: 'verified',
-  }, {
-    title: 'Companies',
-    text: 'Partner with us and we will promote you to our community with special deals, promotions and your events.',
-    link: '/plans/product',
-    icon: 'briefcase-2',
   }
 ];
