@@ -41,6 +41,7 @@ export class AboutPractitionerComponent implements OnInit {
   public videoLink = "/assets/video/about-practitioner-sm.mp4";
   public videoLinkLg = '/assets/video/about-practitioner-md.mp4';
   public videoLgMarkedAsLoadStart: boolean = false;
+  public isVideoLgReady: boolean = false;
 
   @ViewChild('videoPlayer') private videoPlayer: ElementRef;
   @ViewChild('videoLg') private videoLg: ElementRef;
@@ -96,10 +97,11 @@ export class AboutPractitionerComponent implements OnInit {
       videoLg.addEventListener('loadeddata', () => {
         const vp = this.videoPlayer?.nativeElement;
         const currentTime = vp?.currentTime || 0;
-        this.videoLink = this.videoLinkLg;
-        setTimeout(() => {
-          vp.currentTime = currentTime;
-        });
+        this.isVideoLgReady = true;
+        videoLg.currentTime = currentTime;
+        videoLg.loop = true;
+        vp.pause();
+        videoLg.play();        
       });
   
       videoLg.load();

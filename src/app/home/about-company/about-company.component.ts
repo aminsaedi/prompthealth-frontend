@@ -38,6 +38,7 @@ export class AboutCompanyComponent implements OnInit {
   public videoLink = "/assets/video/about-company-sm.mp4";
   public videoLinkLg = '/assets/video/about-company-md.mp4';
   public videoLgMarkedAsLoadStart: boolean = false;
+  public isVideoLgReady: boolean = false;
 
 
   @ViewChild('videoPlayer') private videoPlayer: ElementRef;
@@ -88,10 +89,11 @@ export class AboutCompanyComponent implements OnInit {
       videoLg.addEventListener('loadeddata', () => {
         const vp = this.videoPlayer?.nativeElement;
         const currentTime = vp?.currentTime || 0;
-        this.videoLink = this.videoLinkLg;
-        setTimeout(() => {
-          vp.currentTime = currentTime;
-        });
+        this.isVideoLgReady = true;
+        videoLg.currentTime = currentTime;
+        videoLg.loop = true;
+        vp.pause();
+        videoLg.play();        
       });
   
       videoLg.load();

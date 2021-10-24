@@ -5,12 +5,15 @@
   autoplay 
   loop 
   playsinline 
+  [ngClass]="isVideoLgReady ? 'd-none' : ''"
   [src]="videoLink"
   poster="/assets/video/about-company-thumbnail.jog"
   ></video>
   <video
   #videoLg
-  class="d-none"
+  playinline
+  [muted]="true"
+  [ngClass]="!isVideoLgReady ? 'd-none' : ''"
   preload="none"
   [src]="videoLinkLg"
   ></video>

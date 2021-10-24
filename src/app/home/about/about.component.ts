@@ -29,6 +29,7 @@ export class AboutComponent implements OnInit {
   public videoLink = "/assets/video/about-sm.mp4";
   public videoLinkLg = '/assets/video/about-md.mp4';
   public videoLgMarkedAsLoadStart: boolean = false;
+  public isVideoLgReady: boolean = false;
 
   @ViewChild('videoPlayer') private videoPlayer: ElementRef;
   @ViewChild('videoLg') private videoLg: ElementRef;
@@ -61,10 +62,11 @@ export class AboutComponent implements OnInit {
       videoLg.addEventListener('loadeddata', () => {
         const vp = this.videoPlayer?.nativeElement;
         const currentTime = vp?.currentTime || 0;
-        this.videoLink = this.videoLinkLg;
-        setTimeout(() => {
-          vp.currentTime = currentTime;
-        });
+        this.isVideoLgReady = true;
+        videoLg.currentTime = currentTime;
+        videoLg.loop = true;
+        vp.pause();
+        videoLg.play();        
       });
   
       videoLg.load();
