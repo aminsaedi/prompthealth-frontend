@@ -130,30 +130,26 @@
       </div>
       <div class="col">
         <div class="slideshow-container mt-30p mt-lg-0p">
-          <div class="slideshow mb-15p mb-lg-0p mr-lg-20p">
-            <div 
-            *ngFor="let item of slideshow; let i = index"
-            class="item overflow-hidden rounded-8p"
-            [ngClass]="isSlideshowReady ? '' : 'opacity-0'"
-            style="transition: opacity 300ms"
-            #slideshowItem
-            >
-              <img [src]="'assets/img/home/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;">
-            </div>
-          </div>
-          <div class="slideshow">
-            <div class="slideshow mb-15p mb-lg-0p mr-lg-20p">
+          <div class="slideshow slideshow-animate mb-15p mb-lg-0p mr-lg-20p">
+            <ng-container *ngFor="let ii of [0,1]">
               <div 
-              *ngFor="let item of slideshowReverse; let i = index"
-              class="item-reverse overflow-hidden rounded-8p"
-              [ngClass]="isSlideshowReady ? '' : 'opacity-0'"
-              style="transition: opacity 300ms"
-              #slideshowReverseItem
+              *ngFor="let item of slideshow; let i = index"
+              class="item overflow-hidden rounded-8p"
               >
                 <img [src]="'assets/img/home/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;">
               </div>  
+            </ng-container>
+          </div>
+            <div class="slideshow slideshow-animate-reverse mb-15p mb-lg-0p">
+              <ng-container *ngFor="let jj of [0,1]">
+                <div 
+                *ngFor="let item of slideshowReverse; let i = index"
+                class="item-reverse overflow-hidden rounded-8p"
+                >
+                  <img [src]="'assets/img/home/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;">
+                </div>                    
+              </ng-container>
             </div>          
-          </div>  
         </div>  
       </div>
     </div>
