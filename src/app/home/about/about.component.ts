@@ -58,7 +58,7 @@ export class AboutComponent implements OnInit {
   loadVideoLgIfNeeded() {
     if(this.sizeL && this.videoLg?.nativeElement && !this.videoLgMarkedAsLoadStart) {
       const videoLg = this.videoLg.nativeElement as HTMLVideoElement;
-      videoLg.addEventListener('loadedmetadata', () => {
+      videoLg.addEventListener('loadeddata', () => {
         const vp = this.videoPlayer?.nativeElement;
         const currentTime = vp?.currentTime || 0;
         this.videoLink = this.videoLinkLg;
