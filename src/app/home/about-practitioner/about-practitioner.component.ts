@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
@@ -20,6 +20,8 @@ import { first } from 'rxjs/operators';
 })
 export class AboutPractitionerComponent implements OnInit {
 
+  get sizeL() { return window && window.innerWidth >= 992; }
+
   get profile() { return this._profileService.user; }
   get isNotLoggedIn() { return this._profileService.loginStatus == 'notLoggedIn'; }
   get isLoggedIn() { return this._profileService.loginStatus == 'loggedIn'; }
@@ -35,6 +37,18 @@ export class AboutPractitionerComponent implements OnInit {
   public couponData: ICouponData = null;
   public isCouponShown = false;
   public isCouponShrink = false;
+
+  public videoLink = "/assets/video/about-practitioner-sm.mp4";
+  public videoLinkLg = '/assets/video/about-practitioner-md.mp4';
+  public videoLgMarkedAsLoadStart: boolean = false;
+
+  @ViewChild('videoPlayer') private videoPlayer: ElementRef;
+  @ViewChild('videoLg') private videoLg: ElementRef;
+
+  @HostListener('window:resize') WindowResize() {
+    this.loadVideoLgIfNeeded();
+  } 
+
 
   keepOriginalOrder = (a: any, b: any) => a.key;
 
@@ -62,6 +76,8 @@ export class AboutPractitionerComponent implements OnInit {
         }, 300); 
       }
     });
+
+    this.loadVideoLgIfNeeded();
   }
 
   ngOnInit(): void {
@@ -72,6 +88,23 @@ export class AboutPractitionerComponent implements OnInit {
 
     this.initPlans();
     this.initCoupon();
+  }
+
+  loadVideoLgIfNeeded() {
+    if(this.sizeL && this.videoLg?.nativeElement && !this.videoLgMarkedAsLoadStart) {
+      const videoLg = this.videoLg.nativeElement as HTMLVideoElement;
+      videoLg.addEventListener('loadedmetadata', () => {
+        const vp = this.videoPlayer?.nativeElement;
+        const currentTime = vp?.currentTime || 0;
+        this.videoLink = this.videoLinkLg;
+        setTimeout(() => {
+          vp.currentTime = currentTime;
+        });
+      });
+  
+      videoLg.load();
+      this.videoLgMarkedAsLoadStart = true;  
+    }
   }
 
   initPlans() {

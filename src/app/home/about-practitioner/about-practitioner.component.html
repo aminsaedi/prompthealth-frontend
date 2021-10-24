@@ -1,9 +1,21 @@
 <div class="hero-video overflow-hidden">
-  <video autoplay [muted]="true" loop playsinline poster="/assets/video/about-practitioner-thumbnail.png">
-    <source src="/assets/video/about-practitioner.mp4" type="video/mp4">
-    <source src="/assets/video/about-practitioner-thumbnail.png">
-  </video>
+  <video 
+  #videoPlayer
+  [muted]="true"
+  autoplay 
+  loop 
+  playsinline 
+  [src]="videoLink"
+  poster="/assets/video/about-practitioner-thumbnail.png"
+  ></video>
+  <video
+  #videoLg
+  class="d-none"
+  preload="none"
+  [src]="videoLinkLg"
+  ></video>
 </div>
+
 
 
 
@@ -87,9 +99,8 @@
           *ngIf="i > 0"
           class="position-relative mb-20p subtitle2"
           >
-            <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
-            <span *ngIf="i == 1">All Basic feature plus...</span>
-            <span *ngIf="i == 2">All Advanced feature plus...</span>
+            <span *ngIf="i == 1">All Basic feature +</span>
+            <span *ngIf="i == 2">All Advanced feature +</span>
           </li>
 
           <ng-container *ngFor="let feature of planFeatures; let j = index">

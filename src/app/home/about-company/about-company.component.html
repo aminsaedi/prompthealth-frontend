@@ -1,9 +1,23 @@
 <div class="hero-video overflow-hidden">
-  <video autoplay [muted]="true" loop playsinline poster="/assets/video/about-company-thumbnail.png">
-    <source src="/assets/video/about-company.mp4" type="video/mp4">
-    <source src="/assets/video/about-company-thumbnail.png">
-  </video>
+  <video 
+  #videoPlayer
+  [muted]="true"
+  autoplay 
+  loop 
+  playsinline 
+  [src]="videoLink"
+  poster="/assets/video/about-company-thumbnail.png"
+  ></video>
+  <video
+  #videoLg
+  class="d-none"
+  preload="none"
+  [src]="videoLinkLg"
+  ></video>
 </div>
+
+
+
 
 <section class="container mt-100p mb-50p">
   <ul class="row list-unstyled">

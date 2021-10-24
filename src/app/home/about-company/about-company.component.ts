@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { first } from 'rxjs/operators';
@@ -20,6 +20,7 @@ import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 })
 export class AboutCompanyComponent implements OnInit {
 
+  get sizeL() { return window && window.innerWidth >= 992; }
   get user() { return this._profileService.user; }
 
   public features = features;
@@ -33,6 +34,18 @@ export class AboutCompanyComponent implements OnInit {
   public couponData: ICouponData = null;
   public isCouponShown = false;
   public isCouponShrink = false;
+
+  public videoLink = "/assets/video/about-company-sm.mp4";
+  public videoLinkLg = '/assets/video/about-company-md.mp4';
+  public videoLgMarkedAsLoadStart: boolean = false;
+
+
+  @ViewChild('videoPlayer') private videoPlayer: ElementRef;
+  @ViewChild('videoLg') private videoLg: ElementRef;
+
+  @HostListener('window:resize') WindowResize() {
+    this.loadVideoLgIfNeeded();
+  } 
 
   keepOriginalOrder = (a: any, b: any) => a.key;
 
@@ -60,11 +73,30 @@ export class AboutCompanyComponent implements OnInit {
         }, 300); 
       }
     });
+
+    this.loadVideoLgIfNeeded();
   }
 
   ngOnInit(): void {
     this.initPlans();
     this.initCoupon();
+  }
+
+  loadVideoLgIfNeeded() {
+    if(this.sizeL && this.videoLg?.nativeElement && !this.videoLgMarkedAsLoadStart) {
+      const videoLg = this.videoLg.nativeElement as HTMLVideoElement;
+      videoLg.addEventListener('loadedmetadata', () => {
+        const vp = this.videoPlayer?.nativeElement;
+        const currentTime = vp?.currentTime || 0;
+        this.videoLink = this.videoLinkLg;
+        setTimeout(() => {
+          vp.currentTime = currentTime;
+        });
+      });
+  
+      videoLg.load();
+      this.videoLgMarkedAsLoadStart = true;  
+    }
   }
 
   initPlans() {
