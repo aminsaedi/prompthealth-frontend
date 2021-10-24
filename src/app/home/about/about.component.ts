@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -12,22 +12,30 @@ import { fadeAnimation, slideVerticalStaggerAnimation } from 'src/app/_helpers/a
 })
 export class AboutComponent implements OnInit {
 
-  get isImageReady() { return !!(this.countImagesLoaded == topImages.length); }
-  get founderData() { return teamData[0]; }
-  
+  get sizeL() { return window && window.innerWidth >= 992; }
+
   public teamData = teamData;
-  public topImages = topImages;
   public holisticImages = holisticImages;
   public idxSelectedMember = -1;
 
   public isOnHolistic = false;
   public isOnTeam = false;
 
-  public countImagesLoaded = 0;
+  // public countImagesLoaded = 0;
   public disableAnimationTop = false;
   public disableAnimationHolistic = false;
   public disableAnimationTeam = false;
-  
+
+  public videoLink = "/assets/video/about-sm.mp4";
+  public videoLinkLg = '/assets/video/about-md.mp4';
+  public videoLgMarkedAsLoadStart: boolean = false;
+
+  @ViewChild('videoPlayer') private videoPlayer: ElementRef;
+  @ViewChild('videoLg') private videoLg: ElementRef;
+
+  @HostListener('window:resize') WindowResize() {
+    this.loadVideoLgIfNeeded();
+  } 
 
   constructor(
     private _headerStatusService: HeaderStatusService,
@@ -36,18 +44,32 @@ export class AboutComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.countImagesLoaded = 0;
+    // this.countImagesLoaded = 0;
     this._uService.setMeta(this._router.url, {
       title: 'PromptHealth revolutionize the health and wellness experience',
       description: 'It is our mission to help people seeking care reach informed decisions about their health by providing credible educational resources and personalized care options. ',
     });
   }
 
-  onImageLoaded() {
-    this.countImagesLoaded++;
-    setTimeout(() => {
-      this.disableAnimationTop = true;
-    }, 500)
+  ngAfterViewInit() {
+    this.loadVideoLgIfNeeded();
+  }
+
+  loadVideoLgIfNeeded() {
+    if(this.sizeL && this.videoLg?.nativeElement && !this.videoLgMarkedAsLoadStart) {
+      const videoLg = this.videoLg.nativeElement as HTMLVideoElement;
+      videoLg.addEventListener('loadedmetadata', () => {
+        const vp = this.videoPlayer?.nativeElement;
+        const currentTime = vp?.currentTime || 0;
+        this.videoLink = this.videoLinkLg;
+        setTimeout(() => {
+          vp.currentTime = currentTime;
+        });
+      });
+  
+      videoLg.load();
+      this.videoLgMarkedAsLoadStart = true;  
+    }
   }
     
   changeHeaderShadowStatus(isShown: boolean) {
@@ -98,11 +120,11 @@ export class AboutComponent implements OnInit {
   }
 }
 
-const topImages = [
-  '/assets/img/about/top-0.jpg',
-  '/assets/img/about/top-1.jpg',
-  '/assets/img/about/top-2.jpg'
-];
+// const topImages = [
+//   '/assets/img/about/top-0.jpg',
+//   '/assets/img/about/top-1.jpg',
+//   '/assets/img/about/top-2.jpg'
+// ];
 
 const holisticImages = [
   '/assets/img/about/holistic-0.png',
