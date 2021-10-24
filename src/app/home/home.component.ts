@@ -61,12 +61,12 @@ export class HomeComponent implements OnInit {
   ];
 
   public slideshowReverse = [
-    'slideshow-4.png',
-    'slideshow-5.png',
     'slideshow-6.png',
-    'slideshow-1.png',
-    'slideshow-2.png',
+    'slideshow-5.png',
+    'slideshow-4.png',
     'slideshow-3.png',
+    'slideshow-2.png',
+    'slideshow-1.png',
   ];
 
   private timerResize: any = null;
@@ -116,10 +116,6 @@ export class HomeComponent implements OnInit {
   ngAfterViewInit() {
     if(!this._uService.isServer) {
       this.elExpertFinderScrollHorizontal.nativeElement.scrollTo({left: 10000});
-    }
-
-    if(this._uService.isBrowser){
-      this.initSlideshow();
     }
 
   }
@@ -188,48 +184,48 @@ export class HomeComponent implements OnInit {
     this._modalService.show('user-menu', this.user);
   }
 
-  initSlideshow() {
-    if(this.slideshowItems.length > 0 && this.slideshowReverseItems.length > 0) {
-      let currentDistance = 0;
-      const distancePerMove = 0.2;
+  // initSlideshow() {
+    // if(this.slideshowItems.length > 0 && this.slideshowReverseItems.length > 0) {
+    //   let currentDistance = 0;
+    //   const distancePerMove = 0.2;
 
-      setInterval(() => {
-        currentDistance += distancePerMove;
-        this.moveSlideshow(this.slideshowItems.toArray(), currentDistance, false);
-        this.moveSlideshow(this.slideshowReverseItems.toArray(), currentDistance, true);
-        this.isSlideshowReady = true;
-      }, 30);  
-    }
+    //   setInterval(() => {
+    //     currentDistance += distancePerMove;
+    //     this.moveSlideshow(this.slideshowItems.toArray(), currentDistance, false);
+    //     this.moveSlideshow(this.slideshowReverseItems.toArray(), currentDistance, true);
+    //     this.isSlideshowReady = true;
+    //   }, 30);  
+    // }
     
-  }
+  // }
  
 
-  moveSlideshow(items: ElementRef[], distance: number  = 0, reverse: boolean = false) {
-    let gap = 40;
-    let totalLength = (items.length - 1) * gap;
-    items.forEach((item, i) => {
-      const el = item.nativeElement as HTMLDivElement;
-      totalLength += this.sizeL ? el.clientHeight : el.clientWidth;
-    });
+  // moveSlideshow(items: ElementRef[], distance: number  = 0, reverse: boolean = false) {
+  //   let gap = 40;
+  //   let totalLength = (items.length - 1) * gap;
+  //   items.forEach((item, i) => {
+  //     const el = item.nativeElement as HTMLDivElement;
+  //     totalLength += this.sizeL ? el.clientHeight : el.clientWidth;
+  //   });
 
-    const distActual = distance % totalLength;
+  //   const distActual = distance % totalLength;
 
 
-    let initialPosition = 0;
-    items.forEach((item, i) => {
-      const el = item.nativeElement as HTMLDivElement;
+  //   let initialPosition = 0;
+  //   items.forEach((item, i) => {
+  //     const el = item.nativeElement as HTMLDivElement;
 
-      let currentPosition = initialPosition - distActual;
-      if(currentPosition < - (this.sizeL ? el.clientHeight : el.clientWidth)){
-        currentPosition += totalLength + gap;
-      }
+  //     let currentPosition = initialPosition - distActual;
+  //     if(currentPosition < - (this.sizeL ? el.clientHeight : el.clientWidth)){
+  //       currentPosition += totalLength + gap;
+  //     }
 
-      el.style.transform = `translate${this.sizeL ? 'Y' : 'X'}(${reverse ? -currentPosition : currentPosition}px)`;
+  //     el.style.transform = `translate${this.sizeL ? 'Y' : 'X'}(${reverse ? -currentPosition : currentPosition}px)`;
 
-      initialPosition += this.sizeL ? el.clientHeight : el.clientWidth;
-      initialPosition += gap;
-    });
-  }
+  //     initialPosition += this.sizeL ? el.clientHeight : el.clientWidth;
+  //     initialPosition += gap;
+  //   });
+  // }
   /** HEADER FOR HOMEPAGE END */
 
 
