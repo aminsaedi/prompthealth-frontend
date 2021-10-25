@@ -54,6 +54,11 @@ export class CardItemToolbarComponent implements OnInit {
   onClickLike(e: Event) {
     this.stopPropagation(e);
 
+    if(!this.user) {
+      this._modalService.show('login-menu');
+      return;
+    }
+
     const numLikesCurrent = this.post.numLikes || 0;
     const isLikedCurrent = this.post.isLiked;
     this.changeLikeStatus(!this.post.isLiked, numLikesCurrent + (isLikedCurrent ? -1 : 1));
