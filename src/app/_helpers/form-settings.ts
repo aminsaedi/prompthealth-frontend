@@ -16,6 +16,7 @@ export const minmax = {
   referralMin: 10,
   referralMax: 500,
   promoCodeMax: 30,
+  noteMax: 400,
 };
 
 
@@ -291,6 +292,7 @@ export const validators = {
 
   /** blog post for users */
   publishPostDescription: [Validators.required],
+  publishPostDescriptionNote: [Validators.maxLength(minmax.noteMax)],
   publishPostEventStartTime: [Validators.required, validatorPatternDateTime(), validatorComparePostEventStartTime()],
   publishPostEventEndTime: [Validators.required, validatorPatternDateTime()],
   publishPostEventLink: [Validators.required, validatorPatternURL()],

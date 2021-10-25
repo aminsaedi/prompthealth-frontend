@@ -35,6 +35,8 @@ export class HeaderComponent implements OnInit {
   public isMenuSearchShown: boolean = false;
   public isNotificationSummaryShown: boolean = false;
 
+  public selectedTopicId: string;
+
   public isSearchLoading = false;
   searchResult: {users: Professional[], blogs: ISocialPost[]};
 
@@ -61,7 +63,7 @@ export class HeaderComponent implements OnInit {
   get sizeS(): boolean { return (!window || window.innerWidth < 768); }
 
   private subscriptionLoginStatus: Subscription;
-
+  private subscriptionTopicId: Subscription;
 
   @ViewChild('searchbar') private searchbar: FormItemInputComponent;
 
@@ -88,6 +90,8 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.subscriptionTopicId?.unsubscribe();
+
     if(this.subscriptionLoginStatus) {
       this.subscriptionLoginStatus.unsubscribe();
     }
@@ -110,6 +114,11 @@ export class HeaderComponent implements OnInit {
       this.isMenuMobileShown = (param.menu == 'mobile') ? true : false;
       this.isMenuSearchShown = (param.menu == 'search') ? true : false;
     });
+
+    this.subscriptionTopicId = this._socialService.selectedTopicIdChanged().subscribe(id => {
+      this.selectedTopicId = id;
+      this._changeDetector.detectChanges();
+    })
   }
 
   hideMenu() {

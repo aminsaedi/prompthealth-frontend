@@ -23,13 +23,13 @@ import { skip } from 'rxjs/operators';
 export class ListComponent implements OnInit {
 
   get user() { return this._profileService.profile; }
+  get selectedTopicId() { return this._socialService.selectedTopicId; }
 
   public newPosts: ISocialPost[] = [];
 
   public posts: ISocialPost[] = null;
 
   public countPerPage: number = 20;
-  public selectedTopicId: string;
   public selectedTaxonomyType: SocialPostTaxonomyType;
 
   public isLoading: boolean = false;
@@ -76,13 +76,13 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
     const ss = this._route.snapshot;
     this.selectedTaxonomyType = ss.params.taxonomyType || 'feed';
-    this.selectedTopicId = ss.params.topicId || null;
+    this._socialService.setTopicId(ss.params.topicId || null);
     this.showVoiceOnly = !!(ss.queryParams.voice == 1);
     this.checkLoginStatusAndInitPost();
 
     this._route.params.pipe(skip(1)).subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
-      this.selectedTopicId = param.topicId || null;
+      this._socialService.setTopicId(param.topicId || null);
       this.showVoiceOnly = (this._route.snapshot.queryParams.voice == 1);
       this.setMeta();
       this.checkLoginStatusAndInitPost();

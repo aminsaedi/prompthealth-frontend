@@ -3,7 +3,7 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { validators } from 'src/app/_helpers/form-settings';
+import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import getBlobDuration from 'get-blob-duration';
 import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service';
@@ -17,6 +17,7 @@ import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { EditorService } from '../editor.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { UploadObserverService } from 'src/app/shared/services/upload-observer.service';
+import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 
 
 @Component({
@@ -35,6 +36,8 @@ export class CardNewPostComponent implements OnInit {
   get userImage(): string { return this.user ? this.user.profileImage : ''; }
   get user(): Profile { return this._profileService.profile; }
 
+  get isDescriptionOverLimit() { return !!(this.lengthDescription > this.maxDescription); }
+
   safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
 
   public isMoreShown: boolean = false;
@@ -45,6 +48,8 @@ export class CardNewPostComponent implements OnInit {
   public isSubmitted: boolean = false;
   public isUploading: boolean = false;
   public isAlertUploadingClosedForcibly: boolean = false;
+  public lengthDescription = 0;
+  public maxDescription = minmax.noteMax;
 
   /** AUDIO RECORDER START */
   public isAudioRecording: boolean = false;
@@ -103,6 +108,13 @@ export class CardNewPostComponent implements OnInit {
     this._audioRecorder.processingDone().subscribe(() => {
       this.isAudioRecorderBusy = false;
     });
+  }
+
+  onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
+    if('text' in e) {
+      const text = e.text?.replace(/\s$/, '') || '';
+      this.lengthDescription = text.length;
+    }
   }
 
   onClickButtonMedia() {

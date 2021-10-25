@@ -4,18 +4,26 @@
     <section class="col-3 d-none d-xl-block">
       <div class="sticky-top" style="top: 80px">
         <div class="mb-20p" *ngIf="topics" [@expandVertical]>
-          <div class="bg-white rounded-8p px-20p">
-            <list-item
+          <div class="bg-white rounded-8p overflow-hidden">
+            <div
             *ngFor="let topic of topics; let i = index"
-            [leading]="iconOf(topic)"
-            leadingClass="text-primary"
-            action="chevron-right"
-            actionClass="text-primary"
-            [option]="{hideBorderBottom: (i == topics.length - 1)}"
-            (onTap)="changeTopics(topic)"
+            class="px-20p"
+            [ngClass]="{'bg-primary-light': (selectedTopicId == topic._id)}"
             >
-              <div class="subtitle2">{{topic.item_text}}</div>
-            </list-item>
+              <list-item
+              [leading]="iconOf(topic)"
+              leadingClass="text-primary"
+              action="chevron-right"
+              actionClass="text-primary"
+              [option]="{hideBorderBottom: (i == topics.length - 1)}"
+              (onTap)="changeTopics(topic)"
+              >
+                <div 
+                class="subtitle2"
+                [ngClass]="{'text-primary': (selectedTopicId == topic._id)}"
+                >{{topic.item_text}}</div>
+              </list-item>
+            </div>
           </div>
         </div>        
       </div>
@@ -84,20 +92,21 @@
 
         <div class="mb-30p">
           <a 
-          class="d-block bg-white overflow-hidde rounded-8p py-20p px-30p"
+          class="d-block bg-white overflow-hidden rounded-8p py-20p px-30p"
           href="https://purepharmacy.com/"
           target="_blank"
           >
             <img src="/assets/img/partners/pure-pharmacy.png" alt="" style="max-width: 100%; height: auto;">
           </a>
           <div class="body2 text-label text-right mt-5p mr-5p">
-            Inqury for advertisement. 
             <a 
             routerLink="/plans/product"  
             class="body2 text-label"
-            fragment="plan-productCustom"
             >
-              <u>Learn more</u>
+              <u>
+                Are you a wellness company? 
+                <!-- Learn more -->
+              </u>
             </a>
           </div>
         </div>
