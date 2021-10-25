@@ -12,6 +12,7 @@ import { ISocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { skip } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list',
@@ -33,6 +34,7 @@ export class ListComponent implements OnInit {
 
   public isLoading: boolean = false;
   public isMorePosts: boolean = true;
+  public showVoiceOnly: boolean = false;
 
   private subscriptionLoginStatus: Subscription;
   private subscriptionCacheChange: Subscription;
@@ -72,11 +74,27 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
+    const ss = this._route.snapshot;
+    this.selectedTaxonomyType = ss.params.taxonomyType || 'feed';
+    this.selectedTopicId = ss.params.topicId || null;
+    this.showVoiceOnly = !!(ss.queryParams.voice == 1);
+    this.checkLoginStatusAndInitPost();
+
+    this._route.params.pipe(skip(1)).subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
-      this.selectedTopicId = param.topicId;
+      this.selectedTopicId = param.topicId || null;
+      this.showVoiceOnly = false;
       this.setMeta();
       this.checkLoginStatusAndInitPost();
+    });
+
+    // execute checkLoginStatusAndInitPost ONLY when voice filter is changed in note tab
+    this._route.queryParams.pipe(skip(1)).subscribe((param: {voice: 0|1}) => { 
+      const taxonomyType = this._route.snapshot.params.taxonomyType;
+      if(taxonomyType == 'note') {
+        this.showVoiceOnly = (param.voice == 1);
+        this.checkLoginStatusAndInitPost();
+      }
     });
 
     this.observeCacheChange();
@@ -130,12 +148,14 @@ export class ListComponent implements OnInit {
 
 
   async initPosts() {
+    console.log('initPost')
     this.disposeCacheIfNeeded();
     this.posts = null;
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
     const metadata = this._socialService.metadataOf(this.selectedTaxonomyType);
     if(metadata) {
       this.isMorePosts = metadata.existMorePost;
+      this.showVoiceOnly = metadata.showVoiceOnly || false;
     }
     if(!!posts) {
       setTimeout(() => {
@@ -168,6 +188,11 @@ export class ListComponent implements OnInit {
     if(topicId != topicIdInMeta) {
       this._socialService.disposeCacheOf(this.selectedTaxonomyType);
     }
+
+    if(this.selectedTaxonomyType == 'note' && this.showVoiceOnly != meta?.showVoiceOnly) {
+      this._socialService.disposeCacheOf(this.selectedTaxonomyType);
+    }
+
   }
 
   fetchPosts(): Promise<ISocialPost[]> {
@@ -195,6 +220,9 @@ export class ListComponent implements OnInit {
           params.hasMedia = true;
         } else if(tax == 'note') {
           params.contentType = 'NOTE';
+          if(this.showVoiceOnly) {
+            params.hasVoice = true;
+          }
         } else if(tax == 'event') {
           params.contentType = 'EVENT';
           params.sortBy = 'eventStartTime';
@@ -229,6 +257,7 @@ export class ListComponent implements OnInit {
               userId: this.user ? this.user._id : null, 
               topic: this.selectedTopicId, 
               existMorePost: this.isMorePosts,
+              ...(tax == 'note') && {showVoiceOnly: this.showVoiceOnly}
             }
           );
           resolve(posts);
@@ -250,5 +279,13 @@ export class ListComponent implements OnInit {
     const note = new SocialNote(data);
     note.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(note.description));
     this.newPosts.unshift(note);
+  }
+
+  async onClickButtonFilterVoice() {
+    // this.posts = null;
+    // this.posts = await this.fetchPosts();
+    // const [path, queryParams] = this._modalService.currentPathAndQueryParams
+    const showVoiceOnlyNext = !this.showVoiceOnly;
+    this._router.navigate([], {relativeTo: this._route, queryParams: {voice: showVoiceOnlyNext ? 1 : 0}})
   }
 }

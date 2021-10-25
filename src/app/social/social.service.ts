@@ -341,6 +341,7 @@ interface IPostsPerTaxonomy {
     userId?: string;
     existMorePost?: boolean;
     eventTimeRange?: (string|Date)[];
+    showVoiceOnly?: boolean;
   };
 }
 

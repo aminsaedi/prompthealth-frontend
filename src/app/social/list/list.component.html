@@ -15,22 +15,40 @@
   </div>
 </ng-container>
 
-<ng-container *ngFor="let p of posts; let i = index">
-  <div 
-  class="mb-15p" 
-  [@fade]
-  >
-    <card 
-    class="pointer-events: initial;"
-    [post]="p" 
-    [shorten]="true"
-    [option]="{showLinkToDetail: true}"
-    ></card>
-  </div>
 
-  <div *ngIf="p && i == 1" class="mb-15p">
-      <card-subscribe></card-subscribe>
-  </div>
+<div 
+*ngIf="selectedTaxonomyType == 'note'" 
+class="text-right mb-15p"
+>
+  <button
+  class="btn small"
+  [ngClass]="showVoiceOnly ? 'btn-primary' : 'btn-outline'"
+  (click)="onClickButtonFilterVoice()"
+  >
+    <i iconPh="mic"></i>
+    <span class="ml-5p">Show voice only</span>
+    
+  </button>
+</div>
+
+<ng-container *ngIf="posts && posts.length > 0">
+  <ng-container *ngFor="let p of posts; let i = index">
+    <div 
+    class="mb-15p"  
+    [@fade]
+    >
+      <card 
+      class="pointer-events: initial;"
+      [post]="p" 
+      [shorten]="true"
+      [option]="{showLinkToDetail: true}"
+      ></card>
+    </div>
+  
+    <div *ngIf="p && i == 1" class="mb-15p">
+        <card-subscribe></card-subscribe>
+    </div>
+  </ng-container>
 </ng-container>
 
 <ng-container *ngIf="posts && posts.length == 0">
