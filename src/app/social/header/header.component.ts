@@ -166,10 +166,11 @@ export class HeaderComponent implements OnInit {
   }
 
   changeTopics(topic: Category) {
-    const path = this._location.path();
-    const match = path.match('/community/(feed|article|media|event)');
+    const [path, query] = this._modalService.currentPathAndQueryParams;
+    const match = path.match('/community/(feed|article|media|event|note)');
     const taxonomyType = match ? match[1] : 'feed';
-    this._router.navigate(['/community', taxonomyType, topic._id], {replaceUrl: true});
+    query.menu = null;
+    this._router.navigate(['/community', taxonomyType, topic._id], {queryParams: query, replaceUrl: true});
   }
 
   resetSearch() {

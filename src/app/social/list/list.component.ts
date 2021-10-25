@@ -83,7 +83,7 @@ export class ListComponent implements OnInit {
     this._route.params.pipe(skip(1)).subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
       this.selectedTopicId = param.topicId || null;
-      this.showVoiceOnly = false;
+      this.showVoiceOnly = (this._route.snapshot.queryParams.voice == 1);
       this.setMeta();
       this.checkLoginStatusAndInitPost();
     });
@@ -91,8 +91,9 @@ export class ListComponent implements OnInit {
     // execute checkLoginStatusAndInitPost ONLY when voice filter is changed in note tab
     this._route.queryParams.pipe(skip(1)).subscribe((param: {voice: 0|1}) => { 
       const taxonomyType = this._route.snapshot.params.taxonomyType;
-      if(taxonomyType == 'note') {
-        this.showVoiceOnly = (param.voice == 1);
+      const showVoiceOnly = param.voice == 1;
+      if(taxonomyType == 'note' && this.showVoiceOnly != showVoiceOnly) {
+        this.showVoiceOnly = showVoiceOnly;
         this.checkLoginStatusAndInitPost();
       }
     });
@@ -148,7 +149,6 @@ export class ListComponent implements OnInit {
 
 
   async initPosts() {
-    console.log('initPost')
     this.disposeCacheIfNeeded();
     this.posts = null;
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
