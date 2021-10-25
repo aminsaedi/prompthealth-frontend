@@ -1,15 +1,13 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-// import { Partner } from 'src/app/models/partner';
-// import { IGetCompaniesResult } from 'src/app/models/response-data';
+import { Subscription } from 'rxjs';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
-import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { locations } from 'src/app/_helpers/location-data';
 import { environment } from 'src/environments/environment';
-import { SocialPostTaxonomyType } from '../social.service';
+import { SocialPostTaxonomyType, SocialService } from '../social.service';
 
 @Component({
   selector: 'app-home',
@@ -30,9 +28,10 @@ export class HomeComponent implements OnInit {
   public countCities: number;
 
   public selectedTaxonomyType: SocialPostTaxonomyType;
+  public selectedTopicId: string;
   public idPH = environment.config.idSA;
 
-  // public sponsor: Partner;
+  private subscriptionTopicId: Subscription;
 
 
   iconOf(topic: Category): string {
@@ -44,21 +43,33 @@ export class HomeComponent implements OnInit {
     private _location: Location,
     private _catService: CategoryService,
     private _qService: QuestionnaireService,
+    private _socialService: SocialService,
+    private _changeDetector: ChangeDetectorRef,
     // private _sharedService: SharedService,
   ) { }
 
+  ngOnDestroy() {
+    this.subscriptionTopicId?.unsubscribe();
+  }
   
   ngOnInit(): void {
+
     this._qService.getSitemap().then(data => { 
       this.countTypeOfProviders = data.typeOfProvider.answers.length;
     });
 
     this.countCities = Object.keys(locations).length;
+
     // this._sharedService.getNoAuth('company/get-random').subscribe((res: IGetCompaniesResult) => {
     //   if(res.statusCode == 200) {
     //     this.sponsor = new Partner(res.data[0]);
     //   }
     // });
+
+    this.subscriptionTopicId = this._socialService.selectedTopicIdChanged().subscribe(id => {
+      this.selectedTopicId = id;
+      this._changeDetector.detectChanges();
+    })
   }
 
   navigateTo(route: string[], option: NavigationExtras = {}) {
@@ -71,5 +82,4 @@ export class HomeComponent implements OnInit {
     const taxonomyType = match ? match[1] : 'feed';
     this._router.navigate(['/community', taxonomyType, topic._id]);
   }
-
 }
