@@ -21,10 +21,18 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
         [styles]="{minHeight: '48px', border: 'none', fontSize: '16px'}"
         placeholder="What's on your mind"
         [formControl]="f.description"
+        (onEditorChanged)="onEditorChanged($event)"
         (click)="focusEditor()"
         >
           <div quill-editor-toolbar></div>
         </quill-editor>  
+
+        <div class="d-flex justify-content-end">      
+          <span 
+          class="flex-grow-0 caption" 
+          [ngClass]="!f.description.dirty ? 'text-placeholder' : isDescriptionOverLimit ? 'text-danger' : 'text-success'"
+          >{{lengthDescription}}/{{maxDescription}}</span>
+        </div>
       </div>
     </div>
   
@@ -108,7 +116,7 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
         <button 
         type="submit"
         class="btn btn-primary small"
-        [disabled]="form.invalid || !this.user || isUploading"
+        [disabled]="form.invalid || !this.user || isUploading || isDescriptionOverLimit"
         >Share</button>
       </div>
     </div>
