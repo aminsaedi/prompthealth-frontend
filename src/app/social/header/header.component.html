@@ -133,18 +133,26 @@ style="z-index: 100;"
       </ng-container>
 
     </div>
-    <div class="container">
-      <list-item
-      *ngFor="let topic of topics"
-      [leading]="iconOf(topic)"
-      leadingClass="text-primary"
-      action="chevron-right"
-      actionClass="text-primary"
-      (onTap)="changeTopics(topic)"
-      >
-        <div class="subtitle2">{{topic.item_text}}</div>
-      </list-item>  
 
+    <div>
+      <div
+      *ngFor="let topic of topics"
+      class="container"
+      [ngClass]="{'bg-primary-light': (selectedTopicId == topic._id)}"
+      >
+        <list-item
+        [leading]="iconOf(topic)"
+        leadingClass="text-primary"
+        action="chevron-right"
+        actionClass="text-primary"
+        (onTap)="changeTopics(topic)"
+        >
+          <div class="subtitle2">{{topic.item_text}}</div>
+        </list-item>  
+      </div>
+    </div>
+
+    <div class="container">
       <div class="bg-primary p-20p rounded-8p mt-15p mb-50p">
         <div class="text-white h5 mb-20p" style="font-weight: 400;">
           Need a 
@@ -154,7 +162,7 @@ style="z-index: 100;"
         <a routerLink="/personal-match" class="btn btn-secondary">
           Get Started
         </a>
-      </div>
+      </div>  
     </div>
   </div>
 </div>

@@ -28,6 +28,17 @@ export class SocialService {
     return this._selectedProfileChanged.asObservable();
   }
 
+  private _selectedTopicId: string;
+  get selectedTopicId() { return this._selectedTopicId; }
+  private _selectedTopicIdChanged = new Subject<string>();
+  selectedTopicIdChanged(): Observable<string> {
+    return this._selectedTopicIdChanged.asObservable();
+  }
+  setTopicId(id: string) {
+    this._selectedTopicId = id;
+    this._selectedTopicIdChanged.next(this._selectedTopicId);
+  }
+
   /** CAUTION: THIS IS TEMPORARY SOLUTION */
   /** only when content is deleted, the change will be sent to listeners */
   private _postCacheChanged = new Subject<void>();

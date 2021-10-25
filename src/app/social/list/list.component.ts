@@ -22,13 +22,13 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class ListComponent implements OnInit {
 
   get user() { return this._profileService.profile; }
+  get selectedTopicId() { return this._socialService.selectedTopicId; }
 
   public newPosts: ISocialPost[] = [];
 
   public posts: ISocialPost[] = null;
 
   public countPerPage: number = 20;
-  public selectedTopicId: string;
   public selectedTaxonomyType: SocialPostTaxonomyType;
 
   public isLoading: boolean = false;
@@ -74,7 +74,7 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
-      this.selectedTopicId = param.topicId;
+      this._socialService.setTopicId(param.topicId || null);
       this.setMeta();
       this.checkLoginStatusAndInitPost();
     });
