@@ -97,6 +97,7 @@ export class ListComponent implements OnInit {
       case 'article': desc = `Larn about healthcare topics${topic ? ' about ' + topic : ''} and improve your health with us!`; break;
       case 'event': desc = `Find your favorite healthcare event${topic ? ' about ' + topic : ''} and join now!`; break;
       case 'media': desc = `Find your favorite quick tips${topic ? ' about ' + topic : ''} from best providers with voice, photos and media`; break;
+      case 'note': desc = `Find latest update${topic ? ' about ' + topic : '' } from best providers`; break;
       case 'promotion': desc = `Find your favorite products`; break;
     } 
 
@@ -192,6 +193,8 @@ export class ListComponent implements OnInit {
           params.contentType = 'ARTICLE';
         } else if(tax == 'media') {
           params.hasMedia = true;
+        } else if(tax == 'note') {
+          params.contentType = 'NOTE';
         } else if(tax == 'event') {
           params.contentType = 'EVENT';
           params.sortBy = 'eventStartTime';
