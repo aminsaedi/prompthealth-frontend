@@ -246,7 +246,7 @@ export const validators = {
   firstnameClient: validatorFirstNameClient,
   lastnameClient: validatorLastNameClient,
   email: validatorEmail,
-  displayEmail: [Validators.email],
+  // displayEmail: [Validators.email],
   phone: validatorPhone,
   gender: validatorRequired,
   address: validatorRequired,

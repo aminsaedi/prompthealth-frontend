@@ -51,7 +51,7 @@ export class FormPartnerGeneralComponent implements OnInit {
         Validators.required,
         Validators.email
       ]),
-      displayEmail: new FormControl((this.data.displayEmail ? this.data.displayEmail : ''), validators.displayEmail),
+      // displayEmail: new FormControl((this.data.displayEmail ? this.data.displayEmail : ''), validators.displayEmail),
       address: new FormControl((this.data.address ? this.data.address : '')),
       latitude: new FormControl(((this.data.location && this.data.location[1]) ? this.data.location[1] : 0), []),
       longitude: new FormControl(((this.data.location && this.data.location[0]) ? this.data.location[0] : 0), []),
@@ -60,7 +60,7 @@ export class FormPartnerGeneralComponent implements OnInit {
       zipcode: new FormControl((this.data.zipcode ? this.data.zipcode : ''), []),
       placeId: new FormControl((this.data.placeId ? this.data.placeId : ''), []),
 
-      phone: new FormControl((this.data.phone ? this.data.phone : ''), validators.phone),
+      phone: new FormControl((this.data.phone ? this.data.phone : ''), validators.phone), //keep this because it's being used in formItemPlaceComponent
       website: new FormControl((this.data.website ? this.data.website : ''), validators.website),
       product_description: new FormControl((this.data.product_description ? this.data.product_description : ''), [
         Validators.required,

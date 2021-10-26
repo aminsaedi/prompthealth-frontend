@@ -99,10 +99,12 @@ export class Professional extends Profile implements IProfessional{
   get imageType(){ return this.profileImageType; }
   get coverImage() { return super.coverImage || this._defaultBanner; }
 
-  get emailToDisplay() { return this.p.displayEmail; }
+  // get emailToDisplay() { return this.p.displayEmail; }
+  get emailToDisplay() { return null; }
 
   get title() { return this.p.professional_title || null; }
-  get phone() { return this._phone; }
+  // get phone() { return this._phone; }
+  get phone() { return null; }
   get address() { return (!this.p.hideAddress && this.p.address && this.p.address.length > 0) ? this.p.address : null; }
   get state() { return this.p.state; }
   get city() { return this.p.city; }
@@ -221,7 +223,7 @@ export class Professional extends Profile implements IProfessional{
     return label;
   }
 
-  private _phone: string;
+  // private _phone: string;
   private _reviewData: ReviewData;
   private _recommendations: Referral[];
 
@@ -261,16 +263,16 @@ export class Professional extends Profile implements IProfessional{
   constructor(id: string, protected p: IUserDetail, private ans?: any) {
     super({...p, _id: id});
 
-    let phone: string = p.phone || '';
-    phone = phone.replace(/[^0-9\+]/g, '');
+    // let phone: string = p.phone || '';
+    // phone = phone.replace(/[^0-9\+]/g, '');
 
-    if (phone.length === 10) {
-      phone = `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`;
-    } else {
-      phone = p.phone;
-    }
+    // if (phone.length === 10) {
+    //   phone = `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`;
+    // } else {
+    //   phone = p.phone;
+    // }
 
-    this._phone = phone;
+    // this._phone = phone;
 
     let priceRange: string = p.exactPricing ? p.exactPricing.toString() : (p.price_per_hours || '');
     priceRange = priceRange.replace('<', '0 -');

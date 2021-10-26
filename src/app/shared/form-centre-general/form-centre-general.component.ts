@@ -59,8 +59,8 @@ export class FormCentreGeneralComponent implements OnInit {
       firstName: new FormControl(this.data.firstName ? this.data.firstName : '', validators.nameCentre),
       userType: new FormControl('Centre'),
       email: new FormControl(this.data.email ? this.data.email : '', validators.email),
-      displayEmail: new FormControl(this.data.displayEmail ? this.data.displayEmail : '', validators.displayEmail),
-      phone: new FormControl(this.data.phone ? this.data.phone : '', validators.phone),
+      // displayEmail: new FormControl(this.data.displayEmail ? this.data.displayEmail : '', validators.displayEmail),
+      phone: new FormControl(this.data.phone ? this.data.phone : '', validators.phone), //keep this because it's being used in formItemPlaceComponent
       
       address: new FormControl(this.data.address ? this.data.address : '', validators.address),
       latitude: new FormControl((this.data.location && this.data.location[1]) ? this.data.location[1] : 0 ),
