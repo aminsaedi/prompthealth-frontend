@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit {
     this._headerStatusService.hideHeader();
 
     this._uService.setMeta(this._router.url, {
-      title: 'PromptHealth | Your health and wellness personal assistant',
+      title: 'PromptHealth | Your Wellness Navigator',
       description: 'Take control of your health with options tailored to you',
     });
 
