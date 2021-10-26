@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from '../_helpers/form-settings';
 import { Profile } from '../models/profile';
-import { formatDateToString, formatStringToDate } from '../_helpers/date-formatter';
+import { formatStringToDate } from '../_helpers/date-formatter';
 import { ISocialPost } from '../models/social-post';
 
 
@@ -39,6 +39,7 @@ export class EditorService {
     const f = this.form.controls;
     f.authorId.setValue(this.userId);
     f.contentType.setValue(this.editorType);
+    f.tags.setValue([]);
 
     if(this.editorType == 'ARTICLE' || this.editorType == 'EVENT') {
       f.status.setValue('DRAFT');
@@ -72,6 +73,7 @@ export class EditorService {
         eventType: new FormControl('ONLINE'),
         joinEventLink: new FormControl(null),  // set validator later
         eventAddress: new FormControl(null),
+        tags: new FormControl([], validators.topics),
       });  
     } else if (type == 'ARTICLE') {
       this._form = new FormGroup({
@@ -81,6 +83,7 @@ export class EditorService {
         title: new FormControl(null, validators.savePostTitle),
         description: new FormControl(null), // set validator later
         image: new FormControl('', ),
+        tags: new FormControl([], validators.topics),
       })
     } else if (type == 'NOTE') {
       this._form = new FormGroup({
@@ -89,6 +92,7 @@ export class EditorService {
         description: new FormControl(),
         images: new FormControl(), // TODO: need change to FormArray in ver2.1
         voice: new FormControl(),
+        tags: new FormControl([], validators.topics),
       }, validators.note);
     } else if (type =='PROMO') {
       this._form = new FormGroup({
@@ -99,6 +103,7 @@ export class EditorService {
         availableUntil: new FormControl(null, validators.promoExpireDate),
         images: new FormControl(), // TODO: need change to FormArray in ver2.1
         link: new FormControl('', validators.promoLink),
+        tags: new FormControl([], validators.topics),
       });
     }
 
@@ -175,6 +180,10 @@ export interface ISaveQuery {
   eventType?: ISocialPost['eventType'];
   joinEventLink?: string;
   eventAddress?: string;
+
+  availableUntil?: Date;
+  promo?: string;
+  link?: string;
 }
 
 export class SaveQuery implements ISaveQuery {
@@ -196,6 +205,10 @@ export class SaveQuery implements ISaveQuery {
   get images() { return this.data.images || []; }
   get voice() { return this.data.voice || ''; }
 
+  get availableUntil() { return this.data.availableUntil || null; }
+  get promo() { return this.data.promo || null; }
+  get link() { return this.data.link || null; }
+  
   toJson() { 
     const data: ISaveQuery = {
       contentType: this.contentType,
@@ -217,6 +230,10 @@ export class SaveQuery implements ISaveQuery {
       ... (this.eventStartTime) && {eventStartTime: this.eventStartTime},
       ... (this.eventEndTime) && {eventEndTime: this.eventEndTime},
       ... (this.eventAddress) && {eventAddress: this.eventAddress},
+
+      ... (this.availableUntil) && {availableUntil: this.availableUntil},
+      ... (this.promo) && {promo: this.promo},
+      ... (this.link) && {link: this.link},
     };
     return data;
   }

@@ -10,7 +10,7 @@ import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { minmax } from 'src/app/_helpers/form-settings';
-import { EditorService } from '../editor.service';
+import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 
 @Component({
   selector: 'card-new-promo',
@@ -113,6 +113,9 @@ export class CardNewPromoComponent implements OnInit {
     this.f.images.setValue(null);
   }
 
+  onChangeTags(ids: string[]) {
+    this.f.tags.setValue(ids);
+  }
 
   async onSubmit() {
     this.isSubmitted = true;
@@ -136,28 +139,19 @@ export class CardNewPromoComponent implements OnInit {
       return;
     }
 
-    const data = {
+    const data: ISaveQuery = {
       ...this.form.value
     };
 
-    const tags = this.formItemService.getSelected();
-    if(tags.length > 0) {
-      data.tags = tags;
-    }
-
-    if(data.images) {
-      data.images = [data.images];
-    } else {
-      delete data.images;
-    }
+    data.images = this.f.images.value ? [this.f.images.value] : []; //change format to array
 
     //format availableUntil from 'yyyy-mm-dd' to Date(yyyy,mm,dd,23,59,59)
-    if(data.availableUntil) {
-      let vals = data.availableUntil.split('-');
-      data.availableUntil = new Date(vals[0], vals[1] - 1, vals[2], 23, 59, 59);
-    }
+    const dateArray = this.f.availableUntil.value ? this.f.availableUntil.value.split('-') : null;
+    data.availableUntil = dateArray ? new Date(dateArray[0], dateArray[1] - 1, dateArray[2], 23, 59, 59) : null;
 
-    this._sharedService.put(data, 'note/create').subscribe((res: IContentCreateResult) => {
+    const payload: ISaveQuery = new SaveQuery(data).toJson();
+
+    this._sharedService.put(payload, 'note/create').subscribe((res: IContentCreateResult) => {
       this.isUploading = false;
       if(res.statusCode === 200) {
         this.isSubmitted = false;

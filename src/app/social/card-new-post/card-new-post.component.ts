@@ -12,11 +12,9 @@ import { Profile } from 'src/app/models/profile';
 import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
-import { EditorService } from '../editor.service';
+import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { UploadObserverService } from 'src/app/shared/services/upload-observer.service';
-import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
-
 
 @Component({
   selector: 'card-new-post',
@@ -171,6 +169,10 @@ export class CardNewPostComponent implements OnInit {
     this.isMoreShown = !this.isMoreShown;
   }
 
+  onChangeTags(ids: string[]) {
+    this.f.tags.setValue(ids);
+  }
+
   focusEditor() {
     if(!this.isEditorFocused) {
       this.isEditorFocused = true;
@@ -295,25 +297,17 @@ export class CardNewPostComponent implements OnInit {
       return;
     }
 
-    const data = {
+    const data: ISaveQuery = {
       ...this.form.value,
     };
-    const tags = this.formItemService.getSelected();
-    if(tags.length > 0) {
-      data.tags = tags;
-    }
 
-    if (data.images) {
-      data.images = [data.images];
-    } else {
-      delete data.images;
-    }
 
-    if (!data.voice) {
-      delete data.voice;
-    }
+    data.images = this.f.images.value ? [this.f.images.value] : []; //change format to array
 
-    this._sharedService.put(data, 'note/create').subscribe((res: IContentCreateResult) => {
+    const payload: ISaveQuery = new SaveQuery(data).toJson();
+
+
+    this._sharedService.put(payload, 'note/create').subscribe((res: IContentCreateResult) => {
       this.isUploading = false;
       this.isAlertUploadingClosedForcibly = false;
       this._uploadObserver.markAsUploadDone();

@@ -195,7 +195,12 @@
             <form-item-service
             #formItemService
             [option]="{showInlineWhenEnabled: true}"
+            (changeValue)="onChangeTags($event)"
             ></form-item-service>
+            <form-item-errors 
+            [submitted]="isSubmitted" 
+            [controller]="f.tags"
+            ></form-item-errors>
           </div>
 
           <div class="mt-25p text-right sticky-bottom pb-30p button-bottom-group blur">

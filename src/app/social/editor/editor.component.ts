@@ -249,6 +249,10 @@ export class EditorComponent implements OnInit {
     this.f.eventType.setValue(online ? 'ONLINE' : 'OFFLINE');
   }
 
+  onChangeTags(ids: string[]) {
+    this.f.tags.setValue(ids);
+  }
+
   /** trigger when editor tool bar is sticked to top */
   changeStickyStatus(isSticked: boolean) {
     if (isSticked) { 
@@ -295,12 +299,6 @@ export class EditorComponent implements OnInit {
     }
 
     const data: ISaveQuery = form.value;
-    const tags = this.formItemService.getSelected();
-    if(tags.length > 0) {
-      data.tags = tags;
-    }
-    data.status = status;
-
     const payload: ISaveQuery = new SaveQuery(data).toJson();
 
     // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
