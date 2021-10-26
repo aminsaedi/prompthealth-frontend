@@ -1,16 +1,14 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { minmax, validators } from 'src/app/_helpers/form-settings';
+import { minmax } from 'src/app/_helpers/form-settings';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import getBlobDuration from 'get-blob-duration';
 import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Profile } from 'src/app/models/profile';
-import { ModalService } from 'src/app/shared/services/modal.service';
 import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
@@ -36,6 +34,7 @@ export class CardNewPostComponent implements OnInit {
   get userImage(): string { return this.user ? this.user.profileImage : ''; }
   get user(): Profile { return this._profileService.profile; }
 
+  get lengthDescription() { return this.f.description?.value?.length - 1 || 0;}
   get isDescriptionOverLimit() { return !!(this.lengthDescription > this.maxDescription); }
 
   safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
@@ -48,7 +47,7 @@ export class CardNewPostComponent implements OnInit {
   public isSubmitted: boolean = false;
   public isUploading: boolean = false;
   public isAlertUploadingClosedForcibly: boolean = false;
-  public lengthDescription = 0;
+  // public lengthDescription = 0;
   public maxDescription = minmax.noteMax;
 
   /** AUDIO RECORDER START */
@@ -77,7 +76,6 @@ export class CardNewPostComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _audioRecorder: AudioRecordService,
     private _changeDetector: ChangeDetectorRef,
-    private _modalService: ModalService,
     private _editorService: EditorService,
     private _uploadObserver: UploadObserverService,
   ) { }
@@ -110,12 +108,9 @@ export class CardNewPostComponent implements OnInit {
     });
   }
 
-  onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
-    if('text' in e) {
-      const text = e.text?.replace(/\s$/, '') || '';
-      this.lengthDescription = text.length;
-    }
-  }
+  // onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
+  //   if('text' in e) { }
+  // }
 
   onClickButtonMedia() {
     const el = this.inputMedia.nativeElement as HTMLInputElement;

@@ -23,11 +23,12 @@
     <popup-post-menu [post]="post"></popup-post-menu>
   </div>
 
-  <div class="mb-10p">
-    <div
-    class="post-content"
-    [innerHTML]="post.descriptionSanitized"
-    ></div>
+  <div
+  class="post-content mb-10p"
+  style="white-space:pre-wrap"
+  [innerHTML]="post.descriptionSanitized"
+  >
+    {{post.description}}
   </div>
 
   <ul 
