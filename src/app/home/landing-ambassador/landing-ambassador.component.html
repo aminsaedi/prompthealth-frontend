@@ -1,108 +1,90 @@
-<div class="position-relative overflow-hidden pb-5 pt-50p">
-  <section class="container text-dark position-relative">
-    <ng-container *ngIf="faceType == 'provider'">
-      <div class="row align-items-start">
-        <div class="col-12 col-md-8">
-          <h2 class="text-gradient-blue mb-4">Welcome to the PromptHealth Brand Ambassador Program </h2>
-          <h3 class="text-primary mb-4">Open to All Accredited Health and Wellness Professionals in Canada</h3>
-          <p class="mb-4">
-            Join the movement to help people connect with medical and holistic services based on individualized needs
-            quickly
-            and easily. Help spread our mission of the importance of personalized healthcare with your clients. 
-          </p>
+<section class="bg-lightyellow py-50p py-lg-100p">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-6 col-xl-7">
+        <h6 class="text-primary mb-20p">PromptHealth Ambassador Program</h6>
+        <h2 class="h3 h2-lg text-primary-dark mb-20p">Open to the PromptHealth Community</h2>
+        <p class="mb-30p mb-lg-0p">
+          Join our mission to help people connect with holistic wellness services and solutions based on individualized needs quickly and easily. Help spread our message of the importance of personalized wellness journey with your clients.        </p>  
+      </div>
 
-          <h4 class="text-primary-dark mb-3">Eligibility Criteria:</h4>
-          <ol class="mb-4">
-            <li>You must be signed up as a provider on our platform.</li>
-            <li>You must be an accredited health or wellness professional within Canada.</li>
-          </ol>
-
-          <h4 class="text-primary-dark mb-3">What you do:</h4>
-          <p class="mb-4">
-            Share our referral link on your social media accounts, on your website, and anywhere else you can.<br>
-            Also, tag us <b>@prompthealth</b> on your social media accounts!<br>
-          </p>
-
-          <div *ngIf="user" class="mb-4">
-            <div 
-            class="border rounded-lg px-3 py-2 mb-2 d-flex align-items-center justify-content-end" 
-            style="background: #ffffffcc;" 
-            >
-              <input class="flex-grow-1 input-link" #referralLink
-                [value]="FRONTEND_URL +'/invitation/' + user._id" readonly>
-              <button-share
-              facebook twitter linkedin email
-              label="Share"
-              btnClass="btn btn-primary small"
-              [url]="FRONTEND_URL +'/invitation/' + user._id"
-              title="Join PromptHealth!"
-              text="Join PromptHealth to take control your health!"
-              ></button-share>
-            </div>  
-
-            <button-guideline
-            type="ambassador"
-            label="See guidelines and get Social media kit"
-            buttonClass="btn btn-outline small"
-            ></button-guideline>
-          </div>
-
-          <div *ngIf="!user">
-            <p>To get the referral link, you must sign up first.</p>
-            <div class="mb-5 d-flex flex-column align-items-start">
-              <a class="btn btn-outline small" [routerLink]="['/plans']">Sign up as Provider</a>
-              <a class="btn btn-outline small mt-3" [routerLink]="['/plans/product']">Sign up as
-                Product/Service</a>
-            </div>
-          </div>
-
-
-          <h4 class="text-primary-dark mb-3">What you get:</h4>
-          <div class="mb-md-5">
-
-            <p class="mb-2">
-              The more engagement your shared referral link gets, the more credits you are awarded. The credits can then be used towards our premium services. 
-            </p>
-            <a [routerLink]="'/dashboard/profilemanagement/my-payment'" class="btn btn-text pl-0">
-              Check credit balance
-            </a>
-          </div>
-
-          <div class="d-md-none"><img class="image-people-sm" src="/assets/img/ambassador-people.png"></div>
-
-
-          <h3 class="text-gradient-light-blue mb-3">Our services include:</h3>
-          <h5 class="text-dark mb-3">Premium Membership (valued from $20~100/month):</h5>
-          <div class="mb-4">
-            <ul class="mb-3">
-              <li class="mb-1">Photo and video introduction</li>
-              <li class="mb-1">Verified badge on your profile</li>
-              <li class="mb-1">Genuine reviews and feedback</li>
-              <li class="mb-1">Receive requests for booking or integration with your own booking system option</li>
-              <li class="mb-1">Performance dashboard</li>
-              <li>Link your social media accounts on your PromptHealth profile page</li>
-            </ul>
-            <p class="">* Centres receive even more features and benefits</p>  
-          </div>
-
-
-          <h5 class="text-gradient-light-blue mb-3">Add-Ons:</h5>
-          <h5 class="text-dark mb-3">The Networker (valued at $100/month):</h5>
-          <ul class="mb-4">
-            <li>A feature displaying your main services on the homepage of our website for the ultimate exposure toward clients. </li>
-          </ul>
-
-          <h5 class="text-dark mb-3">The Socialite (Valued at $200/month):</h5>
-          <ul class="mb-3">
-            <li>We will take care of your recognition and growth by creating and posting quality health content three times a week for your social media channels, allowing you to focus on what’s important – treating your clients. </li>
-          </ul>
-          <div>
-            <a [routerLink]="'/plans'" class="btn btn-text pl-0">Check out our services</a>
-          </div>
-
+      <div class="col-12 col-md-6 col-xl-5">
+        <div class="position-relative rounded-12p">
+          <img 
+          src="/assets/img/ambassador/top.jpg"
+          alt="" 
+          class="top-image-shadow rounded-12p">
+          <img src="/assets/img/ambassador/top.jpg" alt="" class="w-100 position-relative rounded-12p">
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<div class="text-center container">
+  <section class="my-100p">
+    <h3 class="mb-30p">Eligibility Criteria</h3>
+    <p>
+      You must be signed up as a wellness provider/center OR company on our platform.
+    </p>
+  </section>
+  
+  <section class="my-100p">
+    <h3 class="mb-30p">What you do</h3>
+    <p class="mb-30p">Stay engaged with the PromptHealth community:</p>
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10 col-xl-8">
+        <ul class="body-ambassador text-left">
+          <li class="mb-5p">
+            Recommend and endorse those you like and trust in the PromptHealth community 
+          </li>
+          <li class="mb-5p">
+            Invite your colleagues to join the PromptHealth community 
+          </li>
+          <li class="mb-5p">
+            Create content on the PromptHealth community page, and share them to your other social media accounts using the share button. 
+          </li>
+          <li class="mb-5p">
+            If sharing on Instagram, use the hashtag #PromptHealthAmbassador with your post. Make sure to tag us @prompthealth! 
+          </li>
+        </ul>  
+      </div>
+    </div>
+
+    <ng-container *ngIf="!user">
+      <div class="d-flex flex-column flex-md-row justify-content-center">
+        <a class="btn btn-outline" [routerLink]="['/plans']">Sign up as provider</a>
+        <a class="btn btn-outline mt-15p mt-md-0p ml-md-30p" [routerLink]="['/plans/product']">Sign up as company</a>
+      </div>
     </ng-container>
+  </section>
+
+  <section class="my-100p">
+    <h3 class="mb-30p">What you get</h3>
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10 col-xl-8">
+        <p class="mb-30p">
+          We believe in the power of collaboration and want to help eachother out. <br><br>
+          The more engaged you are, the more rewards you get. You can keep track of your credits in your dashboards. The credits can be used towards higher tier membership and/or social media services including being featured on our podcast, an interview via Instagram live, and a custom promotional video created by our social media team. 
+        </p>
+
+        <div 
+        *ngIf="user"
+        class="d-flex flex-column d-md-block"
+        >
+          <a [routerLink]="'/dashboard/profilemanagement/my-payment'" class="btn btn-outline">
+            Check credit balance
+          </a>
+        </div>  
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<div class="position-relative overflow-hidden pb-5 pt-50p">
+  <section class="container text-dark position-relative">
+    
 
     <ng-container *ngIf="faceType == 'client' && ambassador">
 

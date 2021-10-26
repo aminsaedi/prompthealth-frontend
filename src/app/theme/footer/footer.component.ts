@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { QuestionnaireAnswer, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { locations } from 'src/app/_helpers/location-data';
 
@@ -8,8 +9,12 @@ import { locations } from 'src/app/_helpers/location-data';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
+  
+  get isU() { return this._profileService.profile?.isU; }
+  
   constructor(
     private _qService: QuestionnaireService,
+    private _profileService: ProfileManagementService,
   ) { }
 
   public typeOfProviderListHighlight: QuestionnaireAnswer[]; /** only contains 2 type of providers */
