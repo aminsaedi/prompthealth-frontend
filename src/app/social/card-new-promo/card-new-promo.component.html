@@ -140,7 +140,12 @@ class="rounded-8p bg-white body1 text-body mb-15p"
         <form-item-service
         #formItemService
         [option]="{showInlineWhenEnabled: true}"
+        (changeValue)="onChangeTags($event)"
         ></form-item-service>
+        <form-item-errors 
+        [submitted]="isSubmitted" 
+        [controller]="f.tags"
+        ></form-item-errors>
       </div>
     </div>
   </form>

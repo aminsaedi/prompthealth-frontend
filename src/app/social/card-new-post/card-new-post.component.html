@@ -140,7 +140,12 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
         <form-item-service
         #formItemService
         [option]="{showInlineWhenEnabled: true}"
+        (changeValue)="onChangeTags($event)"
         ></form-item-service>
+        <form-item-errors 
+        [submitted]="true" 
+        [controller]="f.tags"
+        ></form-item-errors>
       </div>
     </div>
   </form>

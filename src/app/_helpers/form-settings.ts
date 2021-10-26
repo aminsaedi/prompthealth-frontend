@@ -222,6 +222,17 @@ const validatorNoteHasAtLeastOneField = (): ValidatorFn => {
   }
 }
 
+const validatorTopicsSelectedLTE = (maxNum: number): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    const topics = formControl.value || [];
+    if(topics.length > maxNum) {
+      return {topicsSelectedLTE: maxNum};
+    } else {
+      return null;
+    }
+  }
+}
+
 
 const validatorFirstNameClient = [Validators.maxLength(minmax.nameMax), Validators.required];
 const validatorLastNameClient = [Validators.maxLength(minmax.nameMax)];
@@ -317,4 +328,5 @@ export const validators = {
   promoCode: [Validators.maxLength(minmax.promoCodeMax)],
   promoExpireDate: [validatorPatternDate()],
   promoLink: validatorUrl,
+  topics: [validatorTopicsSelectedLTE(3)],
 }

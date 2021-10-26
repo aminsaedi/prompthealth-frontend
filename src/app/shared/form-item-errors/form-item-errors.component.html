@@ -20,6 +20,9 @@
   <li *ngIf="controller.errors.endTimeLaterThanStart">
     End time must be later than start time.
   </li>
+  <li *ngIf="controller.errors.topicsSelectedLTE">
+    Please select {{controller.errors.topicsSelectedLTE}} or less topics.
+  </li>
 
   <li *ngIf="controller.errors.matchPatternURL">
     URL is invalid. Here is sample URL.
