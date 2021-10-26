@@ -138,10 +138,10 @@ export class ProfileAboutComponent implements OnInit {
 
   fetchStaffs() {
     return new Promise((resolve, reject) => {
-      const path = `staff/get-all?center=${this.profile._id}&count=20&page=1&frontend=0/`;
+      const path = `staff/get-by-center/${this.profile._id}`;
       this._sharedService.getNoAuth(path).subscribe((res: IGetStaffsResult) => {
         if(res.statusCode == 200) {
-          const staffs = res.data.data.map(item => item.userId);
+          const staffs = res.data.map(item => item.userId);
           this.profile.setStaffs(staffs);
           resolve(true);  
         } else {
