@@ -12,7 +12,6 @@ import { ISocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { skip } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list',
@@ -34,7 +33,6 @@ export class ListComponent implements OnInit {
 
   public isLoading: boolean = false;
   public isMorePosts: boolean = true;
-  public showVoiceOnly: boolean = false;
 
   private subscriptionLoginStatus: Subscription;
   private subscriptionCacheChange: Subscription;
@@ -74,28 +72,11 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const ss = this._route.snapshot;
-    this.selectedTaxonomyType = ss.params.taxonomyType || 'feed';
-    this._socialService.setTopicId(ss.params.topicId || null);
-    this.showVoiceOnly = !!(ss.queryParams.voice == 1);
-    this.checkLoginStatusAndInitPost();
-
-    this._route.params.pipe(skip(1)).subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
+    this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
       this.selectedTaxonomyType = param.taxonomyType || 'feed';
       this._socialService.setTopicId(param.topicId || null);
-      this.showVoiceOnly = (this._route.snapshot.queryParams.voice == 1);
       this.setMeta();
       this.checkLoginStatusAndInitPost();
-    });
-
-    // execute checkLoginStatusAndInitPost ONLY when voice filter is changed in note tab
-    this._route.queryParams.pipe(skip(1)).subscribe((param: {voice: 0|1}) => { 
-      const taxonomyType = this._route.snapshot.params.taxonomyType;
-      const showVoiceOnly = param.voice == 1;
-      if(taxonomyType == 'note' && this.showVoiceOnly != showVoiceOnly) {
-        this.showVoiceOnly = showVoiceOnly;
-        this.checkLoginStatusAndInitPost();
-      }
     });
 
     this.observeCacheChange();
@@ -117,6 +98,7 @@ export class ListComponent implements OnInit {
       case 'event': desc = `Find your favorite healthcare event${topic ? ' about ' + topic : ''} and join now!`; break;
       case 'media': desc = `Find your favorite quick tips${topic ? ' about ' + topic : ''} from best providers with voice, photos and media`; break;
       case 'note': desc = `Find latest update${topic ? ' about ' + topic : '' } from best providers`; break;
+      case 'voice': desc = `Find latest update with voice note${topic ? ' about ' + topic : '' } from best providers`; break;
       case 'promotion': desc = `Find your favorite products`; break;
     } 
 
@@ -155,7 +137,6 @@ export class ListComponent implements OnInit {
     const metadata = this._socialService.metadataOf(this.selectedTaxonomyType);
     if(metadata) {
       this.isMorePosts = metadata.existMorePost;
-      this.showVoiceOnly = metadata.showVoiceOnly || false;
     }
     if(!!posts) {
       setTimeout(() => {
@@ -188,11 +169,6 @@ export class ListComponent implements OnInit {
     if(topicId != topicIdInMeta) {
       this._socialService.disposeCacheOf(this.selectedTaxonomyType);
     }
-
-    if(this.selectedTaxonomyType == 'note' && this.showVoiceOnly != meta?.showVoiceOnly) {
-      this._socialService.disposeCacheOf(this.selectedTaxonomyType);
-    }
-
   }
 
   fetchPosts(): Promise<ISocialPost[]> {
@@ -214,33 +190,39 @@ export class ListComponent implements OnInit {
         const query = new SocialPostSearchQuery(params);
         req = this._sharedService.get('note/get-feed' + query.toQueryParams());
       } else {
-        if (tax == 'article') {
-          params.contentType = 'ARTICLE';
-        } else if(tax == 'media') {
-          params.hasMedia = true;
-        } else if(tax == 'note') {
-          params.contentType = 'NOTE';
-          if(this.showVoiceOnly) {
+        switch(tax) {
+          case 'article':
+            params.contentType = 'ARTICLE';
+            break;
+          case 'media':
+            params.hasMedia = true;
+            break;
+          case 'note':
+            params.contentType = 'NOTE';
+            break;
+          case 'voice':
+            params.contentType = 'NOTE';
             params.hasVoice = true;
-          }
-        } else if(tax == 'event') {
-          params.contentType = 'EVENT';
-          params.sortBy = 'eventStartTime';
-          params.order = 'asc';
-          const meta = this._socialService.metadataOf('event');
-          if(meta && meta.eventTimeRange) {
-            params.eventTimeRange = meta.eventTimeRange;
-          } else {
-            const now = new Date();
-            params.eventTimeRange = [now.toISOString()];
-          }
-        } else if(tax == 'promotion') {
-          params.contentType = 'PROMO';
-          params.excludeExpiredPromo = true;
-        } else {
-          console.log('oops. this taxonomy type is not implemented yet.: ', tax);
+            break;
+          case 'event':
+            params.contentType = 'EVENT';
+            params.sortBy = 'eventStartTime';
+            params.order = 'asc';
+            const meta = this._socialService.metadataOf('event');
+            if(meta && meta.eventTimeRange) {
+              params.eventTimeRange = meta.eventTimeRange;
+            } else {
+              const now = new Date();
+              params.eventTimeRange = [now.toISOString()];
+            }
+            break;
+          case 'promotion':
+            params.contentType = 'PROMO';
+            params.excludeExpiredPromo = true;
+            break;
+          default:
+            console.log('oops. this taxonomy type is not implemented yet.: ', tax);
         }
-
         const query = new SocialPostSearchQuery(params);
         req = this._sharedService.get('note/filter' + query.toQueryParams());
       } 
@@ -257,7 +239,6 @@ export class ListComponent implements OnInit {
               userId: this.user ? this.user._id : null, 
               topic: this.selectedTopicId, 
               existMorePost: this.isMorePosts,
-              ...(tax == 'note') && {showVoiceOnly: this.showVoiceOnly}
             }
           );
           resolve(posts);
@@ -279,13 +260,5 @@ export class ListComponent implements OnInit {
     const note = new SocialNote(data);
     note.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(note.description));
     this.newPosts.unshift(note);
-  }
-
-  async onClickButtonFilterVoice() {
-    // this.posts = null;
-    // this.posts = await this.fetchPosts();
-    // const [path, queryParams] = this._modalService.currentPathAndQueryParams
-    const showVoiceOnlyNext = !this.showVoiceOnly;
-    this._router.navigate([], {relativeTo: this._route, queryParams: {voice: showVoiceOnlyNext ? 1 : 0}})
   }
 }

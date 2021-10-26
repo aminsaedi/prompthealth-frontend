@@ -15,22 +15,6 @@
   </div>
 </ng-container>
 
-
-<div 
-*ngIf="selectedTaxonomyType == 'note'" 
-class="text-right mb-15p"
->
-  <button
-  class="btn small"
-  [ngClass]="showVoiceOnly ? 'btn-primary' : 'btn-outline'"
-  (click)="onClickButtonFilterVoice()"
-  >
-    <i iconPh="mic"></i>
-    <span class="ml-5p">Show voice only</span>
-    
-  </button>
-</div>
-
 <ng-container *ngIf="posts && posts.length > 0">
   <ng-container *ngFor="let p of posts; let i = index">
     <div 

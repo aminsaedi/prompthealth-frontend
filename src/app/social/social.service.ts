@@ -323,6 +323,7 @@ interface IPostCache {
     media: IPostsPerTaxonomy;
     promotion: IPostsPerTaxonomy;
     note: IPostsPerTaxonomy;
+    voice: IPostsPerTaxonomy;
     users: {[k: string]: IProfileWithPosts}
   }
 }
@@ -340,6 +341,7 @@ class PostCache implements IPostCache {
       media:     {metadata: null, data: null,},
       promotion: {metadata: null, data: null,},
       note:      {metadata: null, data: null,},
+      voice:     {metadata: null, data: null,},
       users: {},
     }
   }
@@ -352,7 +354,6 @@ interface IPostsPerTaxonomy {
     userId?: string;
     existMorePost?: boolean;
     eventTimeRange?: (string|Date)[];
-    showVoiceOnly?: boolean;
   };
 }
 
@@ -362,4 +363,4 @@ interface IProfileWithPosts {
   promodata: ISocialPost[],
 }
 
-export type SocialPostTaxonomyType = 'feed' | 'article' | 'event' | 'media' | 'promotion' | 'note';
+export type SocialPostTaxonomyType = 'feed' | 'article' | 'event' | 'media' | 'promotion' | 'note' | 'voice';
