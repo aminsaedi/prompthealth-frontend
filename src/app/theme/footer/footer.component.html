@@ -27,16 +27,12 @@
               <li class="mb-3">
                 <a routerLink="/plans/product" class="btn btn-text-lightgrey small p-0">Plans for companies</a>
               </li>
-
-              <!-- <li class="mb-3">
-                <a routerLink="/plans/product" class="py-3 body1 text-body">Advertise your products</a>
-              </li> -->
               <li class="mb-3">
                 <a routerLink="/subscribe/newsletter" class="btn btn-text-lightgrey small p-0">Newsletter</a>
               </li>
-              <!-- <li class="mb-3">
-                <a routerLink="/ambassador-program" class="py-3 body1 text-body">Ambassador program</a>
-              </li> -->
+              <li class="mb-3" *ngIf="!isU">
+                <a routerLink="/ambassador-program" class="btn btn-text-lightgrey small p-0">Ambassador program</a>
+              </li>
             </ul>
           </div>
           
