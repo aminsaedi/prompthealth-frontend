@@ -138,15 +138,12 @@ export interface ICreateReferralsResult extends IResponseData {
 }
 export interface IGetStaffsResult extends IResponseData {
   data: {
-    total: number;
-    data: {
-      _id: string;
-      center: string;
-      userId: IUserDetail;
-      createdAt: string;
-      isDeleted: boolean;
-    }[]
-  }
+    _id: string;
+    center: string;
+    userId: IUserDetail;
+    createdAt: string;
+    isDeleted: boolean;
+  }[]
 }
 
 export interface IGetStaffResult extends IResponseData {
