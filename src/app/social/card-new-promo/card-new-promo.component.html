@@ -5,8 +5,9 @@ class="overlay"
 ></div>
 
 <div 
-class="rounded-8p bg-white body1 text-body mb-15p"
-[ngClass]="{focused: isEditorFocused}"
+class="card rounded-8p bg-white body1 text-body mb-15p"
+style="border: none;"
+[ngClass]="{'focused': isEditorFocused}"
 >
   <form (ngSubmit)="onSubmit()">
     <div class="d-flex p-20p border-bottom border-line">
