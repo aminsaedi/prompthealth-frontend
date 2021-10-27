@@ -97,6 +97,8 @@ export class ListComponent implements OnInit {
       case 'article': desc = `Larn about healthcare topics${topic ? ' about ' + topic : ''} and improve your health with us!`; break;
       case 'event': desc = `Find your favorite healthcare event${topic ? ' about ' + topic : ''} and join now!`; break;
       case 'media': desc = `Find your favorite quick tips${topic ? ' about ' + topic : ''} from best providers with voice, photos and media`; break;
+      case 'note': desc = `Find latest update${topic ? ' about ' + topic : '' } from best providers`; break;
+      case 'voice': desc = `Find latest update with voice note${topic ? ' about ' + topic : '' } from best providers`; break;
       case 'promotion': desc = `Find your favorite products`; break;
     } 
 
@@ -188,28 +190,39 @@ export class ListComponent implements OnInit {
         const query = new SocialPostSearchQuery(params);
         req = this._sharedService.get('note/get-feed' + query.toQueryParams());
       } else {
-        if (tax == 'article') {
-          params.contentType = 'ARTICLE';
-        } else if(tax == 'media') {
-          params.hasMedia = true;
-        } else if(tax == 'event') {
-          params.contentType = 'EVENT';
-          params.sortBy = 'eventStartTime';
-          params.order = 'asc';
-          const meta = this._socialService.metadataOf('event');
-          if(meta && meta.eventTimeRange) {
-            params.eventTimeRange = meta.eventTimeRange;
-          } else {
-            const now = new Date();
-            params.eventTimeRange = [now.toISOString()];
-          }
-        } else if(tax == 'promotion') {
-          params.contentType = 'PROMO';
-          params.excludeExpiredPromo = true;
-        } else {
-          console.log('oops. this taxonomy type is not implemented yet.: ', tax);
+        switch(tax) {
+          case 'article':
+            params.contentType = 'ARTICLE';
+            break;
+          case 'media':
+            params.hasMedia = true;
+            break;
+          case 'note':
+            params.contentType = 'NOTE';
+            break;
+          case 'voice':
+            params.contentType = 'NOTE';
+            params.hasVoice = true;
+            break;
+          case 'event':
+            params.contentType = 'EVENT';
+            params.sortBy = 'eventStartTime';
+            params.order = 'asc';
+            const meta = this._socialService.metadataOf('event');
+            if(meta && meta.eventTimeRange) {
+              params.eventTimeRange = meta.eventTimeRange;
+            } else {
+              const now = new Date();
+              params.eventTimeRange = [now.toISOString()];
+            }
+            break;
+          case 'promotion':
+            params.contentType = 'PROMO';
+            params.excludeExpiredPromo = true;
+            break;
+          default:
+            console.log('oops. this taxonomy type is not implemented yet.: ', tax);
         }
-
         const query = new SocialPostSearchQuery(params);
         req = this._sharedService.get('note/filter' + query.toQueryParams());
       } 

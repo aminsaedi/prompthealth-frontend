@@ -322,6 +322,8 @@ interface IPostCache {
     event: IPostsPerTaxonomy;
     media: IPostsPerTaxonomy;
     promotion: IPostsPerTaxonomy;
+    note: IPostsPerTaxonomy;
+    voice: IPostsPerTaxonomy;
     users: {[k: string]: IProfileWithPosts}
   }
 }
@@ -338,6 +340,8 @@ class PostCache implements IPostCache {
       event:     {metadata: null, data: null,},
       media:     {metadata: null, data: null,},
       promotion: {metadata: null, data: null,},
+      note:      {metadata: null, data: null,},
+      voice:     {metadata: null, data: null,},
       users: {},
     }
   }
@@ -359,4 +363,4 @@ interface IProfileWithPosts {
   promodata: ISocialPost[],
 }
 
-export type SocialPostTaxonomyType = 'feed' | 'article' | 'event' | 'media' | 'promotion';
+export type SocialPostTaxonomyType = 'feed' | 'article' | 'event' | 'media' | 'promotion' | 'note' | 'voice';

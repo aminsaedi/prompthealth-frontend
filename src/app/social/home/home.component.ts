@@ -3,7 +3,9 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
+// import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { locations } from 'src/app/_helpers/location-data';
 import { environment } from 'src/environments/environment';
@@ -43,6 +45,7 @@ export class HomeComponent implements OnInit {
     private _location: Location,
     private _catService: CategoryService,
     private _qService: QuestionnaireService,
+    private _modalService: ModalService,
     private _socialService: SocialService,
     private _changeDetector: ChangeDetectorRef,
     // private _sharedService: SharedService,
@@ -77,9 +80,9 @@ export class HomeComponent implements OnInit {
   }
 
   changeTopics(topic: Category) {
-    const path = this._location.path();
-    const match = path.match('/community/(feed|article|media|event)');
+    const [path, query] = this._modalService.currentPathAndQueryParams;
+    const match = path.match('/community/(feed|article|media|event|note)');
     const taxonomyType = match ? match[1] : 'feed';
-    this._router.navigate(['/community', taxonomyType, topic._id]);
+    this._router.navigate(['/community', taxonomyType, topic._id], {queryParams: query});
   }
 }
