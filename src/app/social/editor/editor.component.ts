@@ -275,6 +275,7 @@ export class EditorComponent implements OnInit {
     this._editorService.format();
 
     const publish = status == 'DRAFT' ? false : true;
+    this.f.status.setValue(publish ? 'APPROVED' : 'DRAFT');
     this._editorService.validate(publish);
 
     const form = this._editorService.form;   
@@ -299,6 +300,7 @@ export class EditorComponent implements OnInit {
     }
 
     const data: ISaveQuery = form.value;
+    data.status = status;
     const payload: ISaveQuery = new SaveQuery(data).toJson();
 
     // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
