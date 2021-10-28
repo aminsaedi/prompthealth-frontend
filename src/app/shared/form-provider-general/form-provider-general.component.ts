@@ -64,7 +64,7 @@ export class FormProviderGeneralComponent implements OnInit {
       userType: new FormControl('Service Provider'),
       email: new FormControl(this.data.email ? this.data.email : '', validators.email),
       // displayEmail: new FormControl(this.data.displayEmail ? this.data.displayEmail : '', validators.displayEmail),
-      phone: new FormControl(this.data.phone ? this.data.phone : '', validators.phone), //keep this because it's being used in formItemPlaceComponent
+      phone: new FormControl(this.data.phone ? this.data.phone : '', validators.phone),
       gender: new FormControl(this.data.gender ? this.data.gender: '', validators.gender),
       
       address: new FormControl(this.data.address ? this.data.address : '', validators.address),
