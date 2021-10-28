@@ -51,7 +51,7 @@ export class FormPartnerGeneralComponent implements OnInit {
         Validators.required,
         Validators.email
       ]),
-      displayEmail: new FormControl((this.data.displayEmail ? this.data.displayEmail : ''), validators.displayEmail),
+      // displayEmail: new FormControl((this.data.displayEmail ? this.data.displayEmail : ''), validators.displayEmail),
       address: new FormControl((this.data.address ? this.data.address : '')),
       latitude: new FormControl(((this.data.location && this.data.location[1]) ? this.data.location[1] : 0), []),
       longitude: new FormControl(((this.data.location && this.data.location[0]) ? this.data.location[0] : 0), []),
