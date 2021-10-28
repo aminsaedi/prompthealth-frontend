@@ -22,6 +22,7 @@ export interface IProfile {
   numFollower: number;
   followings: Profile[]; /** should be saved in socialService? */
   followers: Profile[]; /** should be saved in socialService? */
+  followingTopics: any[];
 
   isC: boolean;
   isP: boolean;
@@ -67,6 +68,7 @@ export class Profile implements IProfile {
 
   get followings() { return this._followings; };
   get followers() { return this._followers; }
+  get followingTopics() { return this._followingTopics; }
 
   get numFollowing() { return this.data.follow.following || 0; }
   get numFollower() { return this.data.follow.followed || 0; }
@@ -102,8 +104,9 @@ export class Profile implements IProfile {
 
   private _profileImage: string;
   private _profileImageType: string;
-  private _followings: Profile[] = null;
-  private _followers: Profile[] = null;
+  private _followings: IProfile['followings'] = null;
+  private _followers: IProfile['followers'] = null;
+  private _followingTopics: IProfile['followingTopics'] = null;
 
   protected _s3 = environment.config.AWS_S3;
 
@@ -181,6 +184,15 @@ export class Profile implements IProfile {
 
     this._followers.push(new Profile(user));
   }
+
+  setFollowingTopics(topics: any[]) {
+    if(!this._followingTopics) {
+      this._followingTopics = [];
+      topics.forEach(t => {
+        this.followingTopics.push(t);
+      })
+    }
+  };
 
   countupFollowing() { this.data.follow.following = this.data.follow.following ? this.data.follow.following + 1 : 1; }
   countdownFollowing() { this.data.follow.following = this.data.follow.following > 0 ? this.data.follow.following - 1 : 0; }

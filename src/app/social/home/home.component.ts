@@ -79,10 +79,17 @@ export class HomeComponent implements OnInit {
     this._router.navigate(route, option);
   }
 
-  changeTopics(topic: Category) {
+  onTapTopic(topic: Category) {
+    const selectedAlready = this.selectedTopicId == topic._id;
+
     const [path, query] = this._modalService.currentPathAndQueryParams;
-    const match = path.match('/community/(feed|article|media|event|note)');
-    const taxonomyType = match ? match[1] : 'feed';
-    this._router.navigate(['/community', taxonomyType, topic._id], {queryParams: query});
+    // const match = path.match('/community/(feed|article|media|event|note)');
+    // const taxonomyType = match ? match[1] : 'feed';
+
+    const navigateTo = ['/community', 'feed'];
+    if(!selectedAlready) {
+      navigateTo.push(topic._id);
+    }
+    this._router.navigate(navigateTo, {queryParams: query});
   }
 }

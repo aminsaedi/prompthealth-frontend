@@ -19,7 +19,7 @@ import { HeaderStatusService } from 'src/app/shared/services/header-status.servi
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation, slideHorizontalReverseAnimation, slideVerticalReverseAnimation } from 'src/app/_helpers/animations';
-import { SocialService } from '../social.service';
+import { SocialPostTaxonomyType, SocialService } from '../social.service';
 
 @Component({
   selector: 'header-social',
@@ -80,10 +80,12 @@ export class HeaderComponent implements OnInit {
     private _socialService: SocialService,
   ) { }
 
-  isActiveTaxonomy(type: string) {
-    const regex = new RegExp('community\/' + type)
-    return !!(this._location.path().match(regex));
-  }
+  // isActiveTaxonomy(type: SocialPostTaxonomyType = 'all') {
+  //   return type == this._socialService.selectedTaxonomyType;
+
+  //   const regex = new RegExp('community\/' + type)
+  //   return !!(this._location.path().match(regex));
+  // }
 
   iconOf(topic: Category): string {
     return this._catService.iconOf(topic);

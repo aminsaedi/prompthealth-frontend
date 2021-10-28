@@ -12,6 +12,7 @@ import { ISocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ModalService } from 'src/app/shared/services/modal.service';
 
 @Component({
   selector: 'app-list',
@@ -23,13 +24,14 @@ export class ListComponent implements OnInit {
 
   get user() { return this._profileService.profile; }
   get selectedTopicId() { return this._socialService.selectedTopicId; }
+  get selectedTaxonomyType() { return this._socialService.selectedTaxonomyType; }
+  get isFilterByFollowingOn() { return !!(this.user && !this.selectedTopicId); }
 
   public newPosts: ISocialPost[] = [];
 
   public posts: ISocialPost[] = null;
 
   public countPerPage: number = 20;
-  public selectedTaxonomyType: SocialPostTaxonomyType;
 
   public isLoading: boolean = false;
   public isMorePosts: boolean = true;
@@ -60,6 +62,7 @@ export class ListComponent implements OnInit {
     private _uService: UniversalService,
     private _catService: CategoryService,
     private _sanitizer: DomSanitizer,
+    private _modalService: ModalService,
   ) { }
 
   ngOnDestroy() {
@@ -73,7 +76,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
-      this.selectedTaxonomyType = param.taxonomyType || 'feed';
+      this._socialService.setTaxonomyType(param.taxonomyType || 'feed');
       this._socialService.setTopicId(param.topicId || null);
       this.setMeta();
       this.checkLoginStatusAndInitPost();
@@ -131,6 +134,7 @@ export class ListComponent implements OnInit {
 
 
   async initPosts() {
+
     this.disposeCacheIfNeeded();
     this.posts = null;
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
@@ -143,8 +147,20 @@ export class ListComponent implements OnInit {
         this.posts = posts;
         this._changeDetector.detectChanges();
       }, 100);
-    } else {
+    } 
+    // else if (this._profileService.loginStatus == 'loggedIn' && (!this.user.followingTopics || this.user.followingTopics.length == 0)) {
+    //     // show modal and stop here
+    // } 
+    else {
       try {
+        // if user is not logged in, get all contents base on selected taxonomy & category
+
+        // if user is logged in, check follow-topics status & follow-users status
+        //// if empty --> let user to select topics before fetch posts --> wait result and restart initPosts
+        //// if not --> get feed based on selected taxonomy & category
+
+
+        
         this.posts = await this.fetchPosts(); 
       } catch (error) {
         console.log(error)
@@ -155,18 +171,14 @@ export class ListComponent implements OnInit {
 
   disposeCacheIfNeeded() {
     const meta = this._socialService.metadataOf(this.selectedTaxonomyType);
-    // if(this.selectedTaxonomyType == 'feed') {
-    //   const userId = this.user ? this.user._id : null;
-    //   const userIdInMeta = meta && meta.userId ? meta.userId : null;
-    //   const userIdMatched = !!(userId == userIdInMeta);
-    //   if(userId != userIdInMeta) {
-    //     this._socialService.disposeCacheOf('feed');
-    //   }
-    // }
 
     const topicId = this.selectedTopicId ? this.selectedTopicId : null;
     const topicIdInMeta = meta && meta.topic ? meta.topic : null;
-    if(topicId != topicIdInMeta) {
+
+    const filterByFollowingInMeta = meta?.filterByFollowing || null;
+
+    const needToDispose = (topicId != topicIdInMeta) || (filterByFollowingInMeta != this.isFilterByFollowingOn);
+    if(needToDispose) {
       this._socialService.disposeCacheOf(this.selectedTaxonomyType);
     }
   }
@@ -177,58 +189,59 @@ export class ListComponent implements OnInit {
       
       const params: ISocialPostSearchQuery = {
         count: this.countPerPage,
-        ... (this.selectedTopicId) && {tags: [this.selectedTopicId]},
-        ... (this.posts && this.posts.length > 0) && {
-          page: Math.ceil(this.posts.length / this.countPerPage) + 1,
-          timestamp: this.posts[this.posts.length - 1].createdAt,
-        },
+        ... (this.selectedTopicId) && { tags: [this.selectedTopicId] },
+        ... (this.posts && this.posts.length > 0) && { timestamp: this.posts[this.posts.length - 1].createdAt },
       }
 
-      let req: Observable<any>;
-      if (tax == 'feed') {
-        params.excludeExpiredPromo = true;
-        const query = new SocialPostSearchQuery(params);
-        req = this._sharedService.get('note/get-feed' + query.toQueryParams());
-      } else {
-        switch(tax) {
-          case 'article':
-            params.contentType = 'ARTICLE';
-            break;
-          case 'media':
-            params.hasMedia = true;
-            break;
-          case 'note':
-            params.contentType = 'NOTE';
-            break;
-          case 'voice':
-            params.contentType = 'NOTE';
-            params.hasVoice = true;
-            break;
-          case 'event':
-            params.contentType = 'EVENT';
-            params.sortBy = 'eventStartTime';
-            params.order = 'asc';
-            const meta = this._socialService.metadataOf('event');
-            if(meta && meta.eventTimeRange) {
-              params.eventTimeRange = meta.eventTimeRange;
-            } else {
-              const now = new Date();
-              params.eventTimeRange = [now.toISOString()];
-            }
-            break;
-          case 'promotion':
-            params.contentType = 'PROMO';
-            params.excludeExpiredPromo = true;
-            break;
-          default:
-            console.log('oops. this taxonomy type is not implemented yet.: ', tax);
-        }
-        const query = new SocialPostSearchQuery(params);
-        req = this._sharedService.get('note/filter' + query.toQueryParams());
-      } 
+      switch(this.selectedTaxonomyType) {
+        case 'feed':
+          params.excludeExpiredPromo = true;
+          break;
+        case 'article':
+          params.contentType = 'ARTICLE';
+          break;
+        case 'event':
+          delete params.timestamp;
+
+          params.contentType = 'EVENT';
+          params.sortBy = 'eventStartTime';
+          params.order = 'asc';
+          
+          const meta = this._socialService.metadataOf('event');
+          if(meta && meta.eventTimeRange) {
+            params.eventTimeRange = meta.eventTimeRange;
+          } else if(this.posts?.length > 0) {
+            params.eventTimeRange = [this.posts[this.posts.length - 1].startAt.toISOString()];
+          } else {
+            const now = new Date();
+            params.eventTimeRange = [now.toISOString()];
+          }
+          break;
+        case 'note':
+          params.contentType = 'NOTE';
+          break;
+        case 'voice':
+          params.contentType = 'NOTE';
+          params.hasVoice = true;
+          break;
+        case 'media':
+          params.contentType = 'NOTE';
+          params.hasMedia = true;
+          break;
+        case 'promotion':
+          params.contentType = 'PROMO';
+          params.excludeExpiredPromo = true;
+        default:
+          console.log('oops. this taxonomy type is not implemented yet.: ', this.selectedTaxonomyType);
+      }
+
+      const query = new SocialPostSearchQuery(params).toQueryParams();
+      const path = this.isFilterByFollowingOn ? 'note/get-feed' : 'note/filter';
+
+      console.log(path, query)
 
       this.isLoading = true;
-      req.subscribe((res: IGetSocialContentsResult) => {
+      this._sharedService.get(path + query).subscribe((res: IGetSocialContentsResult) => {
         this.isLoading = false;
         if(res.statusCode === 200) {
           this.isMorePosts = (res.data.data.length < this.countPerPage) ? false : true;
