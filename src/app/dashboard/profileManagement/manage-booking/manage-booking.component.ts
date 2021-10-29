@@ -55,7 +55,7 @@ export class ManageBookingComponent implements OnInit {
   public isLoading: boolean = false;
   public isPopupSortShown: boolean = false;
 
-  private countPerPage: number = 2;
+  private countPerPage: number = 20;
 
   constructor(
     private _uService: UniversalService,
