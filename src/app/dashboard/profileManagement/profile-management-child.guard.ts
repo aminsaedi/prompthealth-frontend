@@ -49,6 +49,7 @@ export class ProfileManagementChildGuard implements CanActivateChild {
         return true;
 
       case 'my-profile':
+      case 'my-booking':
         /** if user role is not P , true */
         if (role !== 'p') { return true; }
         break;
@@ -64,7 +65,6 @@ export class ProfileManagementChildGuard implements CanActivateChild {
         }
         break;
 
-        case 'my-booking':
         case 'my-favourites':
         /** if user role is U, true */
         if (role === 'u') { return true; }

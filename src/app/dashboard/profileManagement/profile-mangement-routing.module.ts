@@ -26,7 +26,6 @@ import { PartnerGeneralComponent } from './partner-general/partner-general.compo
 import { ProfileManagementChildGuard } from './profile-management-child.guard';
 import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
 import { PostManagerModule } from 'src/app/post-manager/post-manager.module';
-import { ManageBookingComponent } from './manage-booking/manage-booking.component';
 
 const routes: Routes = [
   {
@@ -57,11 +56,13 @@ const routes: Routes = [
       // },
       {
         path: 'my-booking',
-        component: MyBookingComponent
+        component: MyBookingComponent,
+        data: {type: 'client'}
       },
       {
         path: 'manage-booking',
-        component: ManageBookingComponent,
+        component: MyBookingComponent,
+        data: {type: 'provider'}
       },
       {
         path: 'my-payment',
