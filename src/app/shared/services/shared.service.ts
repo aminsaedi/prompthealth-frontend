@@ -65,7 +65,7 @@ export class SharedService {
   personalMatch;
   private compareList: Professional[] = [];
 
-  requestPermission(user: User) {
+  requestPermission(user: any) {
     this.angularFireMessaging.requestToken.subscribe(
       (token) => {
         // console.log(token);
