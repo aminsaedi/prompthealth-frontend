@@ -515,7 +515,6 @@ export class ProfileComponent implements OnInit {
       data.phone = data.phone.toString();
       // data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
       this.isBookingLoading = true;
-      console.log(data)
       const path = `booking/create`;
       this._sharedService.post(data, path).subscribe((res: any) => {
         this.isBookingLoading = false;

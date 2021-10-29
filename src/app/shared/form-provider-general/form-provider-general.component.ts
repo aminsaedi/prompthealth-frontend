@@ -142,7 +142,6 @@ export class FormProviderGeneralComponent implements OnInit {
   }
 
   onSubmit(){
-    console.log(this.form);
     if(this.form.invalid){
       this.isSubmitted = true;
       this._toastr.error('There are some items that require your attention.');

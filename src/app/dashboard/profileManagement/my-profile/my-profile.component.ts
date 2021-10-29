@@ -64,12 +64,10 @@ export class MyProfileComponent implements OnInit {
         this._bs.setUserData(res.data);
 
       } else {
-        console.log(res);
         this.toastr.error(res.message);
       }
     }, err => {
       this._sharedService.loader('hide');
-      console.log(err);
       this.toastr.error('There are some errors, please try again after some time !', 'Error');
     });
   }
