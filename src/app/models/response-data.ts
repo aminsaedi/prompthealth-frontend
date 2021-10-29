@@ -1,3 +1,4 @@
+import { IBooking } from "./booking";
 import { IDefaultPlan } from "./default-plan";
 import { ISocialNotification } from "./notification";
 import { IReferral } from "./referral";
@@ -8,6 +9,38 @@ export interface IResponseData {
   statusCode: number;
   message: string;
   data: any;
+}
+
+export interface IAuthResult extends IResponseData {
+  statusCode: number;
+  message: string;
+  data: {
+    _id: IUserDetail['_id'],
+    email: IUserDetail['email'],
+    loginToken: string,
+    lastLogin: string,
+    roles: IUserDetail['roles'],
+    firstName: IUserDetail['firstName'],
+    verifiedBadge: IUserDetail['verifiedBadge'],
+    profileImage: IUserDetail['profileImage'],
+    lastName: IUserDetail['lastName'],
+    favouriteBy: IUserDetail['favouriteBy'],
+    isVipAffiliateUser: IUserDetail['isVipAffiliateUser'],
+  }
+}
+
+export interface IAuthTempResult {
+  _id: IUserDetail['_id'],
+  email: IUserDetail['email'],
+  loginToken: string,
+  lastLogin: string,
+  roles: IUserDetail['roles'],
+  firstName: IUserDetail['firstName'],
+  verifiedBadge: IUserDetail['verifiedBadge'],
+  profileImage: IUserDetail['profileImage'],
+  lastName: IUserDetail['lastName'],
+  favouriteBy: IUserDetail['favouriteBy'],
+  isVipAffiliateUser: IUserDetail['isVipAffiliateUser'],
 }
 
 export interface IGetProfileResult extends IResponseData{
@@ -35,6 +68,13 @@ export interface IGetCompaniesResult extends IResponseData {
 
 export interface IGetPlansResult extends IResponseData {
   data: IDefaultPlan[]
+}
+
+export interface IGetBookingsResult extends IResponseData {
+  data: {
+    data: IBooking[];
+    total: number;
+  }
 }
 
 export interface IGetFollowingsResult extends IResponseData {

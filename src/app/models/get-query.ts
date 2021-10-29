@@ -3,6 +3,7 @@ export interface IGetQuery {
   page?: number;
   sortBy?: string;
   order?: 'desc' | 'asc';
+  search?: string;
 }
 
 export class GetQuery {
@@ -10,6 +11,7 @@ export class GetQuery {
   get page() { return this.data.page || 1; };
   get order() { return this.data.order || null; }
   get sortBy() { return this.data.sortBy || null; }
+  get search() { return this.data.search || null; }
 
   constructor(
     protected data: IGetQuery = {},
@@ -21,6 +23,7 @@ export class GetQuery {
       page: this.page,
       ... this.sortBy && {sortBy: this.sortBy},
       ... this.order && {order: this.order},
+      ... this.search && { search: this.search },
     };
     return json;
   }

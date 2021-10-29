@@ -80,7 +80,7 @@ export class ProfileComponent implements OnInit {
 
   private formBooking: FormGroup;
   public submittedFormBooking = false;
-  public minDateTime: DateTimeData;
+  // public minDateTime: DateTimeData;
   public maxBookingNote = minmax.bookingNoteMax;
 
   public idxActiveRecommendationIndicator: number = 0;
@@ -121,21 +121,22 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.observeLoginStatus();
 
-    const now = new Date();
-    this.minDateTime = {
-      year: now.getFullYear(), 
-      month: now.getMonth() + 1, 
-      day: now.getDate() + 1,
-      hour: 9,
-      minute: 0
-    };
+    // const now = new Date();
+    // this.minDateTime = {
+    //   year: now.getFullYear(), 
+    //   month: now.getMonth() + 1, 
+    //   day: now.getDate() + 1,
+    //   hour: 9,
+    //   minute: 0
+    // };
 
     this.formBooking = new FormGroup({
       name: new FormControl('', validators.bookingName),
       email: new FormControl('', validators.bookingEmail),
       phone: new FormControl('', validators.bookingPhone),
-      bookingDateTime: new FormControl('', validators.bookingDateTime),
+      // bookingDateTime: new FormControl('', validators.bookingDateTime),
       note: new FormControl('', validators.bookingNote),
+      isUrgent: new FormControl(false),
     });
 
     this._route.params.subscribe((param: {userid: string}) => {
@@ -512,7 +513,7 @@ export class ProfileComponent implements OnInit {
       };
 
       data.phone = data.phone.toString();
-      data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
+      // data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
       this.isBookingLoading = true;
       const path = `booking/create`;
       this._sharedService.post(data, path).subscribe((res: any) => {

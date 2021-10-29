@@ -10,7 +10,6 @@ import {
 } from 'angularx-social-login';
 
 
-import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
@@ -21,15 +20,30 @@ import { FormAuthComponent } from './form-auth/form-auth.component';
 import { AuthComponent } from './auth/auth.component';
 import { environment } from 'src/environments/environment';
 import { NgxStripeModule, StripeService } from 'ngx-stripe';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth.guard';
 // import { AppleLoginProvider } from './apple.provider';
 // import { environment } from 'src/environments/environment';
 
+const routes: Routes = [
+
+  { path: 'reset-password/:token', component: ResetPasswordComponent },
+  { path: 'reset-password', redirectTo: '/'},
+  
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+
+  { path: 'registration/:type', component: AuthComponent, canActivate: [AuthGuard], data: {authType: 'signup'}, },
+  { path: 'registration', redirectTo: 'registration/u' },
+  
+  { path: 'login', component: AuthComponent, canActivate: [AuthGuard], data: {authType: 'signin'}},
+];
 
 
 @NgModule({
   imports: [
     CommonModule,
-    AuthRoutingModule,
+    RouterModule.forChild(routes),
     SharedModule,
     FormsModule,
     NgxSpinnerModule,
@@ -44,6 +58,7 @@ import { NgxStripeModule, StripeService } from 'ngx-stripe';
     EnterpriseContactComponent,
     FormAuthComponent,
     AuthComponent,
+    ResetPasswordComponent,
   ],
   exports: [FormAuthComponent],
   providers: [

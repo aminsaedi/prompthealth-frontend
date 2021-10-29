@@ -1,341 +1,228 @@
-<ngx-spinner bdColor="#fff" size="medium" color="#fff">
-  <p style="font-size: 20px; color: white" class="loaderbg">
-    <img src="assets/img/favicon.jpg" class="loader-logo" width="100" />
-  </p>
-</ngx-spinner>
+<h4>My Bookings</h4>
 
-<h4 class="mb-3">My Bookings</h4>
-<div *ngIf="(bookingList && bookingList.length > 0); then booking; else noData"></div>
-<ng-template #booking>
-  <div class="table-responsive mb-3">
-    <table class="table table-hover bookingtable" *ngIf="this.roles === 'U'">
-      <thead>
-        <tr>
-          <th>
-            Doctor Info
-          </th>
-          <th>
-            Date/Slot
-          </th>
-          <th class="note">
-            Notes
-          </th>
-          <th class="status">
-            Status
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let book of bookingList | paginate: { id: 'booking',
-        itemsPerPage: itemsPerPage,
-        currentPage: currentPage,
-        totalItems: totalItems 
-        }"
-        [ngClass]="{'bg-lightgrey': !(book.drId)}"
-        >
-          <td>
-            <span *ngIf="book.drId; then drName; else noDrName;"></span>
-            <ng-template #drName>
-              {{ book.drId.firstName }} - {{ book.drId.lastName }}<br>
-              {{ book.drId.email }}              
-            </ng-template>
-            <ng-template #noDrName>
-              This doctor is no longer available.
-            </ng-template>
-          </td>
-          <td>
-            <span class="text-nowrap">{{ book.bookingDateTime | date: 'MMM d, y, HH: mm'}}</span> 
-            <!-- - {{ book.timing }} -->
-          </td>
-          <td>
-            {{ book.note }}
-          </td>
-          <td>
-            <div *ngIf="book.rating === 0">
-              <div class="d-block" [ngSwitch]="book.status">
-                <div *ngSwitchCase="0" class="text-success">
-                  <h6>Pending</h6>
-                  
-                </div>
-                <div *ngSwitchCase="1" class="text-success">
-                  <i class="fa fa-check"></i> Approved
-                </div>
-                <div *ngSwitchCase="2" class="text-danger">
-                  <i class="fa fa-times"></i> Rejected
-                </div>
-                <div *ngSwitchCase="3" class="text-danger">
-                  <i class="fa fa-ban"></i> Canceled
-                </div>
-                <div *ngSwitchCase="4" class="text-success">
-                  <button
-                    *ngIf="!book.rating"
-                    (click)="showReviewModal(book)"
-                    id ="reviewButton"
-                    class="btn btn-success"
-                  >Rate Now</button>
-  
-                </div>
-  
-                <div *ngSwitchCase="5" class="text-success">
-                  <button
-                    (click)="updateBooking(book._id, 1)"
-                    class="btn btn-primary mr-1"
-                  >
-                    Accept
-                  </button>
-                  <button
-                    (click)="updateBooking(book._id, 2)"
-                    class="btn btn-error mr-1"
-                  >
-                    Reject
-                  </button>
-                  <!-- <button
-                    class="btn btn-success"
-                    data-toggle="modal"
-                    data-target="#reviewModal"
-                  >
-                    Completed
-                  </button> -->
-                </div>
-                <div *ngSwitchCase="6" class="text-success">
-                  
-                  <i class="fa fa-check"></i> Accepted
-                </div>
-                <div *ngSwitchDefault></div>
-              </div>
-            </div>
-            <div *ngIf="book.rating !== 0">
-              <div class="text-review mb-2" *ngIf="book.rating">
-                <div class="text-rating mb-2" *ngIf="book.rating === 5">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                </div>
-                <div class="text-rating mb-2" *ngIf="book.rating === 4">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="far fa-star"></i>
-                </div>
-                <div class="text-rating mb-2" *ngIf="book.rating === 3">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                </div>
-                <div class="text-rating mb-2" *ngIf="book.rating === 2">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                </div>
-                <div class="text-rating mb-2" *ngIf="book.rating === 1">
-                  <i class="fa fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                </div>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <table
-      class="table table-hover bookingtable w-100"
-      *ngIf="this.roles === 'C' || this.roles === 'SP'"
+<section *ngIf="!bookingsAll || bookingsAll.length > 0 || !!currentSearch">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="subtitle1">
+      <ng-container *ngIf="bookings">
+        <span>{{totalBookingCount}} </span>
+        <span class="text-label">
+          Book<ng-container *ngIf="bookings.length > 1">s</ng-container>
+        </span>
+      </ng-container>
+    </div>
+
+    <div 
+    class="position-relative"
+    (clickOutside)="hidePopupSort()"
     >
-      <thead>
-        <tr>
-          <th>
-            Patient's Info
-          </th>
-          <th>
-            Date/Slot
-          </th>
-          <th>
-            Doctor's Info
-          </th>
-          <th class="Reschedule"  style="text-align: center;">
-            Actions
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let book of bookingList | paginate: { id: 'booking',
-          itemsPerPage: itemsPerPage,
-          currentPage: currentPage,
-          totalItems: totalItems 
-          }"
-          [ngClass]="{ disabled: book.status === 2, 'bg-lightgrey': !book.drId }"
-          >
-          <td>
-            <p>{{ book.name }}</p>
-            {{ book.phone }} / {{ book.email }}
-          </td>
-          <td>
-            <span class="text-nowrap">{{ book.bookingDateTime | date: 'MMM d, y, HH: mm'}}</span>
-             <!-- - {{ book.timing }} -->
-          </td>
-          <td>
-            <span *ngIf="book.drId; then drName; else noDrName;"></span>
-            <ng-template #drName>
-              {{ book.drId.firstName }} - {{ book.drId.lastName }}<br>
-              {{ book.drId.email }}              
-            </ng-template>
-            <ng-template #noDrName>
-              This doctor is no longer available.
-            </ng-template>
-          </td>
-          <td class="text-nowrap" style="text-align: center;">
-            <div class="d-block" [ngSwitch]="book.status">
-              <div *ngSwitchCase="0">
-                <button
-                  (click)="updateBooking(book._id, 1)"
-                  class="btn btn-primary mr-1"
-                >
-                  Accept
-                </button>
-                <button
-                  (click)="updateBooking(book._id, 2)"
-                  class="btn btn-error mr-1"
-                >
-                  Reject
-                </button>
-                <button
-                  (click)="rescheduleBooking(book)"
-                  class="btn btn-success"
-                >
-                  Reschedule
-                </button>
-              </div>
-              <div *ngSwitchCase="1">
-                <span class="text-success">
-                  Approved
-                </span>
-                <button
-                  (click)="updateBooking(book._id, 4)"
-                  class="btn btn-primary ml-2"
-                >
-                  Completed
-                </button>
-                
+      <button 
+      class="btn small"
+      [ngClass]="order ? 'btn-primary' : 'btn-inactive'"
+      (click)="togglePopupSort()"
+      >
+        <i [iconPh]="iconSortBy"></i>
+        <span class="ml-5p">{{labelSortBy}}</span>
+      </button>
+            
+      <div 
+      *ngIf="isPopupSortShown"
+      class="position-absolute p-15p bg-background rounded-8p border border-line"
+      style="z-index: 90; right: 0; top: calc(100% + 15px);"
+      [@expandVertical]
+      >
+        <button 
+        class="btn text-nowrap small mb-10p"
+        [class]="{'btn-text': (order == 'desc'), 'btn-text-body': (order == 'asc')}"
+        (click)="changeSortBy('desc')"
+        >Latest</button>        
+        <button 
+        class="btn text-nowrap small"
+        [class]="{'btn-text': (order == 'asc'), 'btn-text-body': (order == 'desc')}"
+        (click)="changeSortBy('asc')"
+        >Oldest</button>        
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-30p">
+    <form-item-input
+    name="search"
+    label="Search"
+    placeholder="Search..."
+    prependIcon="search"
+    autocapitalize="off"
+    [controller]="searchForm"
+    (onChangeValue)="onChangeSearch($event)"
+    ></form-item-input>
+  </div>
   
+  <ul class="list-unstyled row">
+    <li
+      *ngFor="let b of bookings;"
+      class="my-20p my-lg-30p col-12 col-lg-6"
+      >
+        <div class="d-flex align-items-start justify-content-between">
+          <div class="d-inline-flex align-items-start flex-shrink-1">
+            <ng-container *ngIf="viewType == 'client'">
+              <profile-image [size]="42" [image]="b.provider.profileImage"></profile-image>
+              <div class="mx-10p">
+                <div class="subtitle2 clamp-1line">
+                  <span>{{b.provider.name}}</span>
+                  <i iconPh="verified" *ngIf="b.provider.isVerified" class="ml-5p text-primary"></i>
+                </div>
+                <div class="body2 text-label clamp-1line" style="word-break: break-all;">{{b.provider.title}}</div>
               </div>
-              <div *ngSwitchCase="2">Rejected</div>
-              <div *ngSwitchCase="3" class="text-danger">
-                <i class="fa fa-times"></i> Canceled
+            </ng-container>
+
+            <ng-container *ngIf="viewType == 'provider'">
+              <profile-image [size]="42" [image]="b.patientProfileImage"></profile-image>
+              <div class="mx-10p">
+                <div class="subtitle2 clamp-1line">{{b.patientName}}</div>
+                <div class="body2 text-label clamp-1line" style="word-break: break-all;" [innerHTML]="b.patientEmail"></div>
               </div>
-              <div *ngSwitchCase="4" class="text-primary">
-                <i class="fa fa-check"></i> Completed
-              </div>
-              <div *ngSwitchCase="5" class="text-primary">
-                Waiting for Acceptance
-              </div>
-              <div *ngSwitchDefault></div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>  
+            </ng-container>
+          </div>
+          <div>
+            <button 
+            class="btn btn-outline small text-nowrap"
+            (click)="onclickDetail(b)"
+            >See detail</button>
+          </div>
+        </div>
+      </li>
+  </ul>
+</section>
+
+<section *ngIf="bookingsAll?.length == 0">
+  <div class="text-center container">
+    <img src="/assets/img/general/cards.png" alt="" style="max-width: 100%;">
+    <h6 class="text-primary-dark mt-30p">No bookings yet!</h6>
+    <a 
+    *ngIf="viewType == 'client'"
+    class="btn btn-primary mt-30p" 
+    routerLink="/practitioners"
+    >Find practitioners</a>
   </div>
-  <div class="text-center paginator" *ngIf="totalItems > itemsPerPage">
-    <pagination-controls id="booking" (pageChange)="changePage($event)"></pagination-controls>
-  </div>
-</ng-template>
+</section>
 
-
-<ng-template #noData>
-  <h5>No Booking done...</h5>
-  <button *ngIf="this.roles === 'U'"  type="button" class="btn btn-primary" [routerLink]="['/practitioners']">Book Now</button>
-</ng-template>
-
-<modal
-id="booking-reschedule"
-[bodyStyle]="{'padding-bottom': 0, 'max-width': '650px'}"
-#modalBookingReschedule
+<div 
+*ngIf="isLoading"
+class="text-center mt-30p"
 >
-  <div class="title-container d-flex justify-content-between align-items-center">
-    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Reschedule appointment</span>
-    <button class="btn pr-0 btn-icon" (click)="modalBookingReschedule.hide()">
-      <i iconPh="cross"></i>
-    </button>  
-  </div>
+  <loader></loader>
+</div>
 
-  <div class="content-container">
-    <form (ngSubmit)="onSubmitBookingReschedule()">
+<div class="text-right">
+  <button 
+  *ngIf="isMoreBookings && !isLoading"
+  class="btn btn-primary"
+  (click)="fetchBookings()"
+  >See more</button>  
+</div>
 
-      <div class="mb-10p">
-        <label class="subtitle1">
-          Date & Time
-          <span class="text-danger">*</span>
-        </label>
-        <form-item-datetime 
-        label="Date & time"
-        [controller]="f.bookingDateTime" 
-        [submitted]="submitted"
-        [minDateTime]="minDateTime"
-        ></form-item-datetime>
-      </div>
 
-      <div class="text-right sticky-bottom blur pt-10p pb-50p">
-        <button 
-        type="submit" 
-        class="btn btn-primary" 
-        [disabled]="isBookingRescheduleLoading"
-        >Update</button>
-      </div>
-    </form>
-  </div>
-</modal>
-
-<modal
-id="booking-rating"
-[bodyStyle]="{'padding-bottom': 0, 'max-width': '650px'}"
-#modalBookingRating
+<modal 
+id="booking-detail" 
+#modalBookingDetail
 >
-  <div class="title-container d-flex justify-content-between align-items-center">
-    <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Rate your experience</span>
-    <button class="btn pr-0 btn-icon" (click)="modalBookingRating.hide()">
-      <i iconPh="cross"></i>
-    </button>  
-  </div>
-
-  <div class="content-container">
-    <form (ngSubmit)="submitRating()">
-      <div class="mt-3">
-        <label class="subtitle2">Overall Experience</label>
-        <app-ratings [rating]='0'  (ratingClick)='ratingComponentClick($event)'></app-ratings>
-      </div>
-
-      <small *ngIf="ratingSubmited && !ratingClicked" class="text-danger col-sm-12">
-        Rating is required
-      </small>
-
-      <div class="subtitle2 mb-3">
-        Your Review
-      </div>
-      <textarea
-        class="form-control"
-        [(ngModel)] = "review"
-        [ngModelOptions]="{standalone: true}"
-        placeholder="Write a review..."
-      ></textarea>
-      <div class="text-right sticky-bottom blur pt-10p pb-50p">
+  <ng-container *ngIf="selectedBooking">
+    <ng-container *ngIf="viewType == 'client'">
+      <div class="text-right">
         <button 
-        type="submit" 
-        class="btn btn-primary" 
-        [disabled]="isBookingRatingLoading"
-        >Update</button>
+        class="btn pr-0 btn-icon small"
+        (click)="modalBookingDetail.hide()"
+        >
+          <i iconPh="cross"></i>
+        </button>  
       </div>
-    </form>
-  </div>
-</modal>
+    
+      <div class="text-center">
+        <div class="d-inline-block">
+          <profile-image [size]="42" [image]="selectedBooking.provider.profileImage"></profile-image>
+        </div>
+        <div class="subtitle1 mb-20p">
+          {{selectedBooking.provider.name}}
+        </div>
+      </div>
+    
+      <div class="content-container body1 mt-40p">
+        <div class="mb-20p">
+          <b>Create date: </b>
+          <span class="text-label">{{selectedBooking.createdAt | date : 'yyyy/MM/dd'}}</span>
+        </div>
+        <div class="mb-20p">
+          <b>Priority: </b>
+          <span *ngIf="selectedBooking.isUrgent" class="text-error">Urgent</span>
+          <span *ngIf="!selectedBooking.isUrgent"class="text-label">Not urgent</span>
+        </div>
+        <div>
+          <div class="subtitle1">Note:</div>
+          <p class="text-label">{{selectedBooking.note}}</p>
+        </div>
+      </div>
+    </ng-container>
 
+    <ng-container *ngIf="viewType == 'provider'">
+      <div class="text-right">
+        <button 
+        class="btn pr-0 btn-icon small"
+        (click)="modalBookingDetail.hide()"
+        >
+          <i iconPh="cross"></i>
+        </button>  
+      </div>
+    
+      <div class="text-center">
+        <div class="d-inline-block">
+          <profile-image [size]="42" [image]="selectedBooking.patientProfileImage"></profile-image>
+        </div>
+        <div class="subtitle1 mb-20p">
+          {{selectedBooking.patientName}}
+        </div>
+  
+        <div class="d-flex justify-content-center">
+          <a 
+          class="btn btn-primary small mx-15p w-100" 
+          style="flex: 1 1 40%"
+          [href]="'tel:' + selectedBooking.patientPhone"
+          >
+            <i iconPh="smartphone"></i>
+            <span class="ml-5p">Call</span>
+          </a>
+          <a 
+          class="btn btn-outline small mx-15p w-100"
+          style="flex: 1 1 40%"
+          [href]="'mailto:' + selectedBooking.patientEmail"
+          >
+            <i iconPh="email"></i>
+            <span class="ml-5p">E-mail</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="content-container body1 mt-40p">
+        <div class="mb-20p">
+          <b>Create date: </b>
+          <span class="text-label">{{selectedBooking.createdAt | date : 'yyyy/MM/dd'}}</span>
+        </div>
+        <div class="mb-20p">
+          <b>Phone number: </b>
+          <span class="text-label">{{selectedBooking.patientPhone}}</span>
+        </div>
+        <div class="mb-20p">
+          <b>Email: </b>
+          <span class="text-label">{{selectedBooking.patientEmail}}</span>
+        </div>
+        <div class="mb-20p">
+          <b>Priority: </b>
+          <span *ngIf="selectedBooking.isUrgent" class="text-error">Urgent</span>
+          <span *ngIf="!selectedBooking.isUrgent"class="text-label">Not urgent</span>
+        </div>
+        <div>
+          <div class="subtitle1">Note:</div>
+          <p class="text-label">{{selectedBooking.note}}</p>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</modal>

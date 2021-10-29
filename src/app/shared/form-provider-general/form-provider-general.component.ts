@@ -63,7 +63,7 @@ export class FormProviderGeneralComponent implements OnInit {
       
       userType: new FormControl('Service Provider'),
       email: new FormControl(this.data.email ? this.data.email : '', validators.email),
-      displayEmail: new FormControl(this.data.displayEmail ? this.data.displayEmail : '', validators.displayEmail),
+      // displayEmail: new FormControl(this.data.displayEmail ? this.data.displayEmail : '', validators.displayEmail),
       phone: new FormControl(this.data.phone ? this.data.phone : '', validators.phone),
       gender: new FormControl(this.data.gender ? this.data.gender: '', validators.gender),
       

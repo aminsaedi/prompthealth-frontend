@@ -13,6 +13,8 @@ import { ProfileManagementService } from 'src/app/dashboard/profileManagement/pr
 import { IUserDetail } from 'src/app/models/user-detail';
 import { SocialService } from 'src/app/social/social.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { IAuthResult } from 'src/app/models/response-data';
+import { Auth2Service } from '../auth2.service';
 
 @Component({
   selector: 'form-auth',
@@ -38,13 +40,14 @@ export class FormAuthComponent implements OnInit, OnChanges {
   constructor(
     private _fb: FormBuilder,
     private _router: Router,
-    private _authService: SocialAuthService,
+    private _socialAuthService: SocialAuthService,
     private _sharedService: SharedService,
     private _profileService: ProfileManagementService,
     private _socialService: SocialService,
     private _bs: BehaviorService,
     private _toastr: ToastrService,
     private _uService: UniversalService,
+    private _authService: Auth2Service,
   ) {
     this.formRole = new FormControl();
   }
@@ -82,7 +85,7 @@ export class FormAuthComponent implements OnInit, OnChanges {
       google: GoogleLoginProvider.PROVIDER_ID,
     };
 
-    this._authService.signIn(providerId[type]).then(x => {
+    this._socialAuthService.signIn(providerId[type]).then(x => {
       let socialToken: string;
       switch (type) {
         case 'google': socialToken = x.idToken; break;
@@ -150,7 +153,7 @@ export class FormAuthComponent implements OnInit, OnChanges {
     this.changeState.emit('start');
 
     const subscription = (this.authType === 'signin') ? this._sharedService.login(data) : this._sharedService.register(data);
-    subscription.subscribe((res: any) => {
+    subscription.subscribe((res: IAuthResult) => {
       this._sharedService.loader('hide');
 
       if (res.statusCode == 200) {
@@ -168,17 +171,12 @@ export class FormAuthComponent implements OnInit, OnChanges {
 
   }
 
-  async afterLogin(userinfo: any) {
+  async afterLogin(userinfo: IAuthResult['data']) {
     const role = userinfo.roles;
-
-    this._sharedService.addCookie('token', userinfo.loginToken);
-    this._sharedService.addCookie('roles', role);
-    this._sharedService.addCookie('loginID', userinfo._id);
-    this._sharedService.addCookie('isVipAffiliateUser', userinfo.isVipAffiliateUser);
-    this._sharedService.addCookieObject('user', userinfo);
+    this._authService.storeCredential(userinfo);
 
     const taggedCentreId = this._uService.sessionStorage.getItem('tag_by_centre');
-    if (taggedCentreId && role == 'SP') {
+    if (taggedCentreId && userinfo.roles == 'SP') {
       this._uService.sessionStorage.removeItem('tag_by_centre');
       // TODO: connect this SP and C
     }
