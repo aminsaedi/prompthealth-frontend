@@ -19,6 +19,9 @@ const routes: Routes = [
   { path: 'auth', 
     loadChildren: () => AuthModule,
   },
+
+  { path: 'reset-password/:token', redirectTo: 'auth/reset-password/:token'},
+
   {
     path: '',
     loadChildren: () => ThemeModule
