@@ -155,7 +155,7 @@
       class="bg-white rounded-12p overflow-hidden"
       >
         <ng-container *ngIf="profile.isProvider">
-          <div class="d-flex justify-content-between mx-15p mx-md-20p py-15p border-bottom border-line">
+          <div class="d-flex justify-content-between mx-15p mx-md-20p py-15p">
             <div class="text-primary-dark">
               <span class="h6 mb-0">{{profile.priceFull}}</span> 
               <span class="body1"> /hr</span>
@@ -167,49 +167,49 @@
           </div>
         </ng-container>
         
-        <div class="mx-15p mx-md-20p py-15p py-md-20p">
-          <h6 class="header-accent">Contact</h6>
-            
-          <div 
-          *ngIf="profile.address"
-          class="mb-25p d-flex"
-          >
-            <i iconPh="pin" class="text-placeholder mr-5p large"></i>
-            <p class="mb-0">{{profile.address}}</p>
+        <ng-container *ngIf="profile.address || profile.website">
+          <div class="mx-15p mx-md-20p py-15p py-md-20p border-top border-line">
+            <h6 class="header-accent">Contact</h6>
+            <div 
+            *ngIf="profile.address"
+            class="mb-25p d-flex"
+            >
+              <i iconPh="pin" class="text-placeholder mr-5p large"></i>
+              <p class="mb-0">{{profile.address}}</p>
+            </div>
+                            
+            <div 
+            *ngIf="profile.phone" 
+            class="mb-25p d-flex"
+            >
+              <i iconPh="smartphone" class="text-placeholder mr-5p large"></i>
+              <p class="mb-0">{{profile.phone}}</p>
+            </div>
+  
+            <div 
+            *ngIf="profile.emailToDisplay" 
+            class="mb-25p d-flex"
+            >
+              <i iconPh="email" class="text-placeholder mr-5p large"></i>
+              <p class="mb-0">
+                <a [href]="'mailto:' + profile.emailToDisplay">{{profile.emailToDisplay}}</a>
+              </p>
+            </div>
+                      
+            <div 
+            *ngIf="profile.website"
+            class="d-flex"
+            >
+              <i iconPh="laptop" class="text-placeholder mr-5p large"></i>
+              <p class="clamp-1line body1 mb-0" style="word-break: break-all">
+                <a [href]="profile.website" target="_blank">{{profile.websiteLabel}}</a>
+              </p>
+            </div>
           </div>
-                          
-          <div 
-          *ngIf="profile.phone" 
-          class="mb-25p d-flex"
-          >
-            <i iconPh="smartphone" class="text-placeholder mr-5p large"></i>
-            <p class="mb-0">{{profile.phone}}</p>
-          </div>
-
-          <div 
-          *ngIf="profile.emailToDisplay" 
-          class="mb-25p d-flex"
-          >
-            <i iconPh="email" class="text-placeholder mr-5p large"></i>
-            <p class="mb-0">
-              <a [href]="'mailto:' + profile.emailToDisplay">{{profile.emailToDisplay}}</a>
-            </p>
-          </div>
-                    
-          <div 
-          *ngIf="profile.website"
-          class="d-flex"
-          >
-            <i iconPh="laptop" class="text-placeholder mr-5p large"></i>
-            <p class="clamp-1line body1 mb-0" style="word-break: break-all">
-              <a [href]="profile.website" target="_blank">{{profile.websiteLabel}}</a>
-            </p>
-          </div>
-
-        </div>
+        </ng-container>
 
         <ng-container *ngIf="profile.isProvider">
-          <div class="mx-15p mx-md-20p py-15p py-md-20p border-top border-bottom border-line">
+          <div class="mx-15p mx-md-20p py-15p py-md-20p border-top border-line">
             <h6 class="header-accent">Available Time</h6>
             <form-item-checkbox-group
             *ngIf="questionnaires"
@@ -224,64 +224,64 @@
         </ng-container>
 
         <ng-container *ngIf="profile.recommendations && profile.recommendations.length > 0">
-          <div class="mx-15p mx-md-20p py-15p py-md-20p">
-            <div class="mb-40p">
-              <h6 class="header-accent">Recommendations</h6>
-              <div class="mt-25p mb-10p">
-                <i iconPh="quotes-2" class="text-secondary" style="font-size: 32px;"></i>
-              </div>
-              <div 
-              #recommendationCarousel
-              class="overflow-hidden"
-              >
-                <ul class="list-unstyled d-flex flex-nowrap">
-                  <li
-                  *ngFor="let recommendation of profile.recommendationsPreview"
-                  style="flex: 0 0 100%;"
+          <div class="mx-15p mx-md-20p py-15p py-md-20p border-top border-line">
+            <h6 class="header-accent">Recommendations</h6>
+            <div class="mt-25p mb-10p">
+              <i iconPh="quotes-2" class="text-secondary" style="font-size: 32px;"></i>
+            </div>
+            <div 
+            #recommendationCarousel
+            class="overflow-hidden"
+            >
+              <ul class="list-unstyled d-flex flex-nowrap">
+                <li
+                *ngFor="let recommendation of profile.recommendationsPreview"
+                style="flex: 0 0 100%;"
+                >
+                  <p class="body1 clamp-3line" style="white-space:pre-wrap;">{{recommendation.body}}</p>
+                  <a 
+                  class="body2 text-label"
+                  [routerLink]="recommendation.fromLinkToProfile"
                   >
-                    <p class="body1 clamp-3line" style="white-space:pre-wrap;">{{recommendation.body}}</p>
-                    <a 
-                    class="body2 text-label"
-                    [routerLink]="recommendation.fromLinkToProfile"
-                    >
-                      {{recommendation.fromName}} - {{recommendation.createdAt | date}}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <ul 
-              *ngIf="profile.recommendationsPreview.length > 1"
-              class="list-unstyled d-flex flex-nowrap justify-content-center indicators"
-              >
-                <li 
-                *ngFor="let indicator of profile.recommendationsPreview; let i = index;"
-                class="rounded-pill mx-5p active"
-                [ngClass]="{active: idxActiveRecommendationIndicator == i}"
-                (click)="onClickRecommendationCarouselIndicator(i)"
-                ></li>
+                    {{recommendation.fromName}} - {{recommendation.createdAt | date}}
+                  </a>
+                </li>
               </ul>
-              <a routerLink="review" class="btn btn-text small px-0">See more recommendations</a>
             </div>
-            
-            <div *ngIf="profile.isProvider">
-              <button 
-              *ngIf="!user"
-              class="btn btn-primary w-100" 
-              (click)="onClickLogin()"
-              >Login to book</button>
-  
-              <button 
-              *ngIf="user && profile.bookingUrl"
-              class="btn btn-primary w-100" 
-              (click)="onClickBookOutside()"
-              >Book now</button>
-  
-              <button 
-              *ngIf="user && !profile.bookingUrl"
-              class="btn btn-primary w-100" 
-              (click)="onClickBook()"
-              >Book now</button>
-            </div>
+            <ul 
+            *ngIf="profile.recommendationsPreview.length > 1"
+            class="list-unstyled d-flex flex-nowrap justify-content-center indicators"
+            >
+              <li 
+              *ngFor="let indicator of profile.recommendationsPreview; let i = index;"
+              class="rounded-pill mx-5p active"
+              [ngClass]="{active: idxActiveRecommendationIndicator == i}"
+              (click)="onClickRecommendationCarouselIndicator(i)"
+              ></li>
+            </ul>
+            <a routerLink="review" class="btn btn-text small px-0">See more recommendations</a>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="profile.isProvider && !isProfileMyself">
+          <div class="m-15p mx-md-20p">
+            <button 
+            *ngIf="!user"
+            class="btn btn-primary w-100" 
+            (click)="onClickLogin()"
+            >Login to book</button>
+
+            <button 
+            *ngIf="user && profile.bookingUrl"
+            class="btn btn-primary w-100" 
+            (click)="onClickBookOutside()"
+            >Book now</button>
+
+            <button 
+            *ngIf="user && !profile.bookingUrl"
+            class="btn btn-primary w-100" 
+            (click)="onClickBook()"
+            >Book now</button>
           </div>
         </ng-container>
       </section>
@@ -357,7 +357,7 @@ id="booking"
         ></form-item-input>
       </div>
 
-      <div class="mb-10p">
+      <!-- <div class="mb-10p">
         <label class="subtitle1">
           Date & Time
           <span class="text-danger">*</span>
@@ -368,6 +368,14 @@ id="booking"
         [submitted]="submittedFormBooking"
         [minDateTime]="minDateTime"
         ></form-item-datetime>
+      </div> -->
+
+      <div class="my-20p">
+        <form-item-checkbox
+        name="urgent"
+        label="Urgent request"
+        [controller]="f.isUrgent"
+        ></form-item-checkbox>
       </div>
 
       <div class="mb-10p">

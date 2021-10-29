@@ -85,6 +85,7 @@ export class ProfileManagementChildGuard implements CanActivateChild {
       case 'my-social':
       case 'my-badge':
       case 'my-performance':
+      case 'manage-booking':
         /** if user role is not U && user role is not P && premium account, true  */
         if (role !== 'u' && role !== 'p') {
           if (profile.isVipAffiliateUser) { return true; } else if (profile.plan && profile.plan.name !== 'Basic') { return true; }

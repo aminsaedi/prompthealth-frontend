@@ -55,6 +55,12 @@ export class WrapperComponent implements OnInit {
     description: 'View & Reschedule your bookings',
     active,
   })
+  public manageBookingTab = (active) => ({
+    title: 'Manage Booking',
+    link: 'manage-booking',
+    description: 'See & Manage bookings received',
+    active,
+  })
   public favouriteTab = (active) => ({
     title: 'Favourite',
     link: 'my-favourites',
@@ -302,7 +308,8 @@ export class WrapperComponent implements OnInit {
               this.serviceTab(true),
               this.socialTab(true),
               this.badgeTab(true),
-              this.bookingTab(true),
+              // this.bookingTab(true),
+              this.manageBookingTab(true),
             ];
 
             if (profile.plan && profile.plan.videoUpload) { this.listing.push(this.videoTab(true)); }
@@ -322,7 +329,8 @@ export class WrapperComponent implements OnInit {
               this.performanceTab(false),
               this.socialTab(false),
               this.badgeTab(false),
-              this.bookingTab(false),
+              // this.bookingTab(false),
+              this.manageBookingTab(false),
               this.videoTab(false),
               this.reviewTab(false),
             ];
@@ -339,7 +347,8 @@ export class WrapperComponent implements OnInit {
               this.serviceTab(true),
               this.socialTab(true),
               this.badgeTab(true),
-              this.bookingTab(true),
+              // this.bookingTab(true),
+              this.manageBookingTab(true),
               this.reviewTab(true),
             ];
 
@@ -361,7 +370,8 @@ export class WrapperComponent implements OnInit {
               this.performanceTab(false),
               this.socialTab(false),
               this.badgeTab(false),
-              this.bookingTab(false),
+              // this.bookingTab(false),
+              this.manageBookingTab(false),
               this.reviewTab(false),
               this.amenityTab(false),
               this.professionalTab(false),
