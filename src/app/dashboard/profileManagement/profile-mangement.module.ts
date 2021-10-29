@@ -35,6 +35,7 @@ import { MyPerformanceComponent } from './my-performance/my-performance.componen
 import { PartnerServiceComponent } from './partner-service/partner-service.component';
 import { PartnerGeneralComponent } from './partner-general/partner-general.component';
 import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
+import { ManageBookingComponent } from './manage-booking/manage-booking.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
     PartnerServiceComponent,
     PartnerGeneralComponent,
     PartnerOfferComponent,
+    ManageBookingComponent,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

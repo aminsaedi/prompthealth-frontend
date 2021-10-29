@@ -53,7 +53,6 @@ export class ProfileManagementChildGuard implements CanActivateChild {
         if (role !== 'p') { return true; }
         break;
 
-      case 'my-booking':
       case 'reviews-ratings':
         /** if user role is U || premium account, true */
         if (role === 'u') {
@@ -65,7 +64,8 @@ export class ProfileManagementChildGuard implements CanActivateChild {
         }
         break;
 
-      case 'my-favourites':
+        case 'my-booking':
+        case 'my-favourites':
         /** if user role is U, true */
         if (role === 'u') { return true; }
         break;
@@ -85,6 +85,7 @@ export class ProfileManagementChildGuard implements CanActivateChild {
       case 'my-social':
       case 'my-badge':
       case 'my-performance':
+      case 'manage-booking':
         /** if user role is not U && user role is not P && premium account, true  */
         if (role !== 'u' && role !== 'p') {
           if (profile.isVipAffiliateUser) { return true; } else if (profile.plan && profile.plan.name !== 'Basic') { return true; }

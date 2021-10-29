@@ -1,3 +1,4 @@
+import { IBooking } from "./booking";
 import { IDefaultPlan } from "./default-plan";
 import { ISocialNotification } from "./notification";
 import { IReferral } from "./referral";
@@ -35,6 +36,13 @@ export interface IGetCompaniesResult extends IResponseData {
 
 export interface IGetPlansResult extends IResponseData {
   data: IDefaultPlan[]
+}
+
+export interface IGetBookingsResult extends IResponseData {
+  data: {
+    data: IBooking[];
+    total: number;
+  }
 }
 
 export interface IGetFollowingsResult extends IResponseData {
