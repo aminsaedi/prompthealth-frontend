@@ -35,7 +35,7 @@ export class MyPerformanceComponent implements OnInit {
 
     const user = JSON.parse(localStorage.getItem('user'));
 
-    this.getBookingList(user._id);
+    // this.getBookingList(user._id);
     this.user = await this._profileService.getProfileDetail(user);
     // console.log(this.user);
   }
