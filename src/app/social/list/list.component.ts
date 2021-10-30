@@ -26,6 +26,19 @@ export class ListComponent implements OnInit {
   get selectedTopicId() { return this._socialService.selectedTopicId; }
   get selectedTaxonomyType() { return this._socialService.selectedTaxonomyType; }
   get isFilterByFollowingOn() { return !!(this.user && !this.selectedTopicId); }
+  get labels() {
+    let ls = [];
+    if(this.user && !this.selectedTopicId) {
+      ls.push('feed');
+    }
+
+    if(this.selectedTaxonomyType != 'feed') {
+      ls.push(this.selectedTaxonomyType); 
+    }
+    if(this.selectedTopicId) { ls.push('topic-' + this.selectedTopicId.substr(-5, 5)); }
+
+    return ls;
+  }
 
   public newPosts: ISocialPost[] = [];
 
@@ -252,6 +265,7 @@ export class ListComponent implements OnInit {
               userId: this.user ? this.user._id : null, 
               topic: this.selectedTopicId, 
               existMorePost: this.isMorePosts,
+              filterByFollowing: this.isFilterByFollowingOn,
             }
           );
           resolve(posts);

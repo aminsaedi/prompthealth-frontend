@@ -1,3 +1,15 @@
+<div class="mb-30p">
+  <div class="subtitle1">
+    What filters are applied?
+  </div>
+  <ul *ngIf="labels.length > 0" class="list-unstyled">
+    <li
+    *ngFor="let l of labels;"
+    class="d-inline-block mr-20p border rounded-pill px-10p bg-white border-body"
+    >{{l}}</li>
+  </ul>  
+</div>
+
 <card-new-post 
 *ngIf="user?.isEligibleToCreateNote"
 (onPublished)="onPublishNewPost($event)"
