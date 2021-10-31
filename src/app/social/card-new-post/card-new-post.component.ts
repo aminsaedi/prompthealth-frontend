@@ -33,7 +33,7 @@ export class CardNewPostComponent implements OnInit {
   get user(): Profile { return this._profileService.profile; }
 
   get lengthDescription() { return this.f.description?.value?.length - 1 || 0;}
-  get isDescriptionOverLimit() { return !!(this.lengthDescription > this.maxDescription); }
+  // get isDescriptionOverLimit() { return !!(this.lengthDescription > this.maxDescription); }
 
   safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
 
@@ -111,6 +111,10 @@ export class CardNewPostComponent implements OnInit {
   // }
 
   onClickButtonMedia() {
+    if(this.audioSaved) {
+      this._toastr.error('You cannot post image with voice');
+      return;
+    }
     const el = this.inputMedia.nativeElement as HTMLInputElement;
     if(el) {
       el.click();
@@ -144,6 +148,11 @@ export class CardNewPostComponent implements OnInit {
   }
 
   onClickButtonAudio() {
+    if(this.imagePreview) {
+      this._toastr.error('You cannot post voice with image.');
+      return;
+    }
+
     this.audioData = this.audioSaved ? this.audioSaved.copy() : null;
     this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'audio-recorder'}});
   }
