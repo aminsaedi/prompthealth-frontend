@@ -89,7 +89,7 @@ export class EditorService {
       this._form = new FormGroup({
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        description: new FormControl(),
+        description: new FormControl(null, validators.noteDescription),
         images: new FormControl(), // TODO: need change to FormArray in ver2.1
         voice: new FormControl(),
         tags: new FormControl([], validators.topics),

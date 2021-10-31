@@ -222,6 +222,22 @@ const validatorNoteHasAtLeastOneField = (): ValidatorFn => {
   }
 }
 
+//note cannot have image / voice /video together.
+const validatorNoteHasOnlyOneMedia = (): ValidatorFn => {
+  return function validate(formGroup: FormGroup) {
+    const g = formGroup.controls;
+    const image = g.images.value as {file: File|Blog, filename: string};
+    const voice = g.voice.value as string;
+    if(!!image && !!voice) {
+      return {noteHasOnlyOneMedia: true};
+    } else {
+      return null;
+    }
+  }
+}
+
+
+
 const validatorTopicsSelectedLTE = (maxNum: number): ValidatorFn => {
   return function validate(formControl: FormControl) {
     const topics = formControl.value || [];
@@ -322,7 +338,8 @@ export const validators = {
 
   /** social */
   comment: [Validators.required],
-  note: [validatorNoteHasAtLeastOneField()],
+  note: [validatorNoteHasAtLeastOneField(), validatorNoteHasOnlyOneMedia()],
+  noteDescription: [Validators.maxLength(minmax.noteMax + 1)], // need + 1 because description has \n at last before submit
   referral: [Validators.required, Validators.maxLength(minmax.referralMax), Validators.minLength(minmax.referralMin)],
 
   promoCode: [Validators.maxLength(minmax.promoCodeMax)],
