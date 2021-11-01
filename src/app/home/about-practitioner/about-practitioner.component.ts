@@ -300,6 +300,7 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
 const planFeatures: IPlanFeatureData[] = [
   {item: 'Get listed with a personalized profile', targetPlan: ['basic', 'provider', 'centre'], detail: null},
   {item: 'Follow and engage with other users', targetPlan: ['basic', 'provider', 'centre'], detail: null},
+  {item: 'Make basic contents', targetPlan: ['basic', 'provider', 'centre'], detail: null},
   {item: 'Receive booking requests', targetPlan: ['basic', 'provider', 'centre'], detail: null},
 
   {item: 'Share your knowledge via voice memos, notes, and images + articles, and events', targetPlan: ['provider', 'centre'], detail: null},
@@ -307,8 +308,10 @@ const planFeatures: IPlanFeatureData[] = [
   {item: 'Ratings and reviews', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Performance analytics', targetPlan: ['provider', 'centre'], detail: null},
 
-  {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
-  {item: 'Display company products and amenities', targetPlan: ['centre'], detail: null},
+  // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
+  {item: 'Display company products ', targetPlan: ['centre'], detail: null},
+  {item: 'Display company amenities', targetPlan: ['centre'], detail: null},
+  {item: 'Enrich your profile with videos', targetPlan: ['centre'], detail: null},
   {item: 'Tag your providers', targetPlan: ['centre'], detail: null},
 ];
 
