@@ -395,6 +395,7 @@ export class ProfileComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const data = {
         id: this.profileId,
+        type: 'user',
       }
       this.isFollowing = true;
       this.user.setFollowing(this.profile.decode(), true);
