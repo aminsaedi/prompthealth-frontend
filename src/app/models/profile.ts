@@ -111,7 +111,6 @@ export class Profile implements IProfile {
   protected _s3 = environment.config.AWS_S3;
 
   constructor(protected data: IUserDetail) {
-    console.log(data);
     const image = (data.profileImage && data.profileImage.length > 0) ? 
       data.profileImage : 
       (data.image && typeof(data.image) == 'string' && data.image.length > 0) ? 
