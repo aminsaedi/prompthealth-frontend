@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { IGetSocialContentsResult } from 'src/app/models/response-data';
+import { IFollowMultipleResult, IGetFollowingTopicsResult, IGetSocialContentsResult } from 'src/app/models/response-data';
 import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
 import { SocialNote } from 'src/app/models/social-note';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -12,7 +12,8 @@ import { ISocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ModalService } from 'src/app/shared/services/modal.service';
+import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-list',
@@ -25,20 +26,25 @@ export class ListComponent implements OnInit {
   get user() { return this._profileService.profile; }
   get selectedTopicId() { return this._socialService.selectedTopicId; }
   get selectedTaxonomyType() { return this._socialService.selectedTaxonomyType; }
+  get selectedFollowingTopicIds() { return this.formItemService?.getSelected() || []; }
   get isFilterByFollowingOn() { return !!(this.user && !this.selectedTopicId); }
-  get labels() {
-    let ls = [];
-    if(this.user && !this.selectedTopicId) {
-      ls.push('feed');
-    }
+  get noFollowings() { return (this.user?.numFollowing == 0 && this.user?.followingTopics?.length == 0); }
 
-    if(this.selectedTaxonomyType != 'feed') {
-      ls.push(this.selectedTaxonomyType); 
-    }
-    if(this.selectedTopicId) { ls.push('topic-' + this.selectedTopicId.substr(-5, 5)); }
+  @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
 
-    return ls;
-  }
+  // get labels() {
+  //   let ls = [];
+  //   if(this.user && !this.selectedTopicId) {
+  //     ls.push('feed');
+  //   }
+
+  //   if(this.selectedTaxonomyType != 'feed') {
+  //     ls.push(this.selectedTaxonomyType); 
+  //   }
+  //   if(this.selectedTopicId) { ls.push('topic-' + this.selectedTopicId.substr(-5, 5)); }
+
+  //   return ls;
+  // }
 
   public newPosts: ISocialPost[] = [];
 
@@ -47,6 +53,8 @@ export class ListComponent implements OnInit {
   public countPerPage: number = 20;
 
   public isLoading: boolean = false;
+  public isSelectTopicsUploading: boolean = false;
+  public isSelectTopicsUploadDone: boolean = false;
   public isMorePosts: boolean = true;
 
   private subscriptionLoginStatus: Subscription;
@@ -75,7 +83,7 @@ export class ListComponent implements OnInit {
     private _uService: UniversalService,
     private _catService: CategoryService,
     private _sanitizer: DomSanitizer,
-    private _modalService: ModalService,
+    private _toastr: ToastrService,
   ) { }
 
   ngOnDestroy() {
@@ -126,12 +134,14 @@ export class ListComponent implements OnInit {
 
   checkLoginStatusAndInitPost() {
     const status = this._profileService.loginStatus;
+    this.fetchFollowTopicsIfNotExist()
     if(status == 'loggedIn' || status == 'notLoggedIn') {
       this.initPosts();
     }
     
     if(!this.subscriptionLoginStatus) {
       this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(res => {
+      this.fetchFollowTopicsIfNotExist()
         if(res == 'loggedIn' || res == 'notLoggedIn') {
           this.initPosts();
         }
@@ -145,9 +155,23 @@ export class ListComponent implements OnInit {
     });
   }
 
+  fetchFollowTopicsIfNotExist() {
+    if(this.user && !this.user.followingTopics) {
+      this._sharedService.get('/social/get-followed-topics').subscribe((res: IGetFollowingTopicsResult) => {
+        if(res.statusCode == 200) {
+          this.user.setFollowingTopics(res.data);
+          console.log(this.user.followingTopics)
+        } else {
+          console.log(res.message);
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
 
   async initPosts() {
-
     this.disposeCacheIfNeeded();
     this.posts = null;
     const posts = this._socialService.postsOf(this.selectedTaxonomyType);
@@ -288,4 +312,49 @@ export class ListComponent implements OnInit {
     note.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(note.description));
     this.newPosts.unshift(note);
   }
+
+  onSubmitFollowTopics() {
+    // this is used only when user doesn't follow any topics.
+    // if the user already follow some topics, it doesn't work properly.
+    if(this.user) {
+      const followingTopics = this.selectedFollowingTopicIds.filter(id => {
+        let notExist = true;
+        if(this.user.followingTopics?.indexOf(id) >= 0) { 
+          notExist = false; 
+        }
+        return notExist;
+      });
+
+      const data = {
+        ids: followingTopics,
+        type: 'topic',
+      }
+
+      this.isSelectTopicsUploading = true;
+      this._sharedService.post(data, 'social/follow-multiple').subscribe((res: IFollowMultipleResult) => {
+        this.isSelectTopicsUploading = false;
+
+        if(res.statusCode == 200) {
+          this.user.setFollowingTopics(followingTopics);
+
+          this._socialService.dispose();
+          this.initPosts();
+
+          this.isSelectTopicsUploadDone = true;
+          setTimeout(() => {
+            this.isSelectTopicsUploadDone = false;
+          }, 2000);
+
+        } else {
+          console.log(res.message);
+          this._toastr.error('Something went wrong. Please try again');
+        }
+      }, error => {
+        console.log(error);
+        this.isSelectTopicsUploading = false;
+        this._toastr.error('Something went wrong. Please try again');
+      });
+    }
+  }
+
 }

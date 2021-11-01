@@ -59,6 +59,7 @@
   @include btn($colorGsPlaceholder, $colorGsBackground, rgba($colorGsBackground, 0.7));
 }
 
+
 @mixin btnOutline($color, $colorHover) {
   color: $color;
   border: 1px solid $color;

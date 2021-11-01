@@ -111,6 +111,7 @@ export class Profile implements IProfile {
   protected _s3 = environment.config.AWS_S3;
 
   constructor(protected data: IUserDetail) {
+    console.log(data);
     const image = (data.profileImage && data.profileImage.length > 0) ? 
       data.profileImage : 
       (data.image && typeof(data.image) == 'string' && data.image.length > 0) ? 
@@ -185,13 +186,13 @@ export class Profile implements IProfile {
     this._followers.push(new Profile(user));
   }
 
-  setFollowingTopics(topics: any[]) {
+  setFollowingTopics(topics: string[]) {
     if(!this._followingTopics) {
       this._followingTopics = [];
-      topics.forEach(t => {
-        this.followingTopics.push(t);
-      })
     }
+    topics.forEach(t => {
+      this._followingTopics.push(t);
+    })
   };
 
   countupFollowing() { this.data.follow.following = this.data.follow.following ? this.data.follow.following + 1 : 1; }
