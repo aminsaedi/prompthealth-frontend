@@ -7,6 +7,7 @@ import { Category, CategoryService } from 'src/app/shared/services/category.serv
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar.component';
+import { SocialService } from '../social.service';
 
 @Component({
   selector: 'card',
@@ -22,6 +23,7 @@ export class CardComponent implements OnInit {
 
 
   get topics(): Category[] { return this._categoryService.categoryList; }
+  get selectedTopicId() { return this._socialService.selectedTopicId; }
 
 
   // public isContentGradientShown: boolean = false;
@@ -38,6 +40,7 @@ export class CardComponent implements OnInit {
     private _location: Location,
     private _modalService: ModalService,
     private _categoryService: CategoryService,
+    private _socialService: SocialService,
   ) { }
 
   ngAfterViewInit() {
@@ -80,6 +83,10 @@ export class CardComponent implements OnInit {
   
   markCurrentPosition() {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
+  }
+
+  stopPropergation(e: Event) {
+    e.stopPropagation();
   }
 }
 

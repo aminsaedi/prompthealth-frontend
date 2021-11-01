@@ -81,6 +81,10 @@ export interface IGetFollowingsResult extends IResponseData {
   data: IUserDetail[];
 }
 
+export interface IGetFollowingTopicsResult extends IResponseData {
+  data: string[];
+}
+
 export interface IGetFollowStatusResult extends IResponseData {
   data: {
     _id: string,
@@ -95,6 +99,10 @@ export interface IFollowResult extends IResponseData {
     following: string,
     followed: string,
   }
+}
+
+export interface IFollowMultipleResult extends IResponseData {
+  data: IFollowResult['data'][];
 }
 
 export interface IUnfollowResult extends IResponseData {

@@ -1,7 +1,70 @@
+<!-- <div class="mb-30p">
+  <div class="subtitle1">
+    What filters are applied?
+  </div>
+  <ul *ngIf="labels.length > 0" class="list-unstyled">
+    <li
+    *ngFor="let l of labels;"
+    class="d-inline-block mr-20p border rounded-pill px-10p bg-white border-body"
+    >{{l}}</li>
+  </ul>  
+</div> -->
+
 <card-new-post 
 *ngIf="user?.isEligibleToCreateNote"
 (onPublished)="onPublishNewPost($event)"
 ></card-new-post>
+
+<ng-container *ngIf="noFollowings || isSelectTopicsUploadDone">
+  <div 
+  class="mb-20p position-relative rounded-8p bg-white body1 text-body px-20p py-20p overflow-hidden"
+  [@expandVertical]
+  >
+    <div class="mb-20p text-center">
+      <i iconPh="tag" style="font-size: 30px;"></i>
+      <div class="h5">Choose some interests to personalize your feed</div>
+    </div>
+
+    <form-item-service
+    #formItemService
+    type="chip"
+    [option]="{showInlineWhenEnabled: true}"
+    ></form-item-service>
+
+    <div>
+      <button 
+      class="btn btn-primary w-100"
+      [disabled]="selectedFollowingTopicIds.length == 0 || isSelectTopicsUploading || isSelectTopicsUploadDone"
+      (click)="onSubmitFollowTopics()"
+      >Update my feed</button>
+    </div>
+
+    <div 
+    *ngIf="isSelectTopicsUploading || isSelectTopicsUploadDone"
+    class="position-absolute"
+    style="top: 0; left: 0; width: 100%; height: 100%;"
+    >
+      <div
+      *ngIf="isSelectTopicsUploading"
+      class="position-absolute"
+      style="top: 50%; left: 50%; transform: translate(-50%, -50%)"
+      >
+        <loader></loader>
+      </div>
+
+      <div
+      *ngIf="isSelectTopicsUploadDone"
+      class="position-absolute bg-body rounded-12p px-30p py-20p"
+      style="top: 50%; left: 50%; transform: translate(-50%, -50%)"
+      >
+        <div class="text-center">
+          <i iconPh="checkbox-square-outline" class="text-success" style="font-size: 35px;"></i>
+          <h5 class="mt-10p text-white mb-0">Updated!</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
 
 <ng-container *ngFor="let n of newPosts; let j = index">
   <div [@expandVertical]>

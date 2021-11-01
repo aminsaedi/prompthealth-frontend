@@ -1,4 +1,7 @@
-<div class="d-flex justify-content-start align-items-start">
+<div 
+*ngIf="type == 'checkbox' || type == 'radio'"
+class="d-flex justify-content-start align-items-start"
+>
   <div 
   class="position-relative mr-1 check-container" 
   style="margin-top: 3px;"
@@ -24,4 +27,30 @@
   </div>
 
   <label [for]="name" class="m-0 subtitle1" [innerHTML]="label"></label>  
+</div>
+
+<div 
+*ngIf="type == 'chip'"
+class="position-relative"
+>
+  <button
+  class="btn small"
+  [ngClass]="controller.value ? 'btn-primary' : 'btn-inactive'"
+  (click)="chipInput.click()"
+  >
+  <span>{{label}}</span>
+  <i
+  *ngIf="_option.actionIconForChip"
+  class="ml-5p"
+  [iconPh]="controller.value ? _option.actionIconForChipSelected : _option.actionIconForChip"
+  ></i>
+  </button>
+  <input 
+  #chipInput
+  type="checkbox" 
+  [id]="name" 
+  class="d-none" 
+  [formControl]="controller" 
+  (change)="onChange()"
+  >
 </div>

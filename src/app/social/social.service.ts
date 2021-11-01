@@ -28,6 +28,12 @@ export class SocialService {
     return this._selectedProfileChanged.asObservable();
   }
 
+  private _selectedTaxonomyType: SocialPostTaxonomyType;
+  get selectedTaxonomyType() { return this._selectedTaxonomyType; }
+  setTaxonomyType(type: SocialPostTaxonomyType) {
+    this._selectedTaxonomyType = type;
+  }
+
   private _selectedTopicId: string;
   get selectedTopicId() { return this._selectedTopicId; }
   private _selectedTopicIdChanged = new Subject<string>();
@@ -351,9 +357,10 @@ interface IPostsPerTaxonomy {
   data: ISocialPost[];
   metadata?: {
     topic?: string;
-    userId?: string;
+    userId?: string; // loggedinUserId
     existMorePost?: boolean;
-    eventTimeRange?: (string|Date)[];
+    eventTimeRange?: Date[]; // not implemented yet. this is for date filter
+    filterByFollowing?: boolean;
   };
 }
 

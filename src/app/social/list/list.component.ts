@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { IGetSocialContentsResult } from 'src/app/models/response-data';
+import { IFollowMultipleResult, IGetFollowingTopicsResult, IGetSocialContentsResult } from 'src/app/models/response-data';
 import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
 import { SocialNote } from 'src/app/models/social-note';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -12,6 +12,8 @@ import { ISocialPost } from 'src/app/models/social-post';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-list',
@@ -23,15 +25,36 @@ export class ListComponent implements OnInit {
 
   get user() { return this._profileService.profile; }
   get selectedTopicId() { return this._socialService.selectedTopicId; }
+  get selectedTaxonomyType() { return this._socialService.selectedTaxonomyType; }
+  get selectedFollowingTopicIds() { return this.formItemService?.getSelected() || []; }
+  get isFilterByFollowingOn() { return !!(this.user && !this.selectedTopicId); }
+  get noFollowings() { return (this.user?.numFollowing == 0 && this.user?.followingTopics?.length == 0); }
+
+  @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
+
+  // get labels() {
+  //   let ls = [];
+  //   if(this.user && !this.selectedTopicId) {
+  //     ls.push('feed');
+  //   }
+
+  //   if(this.selectedTaxonomyType != 'feed') {
+  //     ls.push(this.selectedTaxonomyType); 
+  //   }
+  //   if(this.selectedTopicId) { ls.push('topic-' + this.selectedTopicId.substr(-5, 5)); }
+
+  //   return ls;
+  // }
 
   public newPosts: ISocialPost[] = [];
 
   public posts: ISocialPost[] = null;
 
   public countPerPage: number = 20;
-  public selectedTaxonomyType: SocialPostTaxonomyType;
 
   public isLoading: boolean = false;
+  public isSelectTopicsUploading: boolean = false;
+  public isSelectTopicsUploadDone: boolean = false;
   public isMorePosts: boolean = true;
 
   private subscriptionLoginStatus: Subscription;
@@ -60,6 +83,7 @@ export class ListComponent implements OnInit {
     private _uService: UniversalService,
     private _catService: CategoryService,
     private _sanitizer: DomSanitizer,
+    private _toastr: ToastrService,
   ) { }
 
   ngOnDestroy() {
@@ -73,7 +97,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this._route.params.subscribe((param: {taxonomyType: SocialPostTaxonomyType, topicId: string}) => {
-      this.selectedTaxonomyType = param.taxonomyType || 'feed';
+      this._socialService.setTaxonomyType(param.taxonomyType || 'feed');
       this._socialService.setTopicId(param.topicId || null);
       this.setMeta();
       this.checkLoginStatusAndInitPost();
@@ -110,12 +134,14 @@ export class ListComponent implements OnInit {
 
   checkLoginStatusAndInitPost() {
     const status = this._profileService.loginStatus;
+    this.fetchFollowTopicsIfNotExist()
     if(status == 'loggedIn' || status == 'notLoggedIn') {
       this.initPosts();
     }
     
     if(!this.subscriptionLoginStatus) {
       this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(res => {
+      this.fetchFollowTopicsIfNotExist()
         if(res == 'loggedIn' || res == 'notLoggedIn') {
           this.initPosts();
         }
@@ -127,6 +153,21 @@ export class ListComponent implements OnInit {
     this.subscriptionCacheChange = this._socialService.postCacheChanged().subscribe(() => {
       this.initPosts();
     });
+  }
+
+  fetchFollowTopicsIfNotExist() {
+    if(this.user && !this.user.followingTopics) {
+      this._sharedService.get('/social/get-followed-topics').subscribe((res: IGetFollowingTopicsResult) => {
+        if(res.statusCode == 200) {
+          this.user.setFollowingTopics(res.data);
+          console.log(this.user.followingTopics)
+        } else {
+          console.log(res.message);
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
 
 
@@ -143,8 +184,20 @@ export class ListComponent implements OnInit {
         this.posts = posts;
         this._changeDetector.detectChanges();
       }, 100);
-    } else {
+    } 
+    // else if (this._profileService.loginStatus == 'loggedIn' && (!this.user.followingTopics || this.user.followingTopics.length == 0)) {
+    //     // show modal and stop here
+    // } 
+    else {
       try {
+        // if user is not logged in, get all contents base on selected taxonomy & category
+
+        // if user is logged in, check follow-topics status & follow-users status
+        //// if empty --> let user to select topics before fetch posts --> wait result and restart initPosts
+        //// if not --> get feed based on selected taxonomy & category
+
+
+        
         this.posts = await this.fetchPosts(); 
       } catch (error) {
         console.log(error)
@@ -155,18 +208,14 @@ export class ListComponent implements OnInit {
 
   disposeCacheIfNeeded() {
     const meta = this._socialService.metadataOf(this.selectedTaxonomyType);
-    // if(this.selectedTaxonomyType == 'feed') {
-    //   const userId = this.user ? this.user._id : null;
-    //   const userIdInMeta = meta && meta.userId ? meta.userId : null;
-    //   const userIdMatched = !!(userId == userIdInMeta);
-    //   if(userId != userIdInMeta) {
-    //     this._socialService.disposeCacheOf('feed');
-    //   }
-    // }
 
     const topicId = this.selectedTopicId ? this.selectedTopicId : null;
     const topicIdInMeta = meta && meta.topic ? meta.topic : null;
-    if(topicId != topicIdInMeta) {
+
+    const filterByFollowingInMeta = meta?.filterByFollowing || null;
+
+    const needToDispose = (topicId != topicIdInMeta) || (filterByFollowingInMeta != this.isFilterByFollowingOn);
+    if(needToDispose) {
       this._socialService.disposeCacheOf(this.selectedTaxonomyType);
     }
   }
@@ -177,58 +226,59 @@ export class ListComponent implements OnInit {
       
       const params: ISocialPostSearchQuery = {
         count: this.countPerPage,
-        ... (this.selectedTopicId) && {tags: [this.selectedTopicId]},
-        ... (this.posts && this.posts.length > 0) && {
-          page: Math.ceil(this.posts.length / this.countPerPage) + 1,
-          timestamp: this.posts[this.posts.length - 1].createdAt,
-        },
+        ... (this.selectedTopicId) && { tags: [this.selectedTopicId] },
+        ... (this.posts && this.posts.length > 0) && { timestamp: this.posts[this.posts.length - 1].createdAt },
       }
 
-      let req: Observable<any>;
-      if (tax == 'feed') {
-        params.excludeExpiredPromo = true;
-        const query = new SocialPostSearchQuery(params);
-        req = this._sharedService.get('note/get-feed' + query.toQueryParams());
-      } else {
-        switch(tax) {
-          case 'article':
-            params.contentType = 'ARTICLE';
-            break;
-          case 'media':
-            params.hasMedia = true;
-            break;
-          case 'note':
-            params.contentType = 'NOTE';
-            break;
-          case 'voice':
-            params.contentType = 'NOTE';
-            params.hasVoice = true;
-            break;
-          case 'event':
-            params.contentType = 'EVENT';
-            params.sortBy = 'eventStartTime';
-            params.order = 'asc';
-            const meta = this._socialService.metadataOf('event');
-            if(meta && meta.eventTimeRange) {
-              params.eventTimeRange = meta.eventTimeRange;
-            } else {
-              const now = new Date();
-              params.eventTimeRange = [now.toISOString()];
-            }
-            break;
-          case 'promotion':
-            params.contentType = 'PROMO';
-            params.excludeExpiredPromo = true;
-            break;
-          default:
-            console.log('oops. this taxonomy type is not implemented yet.: ', tax);
-        }
-        const query = new SocialPostSearchQuery(params);
-        req = this._sharedService.get('note/filter' + query.toQueryParams());
-      } 
+      switch(this.selectedTaxonomyType) {
+        case 'feed':
+          params.excludeExpiredPromo = true;
+          break;
+        case 'article':
+          params.contentType = 'ARTICLE';
+          break;
+        case 'event':
+          delete params.timestamp;
+
+          params.contentType = 'EVENT';
+          params.sortBy = 'eventStartTime';
+          params.order = 'asc';
+          
+          const meta = this._socialService.metadataOf('event');
+          if(meta && meta.eventTimeRange) {
+            params.eventTimeRange = meta.eventTimeRange;
+          } else if(this.posts?.length > 0) {
+            params.eventTimeRange = [this.posts[this.posts.length - 1].startAt.toISOString()];
+          } else {
+            const now = new Date();
+            params.eventTimeRange = [now.toISOString()];
+          }
+          break;
+        case 'note':
+          params.contentType = 'NOTE';
+          break;
+        case 'voice':
+          params.contentType = 'NOTE';
+          params.hasVoice = true;
+          break;
+        case 'media':
+          params.contentType = 'NOTE';
+          params.hasMedia = true;
+          break;
+        case 'promotion':
+          params.contentType = 'PROMO';
+          params.excludeExpiredPromo = true;
+        default:
+          console.log('oops. this taxonomy type is not implemented yet.: ', this.selectedTaxonomyType);
+      }
+
+      const query = new SocialPostSearchQuery(params).toQueryParams();
+      const path = this.isFilterByFollowingOn ? 'note/get-feed' : 'note/filter';
+
+      console.log(path, query)
 
       this.isLoading = true;
-      req.subscribe((res: IGetSocialContentsResult) => {
+      this._sharedService.get(path + query).subscribe((res: IGetSocialContentsResult) => {
         this.isLoading = false;
         if(res.statusCode === 200) {
           this.isMorePosts = (res.data.data.length < this.countPerPage) ? false : true;
@@ -239,6 +289,7 @@ export class ListComponent implements OnInit {
               userId: this.user ? this.user._id : null, 
               topic: this.selectedTopicId, 
               existMorePost: this.isMorePosts,
+              filterByFollowing: this.isFilterByFollowingOn,
             }
           );
           resolve(posts);
@@ -261,4 +312,49 @@ export class ListComponent implements OnInit {
     note.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(note.description));
     this.newPosts.unshift(note);
   }
+
+  onSubmitFollowTopics() {
+    // this is used only when user doesn't follow any topics.
+    // if the user already follow some topics, it doesn't work properly.
+    if(this.user) {
+      const followingTopics = this.selectedFollowingTopicIds.filter(id => {
+        let notExist = true;
+        if(this.user.followingTopics?.indexOf(id) >= 0) { 
+          notExist = false; 
+        }
+        return notExist;
+      });
+
+      const data = {
+        ids: followingTopics,
+        type: 'topic',
+      }
+
+      this.isSelectTopicsUploading = true;
+      this._sharedService.post(data, 'social/follow-multiple').subscribe((res: IFollowMultipleResult) => {
+        this.isSelectTopicsUploading = false;
+
+        if(res.statusCode == 200) {
+          this.user.setFollowingTopics(followingTopics);
+
+          this._socialService.dispose();
+          this.initPosts();
+
+          this.isSelectTopicsUploadDone = true;
+          setTimeout(() => {
+            this.isSelectTopicsUploadDone = false;
+          }, 2000);
+
+        } else {
+          console.log(res.message);
+          this._toastr.error('Something went wrong. Please try again');
+        }
+      }, error => {
+        console.log(error);
+        this.isSelectTopicsUploading = false;
+        this._toastr.error('Something went wrong. Please try again');
+      });
+    }
+  }
+
 }

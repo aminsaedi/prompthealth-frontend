@@ -65,7 +65,9 @@ class="card position-relative rounded-8p bg-white body1 text-body px-20p pt-20p"
         <ng-container *ngFor="let item of topics">
           <a
           *ngIf="post.tags.includes(item._id)" 
-          class="body2 text-body rounded-pill mr-10p mb-10p border border-body d-inline-block"
+          [routerLink]="['/community/feed', item._id]"
+          (click)="stopPropergation($event)"
+          class="body2 text-body rounded-pill mr-10p mb-10p border d-inline-block text-body border-body"
           style="padding: 2px 8px"
           >{{item.item_text}}</a>
         </ng-container>
