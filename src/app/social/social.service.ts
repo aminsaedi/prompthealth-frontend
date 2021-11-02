@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
+import { ProfileManagementService } from '../dashboard/profileManagement/profile-management.service';
 import { ISocialNotification, SocialNotification } from '../models/notification';
 import { Professional } from '../models/professional';
 import { SocialArticle } from '../models/social-article';
@@ -57,6 +58,7 @@ export class SocialService {
 
   constructor(
     private _sanitizer: DomSanitizer,
+    private _profileService: ProfileManagementService,
   ) { 
     this.postCache = new PostCache();
   }
@@ -66,7 +68,7 @@ export class SocialService {
     const cache = this.postCache.dataPerTaxonomy[taxonomy];
     return cache ? cache.metadata : null;
   }
-  postOf(id: string) {
+  postOf(id: string): ISocialPost {
     const data = this.postCache.dataMap;
     if(!data) { 
       return null; 
@@ -103,6 +105,17 @@ export class SocialService {
   postsOfUser(userId: string): ISocialPost[] {
     const data = this.postCache.dataPerTaxonomy.users[userId];
     return data ? data.postdata : null;
+  }
+
+  findPostsByUserId(userId: string): ISocialPost[] {
+    const result = [];
+    for(let id in this.postCache.dataMap) {
+      const post = this.postCache.dataMap[id];
+      if(post.authorId == userId) {
+        result.push(post);
+      }
+    }
+    return result;
   }
 
   promosOfUser(userId: string): ISocialPost[] {
