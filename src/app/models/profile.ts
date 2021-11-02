@@ -83,8 +83,15 @@ export class Profile implements IProfile {
   get hasProfile() { return !this.isU; }
   get isEligibleToCreateNote() { return this.isProvider || this.isSA; }
   get isEligibleToCreatePromo() { return this.isP; }
-  get isEligibleToCreateArticle() { return this.isProvider || this.isSA; }
-  get isEligibleToCreateEvent() { return !this.isU; }
+  get isEligibleToCreateArticle() { return (this.isProvider && this.isPaid) || this.isSA; }
+  get isEligibleToCreateEvent() { return (!this.isU && this.isPaid) || this.isSA; }
+
+  get isPaid() {
+    return (
+      this.data.isVipAffiliateUser || 
+      (this.data.plan && this.data.plan.name.toLowerCase() != 'basic')
+    );
+  }
 
 
   get isApproved() { return this.isU || this.isSA || this.data.isApproved; }

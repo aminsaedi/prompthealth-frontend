@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { LoginStatusType, ProfileManagementService } from '../dashboard/profileManagement/profile-management.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
-  
+export class GuardIfUserTypeClientGuard implements CanActivate {
+
   constructor(
     private _profileService: ProfileManagementService,
     private _router: Router,
-  ) {}
+  ){}
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Promise<boolean | UrlTree> | boolean
-  {
-    const editorType = next.data.type || null;
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+
     let loginStatus = this._profileService.loginStatus;
 
     if(loginStatus == 'notChecked' || loginStatus == 'loggingIn') {
@@ -25,7 +25,7 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
         const subscription = this._profileService.loginStatusChanged().subscribe(status => {
           if(status == 'loggedIn' || status == 'notLoggedIn') {
             subscription.unsubscribe();
-            const isValidated = this.validate(status, editorType);
+            const isValidated = this.validate(status);
             if(isValidated) {
               resolve(true);
             } else {
@@ -36,7 +36,7 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
         })  
       })
     } else {
-      const isValidated = this.validate(loginStatus, editorType);
+      const isValidated = this.validate(loginStatus);
       if(isValidated) {
         return true;
       } else {
@@ -46,23 +46,10 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
     }
   }
 
-  validate(loginStatus: LoginStatusType, editorType?: 'article' | 'event' | 'promo' | 'note') {
-    let isValidated = false;
-
-    if(loginStatus == 'loggedIn') {
-      const user = this._profileService.profile;
-      switch (editorType) {
-        case 'article': isValidated = user.isEligibleToCreateArticle; break;
-        case 'event': isValidated = user.isEligibleToCreateEvent; break;
-        case 'note': isValidated = user.isEligibleToCreateNote; break; //not used for now nor being tested
-        case 'promo': isValidated = user.isEligibleToCreatePromo; break; //not used for now nor being tested
-        default: isValidated = true;
-      }
-    }
-    
-    return isValidated;
+  validate(loginStatus: LoginStatusType) {
+    return (loginStatus == 'loggedIn' && !this._profileService.profile.isU);
   }
-  
+
   guard() {
     this._router.navigate(['/community/feed']);
   }

@@ -48,6 +48,7 @@ import { GuardIfNewReferralIncompletedGuard } from '../guard-if-new-referral-inc
 import { PopupPostMenuComponent } from './popup-post-menu/popup-post-menu.component';
 import { ProfilePromotionComponent } from './profile-promotion/profile-promotion.component';
 import { CardNewPromoComponent } from './card-new-promo/card-new-promo.component';
+import { GuardIfUserTypeClientGuard } from './guard-if-user-type-client.guard';
 
 
 const routes: Routes = [
@@ -80,7 +81,7 @@ const routes: Routes = [
     { path: 'create', redirectTo: 'create/article' },
     // { path: 'draft', component: DraftComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
     { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
-    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], },
+    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfUserTypeClientGuard], },
     { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },
 
     { path: '', component: HomeComponent, children: [

@@ -160,7 +160,6 @@ export class ListComponent implements OnInit {
       this._sharedService.get('/social/get-followed-topics').subscribe((res: IGetFollowingTopicsResult) => {
         if(res.statusCode == 200) {
           this.user.setFollowingTopics(res.data);
-          console.log(this.user.followingTopics)
         } else {
           console.log(res.message);
         }
@@ -275,7 +274,7 @@ export class ListComponent implements OnInit {
       const query = new SocialPostSearchQuery(params).toQueryParams();
       const path = this.isFilterByFollowingOn ? 'note/get-feed' : 'note/filter';
 
-      console.log(path, query)
+      // console.log(path, query)
 
       this.isLoading = true;
       this._sharedService.get(path + query).subscribe((res: IGetSocialContentsResult) => {

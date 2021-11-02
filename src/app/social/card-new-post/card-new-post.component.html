@@ -152,23 +152,25 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
 </div>
 
 <ng-template #btnEvent>
-  <a 
+  <button 
+  type="button"
   class="btn btn-text-grey border-lg-line small px-0 px-lg-5p"
-  routerLink="/community/create/event"
+  (click)="onClickButtonEvent()"
   >
     <i iconPh="calendar"></i>
     <span>Event</span>
-  </a>
+  </button>
 </ng-template>
 
 <ng-template #btnArticle>
-  <a 
+  <button 
+  type="button"
   class="btn btn-text-grey border-lg-line small px-0 px-lg-5p"
-  routerLink="/community/create/article"
+  (click)="onClickButtonArticle()"
   >
     <i iconPh="note-text"></i>
     <span>Article</span>
-  </a>  
+  </button>  
 </ng-template>
 
 <modal

@@ -103,13 +103,14 @@ style="border: none;"
           >
         </div>     
     
-        <a 
+        <button
+        type="button"
         class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
-        routerLink="/community/create/event"
+        (click)="onClickButtonEvent()"
         >
           <i iconPh="calendar"></i>
           <span>Event</span>
-        </a>
+        </button>
  
         <button 
         type="button"
