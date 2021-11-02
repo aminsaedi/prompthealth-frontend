@@ -50,15 +50,15 @@ export class WrapperComponent implements OnInit {
     active
   })
   public bookingTab = (active) => ({
-    title: 'Booking',
+    title: 'Bookings',
     link: 'my-booking',
-    description: 'View & Reschedule your bookings',
+    description: 'View your bookings with wellness providers',
     active,
   })
   public manageBookingTab = (active) => ({
-    title: 'Manage Booking',
+    title: 'Bookings Received',
     link: 'manage-booking',
-    description: 'See & Manage bookings received',
+    description: 'View your bookings with clients',
     active,
   })
   public favouriteTab = (active) => ({

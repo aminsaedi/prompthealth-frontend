@@ -1,4 +1,11 @@
-<h4>My Bookings</h4>
+<h4>
+  <ng-container *ngIf="viewType == 'client'">
+    Bookings with wellness providers
+  </ng-container>
+  <ng-container *ngIf="viewType == 'provider'">
+    Bookings with clients
+  </ng-container>
+</h4>
 
 <section *ngIf="!bookingsAll || bookingsAll.length > 0 || !!currentSearch">
   <div class="d-flex justify-content-between align-items-center">
@@ -58,38 +65,64 @@
   
   <ul class="list-unstyled row">
     <li
-      *ngFor="let b of bookings;"
-      class="my-20p my-lg-30p col-12 col-lg-6"
-      >
-        <div class="d-flex align-items-start justify-content-between">
+    *ngFor="let b of bookings;"
+    class="my-20p my-lg-30p col-12 col-xl-6"
+    >
+      <div class="d-flex align-items-start justify-content-between">
+        <ng-container *ngIf="viewType == 'client'">
           <div class="d-inline-flex align-items-start flex-shrink-1">
-            <ng-container *ngIf="viewType == 'client'">
-              <profile-image [size]="42" [image]="b.provider.profileImage"></profile-image>
-              <div class="mx-10p">
-                <div class="subtitle2 clamp-1line">
-                  <span>{{b.provider.name}}</span>
-                  <i iconPh="verified" *ngIf="b.provider.isVerified" class="ml-5p text-primary"></i>
-                </div>
-                <div class="body2 text-label clamp-1line" style="word-break: break-all;">{{b.provider.title}}</div>
+            <profile-image [size]="42" [image]="b.provider.profileImage"></profile-image>
+            <div class="mx-10p">
+              <div class="subtitle2 clamp-1line">
+                <span>{{b.provider.name}}</span>
+                <i iconPh="verified" *ngIf="b.provider.isVerified" class="ml-5p text-primary"></i>
               </div>
-            </ng-container>
-
-            <ng-container *ngIf="viewType == 'provider'">
-              <profile-image [size]="42" [image]="b.patientProfileImage"></profile-image>
-              <div class="mx-10p">
-                <div class="subtitle2 clamp-1line">{{b.patientName}}</div>
-                <div class="body2 text-label clamp-1line" style="word-break: break-all;" [innerHTML]="b.patientEmail"></div>
+              <div class="body2 text-label">
+              {{b.createdAt | timeago}}
               </div>
-            </ng-container>
+            </div>
           </div>
           <div>
             <button 
             class="btn btn-outline small text-nowrap"
-            (click)="onclickDetail(b)"
+            (click)="onclickDetail(b, false)"
+            >See detail</button>
+          </div>  
+        </ng-container>
+
+        <ng-container *ngIf="viewType == 'provider'">
+          <div class="d-inline-flex align-items-start flex-shrink-1">
+            <div 
+            class="align-self-center"
+            style="flex: 0 0 15px"
+            >
+              <div
+              *ngIf="!b.isRead"
+              class="circle-for-unread circle-primary position-relative"
+              style="width: 7px; height: 7px;"
+              ></div>
+            </div>
+            <profile-image [size]="42" [image]="b.patientProfileImage"></profile-image>
+            <div class="mx-10p">
+              <div class="subtitle2 clamp-1line">{{b.patientName}}</div>
+              <div class="body2 text-label text-nowrap">
+                {{b.createdAt | timeago}}
+                <ng-container *ngIf="b.isUrgent">
+                  ・ 
+                  <span class="body2 text-error">Urgent</span>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button 
+            class="btn btn-outline small text-nowrap"
+            (click)="onclickDetail(b, true)"
             >See detail</button>
           </div>
-        </div>
-      </li>
+        </ng-container>
+      </div>
+    </li>
   </ul>
 </section>
 
@@ -127,7 +160,13 @@ id="booking-detail"
 >
   <ng-container *ngIf="selectedBooking">
     <ng-container *ngIf="viewType == 'client'">
-      <div class="text-right">
+      <div class="d-flex justify-content-between">
+        <button 
+        class="btn pl-0 btn-icon-error small"
+        (click)="toggleDetailDeleteMode(true)"
+        >
+          <i iconPh="trash"></i>
+        </button>  
         <button 
         class="btn pr-0 btn-icon small"
         (click)="modalBookingDetail.hide()"
@@ -145,7 +184,10 @@ id="booking-detail"
         </div>
       </div>
     
-      <div class="content-container body1 mt-40p">
+      <div
+      *ngIf="!isDetailDeleteMode" 
+      class="content-container body1 mt-40p"
+      >
         <div class="mb-20p">
           <b>Create date: </b>
           <span class="text-label">{{selectedBooking.createdAt | date : 'yyyy/MM/dd'}}</span>
@@ -155,10 +197,47 @@ id="booking-detail"
           <span *ngIf="selectedBooking.isUrgent" class="text-error">Urgent</span>
           <span *ngIf="!selectedBooking.isUrgent"class="text-label">Not urgent</span>
         </div>
+        <div class="mb-20p">
+          <b>Status: </b>
+          <span *ngIf="selectedBooking.isRead" class="text-label">Read</span>
+          <span *ngIf="!selectedBooking.isRead"class="text-label">Unread</span>
+        </div>
+
         <div>
           <div class="subtitle1">Note:</div>
-          <p class="text-label">{{selectedBooking.note}}</p>
+          <p 
+          class="text-label" 
+          style="white-space: pre-wrap;"
+          >{{selectedBooking.note}}</p>
         </div>
+      </div>
+
+      <div 
+      *ngIf="isDetailDeleteMode"
+      class="content-container body1 mt-40p text-center"
+      >
+        <h6>Are you sure to cancel this booking?</h6>
+        <div class="mt-50p d-flex justify-content-between">
+          <button 
+          class="btn btn-primary"
+          (click)="delete(selectedBooking)"
+          >Yes, cancel</button>
+          <button 
+          class="btn btn-text"
+          (click)="toggleDetailDeleteMode(false)"
+          >No</button>
+        </div>
+      </div>
+
+      <div 
+      *ngIf="isDeleting"
+      class="position-absolute px-50p pt-30p pb-20p bg-body text-center rounded-12p"
+      style="top:50%; left: 50%; transform: translate(-50%, -50%)"
+      >
+        <div class="d-inline-block">
+          <loader color="white"></loader>
+        </div>
+        <h6 class="text-white mt-20p mb-0p">Deleting</h6>
       </div>
     </ng-container>
 
@@ -220,7 +299,10 @@ id="booking-detail"
         </div>
         <div>
           <div class="subtitle1">Note:</div>
-          <p class="text-label">{{selectedBooking.note}}</p>
+          <p 
+          class="text-label" 
+          style="white-space: pre-wrap;"
+          >{{selectedBooking.note}}</p>
         </div>
       </div>
     </ng-container>
