@@ -60,7 +60,6 @@ export class PopupPostMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.post);
     this.subscription = this.post.changed().subscribe(() => {
       this._changeDetector.detectChanges();
     })

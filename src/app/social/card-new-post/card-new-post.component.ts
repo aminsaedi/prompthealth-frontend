@@ -110,6 +110,20 @@ export class CardNewPostComponent implements OnInit {
   //   if('text' in e) { }
   // }
 
+  onClickButtonArticle() {
+    if(this.user.isEligibleToCreateArticle) {
+      this._router.navigate(['/community/create/article']);
+    } else {
+      this._toastr.error('You are not eligible to create article.');
+    }
+  }
+  onClickButtonEvent() {
+    if(this.user.isEligibleToCreateEvent) {
+      this._router.navigate(['/community/create/event']);
+    } else {
+      this._toastr.error('You are not eligible to create event.');
+    }
+  }
   onClickButtonMedia() {
     if(this.audioSaved) {
       this._toastr.error('You cannot post image with voice');

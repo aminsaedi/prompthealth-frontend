@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Profile } from 'src/app/models/profile';
@@ -44,6 +45,7 @@ export class CardNewPromoComponent implements OnInit {
   constructor(
     private _profileService: ProfileManagementService,
     private _toastr: ToastrService,
+    private _router: Router,
     private _editorService: EditorService,
     private _sharedService: SharedService,
   ) { }
@@ -79,6 +81,13 @@ export class CardNewPromoComponent implements OnInit {
     this.isMoreShown = !this.isMoreShown;
   }
 
+  onClickButtonEvent() {
+    if(this.user.isEligibleToCreateEvent) {
+      this._router.navigate(['/community/create/event']);
+    } else {
+      this._toastr.error('You are not eligible to create event.');
+    }
+  }
 
   onClickButtonMedia() {
     const el = this.inputMedia.nativeElement as HTMLInputElement;
