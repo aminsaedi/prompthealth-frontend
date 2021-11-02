@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
-import { ProfileManagementService } from '../dashboard/profileManagement/profile-management.service';
 import { ISocialNotification, SocialNotification } from '../models/notification';
 import { Professional } from '../models/professional';
 import { SocialArticle } from '../models/social-article';
@@ -58,7 +57,6 @@ export class SocialService {
 
   constructor(
     private _sanitizer: DomSanitizer,
-    private _profileService: ProfileManagementService,
   ) { 
     this.postCache = new PostCache();
   }
