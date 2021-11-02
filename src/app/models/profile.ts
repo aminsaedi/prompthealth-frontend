@@ -137,11 +137,14 @@ export class Profile implements IProfile {
   }
 
   setFollowing(user: IUserDetail, countup: boolean = false) {
-    if(!this._followings) {
-      this._followings = [];
+    // do only when _followings exists.
+    if(this._followings) {
+      this._followings.push(new Profile(user));
     }
-
-    this._followings.push(new Profile(user));
+    // if(!this._followings) {
+    //   this._followings = [];
+    // }
+    // this._followings.push(new Profile(user));
 
     if(countup) {
       this.countupFollowing();

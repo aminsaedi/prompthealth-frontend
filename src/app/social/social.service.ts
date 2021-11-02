@@ -72,7 +72,7 @@ export class SocialService {
     const cache = this.postCache.dataPerTaxonomy[taxonomy];
     return cache ? cache.metadata : null;
   }
-  postOf(id: string) {
+  postOf(id: string): ISocialPost {
     const data = this.postCache.dataMap;
     if(!data) { 
       return null; 
@@ -109,6 +109,17 @@ export class SocialService {
   postsOfUser(userId: string): ISocialPost[] {
     const data = this.postCache.dataPerTaxonomy.users[userId];
     return data ? data.postdata : null;
+  }
+
+  findPostsByUserId(userId: string): ISocialPost[] {
+    const result = [];
+    for(let id in this.postCache.dataMap) {
+      const post = this.postCache.dataMap[id];
+      if(post.authorId == userId) {
+        result.push(post);
+      }
+    }
+    return result;
   }
 
   promosOfUser(userId: string): ISocialPost[] {
