@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Booking } from 'src/app/models/booking';
 import { GetQuery } from 'src/app/models/get-query';
-import { IGetBookingsResult } from 'src/app/models/response-data';
+import { IGetBookingsResult, IUpdateBookingResult } from 'src/app/models/response-data';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
@@ -56,6 +56,8 @@ export class MyBookingComponent implements OnInit {
   public isMoreBookings: boolean = true;
   public isLoading: boolean = false;
   public isPopupSortShown: boolean = false;
+  public isDetailDeleteMode: boolean = false;
+  public isDeleting: boolean = false;
 
   private countPerPage: number = 20;
 
@@ -137,8 +139,52 @@ export class MyBookingComponent implements OnInit {
     this.hidePopupSort();
   }
 
-  onclickDetail(data: Booking) {
+  onclickDetail(data: Booking, markAsRead: boolean = false) {
     this._modalService.show('booking-detail', data);
+    if(markAsRead) {
+      this.markAsRead(data);
+    }
+  }
+
+  toggleDetailDeleteMode(isDeleteMode: boolean = true) {
+    this.isDetailDeleteMode = isDeleteMode
+  }
+
+  markAsRead(data: Booking) {
+    if(data.provider._id == this.userId) {
+      data.markAsRead();
+      this._sharedService.get('booking/read/' + data._id).subscribe((res: IUpdateBookingResult) => {
+        if(res.statusCode == 200) {
+        } else {
+          console.log(res.message);
+          data.markAsUnread();
+        }
+      }, error => {
+        console.log(error);
+        data.markAsUnread();
+      })
+    }
+  }
+
+  delete(data: Booking) {
+    if(data.client._id == this.userId) {
+      this.isDeleting = true;
+      this._sharedService.deleteContent('booking/' + data._id).subscribe(() => {
+        this.isDetailDeleteMode = false;
+        this._toastr.success('The booking has been cancelled.');
+        this._modalService.hide();
+        this.bookingsAll = this.bookingsAll.filter(item => item._id != data._id);
+        this.bookings = this.bookings.filter(item => item._id != data._id);
+        this.totalBookingCount --;
+      }, error => {
+        console.log(error);
+        this._toastr.error('Something went wrong. Please try again');
+      }, () => {
+        this.isDeleting = false;
+      });
+    } else {
+      this._toastr.error('You cannot cancel the booking');
+    }
   }
 
   private timerSearch: any;

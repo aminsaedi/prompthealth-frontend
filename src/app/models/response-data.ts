@@ -77,6 +77,10 @@ export interface IGetBookingsResult extends IResponseData {
   }
 }
 
+export interface IUpdateBookingResult extends IResponseData {
+  data: IBooking;
+}
+
 export interface IGetFollowingsResult extends IResponseData {
   data: IUserDetail[];
 }
