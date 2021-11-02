@@ -1,10 +1,10 @@
 <h4>
-  <span *ngIf="viewType == 'client'">
+  <ng-container *ngIf="viewType == 'client'">
     Bookings with wellness providers
-  </span>
-  <span *ngIf="viewType == 'provider'">
+  </ng-container>
+  <ng-container *ngIf="viewType == 'provider'">
     Bookings with clients
-  </span>
+  </ng-container>
 </h4>
 
 <section *ngIf="!bookingsAll || bookingsAll.length > 0 || !!currentSearch">
@@ -65,47 +65,54 @@
   
   <ul class="list-unstyled row">
     <li
-      *ngFor="let b of bookings;"
-      class="my-20p my-lg-30p col-12 col-xl-6"
-      >
-        <div class="d-flex align-items-start justify-content-between">
+    *ngFor="let b of bookings;"
+    class="my-20p my-lg-30p col-12 col-xl-6"
+    >
+      <div class="d-flex align-items-start justify-content-between">
+        <ng-container *ngIf="viewType == 'client'">
           <div class="d-inline-flex align-items-start flex-shrink-1">
-            <ng-container *ngIf="viewType == 'client'">
-              <profile-image [size]="42" [image]="b.provider.profileImage"></profile-image>
-              <div class="mx-10p">
-                <div class="subtitle2 clamp-1line">
-                  <span>{{b.provider.name}}</span>
-                  <i iconPh="verified" *ngIf="b.provider.isVerified" class="ml-5p text-primary"></i>
-                </div>
-                <div class="body2 text-label" style="word-break: break-all;">
-                  {{b.createdAt | timeago}}
-                </div>
+            <profile-image [size]="42" [image]="b.provider.profileImage"></profile-image>
+            <div class="mx-10p">
+              <div class="subtitle2 clamp-1line">
+                <span>{{b.provider.name}}</span>
+                <i iconPh="verified" *ngIf="b.provider.isVerified" class="ml-5p text-primary"></i>
               </div>
-            </ng-container>
+              <div class="body2 text-label">
+              {{b.createdAt | timeago}}
+              </div>
+            </div>
+          </div>
+          <div>
+            <button 
+            class="btn btn-outline small text-nowrap"
+            (click)="onclickDetail(b, false)"
+            >See detail</button>
+          </div>  
+        </ng-container>
 
-            <ng-container *ngIf="viewType == 'provider'">
-              <div 
-              class="align-self-center"
-              style="flex: 0 0 15px"
-              >
-                <div
-                *ngIf="!b.isRead"
-                class="circle-for-unread circle-primary position-relative"
-                style="width: 7px; height: 7px;"
-                ></div>
+        <ng-container *ngIf="viewType == 'provider'">
+          <div class="d-inline-flex align-items-start flex-shrink-1">
+            <div 
+            class="align-self-center"
+            style="flex: 0 0 15px"
+            >
+              <div
+              *ngIf="!b.isRead"
+              class="circle-for-unread circle-primary position-relative"
+              style="width: 7px; height: 7px;"
+              ></div>
+            </div>
+            <profile-image [size]="42" [image]="b.patientProfileImage"></profile-image>
+            <div class="mx-10p">
+              <div class="subtitle2 clamp-1line">{{b.patientName}}</div>
+              <div class="body2 text-label text-nowrap">
+                {{b.createdAt | timeago}}
+                <ng-container *ngIf="b.isUrgent">
+                  ・ 
+                  <span class="body2 text-error">Urgent</span>
+                </ng-container>
               </div>
-              <profile-image [size]="42" [image]="b.patientProfileImage"></profile-image>
-              <div class="mx-10p">
-                <div class="subtitle2 clamp-1line">{{b.patientName}}</div>
-                <div class="body2 text-label text-nowrap">
-                  {{b.createdAt | timeago}}
-                  <ng-container *ngIf="b.isUrgent">
-                    ・ 
-                    <span class="body2 text-error">Urgent</span>
-                  </ng-container>
-                </div>
-              </div>
-            </ng-container>
+            </div>
           </div>
           <div>
             <button 
@@ -113,8 +120,9 @@
             (click)="onclickDetail(b, true)"
             >See detail</button>
           </div>
-        </div>
-      </li>
+        </ng-container>
+      </div>
+    </li>
   </ul>
 </section>
 
