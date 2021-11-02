@@ -151,15 +151,19 @@ export class MyBookingComponent implements OnInit {
 
     if(keyword?.length > 1) {
       const regex = new RegExp(keyword);
-      this.bookings = this.bookingsAll.filter(item => {
-        let matched: boolean = !!(
+      this.bookings = this.bookingsAll ?  this.bookingsAll.filter(item => {
+        let matched: boolean = this.viewType == 'provider' ? !!(
           item.patientName?.toLowerCase().match(regex) || 
           item.patientEmail?.toLowerCase().match(regex) || 
           item.patientNote?.toLowerCase().match(regex) || 
           item.patientPhone?.toLowerCase().match(regex)
+        ) : !!(
+          item.provider.firstName?.toLowerCase().match(regex) ||
+          item.provider.lastName?.toLowerCase().match(regex) ||
+          item.patientNote?.toLowerCase().match(regex) 
         );
         return matched;
-      });
+      }) : [];
 
       this.timerSearch = setTimeout(() => {
         this.bookingsAll = null;
