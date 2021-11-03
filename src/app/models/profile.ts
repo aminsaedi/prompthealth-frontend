@@ -1,4 +1,5 @@
 import { environment } from "src/environments/environment";
+import { IDefaultPlan } from "./default-plan";
 import { IUserDetail } from "./user-detail";
 
 export interface IProfile {
@@ -44,6 +45,8 @@ export interface IProfile {
   gender: string;
 
   eligibleCreateRecommendation: boolean;
+
+  plan: IDefaultPlan;
 }
 
 export class Profile implements IProfile {
@@ -108,6 +111,8 @@ export class Profile implements IProfile {
         true :
         false;
   }
+
+  get plan() { return this.data.plan || null;}
 
   private _profileImage: string;
   private _profileImageType: string;
