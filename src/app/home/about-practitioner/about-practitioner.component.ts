@@ -307,8 +307,7 @@ const planFeatures: IPlanFeatureData[] = [
   {item: 'Performance analytics', targetPlan: ['provider', 'centre'], detail: null},
 
   // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
-  {item: 'Display company products ', targetPlan: ['centre'], detail: null},
-  {item: 'Display company amenities', targetPlan: ['centre'], detail: null},
+  {item: 'Display company products and amenities', targetPlan: ['centre'], detail: null},
   {item: 'Enrich your profile with videos', targetPlan: ['centre'], detail: null},
   {item: 'Tag your providers', targetPlan: ['centre'], detail: null},
   {item: 'PromptHealth personal assistant for onboarding', targetPlan: ['centre'], detail: null},
