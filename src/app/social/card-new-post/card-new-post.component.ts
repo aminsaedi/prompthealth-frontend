@@ -15,6 +15,7 @@ import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { UploadObserverService } from 'src/app/shared/services/upload-observer.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
 
 @Component({
   selector: 'card-new-post',
@@ -31,6 +32,8 @@ export class CardNewPostComponent implements OnInit {
 
   get userImage(): string { return this.user ? this.user.profileImage : ''; }
   get user(): Profile { return this._profileService.profile; }
+
+  get linkToPlan(): string[] { return this.user?.role == 'P' ? ['/plans/product'] : ['/plans']; }
 
   get lengthDescription() { return this.f.description?.value?.length - 1 || 0;}
   // get isDescriptionOverLimit() { return !!(this.lengthDescription > this.maxDescription); }
@@ -76,6 +79,7 @@ export class CardNewPostComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _editorService: EditorService,
     private _uploadObserver: UploadObserverService,
+    private _modalService: ModalService,
   ) { }
 
   ngOnInit(): void {
@@ -114,14 +118,14 @@ export class CardNewPostComponent implements OnInit {
     if(this.user.isEligibleToCreateArticle) {
       this._router.navigate(['/community/create/article']);
     } else {
-      this._toastr.error('You are not eligible to create article.');
+      this._modalService.show('upgrade-plan');
     }
   }
   onClickButtonEvent() {
     if(this.user.isEligibleToCreateEvent) {
       this._router.navigate(['/community/create/event']);
     } else {
-      this._toastr.error('You are not eligible to create event.');
+      this._modalService.show('upgrade-plan');
     }
   }
   onClickButtonMedia() {
