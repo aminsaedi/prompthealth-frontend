@@ -41,6 +41,7 @@ import { AboutComponent } from "./about/about.component";
 import { AboutPractitionerComponent } from "./about-practitioner/about-practitioner.component";
 import { AboutCompanyComponent } from "./about-company/about-company.component";
 import { TagProviderComponent } from "./tag-provider/tag-provider.component";
+import { AboutPartnerComponent } from "./about-partner/about-partner.component";
 
 const routes: Routes = [
   // {
@@ -112,6 +113,8 @@ const routes: Routes = [
   { path: 'unsubscribe', redirectTo: '/'},
 
   { path: 'about', component: AboutComponent },
+  { path: 'about/partner', component: AboutPartnerComponent, },
+
   { path: 'plans', component: AboutPractitionerComponent },
   // { path: 'plans', component: SubscriptionPlanComponent },
   { path: 'plans/product', component: AboutCompanyComponent },
@@ -162,7 +165,6 @@ const routes: Routes = [
     data: {type: 'provider'},
     canActivate: [AmbassadorProgramGuardGuard],
   },
-
   { path: 'sitemaps', component: SitemapComponent},
   { path: '404', component: NotFoundComponent },
 ];
