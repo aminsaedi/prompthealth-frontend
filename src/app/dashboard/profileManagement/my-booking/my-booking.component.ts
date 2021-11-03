@@ -140,8 +140,10 @@ export class MyBookingComponent implements OnInit {
   }
 
   onclickDetail(data: Booking, markAsRead: boolean = false) {
+    this.isDetailDeleteMode = false;
     this._modalService.show('booking-detail', data);
-    if(markAsRead) {
+
+    if(markAsRead && !data.isRead) {
       this.markAsRead(data);
     }
   }
