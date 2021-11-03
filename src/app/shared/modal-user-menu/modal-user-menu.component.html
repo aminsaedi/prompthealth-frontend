@@ -160,5 +160,15 @@ id="user-menu"
       </div>
     </div>
   </div>
+
+  <a
+  *ngIf="eligibleToUpgradePlan"
+  [routerLink]="linkToPlan"
+  [replaceUrl]="true"
+  class="btn btn-primary w-100 rounded-0"
+  >
+  <i iconPh="rocket"></i>
+  <span class="ml-5p">Upgrade plan now!</span>
+  </a>
 </ng-container>
 </modal>
