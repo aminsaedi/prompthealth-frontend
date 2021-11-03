@@ -1,93 +1,92 @@
-<section class="bg-lightyellow py-50p py-lg-100p">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-12 col-md-6 col-xl-7">
-        <h6 class="text-primary mb-20p">PromptHealth Ambassador Program</h6>
-        <h2 class="h3 h2-lg text-primary-dark mb-20p">Open to the PromptHealth Community</h2>
-        <p class="mb-30p mb-lg-0p">
-          Join our mission to help people connect with holistic wellness services and solutions based on individualized needs quickly and easily. Help spread our message of the importance of personalized wellness journey with your clients.        </p>  
-      </div>
-
-      <div class="col-12 col-md-6 col-xl-5">
-        <div class="position-relative rounded-12p">
-          <img 
-          src="/assets/img/ambassador/top.jpg"
-          alt="" 
-          class="top-image-shadow rounded-12p">
-          <img src="/assets/img/ambassador/top.jpg" alt="" class="w-100 position-relative rounded-12p">
+<ng-container *ngIf="faceType == 'provider'">
+  <section class="bg-lightyellow py-50p py-lg-100p">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-12 col-md-6 col-xl-7">
+          <h6 class="text-primary mb-20p">PromptHealth Ambassador Program</h6>
+          <h2 class="h3 h2-lg text-primary-dark mb-20p">Open to the PromptHealth Community</h2>
+          <p class="mb-30p mb-lg-0p">
+            Join our mission to help people connect with holistic wellness services and solutions based on individualized needs quickly and easily. Help spread our message of the importance of personalized wellness journey with your clients.        </p>  
+        </div>
+  
+        <div class="col-12 col-md-6 col-xl-5">
+          <div class="position-relative rounded-12p">
+            <img 
+            src="/assets/img/ambassador/top.jpg"
+            alt="" 
+            class="top-image-shadow rounded-12p">
+            <img src="/assets/img/ambassador/top.jpg" alt="" class="w-100 position-relative rounded-12p">
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-<div class="text-center container">
-  <section class="my-100p">
-    <h3 class="mb-30p">Eligibility Criteria</h3>
-    <p>
-      You must be signed up as a wellness provider/center OR company on our platform.
-    </p>
   </section>
   
-  <section class="my-100p">
-    <h3 class="mb-30p">What you do</h3>
-    <p class="mb-30p">Stay engaged with the PromptHealth community:</p>
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-8">
-        <ul class="body-ambassador text-left">
-          <li class="mb-5p">
-            Recommend and endorse those you like and trust in the PromptHealth community 
-          </li>
-          <li class="mb-5p">
-            Invite your colleagues to join the PromptHealth community 
-          </li>
-          <li class="mb-5p">
-            Create content on the PromptHealth community page, and share them to your other social media accounts using the share button. 
-          </li>
-          <li class="mb-5p">
-            If sharing on Instagram, use the hashtag #PromptHealthAmbassador with your post. Make sure to tag us @prompthealth! 
-          </li>
-        </ul>  
-      </div>
-    </div>
-
-    <ng-container *ngIf="!user">
-      <div class="d-flex flex-column flex-md-row justify-content-center">
-        <a class="btn btn-outline" [routerLink]="['/plans']">Sign up as provider</a>
-        <a class="btn btn-outline mt-15p mt-md-0p ml-md-30p" [routerLink]="['/plans/product']">Sign up as company</a>
-      </div>
-    </ng-container>
-  </section>
-
-  <section class="my-100p">
-    <h3 class="mb-30p">What you get</h3>
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-8">
-        <p class="mb-30p">
-          We believe in the power of collaboration and want to help eachother out. <br><br>
-          The more engaged you are, the more rewards you get. You can keep track of your credits in your dashboards. The credits can be used towards higher tier membership and/or social media services including being featured on our podcast, an interview via Instagram live, and a custom promotional video created by our social media team. 
-        </p>
-
-        <div 
-        *ngIf="user"
-        class="d-flex flex-column d-md-block"
-        >
-          <a [routerLink]="'/dashboard/profilemanagement/my-payment'" class="btn btn-outline">
-            Check credit balance
-          </a>
-        </div>  
-      </div>
-    </div>
-  </section>
-</div>
-
-
-<div class="position-relative overflow-hidden pb-5 pt-50p">
-  <section class="container text-dark position-relative">
+  <div class="text-center container">
+    <section class="my-100p">
+      <h3 class="mb-30p">Eligibility Criteria</h3>
+      <p>
+        You must be signed up as a wellness provider/center OR company on our platform.
+      </p>
+    </section>
     
+    <section class="my-100p">
+      <h3 class="mb-30p">What you do</h3>
+      <p class="mb-30p">Stay engaged with the PromptHealth community:</p>
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+          <ul class="body-ambassador text-left">
+            <li class="mb-5p">
+              Recommend and endorse those you like and trust in the PromptHealth community 
+            </li>
+            <li class="mb-5p">
+              Invite your colleagues to join the PromptHealth community 
+            </li>
+            <li class="mb-5p">
+              Create content on the PromptHealth community page, and share them to your other social media accounts using the share button. 
+            </li>
+            <li class="mb-5p">
+              If sharing on Instagram, use the hashtag #PromptHealthAmbassador with your post. Make sure to tag us @prompthealth! 
+            </li>
+          </ul>  
+        </div>
+      </div>
+  
+      <ng-container *ngIf="!user">
+        <div class="d-flex flex-column flex-md-row justify-content-center">
+          <a class="btn btn-outline" [routerLink]="['/plans']">Sign up as provider</a>
+          <a class="btn btn-outline mt-15p mt-md-0p ml-md-30p" [routerLink]="['/plans/product']">Sign up as company</a>
+        </div>
+      </ng-container>
+    </section>
+  
+    <section class="my-100p">
+      <h3 class="mb-30p">What you get</h3>
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+          <p class="mb-30p">
+            We believe in the power of collaboration and want to help eachother out. <br><br>
+            The more engaged you are, the more rewards you get. You can keep track of your credits in your dashboards. The credits can be used towards higher tier membership and/or social media services including being featured on our podcast, an interview via Instagram live, and a custom promotional video created by our social media team. 
+          </p>
+  
+          <div 
+          *ngIf="user"
+          class="d-flex flex-column d-md-block"
+          >
+            <a [routerLink]="'/dashboard/profilemanagement/my-payment'" class="btn btn-outline">
+              Check credit balance
+            </a>
+          </div>  
+        </div>
+      </div>
+    </section>
+  </div>
+</ng-container>
 
-    <ng-container *ngIf="faceType == 'client' && ambassador">
 
+<ng-container *ngIf="faceType == 'client' && ambassador">
+  <div class="position-relative overflow-hidden pb-5 pt-50p">
+    <section class="container text-dark position-relative">
       <div class="d-flex justify-content-center">
         <div>
           <a [routerLink]="['/practitioners', practitionerId]">
@@ -112,7 +111,7 @@
       <h2 class="h4 h2-md text-gradient-blue my-5 text-center">
         Invites you to check out PromptHealth, your personalised health concierge
       </h2>
-
+  
       <div class="my-5 py-4 text-center">
         <a class="btn btn-primary" [routerLink]="['/']" (click)="countup()">
           Get Started
@@ -154,12 +153,7 @@
           </p>
         </li>
       </ul>
-    </ng-container>
-  </section>
-
-  <div class="canvas heightH-100 w-100 position-absolute">
-    <img class="object-3" src="/assets/img/ambassador-left-bottom.png">
-    <img class="object-2" src="/assets/img/ambassador-right.png">
-    <img *ngIf="faceType == 'provider'" class="object-1 d-none d-md-block" src="/assets/img/ambassador-people.png">
+  
+    </section>
   </div>
-</div>
+</ng-container>

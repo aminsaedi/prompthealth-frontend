@@ -62,6 +62,7 @@ import { FaqItemComponent } from './_elements/faq-item/faq-item.component';
 import { TablePlanFeatureComponent } from './_elements/table-plan-feature/table-plan-feature.component';
 import { AboutCompanyComponent } from './about-company/about-company.component';
 import { TagProviderComponent } from './tag-provider/tag-provider.component';
+import { AboutPartnerComponent } from './about-partner/about-partner.component';
 
 
 @NgModule({
@@ -116,6 +117,7 @@ import { TagProviderComponent } from './tag-provider/tag-provider.component';
     TablePlanFeatureComponent,
     AboutCompanyComponent,
     TagProviderComponent,
+    AboutPartnerComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [
