@@ -311,6 +311,7 @@ const planFeatures: IPlanFeatureData[] = [
   {item: 'Display company amenities', targetPlan: ['centre'], detail: null},
   {item: 'Enrich your profile with videos', targetPlan: ['centre'], detail: null},
   {item: 'Tag your providers', targetPlan: ['centre'], detail: null},
+  {item: 'PromptHealth personal assistant for onboarding', targetPlan: ['centre'], detail: null},
 ];
 
 const faqs: IFAQItem[] = [
