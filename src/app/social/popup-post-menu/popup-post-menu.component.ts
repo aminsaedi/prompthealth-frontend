@@ -1,3 +1,6 @@
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { EditorService } from '../editor.service';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -20,6 +23,10 @@ export class PopupPostMenuComponent implements OnInit {
 
   get eligibleToShowPostMenu() {
     return this.post && this.user;
+  }
+
+  get eligibleToEdit() {
+    return this.eligibleToDelete && (this.post.isArticle || this.post.isEvent);
   }
 
   get eligibleToDelete() {
@@ -48,6 +55,9 @@ export class PopupPostMenuComponent implements OnInit {
 
   constructor(
     private _modalService: ModalService,
+    private _editorService: EditorService,
+    private _router: Router,
+    private _location: Location,
     private _profileService: ProfileManagementService,
     private _changeDetector: ChangeDetectorRef,
     private _sharedService: SharedService,
@@ -72,6 +82,25 @@ export class PopupPostMenuComponent implements OnInit {
     this._changeDetector.detectChanges();
   }
 
+
+  editContent(e: Event) {
+    this.hidePopup(e);
+    this._editorService.setData(this.post.decode());
+    this.markCurrentPosition();
+
+    const route = 
+      this.post.isArticle ?  ['/community/editor/article', this.post._id] :
+      this.post.isEvent ? ['/community/editor/event', this.post._id] :
+      this.post.isNote ? ['community/editor/note', this.post._id] : 
+      ['community/editor/article', this.post._id];
+
+    this._router.navigate(route);
+  }
+
+  markCurrentPosition() {
+    this._location.replaceState(this._location.path() + '#' + this.post._id);
+  }
+  
   hidePopup(e: Event) {
     e.stopPropagation();
     e.preventDefault();

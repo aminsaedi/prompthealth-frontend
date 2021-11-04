@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { validators } from '../_helpers/form-settings';
 import { Profile } from '../models/profile';
-import { formatStringToDate } from '../_helpers/date-formatter';
+import { formatDateToDateTimeData, formatDateToString, formatStringToDate, formatStringToDateTimeData } from '../_helpers/date-formatter';
 import { ISocialPost } from '../models/social-post';
 
 
@@ -12,8 +12,11 @@ import { ISocialPost } from '../models/social-post';
 export class EditorService {
 
   get isEditorLocked() { return this.editorLocked; }
+  get existsData() { return !!this._originalData; }
+  get originalData() { return this._originalData; }
   get form() { return this._form; }
   
+  private _originalData: ISocialPost;
   private editorLocked: boolean = false;
   private _form: FormGroup;
   private editorType: ISocialPost['contentType'];
@@ -21,9 +24,9 @@ export class EditorService {
 
   constructor() { }
 
-  // this function should dispose form data. (reset is not enough.)
   dispose() {
-    this.resetForm();
+    this._form = null;
+    this._originalData = null;
     this.unlockEditor();
   }
 
@@ -54,45 +57,58 @@ export class EditorService {
     }
   }
 
+  setData(data: ISocialPost) {
+    this._originalData = data;
+  }
+
   init(type: ISocialPost['contentType'], profile: Profile): FormGroup {
     this.unlockEditor();
     this.editorType = type;
     this.userId = profile._id;
 
+    const d: ISocialPost = this._originalData;
+    
     if (type == 'EVENT') {
+      const startTime = d && d.eventStartTime ? formatDateToString(new Date(d.eventStartTime)) : null;
+      const endTime = d && d.eventEndTime ? formatDateToString(new Date(d.eventEndTime)) : null;
+
       this._form = new FormGroup({
-        status: new FormControl('DRAFT'),
+        status: new FormControl(d ? d.status : 'DRAFT'),
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        title: new FormControl(null, validators.savePostTitle),
-        description: new FormControl(null),
-        image: new FormControl(null),
+        title: new FormControl(d ? d.title : null, validators.savePostTitle),
+        description: new FormControl(d ? d.description || '' : ''),
+        image: new FormControl(d ? d.image || '' : ''),
 
-        eventStartTime: new FormControl(null),  // set validator later
-        eventEndTime: new FormControl(null),  // set validator later
-        eventType: new FormControl('ONLINE'),
-        joinEventLink: new FormControl(null),  // set validator later
-        eventAddress: new FormControl(null),
-        tags: new FormControl([], validators.topics),
+        eventStartTime: new FormControl(startTime),  // set validator later
+        eventEndTime: new FormControl(endTime),  // set validator later
+        eventType: new FormControl(d? d.eventType : 'ONLINE'),
+        joinEventLink: new FormControl(d ? d.joinEventLink || '' : ''),  // set validator later
+        eventAddress: new FormControl(d ? d.eventAddress || '' : ''),
+        tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
       });  
     } else if (type == 'ARTICLE') {
       this._form = new FormGroup({
-        status: new FormControl('DRAFT'),
+        status: new FormControl(d ? d.status : 'DRAFT'),
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        title: new FormControl(null, validators.savePostTitle),
-        description: new FormControl(null), // set validator later
-        image: new FormControl('', ),
-        tags: new FormControl([], validators.topics),
-      })
+        title: new FormControl(d ? d.title : null, validators.savePostTitle),
+        description: new FormControl(d ? d.description : null), // set validator later
+        image: new FormControl(d ? d.image || '' : ''),
+        tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
+      });
     } else if (type == 'NOTE') {
       this._form = new FormGroup({
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        description: new FormControl(null, validators.noteDescription),
-        images: new FormControl(), // TODO: need change to FormArray in ver2.1
-        voice: new FormControl(),
-        tags: new FormControl([], validators.topics),
+        description: new FormControl(d ? d.description : null),
+
+        // value type: string (path in S3 | blob)
+        images: new FormControl(d?.images?.length > 0 ? d.images[0] : null), 
+
+        // value type: string (path in S3 | AudioData)
+        voice: new FormControl(d?.voice ? d.voice : null),
+        tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
       }, validators.note);
     } else if (type =='PROMO') {
       this._form = new FormGroup({
@@ -103,7 +119,7 @@ export class EditorService {
         availableUntil: new FormControl(null, validators.promoExpireDate),
         images: new FormControl(), // TODO: need change to FormArray in ver2.1
         link: new FormControl('', validators.promoLink),
-        tags: new FormControl([], validators.topics),
+        tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
       });
     }
 
@@ -156,6 +172,8 @@ export class EditorService {
       f.joinEventLink.updateValueAndValidity();  
       f.eventAddress.updateValueAndValidity();
     }
+
+    // note doesn't have to change validation because it doesn't have status DRAFT
   }
 }
 
@@ -199,11 +217,11 @@ export class SaveQuery implements ISaveQuery {
   get eventEndTime() { return this.data.eventEndTime ? formatStringToDate(this.data.eventEndTime as string) : null; }
   get eventType() { return this.data.eventType || 'ONLINE'; }
   get joinEventLink() { return this.data.joinEventLink || null; }
-  get eventAddress() { return this.data.eventAddress || null; }
+  get eventAddress() { return this.data.eventType == 'OFFLINE' && this.data.eventAddress ? this.data.eventAddress : null; }
   
-  get image() { return this.data.image || ''; }
+  get image() { return this.data.image || null; }
   get images() { return this.data.images || []; }
-  get voice() { return this.data.voice || ''; }
+  get voice() { return this.data.voice || null; }
 
   get availableUntil() { return this.data.availableUntil || null; }
   get promo() { return this.data.promo || null; }
@@ -214,22 +232,29 @@ export class SaveQuery implements ISaveQuery {
       contentType: this.contentType,
       authorId: this.authorId,
 
+      description: this.description,
+      tags: this.tags,
+
       ... (this._id) && {_id: this._id},
-      ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {status: this.status}, 
 
-      ... (this.title) && {title: this.title},
-      ... (this.description) && {description: this.description},
-      ... (this.image) && {image: this.image},
-      ... (this.images.length > 0) && {images: this.images},
-      ... (this.voice) && {voice: this.voice},
+      ... (this.contentType == 'NOTE') && {
+        images: this.images,
+        voice: this.voice,
+      },
+      
+      ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {
+        status: this.status,
+        image: this.image,
+        title: this.title,
+      }, 
 
-      ... (this.tags.length > 0) && {tags: this.tags},
-
-      ... (this.eventType && this.contentType == 'EVENT') && {eventType: this.eventType},
-      ... (this.joinEventLink) && {joinEventLink: this.joinEventLink},
-      ... (this.eventStartTime) && {eventStartTime: this.eventStartTime},
-      ... (this.eventEndTime) && {eventEndTime: this.eventEndTime},
-      ... (this.eventAddress) && {eventAddress: this.eventAddress},
+      ... (this.contentType == 'EVENT') && {
+        eventType: this.eventType,
+        joinEventLink: this.joinEventLink,
+        eventStartTime: this.eventStartTime,
+        eventEndTime: this.eventEndTime,
+        eventAddress: this.eventAddress,
+      },
 
       ... (this.availableUntil) && {availableUntil: this.availableUntil},
       ... (this.promo) && {promo: this.promo},

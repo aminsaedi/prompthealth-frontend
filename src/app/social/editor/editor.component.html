@@ -1,25 +1,45 @@
-<form (ngSubmit)="publish()">
+<form 
+*ngIf="form"
+(ngSubmit)="publish()"
+>
   <div class="container-fluid container-md">
     <div class="row justify-content-center">
       <div class="col-12 col-lg-9 col-xl-8">
         <div class="bg-white pt-15p px-15p pt-md-20p px-md-20p editor-container">
           <div class="d-flex justify-content-between align-items-center mb-20p">
             <h5 class="mb-0">
-              <span *ngIf="isEvent">Create an event</span>
-              <span *ngIf="isArticle">Write an article</span>
+              <span *ngIf="isEvent">
+                <ng-container *ngIf="!isEditMode">Create </ng-container>
+                <ng-container *ngIf="isEditMode">Edit </ng-container>
+                an event
+              </span>
+              <span *ngIf="isArticle">
+                <ng-container *ngIf="!isEditMode">Write </ng-container>
+                <ng-container *ngIf="isEditMode">Edit </ng-container>
+                an article
+              </span>
+
+              <span *ngIf="isNote">
+                <ng-container *ngIf="!isEditMode">Write </ng-container>
+                <ng-container *ngIf="isEditMode">Edit </ng-container>
+                a note
+              </span>
             </h5>
             <button 
             class="btn btn-text-body small px-0"
             type="button"
-            (click)="onClickCancel()"
+            (click)="goback()"
             >Cancel</button>
           </div>
-          <div class="cover-image-container cursor-pointer overflow-hidden">
+          <div 
+          *ngIf="isArticle || isEvent"
+          class="cover-image-container cursor-pointer overflow-hidden"
+          >
             <div *ngIf="imagePreview">
               <img [src]="imagePreview" class="cover-image">
               <button 
               class="btn btn-icon-body small blur p-5p btn-remove-image"
-              (click)="onClickButtonRemoveMedia()"
+              (click)="onClickButtonRemoveCoverImage()"
               >
                 <i iconPh="cross"></i>
               </button>  
@@ -44,7 +64,10 @@
             </div>  
           </div>        
         
-          <div class="mt-15p">
+          <div 
+          *ngIf="isArticle || isEvent"
+          class="mt-15p"
+          >
             <label class="subtitle2 text-label">
               <span *ngIf="isEvent">Event name</span>
               <span *ngIf="isArticle">Main title</span>
@@ -66,7 +89,10 @@
             </div>
           </div>
             
-          <div class="mt-15p" *ngIf="isEvent">
+          <div 
+          *ngIf="isEvent"
+          class="mt-15p" 
+          >
             <div class="row">
               <div class="col-12 col-md">
                 <label class="subtitle2 text-label">Start at</label>
@@ -96,7 +122,7 @@
             <label class="subtitle2 text-label">Description</label>
             <div 
             class="form-control description"
-            [ngClass]="{'simple': isEvent, 'rich': isArticle, 'error': (isSubmitted && f.description.invalid), 'success': (isSubmitted && f.description.valid)}"
+            [ngClass]="{'simple': (isEvent || isNote) , 'rich': isArticle, 'error': (isSubmitted && f.description.invalid), 'success': (isSubmitted && f.description.valid)}"
             >
               <quill-editor
               [styles]="{minHeight: (isArticle ? '360px' : '72px'), border: 'none'}"
@@ -190,10 +216,83 @@
             </div>
           </ng-container>
 
+          <ng-container *ngIf="isNote">
+            <div *ngIf="imagesPreview || audioPreview" class="d-flex overflow-auto mb-15p">
+              <ul 
+              *ngIf="imagesPreview.length > 0" 
+              class="list-unstyled mb-0 d-flex"
+              >
+                <li 
+                *ngFor="let image of imagesPreview; let i = index;"
+                class="position-relative overflow-hidden rounded-4p mr-10p"
+                >
+                  <img [src]="image" alt="" height="100" width="auto">
+                  <button
+                  type="button"
+                  class="btn btn-icon-body small blur p-5p btn-remove-media"
+                  (click)="onClickButtonRemoveMediaOf(i)"
+                  >
+                    <i iconPh="cross"></i>
+                  </button>    
+                </li>
+              </ul>
+              
+              <div 
+              *ngIf="isLoadingVoice"
+              class="m-15p"
+              >
+                <loader></loader>
+              </div>
+
+              <div *ngIf="audioPreview"
+              class="position-relative d-inline-block border border-line rounded-4p preview-file"
+              (click)="onClickButtonAudio()"
+              >
+                <i iconPh="mic" class="icon-file-type"></i>
+                <button 
+                type="button"
+                class="btn btn-icon-body small blur p-5p btn-remove-media"
+                (click)="onClickButtonRemoveAudio()"
+                >
+                  <i iconPh="cross"></i>
+                </button>  
+              </div>
+            </div>
+
+            <div class="d-flex">
+              <div>
+                <button 
+                type="button"
+                class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
+                (click)="onClickButtonMedia()"
+                >
+                  <i iconPh="image-3"></i>
+                  <span class="d-none d-lg-inline">Media</span>
+                </button>
+                <input #inputMedia
+                class="position-absolute d-none"
+                type="file" 
+                accept="image/jpeg, image/png" 
+                (change)="onSelectMedia($event)"
+                >
+              </div>     
+          
+              <button
+              type="button" 
+              class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
+              (click)="onClickButtonAudio()"
+              >
+                <i iconPh="mic"></i>
+                <span class="d-none d-lg-inline">Voice</span>
+              </button>
+            </div>
+          </ng-container>
+
           <div class="mt-30p">
             <label class="subtitle2 text-label">Select topics</label>
             <form-item-service
             #formItemService
+            [data]="f.tags.value"
             [option]="{showInlineWhenEnabled: true}"
             (changeValue)="onChangeTags($event)"
             ></form-item-service>
@@ -204,22 +303,25 @@
           </div>
 
           <div class="mt-25p text-right sticky-bottom pb-30p button-bottom-group blur">
-            <div class="d-flex justify-content-end">
-              <!-- <button
+            <div 
+            class="d-flex"
+            [ngClass]="!!isPublished ? 'justify-content-end' : 'justify-content-between'"
+            >
+              <button
+              *ngIf="!isPublished"
               type="button"
               class="btn btn-outline"
               (click)="saveAsDraft()"
               [disabled]="isUploading"
               >
-                <span *ngIf="f.status.value == 'DRAFT'">Save as draft</span>
-                <span *ngIf="f.status.value != 'DRAFT'">Make private</span>
-              </button> -->
+                <span>Save as draft</span>
+              </button>
 
               <input 
               type="submit" 
               class="btn btn-primary" 
               [disabled]="isUploading"
-              [value]="f.status.value == 'DRAFT' ? 'Publish' : 'Update'"
+              [value]="isPublished ? 'Update' : 'Publish'"
               >
             </div>
           </div>
@@ -243,3 +345,8 @@ class="modal-view"
     </div>
   </div>
 </div>
+
+<modal-voice-recorder
+[audioData]="audioPreview"
+(onSave)="onAudioSaved($event)"
+></modal-voice-recorder>

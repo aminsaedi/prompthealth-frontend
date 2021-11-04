@@ -1,4 +1,5 @@
 import { Location } from '@angular/common';
+import { HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,16 +8,19 @@ import { ToastrService } from 'ngx-toastr';
 import Quill from 'quill';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
+import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString, formatStringToDate } from 'src/app/_helpers/date-formatter';
 import { environment } from 'src/environments/environment';
 import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
+import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.component';
+import { SocialService } from '../social.service';
 
 @Component({
   selector: 'app-editor',
@@ -25,11 +29,23 @@ import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 })
 export class EditorComponent implements OnInit {
 
-
+  get form() { return this._editorService.form; }
   get f() {return this._editorService.form.controls; }
   get isEvent() { return this.editorType == 'EVENT'; }
   get isArticle() { return this.editorType == 'ARTICLE'; }
+  get isNote() { return this.editorType == 'NOTE'; }
   get user() { return this._profileService.profile; }
+  get isEditMode() { return this._editorService.existsData; }
+  get isPublished(): boolean { 
+    const status = this._editorService.originalData ? this._editorService.originalData.status : 'DRAFT';
+    return status == 'APPROVED' || status == 'HIDDEN';
+  }
+
+  get imagePreview() {
+    return this._imagePreview ? this._imagePreview :
+     this.form && this.f.image.value && typeof this.f.image.value == 'string' ? this._s3 + this.f.image.value : 
+      null;
+  }
 
   @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
     if(this._editorService.isEditorLocked) {
@@ -37,7 +53,7 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  public imagePreview: string | ArrayBuffer;
+  public _imagePreview: string | ArrayBuffer;
 
   public description: string;
   public formCheckboxOnlineEvent: FormControl;
@@ -48,14 +64,19 @@ export class EditorComponent implements OnInit {
   private contentEditor: Quill;
 
   public isSubmitted: boolean = false;
+  public isLoadingVoice: boolean = false;
   public isUploading: boolean = false;
+
   public minDateTimeEventStart: DateTimeData;
   public minDateTimeEventEnd: DateTimeData;
+
+  public audioPreview: AudioData = null;
+  public imagesPreview: (string|ArrayBuffer)[] = [];
 
   private _s3 = environment.config.AWS_S3;
   private subscriptionLoginStatus: Subscription;
 
-  // @ViewChild('inputMedia') private inputMedia: ElementRef;
+  @ViewChild('inputMedia') private inputMedia: ElementRef;
   @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
 
   constructor(
@@ -68,15 +89,15 @@ export class EditorComponent implements OnInit {
     private _headerService: HeaderStatusService,
     private _toastr: ToastrService,
     private _uService: UniversalService,
+    private _socialService: SocialService,
+    private _modalService: ModalService,
   ) { }
 
   ngOnDestroy() {
-    this._editorService.unlockEditor();
+    this._editorService.dispose();
     this._headerService.showHeader();
 
-    if(this.subscriptionLoginStatus) {
-      this.subscriptionLoginStatus.unsubscribe();
-    }
+    this.subscriptionLoginStatus?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -90,33 +111,33 @@ export class EditorComponent implements OnInit {
       switch(data.type) {
         case 'article': this.editorType = 'ARTICLE'; break;
         case 'event': this.editorType = 'EVENT'; break;
-        default: this.editorType = null; 
+        default: this.editorType = null;
       }
 
       this._editorService.init(
         this.editorType, 
         this.user,
       );
+
+      const isOnline = this.f.eventType ? this.f.eventType.value == 'ONLINE' : false;
+      this.formCheckboxOnlineEvent = new FormControl(isOnline);
+  
+      const now = new Date();
+      this.minDateTimeEventStart = {
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+        hour: now.getHours() + 1,
+        minute: 0,
+      }
+      this.minDateTimeEventEnd = {
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+        hour: now.getHours() + 2,
+        minute: 0
+      }  
     });
-
-    const now = new Date();
-    this.minDateTimeEventStart = {
-      year: now.getFullYear(),
-      month: now.getMonth() + 1,
-      day: now.getDate(),
-      hour: now.getHours() + 1,
-      minute: 0,
-    }
-    this.minDateTimeEventEnd = {
-      year: now.getFullYear(),
-      month: now.getMonth() + 1,
-      day: now.getDate(),
-      hour: now.getHours() + 2,
-      minute: 0
-    }
-
-    this.formCheckboxOnlineEvent = new FormControl(true);
-
   }
 
   observeLoginStatus() {
@@ -128,7 +149,7 @@ export class EditorComponent implements OnInit {
     });
   }
 
-  onClickCancel() {
+  goback() {
     const state = this._location.getState() as any;
     if(state.navigationId == 1) {
       this._router.navigate(['/community/feed']);
@@ -150,7 +171,7 @@ export class EditorComponent implements OnInit {
         const reader = new FileReader();
         reader.readAsDataURL(image.file);
         reader.onloadend = () => {
-          this.imagePreview = reader.result;
+          this._imagePreview = reader.result;
         }
       } catch(err){
         console.log(err);
@@ -159,8 +180,8 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  onClickButtonRemoveMedia() {
-    this.imagePreview = null;
+  onClickButtonRemoveCoverImage() {
+    this._imagePreview = null;
     this.f.image.setValue(null);
   }
 
@@ -249,8 +270,54 @@ export class EditorComponent implements OnInit {
     this.f.eventType.setValue(online ? 'ONLINE' : 'OFFLINE');
   }
 
+  onClickButtonMedia() {
+    const el = this.inputMedia.nativeElement as HTMLInputElement;
+    if(el) {
+      el.click();
+    }
+  }
   onChangeTags(ids: string[]) {
     this.f.tags.setValue(ids);
+  }
+
+  onClickButtonAudio() {
+    this._modalService.show('audio-recorder');
+  }
+
+  async onSelectMedia(e: Event){
+    const files = (e.target as HTMLInputElement).files;
+    if(files && files.length > 0){
+      let image: {file: File | Blob, filename: string};
+
+      try { 
+        image = await this._sharedService.shrinkImageByFixedWidth(files[0], 800);
+        this.f.images.setValue(image);
+
+        const reader = new FileReader();
+        reader.readAsDataURL(image.file);
+        reader.onloadend = () => {
+          this.imagesPreview = [reader.result];
+        }
+      } catch(err){
+        console.log(err);
+        return;
+      }
+    }
+  }
+
+  onClickButtonRemoveMediaOf(i: number) {
+    this.imagesPreview.splice(i,1);
+  }
+
+  onClickButtonRemoveAudio() {
+    this.audioPreview = null;
+    this.f.voice.setValue(null);
+    this._editorService.lockEditor();
+  }
+
+  onAudioSaved(data: AudioData) {
+    this.audioPreview = data;
+    this.f.voice.setValue(data ? {file: data.file, filename: data.filename} : null);
   }
 
   /** trigger when editor tool bar is sticked to top */
@@ -262,78 +329,111 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  saveAsDraft() {
-    this.save('DRAFT');
-  }
-
-  publish() {
-    this.save('APPROVED')
-  }
-
-  async save(status: ISocialPost['status']) {
-    this.isSubmitted = true;
-    this._editorService.format();
-
-    const publish = status == 'DRAFT' ? false : true;
-    this.f.status.setValue(publish ? 'APPROVED' : 'DRAFT');
-    this._editorService.validate(publish);
-
-    const form = this._editorService.form;   
-    if(form.invalid) {
-      this._toastr.error('There are several items that require your attention.');
-      return;
-    }
-
-    this.isUploading = true;
-
-    let imageUploaded = false;
+  async saveAsDraft() {
     try {
-      await this.uploadImagesIfNeeded();
-      imageUploaded = true;
+      const data = await this.save('DRAFT');
+      this._toastr.success('Saved as draft successfully');
+
+      this._editorService.setData(data);
+      this._editorService.unlockEditor();
     } catch(error) {
+      this._toastr.error(error);
+    }
+  }
+  
+
+  async publish() {
+    try {
+      const data = await this.save('APPROVED');
+      this._toastr.success(this.isPublished ? 'Updated successfully' : 'Published successfully');
+      
+      this._editorService.dispose();
+      this._socialService.updateCacheSingle(data);
+      this.goback();
+    } catch (error) {
       console.log(error);
-      this._toastr.error('Could not upload media. Please try later');
-      this.isUploading = false;
+      this._toastr.error(error);
     }
-    if(!imageUploaded) {
-      return false;
-    }
+  }
 
-    const data: ISaveQuery = form.value;
-    data.status = status;
-    const payload: ISaveQuery = new SaveQuery(data).toJson();
-
-    // const req =  this.post ? this._sharedService.put(data, `blog/update/${this.post._id}`) : this._sharedService.post(data, 'blog/create');
-    const req =  this._sharedService.post(payload, 'blog/create');
-    req.subscribe((res: any) => {
-      this.isUploading = false;
-      if(res.statusCode === 200) {
-        this.isSubmitted = false;
-
-        if(status == 'APPROVED') {
-          this._toastr.success('Published successfully');
-        } else if (status == 'DRAFT') {
-          this._toastr.success('Saved as draft successfully');
-        }
-        this._editorService.resetForm();
-        this.imagePreview = null;
-        this.formItemService.deselectAll();
-        this.formCheckboxOnlineEvent.setValue(true);
-        this._editorService.unlockEditor();
-      } else {
-        this._toastr.error(res.message);
+  save(status: ISocialPost['status']): Promise<ISocialPost> {
+    return new Promise(async (resolve, reject) => {
+      this.isSubmitted = true;
+      this._editorService.format();
+      this._editorService.validate( status == 'DRAFT' ? false : true );
+  
+      const form = this._editorService.form;   
+      if(form.invalid) {
+        reject('There are several items that require your attention.');
+        return;
       }
-    }, (err) => {
-      console.log(err);
-      this.isUploading = false;
-      this._toastr.error(err);
+  
+      this.isUploading = true;
+  
+      let imageUploaded = false;
+      try {
+        await this.uploadImagesIfNeeded();
+        imageUploaded = true;
+      } catch(error) {
+        console.log(error);
+        this.isUploading = false;
+        reject('Could not upload media. Please try later');
+      }
+      if(!imageUploaded) {
+        return false;
+      }
+  
+      const data: ISaveQuery = form.value;
+      data.status = status;
+  
+      const payload: ISaveQuery = new SaveQuery(data).toJson();
+      const req = this.isNote ? this._sharedService.put(
+        payload, 
+        this.isEditMode ? `note/update/${this._editorService.originalData._id}` : `note/create`
+      ) :
+        this.isEditMode ? this._sharedService.put(payload, `blog/update/${this._editorService.originalData._id}`) : 
+        this._sharedService.post(data, 'blog/create');
+  
+      req.subscribe((res: IContentCreateResult) => {
+        this.isUploading = false;
+        if(res.statusCode === 200) {
+          this.isSubmitted = false;
+  
+          if(status == 'APPROVED') {
+            // this._imagePreview = null;
+            // this.formItemService.deselectAll();
+            // this.formCheckboxOnlineEvent.setValue(true);
+          
+            // this._toastr.success( this.isPublished ? ' Updated sccessfully' : 'Published successfully');
+          } else if(status == 'DRAFT') {
+            // this._editorService.setData(res.data);
+          };
+
+          resolve(res.data);
+  
+        } else {
+          reject(res.message);
+        }
+      }, (err) => {
+        console.log(err);
+        this.isUploading = false;
+        reject(err);
+      });
     });
   }
 
   uploadImagesIfNeeded(): Promise<void> {
     return new Promise( async (resolve, reject) => {
       const images = [];
-      if(this.f.image.value && typeof this.f.image.value != 'string') {
+      if(this.f.voice?.value && typeof this.f.voice.value != 'string') {
+        images.push(this.f.voice.value);
+      }
+
+      if(this.f.images?.value && typeof this.f.voice.value != 'string') {
+        images.push(this.f.images.value);
+      }
+
+      if(this.f.image?.value && typeof this.f.image.value != 'string') {
         images.push(this.f.image.value);
       }
 
@@ -358,10 +458,21 @@ export class EditorComponent implements OnInit {
           if(res.statusCode === 200) {
             const images = (typeof res.data == 'string') ? [res.data] : res.data;
 
-            if(typeof this.f.image.value != 'string') {
+            if(this.f.voice?.value && typeof this.f.voice.value != 'string') {
+              this.f.voice.setValue(images[0]);
+              images.splice(0,1);
+            }
+
+            if(this.f.images?.value && typeof this.f.images.value != 'string') {
+              this.f.images.setValue(images[0]);
+              images.splice(0,1);
+            }
+
+            if(this.f.image?.value && typeof this.f.image.value != 'string') {
               this.f.image.setValue(images[0]);
               images.splice(0,1);
             }
+
             if(matchImages && matchImages.length > 0) {
               matchImages.forEach((match, i) => {
                 desc = desc.replace(match, `<img src="${this._s3 + images[i]}">`);

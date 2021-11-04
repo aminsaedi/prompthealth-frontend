@@ -10,4 +10,10 @@ export class SocialNote extends SocialPostBase implements ISocialPost {
     
     this._images = data.images ? data.images.map(image => this._s3 + image) : [];
   }
+
+  updateWith(data: ISocialPost) {
+    super.updateWith(data);
+    this.data.voice = data.voice;
+    this._images = data.images ? data.images.map(image => this._s3 + image) : [];
+  }
 }

@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax } from 'src/app/_helpers/form-settings';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -15,6 +14,7 @@ import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { UploadObserverService } from 'src/app/shared/services/upload-observer.service';
+import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 
 @Component({
@@ -38,12 +38,11 @@ export class CardNewPostComponent implements OnInit {
   get lengthDescription() { return this.f.description?.value?.length - 1 || 0;}
   // get isDescriptionOverLimit() { return !!(this.lengthDescription > this.maxDescription); }
 
-  safeResourceUrlOf(url: string): SafeResourceUrl { return this._sanitizer.bypassSecurityTrustUrl(url); }
-
   public isMoreShown: boolean = false;
   public isEditorFocused: boolean = false;
   public imagePreview: string | ArrayBuffer;
   public audioSaved: AudioData =  null;
+  public audioData: AudioData = null;
 
   public isSubmitted: boolean = false;
   public isUploading: boolean = false;
@@ -51,20 +50,7 @@ export class CardNewPostComponent implements OnInit {
   // public lengthDescription = 0;
   public maxDescription = minmax.noteMax;
 
-  /** AUDIO RECORDER START */
-  public isAudioRecording: boolean = false;
-  public isAudioRecorderBusy: boolean = false;
-  public isAudioPlaying: boolean = false;
-  public timeAudioPlayCurrent: number = 0; //unit: ms;
-  public timeAudioRecordingRemaining: number = 0; //unit: s;
-  public percentAudioPlayCurrent: number = 0;
-  public recorder: any;
-  public audioData: AudioData = null;
-  /** AUDIO RECORDER END */
-
   @ViewChild('inputMedia') private inputMedia: ElementRef;
-  @ViewChild('audioPlayer') private audioPlayer: ElementRef;
-  @ViewChild('modalAudioRecorder') private modalAudioRecorder: ModalComponent;
   @ViewChild('editor') private editor: ElementRef;
   @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
 
@@ -73,7 +59,6 @@ export class CardNewPostComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
-    private _sanitizer: DomSanitizer,
     private _profileService: ProfileManagementService,
     private _audioRecorder: AudioRecordService,
     private _changeDetector: ChangeDetectorRef,
@@ -84,30 +69,6 @@ export class CardNewPostComponent implements OnInit {
 
   ngOnInit(): void {
     this._editorService.init('NOTE', this.user);
-
-    this._audioRecorder.recordingFailed().subscribe((message) => {
-      this.onAudioRecordingFaild(message);
-    });
-
-    this._audioRecorder.recordingStarted().subscribe(() => {
-      this.onAudioRecordingStarted();
-    });
-
-    this._audioRecorder.timerRecording().subscribe((seconds) => {
-      this.onTimerAudioRecordingChanged(seconds);
-    })
-
-    this._audioRecorder.recordingDone().subscribe((data) => {
-      this.onAudioRecordingDone(data);
-    });
-
-    this._audioRecorder.processingStarted().subscribe(() => {
-      this.isAudioRecorderBusy = true;
-    });
-
-    this._audioRecorder.processingDone().subscribe(() => {
-      this.isAudioRecorderBusy = false;
-    });
   }
 
   // onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
@@ -116,14 +77,14 @@ export class CardNewPostComponent implements OnInit {
 
   onClickButtonArticle() {
     if(this.user.isEligibleToCreateArticle) {
-      this._router.navigate(['/community/create/article']);
+      this._router.navigate(['/community/editor/article']);
     } else {
       this._modalService.show('upgrade-plan');
     }
   }
   onClickButtonEvent() {
     if(this.user.isEligibleToCreateEvent) {
-      this._router.navigate(['/community/create/event']);
+      this._router.navigate(['/community/editor/event']);
     } else {
       this._modalService.show('upgrade-plan');
     }
@@ -172,7 +133,7 @@ export class CardNewPostComponent implements OnInit {
     }
 
     this.audioData = this.audioSaved ? this.audioSaved.copy() : null;
-    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {modal: 'audio-recorder'}});
+    this._modalService.show('audio-recorder');
   }
 
   onClickButtonRemoveAudio(e: Event) {
@@ -180,16 +141,6 @@ export class CardNewPostComponent implements OnInit {
     e.preventDefault();
     this.audioSaved = null;
     this.f.voice.setValue('');
-  }
-
-  cancelAudioRecord() {
-    this.modalAudioRecorder.goBack();
-  }
-  saveAudioRecord() {
-    this.f.voice.setValue(this.audioData);
-    this.audioSaved = this.audioData.copy();
-    // console.log(this.audioSaved);
-    this.modalAudioRecorder.goBack();
   }
 
   onClickButtonMore() {
@@ -214,99 +165,9 @@ export class CardNewPostComponent implements OnInit {
     }
   }
 
-  /** AUDIO RECORDER / PLAYER START */
-  toggleAudioPlayerState() {
-    if(!this.isAudioPlaying) {
-      this.playAudioPlayer();
-    } else {
-      this.pauseAudioPlayer();
-    }  
+  onAudioSaved(data: AudioData) {
+    this.audioSaved = data;
   }
-
-  private intervalPlayAudio: any;
-  playAudioPlayer() {
-    const el = this.audioPlayer.nativeElement as HTMLAudioElement;
-    if(el) {
-      el.play();
-      this.isAudioPlaying = true;
-      this.intervalPlayAudio = setInterval(() => {
-        this.timeAudioPlayCurrent += 100;
-        const duration = this.audioData.duration * 1000;
-        this.percentAudioPlayCurrent = this.timeAudioPlayCurrent / duration * 100;
-        if(this.timeAudioPlayCurrent >= duration) {
-          this.timeAudioPlayCurrent = duration * 1000;
-          this.percentAudioPlayCurrent = 100;
-          clearInterval(this.intervalPlayAudio);
-          this.stopAudioPlayer();
-        }
-      }, 100);  
-    }
-  }
-  pauseAudioPlayer() {
-    const el = this.audioPlayer.nativeElement as HTMLAudioElement;
-    if(el) {
-      el.pause();
-      this.isAudioPlaying = false;
-      clearInterval(this.intervalPlayAudio);
-    }
-  }
-
-  stopAudioPlayer() {
-    const el = this.audioPlayer.nativeElement as HTMLAudioElement;
-    if(el) {
-      this.isAudioPlaying = false;
-      this.timeAudioPlayCurrent = 0;
-      this.percentAudioPlayCurrent = 0;
-    }
-  }
-
-  async toggleAudioRecorderState() {
-    const stateNext = this.isAudioRecording ? 'stop' : 'start';
-
-    if(stateNext == 'start') {
-      this.startAudioRecording();
-    } else {
-      this.stopAudioRecording();
-    }
-  }
-
-  startAudioRecording() {
-    this._audioRecorder.startRecording();
-  }
-
-  stopAudioRecording() {
-    this._audioRecorder.stopRecording();
-  }
-
-  onAudioRecordingFaild(message: string) {
-    console.log('audio recording failed')
-    this.isAudioRecording = false;
-    this._changeDetector.detectChanges();
-    this._toastr.error(message);
-  }
-
-  onAudioRecordingStarted() {
-    this.isAudioRecording = true;
-    this._changeDetector.detectChanges();
-  }
-
-  onTimerAudioRecordingChanged(seconds: number) {
-    this.timeAudioRecordingRemaining = seconds;
-    this._changeDetector.detectChanges();
-  }
-
-  onAudioRecordingDone(data: RecordedAudioOutput) {
-    this.isAudioRecording = false;
-    this.audioData = new AudioData(data);
-    this._changeDetector.detectChanges();
-  }
-
-  disposeAudio() {
-    this.audioData = null;
-    this.timeAudioPlayCurrent = 0;
-    this.percentAudioPlayCurrent = 0;
-  }
-  /** VOICE RECORDER END */
 
   async onSubmit() {
     this.isSubmitted = true;
@@ -406,26 +267,5 @@ export class CardNewPostComponent implements OnInit {
         });
       }
     })
-  }
-}
-
-class AudioData{
-  public url: string = null;
-  public filename: string = null;
-  public file: Blob = null;
-  public duration: number = null;
-  public durationFormatted: string = null;
-  
-  constructor(data: RecordedAudioOutput) {
-    this.url = URL.createObjectURL(data.blob);
-    this.filename = data.title;
-    this.file = data.blob;
-    getBlobDuration(data.blob).then((duration) => {
-      this.duration = duration;
-    });
-  }
-
-  copy() {
-    return new AudioData({blob: this.file, title: this.filename});
   }
 }

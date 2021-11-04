@@ -13,7 +13,10 @@ export class SocialArticle extends SocialPostBase implements ISocialPost {
   
   constructor(protected data: ISocialPost) {
     super(data);
-    
+    this.calcReadLength(data);
+  }
+
+  calcReadLength (data: ISocialPost) {
     /** calculate readLength if it's 0 */
     if(data.readLength > 0) {
       this._readLength = data.readLength;
@@ -32,5 +35,12 @@ export class SocialArticle extends SocialPostBase implements ISocialPost {
       res = minutes + 'min' + (minutes > 1 ? 's' : '');      
     }
     return res;
+  }
+
+  updateWith(data: ISocialPost) {
+    super.updateWith(data);
+    this.data.title = data.title;
+    this.data.image = data.image;
+    this.calcReadLength(data);
   }
 }

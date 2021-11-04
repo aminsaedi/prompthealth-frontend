@@ -109,7 +109,7 @@ export interface ISocialPost {
   code?: string;
 
   decode?(): ISocialPost;
-
+  updateWith?(data: ISocialPost): void;
 }
 
 export class SocialPostBase implements ISocialPost {
@@ -162,6 +162,10 @@ export class SocialPostBase implements ISocialPost {
   get comments() { return this._comments; };
 
   get linkToPost() { return '/community/content/' + this._id; }
+  // get linkToPost() { 
+  //   const type = this.isNote ? 'note' : this.isArticle ? 'article' : this.isEvent ? 'event' : 'content';
+  //   return `/community/${type}/${this._id}`; 
+  // }
 
   protected _s3 = environment.config.AWS_S3; 
   protected _summary: string;
@@ -171,7 +175,11 @@ export class SocialPostBase implements ISocialPost {
   protected _changed = new Subject<ISocialPost>();
 
   constructor(protected data: ISocialPost) {
-    const desc = data.description || '';
+    this.setSummary(data.description || '');
+  }
+
+  setSummary(desc: string) {
+    desc = desc || '';
     this._summary = desc.replace(/<\/?[^>]+(>|$)/g, ' ').replace(/\s{2,}/, " ").trim();
   }
 
@@ -258,6 +266,14 @@ export class SocialPostBase implements ISocialPost {
 
   decode() {
     return this.data;
+  }
+  
+  updateWith(data: ISocialPost) {
+    this.data.status = data.status;
+    this.data.image = data.image;
+    this.data.description = data.description;
+    this.setSummary(data.description || '');
+    this.data.tags = data.tags || [];
   }
 }
 

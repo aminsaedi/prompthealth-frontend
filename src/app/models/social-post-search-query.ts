@@ -15,7 +15,6 @@ export interface ISocialPostSearchQuery {
   authorId?: string;
   excludeExpiredPromo?: boolean;
   excludePastEvent?: boolean;
-
 }
 
 export class SocialPostSearchQuery implements ISocialPostSearchQuery {

@@ -173,92 +173,10 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
   </button>  
 </ng-template>
 
-<modal
-id="audio-recorder"
-[option]="{disableCloseByClickingDrop: true}"
-#modalAudioRecorder
->
-  <div class="title-container text-right">
-    <button 
-    class="btn pr-0 btn-icon-grey" 
-    (click)="cancelAudioRecord()"
-    [disabled]="isAudioRecording || isAudioRecorderBusy"
-    >
-      <i iconPh="cross" class="large"></i>
-    </button>  
-  </div>
-
-  <div class="content-container">
-    <div class="mb-60p d-flex justify-content-center">
-      <profile-image size="80" [image]="userImage" class="inline-block"></profile-image>
-    </div>
-
-    <div class="d-flex align-items-center">
-      <button 
-      *ngIf="!!audioData" 
-      class="btn btn-play-control"
-      (click)="toggleAudioPlayerState()"
-      >
-        <i [iconPh]="isAudioPlaying ? 'pause' : 'play'"></i>
-      </button>
-      <div
-      class="audio-progress-bar flex-grow-1 mx-15p"
-      [ngClass]="{recording: isAudioRecording}"
-      >
-        <div class="audio-progress"></div>
-        <div class="audio-progress done"
-        [ngStyle]="{width: percentAudioPlayCurrent + '%'}"
-        ></div>
-        <ng-container *ngIf="audioData">
-          <span class="label-audio-duration-current subtitle2 text-label">{{timeAudioPlayCurrent / 1000 | duration}}</span>
-          <span class="label-audio-duration subtitle2 text-label">{{audioData.duration | duration}}</span>
-          <audio 
-          #audioPlayer
-          class="d-none"
-          >
-            <source [src]="safeResourceUrlOf(audioData.url)" type="audio/wav">
-          </audio>      
-        </ng-container>
-        <ng-container *ngIf="isAudioRecording">
-          <span 
-            class="label-audio-duration subtitle2"
-            [ngClass]="(timeAudioRecordingRemaining > 60 ? 'text-label' : 'text-error')"
-          >
-            {{timeAudioRecordingRemaining | duration}}
-          </span>
-        </ng-container>
-      </div>
-      <button
-      type="button"
-      class="button"
-      *ngIf="audioData"
-      class="btn btn-icon-error small"
-      (click)="disposeAudio()"
-      >
-        <i iconPh="trash" class="large"></i>
-      </button>
-    </div>
-
-    <div class="mt-80p text-right position-relative">
-      <button
-      type="button"
-      class="btn btn-record-control" 
-      (click)="toggleAudioRecorderState()"
-      [ngClass]="{disabled: audioData}"
-      [disabled]="isAudioRecorderBusy"
-      >
-        <i *ngIf="!isAudioRecording" iconPh="play"></i>
-        <i *ngIf="isAudioRecording" iconPh="stop"></i>
-      </button>
-      <button 
-      type="button"
-      class="btn btn-primary small"
-      (click)="saveAudioRecord()"
-      [disabled]="isAudioRecording || isAudioRecorderBusy"
-      >Done</button>
-    </div>
-  </div>
-</modal>
+<modal-voice-recorder
+[audioData]="audioSaved"
+(onSave)="onAudioSaved($event)"
+></modal-voice-recorder>
 
 <alert-uploading 
 *ngIf="isUploading && !isAlertUploadingClosedForcibly"

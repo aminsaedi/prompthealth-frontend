@@ -39,6 +39,7 @@ export interface IProfile {
   isEligibleToCreatePromo: boolean;
   isEligibleToCreateArticle: boolean;
   isEligibleToCreateEvent: boolean;
+  isEligibleToHaveDraft: boolean;
 
   linkToProfile: string;
 
@@ -88,7 +89,8 @@ export class Profile implements IProfile {
   get isEligibleToCreatePromo() { return this.isP; }
   get isEligibleToCreateArticle() { return (this.isProvider && this.isPaid) || this.isSA; }
   get isEligibleToCreateEvent() { return (!this.isU && this.isPaid) || this.isSA; }
-
+  get isEligibleToHaveDraft() { return this.isEligibleToCreateArticle || this.isEligibleToCreateEvent; }
+  
   get isPaid() {
     return (
       this.data.isVipAffiliateUser || 

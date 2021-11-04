@@ -281,6 +281,14 @@ export class SocialService {
     this._postCacheChanged.next();
   }
 
+  updateCacheSingle(data: ISocialPost) {
+    const cache = this.postCache.dataMap[data._id];
+    if(cache) {
+      cache.updateWith(data);
+      cache.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(cache.description));
+    }
+  }
+
   saveCacheProfile(data: Professional) {
     const cache = this.postCache.dataPerTaxonomy.users[data._id];
     if(!cache) {

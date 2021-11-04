@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DraftComponent } from './draft.component';
+import { ModalVoiceRecorderComponent } from './modal-voice-recorder.component';
 
-describe('DraftComponent', () => {
-  let component: DraftComponent;
-  let fixture: ComponentFixture<DraftComponent>;
+describe('ModalVoiceRecorderComponent', () => {
+  let component: ModalVoiceRecorderComponent;
+  let fixture: ComponentFixture<ModalVoiceRecorderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DraftComponent ]
+      declarations: [ ModalVoiceRecorderComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DraftComponent);
+    fixture = TestBed.createComponent(ModalVoiceRecorderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
