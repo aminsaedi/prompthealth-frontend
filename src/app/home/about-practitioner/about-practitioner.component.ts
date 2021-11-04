@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
@@ -20,6 +20,8 @@ import { first } from 'rxjs/operators';
 })
 export class AboutPractitionerComponent implements OnInit {
 
+  get sizeL() { return window && window.innerWidth >= 992; }
+
   get profile() { return this._profileService.user; }
   get isNotLoggedIn() { return this._profileService.loginStatus == 'notLoggedIn'; }
   get isLoggedIn() { return this._profileService.loginStatus == 'loggedIn'; }
@@ -29,12 +31,25 @@ export class AboutPractitionerComponent implements OnInit {
   public planFeatures = planFeatures;
   public faqs = faqs;
 
-  public isDurationMonthly: boolean = false;
+  public isDurationMonthly: boolean = true;
   public isLoading: boolean = false;
 
   public couponData: ICouponData = null;
   public isCouponShown = false;
   public isCouponShrink = false;
+
+  public videoLink = "/assets/video/about-practitioner-sm.mp4";
+  public videoLinkLg = '/assets/video/about-practitioner-md.mp4';
+  public videoLgMarkedAsLoadStart: boolean = false;
+  public isVideoLgReady: boolean = false;
+
+  @ViewChild('videoPlayer') private videoPlayer: ElementRef;
+  @ViewChild('videoLg') private videoLg: ElementRef;
+
+  @HostListener('window:resize') WindowResize() {
+    this.loadVideoLgIfNeeded();
+  } 
+
 
   keepOriginalOrder = (a: any, b: any) => a.key;
 
@@ -62,6 +77,8 @@ export class AboutPractitionerComponent implements OnInit {
         }, 300); 
       }
     });
+
+    this.loadVideoLgIfNeeded();
   }
 
   ngOnInit(): void {
@@ -72,6 +89,24 @@ export class AboutPractitionerComponent implements OnInit {
 
     this.initPlans();
     this.initCoupon();
+  }
+
+  loadVideoLgIfNeeded() {
+    if(this.sizeL && this.videoLg?.nativeElement && !this.videoLgMarkedAsLoadStart) {
+      const videoLg = this.videoLg.nativeElement as HTMLVideoElement;
+      videoLg.addEventListener('loadeddata', () => {
+        const vp = this.videoPlayer?.nativeElement;
+        const currentTime = vp?.currentTime || 0;
+        this.isVideoLgReady = true;
+        videoLg.currentTime = currentTime;
+        videoLg.loop = true;
+        vp.pause();
+        videoLg.play();        
+      });
+  
+      videoLg.load();
+      this.videoLgMarkedAsLoadStart = true;  
+    }
   }
 
   initPlans() {
@@ -183,35 +218,56 @@ export class AboutPractitionerComponent implements OnInit {
 
 const features = [
   {
-    icon: 'lightning-outline',
-    title: 'Simple to use and time-saving.',
-    content: 'We are creating a space where health and wellness experts can lead the conversation around the topics they are experts in. Instead of spending time building your credibility online, let them come to you on PromptHealth and focus on what you do best.',
+    icon: 'user-check-outline',
+    title: 'Get discovered.',
+    content: 'Share your wellness philosophy and knowledge, allowing people to discover you and your unique services before making an appointment.',
   },
   {
     icon: 'text-block-outline',
-    title: 'Choose a content creation option that works best for you.',
-    content: 'Easy to use content creation tools made for busy health practitioners. Share using the medium that suits you best. Whether it’s through voice notes, videos, articles, or online events, we made it easy for health providers to create and share.',
-  },
-  {
-    icon: 'user-check-outline',
-    title: 'Share information on topics you are an expert in.',
-    content: 'Health misinformation online is a huge problem today. We are serious about making sure those providing health information can be trusted. We prioritize verifying our providers to remain a credible and helpful health resource for the public.',
+    title: 'Share your expertise.',
+    content: 'Whether it’s through text, voice notes, images, articles, or online events, we made it easy for you to share your knowledge using the medium that you enjoy creating with.',
   },
   {
     icon: 'cast-outline',
-    title: 'Connect with clients.',
-    content: 'Find clients, share details about the services you offer and how you can help, and accept bookings all in one platform. ',
+    title: 'Connect and engage.',
+    content: 'Be a part of our wellness community. Engage with new and potential clients, and other providers in your area who align with your values and approach to wellness.',
   },
   {
-    icon: 'thumbs-up-outline',
-    title: 'Engage with the health and wellness community.',
-    content: 'Be part of our community. Stay engaged with new and current clients, and other practitioners in your area. ',
+    icon: 'lightning-outline',
+    title: 'Fun and simple to use.',
+    content: 'Your profile, your rules! PromptHealth is where wellness providers are leading the conversation around the topics they are experts in, and having fun doing it.',
   },
-  {
-    icon: 'verified-outline',
-    title: 'Recommend other health professionals you trust.',
-    content: 'Think your clients will benefit from a different treatment, or do you know another provider you trust? Find and leave recommendations for other practitioners. ',
-  },
+
+  // {
+  //   icon: 'lightning-outline',
+  //   title: 'Simple to use and time-saving.',
+  //   content: 'We are creating a space where health and wellness experts can lead the conversation around the topics they are experts in. Instead of spending time building your credibility online, let them come to you on PromptHealth and focus on what you do best.',
+  // },
+  // {
+  //   icon: 'text-block-outline',
+  //   title: 'Choose a content creation option that works best for you.',
+  //   content: 'Easy to use content creation tools made for busy health practitioners. Share using the medium that suits you best. Whether it’s through voice notes, videos, articles, or online events, we made it easy for health providers to create and share.',
+  // },
+  // {
+  //   icon: 'user-check-outline',
+  //   title: 'Share information on topics you are an expert in.',
+  //   content: 'Health misinformation online is a huge problem today. We are serious about making sure those providing health information can be trusted. We prioritize verifying our providers to remain a credible and helpful health resource for the public.',
+  // },
+  // {
+  //   icon: 'cast-outline',
+  //   title: 'Connect with clients.',
+  //   content: 'Find clients, share details about the services you offer and how you can help, and accept bookings all in one platform. ',
+  // },
+  // {
+  //   icon: 'thumbs-up-outline',
+  //   title: 'Engage with the health and wellness community.',
+  //   content: 'Be part of our community. Stay engaged with new and current clients, and other practitioners in your area. ',
+  // },
+  // {
+  //   icon: 'verified-outline',
+  //   title: 'Recommend other health professionals you trust.',
+  //   content: 'Think your clients will benefit from a different treatment, or do you know another provider you trust? Find and leave recommendations for other practitioners. ',
+  // },
 ]
 
 const plans: {[k in PlanTypePractitioner]: IPlanData} = {
@@ -226,16 +282,16 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
   provider: {
     id: 'provider',
     icon: 'verified-outline',
-    title: 'Providers',
-    subtitle: 'Get the most out of PromptHealth',
+    title: 'Advanced',
+    subtitle: 'For solo providers.',
     label: 'Popular',
     data: null,
   },
   centre: {
     id: 'centre',
     icon: 'users-outline',
-    title: 'Centre',
-    subtitle: 'For centers with multiple providers',
+    title: 'Premium',
+    subtitle: 'For centers with multiple providers.',
     label: null,
     data: null,
   }
@@ -243,17 +299,18 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
 
 const planFeatures: IPlanFeatureData[] = [
   {item: 'Get listed with a personalized profile', targetPlan: ['basic', 'provider', 'centre'], detail: null},
-  {item: 'Follow and engage with other users', targetPlan: ['basic', 'provider', 'centre'], detail: null},
-  {item: 'Share your knowledge via voice memos, notes, articles, and events', targetPlan: ['basic', 'provider', 'centre'], detail: null},
-  {item: 'Receive booking requests', targetPlan: ['basic', 'provider', 'centre'], detail: null},
-
+  {item: 'Share your knowledge via voice memos and notes', targetPlan: ['basic', 'provider', 'centre'], detail: null},
+  {item: 'Share your knowledge via voice memos, notes, and images + articles, and events', targetPlan: ['provider', 'centre'], detail: null},
+  {item: 'Receive booking requests', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Inter referrals enabled', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Ratings and reviews', targetPlan: ['provider', 'centre'], detail: null},
   {item: 'Performance analytics', targetPlan: ['provider', 'centre'], detail: null},
 
-  {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
+  // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
   {item: 'Display company products and amenities', targetPlan: ['centre'], detail: null},
+  {item: 'Enrich your profile with videos', targetPlan: ['centre'], detail: null},
   {item: 'Tag your providers', targetPlan: ['centre'], detail: null},
+  {item: 'PromptHealth personal assistant for onboarding', targetPlan: ['centre'], detail: null},
 ];
 
 const faqs: IFAQItem[] = [

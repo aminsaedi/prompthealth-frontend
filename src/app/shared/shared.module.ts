@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { ModalModule,  } from 'ngx-bootstrap/modal';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { SharedService } from './services/shared.service';
 import { PreviousRouteService } from './services/previousUrl.service';
 import { SearchPipe } from '../shared/pipes/search-pipe';
@@ -48,7 +48,6 @@ import { FormItemCustomerHealthComponent } from './form-item-customer-health/for
 import { FormPractitionerServiceComponent } from './form-practitioner-service/form-practitioner-service.component';
 import { FormItemDatetimeComponent } from './form-item-datetime/form-item-datetime.component';
 import { FormItemUploadImageButtonComponent } from './form-item-upload-image-button/form-item-upload-image-button.component';
-import { AddonSelectCategoryComponent } from './addon-select-category/addon-select-category.component';
 import { ButtonShareComponent } from './button-share/button-share.component';
 import { ListItemComponent } from './list-item/list-item.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
@@ -81,10 +80,10 @@ import { AlertUploadingComponent } from './alert-uploading/alert-uploading.compo
     FormsModule,
     ReactiveFormsModule,
     ModalModule.forRoot(),
-    NgbModule,
     AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.config.firebase),
-    // FlashMessagesModule,
+    BsDatepickerModule.forRoot(),
+    TimepickerModule.forRoot(),
   ],
   providers: [
     PreviousRouteService,
@@ -131,7 +130,6 @@ import { AlertUploadingComponent } from './alert-uploading/alert-uploading.compo
     FormPractitionerServiceComponent,
     FormItemDatetimeComponent,
     FormItemUploadImageButtonComponent,
-    AddonSelectCategoryComponent,
     ButtonShareComponent,
     ListItemComponent,
     SearchBarComponent,

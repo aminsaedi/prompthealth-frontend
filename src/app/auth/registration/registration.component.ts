@@ -40,7 +40,6 @@ export class RegistrationComponent implements OnInit {
   }
 
   changeHeaderShadowStatus(isShown: boolean) {
-    console.log(isShown);
     if(isShown) {
       this._headerStatusService.showShadow();
     } else {

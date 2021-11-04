@@ -27,7 +27,7 @@
       <div class="col-12 col-md-5 text-center">
         <h5>You are not member yet?</h5>
         <div class="mb-3" *ngIf="isApplicableTo('SP') || isApplicableTo('C')">
-          <a routerLink="/plans" class="btn btn-primary w-100">Sign up as Practitioner</a>
+          <a routerLink="/plans" class="btn btn-primary w-100">Sign up as Provider</a>
         </div>
         <div class="mb-3" *ngIf="isApplicableTo('P')">
           <a routerLink="/plans/product" [queryParams]="{nextKeyword: 'buyplan'}" class="btn btn-primary w-100">Sign up as Product/Service</a>
@@ -46,7 +46,7 @@
 
       <div class="row flex-column justify-content-center align-items-center">
         <div class="col-12 col-md-5 mb-3" *ngIf="isApplicableTo('SP') || isApplicableTo('C')">
-          <button class="btn btn-primary w-100" (click)="logoutAndSignup('SP')">Sign up as Practitioner</button>
+          <button class="btn btn-primary w-100" (click)="logoutAndSignup('SP')">Sign up as Provider</button>
         </div>
         <div class="col-12 col-md-5" *ngIf="isApplicableTo('P')">
           <button class="btn btn-primary w-100" (click)="logoutAndSignup('P')">Sign up as Product/Service</button>

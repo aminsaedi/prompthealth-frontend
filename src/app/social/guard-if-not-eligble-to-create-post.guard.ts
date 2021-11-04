@@ -17,6 +17,7 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> | boolean
   {
+    const editorType = next.data.type || null;
     let loginStatus = this._profileService.loginStatus;
 
     if(loginStatus == 'notChecked' || loginStatus == 'loggingIn') {
@@ -24,7 +25,7 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
         const subscription = this._profileService.loginStatusChanged().subscribe(status => {
           if(status == 'loggedIn' || status == 'notLoggedIn') {
             subscription.unsubscribe();
-            const isValidated = this.validate(status);
+            const isValidated = this.validate(status, editorType);
             if(isValidated) {
               resolve(true);
             } else {
@@ -35,7 +36,7 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
         })  
       })
     } else {
-      const isValidated = this.validate(loginStatus);
+      const isValidated = this.validate(loginStatus, editorType);
       if(isValidated) {
         return true;
       } else {
@@ -45,12 +46,21 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
     }
   }
 
-  validate(loginStatus: LoginStatusType) {
-    if(loginStatus == 'loggedIn' && this._profileService.profile.role != 'U') {
-      return true;
-    } else {
-      return false;
+  validate(loginStatus: LoginStatusType, editorType?: 'article' | 'event' | 'promo' | 'note') {
+    let isValidated = false;
+
+    if(loginStatus == 'loggedIn') {
+      const user = this._profileService.profile;
+      switch (editorType) {
+        case 'article': isValidated = user.isEligibleToCreateArticle; break;
+        case 'event': isValidated = user.isEligibleToCreateEvent; break;
+        case 'note': isValidated = user.isEligibleToCreateNote; break; //not used for now nor being tested
+        case 'promo': isValidated = user.isEligibleToCreatePromo; break; //not used for now nor being tested
+        default: isValidated = true;
+      }
     }
+    
+    return isValidated;
   }
   
   guard() {

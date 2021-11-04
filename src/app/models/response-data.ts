@@ -1,3 +1,4 @@
+import { IBooking } from "./booking";
 import { IDefaultPlan } from "./default-plan";
 import { ISocialNotification } from "./notification";
 import { IReferral } from "./referral";
@@ -8,6 +9,38 @@ export interface IResponseData {
   statusCode: number;
   message: string;
   data: any;
+}
+
+export interface IAuthResult extends IResponseData {
+  statusCode: number;
+  message: string;
+  data: {
+    _id: IUserDetail['_id'],
+    email: IUserDetail['email'],
+    loginToken: string,
+    lastLogin: string,
+    roles: IUserDetail['roles'],
+    firstName: IUserDetail['firstName'],
+    verifiedBadge: IUserDetail['verifiedBadge'],
+    profileImage: IUserDetail['profileImage'],
+    lastName: IUserDetail['lastName'],
+    favouriteBy: IUserDetail['favouriteBy'],
+    isVipAffiliateUser: IUserDetail['isVipAffiliateUser'],
+  }
+}
+
+export interface IAuthTempResult {
+  _id: IUserDetail['_id'],
+  email: IUserDetail['email'],
+  loginToken: string,
+  lastLogin: string,
+  roles: IUserDetail['roles'],
+  firstName: IUserDetail['firstName'],
+  verifiedBadge: IUserDetail['verifiedBadge'],
+  profileImage: IUserDetail['profileImage'],
+  lastName: IUserDetail['lastName'],
+  favouriteBy: IUserDetail['favouriteBy'],
+  isVipAffiliateUser: IUserDetail['isVipAffiliateUser'],
 }
 
 export interface IGetProfileResult extends IResponseData{
@@ -29,12 +62,31 @@ export interface IGetPractitionersResult extends IResponseData {
   }
 }
 
+export interface IGetCompaniesResult extends IResponseData {
+  data: IUserDetail[];
+}
+
 export interface IGetPlansResult extends IResponseData {
   data: IDefaultPlan[]
 }
 
+export interface IGetBookingsResult extends IResponseData {
+  data: {
+    data: IBooking[];
+    total: number;
+  }
+}
+
+export interface IUpdateBookingResult extends IResponseData {
+  data: IBooking;
+}
+
 export interface IGetFollowingsResult extends IResponseData {
   data: IUserDetail[];
+}
+
+export interface IGetFollowingTopicsResult extends IResponseData {
+  data: string[];
 }
 
 export interface IGetFollowStatusResult extends IResponseData {
@@ -51,6 +103,10 @@ export interface IFollowResult extends IResponseData {
     following: string,
     followed: string,
   }
+}
+
+export interface IFollowMultipleResult extends IResponseData {
+  data: IFollowResult['data'][];
 }
 
 export interface IUnfollowResult extends IResponseData {
@@ -134,15 +190,12 @@ export interface ICreateReferralsResult extends IResponseData {
 }
 export interface IGetStaffsResult extends IResponseData {
   data: {
-    total: number;
-    data: {
-      _id: string;
-      center: string;
-      userId: IUserDetail;
-      createdAt: string;
-      isDeleted: boolean;
-    }[]
-  }
+    _id: string;
+    center: string;
+    userId: IUserDetail;
+    createdAt: string;
+    isDeleted: boolean;
+  }[]
 }
 
 export interface IGetStaffResult extends IResponseData {

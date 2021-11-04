@@ -50,9 +50,15 @@ export class WrapperComponent implements OnInit {
     active
   })
   public bookingTab = (active) => ({
-    title: 'Booking',
+    title: 'Bookings',
     link: 'my-booking',
-    description: 'View & Reschedule your bookings',
+    description: 'View your bookings with wellness providers',
+    active,
+  })
+  public manageBookingTab = (active) => ({
+    title: 'Bookings Received',
+    link: 'manage-booking',
+    description: 'View your bookings with clients',
     active,
   })
   public favouriteTab = (active) => ({
@@ -303,6 +309,7 @@ export class WrapperComponent implements OnInit {
               this.socialTab(true),
               this.badgeTab(true),
               this.bookingTab(true),
+              this.manageBookingTab(true),
             ];
 
             if (profile.plan && profile.plan.videoUpload) { this.listing.push(this.videoTab(true)); }
@@ -323,6 +330,7 @@ export class WrapperComponent implements OnInit {
               this.socialTab(false),
               this.badgeTab(false),
               this.bookingTab(false),
+              this.manageBookingTab(false),
               this.videoTab(false),
               this.reviewTab(false),
             ];
@@ -340,6 +348,7 @@ export class WrapperComponent implements OnInit {
               this.socialTab(true),
               this.badgeTab(true),
               this.bookingTab(true),
+              this.manageBookingTab(true),
               this.reviewTab(true),
             ];
 
@@ -362,6 +371,7 @@ export class WrapperComponent implements OnInit {
               this.socialTab(false),
               this.badgeTab(false),
               this.bookingTab(false),
+              this.manageBookingTab(false),
               this.reviewTab(false),
               this.amenityTab(false),
               this.professionalTab(false),
@@ -377,7 +387,7 @@ export class WrapperComponent implements OnInit {
             this.partnerProfileTab(true),
             this.passwordTab(true),
             this.partnerServiceTab(true),
-            this.partnerOfferTab(true),
+            // this.partnerOfferTab(true),
             this.subscriptionTab(true),
             this.paymentTab(true),
           ];

@@ -78,13 +78,35 @@ id="user-menu"
         <div class="subtitle2 text-label">{{user.email}}</div>
       </div>
     </div>
+
+    <div class="mt-20p" *ngIf="user?.isProvider || user?.isP">
+      <!-- <div 
+      *ngIf="user.isPaid"
+      class="d-inline-block rounded-4p py-5p px-10p body-small text-primary border border-primary"
+      >
+        <i iconPh="rocket" style="line-height: 1.1"></i>
+        <span class="ml-5p">Plan: {{user.plan.name}}</span>
+      </div> -->
+      <div
+      *ngIf="!user.isPaid"
+      class="bg-yellow-light border border-yellow rounded-8p p-10p"
+      >
+        <div class="text-yellow-dark d-flex">
+          <i iconPh="info"></i>
+          <div class="body-small ml-5p">
+            Your plan is basic. Upgrade for advanced features.<br>
+            <a [routerLink]="linkToPlan" class="text-yellow-dark"><u>Learn more</u></a>            
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="d-flex mt-20p">
       <a
       class="text-body"
       routerLink="/community/followings"
       [replaceUrl]="true"
       >
-        <div class="subtitle2">Followings</div>
+        <div class="subtitle2">Following</div>
         <div class="h5">{{user.numFollowing}}</div>
       </a>
       <a
@@ -100,7 +122,7 @@ id="user-menu"
     <div class="mt-15p">
       <div class="mb-5p">
         <a
-        *ngIf="!user.isU"
+        *ngIf="user.hasProfile"
         class="btn btn-text-body small px-0"
         (click)="onClickUserMenuItem(['/community/profile', userId])"
         >
@@ -110,7 +132,7 @@ id="user-menu"
       </div>
       <div class="mb-5p">
         <a
-        *ngIf="!user.isU"
+        *ngIf="user.isEligibleToCreateArticle"
         class="btn btn-text-body small px-0"
         (click)="onClickUserMenuItem(['/community/editor/article'])"
         >
@@ -121,7 +143,7 @@ id="user-menu"
 
       <div class="mb-5p">
         <a
-        *ngIf="!user.isU"
+        *ngIf="user.isEligibleToCreateEvent"
         class="btn btn-text-body small px-0"
         (click)="onClickUserMenuItem(['/community/editor/event'])"
         >

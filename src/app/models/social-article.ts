@@ -21,8 +21,7 @@ export class SocialArticle extends SocialPostBase implements ISocialPost {
     if(data.readLength > 0) {
       this._readLength = data.readLength;
     } else {
-      const words = data.title + this._summary;
-      this._readLength = Math.ceil(words.length / 200);
+      this._readLength = Math.ceil(this._summary.length / 1200) || 1; // originally divide by 200
     }
     this._readLengthLabel = this.getFormattedTime(this._readLength);
   }

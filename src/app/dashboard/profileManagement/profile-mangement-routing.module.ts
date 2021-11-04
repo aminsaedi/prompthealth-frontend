@@ -56,7 +56,13 @@ const routes: Routes = [
       // },
       {
         path: 'my-booking',
-        component: MyBookingComponent
+        component: MyBookingComponent,
+        data: {type: 'client'}
+      },
+      {
+        path: 'manage-booking',
+        component: MyBookingComponent,
+        data: {type: 'provider'}
       },
       {
         path: 'my-payment',
@@ -114,10 +120,10 @@ const routes: Routes = [
         path: 'partner-profile',
         component: PartnerGeneralComponent,
       },
-      {
-        path: 'partner-offer',
-        component: PartnerOfferComponent,
-      },
+      // {
+      //   path: 'partner-offer',
+      //   component: PartnerOfferComponent,
+      // },
       { path: 'my-posts', loadChildren: () => PostManagerModule },
 
     ]

@@ -26,9 +26,13 @@
 }
 
 .top-images {
+  li {
+    border-radius: 12px;
+    overflow: hidden;
+  }
   li:first-child {
     position: relative;
-    width: 55%;
+    width: 47%;
     height: auto;
     img {
       position: relative;
@@ -40,8 +44,7 @@
   li:nth-child(2) {
     position: absolute;
     top: 0;
-    left: 58%;
-    width: 42%;
+    left: 49%;
     height: 45%;
     img {
       position: relative;
@@ -53,8 +56,8 @@
   li:nth-child(3) {
     position: absolute;
     bottom: 0;
-    left: 58%;
-    width: 42%;
+    left: 49%;
+    width: 51%;
     img {
       position: relative;
       width: 100%;

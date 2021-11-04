@@ -41,7 +41,7 @@ export class FormPartnerGeneralComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this._fb.group({
-      profileImage: new FormControl((this.data.profileImage ? this.data.profileImage : ''), [Validators.required,]),
+      profileImage: new FormControl((this.data.profileImage ? this.data.profileImage : ''), []),
       firstName: new FormControl((this.data.firstName ? this.data.firstName : ''), [
         Validators.required,
         Validators.minLength(3),
@@ -51,7 +51,7 @@ export class FormPartnerGeneralComponent implements OnInit {
         Validators.required,
         Validators.email
       ]),
-      displayEmail: new FormControl((this.data.displayEmail ? this.data.displayEmail : ''), validators.displayEmail),
+      // displayEmail: new FormControl((this.data.displayEmail ? this.data.displayEmail : ''), validators.displayEmail),
       address: new FormControl((this.data.address ? this.data.address : '')),
       latitude: new FormControl(((this.data.location && this.data.location[1]) ? this.data.location[1] : 0), []),
       longitude: new FormControl(((this.data.location && this.data.location[0]) ? this.data.location[0] : 0), []),

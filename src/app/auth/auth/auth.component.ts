@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { getListedMenu } from 'src/app/_helpers/get-listed-menu';
 
 @Component({
   selector: 'app-auth',
@@ -7,6 +8,9 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
+
+  get getListedProvider() { return getListedMenu[0]; }
+  get getListedCompany() { return getListedMenu[1]; }
 
   public authType: AuthType;
   public roleType: RoleType;

@@ -1,18 +1,21 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { minmax } from 'src/app/_helpers/form-settings';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import getBlobDuration from 'get-blob-duration';
+import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Profile } from 'src/app/models/profile';
 import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
-import { EditorService } from '../editor.service';
+import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { UploadObserverService } from 'src/app/shared/services/upload-observer.service';
 import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
-
 
 @Component({
   selector: 'card-new-post',
@@ -30,6 +33,11 @@ export class CardNewPostComponent implements OnInit {
   get userImage(): string { return this.user ? this.user.profileImage : ''; }
   get user(): Profile { return this._profileService.profile; }
 
+  get linkToPlan(): string[] { return this.user?.role == 'P' ? ['/plans/product'] : ['/plans']; }
+
+  get lengthDescription() { return this.f.description?.value?.length - 1 || 0;}
+  // get isDescriptionOverLimit() { return !!(this.lengthDescription > this.maxDescription); }
+
   public isMoreShown: boolean = false;
   public isEditorFocused: boolean = false;
   public imagePreview: string | ArrayBuffer;
@@ -39,6 +47,8 @@ export class CardNewPostComponent implements OnInit {
   public isSubmitted: boolean = false;
   public isUploading: boolean = false;
   public isAlertUploadingClosedForcibly: boolean = false;
+  // public lengthDescription = 0;
+  public maxDescription = minmax.noteMax;
 
   @ViewChild('inputMedia') private inputMedia: ElementRef;
   @ViewChild('editor') private editor: ElementRef;
@@ -50,6 +60,8 @@ export class CardNewPostComponent implements OnInit {
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
+    private _audioRecorder: AudioRecordService,
+    private _changeDetector: ChangeDetectorRef,
     private _editorService: EditorService,
     private _uploadObserver: UploadObserverService,
     private _modalService: ModalService,
@@ -59,7 +71,29 @@ export class CardNewPostComponent implements OnInit {
     this._editorService.init('NOTE', this.user);
   }
 
+  // onEditorChanged(e: EditorChangeContent | EditorChangeSelection) {
+  //   if('text' in e) { }
+  // }
+
+  onClickButtonArticle() {
+    if(this.user.isEligibleToCreateArticle) {
+      this._router.navigate(['/community/create/article']);
+    } else {
+      this._modalService.show('upgrade-plan');
+    }
+  }
+  onClickButtonEvent() {
+    if(this.user.isEligibleToCreateEvent) {
+      this._router.navigate(['/community/create/event']);
+    } else {
+      this._modalService.show('upgrade-plan');
+    }
+  }
   onClickButtonMedia() {
+    if(this.audioSaved) {
+      this._toastr.error('You cannot post image with voice');
+      return;
+    }
     const el = this.inputMedia.nativeElement as HTMLInputElement;
     if(el) {
       el.click();
@@ -93,6 +127,12 @@ export class CardNewPostComponent implements OnInit {
   }
 
   onClickButtonAudio() {
+    if(this.imagePreview) {
+      this._toastr.error('You cannot post voice with image.');
+      return;
+    }
+
+    this.audioData = this.audioSaved ? this.audioSaved.copy() : null;
     this._modalService.show('audio-recorder');
   }
 
@@ -105,6 +145,10 @@ export class CardNewPostComponent implements OnInit {
 
   onClickButtonMore() {
     this.isMoreShown = !this.isMoreShown;
+  }
+
+  onChangeTags(ids: string[]) {
+    this.f.tags.setValue(ids);
   }
 
   focusEditor() {
@@ -141,25 +185,17 @@ export class CardNewPostComponent implements OnInit {
       return;
     }
 
-    const data = {
+    const data: ISaveQuery = {
       ...this.form.value,
     };
-    const tags = this.formItemService.getSelected();
-    if(tags.length > 0) {
-      data.tags = tags;
-    }
 
-    if (data.images) {
-      data.images = [data.images];
-    } else {
-      delete data.images;
-    }
 
-    if (!data.voice) {
-      delete data.voice;
-    }
+    data.images = this.f.images.value ? [this.f.images.value] : []; //change format to array
 
-    this._sharedService.put(data, 'note/create').subscribe((res: IContentCreateResult) => {
+    const payload: ISaveQuery = new SaveQuery(data).toJson();
+
+
+    this._sharedService.put(payload, 'note/create').subscribe((res: IContentCreateResult) => {
       this.isUploading = false;
       this.isAlertUploadingClosedForcibly = false;
       this._uploadObserver.markAsUploadDone();

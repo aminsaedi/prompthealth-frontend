@@ -1,26 +1,59 @@
-<div class="popup-drop"
-(click)="hidePopup($event)"
-></div>
-<div class="bg-body p-10p popup-body rounded-8p">
-  <ul class="text-white list-unstyled text-nowrap mb-0">
-    <li>
-      <button 
-      class="btn btn-text-light small"
-      (click)="editContent($event)"
-      >
-        <i iconPh="edit"></i>
-        <span>Edit this content</span>  
-      </button>
-    </li>
+<div 
+*ngIf="eligibleToShowPostMenu"
+class="position-relative d-inline-block"
+>
+  <button 
+  class="btn btn-icon-grey small"
+  (click)="showPopup($event)"
+  >
+    <i iconPh="more-horiz"></i>
+  </button>
+  <div
+  *ngIf="isPopupPostMenuShown"
+  class="position-absolute mt-5p" 
+  style="right: -5px;"
+  >
+    <div class="popup-drop"
+    (click)="hidePopup($event)"
+    ></div>
+    <div class="bg-body p-10p popup-body rounded-8p">
+      <ul class="list-unstyled text-nowrap mb-0">
+        <ng-container *ngIf="eligibleToBell">
+          <li>
+            <button 
+            class="btn btn-text-white small w-100"
+            (click)="toggleBell($event)"
+            >
+              <span *ngIf="!post.authorBelled">Turn on notification</span>  
+              <span *ngIf="post.authorBelled">Turn off notification</span>  
+            </button>
+          </li>  
+        </ng-container>
 
-    <li>
-      <button 
-      class="btn btn-text-error small"
-      (click)="deleteContent($event)"
-      >
-        <i iconPh="trash"></i>
-        <span>Delete this content</span>  
-      </button>
-    </li>
-  </ul>
+        <ng-container *ngIf="eligibleToFollow">
+          <li>
+            <button 
+            class="btn btn-text-white small w-100"
+            (click)="toggleFollow($event)"
+            >
+              <span *ngIf="!post.authorFollowed">Follow</span>  
+              <span *ngIf="post.authorFollowed">Unfollow</span>  
+            </button>
+          </li>
+        </ng-container>
+
+        <ng-container *ngIf="eligibleToDelete">
+          <li>
+            <button 
+            class="btn btn-text-error small w-100"
+            (click)="deleteContent($event)"
+            >
+              <span>Delete</span>  
+            </button>
+          </li>  
+        </ng-container>
+      </ul>
+    </div>
+  </div>  
 </div>
+

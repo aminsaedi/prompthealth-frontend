@@ -1,48 +1,37 @@
-<section class="bg-primary-light overflow-hidden position-relative py-20p py-lg-80p">
-  <div class="circle-for-video circle-secondary" parallax intensity="0.5"></div>
+<div class="hero-video overflow-hidden">
+  <video 
+  #videoPlayer
+  [muted]="true"
+  autoplay 
+  loop 
+  playsinline 
+  [ngClass]="isVideoLgReady ? 'd-none' : ''"
+  [src]="videoLink"
+  poster="/assets/video/about-practitioner-thumbnail.jpg"
+  ></video>
+  <video
+  #videoLg
+  playinline
+  [muted]="true"
+  [ngClass]="!isVideoLgReady ? 'd-none' : ''"
+  preload="none"
+  [src]="videoLinkLg"
+  ></video>
+</div>
 
-  <div class="container">
-    <div class="row flex-md-row justify-content-between align-items-center">
-      <div class="col-12 col-md-7 col-xl-6 my-30p">
-        <h6 class="text-primary">For Providers</h6>
-        <h2 class="h3 h2-lg mb-25p">
-          Reach more new patients<br>Grow your practice
-        </h2>
-        <p class="text-label mb-30p">
-          PromptHealth helps providers reach more new patients for in-person visits, video visits or both.
-        </p>
-        <button 
-        class="btn btn-primary"
-        (click)="scrollTo(anchorPlans)"
-        >Join Us Now</button>
-      </div>
-      <div class="col-12 col-md-5 my-30p">
-        <div class="position-relative">
-          <div 
-          class="image-shadow"
-          style="background-image: url(/assets/img/about/top-provider.png);"
-          ></div>
-          <img 
-          class="w-100 rounded-12p position-relative" 
-          src="/assets/img/about/top-provider.png" 
-          alt=""
-          >  
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
+
 
 <section class="container mt-100p mb-50p">
-  <ul class="row list-unstyled">
+  <ul class="row list-unstyled justify-content-center">
     <li 
     *ngFor="let feature of features" 
-    class="mb-50p col-12 col-md-6 col-xl-4"
+    class="mb-50p col-12 col-md-6 col-xl-5"
     >
       <div class="mb-25p">
         <i [iconPh]="feature.icon" style="font-size: 30px;"></i>
       </div>
-      <h4 class="h4-md clamp-2line">{{feature.title}}</h4>
+      <h4 class="h4-md">{{feature.title}}</h4>
       <p class="text-label">{{feature.content}}</p>
     </li>
   </ul>
@@ -51,7 +40,7 @@
 <section class="container">
   <div class="text-center">
     <h2 class="h3 h2-md">It’s easy to get started</h2>
-    <p class="mt-20p">Free 14-day trial on our paid plans. Just cancel before the trial period is over!</p>
+    <!-- <p class="mt-20p">Free 14-day trial on our paid plans. Just cancel before the trial period is over!</p> -->
     <div class="mt-60p mb-40p">
       <a #anchorPlans class="scroll-anchor"></a>
       <div 
@@ -62,6 +51,7 @@
           20% Discount
         </div>      <switch 
         [labels]="['Annually', 'Monthly']"
+        [initialState]="'on'"
         (changeState)="onChangeDuration($event)"
         ></switch>
       </div>  
@@ -108,6 +98,14 @@
         </h2>
 
         <ul class="list-unstyled pl-25p plan-features flex-grow-1">
+          <li 
+          *ngIf="i > 0"
+          class="position-relative mb-20p subtitle2"
+          >
+            <span *ngIf="i == 1">All Basic features +</span>
+            <span *ngIf="i == 2">All Advanced features +</span>
+          </li>
+
           <ng-container *ngFor="let feature of planFeatures; let j = index">
             <li 
             *ngIf="isFeatureShowable(j, plan.key)"
@@ -115,8 +113,13 @@
             >  
               <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
               <span>{{feature.item}}</span>
-            </li>  
+            </li>
           </ng-container>
+
+          <li class="position-relative mt-40p mb-20p subtitle2">
+            <i class="icon-pre text-primary" iconPh="megaphone"></i>
+            <a routerLink="/ambassador-program">Become ambassador and get credit</a>
+          </li>
         </ul>
 
         <button 
@@ -143,6 +146,11 @@
         </ng-container>
       </div>
     </div>
+  </div>
+
+  <div class="mt-30p text-center body1">
+    Looking for social media collaborations? 
+    <a class="ml-10p btn-text-primary" routerLink="/contact-us"><u>Contact us</u></a>
   </div>
 </section>
 

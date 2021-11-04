@@ -1,19 +1,21 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { formatDateTimeDataToDate, formatDateToDateTimeData, formatStringToDateTimeData } from 'src/app/_helpers/date-formatter';
-import { pattern } from 'src/app/_helpers/pattern';
+import { Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { formatDateTimeDataToDate, formatDateToDateTimeData, formatDateToString, formatStringToDate, formatStringToDateTimeData } from 'src/app/_helpers/date-formatter';
+// import { pattern } from 'src/app/_helpers/pattern';
 import { expandVerticalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
 
 @Component({
   selector: 'form-item-datetime',
   templateUrl: './form-item-datetime.component.html',
   styleUrls: ['./form-item-datetime.component.scss'],
-  animations: [slideVerticalAnimation, expandVerticalAnimation]
+  animations: [slideVerticalAnimation, expandVerticalAnimation],
 })
 export class FormItemDatetimeComponent implements OnInit {
 
   @Input() controller: FormControl;
   @Input() minDateTime: DateTimeData;
+  @Input() placeholder: string = 'yyyy-mm-dd HH:MM'
+  @Input() dateOnly: boolean = false;
 
   @Input() stepMinute = 15;
   @Input() stepHour = 1;
@@ -28,10 +30,9 @@ export class FormItemDatetimeComponent implements OnInit {
 
   public isPickerShown = false;
 
-  public fDate: FormControl;
-  public fTime: FormControl;
+  public form: { date: Date, time: Date };
 
-  public dateTime: DateTimeData;
+  public _minDateTime: Date
 
   @ViewChild('formBlur') private formBlur: ElementRef;
 
@@ -39,72 +40,51 @@ export class FormItemDatetimeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const datetime = formatStringToDateTimeData(this.controller.value);
-    if (datetime) {
-      this.dateTime = datetime;
-    } else if (this.minDateTime) {
-      this.dateTime = this.minDateTime;
-    } else {
-      const now = new Date();
-      this.dateTime = formatDateToDateTimeData(now);
-    }
+    const min = this.minDateTime;
+    this._minDateTime = new Date(
+      min && min.year ? min.year : 1900,
+      min && min.month ? min.month - 1 : 0,
+      min && min.day ? min.day : 1,
+      min && min.hour ? min.hour : 0,
+      min && min.minute ? min.minute : 0,
+    );
 
-    this.fDate = new FormControl(this.dateTime);
-    this.fTime = new FormControl(this.dateTime);
-
-    this.fDate.valueChanges.subscribe(() => {
-      this.updateDateTime(true);
-    });
-    this.fTime.valueChanges.subscribe(() => {
-      this.updateDateTime(true);
-    });
-
+    this.initDateTimePicker();
   }
 
-  initDateTimePicker(dt: string) {
+  initDateTimePicker() {
     /** update using current controller value */
-    const datetime = formatStringToDateTimeData(dt);
+    const datetime = 
+      this.controller.value && formatStringToDate(this.controller.value) ? formatStringToDate(this.controller.value) :
+      this.minDateTime ? formatDateTimeDataToDate(this.minDateTime) :
+      new Date();
 
-    if (datetime) {
-      this.fDate.setValue({
-        ...datetime
-      });
-      this.fTime.setValue({
-        ...datetime
-      });
-    } else {
-      this.fDate.setValue({
-        ... this.minDateTime
-      });
-      this.fTime.setValue({
-        ...this.minDateTime
-      });
+    this.form = { 
+      ...{ date: datetime }, 
+      ...{ time: datetime },
     }
-
   }
 
   /** update controller value by selecting by datetime picker */
   updateDateTime(emit: boolean = false) {
-    const date: DateData = this.fDate.value;
-    const time: TimeData = this.fTime.value;
+    const date: Date = this.form.date;
+    const time: Date = this.form.time;
+    const datetime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
 
-    this.controller.setValue(date.year + '-' + ('0' + date.month).slice(-2) + '-' + ('0' + date.day).slice(-2) + ' ' + ('0' + time.hour).slice(-2) + ':' + ('0' + time.minute).slice(-2));
+    this.controller.setValue(formatDateToString(datetime, this.dateOnly));
     if (emit) {
-      this.changeValue.emit(this.getFormattedValue());
+      this.changeValue.emit(datetime);
     }
   }
 
   getFormattedValue() {
-    const date: DateData = this.fDate.value;
-    const time: TimeData = this.fTime.value;
-
-    const datetime = new Date(date.year + '-' + ('0' + date.month).slice(-2) + '-' + ('0' + date.day).slice(-2) + ' ' + ('0' + time.hour).slice(-2) + ':' + ('0' + time.minute).slice(-2));
-    return datetime;
+    const datetime = this.controller.value;
+    return formatStringToDate(datetime);
   }
 
   showPicker() {
     if (!this.isPickerShown) {
-      this.initDateTimePicker(this.controller.value);
+      this.initDateTimePicker();
     }
     this.isPickerShown = true;
     if(this.sizeS && this.formBlur.nativeElement) {
@@ -112,6 +92,7 @@ export class FormItemDatetimeComponent implements OnInit {
     }
   }
   hidePicker() { this.isPickerShown = false; }
+
 }
 
 function copy(obj: { [k: string]: any }, key: string) {

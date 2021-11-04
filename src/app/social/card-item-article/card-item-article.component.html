@@ -25,7 +25,7 @@
         </h6>        
       </a>
       <div class="body2 text-label">
-        {{post?.createdAt | date:'dd.MM.yyyy'}}
+        {{post?.createdAt | date:'yyyy/MM/dd'}}
       </div>
     </div>
   </div>
@@ -39,28 +39,7 @@
       </span>
     </span>
 
-    <div 
-    *ngIf="eligibleToShowPostMenu"
-    class="position-relative d-inline-block"
-    >
-      <button 
-      class="btn btn-icon-grey small"
-      (click)="_onClickButton($event, 'post-menu')"
-      >
-        <i iconPh="more-horiz"></i>
-      </button>
-      <div
-      [@fadeFast]
-      *ngIf="isPopupPostMenuShown"
-      class="position-absolute mt-5p" 
-      style="right: -5px;"
-      >
-        <popup-post-menu 
-        [post]="post"
-        (onClose)="onPopupPostMenuClosed()"
-        ></popup-post-menu>
-      </div>  
-    </div>
+    <popup-post-menu [post]="post"></popup-post-menu>
   </div>
 
 </div>
@@ -68,4 +47,13 @@
 <h2 
 class="h4"
 [ngClass]="{'clamp-1line': shorten}"
->{{post.title}}</h2>
+[innerHTML]="post.title"
+></h2>
+
+<div class="mb-10p">
+  <div #content
+  class="post-content"
+  [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
+  [innerHTML]="post.descriptionSanitized"
+  ></div>
+</div>

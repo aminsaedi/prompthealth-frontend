@@ -58,7 +58,7 @@ export class RegisterQuestionnaireComponent implements OnInit {
       (this.userRole == 'P') ? [
         {label: 'General Information',     isComplete: false, route: 'general'},
         {label: 'Company Services',        isComplete: false, route: 'service'},
-        {label: 'Offer for PromptHealth',  isComplete: false, route: 'offer'},
+        // {label: 'Offer for PromptHealth',  isComplete: false, route: 'offer'},
         {label: 'Terms and Conditions',    isComplete: false, route: 'term'},
       ] : 
       (this.userRole == 'SP' || this.userRole == 'C') ? [
@@ -100,13 +100,14 @@ export class RegisterQuestionnaireComponent implements OnInit {
           try {
             const monthly = (this._uService.sessionStorage.getItem('selectedMonthly') === 'true') ? true : false;
             const result = await this._sharedService.checkoutPlan(user, plan, 'default', monthly);
-            this._toastr.success(result.message);
             switch(result.nextAction) {
               case 'complete':
-                this._router.navigate(['/dashboard/register-product/complete']);
+                this._router.navigate(['/community']);
+                this._toastr.success('Thank you for joining us. You can always upgrade your plan!');
                 break;
               case 'stripe':
                 //automatically redirect to stripe. nothing to do.
+                this._toastr.success(result.message);
                 break;
             }
           } catch(error) {

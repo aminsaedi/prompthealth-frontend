@@ -6,12 +6,15 @@ export interface ISocialPostSearchQuery {
   count?: number; /** default: 20 */
   tags?: string[]; /** object id list for tag (greedy) */
   timestamp?: string|Date; /** search contents created before the timestamp */
-  eventTimeRange?: (string|Date)[]; /** [from, to?] search events which START in this time range*/
+  page?: number; /** if it's set, timestamp will be disabled */
+  eventTimeRange?: string[]; /** [from, to?] search events which START in this time range*/
   contentType?: ISocialPost['contentType'];
   hasMedia?: boolean;
   hasImage?: boolean;
   hasVoice?: boolean;
   authorId?: string;
+  excludeExpiredPromo?: boolean;
+  excludePastEvent?: boolean;
 }
 
 export class SocialPostSearchQuery implements ISocialPostSearchQuery {
@@ -23,10 +26,13 @@ export class SocialPostSearchQuery implements ISocialPostSearchQuery {
   get hasMedia() { return this.data.hasMedia || null; }
   get hasImage() { return this.data.hasImage || null; }
   get hasVoice() { return this.data.hasVoice || null; }
-  get timestamp() { return this.data.timestamp || null; }
+  get timestamp() { return (this.data.timestamp && !this.page) ? this.data.timestamp : null; }
+  get page() { return this.data.page > 0 ? this.data.page : null; }
   get eventTimeRange() { return this.data.eventTimeRange || null; }
   get authorId() { return this.data.authorId || null; }
   get contentType() { return this.data.contentType || null; }
+  get excludeExpiredPromo() { return this.data.excludeExpiredPromo || null; }
+  get excludePastEvent() { return this.data.excludePastEvent || null; }
 
   toJson() {
     const data: ISocialPostSearchQuery = {
@@ -38,9 +44,12 @@ export class SocialPostSearchQuery implements ISocialPostSearchQuery {
       ... (this.hasImage) && {hasImage: this.hasImage},
       ... (this.hasVoice) && {hasVoice: this.hasVoice},
       ... (this.timestamp) && {timestamp: this.timestamp},
+      ... (this.page) && {page: this.page},
       ... (this.eventTimeRange) && {eventTimeRange: this.eventTimeRange},
       ... (this.authorId) && {authorId: this.authorId},
       ... (this.contentType) && {contentType: this.contentType},
+      ... (this.excludeExpiredPromo) && {excludeExpiredPromo: this.excludeExpiredPromo},
+      ... (this.excludePastEvent) && {excludePastEvent: this.excludePastEvent},
     };
     return data;
   }

@@ -35,15 +35,15 @@ export class MyPerformanceComponent implements OnInit {
 
     const user = JSON.parse(localStorage.getItem('user'));
 
-    this.getBookingList(user._id);
+    // this.getBookingList(user._id);
     this.user = await this._profileService.getProfileDetail(user);
-    console.log(this.user);
+    // console.log(this.user);
   }
 
   getBookingList(userId: string) {
     const path = `booking/get-by-doctor/${userId}?count=0&page=1`;
     this._sharedService.get(path).subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       if (res.statusCode === 200 && res.data.data.length > 0) {
         const bookings: BookingData[] = res.data.data;
         const count = { approved: 0, canceled: 0, rejected: 0, completed: 0, pending: 0, rescheduled: 0, };

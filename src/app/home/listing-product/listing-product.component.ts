@@ -134,8 +134,8 @@ export class ListingProductComponent implements OnInit {
   }
 
   onChangeStickyStatus(isSticked: boolean){
-    if(isSticked){ this._headerService.hideHeader(); }
-    else{ this._headerService.showHeader(); }
+    if(isSticked){ this._headerService.hideHeader(true); }
+    else{ this._headerService.showHeader(true); }
   }
 
   backPage(){

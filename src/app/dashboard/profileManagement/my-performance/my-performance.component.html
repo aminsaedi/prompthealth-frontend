@@ -12,7 +12,7 @@
     </ul>
   </section>
 
-  <section class="mb-80p">
+  <!-- <section class="mb-80p">
     <h5>Your Bookings</h5>
     <p *ngIf="!countBooking">You have no booking in our system yet</p>
     <ng-container *ngIf="countBooking">
@@ -44,19 +44,15 @@
         </li>
 
         <li class="rounded-lg">
-          <div class="py-3 d-flex align-items-center justify-content-center title">
-            <i class="fas fa-calendar-check"></i>
+          <div class="py-3 bg-primary text-white subtitle1 text-center">
+            <i iconPh="thumbs-up"></i>
             <span class="ml-2">Booking Link clicked</span>
           </div>
           <div class="py-4 text-center">{{user.bookingCount}}</div>
         </li>
       </ul>
-      <div *ngIf="countBooking.pending">
-        <p class="font-italic subtitle1">There are some bookings that require your attention.</p>
-        <a [routerLink]="['../my-booking']" class='btn btn-outline'>See Bookings</a>
-      </div>
     </ng-container>
-  </section>
+  </section> -->
 
   <section class="mb-80p">
     <h5>Social Media Profile View Count</h5>

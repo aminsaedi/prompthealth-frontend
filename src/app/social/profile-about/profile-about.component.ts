@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { EmbedVideoService } from 'ngx-embed-video';
 import { Subscription } from 'rxjs';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
@@ -25,6 +26,8 @@ export class ProfileAboutComponent implements OnInit {
   public isProductViewerShown = false;
   public isPartnerViewerShown = false;
 
+  public videos: HTMLIFrameElement[];
+
   private subscription: Subscription;
   private selectedStaffIds = [];
 
@@ -34,6 +37,7 @@ export class ProfileAboutComponent implements OnInit {
     private _qService: QuestionnaireService,
     private _uService: UniversalService,
     private _router: Router,
+    private _embedService: EmbedVideoService,
   ) { }
 
   ngOnDestroy() {
@@ -52,6 +56,8 @@ export class ProfileAboutComponent implements OnInit {
   onProfileChanged(p: Professional | Partner) {
     this.profile = p;
     this.setMeta();
+
+    this.createIframesForVideo();
 
     if(p && p.isC && !p.triedFetchingAmenity) {
       p.markAsTriedFetchingAmenity();
@@ -83,6 +89,17 @@ export class ProfileAboutComponent implements OnInit {
         imageAlt: this.profile.name,
       });  
     }
+  }
+
+  createIframesForVideo() {
+    this.videos = [];
+    this.profile?.videos.forEach(v => {
+      const iframe: HTMLIFrameElement = this._embedService.embed(v.url);
+      if(iframe) {
+        iframe.title = v.title;
+        this.videos.push(iframe);  
+      }
+    });
   }
 
   fetchAmenity() {
@@ -121,10 +138,10 @@ export class ProfileAboutComponent implements OnInit {
 
   fetchStaffs() {
     return new Promise((resolve, reject) => {
-      const path = `staff/get-all?center=${this.profile._id}&count=20&page=1&frontend=0/`;
+      const path = `staff/get-by-center/${this.profile._id}`;
       this._sharedService.getNoAuth(path).subscribe((res: IGetStaffsResult) => {
         if(res.statusCode == 200) {
-          const staffs = res.data.data.map(item => item.userId);
+          const staffs = res.data.map(item => item.userId);
           this.profile.setStaffs(staffs);
           resolve(true);  
         } else {
@@ -143,7 +160,6 @@ export class ProfileAboutComponent implements OnInit {
       _id: this.profile._id,
       type,
     }, 'user/update-social-count').subscribe((res) => {
-      console.log(res);
     });
   }
 

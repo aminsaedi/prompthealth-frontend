@@ -1,4 +1,4 @@
-[class^=image-container-] {
+[class*=image-container-] {
   position: relative;
 
   img {
@@ -57,6 +57,12 @@
 .image-container-40pc::after {
   padding-top: 40%;
 }
+.image-container-50pc::after {
+  padding-top: 50%;
+}
+.image-container-60pc::after {
+  padding-top: 60%;
+}
 .image-container-100pc::after {
   padding-top: 100%;
 }
@@ -80,6 +86,13 @@
   .image-container-md-40pc::after {
     padding-top: 40%;
   }
+  .image-container-md-50pc::after {
+    padding-top: 50%;
+  }
+  .image-container-md-60pc::after {
+    padding-top: 60%;
+  }
+  
   .image-container-md-100pc::after {
     padding-top: 100%;
   }
@@ -104,6 +117,13 @@
   .image-container-lg-40pc::after {
     padding-top: 40%;
   }
+  .image-container-lg-50pc::after {
+    padding-top: 50%;
+  }
+  .image-container-lg-60pc::after {
+    padding-top: 60%;
+  }
+  
   .image-container-lg-100pc::after {
     padding-top: 100%;
   }
@@ -127,6 +147,12 @@
   }
   .image-container-xl-40pc::after {
     padding-top: 40%;
+  }
+  .image-container-xl-50pc::after {
+    padding-top: 50%;
+  }
+  .image-container-xl-60pc::after {
+    padding-top: 60%;
   }
   .image-container-xl-100pc::after {
     padding-top: 100%;

@@ -1,44 +1,23 @@
-<section class="bg-primary-light overflow-hidden py-20p py-lg-80p">
-  <div class="container position-relative">
-    <div 
-    class="circle-for-about circle-secondary" 
-    parallax
-    intensity="0.7"
-    ></div>
-    <div class="row align-items-center position-relative flex-column-reverse flex-md-row">
-      <div class="col-12 col-md-6 col-lg-7 my-30p">
-        <ul 
-        class="list-unstyled top-images position-relative " 
-        [@slideVerticalStagger]="countImagesLoaded"
-        [@.disabled]="disableAnimationTop"
-        >
-          <li 
-          *ngFor="let img of topImages;"
-          [ngClass]="{'show': isImageReady}"
-          >
-            <img
-            [hidden]="!isImageReady"
-            [src]="img" 
-            (load)="onImageLoaded()"
-            >  
-          </li>
-        </ul>  
-      </div>
-      <div class="col-12 col-md-6 col-lg-5 my-30p">
-        <h6 class="text-primary mb-20p">
-          About
-        </h6>
-        <h1 class="h3 h2-xl mb-20p">
-          We are here to empower you along your wellness journey.
-        </h1>
-        <p class="text-label">
-          We want to facilitate your wellness journey by connecting you with holistic health providers that fit your personal needs and preferences.<br>
-          Our goal is to provide those looking to improve their health with resources and practitioners that approach wellness from a holistic perspective. 
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="hero-video overflow-hidden">
+  <video 
+  #videoPlayer
+  autoplay 
+  [muted]="true"
+  loop 
+  playsinline 
+  [ngClass]="isVideoLgReady ? 'd-none' : ''"
+  [src]="videoLink"
+  poster="/assets/video/about-thumbnail.jpg"
+  ></video>
+  <video
+  #videoLg
+  playinline
+  [muted]="true"
+  [ngClass]="!isVideoLgReady ? 'd-none' : ''"
+  preload="none"
+  [src]="videoLinkLg"
+  ></video>
+</div>
 
 <div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="changeHeaderShadowStatus($event)"></div>
 <section class="overflow-hidden" style="max-width: 100vw">
@@ -61,8 +40,8 @@
           </svg>
     
           <span class="position-relative">
-            One size does not fit all, especially when it comes to choosing a wellness service or provider. We want people to feel empowered through their journey by being aware of different options for care.<br>
-            Helping Candians feel <span class="text-body">empowered</span> through their wellness journey, <span class="text-body">not overwhelmed</span> - the way it should be when we are taking care of ourselves. 
+            One size does not fit all, especially when it comes to choosing a wellness service or provider. We want people to feel empowered through their journey by being aware of different options for care.<br><br>
+            Helping Canadians feel <span class="text-body">empowered</span> through their wellness journey, <span class="text-body">not overwhelmed</span> - the way it should be when we are taking care of ourselves. 
           </span>
         </p>
       </div>
@@ -105,7 +84,7 @@
     <div class="col-12 col-md-6 order-1 order-md-2">
       <h2 class="h3 h2-md mb-20p">Why a holistic approach?</h2>
       <p class="explanation">
-        Feeling unwell in one aspect of ourselves - mind, body, or spirit - can make us feel unwell in other aspects. We believe that approaching wellness in a way that addresses the whole self is the best way to achieve optimal health. 
+        Feeling unwell in one aspect of ourselves - mind, body, or spirit - can make us feel unwell in other aspects. We believe that approaching wellness in a way that addresses the whole self is the best way to achieve optimal health.
       </p>
     </div>
   </div>
@@ -117,11 +96,10 @@
       <div class="p-15p p-md-40p px-lg-100p">
         <h4 class="text-center mb-20p">The Company</h4>
         <p class="explanation">
-          In our traditional healthcare system, finding treatment is often illness-focused and does not take into account all the elements of our wellbeing - mental, physical, social, emotional, and spiritual health. Instead, it only treats symptoms. PromptHealth was created to solve the gap between people seeking preventative care, and the wellness practitioners who provide complementary solutions to traditional healthcare. 
+          In our traditional healthcare system, finding treatment is often illness-focused and does not take into account all the elements of our wellbeing - mental, physical, social, emotional, and spiritual health. Instead, it only treats symptoms. PromptHealth was created to solve the gap between people seeking preventative care, and the wellness providers who provide complementary solutions to traditional healthcare. 
           <br><br>
-          In a world where people seek health information online, we are enabling trusted practitioners to share their knowledge and resources to those seeking wellness solutions, all in one place. Our app acts as a social platform that allows users to find and learn from wellness providers in whatever media format they prefer, including notes, voices, events, and articles. 
+          In a world where people seek health information online, we are enabling trusted providers to share their knowledge and resources to those seeking wellness solutions, all in one place. Our app acts as a social platform that allows users to find and learn from wellness providers in whatever media format they prefer, including notes, voices, events, and articles. 
           <br><br>
-
           <img 
           src="/assets/img/logo-sm.png" 
           alt="PromptHealth"
@@ -131,7 +109,7 @@
           >
           <b>
             <span class="text-primary">PromptHealth </span>
-            seeks to educate people on all of their care options, empowering them with the knowledge and resources to facilitate their wellness journey.  
+            educates people on all of their care options, empowering them with the knowledge and resources to facilitate their wellness journey.  
           </b>
         </p>
       </div>

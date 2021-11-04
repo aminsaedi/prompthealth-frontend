@@ -1,115 +1,167 @@
-<section class="bg-primary-light py-40p pt-md-90p pb-md-70p overflow-hidden">
-  <div class="container">
+<section class="bg-lightyellow pb-md-70p overflow-hidden position-relative">
+  <div class="circle-for-dim-1"></div>
+  <div class="circle-for-dim-2"></div>
+  <div class="dim-3"></div>
+  <div class="circle-for-dim-4"></div>
+
+  <div class="container py-5p py-md-10p position-relative" style="z-index: 2">
+    <div class="d-flex justify-content-between justify-content-lg-start align-items-center">
+      <div>
+        <a routerLink="/">
+          <img class="d-md-none d-lg-block d-xl-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20">
+          <img class="d-none d-md-block d-lg-none d-xl-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="25">
+        </a>
+      </div>
+      <nav>
+        <ul class="d-flex justify-content-between align-items-center list-unstyled mb-0 subtitle2 text-body">
+          <li class="ml-30p mr-15p d-none d-lg-block">
+            <a routerLink="/practitioners" class="text-body">Find Providers</a>
+          </li>
+          <li class="mx-15p d-none d-lg-block">
+            <a routerLink="/products" class="text-body">Companies</a>
+          </li>
+          <li class="mx-10p d-none d-lg-block">
+            <a routerLink="/about" class="text-body">About</a>
+          </li>
+
+          <li class="mx-15p d-none d-lg-block position-relative" (clickOutside)="hidePlanMenu()">
+            <a class="text-body" (click)="onClickGetListed()">Get listed</a>
+            <i iconPh="chevron-down" class="ml-5p"></i>
+            <div 
+            *ngIf="isPlanMenuShown"
+            [@fade]
+            class="px-30p bg-white rounded-12p shadow get-listed-md-container"
+            >
+              <a
+              *ngFor="let item of planMenuData;"
+              [routerLink]="[item.link]" 
+              (click)="hidePlanMenu()"
+              >
+                <div class="py-30p border-bottom border-line">
+                  <h6 class="d-flex">
+                    <span class="flex-grow-1">
+                      <i [iconPh]="item.icon" class="mr-10p text-primary-dark"></i>
+                      <span class="text-body">{{item.title}}</span>
+                    </span>
+                    <i iconPh="chevron-right" class="text-placeholder"></i>
+                  </h6>
+                  <p class="mb-0 body2 text-label">{{item.text}}</p>
+                </div>
+              </a>
+            </div>
+          </li>
+
+          <li *ngIf="!isLoggedIn" class="mx-15p d-none d-lg-block">
+            <a routerLink="/auth/login" class="text-body">Login</a>
+            /
+            <a routerLink="/auth/registration/u" class="text-body">Register</a>
+          </li>
+
+          <li *ngIf="isLoggedIn" class="mx-10p mx-lg-15p cursor-pointer">
+            <profile-image [image]="user?.profileImageFull" (click)="onClickUserIcon()"></profile-image>
+          </li>
+          <li class="ml-10p ml-lg-15p">
+            <a routerLink="/community/feed" class="btn btn-primary small">
+              <i iconPh="users"></i>
+              <span>Community</span>
+            </a>
+          </li>
+          <li class="d-lg-none">
+            <button class="btn btn-icon small pr-0 py-5p ml-10p" (click)="showMenuSm()">
+              <i iconPh="menu" class="large"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container py-40p pt-md-90p ">
     <div class="row">
       <div class="col-12 col-lg-7" style="z-index: 1">
-        <h6 class="h6 text-primary mb-20p">Discover. Learn. Connect.</h6>
-        <h2 class="h3 h2-md mb-30p">Your health and wellness personal assistant</h2>
-        <h6 class="h6 opacity-70pc mb-50p">Take control of your health with options tailored to you</h6>
+        <h6 
+        class="h6 text-primary-dark mb-20p"
+        style="font-weight: 400"
+        >Find vetted wellness providers and start your health journey today.</h6>
+        <h2 class="h3 h2-md mb-55p text-primary-dark">
+          Your 
+          <span class="handwritten-highlight-secondary">wellness</span> 
+          navigator.</h2>
         
-        <div class="bg-white color-border-primary-light-dark border rounded-lg mb-50p">
+        <div class="bg-white color-border-primary-light-dark border rounded-lg mb-40p">
           <search-bar></search-bar>
         </div>
 
-        <ul class="row list-unstyled">
-          <li class="col-12 col-md-4">
-            <h5 class="text-secondary">
-              <i iconPh="checkbox-square-outline"></i>
-            </h5>
-            <p class="opacity-70pc">
-              Find trusted wellness practitioners.
-            </p>
-          </li>
-          <li class="col-12 col-md-4">
-            <h5 class="text-secondary">
-              <i iconPh="checkbox-square-outline"></i>
-            </h5>
-            <p class="opacity-70pc">
-              Discover resources from the experts.
-            </p>
-          </li>
-          <li class="col-12 col-md-4">
-            <h5 class="text-secondary">
-              <i iconPh="checkbox-square-outline"></i>
-            </h5>
-            <p class="opacity-70pc">
-              Stay connected.
-            </p>
-          </li>
-        </ul>
+        <div class="mb-55p text-label body1">
+          <img src="/assets/img/home/three-providers.png" alt="" style="vertical-align: middle;">
+          <div class="d-inline-block ml-10p" style="vertical-align: middle;">
+            <span class="text-primary">+500</span> Providers <br class="d-md-none">
+            from all across Canada
+          </div>
+        </div>
+
+        <div class="row align-items-center flex-lg-nowrap">
+          <!-- <div class="col-4 col-md col-lg-3 mb-15p">
+            <a href="https://purepharmacy.com/" target="_blank">
+              <img src="/assets/img/partners/pure-pharmacy.png?ver=2" alt="" style="width: 98%; height: auto;" class="filter-black opacity-50pc">
+            </a>
+          </div>
+          <div class="col-4 col-md col-lg-3 mb-15p">
+            <a href="https://inbodycanada.ca/" target="_blank"> 
+              <img src="/assets/img/partners/inbody-canada.jpeg?ver=2" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc">
+            </a>    
+          </div>
+          <div class="col-4 d-md-none"></div> -->
+          <div class="col-4 col-md col-lg-4 mb-15p">
+            <a href="https://lifesciencesbc.ca/members/personalized-healthcare-with-prompt-health-the-new-wave-of-health-and-wellness/" target="_blank">
+              <img src="/assets/img/medias/life-sciences.png?ver=2" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc">
+            </a>    
+          </div>
+          <div class="col-4 col-md col-lg-4 mb-15p">
+            <a href="https://medcitynews.com/2021/02/prompt-health-is-creating-marketplace-for-smart-referrals/" target="_blank">
+              <img src="/assets/img/medias/medcity-news.png?ver=2" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc">
+            </a>    
+          </div>
+          <div class="col-4 col-md col-lg-4 mb-15p">
+            <img src="/assets/img/medias/canadian-insider.png?ver=2" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc">
+          </div>
+        </div>  
+
       </div>
       <div class="col">
-        <div class="position-relative mt-50p">
-          <div class="circle-for-video circle-secondary" parallax intensity="0.5"></div>
-          <div class="video-container position-relative rounded-12p overflow-hidden">
-            <video src="assets/video/video2.mp4" controls></video>
+        <div class="slideshow-container mt-30p mt-lg-0p">
+          <div class="slideshow slideshow-animate mb-15p mb-lg-0p mr-lg-20p">
+            <ng-container *ngFor="let ii of [0,1]">
+              <div 
+              *ngFor="let item of slideshow; let i = index"
+              class="item overflow-hidden rounded-8p"
+              >
+                <img [src]="'assets/img/home/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;">
+              </div>  
+            </ng-container>
           </div>
-        </div>
+            <div class="slideshow slideshow-animate-reverse mb-15p mb-lg-0p">
+              <ng-container *ngFor="let jj of [0,1]">
+                <div 
+                *ngFor="let item of slideshowReverse; let i = index"
+                class="item-reverse overflow-hidden rounded-8p"
+                >
+                  <img [src]="'assets/img/home/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;">
+                </div>                    
+              </ng-container>
+            </div>          
+        </div>  
       </div>
     </div>
   </div>
-</section>
-
-<div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="changeHeaderShadowStatus($event)"></div>
-<section class="bg-primary-lighter py-65p">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-12 col-lg-4">
-        <h4 class="d-flex flex-nowrap align-items-center">
-          <i iconPh="heart-filled" class="text-secondary mr-2 large text-primary-dark "></i>
-          <span>Our partners: </span>
-        </h4>    
-      </div>
-      <div class="col-12 col-lg-8 mt-4 mt-lg-0">
-        <div class="row align-items-center">
-          <div class="col-6 col-md-4 col-lg-4">
-            <a href="https://purepharmacy.com/" target="_blank">
-              <img src="/assets/img/partners/pure-pharmacy.png" alt="" style="width: 90%; height: auto;">
-            </a>    
-          </div>
-          <div class="col-6 col-md-4 col-lg-4">
-            <a href="https://inbodycanada.ca/" target="_blank">
-              <img src="/assets/img/partners/inbody-canada.jpeg" alt="" style="width: 90%; height: auto;">
-            </a>    
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container mt-50p">
-    <div class="row align-items-center">
-      <div class="col-12 col-lg-4">
-        <h4 class="d-flex flex-nowrap align-items-center">
-          <i iconPh="heart-filled" class="text-secondary mr-2 large text-primary-dark "></i>
-          <span>As featured in: </span>
-        </h4>    
-      </div>
-      <div class="col-12 col-lg-8 mt-4 mt-lg-0">
-        <div class="row align-items-center">
-          <div class="col-6 col-md-4 col-lg-4">
-            <a href="https://lifesciencesbc.ca/members/personalized-healthcare-with-prompt-health-the-new-wave-of-health-and-wellness/" target="_blank">
-              <img src="/assets/img/medias/life-sciences.png" alt="" style="width: 90%; height: auto;">
-            </a>    
-          </div>
-          <div class="col-6 col-md-4 col-lg-4">
-            <a href="https://ca.style.yahoo.com/one-size-does-not-fit-231700679.html" target="_blank">
-              <img src="/assets/img/medias/yahoo-life.png" alt="" style="width: 90%; height: auto;">
-            </a>    
-          </div>
-          <div class="col-6 col-md-4 col-lg-4">
-            <a href="https://medcitynews.com/2021/02/prompt-health-is-creating-marketplace-for-smart-referrals/" target="_blank">
-              <img src="/assets/img/medias/medcity-news.png" alt="" style="width: 90%; height: auto;">
-            </a>    
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </section>
 
 <!-- category start -->
+<div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectCategory($event)"></div>
 <section class="container my-40p my-md-100p">
+  <h2 class="text-center mb-50p">
+    <span class="handwritten-highlight">Specialities</span>
+  </h2>
   <ul class="row list-unstyled p-0">
     <ng-container *ngFor="let dataPerRow of categoryController?.dataPerRows; let i = index;">
       <li *ngFor="let cat of dataPerRow.categories; let j = index;" class="col-12 col-md-6 col-xl-4">
@@ -163,39 +215,37 @@
       </li>
     </ng-container>
   </ul>
-
-  <!-- <div class="d-flex h6 mt-50p">
-    <i iconPh="question" class="text-primary large mr-2"></i>
-    <div class="d-md-flex flex-nowrap">
-      <h6>Are you a wellness Provider?</h6>
-      <a class="mt-3 mt-md-0 ml-md-3" routerLink="/sitemaps" fragment="type-of-provider">Click To See All 38 Provider Types</a>  
-    </div>
-  </div> -->
 </section>
 <!-- category end -->
 
 <!-- expert finder start -->
-<section class="mt-100p">
+<section class="mt-100p bg-primary-light pt-70p pb-100p">
   <div class="container mb-25p">
-    <h2>Expert Finder</h2>
-    <div class="row align-items-end justify-content-between">
-      <p class="col-12 col-md-8 col-lg-7 mb-md-0">
+    <h2 class="text-center mb-30p">
+      <span class="handwritten-highlight-white">Expert Finder</span>
+    </h2>
+    <div class="row justify-content-center">
+      <p class="mb-md-0 text-center col col-lg-8 mb-30p">
         Searching for care options can be difficult. 
-        Get started and discover a vetted wellness practitioner that is right for you.
-      </p>
-      <div class="col-12 col-md text-md-right">
-        <a class="btn btn-text body1 pl-0 pr-md-0 pb-md-0" routerLink="/practitioners">
-            <u>Find Practitioners</u>
-          <i iconPh="arrow-right-circle"></i>
-        </a>
-      </div>
-    </div>  
+        Browse our providers and discover a vetted wellness provider that is right for you.
+      </p>  
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-center">
+      <a class="btn btn-outline mb-15p mb-md-0p mx-md-30p" routerLink="/personal-match">
+        Start Personal Match
+      </a>
+
+      <a class="btn btn-primary mx-md-30p" routerLink="/practitioners">
+        Find providers
+      </a>
+    </div>
   </div>
 
   <div class="container">
     <div class="row mb-3" *ngIf="!featuredExpertController || !featuredExpertController.includePersonalMatchInFirstRow">
       <div class="col-12">
-        <ng-container *ngTemplateOutlet="cardPersonalMatch"></ng-container>
+        <!-- <ng-container *ngTemplateOutlet="cardPersonalMatch"></ng-container> -->
       </div>
     </div>
   </div>
@@ -206,12 +256,12 @@
     <ul *ngFor="let dataPerRow of featuredExpertController.dataPerRows; let i = index"
     class="d-flex align-items-stretch flex-nowrap list-unstyled expert-finder-container"
     >
-      <li
+      <!-- <li
       *ngIf="!!featuredExpertController.includePersonalMatchInFirstRow && i == 0"
       class="personal-match-container mr-15p"
       >
         <ng-container *ngTemplateOutlet="cardPersonalMatch"></ng-container>
-      </li>
+      </li> -->
 
       <li 
       *ngFor="let p of dataPerRow" 
@@ -228,20 +278,6 @@
       </li>
     </ul>
   </div>
-
-  <ng-template #cardPersonalMatch>
-    <div class="card card-personal-match align-items-center bg-primary h-100 rounded-12p personal-match p-3 text-white text-center">
-      <div class="mt-5p mb-10p">
-        <i iconPh="checkbox-square" style="font-size: 45px;"></i>
-      </div>
-      <h6 class="mb-15p">Need a personal match?</h6>
-      <p class="body2">
-        Get matched with and compare health and wellness practitioners tailored to 
-        your specific health and wellness goals, preferences, and needs.
-      </p>  
-      <a class="btn btn-black" routerLink="/personal-match">Get Started</a>
-    </div>
-  </ng-template>
 </section>
 <!-- expert finder end -->
 
@@ -251,10 +287,9 @@
     <div class="row align-items-center">
       <div class="col-12 col-lg-5 col-xl-6 order-lg-2">
         <h6 class="text-primary mb-10p mb-md-20p mb-lg-10p mb-xl-20p">Our community</h6>
-        <h2 class="h3 h2-md mb-25p">Stay connected with your favourite practitioners</h2>
+        <h2 class="h3 h2-md mb-25p">Connect and learn from wellness experts near you.</h2>
         <p class="mb-60p">
-          Use our social features to connect, engage, and learn more from trusted sources before booking with them. 
-          Access wellness information created by experts via notes, voices, events, videos, articles, and more.
+          Discover their philosophy to wellness, services, and treatment modalities. Use our social features to connect, engage, and learn about your chosen provider before booking with them.
         </p>
         <a
         routerLink="/community/feed"
@@ -264,7 +299,7 @@
         </a>
       </div>
       <div class="col-12 col-lg-7 col-xl-6 my-20p my-lg-0p order-lg-1 ">
-        <div class="d-flex bg-primary-light py-15p rounded-12p post-types-container position-relative">
+        <div class="d-flex py-15p rounded-12p post-types-container position-relative">
 
           <div class="mx-5p mx-md-20p mx-lg-10p mx-xl-20p mt-50p mt-lg-0p" style="flex: 0 1 33%">
             <ng-container *ngTemplateOutlet="cardPostType; context: {data: introductionPostType.note}"></ng-container>
@@ -283,7 +318,7 @@
         </div>
       </div>
       <ng-template #cardPostType let-data="data">
-        <div class="card rounded-12p py-20p px-10p my-5p my-md-20p my-lg-10p my-xl-20p">
+        <div class="card rounded-12p py-20p px-10p my-5p my-md-20p my-lg-10p my-xl-20p bg-lightyellow border-0">
           <div class="mb-10p mb-md-20p">
             <div
             class="d-inline-block rounded-8p icon-container"
@@ -302,13 +337,15 @@
 
 <!-- testimonial start-->
 <div class="intersection-observer" intersectionObserver rootMargin="-70% 0px 10000px 0px" (changeStatus)="onIntersectTestimonial($event)"></div>
-<section class="bg-primary-light py-100p position-relative overflow-hidden">
-  <div class="circle-for-testimonial circle-secondary" parallax intensity="0.3"></div>
+<section class="bg-lightgreen py-100p position-relative overflow-hidden">
+  <!-- <div class="circle-for-testimonial circle-secondary" parallax intensity="0.3"></div> -->
   <div class="container">
     <div class="row">
       <div class="col-12 col-xl-4">
-        <h2>What people think of us</h2>
-        <p class="subtitle1 opacity-70pc mb-45p">When our members are happy, we are too.</p>
+        <h2 class="mb-30p mb-lg-40p mb-xl-30p text-center text-xl-left">
+          <span class="handwritten-highlight-white">What people think of us</span>
+        </h2>
+        <p class="subtitle1 opacity-70pc mb-45p text-center text-xl-left">When our members are happy, we are too.</p>
         <!-- <a class="btn btn-primary">Read More Testimonials</a> -->
       </div>
 
@@ -332,16 +369,16 @@
 <!-- #app -->
 <section class="my-100p">
   <div class="container text-center">
-    <h2 class="h4 h2-md">
-      <span class="text-primary">+476</span> 
+    <h2 class="h3 h2-md">
+      <span class="text-primary">+500</span> 
       providers. <br>
-      Conncect together.
+      Connect together.
     </h2>
     <p class="mb-50p">
       <span class="opacity-70pc">
-        Find trusted wellness practitioners based on your personalized needs. 
+        Find trusted wellness providers based on your personalized needs. 
         <br>
-        PromptHealth is the social app helping you find health and wellness information provided by vetted practitioners. 
+        PromptHealth is the social app helping you find health and wellness information provided by vetted providers. 
       </span>
     </p>  
   </div>
@@ -494,33 +531,36 @@
 <!-- Find by city end-->
 
 <!-- blogs start-->
-<section class="container my-100p">
-  <h2 class="mb-30p">Our Blogs</h2>
-  <ul class="row list-unstyled mb-0">
-    <ng-container *ngIf="!blogs">
-      <li class="col-12 col-md-4 mb-20p" *ngFor="let i of [0,1,2]">
-        <div class="card"><card-dummy></card-dummy></div>
-      </li>
-    </ng-container>
-    <ng-container *ngIf="blogs">
-      <li class="col-12 col-md-4 mb-20p" *ngFor="let b of blogs">
-        <a [routerLink]="[b.linkToPost]">
-          <div class="bg-background rounded-12p p-20p">
-            <div class="body-small text-primary mb-10p">{{b.createdAt | date: 'longDate'}}</div>
-            <h6 class="h6 clamp-2line mb-10p text-body">{{b.title}}</h6>
-            <p class="body1 clamp-3line text-body">{{b.summary}}</p>
-            <div class="text-right">
-              <button class="btn btn-text pr-0 pb-0">
-                <u>Read</u>
-                <i iconPh="arrow-right-circle" class="large"></i>
-              </button>
+<div class="bg-primary-light">
+  <section class="container py-100p">
+    <h2 class="mb-30p">Our Blogs</h2>
+    <ul class="row list-unstyled mb-0">
+      <ng-container *ngIf="!blogs">
+        <li class="col-12 col-md-4 mb-20p" *ngFor="let i of [0,1,2]">
+          <div class="card"><card-dummy></card-dummy></div>
+        </li>
+      </ng-container>
+      <ng-container *ngIf="blogs">
+        <li class="col-12 col-md-4 mb-20p" *ngFor="let b of blogs">
+          <a [routerLink]="[b.linkToPost]">
+            <div class="bg-white rounded-12p p-20p">
+              <div class="body-small text-primary mb-10p">{{b.createdAt | date: 'longDate'}}</div>
+              <h6 class="h6 clamp-2line mb-10p text-body">{{b.title}}</h6>
+              <p class="body1 clamp-3line text-body">{{b.summary}}</p>
+              <div class="text-right">
+                <button class="btn btn-text pr-0 pb-0">
+                  <u>Read</u>
+                  <i iconPh="arrow-right-circle" class="large"></i>
+                </button>
+              </div>
             </div>
-          </div>
-        </a>
-      </li>
-    </ng-container>
-  </ul>
-</section>
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+  </section>
+</div>
+
 
 
 

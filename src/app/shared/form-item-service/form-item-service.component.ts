@@ -16,6 +16,7 @@ export class FormItemServiceComponent implements OnInit {
   @Input() submitted: boolean = false;
   @Input() controller: FormGroup = new FormGroup({});
   @Input() option: IOptionCheckboxGroupService = {};
+  @Input() type: 'checkbox' | 'chip' = 'checkbox';
 
 
   @Output() changeValue = new EventEmitter<string[]>();
@@ -104,6 +105,7 @@ export class FormItemServiceComponent implements OnInit {
 
 export interface IOptionCheckboxGroupService extends IOptionCheckboxGroup{
   hideSub?: boolean;
+
 }
 
 export class OptionCheckboxGroupService extends OptionCheckboxGroup implements IOptionCheckboxGroupService {

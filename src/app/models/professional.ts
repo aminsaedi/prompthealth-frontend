@@ -4,6 +4,7 @@ import { IUserDetail, IVideo } from './user-detail';
 import { IProfile, Profile } from './profile';
 import { ReviewData } from './review-data';
 import { IReferral, Referral } from './referral';
+import { ISocialPost } from './social-post';
 
 export interface IProfessional extends IProfile {
   id: IProfessional['_id']; /** old name (changed to _id) */
@@ -45,7 +46,6 @@ export interface IProfessional extends IProfile {
   recommendations: Referral[];
   recommendationsPreview: Referral[];
 
-
   team: Professional;
   staffs: Professional[];
   amenity: ImageViewerData; /** all amenities data */
@@ -82,6 +82,7 @@ export interface IProfessional extends IProfile {
   triedFetchingProduct: boolean;
   triedFetchingStaffs: boolean;
   triedFetchingTeam: boolean;
+
   eligibleFeatureStaffs: boolean;
   eligibleFeatureRecommendation: boolean;
 }
@@ -98,10 +99,12 @@ export class Professional extends Profile implements IProfessional{
   get imageType(){ return this.profileImageType; }
   get coverImage() { return super.coverImage || this._defaultBanner; }
 
-  get emailToDisplay() { return this.p.displayEmail; }
+  // get emailToDisplay() { return this.p.displayEmail; }
+  get emailToDisplay() { return null; }
 
   get title() { return this.p.professional_title || null; }
-  get phone() { return this._phone; }
+  // get phone() { return this._phone; }
+  get phone() { return null; }
   get address() { return (!this.p.hideAddress && this.p.address && this.p.address.length > 0) ? this.p.address : null; }
   get state() { return this.p.state; }
   get city() { return this.p.city; }
@@ -112,9 +115,15 @@ export class Professional extends Profile implements IProfessional{
 
   get price() { return (this._priceRange.length >= 1) ? `$${this._priceRange[0]}+ / hr` : null; }
   get priceFull() { return (this._priceRange.length === 0) ? 'N/A' : '$' + this._priceRange.join(' - '); }
-  get website() { return this.p.website; }
+  get website() { 
+    //some legacy users have link without http prefix. if so, add it.
+    return (this.p.website && !this.p.website.match(/^http/)) ? 'http://' + this.p.website : this.p.website || null;
+  }
   get websiteLabel() { return this.getURLLabel(this.p.website); }
-  get bookingUrl() { return this.p.bookingURL || null; }
+  get bookingUrl() { 
+    //some legacy users have bookingURL without http prefix. if so, add it.
+    return (this.p.bookingURL && !this.p.bookingURL.match(/^http/)) ? 'http://' + this.p.bookingURL : this.p.bookingURL || null;
+  }
   get organization() { return this.p.professional_organization || null; }
   get certification() { return this.p.certification; }
   get yearsOfExperience() { return this.p.years_of_experience || null; }
@@ -208,12 +217,13 @@ export class Professional extends Profile implements IProfessional{
 
   getURLLabel(url: string = ''){
     let label = ''
-    const match = url.match(/https?:\/\/(?:www\.)?([^/]+)/);
+    // some legacy users have url without http prefix. it's better http:// is optional here.
+    const match = url.match(/(?:https?:\/\/)?(?:www\.)?([^/]+)/);
     if(url && match){ label = match[1]; }
     return label;
   }
 
-  private _phone: string;
+  // private _phone: string;
   private _reviewData: ReviewData;
   private _recommendations: Referral[];
 
@@ -253,17 +263,16 @@ export class Professional extends Profile implements IProfessional{
   constructor(id: string, protected p: IUserDetail, private ans?: any) {
     super({...p, _id: id});
 
-    let phone: string;
-    if (!p.phone) {
-      phone = null;
-    } else if (p.phone.length === 0) {
-      phone = null;
-    } else if (p.phone.length === 10) {
-      phone = `(${p.phone.slice(0, 3)}) ${p.phone.slice(3, 6)}-${p.phone.slice(6)}`;
-    } else {
-      phone = p.phone;
-    }
-    this._phone = phone;
+    // let phone: string = p.phone || '';
+    // phone = phone.replace(/[^0-9\+]/g, '');
+
+    // if (phone.length === 10) {
+    //   phone = `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`;
+    // } else {
+    //   phone = p.phone;
+    // }
+
+    // this._phone = phone;
 
     let priceRange: string = p.exactPricing ? p.exactPricing.toString() : (p.price_per_hours || '');
     priceRange = priceRange.replace('<', '0 -');

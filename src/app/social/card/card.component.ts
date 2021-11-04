@@ -7,6 +7,7 @@ import { Category, CategoryService } from 'src/app/shared/services/category.serv
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar.component';
+import { SocialService } from '../social.service';
 
 @Component({
   selector: 'card',
@@ -20,26 +21,12 @@ export class CardComponent implements OnInit {
 
   @Input() option: ICardOption = {};
 
-  get images() {
-    let images: string[] = null;
-    if(this.post && this.post.isNote) {
-      images = this.post.images;
-    }
-    return images;
-  }
-
-  get voice() {
-    let voice: string = null;
-    if(this.post && this.post.isNote) {
-      voice = this.post.voice || null;
-    }
-    return voice;
-  }
 
   get topics(): Category[] { return this._categoryService.categoryList; }
+  get selectedTopicId() { return this._socialService.selectedTopicId; }
 
 
-  public isContentGradientShown: boolean = false;
+  // public isContentGradientShown: boolean = false;
   public _option: CardOption;
 
 
@@ -53,11 +40,12 @@ export class CardComponent implements OnInit {
     private _location: Location,
     private _modalService: ModalService,
     private _categoryService: CategoryService,
+    private _socialService: SocialService,
   ) { }
 
   ngAfterViewInit() {
-    const el = this.content.nativeElement as HTMLDivElement;
-    this.isContentGradientShown = (el.clientHeight >= 200);
+    // const el = this.content.nativeElement as HTMLDivElement;
+    // this.isContentGradientShown = (el.clientHeight >= 200);
 
     if(this._option.openCommentsOnInit) {
       this.toolbar.showComment();
@@ -93,19 +81,12 @@ export class CardComponent implements OnInit {
     }
   }
   
-  onClickButton(buttonName: string) {
-    console.log(buttonName);
-    switch(buttonName) {
-      case 'post-menu':
-      case 'calendar-menu':
-      case 'subscribe-menu':
-        this._modalService.show(buttonName, this.post);
-        break;
-    }
-  }
-
   markCurrentPosition() {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
+  }
+
+  stopPropergation(e: Event) {
+    e.stopPropagation();
   }
 }
 

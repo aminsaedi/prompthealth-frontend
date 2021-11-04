@@ -1,224 +1,236 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
+import { Booking } from 'src/app/models/booking';
+import { GetQuery } from 'src/app/models/get-query';
+import { IGetBookingsResult, IUpdateBookingResult } from 'src/app/models/response-data';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { SharedService } from '../../../shared/services/shared.service';
+import { ProfileManagementService } from '../profile-management.service';
 
 @Component({
   selector: 'app-my-booking',
   templateUrl: './my-booking.component.html',
-  styleUrls: ['./my-booking.component.scss']
+  styleUrls: ['./my-booking.component.scss'],
+  animations: [expandVerticalAnimation]
 })
 export class MyBookingComponent implements OnInit {
-  @ViewChild('closebutton') closebutton;
-  @ViewChild('closeRatingbutton') closeRatingbutton;
-  @ViewChild('reviewModal') reviewModal: ElementRef;
-  bookingForm: FormGroup;
-  ratingSubmited = false;
-  ratingPayload = {}
-  ratingClicked: number;
-  review = '';
-  public currentPage = 1;
-  public totalItems: number;
-  public itemsPerPage = 10;
-  public minDateTime: DateTimeData;
 
-  @ViewChild(FormItemDatetimeComponent) formDateTimeComponent: FormItemDatetimeComponent;
-  timingList = [
-    { id: 'timing1', name: 'Morning' },
-    { id: 'timing2', name: 'Afternoon' },
-    { id: 'timing3', name: 'Evening' },
-    { id: 'timing4', name: 'Anytime' },
-  ];
+  get user() { return this._profileService.profile; }
+  get userId() { return this.user?._id; }     //it always has value
+  get userRole() { return this.user?.role; }  //it always has value
 
-  timingSelectedValue = '';
-  startDate = new Date();
-  minDate = new Date();
-  bookingList = [];
-  userId = '';
-  roles = '';
-  submitted = false;
-  slectedBookingId = ''
+  get selectedBooking() { return this._modalService.data; }
+  get iconSortBy() {
+    let icon: string;
+    switch(this.order) {
+      case 'asc': icon = 'sort-number'; break;
+      case 'desc': icon = 'sort-number-reverse'; break;
+      default: icon = 'line-height-2';
+    }
+    return icon;
+  }
+  get labelSortBy() {
+    let label: string;
+    switch(this.order) {
+      case 'asc': label = 'Oldest'; break;
+      case 'desc': label = 'Latest'; break;
+      default: label = 'Sort by';
+    }
+    return label;
+  }
+
+  public bookings: Booking[] = null;
+  public bookingsAll: Booking[] = null;
+  public totalBookingCount: number;
+  public order: 'asc' | 'desc';
+  public viewType: 'client' | 'provider';
+
+  public searchForm = new FormControl();
+  public currentSearch: string = null;
+
+  public isMoreBookings: boolean = true;
+  public isLoading: boolean = false;
+  public isPopupSortShown: boolean = false;
+  public isDetailDeleteMode: boolean = false;
+  public isDeleting: boolean = false;
+
+  private countPerPage: number = 20;
 
   constructor(
-    private _sharedService: SharedService,
-    private toastr: ToastrService,
-    private formBuilder: FormBuilder,
+    private _uService: UniversalService,
     private _router: Router,
-    private _uService: UniversalService,  
+    private _route: ActivatedRoute,
+    private _profileService: ProfileManagementService,
+    private _toastr: ToastrService,
+    private _sharedService: SharedService,
+    private _modalService: ModalService,
   ) { }
 
-  get f() { return this.bookingForm.controls; }
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
-      title: 'Manage booking | PromptHealth',
+      title: 'My bookings | PromptHealth',
     });
 
-    const now = new Date();
-    this.minDateTime = {
-      year: now.getFullYear(), 
-      month: now.getMonth() + 1, 
-      day: now.getDate(),
-      hour: 9,
-      minute: 0
-    };
-
-    this.bookingForm = this.formBuilder.group({
-      // timing: new FormControl('', [Validators.required]),
-      bookingDateTime: new FormControl('', [Validators.required]),
+    this._route.data.subscribe((data: {type: 'provider' | 'client' }) => {
+      this.viewType = data.type;
     });
-    this.getBookingList();
+
+    this.fetchBookings();
   }
 
-  getBookingList() {
-    this.roles = localStorage.getItem('roles');
-    // this.roles = 'U';
-    this.userId = localStorage.getItem('loginID');
-
-    const userType = (this.roles.toLowerCase() == 'u') ? 'client' : 'doctor';
-    const path = `booking/get-by-${userType}/${this.userId}?count=${this.itemsPerPage}&page=${this.currentPage}`; 
-
-    this._sharedService.loader('show');
-    this._sharedService.get(path).subscribe((res: any) => {
-      this._sharedService.loader('hide');
-      if (res.statusCode === 200) {
-        this.bookingList = res.data.data;
-        this.totalItems = res.data.total;
-      } else {
-        this._sharedService.checkAccessToken(res.message);
-      }
-      }, err => {
-        this._sharedService.loader('hide');
-        this._sharedService.checkAccessToken(err);
-      }
-    );
-  }
-  cancelBooking(id) {
-    this._sharedService.loader('show');
-    const path = `booking/cancelBooking/`;
-    let data = { "id": id }
-    this._sharedService.put(data, path).subscribe((res: any) => {
-      this._sharedService.loader('hide');
-      if (res.statusCode === 200) {
-        this.toastr.success(res.message);
-        this.bookingList.forEach((ele, index) => {
-          if (ele._id === id) this.bookingList.splice(index, 1);
-        });
-        // this._router.navigate(['/home']);
-      } else {
-        this.toastr.error(res.message);
-
-      }
-    }, err => {
-      this._sharedService.loader('hide');
+  fetchBookings() {
+    const query = new GetQuery({
+      count: this.countPerPage,
+      page: (this.bookingsAll ? Math.ceil(this.bookingsAll.length / this.countPerPage) : 0) + 1,
+      ... (this.order) && { order: this.order },
+      ... (this.currentSearch) && {search: this.currentSearch} 
     });
-  }
-  updateBooking(id, status) {
-    this._sharedService.loader('show');
-    const path = `booking/updateBooking/`;
-    let data = { id, status }
-    this._sharedService.put(data, path).subscribe((res: any) => {
-      this._sharedService.loader('hide');
-      if (res.statusCode === 200) {
-        this.toastr.success(res.message);
-        this.bookingList.forEach((ele, index) => {
-          if (ele._id === id) this.bookingList.splice(index, 1);
+    
+    
+    const path = (this.viewType == 'provider' ? 'booking/get-by-doctor/' : 'booking/get-by-client/') + this.userId + query.toQueryParamsString();
+
+    this.isLoading = true;
+    this._sharedService.get(path).subscribe((res: IGetBookingsResult) => {
+      this.isLoading = false;
+
+      if(res.statusCode == 200) {
+
+        if(!this.bookingsAll) {
+          this.bookingsAll = [];
+        }
+        res.data.data.forEach(d => {
+          this.bookingsAll.push(new Booking(d));
         });
 
-        this.getBookingList();
-      } else {
-        this.toastr.error(res.message);
+        this.bookings = this.bookingsAll;
 
+        this.totalBookingCount = res.data.total;
+        this.isMoreBookings = this.bookingsAll.length < res.data.total;
+
+      } else {
+        console.log(res.message);
+        this._toastr.error('Could not get bookings. Please try again');
       }
-    }, err => {
-      this._sharedService.loader('hide');
+    }, (error) => {
+      console.log(error);
+      this.isLoading = false;
+      this._toastr.error('Could not get bookings. Please try again');
     });
   }
 
-  changePage(e: any){
-    this.currentPage = e;
-    this.getBookingList();
+  togglePopupSort() {
+    this.isPopupSortShown = !this.isPopupSortShown;
+  }
+  hidePopupSort() {
+    this.isPopupSortShown = false;
   }
 
-  timingSelected(evt) {
-    this.timingSelectedValue = evt.target.value;
-  }
-
-  rescheduleBooking(id) {
-    this.slectedBookingId = id;
-  }
-  rescheduleBookingApi() {
-    console.log(this.bookingForm);
-    this.submitted = true;
-    this.submitted = true;
-    if (this.bookingForm.invalid) {
-      return;
+  changeSortBy(order: 'asc' | 'desc') {
+    if(this.order != order) {
+      this.order = order;
+      this.bookingsAll = null;
+      this.fetchBookings();
     }
-    else {
-      const formData = {
-        ...this.bookingForm.value,
-      }
-      let data = {
-        'id': this.slectedBookingId,
-        ...formData,
-      };
-      // data.timing = this.timingSelectedValue;
-      data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
-      // data.bookingDateTime = data.bookingDateTime.toString();
-      this._sharedService.loader('show');
-      const path = `/booking/rescheduleBooking`
-      this._sharedService.put(data, path).subscribe((res: any) => {
-        this._sharedService.loader('hide');
-        if (res.statusCode === 200) {
-          this.toastr.success(res.message);
+    this.hidePopupSort();
+  }
 
-          this.getBookingList();
-          this.closebutton.nativeElement.click();
-        }
+  onclickDetail(data: Booking, markAsRead: boolean = false) {
+    this.isDetailDeleteMode = false;
+    this._modalService.show('booking-detail', data);
 
-        else {
-          this._sharedService.showAlert(res.message, 'alert-danger');
+    if(markAsRead && !data.isRead) {
+      this.markAsRead(data);
+    }
+  }
+
+  toggleDetailDeleteMode(isDeleteMode: boolean = true) {
+    this.isDetailDeleteMode = isDeleteMode
+  }
+
+  markAsRead(data: Booking) {
+    if(data.provider._id == this.userId) {
+      data.markAsRead();
+      this._sharedService.get('booking/read/' + data._id).subscribe((res: IUpdateBookingResult) => {
+        if(res.statusCode == 200) {
+        } else {
+          console.log(res.message);
+          data.markAsUnread();
         }
-      }, (error) => {
-        this._sharedService.loader('hide');
+      }, error => {
+        console.log(error);
+        data.markAsUnread();
+      })
+    }
+  }
+
+  delete(data: Booking) {
+    if(data.client._id == this.userId) {
+      this.isDeleting = true;
+      this._sharedService.deleteContent('booking/' + data._id).subscribe(() => {
+        this.isDetailDeleteMode = false;
+        this._toastr.success('The booking has been cancelled.');
+        this._modalService.hide();
+        this.bookingsAll = this.bookingsAll.filter(item => item._id != data._id);
+        this.bookings = this.bookings.filter(item => item._id != data._id);
+        this.totalBookingCount --;
+      }, error => {
+        console.log(error);
+        this._toastr.error('Something went wrong. Please try again');
+      }, () => {
+        this.isDeleting = false;
       });
+    } else {
+      this._toastr.error('You cannot cancel the booking');
     }
   }
 
-  ratingComponentClick(clickObj: any): void {
-    this.ratingClicked = clickObj.rating
-  }
-  showReviewModal(bookid) {
-    this.ratingPayload['drId'] = bookid.drId._id;
-    this.ratingPayload['bookingId'] = bookid._id;
-  }
-  submitRating() {
-    this.ratingSubmited = true;
-    const payload = {
-      ...this.ratingPayload,
-      userId: this.userId,
-      rating: this.ratingClicked,
-      review: this.review
+  private timerSearch: any;
+  onChangeSearch(keyword: string) {
+    if(this.timerSearch) {
+      clearTimeout(this.timerSearch);
     }
-    this._sharedService.loader('show');
-    const path = decodeURI('user/add-rating/');
-    this._sharedService.post(payload, path).subscribe((res: any) => {
-      this._sharedService.loader('hide');
-      if (res.statusCode === 200) {
-        this.toastr.success(res.message);
 
-        this.getBookingList();
+    keyword = keyword.toLowerCase();
 
-        this.closeRatingbutton.nativeElement.click();
-      } else {
-        this.toastr.error(res.message);
+    if(keyword?.length > 1) {
+      const regex = new RegExp(keyword);
+      this.bookings = this.bookingsAll ?  this.bookingsAll.filter(item => {
+        let matched: boolean = this.viewType == 'provider' ? !!(
+          item.patientName?.toLowerCase().match(regex) || 
+          item.patientEmail?.toLowerCase().match(regex) || 
+          item.patientNote?.toLowerCase().match(regex) || 
+          item.patientPhone?.toLowerCase().match(regex)
+        ) : !!(
+          item.provider.firstName?.toLowerCase().match(regex) ||
+          item.provider.lastName?.toLowerCase().match(regex) ||
+          item.patientNote?.toLowerCase().match(regex) 
+        );
+        return matched;
+      }) : [];
 
+      this.timerSearch = setTimeout(() => {
+        this.bookingsAll = null;
+        this.currentSearch = keyword;
+        this.fetchBookings();
+      }, 600);
+
+    } else {
+      this.bookings = this.bookingsAll;
+  
+      if(this.currentSearch) {
+        this.timerSearch = setTimeout(() => {
+          this.bookingsAll = null;
+          this.currentSearch = null;
+          this.fetchBookings();
+        }, 600);  
       }
-    }, err => {
-      this._sharedService.loader('hide');
-    });
+
+    }
+
   }
 }

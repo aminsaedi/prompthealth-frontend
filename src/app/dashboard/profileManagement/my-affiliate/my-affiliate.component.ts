@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { TabsetComponent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-my-affiliate',
@@ -14,6 +15,8 @@ export class MyAffiliateComponent implements OnInit {
   affiliateRequestForm: FormGroup;
   submitted = false;
   affiliatedList = [];
+
+  @ViewChild('tabset') tabset: TabsetComponent;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -56,9 +59,11 @@ export class MyAffiliateComponent implements OnInit {
           this.toastr.success('Invitation sent successfully!');
           this.affiliateRequestForm.reset();
           this.submitted = false;
-          this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
-            this.router.navigate(['/dashboard/profilemanagement/my-affiliate']);
-          });
+          // this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
+          //   this.router.navigate(['/dashboard/profilemanagement/my-affiliate']);
+          // });
+          this.getListOfAffiliateUsers();
+          this.tabset.tabs[0].active = true;
 
         } else {
           this.toastr.error(res.message);

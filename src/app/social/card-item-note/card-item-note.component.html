@@ -15,32 +15,31 @@
           </h6>        
         </a>
         <div class="body2 text-label">
-          {{post?.createdAt | date:'dd.MM.yyyy'}}
+          {{post?.createdAt | date:'yyyy/MM/dd'}}
         </div>
       </div>
     </div>
 
-    <div 
-    *ngIf="eligibleToShowPostMenu"
-    class="position-relative"
-    >
-      <button 
-      class="btn btn-icon-grey small"
-      (click)="_onClickButton($event, 'post-menu')"
-      >
-        <i iconPh="more-horiz"></i>
-      </button>
-      <div
-      [@fadeFast]
-      *ngIf="isPopupPostMenuShown"
-      class="position-absolute mt-5p" 
-      style="right: -5px;"
-      >
-        <popup-post-menu 
-        [post]="post"
-        (onClose)="onPopupPostMenuClosed()"
-        ></popup-post-menu>
-      </div>  
-    </div>
+    <popup-post-menu [post]="post"></popup-post-menu>
+  </div>
 
+  <p
+  class="post-content mb-10p"
+  style="white-space:pre-wrap"
+  >{{post.description}}</p>
+
+  <ul 
+  class="list-unstyled mb-10p" 
+  *ngIf="images.length>0"
+  >
+    <li 
+    *ngFor="let image of images" 
+    [ngClass]="shorten ? 'image-container-40pc rounded-12p overflow-hidden' : 'image-container'"
+    >
+      <img [src]="image" alt="">
+    </li>
+  </ul>
+
+  <div *ngIf="voice">
+    <audio-player [src]="voice"></audio-player>
   </div>

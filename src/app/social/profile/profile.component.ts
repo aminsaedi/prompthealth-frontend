@@ -8,7 +8,8 @@ import { ProfileManagementService } from 'src/app/dashboard/profileManagement/pr
 import { GetReferralsQuery } from 'src/app/models/get-referrals-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
-import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetStaffResult, IGetReferralsResult, IUnbellResult, IUnfollowResult } from 'src/app/models/response-data';
+import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetStaffResult, IGetReferralsResult, IUnbellResult, IUnfollowResult, IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
+import { SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
@@ -36,6 +37,18 @@ export class ProfileComponent implements OnInit {
   get isProfilePH() { return this.profileId == environment.config.idSA; }
   get user() { return this._profileService.profile; }
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
+  get countAvailablePromos(): number {
+    const promos = this._socialService.promosOfUser(this.profileId);
+    let count = 0;
+    if(promos?.length > 0) {
+      promos.forEach(p => {
+        if(p.isAvailable) {
+          count ++;
+        }
+      });
+    }
+    return count;
+  }
 
   get canRecommend() {
     let canRecommend = false;
@@ -67,12 +80,13 @@ export class ProfileComponent implements OnInit {
 
   private formBooking: FormGroup;
   public submittedFormBooking = false;
-  public minDateTime: DateTimeData;
+  // public minDateTime: DateTimeData;
   public maxBookingNote = minmax.bookingNoteMax;
 
   public idxActiveRecommendationIndicator: number = 0;
   private timerRecommendationCarousel: any;
   
+  public countPromoPerPage: number = 20;
 
   public isBellLoading = false;
   public isFollowLoading = false;
@@ -81,7 +95,7 @@ export class ProfileComponent implements OnInit {
   private subscriptionLoginStatus: Subscription;
 
   @ViewChild(FormItemDatetimeComponent) private formDateTimeComponent: FormItemDatetimeComponent;
-  @ViewChild('#modalBooking') private modalBooking: ModalComponent;
+  @ViewChild('modalBooking') private modalBooking: ModalComponent;
   @ViewChild('recommendationCarousel') private recommendationCarousel: ElementRef;
 
   constructor(
@@ -107,21 +121,22 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.observeLoginStatus();
 
-    const now = new Date();
-    this.minDateTime = {
-      year: now.getFullYear(), 
-      month: now.getMonth() + 1, 
-      day: now.getDate() + 1,
-      hour: 9,
-      minute: 0
-    };
+    // const now = new Date();
+    // this.minDateTime = {
+    //   year: now.getFullYear(), 
+    //   month: now.getMonth() + 1, 
+    //   day: now.getDate() + 1,
+    //   hour: 9,
+    //   minute: 0
+    // };
 
     this.formBooking = new FormGroup({
       name: new FormControl('', validators.bookingName),
       email: new FormControl('', validators.bookingEmail),
       phone: new FormControl('', validators.bookingPhone),
-      bookingDateTime: new FormControl('', validators.bookingDateTime),
+      // bookingDateTime: new FormControl('', validators.bookingDateTime),
       note: new FormControl('', validators.bookingNote),
+      isUrgent: new FormControl(false),
     });
 
     this._route.params.subscribe((param: {userid: string}) => {
@@ -152,7 +167,7 @@ export class ProfileComponent implements OnInit {
         this.getQuestionnaire(),
       ];
 
-      Promise.all(promiseAll).then((vals) => {
+      Promise.all(promiseAll).then(async (vals) => {
         this.profile = vals[0];
         this.initRecommendation();
         this.setProfileMenu();
@@ -162,7 +177,12 @@ export class ProfileComponent implements OnInit {
           this.fetchTeam();
         }
 
+        if(this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
+          this.fetchPromos();
+        }
+
       }, error => {
+        console.log(error);
         this._router.navigate(['404'], {replaceUrl: true});
         this._toastr.error('Something went wrong.');
       });
@@ -296,7 +316,7 @@ export class ProfileComponent implements OnInit {
           this.profile.setTeam(res.data.center);
           resolve();
         } else {
-          console.log(res.message);
+          // console.log(res.message);
           resolve();
         }
       }, error => {
@@ -304,6 +324,28 @@ export class ProfileComponent implements OnInit {
         resolve();
       });
     });
+  }
+
+  fetchPromos(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const query = new SocialPostSearchQuery({
+        order: 'desc',
+        count: this.countPromoPerPage,
+        contentType: 'PROMO',        
+      });
+      this._sharedService.get('note/get-by-author/' + this.profileId + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+        if(res.statusCode === 200) {
+          this._socialService.saveCachePromosOfUser(res.data, this.profileId);
+          resolve();
+        } else {
+          console.log(res.message);
+          reject();
+        }
+      }, error => {
+        console.log(error);
+        reject();
+      })
+    }); 
   }
 
   goback() {
@@ -353,6 +395,7 @@ export class ProfileComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const data = {
         id: this.profileId,
+        type: 'user',
       }
       this.isFollowing = true;
       this.user.setFollowing(this.profile.decode(), true);
@@ -471,7 +514,7 @@ export class ProfileComponent implements OnInit {
       };
 
       data.phone = data.phone.toString();
-      data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
+      // data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
       this.isBookingLoading = true;
       const path = `booking/create`;
       this._sharedService.post(data, path).subscribe((res: any) => {
@@ -498,12 +541,15 @@ export class ProfileComponent implements OnInit {
     this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe((res) => {
       this.checkFollowStatus();
       this.checkBellStatus();
+
+      if(this.profile?.isP && !this._socialService.promosOfUser(this.profileId)) {
+        this.fetchPromos();
+      }
     });
   }
 
   checkFollowStatus() {
     if(this.isFollowLoading || !this.user || this.isProfileMyself) {
-      console.log('do not start checkFollowStatus');
       return;
     }
 
@@ -521,7 +567,6 @@ export class ProfileComponent implements OnInit {
 
   checkBellStatus() {
     if(this.isBellLoading || !this.user || this.isProfileMyself) {
-      console.log('checking follow status is not ready yet');
       return;
     }
 
@@ -541,19 +586,20 @@ export class ProfileComponent implements OnInit {
 const profileMenusForProvider: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
   {id: 'service', label: 'Service', relativeLink: 'service', },
-  {id: 'feed',    label: 'Contents',    relativeLink: 'feed'},
+  {id: 'feed',    label: 'Posts',    relativeLink: 'feed'},
   {id: 'review',  label: 'Review',  relativeLink: 'review'},
 ];
 
 const profileMenusForCompany: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
   {id: 'promotion', label: 'Discounts', relativeLink: 'promotion', },
+  {id: 'event', label: 'Event', relativeLink: 'event', },
   {id: 'review', label: 'Recommendation', relativeLink: 'review', },
 ];
 
 const profileMenusForPH: IProfileMenuItem[] = [
   {id: 'about',   label: 'About',   relativeLink: null, },
-  {id: 'feed',    label: 'Contents',    relativeLink: 'feed'},
+  {id: 'feed',    label: 'Posts',    relativeLink: 'feed'},
   {id: 'review',  label: 'Review',  relativeLink: 'review'},
 ];
 

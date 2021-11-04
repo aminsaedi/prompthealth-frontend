@@ -7,6 +7,7 @@ import { SocialArticle } from '../models/social-article';
 import { SocialEvent } from '../models/social-event';
 import { SocialNote } from '../models/social-note';
 import { ISocialPost, SocialPostBase } from '../models/social-post';
+import { SocialPromo } from '../models/social-promo';
 @Injectable({
   providedIn: 'root'
 })
@@ -25,6 +26,23 @@ export class SocialService {
   private _selectedProfileChanged = new Subject<Professional>();
   selectedProfileChanged(): Observable<Professional> {
     return this._selectedProfileChanged.asObservable();
+  }
+
+  private _selectedTaxonomyType: SocialPostTaxonomyType;
+  get selectedTaxonomyType() { return this._selectedTaxonomyType; }
+  setTaxonomyType(type: SocialPostTaxonomyType) {
+    this._selectedTaxonomyType = type;
+  }
+
+  private _selectedTopicId: string;
+  get selectedTopicId() { return this._selectedTopicId; }
+  private _selectedTopicIdChanged = new Subject<string>();
+  selectedTopicIdChanged(): Observable<string> {
+    return this._selectedTopicIdChanged.asObservable();
+  }
+  setTopicId(id: string) {
+    this._selectedTopicId = id;
+    this._selectedTopicIdChanged.next(this._selectedTopicId);
   }
 
   /** CAUTION: THIS IS TEMPORARY SOLUTION */
@@ -54,7 +72,7 @@ export class SocialService {
     const cache = this.postCache.dataPerTaxonomy[taxonomy];
     return cache ? cache.metadata : null;
   }
-  postOf(id: string) {
+  postOf(id: string): ISocialPost {
     const data = this.postCache.dataMap;
     if(!data) { 
       return null; 
@@ -91,6 +109,22 @@ export class SocialService {
   postsOfUser(userId: string): ISocialPost[] {
     const data = this.postCache.dataPerTaxonomy.users[userId];
     return data ? data.postdata : null;
+  }
+
+  findPostsByUserId(userId: string): ISocialPost[] {
+    const result = [];
+    for(let id in this.postCache.dataMap) {
+      const post = this.postCache.dataMap[id];
+      if(post.authorId == userId) {
+        result.push(post);
+      }
+    }
+    return result;
+  }
+
+  promosOfUser(userId: string): ISocialPost[] {
+    const data = this.postCache.dataPerTaxonomy.users[userId];
+    return data? data.promodata : null;
   }
 
   profileOf(userId: string): Professional {
@@ -142,6 +176,7 @@ export class SocialService {
       this.postCache.dataPerTaxonomy.users[userId] = {
         userdata: null,
         postdata: [],
+        promodata: null
       }
     } else if(!cache.postdata) {
       cache.postdata = [];
@@ -168,17 +203,63 @@ export class SocialService {
     return returnData;
   }
 
+  saveCachePromosOfUser(data: ISocialPost[], userId: string): ISocialPost[] {
 
-  saveCacheSingle(data: ISocialPost) {
-    if(!this.postCache.dataMap[data._id]) {
-      const content = 
-        data.contentType == 'NOTE' ? new SocialNote(data as ISocialPost) : 
-        data.contentType == 'ARTICLE' ? new SocialArticle(data as ISocialPost) :
-        data.contentType == 'EVENT' ? new SocialEvent(data as ISocialPost) :
-        new SocialPostBase(data);
+    const cache = this.postCache.dataPerTaxonomy.users[userId];
+    if (!cache) {
+      this.postCache.dataPerTaxonomy.users[userId] = {
+        userdata: null,
+        postdata: null,
+        promodata: []
+      }
+    } else if(!cache.promodata) {
+      cache.promodata = [];
+    }
 
+    const returnData = [];
+
+    for(let d of data) {
+      let idInMap = null;
+      for(let id in this.postCache.dataMap) {
+        if(d._id == id) {
+          idInMap = id;
+          break;
+        }
+      }
+      if(!idInMap) {
+        this.saveCacheSingle(d);
+        idInMap = d._id;
+      }
+
+      this.postCache.dataPerTaxonomy.users[userId].promodata.push(this.postOf(idInMap));
+      returnData.push(this.postOf(idInMap));
+    }
+    return returnData;
+  }
+
+
+  saveCacheSingle(data: ISocialPost, userId?: string) {
+    const content = 
+      data.contentType == 'NOTE' ? new SocialNote(data as ISocialPost) : 
+      data.contentType == 'ARTICLE' ? new SocialArticle(data as ISocialPost) :
+      data.contentType == 'EVENT' ? new SocialEvent(data as ISocialPost) :
+      data.contentType == 'PROMO' ? new SocialPromo(data) :
+      new SocialPostBase(data);
+
+    // if cache doesn't exist, add in map.
+    if(!this.postCache.dataMap[content._id]) {
       content.setSanitizedDescription(this._sanitizer.bypassSecurityTrustHtml(content.description));
-      this.postCache.dataMap[data._id] = content;
+      this.postCache.dataMap[content._id] = content;
+    }
+
+    // if userId is provided, it means the user created new post.
+    // add the post at first position of postdata | promodata
+    if(userId) {
+      const dataType = data.contentType == 'PROMO' ? 'promodata' : 'postdata';
+      if(!this.postCache.dataPerTaxonomy.users[userId][dataType]) {
+        this.postCache.dataPerTaxonomy.users[userId][dataType] = [];
+      }
+      this.postCache.dataPerTaxonomy.users[userId][dataType].unshift(content);
     }
   }
 
@@ -189,8 +270,11 @@ export class SocialService {
         cache.data = cache.data ? cache.data.filter(item => item._id != data._id) : null;
       } else {
         const cache: IProfileWithPosts = this.postCache.dataPerTaxonomy.users[data.authorId];
-        if(cache) {
+        if(cache?.postdata) {
           cache.postdata = cache.postdata.filter(item => item._id != data._id);
+        }
+        if(cache?.promodata) {
+          cache.promodata = cache.promodata.filter(item => item._id != data._id);
         }
       }
     }
@@ -211,6 +295,7 @@ export class SocialService {
       this.postCache.dataPerTaxonomy.users[data._id] = {
         userdata: data,
         postdata: null,
+        promodata: null
       }
     }
   }
@@ -261,6 +346,9 @@ interface IPostCache {
     article: IPostsPerTaxonomy;
     event: IPostsPerTaxonomy;
     media: IPostsPerTaxonomy;
+    promotion: IPostsPerTaxonomy;
+    note: IPostsPerTaxonomy;
+    voice: IPostsPerTaxonomy;
     users: {[k: string]: IProfileWithPosts}
   }
 }
@@ -272,10 +360,13 @@ class PostCache implements IPostCache {
   constructor() {
     this.dataMap = {};
     this.dataPerTaxonomy = {
-      feed:    {metadata: null, data: null,},
-      article: {metadata: null, data: null,},
-      event:   {metadata: null, data: null,},
-      media:   {metadata: null, data: null,},
+      feed:      {metadata: null, data: null,},
+      article:   {metadata: null, data: null,},
+      event:     {metadata: null, data: null,},
+      media:     {metadata: null, data: null,},
+      promotion: {metadata: null, data: null,},
+      note:      {metadata: null, data: null,},
+      voice:     {metadata: null, data: null,},
       users: {},
     }
   }
@@ -285,15 +376,17 @@ interface IPostsPerTaxonomy {
   data: ISocialPost[];
   metadata?: {
     topic?: string;
-    userId?: string;
+    userId?: string; // loggedinUserId
     existMorePost?: boolean;
-    eventTimeRange?: (string|Date)[];
+    eventTimeRange?: string[]; // ISODateString
+    filterByFollowing?: boolean;
   };
 }
 
 interface IProfileWithPosts {
   userdata: Professional,
-  postdata: ISocialPost[]
+  postdata: ISocialPost[],
+  promodata: ISocialPost[],
 }
 
-export type SocialPostTaxonomyType = 'feed' | 'article' | 'event' | 'media';
+export type SocialPostTaxonomyType = 'feed' | 'article' | 'event' | 'media' | 'promotion' | 'note' | 'voice';

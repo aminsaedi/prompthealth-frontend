@@ -1,42 +1,36 @@
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { ISocialPost } from 'src/app/models/social-post';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { fadeFastAnimation } from 'src/app/_helpers/animations';
 
 @Component({
   selector: 'card-item-event',
   templateUrl: './card-item-event.component.html',
   styleUrls: ['./card-item-event.component.scss'],
-  animations: [fadeFastAnimation,]
 })
 export class CardItemEventComponent implements OnInit {
 
   @Input() post: ISocialPost;
   @Input() shorten: boolean = true;
 
-  @Output() onClickButton = new EventEmitter<string>();
+  @ViewChild('content') private content: ElementRef;
 
-  get eligibleToShowPostMenu() {
-    return !!(this.post && this.user && this.post.authorId == this.user._id)
-  }
-  get user() {
-    return this._profileService.user;
-  }
-
-  public isPopupPostMenuShown = false;
   public alreadySubscribed: boolean = false;
+  public isContentGradientShown: boolean = false;
 
   constructor(
     private _route: ActivatedRoute,
     private _location: Location,
     private _uService: UniversalService,
-    private _profileService: ProfileManagementService,
+    private _modalService: ModalService,
   ) { }
 
-
+  ngAfterViewInit() {
+    const el = this.content.nativeElement as HTMLDivElement;
+    this.isContentGradientShown = (el.clientHeight >= 200); 
+  }
 
   ngOnInit(): void {
     this._route.queryParams.subscribe(() => {
@@ -44,24 +38,13 @@ export class CardItemEventComponent implements OnInit {
     });
   }
 
-  _onClickButton(e: Event, buttonName: string) {
+  showMenu(e: Event, menuName: string) {
     e.stopPropagation();
     e.preventDefault();
-    this.isPopupPostMenuShown = true;
+    this._modalService.show(menuName, this.post);
   }
 
   markCurrentPosition() {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
-  }
-
-  onClickButtonPopupPostMenu(e: Event) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.isPopupPostMenuShown = true;
-  }
-
-  onPopupPostMenuClosed() {
-    this.isPopupPostMenuShown = false;
-  }
-  
+  } 
 }

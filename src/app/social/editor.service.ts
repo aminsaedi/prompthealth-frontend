@@ -24,6 +24,7 @@ export class EditorService {
 
   constructor() { }
 
+  // this function should dispose form data. (reset is not enough.)
   dispose() {
     this.resetForm();
     this._originalData = null;
@@ -42,6 +43,7 @@ export class EditorService {
     const f = this.form.controls;
     f.authorId.setValue(this.userId);
     f.contentType.setValue(this.editorType);
+    f.tags.setValue([]);
 
     if(this.editorType == 'ARTICLE' || this.editorType == 'EVENT') {
       f.status.setValue('DRAFT');
@@ -49,6 +51,10 @@ export class EditorService {
 
     if(this.editorType == 'EVENT') {
       f.eventType.setValue('ONLINE');
+    }
+
+    if(this.editorType == 'PROMO') {
+      f.promo.setValue('');
     }
   }
 
@@ -80,6 +86,7 @@ export class EditorService {
         eventType: new FormControl(d? d.eventType : 'ONLINE'),
         joinEventLink: new FormControl(d ? d.joinEventLink || '' : ''),  // set validator later
         eventAddress: new FormControl(d ? d.eventAddress || '' : ''),
+        tags: new FormControl([], validators.topics),
       });  
     } else if (type == 'ARTICLE') {
       this._form = new FormGroup({
@@ -89,6 +96,7 @@ export class EditorService {
         title: new FormControl(d ? d.title : null, validators.savePostTitle),
         description: new FormControl(d ? d.description : null), // set validator later
         image: new FormControl(d ? d.image || '' : ''),
+        tags: new FormControl([], validators.topics),
       });
     } else if (type == 'NOTE') {
       this._form = new FormGroup({
@@ -96,13 +104,24 @@ export class EditorService {
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
         description: new FormControl(d ? d.description : ''),
 
-        // TODO: need change to FormArray in ver2.1
         // value type: string (path in S3 | blob)
         images: new FormControl(d?.images?.length > 0 ? d.images[0] : null), 
 
         // value type: string (path in S3 | AudioData)
         voice: new FormControl(d?.voice ? d.voice : null),
+        tags: new FormControl([], validators.topics),
       }, validators.note);
+    } else if (type =='PROMO') {
+      this._form = new FormGroup({
+        contentType: new FormControl(type),
+        authorId: new FormControl(profile._id, validators.savePostAuthorId),
+        description: new FormControl('', validators.publishPostDescription),
+        promo: new FormControl('', validators.promoCode),
+        availableUntil: new FormControl(null, validators.promoExpireDate),
+        images: new FormControl(), // TODO: need change to FormArray in ver2.1
+        link: new FormControl('', validators.promoLink),
+        tags: new FormControl([], validators.topics),
+      });
     }
 
     this._form.valueChanges.subscribe(() => {
@@ -121,7 +140,8 @@ export class EditorService {
     }
 
     if(f.description) {
-      const desc = f.description.value || '';
+      let desc = f.description.value || '';
+      desc = desc.trim();
       f.description.setValue(desc.replace(/(<p><br><\/p>)+$/, ''));
     }
   }
@@ -179,6 +199,10 @@ export interface ISaveQuery {
   eventType?: ISocialPost['eventType'];
   joinEventLink?: string;
   eventAddress?: string;
+
+  availableUntil?: Date;
+  promo?: string;
+  link?: string;
 }
 
 export class SaveQuery implements ISaveQuery {
@@ -200,6 +224,10 @@ export class SaveQuery implements ISaveQuery {
   get images() { return this.data.images || []; }
   get voice() { return this.data.voice || null; }
 
+  get availableUntil() { return this.data.availableUntil || null; }
+  get promo() { return this.data.promo || null; }
+  get link() { return this.data.link || null; }
+  
   toJson() { 
     const data: ISaveQuery = {
       contentType: this.contentType,
@@ -227,7 +255,11 @@ export class SaveQuery implements ISaveQuery {
         eventStartTime: this.eventStartTime,
         eventEndTime: this.eventEndTime,
         eventAddress: this.eventAddress,
-      }
+      },
+
+      ... (this.availableUntil) && {availableUntil: this.availableUntil},
+      ... (this.promo) && {promo: this.promo},
+      ... (this.link) && {link: this.link},
     };
     return data;
   }

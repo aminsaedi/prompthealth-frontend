@@ -30,8 +30,6 @@ import { Professional } from 'src/app/models/professional';
 import { SocialService } from 'src/app/social/social.service';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 
-declare var jQuery: any;
-
 export class User {
   constructor(
     public email: string,
@@ -67,7 +65,7 @@ export class SharedService {
   personalMatch;
   private compareList: Professional[] = [];
 
-  requestPermission(user: User) {
+  requestPermission(user: any) {
     this.angularFireMessaging.requestToken.subscribe(
       (token) => {
         // console.log(token);
@@ -96,9 +94,11 @@ export class SharedService {
   async logout(navigate: boolean = true) {
     // console.log(token);
     await this.angularFireMessaging.getToken.toPromise().then(token => {
-      this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
-        console.log('Cleared fcm token');
-      });
+      if (token) {
+        this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
+          console.log('Cleared fcm token');
+        });
+      }
     }).catch(error => {
       console.error(error);
     });
@@ -116,7 +116,7 @@ export class SharedService {
     ls.removeItem('isVipAffiliateUser');
 
     this._bs.setUserData(null);
-    this._toastr.success('Logged out successfully');
+    // this._toastr.success('Logged out successfully');
     ls.setItem('userType', 'U');
     if (navigate) {
       this._router.navigate(['/']);
@@ -643,7 +643,7 @@ export class SharedService {
       const ss = this._uService.sessionStorage;
       const savedCoupon: ICouponData = JSON.parse(ss.getItem('stripe_coupon_code'));
       const _option = new CheckoutPlanOption(option, user.roles);
-      console.log(user);
+      // console.log(user);
       const payload: IStripeCheckoutData = {
         cancel_url: _option.cancelUrl,
         success_url: _option.successUrl,
@@ -665,18 +665,18 @@ export class SharedService {
 
       this.post(payload, 'user/checkoutSession').subscribe((res: any) => {
         if (res.statusCode === 200) {
-          console.log(res.data);
+          // console.log(res.data);
           this._stripeService.changeKey(environment.config.stripeKey);
 
           if (res.data.type === 'checkout') {
             this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
-              console.log('success!');
+              // console.log('success!');
             }, error => {
               console.log(error);
             });
             resolve('Checking out...');
           } else if (res.data.type === 'portal') {
-            console.log(res.data);
+            // console.log(res.data);
             location.href = res.data.url;
             resolve('You already have this plan. Redirecting to billing portal.');
           }
@@ -711,10 +711,10 @@ export class SharedService {
 type StripeCheckoutType = 'default' | 'addon';
 
 interface ICheckoutPlanOption {
-  cancelUrl?: string;
-  successUrl?: string;
-  showSuccessMessage?: boolean;
-  showErrorMessage?: boolean;
+  cancelUrl?: string; // default: '/plans' || '/plans/product'
+  successUrl?: string; // default: '/community'
+  showSuccessMessage?: boolean; // default true
+  showErrorMessage?: boolean; // default true
 }
 
 class CheckoutPlanOption implements ICheckoutPlanOption {
@@ -727,7 +727,7 @@ class CheckoutPlanOption implements ICheckoutPlanOption {
 
   /** currently, practitioner complete page url is same as product complete page. */
   get successUrl() {
-    const url = location.origin + (this.data.successUrl ? this.data.successUrl : '/dashboard/register-product/complete');
+    const url = location.origin + (this.data.successUrl ? this.data.successUrl : '/community');
     return url + (this._showSuccessMessage ? '?action=stripe-success' : '');
   }
 

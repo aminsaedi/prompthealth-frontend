@@ -6,6 +6,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AgmCoreModule } from '@agm/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import 'rxjs';
 
@@ -21,13 +22,11 @@ import { MyFavouriteComponent } from './my-favourite/my-favourite.component';
 import { ReviewsRatingsComponent } from './reviews-ratings/reviews-ratings.component';
 import { VideosBlogsComponent } from './videos-blogs/videos-blogs.component';
 
-// import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { MyAmenitiesComponent } from './my-amenities/my-amenities.component';
 import { SharedModule } from '../../shared/shared.module';
 import { MyProductComponent } from './my-product/my-product.component';
 import { RatingsComponent } from '../../shared/ratings/ratings.component';
 import { MyAffiliateComponent } from './my-affiliate/my-affiliate.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MyPasswordComponent } from './my-password/my-password.component';
 import { MyServiceComponent } from './my-service/my-service.component';
 import { MySocialComponent } from './my-social/my-social.component';
@@ -72,10 +71,10 @@ import { PartnerOfferComponent } from './partner-offer/partner-offer.component';
       libraries: ['places']
     }),
     ModalModule.forRoot(),
+    TabsModule.forRoot(),
     NgxPaginationModule, NgxSpinnerModule,
     SharedModule, NgxDatatableModule,
-    // OwlDateTimeModule, OwlNativeDateTimeModule,
-    CommonModule, ProfileManagementRoutingModule, ReactiveFormsModule, FormsModule, NgbModule,
+    CommonModule, ProfileManagementRoutingModule, ReactiveFormsModule, FormsModule, 
   ]
 
 })

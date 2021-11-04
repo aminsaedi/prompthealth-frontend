@@ -10,6 +10,7 @@ import { CardSubscribeComponent } from './card-subscribe/card-subscribe.componen
 import { CardItemEventComponent } from './card-item-event/card-item-event.component';
 import { ModalEventComponent } from './modal-event/modal-event.component';
 import { CardItemNoteComponent } from './card-item-note/card-item-note.component';
+import { CardItemPromoComponent } from './card-item-promo/card-item-promo.component';
 import { CardItemEyecatchComponent } from './card-item-eyecatch/card-item-eyecatch.component';
 import { CardItemArticleComponent } from './card-item-article/card-item-article.component';
 import { HomeComponent } from './home/home.component';
@@ -48,6 +49,9 @@ import { CardPostDraftComponent } from './card-post-draft/card-post-draft.compon
 import { GuardIfDataNotSetGuard } from './guard-if-data-not-set.guard';
 import { PopupPostMenuComponent } from './popup-post-menu/popup-post-menu.component';
 import { ModalVoiceRecorderComponent } from './modal-voice-recorder/modal-voice-recorder.component';
+import { ProfilePromotionComponent } from './profile-promotion/profile-promotion.component';
+import { CardNewPromoComponent } from './card-new-promo/card-new-promo.component';
+import { GuardIfUserTypeClientGuard } from './guard-if-user-type-client.guard';
 
 
 const routes: Routes = [
@@ -56,7 +60,9 @@ const routes: Routes = [
       { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
       { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
       { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
-      { path: 'review', component: ProfileReviewComponent, data: {order: 4} },
+      { path: 'promotion', component: ProfilePromotionComponent, data: {order: 3}, canDeactivate: [GuardIfEditorLockedGuard] },
+      { path: 'event', component: ProfileFeedComponent, data: {order: 4, contentType: 'event'} },
+      { path: 'review', component: ProfileReviewComponent, data: {order: 5} },
     ] },
 
     { path: 'profile/:userid/followings', component: ProfileFollowListComponent, data: {type: 'following'}},
@@ -86,7 +92,7 @@ const routes: Routes = [
     { path: 'editor', redirectTo: 'editor/article' },
 
     { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
-    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfNotEligbleToCreatePostGuard], },
+    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfUserTypeClientGuard], },
     { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },
 
     { path: '', component: HomeComponent, children: [
@@ -113,6 +119,7 @@ const routes: Routes = [
     CardItemEventComponent, 
     ModalEventComponent, 
     CardItemNoteComponent, 
+    CardItemPromoComponent,
     CardItemEyecatchComponent, 
     CardItemArticleComponent, 
     CardItemCommentComponent, 
@@ -136,6 +143,8 @@ const routes: Routes = [
     CardPostDraftComponent,
     PopupPostMenuComponent,
     ModalVoiceRecorderComponent,
+    ProfilePromotionComponent,
+    CardNewPromoComponent,
   ],
   providers: [
     CategoryService,

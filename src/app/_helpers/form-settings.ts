@@ -15,6 +15,8 @@ export const minmax = {
   bookingNoteMax: 500,
   referralMin: 10,
   referralMax: 500,
+  promoCodeMax: 30,
+  noteMax: 400,
 };
 
 
@@ -96,6 +98,36 @@ const validatorPatternDateTime = (): ValidatorFn => {
     } else {
       const errors = { matchPatternDateTime: true };
       return errors;
+    }
+  };
+};
+
+const validatorPatternDate = (): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    const regex = new RegExp(pattern.date);
+    if (!formControl.value || formControl.value.match(regex)) {
+      return null;
+    } else {
+      const errors = { matchPatternDateTime: true };
+      return errors;
+    }
+  };
+};
+
+const validatorCompareBookingDateTime = (): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    const regex = new RegExp(pattern.datetime);
+    if (formControl.value && formControl.value.match(regex)) {
+      const now = new Date();
+      const start = formatStringToDate(formControl.value);
+
+      if (now.getTime() >= start.getTime()) {
+        return { bookingDateTimeLaterThanNow: true };
+      } else {
+        return null;
+      }
+    } else {
+      return null;
     }
   };
 };
@@ -190,6 +222,33 @@ const validatorNoteHasAtLeastOneField = (): ValidatorFn => {
   }
 }
 
+//note cannot have image / voice /video together.
+const validatorNoteHasOnlyOneMedia = (): ValidatorFn => {
+  return function validate(formGroup: FormGroup) {
+    const g = formGroup.controls;
+    const image = g.images.value as {file: File|Blog, filename: string};
+    const voice = g.voice.value as string;
+    if(!!image && !!voice) {
+      return {noteHasOnlyOneMedia: true};
+    } else {
+      return null;
+    }
+  }
+}
+
+
+
+const validatorTopicsSelectedLTE = (maxNum: number): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    const topics = formControl.value || [];
+    if(topics.length > maxNum) {
+      return {topicsSelectedLTE: maxNum};
+    } else {
+      return null;
+    }
+  }
+}
+
 
 const validatorFirstNameClient = [Validators.maxLength(minmax.nameMax), Validators.required];
 const validatorLastNameClient = [Validators.maxLength(minmax.nameMax)];
@@ -214,7 +273,7 @@ export const validators = {
   firstnameClient: validatorFirstNameClient,
   lastnameClient: validatorLastNameClient,
   email: validatorEmail,
-  displayEmail: [Validators.email],
+  // displayEmail: [Validators.email],
   phone: validatorPhone,
   gender: validatorRequired,
   address: validatorRequired,
@@ -250,7 +309,7 @@ export const validators = {
   bookingName: validatorFirstNameClient,
   bookingEmail: validatorEmail,
   bookingPhone: [Validators.pattern(pattern.phone), Validators.minLength(minmax.phoneMin), Validators.maxLength(minmax.phoneMax), Validators.required],
-  bookingDateTime: [validatorPatternDateTime(), validatorComparePostEventStartTime(), Validators.required],
+  bookingDateTime: [validatorPatternDateTime(), validatorCompareBookingDateTime(), Validators.required],
   bookingNote: [Validators.maxLength(minmax.bookingNoteMax)],
 
   /** contact form */
@@ -260,6 +319,7 @@ export const validators = {
 
   /** blog post for users */
   publishPostDescription: [Validators.required],
+  publishPostDescriptionNote: [Validators.maxLength(minmax.noteMax)],
   publishPostEventStartTime: [Validators.required, validatorPatternDateTime(), validatorComparePostEventStartTime()],
   publishPostEventEndTime: [Validators.required, validatorPatternDateTime()],
   publishPostEventLink: [Validators.required, validatorPatternURL()],
@@ -278,6 +338,12 @@ export const validators = {
 
   /** social */
   comment: [Validators.required],
-  note: [validatorNoteHasAtLeastOneField()],
+  note: [validatorNoteHasAtLeastOneField(), validatorNoteHasOnlyOneMedia()],
+  noteDescription: [Validators.maxLength(minmax.noteMax + 1)], // need + 1 because description has \n at last before submit
   referral: [Validators.required, Validators.maxLength(minmax.referralMax), Validators.minLength(minmax.referralMin)],
+
+  promoCode: [Validators.maxLength(minmax.promoCodeMax)],
+  promoExpireDate: [validatorPatternDate()],
+  promoLink: validatorUrl,
+  topics: [validatorTopicsSelectedLTE(3)],
 }

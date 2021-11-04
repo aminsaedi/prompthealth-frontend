@@ -21,10 +21,18 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
         [styles]="{minHeight: '48px', border: 'none', fontSize: '16px'}"
         placeholder="What's on your mind"
         [formControl]="f.description"
+        format="text"
         (click)="focusEditor()"
         >
           <div quill-editor-toolbar></div>
         </quill-editor>  
+
+        <div class="d-flex justify-content-end">      
+          <span 
+          class="flex-grow-0 caption" 
+          [ngClass]="!f.description.dirty ? 'text-placeholder' : f.description.invalid ? 'text-danger' : 'text-success'"
+          >{{lengthDescription}}/{{maxDescription}}</span>
+        </div>
       </div>
     </div>
   
@@ -132,30 +140,37 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
         <form-item-service
         #formItemService
         [option]="{showInlineWhenEnabled: true}"
+        (changeValue)="onChangeTags($event)"
         ></form-item-service>
+        <form-item-errors 
+        [submitted]="true" 
+        [controller]="f.tags"
+        ></form-item-errors>
       </div>
     </div>
   </form>
 </div>
 
 <ng-template #btnEvent>
-  <a 
+  <button 
+  type="button"
   class="btn btn-text-grey border-lg-line small px-0 px-lg-5p"
-  routerLink="/community/create/event"
+  (click)="onClickButtonEvent()"
   >
     <i iconPh="calendar"></i>
     <span>Event</span>
-  </a>
+  </button>
 </ng-template>
 
 <ng-template #btnArticle>
-  <a 
+  <button 
+  type="button"
   class="btn btn-text-grey border-lg-line small px-0 px-lg-5p"
-  routerLink="/community/create/article"
+  (click)="onClickButtonArticle()"
   >
     <i iconPh="note-text"></i>
     <span>Article</span>
-  </a>  
+  </button>  
 </ng-template>
 
 <modal-voice-recorder
@@ -168,3 +183,28 @@ class="card rounded-8p bg-white shadow body1 text-body mb-15p"
 [closable]="true"
 (onClose)="onAlertUploadingClosed()"
 ></alert-uploading>
+
+<modal
+id="upgrade-plan"
+#alertUpgradePlan
+>
+  <div class="title-container d-flex justify-content-between align-items-center">
+    <h5 class="h4-md mb-0">Upgrade your plan</h5>
+    <button class="btn pr-0 btn-icon" (click)="alertUpgradePlan.hide()">
+      <i iconPh="cross"></i>
+    </button>
+  </div>
+
+  <div class="content-container">
+    <p>
+      You need a premuim plan for advanced features.
+    </p>
+    <div class="text-center mt-30p">
+      <a 
+      [routerLink]="linkToPlan"
+      [replaceUrl]="true"
+      class="btn btn-primary"
+      >Learn more</a>
+    </div>
+  </div>
+</modal>

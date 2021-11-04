@@ -56,6 +56,7 @@ export class AudioPlayerComponent implements OnInit {
     const p = this.player;
     if(p) {
       p.addEventListener('canplay', () => {this.onPlayerReady(); })
+      p.addEventListener('loadedmetadata', () => {this.onPlayerReady(); })
       p.addEventListener('play', () => {this.onPlayerStarted(); });
       p.addEventListener('pause', () => { this.onPlayerPaused(); });
       p.addEventListener('ended', () => { this.onPlayerDone(); });

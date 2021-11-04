@@ -1,3 +1,5 @@
+@import '../../../assets/scss/variables';
+
 @mixin textGradient($c1, $c2){
   background: -webkit-linear-gradient(135deg, $c1 0%, $c2 100%);
   -webkit-background-clip: text;
@@ -15,11 +17,34 @@
   @include textGradient(#95b3ef, #6f3bef);
 }
 
+p,
+.body-ambassador {
+  @media (min-width: $breakpointMd) {
+    font-size: 18px;
+    line-height: 30px;  
+  }
+}
+
 .practitioner-name {
   min-width: 280px;
   white-space: pre-wrap;
   border-bottom: solid 2px #213f7a;
   vertical-align: bottom;
+}
+
+.top-image-shadow {
+  position: absolute;
+  top: 10px; 
+  left: 10px; 
+  width: 100%; 
+  height: 100%; 
+  opacity: 30%;
+  filter: brightness(0.3);
+  object-fit: cover;
+  @media (min-width: $breakpointMd) {
+    top: 15px;
+    left: 15px;
+  }
 }
 
 

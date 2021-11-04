@@ -1,4 +1,5 @@
 import { SafeHtml } from "@angular/platform-browser";
+import { Observable, Subject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { Profile } from "./profile";
 import { IUserDetail } from "./user-detail";
@@ -39,15 +40,29 @@ export interface ISocialPost {
   comments: ISocialComment[];
 
   /** socialPostBase */
-  author?: IUserDetail;
+  author?: {
+    _id?: string;
+    firstName?: IUserDetail['firstName'];
+    lastName?: IUserDetail['lastName'];
+    profileImage?: IUserDetail['profileImage'];
+    verifiedBadge?: IUserDetail['verifiedBadge'];
+    // roles: IUserDetail['roles'];
+    // product_description: IUserDetail['product_description'];
+    // professional_title: IUserDetail['professional_title'];
+    followed?: boolean;
+    belled?: boolean;
+  };
   authorName?: string;
   authorImage?: string;
   authorVerified?: boolean;
+  authorBelled?: boolean;
+  authorFollowed?: boolean;
   descriptionSanitized?: SafeHtml;
   summary?: string;
   isNote?: boolean;
   isArticle?: boolean;
   isEvent?: boolean;
+  isPromo?: boolean;
   isMoreShown?: boolean;
   isLiked?: boolean;
   isBookmarked?: boolean;
@@ -61,21 +76,38 @@ export interface ISocialPost {
   like?(updateNumLikes?: boolean, numLikes?: number): void;
   unlike?(updateNumLikes?: boolean, numLikes?: number): void;
   getImageTypeOf?(s: string): string;
+  markAsFollow?: () => void;
+  markAsUnfollow?: () => void;
+  markAsBell?: () => void;
+  markAsUnbell?: () => void;
+
+  // changed() emits only when these status changed for now
+  // * follow   * bell
+  changed?(): Observable<ISocialPost>; 
 
   /** SocialArticle */
   readLength?: number;
   readLengthLabel?: string;
+
+  /** SocialEvent & SocialPromo */
+  link?: string;
   
   /** SocialEvent */
   startAt?: Date;
   endAt?: Date;
   duration?: number;
-  link?: string;
   openStatus?: string;
   isFinished?: boolean;
   isVirtual?: boolean;
   venue?: string;
   setSanitizedDescription?(s: SafeHtml): void;
+
+  /** SocialPromo */
+  availableUntil?: string | Date;
+  promo?: string;
+  isAvailable?: boolean;
+  code?: string;
+
   decode?(): ISocialPost;
   updateWith?(data: ISocialPost): void;
 }
@@ -99,8 +131,11 @@ export class SocialPostBase implements ISocialPost {
   get authorId(): string { return (typeof this.data.author == 'string') ? this.data.author : this.data.author ?  this.data.author._id : 'noid'; }
   get authorImage() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.profileImage) ? this._s3 + '350x220/' + this.data.author.profileImage : 'assets/img/logo-sm-square.png'}
   get authorVerified() {return (this.data.author && typeof this.data.author != 'string' && this.data.author.verifiedBadge) ? true : false; }
+  get authorBelled() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.belled) ? true : false; } 
+  get authorFollowed() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.followed) ? true : false; } 
+  get author() { return (this.data.author && typeof this.data.author != 'string') ? this.data.author : null ; }
 
-  get coverImage() { return this.data.image ? this._s3 + this.data.image : (this.data.images && this.data.images.length > 0) ? this._s3 + this.data.images[0] : '/assets/img/logo-square-primary-light.png'; }
+  get coverImage() { return this.data.image ? this._s3 + this.data.image : (this.data.images && this.data.images.length > 0) ? this._s3 + this.data.images[0] : '/assets/img/logo-100x35-primary-light.png'; }
   get coverImageType() { return this.getImageTypeOf(this.coverImage); }
 
   get description() { return this.data.description || ''; }
@@ -114,6 +149,7 @@ export class SocialPostBase implements ISocialPost {
   get isNote() { return this.contentType == 'NOTE'; }
   get isArticle() { return this.contentType == 'ARTICLE'; }
   get isEvent() { return this.contentType == 'EVENT'; }
+  get isPromo() { return this.contentType == 'PROMO'; }
 
   get isLiked() { return !!this.data.liked; }
 
@@ -133,17 +169,17 @@ export class SocialPostBase implements ISocialPost {
   protected _s3 = environment.config.AWS_S3; 
   protected _summary: string;
   private _description: SafeHtml;
+  private _comments: SocialComment[] = null;
 
-
-  _comments: SocialComment[] = null;
-
+  protected _changed = new Subject<ISocialPost>();
 
   constructor(protected data: ISocialPost) {
     this.setSummary(data.description || '');
   }
 
   setSummary(desc: string) {
-    this._summary = desc.replace(/<\/?[^>]+(>|$)/g, '').replace(/\s{2,}/, " ");
+    desc = desc || '';
+    this._summary = desc.replace(/<\/?[^>]+(>|$)/g, ' ').replace(/\s{2,}/, " ").trim();
   }
 
   setSanitizedDescription(d: SafeHtml) {
@@ -188,6 +224,26 @@ export class SocialPostBase implements ISocialPost {
     }
   }
 
+  markAsFollow() {
+    this.data.author.followed = true;
+    this._changed.next(this);
+  }
+
+  markAsUnfollow() {
+    this.data.author.followed = false;
+    this._changed.next(this);
+  }
+
+  markAsBell() {
+    this.data.author.belled = true;
+    this._changed.next(this);
+  }
+
+  markAsUnbell() {
+    this.data.author.belled = false;
+    this._changed.next(this);
+  }
+
   updateNumLikes(numLikes: number) {
     this.data.numLikes = numLikes;
   }
@@ -202,10 +258,15 @@ export class SocialPostBase implements ISocialPost {
     return imageType;
   }
 
+  changed() {
+    return this._changed.asObservable();
+  }
+
+
   decode() {
     return this.data;
   }
-
+  
   updateWith(data: ISocialPost) {
     this.data.status = data.status;
     this.data.image = data.image;

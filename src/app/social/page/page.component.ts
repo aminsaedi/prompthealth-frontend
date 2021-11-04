@@ -77,8 +77,17 @@ export class PageComponent implements OnInit {
   }
 
   setMeta(){
+    let title: string;
+    if (this.post.isNote) {
+      title = `A note from ${this.post.authorName} posted at ${formatDateToString(new Date(this.post.createdAt))}`;
+    } else if (this.post.isPromo) {
+      title = `Special discount offer from ${this.post.authorName}!${this.post.availableUntil ? (' Available until ' + formatDateToString(this.post.availableUntil as Date, true)) : ''}`;
+    } else {
+      title = this.post.title;
+    }
+
     this._uService.setMeta(this._router.url, {
-      title: (this.post.isNote ? `A note from ${this.post.authorName} posted at ${formatDateToString(new Date(this.post.createdAt))}` : this.post.title) + ' | PromptHealth Community',
+      title: title + ' | PromptHealth Community',
       description: this.post.summary,
       pageType: 'article',
       image: this.post.coverImage,

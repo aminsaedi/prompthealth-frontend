@@ -1,0 +1,154 @@
+<div 
+*ngIf="isEditorFocused"
+class="overlay"
+(click)="blurEditor()"
+></div>
+
+<div 
+class="card rounded-8p bg-white body1 text-body mb-15p"
+style="border: none;"
+[ngClass]="{'focused': isEditorFocused}"
+>
+  <form (ngSubmit)="onSubmit()">
+    <div class="d-flex p-20p border-bottom border-line">
+      <profile-image [image]="userImage"></profile-image>
+      <div class="flex-grow-1 ml-10p"
+      scrollDetector
+      offset="200"
+      (detect)="blurEditor()"
+      #editor
+      >
+        <form-item-textarea
+        label="Description"
+        [controller]="f.description"
+        placeholder="Enter description..."
+        [option]="{transparent: true, paddingZero: true}"
+        [submitted]="isSubmitted"
+        (click)="focusEditor()"
+        ></form-item-textarea>
+      </div>
+    </div>
+
+    <div *ngIf="imagePreview" class="p-20p d-flex">
+      <div 
+      *ngIf="imagePreview" 
+      class="position-relative d-inline-block overflow-hidden rounded-4p mr-10p"
+      >
+        <img [src]="imagePreview" alt="" height="100" width="auto">
+        <button
+        type="button"
+        class="btn btn-icon-body small blur p-5p btn-remove-media"
+        (click)="onClickButtonRemoveMedia()"
+        >
+          <i iconPh="cross"></i>
+        </button>  
+      </div>
+    </div>
+
+    <div class="d-lg-flex justify-content-between align-items-start pt-20p px-20p">
+      <div class="mr-lg-10p mb-10p mb-lg-0p flex-grow-1">
+        <label for="code" class="text-label subtitle2 clamp-1line">Discount code</label>
+        <form-item-input
+        name="code"
+        label="Discount code"
+        placeholder="Enter code"
+        [submitted]="isSubmitted"
+        autocapitalize="off"
+        [controller]="f.promo"
+        [max]="maxPromoCode"
+        ></form-item-input>
+      </div>
+
+      <div class="mb-10p mb-lg-0p flex-grow-1">
+        <label for="date" class="subtitle2 text-label clamp-1line">Expire date</label>
+        <form-item-datetime
+        label="Expire date"
+        [submitted]="isSubmitted"
+        [controller]="f.availableUntil"
+        placeholder="yyyy-mm-dd"
+        [dateOnly]="true"
+        [minDateTime]="minDateTime"
+        ></form-item-datetime>
+      </div>
+    </div>
+
+    <div class="px-20p">
+      <label for="code" class="text-label subtitle2 clamp-1line">Link</label>
+      <form-item-input
+      name="code"
+      label="Discount code"
+      placeholder="https://your-website.com/awesome-product"
+      [submitted]="isSubmitted"
+      autocapitalize="off"
+      [controller]="f.link"
+      ></form-item-input>
+    </div> 
+
+    <div class="d-flex px-20p pt-20p justify-content-between">
+      <div class="d-flex">
+        <div>
+          <button 
+          type="button"
+          class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
+          (click)="onClickButtonMedia()"
+          >
+            <i iconPh="image-3"></i>
+            <span class="d-none d-lg-inline">Media</span>
+          </button>
+          <input #inputMedia
+          class="position-absolute d-none"
+          type="file" 
+          accept="image/jpeg, image/png" 
+          (change)="onSelectMedia($event)"
+          >
+        </div>     
+    
+        <button
+        type="button"
+        class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
+        (click)="onClickButtonEvent()"
+        >
+          <i iconPh="calendar"></i>
+          <span>Event</span>
+        </button>
+ 
+        <button 
+        type="button"
+        class="btn btn-text-grey small mb-10p px-0 px-lg-5p"
+        [ngClass]="{'btn-text-grey': !isMoreShown, 'btn-grey-light': isMoreShown}"
+        (click)="onClickButtonMore()"
+        >
+        <i iconPh="more-horiz"></i>
+        <span class="d-lg-none">More</span>
+        </button>  
+      </div>
+  
+      <div>
+        <button 
+        type="submit"
+        class="btn btn-primary small"
+        [disabled]="!this.user || isUploading"
+        >Share</button>
+      </div>
+    </div>
+
+    <div 
+    class="pb-10p overflow-hidden"
+    [ngStyle]="{'height': (!isMoreShown ? '0px' : 'auto')}"
+    [@expandVertical]="(isMoreShown ? 'expand' : 'shrink')"
+    >
+      <div class="mt-10p pt-20p pt-lg-10p px-20p border-top border-lg-top-0 border-line">
+        <h6 class="mb-10p">Select topics</h6>
+        <form-item-service
+        #formItemService
+        [option]="{showInlineWhenEnabled: true}"
+        (changeValue)="onChangeTags($event)"
+        ></form-item-service>
+        <form-item-errors 
+        [submitted]="isSubmitted" 
+        [controller]="f.tags"
+        ></form-item-errors>
+      </div>
+    </div>
+  </form>
+</div>

@@ -4,18 +4,26 @@
     <section class="col-3 d-none d-xl-block">
       <div class="sticky-top" style="top: 80px">
         <div class="mb-20p" *ngIf="topics" [@expandVertical]>
-          <div class="bg-white rounded-8p px-20p">
-            <list-item
+          <div class="bg-white rounded-8p overflow-hidden">
+            <div
             *ngFor="let topic of topics; let i = index"
-            [leading]="iconOf(topic)"
-            leadingClass="text-primary"
-            action="chevron-right"
-            actionClass="text-primary"
-            [option]="{hideBorderBottom: (i == topics.length - 1)}"
-            (onTap)="changeTopics(topic)"
+            class="px-20p"
+            [ngClass]="{'bg-primary-light': (selectedTopicId == topic._id)}"
             >
-              <div class="subtitle2">{{topic.item_text}}</div>
-            </list-item>
+              <list-item
+              [leading]="iconOf(topic)"
+              leadingClass="text-primary"
+              action="chevron-right"
+              actionClass="text-primary"
+              [option]="{hideBorderBottom: (i == topics.length - 1)}"
+              (onTap)="onTapTopic(topic)"
+              >
+                <div 
+                class="subtitle2"
+                [ngClass]="{'text-primary': (selectedTopicId == topic._id)}"
+                >{{topic.item_text}}</div>
+              </list-item>
+            </div>
           </div>
         </div>        
       </div>
@@ -28,34 +36,78 @@
       
     <!-- right -->
     <section class="d-none d-md-block col-5 col-lg-4 col-xl-3">
-      <div class="sticky-top" style="top: 80px;">
-        <div class="mb-20p">
-          <a [routerLink]="['/community/profile', idPH]">
-            <div class="p-20p rounded-8p bg-primary text-white d-flex justify-content-between align-items-center">
-              <div class="d-flex">
-                <profile-image image="/assets/img/logo-sm-white.png"></profile-image>
-                <div class="ml-15p">
-                  <h6 class="subtitle2 mb-0">PromptHealth</h6>
-                  <span class="body-small text-line">See our profile</span>
-                </div>
+      <div class="mb-20p">
+        <a [routerLink]="['/community/profile', idPH]">
+          <div class="p-20p rounded-8p bg-primary text-white d-flex justify-content-between align-items-center">
+            <div class="d-flex">
+              <profile-image image="/assets/img/logo-sm-white.png"></profile-image>
+              <div class="ml-15p">
+                <h6 class="subtitle2 mb-0">PromptHealth</h6>
+                <span class="body-small text-line">See our profile</span>
               </div>
-              <i iconPh="arrow-right-circle" class="text-primary-light"></i>
+            </div>
+            <i iconPh="arrow-right-circle" class="text-primary-light"></i>
+          </div>
+        </a>
+      </div>
+      <div class="mb-20p">
+        <div class="rounded-8p position-relative overflow-hidden border border-light">
+          <img src="assets/img/social/personal-match.jpg" style="width: 100%; height: auto;">
+          <div class="position-absolute mb-20p mx-30p" style="bottom: 0">
+            <div class="h5 mb-10p text-light" style="font-weight: 400; text-shadow: 1px 1px 3px #747474;">
+              Need a
+              <b>Personal </b>
+              Match?
+            </div>
+            <a routerLink="/personal-match" class="btn btn-primary small">
+              Get Started
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky-top" style="top: 80px;">
+        <!-- <div 
+        *ngIf="sponsor"
+        class="mb-20p"
+        >
+          <a 
+          class="d-block card-sponsor overflow-hidden rounded-8p bg-body"
+          [routerLink]="['/community/profile', sponsor._id]"
+          >
+            <div class="image-container-60pc">
+              <img [src]="imageSponsor" alt="">
+            </div>
+            <div class="info-container">
+              <h5 class="subtitle1 text-white">{{sponsor.name}}</h5>
             </div>
           </a>
-        </div>
-        <div class="mb-20p">
-          <div class="bg-white rounded-8p position-relative">
-            <img src="assets/img/social/personal-match.png" style="width: 100%; height: auto;">
-            <div class="position-absolute mt-30p mx-30p" style="top: 0">
-              <div class="h5 mb-20p" style="font-weight: 400;">
-                Need a
-                <b>Personal </b>
-                Match?
-              </div>
-              <a routerLink="/personal-match" class="btn btn-secondary small">
-                Get Started
-              </a>
-            </div>
+          <div class="text-right">
+            <a 
+            class="btn btn-text-grey small pr-0" 
+            routerLink="/products"
+            ><u>See all companies</u></a>
+          </div>
+        </div> -->
+
+        <div class="mb-30p">
+          <a 
+          class="d-block bg-white overflow-hidden rounded-8p py-20p px-30p"
+          href="https://purepharmacy.com/"
+          target="_blank"
+          >
+            <img src="/assets/img/partners/pure-pharmacy.png" alt="" style="max-width: 100%; height: auto;">
+          </a>
+          <div class="body2 text-label text-right mt-5p mr-5p">
+            <a 
+            routerLink="/plans/product"  
+            class="body2 text-label"
+            >
+              <u>
+                Are you a wellness company? 
+                <!-- Learn more -->
+              </u>
+            </a>
           </div>
         </div>
 
@@ -90,7 +142,9 @@
           <div>
             <a routerLink="/" class="body-small text-label">Home</a>
             <span> . </span>
-            <a routerLink="/practitioners" class="body-small text-label">Find practitioners</a>
+            <a routerLink="/practitioners" class="body-small text-label">Find providers</a>
+            <span> . </span>
+            <a routerLink="/products" class="body-small text-label">Companies</a>
           </div>
           <a routerLink="/policy" class="body-small text-label">Privacy Policy</a>
           <span> . </span>

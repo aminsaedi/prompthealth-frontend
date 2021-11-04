@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -12,22 +12,31 @@ import { fadeAnimation, slideVerticalStaggerAnimation } from 'src/app/_helpers/a
 })
 export class AboutComponent implements OnInit {
 
-  get isImageReady() { return !!(this.countImagesLoaded == topImages.length); }
-  get founderData() { return teamData[0]; }
-  
+  get sizeL() { return window && window.innerWidth >= 992; }
+
   public teamData = teamData;
-  public topImages = topImages;
   public holisticImages = holisticImages;
   public idxSelectedMember = -1;
 
   public isOnHolistic = false;
   public isOnTeam = false;
 
-  public countImagesLoaded = 0;
+  // public countImagesLoaded = 0;
   public disableAnimationTop = false;
   public disableAnimationHolistic = false;
   public disableAnimationTeam = false;
-  
+
+  public videoLink = "/assets/video/about-sm.mp4";
+  public videoLinkLg = '/assets/video/about-md.mp4';
+  public videoLgMarkedAsLoadStart: boolean = false;
+  public isVideoLgReady: boolean = false;
+
+  @ViewChild('videoPlayer') private videoPlayer: ElementRef;
+  @ViewChild('videoLg') private videoLg: ElementRef;
+
+  @HostListener('window:resize') WindowResize() {
+    this.loadVideoLgIfNeeded();
+  } 
 
   constructor(
     private _headerStatusService: HeaderStatusService,
@@ -36,18 +45,33 @@ export class AboutComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.countImagesLoaded = 0;
+    // this.countImagesLoaded = 0;
     this._uService.setMeta(this._router.url, {
       title: 'PromptHealth revolutionize the health and wellness experience',
       description: 'It is our mission to help people seeking care reach informed decisions about their health by providing credible educational resources and personalized care options. ',
     });
   }
 
-  onImageLoaded() {
-    this.countImagesLoaded++;
-    setTimeout(() => {
-      this.disableAnimationTop = true;
-    }, 500)
+  ngAfterViewInit() {
+    this.loadVideoLgIfNeeded();
+  }
+
+  loadVideoLgIfNeeded() {
+    if(this.sizeL && this.videoLg?.nativeElement && !this.videoLgMarkedAsLoadStart) {
+      const videoLg = this.videoLg.nativeElement as HTMLVideoElement;
+      videoLg.addEventListener('loadeddata', () => {
+        const vp = this.videoPlayer?.nativeElement;
+        const currentTime = vp?.currentTime || 0;
+        this.isVideoLgReady = true;
+        videoLg.currentTime = currentTime;
+        videoLg.loop = true;
+        vp.pause();
+        videoLg.play();        
+      });
+  
+      videoLg.load();
+      this.videoLgMarkedAsLoadStart = true;  
+    }
   }
     
   changeHeaderShadowStatus(isShown: boolean) {
@@ -98,11 +122,11 @@ export class AboutComponent implements OnInit {
   }
 }
 
-const topImages = [
-  '/assets/img/about/top-0.png',
-  '/assets/img/about/top-1.png',
-  '/assets/img/about/top-2.png'
-];
+// const topImages = [
+//   '/assets/img/about/top-0.jpg',
+//   '/assets/img/about/top-1.jpg',
+//   '/assets/img/about/top-2.jpg'
+// ];
 
 const holisticImages = [
   '/assets/img/about/holistic-0.png',
@@ -116,25 +140,25 @@ const teamData = [
   {
     name: 'Bob Mehr',
     title: 'Advisor',
-    image: 'bob.jpg',
+    image: 'bob.png',
     content: 'Bob is the president of Pure Integrative Pharmacy, chain of 17 pharmacies across BC with years of experience in healthcare as a pharmacist and business leader.',
   },
   {
     name: 'Jan Simon',
     title: 'Advisor',
-    image: 'jan.jpg',
+    image: 'jan.png',
     content: 'Jan is a managing partner at Vonzeo capital and university lecturer in finance at top business schools including IESE and Simon Fraser.',
   },
   {
     name: 'Peter Valadkhan',
     title: 'Technical lead',
-    image: 'peter.jpg',
+    image: 'peter.png',
     content: 'Peter is an experienced software developer with a PHD in computer science and university lecturer at University of the Fraser Valley leading the technical development.',
   },
   {
     name: 'Renee Bigelow',
     title: 'Marketing Consultant & Fractional CMO',
-    image: 'renee.jpg',
+    image: 'renee.png',
     content: '20+ years experience leading marketing teams with speciality in technology and SaaS & Media and Marketing Services SMBs',
   }, 
   {
@@ -149,6 +173,12 @@ const teamData = [
     image: 'jaden.png',
     content: 'Jaden joined the team in May, with a background in social media and marketing, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue her passion for marketing and making health services more accessible. Working at PromptHealth means a lot to her, as she feels strongly about the value that PromptHealth can bring to people.'
   },
+  {
+    name: 'Jersey Flores',
+    title: 'Customer Success Manager',
+    image: 'jersey.jpg',
+    content: 'Jersey recentetly joined PromptHealth as a Marketing and Communications student with a passion for healthy practices and bringing out each individual\'s best potential.',
+  },  
   // {
   //   name: 'Leah King',
   //   title: 'Digital Marketing and Communications Manager',
@@ -165,7 +195,7 @@ const teamData = [
     name: 'Otto Hu',
     title: 'Software Developer',
     image: 'otto.png',
-    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, practitioners and product companies.'
+    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, providers and product companies.'
   },
   {
     name: 'Takayuki Hiraishi',

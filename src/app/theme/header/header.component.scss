@@ -2,22 +2,9 @@
 @import "../../../assets/scss/variables";
 
 
-header {
-  transition-property: transform box-shadow;
-  transition-duration: 400ms;
-
-  &.hide {
-    transform: translateY(-100%);
-  }
-  
-  &.shadow{
-    box-shadow: 0 2px 5px #d6dfea!important;
-  }
-}
-
 .get-listed-md-container {
   position: absolute;
-  width: 280px;
+  width: 300px;
   top: 100%;
   left: calc(50% - 140px);
   margin-top: 20px;
@@ -31,59 +18,5 @@ header {
     margin-left: -8px;
     border: solid 8px;
     border-color: transparent transparent white transparent;
-  }
-}
-
-modal#user-type-menu{
-  .image-container{
-    width: 50%;
-    top: 0;
-    left: 0;
-
-    transform: translate(-7%, -40%);
-    @media (min-width: 768px){ transform: translate(-5%, -50%); }
-
-    img {
-      position: absolute;
-      width: 95%;
-      height: 95%;
-      object-fit: contain;
-    }
-
-    &::after{
-      content: '';
-      display: block;
-      padding-top: 100%;
-    }
-  }
-
-  h3{
-    margin-left: 55%;
-    .hidden-i5 {
-      @media (max-width: 374px){ display: none; }
-    }
-  }
-}
-
-.menu-sm {
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-
-  .menu-top {
-    position: absolute;
-    transform: translateX(-50%);
-    top: 0;
-    left: 50%;
-    z-index: 100;
-  }
-
-  .menu-inner {
-    flex: 0 0 100%;
-    height: calc(100vh - 60px);
-    overflow: auto;
   }
 }

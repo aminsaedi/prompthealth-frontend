@@ -1,15 +1,14 @@
 import { Component, OnInit, HostListener, ChangeDetectorRef, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from '../shared/services/shared.service';
 import { HeaderStatusService } from '../shared/services/header-status.service';
 import { UniversalService } from '../shared/services/universal.service';
 import { Category, CategoryService } from '../shared/services/category.service';
 import { IUserDetail } from '../models/user-detail';
 import { CategoryViewerController } from '../models/category-viewer-controller';
-import { expandAllAnimation, expandVerticalAnimation, slideVerticalStaggerAnimation } from '../_helpers/animations';
+import { expandAllAnimation, expandVerticalAnimation, fadeAnimation, slideVerticalStaggerAnimation } from '../_helpers/animations';
 import { Professional } from '../models/professional';
 import { CityId, getLabelByCityId } from '../_helpers/location-data';
-import { BlogSearchQuery, IBlogSearchResult } from '../models/blog-search-query';
 import { Blog } from '../models/blog';
 import { FeaturedExpertController } from '../models/featured-expert-controller';
 import { smoothHorizontalScrolling } from '../_helpers/smooth-scroll';
@@ -17,6 +16,9 @@ import { environment } from 'src/environments/environment';
 import { SocialPostSearchQuery } from '../models/social-post-search-query';
 import { IGetSocialContentsByAuthorResult } from '../models/response-data';
 import { SocialArticle } from '../models/social-article';
+import { ProfileManagementService } from '../dashboard/profileManagement/profile-management.service';
+import { ModalService } from '../shared/services/modal.service';
+import { getListedMenu } from '../_helpers/get-listed-menu';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -25,24 +27,54 @@ import { SocialArticle } from '../models/social-article';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  animations: [expandVerticalAnimation, expandAllAnimation, slideVerticalStaggerAnimation],
+  animations: [expandVerticalAnimation, expandAllAnimation, slideVerticalStaggerAnimation, fadeAnimation],
 })
 export class HomeComponent implements OnInit {
 
   get sizeL() { return window && window.innerWidth >= 992; }
+  get planMenuData() { return getListedMenu; }
+  get user() { return this._profileService.profile; }
+  get isLoggedIn(): boolean { return !!this.user; }
 
   constructor(
-    private router: Router,
+    private _router: Router,
+    private _route: ActivatedRoute,
     private _catService: CategoryService,
     private _sharedService: SharedService,
     private _headerStatusService: HeaderStatusService,
     private _uService: UniversalService,
     private _changeDetector: ChangeDetectorRef,
+    private _profileService: ProfileManagementService,
+    private _modalService: ModalService,
   ) { }
 
+  public isPlanMenuShown = false;
+  public isSlideshowReady = false;
+
+  public slideshow = [
+    'slideshow-1.png',
+    'slideshow-2.png',
+    'slideshow-3.png',
+    'slideshow-4.png',
+    'slideshow-5.png',
+    'slideshow-6.png',
+  ];
+
+  public slideshowReverse = [
+    'slideshow-6.png',
+    'slideshow-5.png',
+    'slideshow-4.png',
+    'slideshow-3.png',
+    'slideshow-2.png',
+    'slideshow-1.png',
+  ];
 
   private timerResize: any = null;
   private previousScreenWidth: number = 0;
+  
+  @ViewChildren('slideshowItem') private slideshowItems: QueryList<ElementRef>; 
+  @ViewChildren('slideshowReverseItem') private slideshowReverseItems: QueryList<ElementRef>; 
+
 
   @HostListener('window:resize', ['$event']) WindowResize(e: Event) {
     if(this.categories && window.innerWidth && window.innerWidth != this.previousScreenWidth) {
@@ -69,10 +101,23 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  onIntersectCategory(isShown: boolean) {
+    if(isShown) {
+      this._headerStatusService.showHeader(true);
+    } else {
+      this._headerStatusService.hideHeader(true);
+    }
+  }
+
+  ngOnDestroy() {
+    this._headerStatusService.showHeader(false);
+  }
+
   ngAfterViewInit() {
     if(!this._uService.isServer) {
       this.elExpertFinderScrollHorizontal.nativeElement.scrollTo({left: 10000});
     }
+
   }
 
   // eventbriteCheckout(event) {
@@ -83,8 +128,10 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
-    this._uService.setMeta(this.router.url, {
-      title: 'PromptHealth | Your health and wellness personal assistant',
+    this._headerStatusService.hideHeader();
+
+    this._uService.setMeta(this._router.url, {
+      title: 'PromptHealth | Your Wellness Navigator',
       description: 'Take control of your health with options tailored to you',
     });
 
@@ -102,7 +149,7 @@ export class HomeComponent implements OnInit {
 
     this.getBlog();
 
-    if (!this._uService.isServer) {
+    if (this._uService.isBrowser) {
       // await this.getHomePageFeatures(); /** need to reinstate after many practitioners buy addonPlan */
       this.getPractitionersFeatured(); /** temporary solition */
     }
@@ -119,6 +166,67 @@ export class HomeComponent implements OnInit {
       });  
     });
   }
+
+  /** HEADER FOR HOMEPAGE */
+  showMenuSm() {
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {menu: 'show'}});
+  }
+
+  onClickGetListed() {
+    this.isPlanMenuShown = !this.isPlanMenuShown;
+  }
+
+  hidePlanMenu() {
+    this.isPlanMenuShown = false;
+  }
+
+  onClickUserIcon() {
+    this._modalService.show('user-menu', this.user);
+  }
+
+  // initSlideshow() {
+    // if(this.slideshowItems.length > 0 && this.slideshowReverseItems.length > 0) {
+    //   let currentDistance = 0;
+    //   const distancePerMove = 0.2;
+
+    //   setInterval(() => {
+    //     currentDistance += distancePerMove;
+    //     this.moveSlideshow(this.slideshowItems.toArray(), currentDistance, false);
+    //     this.moveSlideshow(this.slideshowReverseItems.toArray(), currentDistance, true);
+    //     this.isSlideshowReady = true;
+    //   }, 30);  
+    // }
+    
+  // }
+ 
+
+  // moveSlideshow(items: ElementRef[], distance: number  = 0, reverse: boolean = false) {
+  //   let gap = 40;
+  //   let totalLength = (items.length - 1) * gap;
+  //   items.forEach((item, i) => {
+  //     const el = item.nativeElement as HTMLDivElement;
+  //     totalLength += this.sizeL ? el.clientHeight : el.clientWidth;
+  //   });
+
+  //   const distActual = distance % totalLength;
+
+
+  //   let initialPosition = 0;
+  //   items.forEach((item, i) => {
+  //     const el = item.nativeElement as HTMLDivElement;
+
+  //     let currentPosition = initialPosition - distActual;
+  //     if(currentPosition < - (this.sizeL ? el.clientHeight : el.clientWidth)){
+  //       currentPosition += totalLength + gap;
+  //     }
+
+  //     el.style.transform = `translate${this.sizeL ? 'Y' : 'X'}(${reverse ? -currentPosition : currentPosition}px)`;
+
+  //     initialPosition += this.sizeL ? el.clientHeight : el.clientWidth;
+  //     initialPosition += gap;
+  //   });
+  // }
+  /** HEADER FOR HOMEPAGE END */
 
 
   /** CATEGORIES */
@@ -254,35 +362,37 @@ const appFeatureItems = [
   [
     {
       icon: 'verified-outline', 
-      title: 'Search for health and wellness practitioners.',
-      content: 'Use personalized filters to find your best match.',
+      title: 'Find trusted wellness providers based on your personalized needs.',
+      content: 'Do a personal match or use search filter options.',
     },
     {
       icon: 'checkbox-square-outline',
-      title: 'Compare and book.',
-      content: 'Read reviews and make informed decisions about your care when booking appointments.',
+      title: 'Browse and learn from our content library.',
+      content: 'View resources by category and filter by media type to find expert created content that matters to you.',
     },
     {
       icon: 'users-outline',
-      title: 'Stay connected with your favourite experts.',
-      content: 'Get notified when experts you follow share new content.',
+      title: 'Compare and book.',
+      content: 'Read reviews and make informed decisions about your care.',
     }
   ],
   [
     {
       icon: 'book-open-outline',
-      title: 'Browse and learn from our content library.',
-      content: 'View by category and filter by media type to find expert-created content that matters to you.',
+      title: 'Stay connected with your favourite experts.',
+      content: 'Appointment go well? Follow your provider’s page for updates and additional resources.',
     },
     {
       icon: 'tags-2-outline',
-      title: 'Discover select deals on expert-recommended products.',
-      content: 'Browse our product offerings page for deals to support your health and wellness journey. (Coming soon)',
+      title: 'Find wellness events and workshops.',
+      content: '',
+      // content: 'Your privacy and security is ensured.',
+      // content: 'Your privacy and security is ensured. PIPEDA/HIPPA approved.',
     },
     {
       icon: 'shield-check-outline',
-      title: 'Safe & Secure.',
-      content: 'Your privacy and security is ensured.',
+      title: 'Discover deals on recommended wellness products and services.',
+      content: 'Browse through wellness products recommended by the experts themselves.',
     }
   ],
 ]
@@ -293,14 +403,14 @@ const introductionPostType = {
     color: 'bg-success',
 
     title: 'Notes',
-    content: 'Read quick health tips and thoughts.',
+    content: 'Quick health and wellness reads.',
   },
   event: {
     icon: 'calendar',
     color: 'bg-error',
 
     title: 'Events',
-    content: 'Attend virtual or in-person events hosted by practitioners',
+    content: 'Attend virtual or in-person events hosted by providers.',
   },
   article: {
     icon: 'file',
@@ -314,7 +424,7 @@ const introductionPostType = {
     color: 'bg-primary',
 
     title: 'Voices',
-    content: 'Listen to informative audio and get empowered.',
+    content: 'Get to know your provider before meeting with audio recordings.',
   },
   video: {
     icon: 'image-3',

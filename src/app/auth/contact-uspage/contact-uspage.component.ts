@@ -4,7 +4,6 @@ import { SharedService } from '../../shared/services/shared.service';
 import { environment } from '../../../environments/environment';
 import { NgForm } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-declare var jQuery: any;
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

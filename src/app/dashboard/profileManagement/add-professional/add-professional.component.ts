@@ -69,12 +69,12 @@ export class AddProfessionalComponent implements OnInit {
   }
 
   getStaffList() {
-    const path = `staff/get-all?center=${this.user._id}&count=10&page=1&frontend=0/`;
+    const path = `staff/get-by-center/${this.user._id}`;
     this.isLoading = true;
     this._sharedService.getNoAuth(path).subscribe((res: IGetStaffsResult) => {
       this.isLoading = false;
       if (res.statusCode === 200) {
-        this.staffs = res.data.data.map(item => new Professional(item.userId._id, item.userId));
+        this.staffs = res.data.map(item => new Professional(item.userId._id, item.userId));
       } else {
         this.staffs = [];
       }

@@ -288,7 +288,6 @@ export class EditorComponent implements OnInit {
   } 
 
   onChangeEventType(online: boolean) {
-    console.log('onChangeEventType')
     this.f.eventType.setValue(online ? 'ONLINE' : 'OFFLINE');
   }
 
@@ -297,6 +296,9 @@ export class EditorComponent implements OnInit {
     if(el) {
       el.click();
     }
+  }
+  onChangeTags(ids: string[]) {
+    this.f.tags.setValue(ids);
   }
 
   onClickButtonAudio() {
@@ -359,6 +361,7 @@ export class EditorComponent implements OnInit {
       this._toastr.error(error);
     }
   }
+  
 
   async publish() {
     try {
@@ -402,10 +405,6 @@ export class EditorComponent implements OnInit {
       }
   
       const data: ISaveQuery = form.value;
-      const tags = this.formItemService.getSelected();
-      if(tags.length > 0) {
-        data.tags = tags;
-      }
       data.status = status;
   
       const payload: ISaveQuery = new SaveQuery(data).toJson();
@@ -474,7 +473,6 @@ export class EditorComponent implements OnInit {
       }
 
       if(images.length == 0) {
-        console.log('no image found');
         resolve();
       } else {
         this._sharedService.uploadMultipleImages(images, this.user._id, 'blogs').subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {
