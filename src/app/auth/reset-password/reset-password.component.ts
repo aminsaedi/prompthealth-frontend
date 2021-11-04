@@ -14,6 +14,8 @@ import { Auth2Service } from '../auth2.service';
 })
 export class ResetPasswordComponent implements OnInit {
 
+  get token() { return this._route.snapshot.params.token; }
+
   public form: FormControl;
   public isSubmitted: boolean = false;
   public isUpdating: boolean = false;
@@ -38,7 +40,7 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     const data = {
-      token: this._route.snapshot.params.token,
+      token: this.token,
       password: this.form.value,
     }
 
