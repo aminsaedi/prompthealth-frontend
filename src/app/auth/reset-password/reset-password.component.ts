@@ -4,30 +4,51 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IAuthResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { slideVerticalAnimation } from 'src/app/_helpers/animations';
 import { validators } from '../../_helpers/form-settings';
 import { Auth2Service } from '../auth2.service';
 
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.scss']
+  styleUrls: ['./reset-password.component.scss'],
+  animations: [slideVerticalAnimation],
 })
 export class ResetPasswordComponent implements OnInit {
+
+  get token() { return this._route.snapshot.params.token; }
+
+  get isAndroid() { return this._uService.isAndroid; }
+  get isIPhone()  { return this._uService.isIphone; }
+  get isAppAvailable() { return this._uService.isAppAvailable; }  
 
   public form: FormControl;
   public isSubmitted: boolean = false;
   public isUpdating: boolean = false;
   public doneUpdate: boolean = false;
 
+  public isAppNavigationShown: boolean = true;
+
   constructor(
     private _toastr: ToastrService,
     private _sharedService: SharedService,
     private _route: ActivatedRoute,
     private _authService: Auth2Service,
+    private _uService: UniversalService,
   ) { }
 
   ngOnInit(): void {
     this.form = new FormControl('', validators.password);
+  }
+
+  openApp() {
+    this._uService.openApp('confirmResetPassword/' + this.token);
+  }
+
+  closeAppNavigation(e: Event) {
+    e.stopPropagation();
+    this.isAppNavigationShown = false;
   }
 
   onSubmit() {
@@ -38,7 +59,7 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     const data = {
-      token: this._route.snapshot.params.token,
+      token: this.token,
       password: this.form.value,
     }
 
