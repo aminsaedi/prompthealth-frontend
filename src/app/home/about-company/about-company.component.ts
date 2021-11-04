@@ -261,14 +261,59 @@ const planFeatures: IPlanFeatureData[] = [
 ];
 
 const faqs: IFAQItem[] = [
-  {q: 'What is PromptHealth and why should I be involved?', a: 'PromptHealth is an online platform revolutionizing the health and wellness experience. We have created an ecosystem where wellness seekers can learn directly from the providers and get connected with them based on areas of interest. Wellness companies can also get displayed in front of the wellness seekers and providers based on different categories.', opened: false},
-  {q: 'What is known as a wellness company?', a: 'Brands in wellness which are not necessarily offered  by a wellness provider. It can range from Apps, products, services and resources that have an offering in one or more of the categories listed on PromptHealth.', opened: false,},
-  {q: 'What do I get with my standard membership?', a: 'You get a profile with a description of your company and can upload pictures. You can promote any upcoming offers or events to inform the PromptHealth community with push notifications. You can also receive recommendations and endorsements from the wellness providers to gain more credibility. They can share your offering on their feeds as well.', opened: false},
-  {q: 'What is the cost to join PromptHealth?', a: 'The standard profile for wellness companies costs $200/month with 20% discount for the yearly membership. There is an add-on option where we can promote your brand further on a custom base as required by you with ads on our social feed, on our different social media channels and newsletter. Details and features can be found on the pricing page.', opened: false},
-  {q: 'How do I get listed?', a: 'After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your background and specialities. This allows us to ensure you are listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern.', opened: false},
-  {q: 'How do I create an account?', a: 'Creating an account is easy. Click the “sign-up” link on our site, and follow the steps shown. When creating an account, please ensure that you fill out all requested information, as it helps create the perfect profile for new clients to find and book sessions with you. Our team DOES NOT approve profiles that are partially filled out, as this does not ensure you are placed in the correct category in our search. We expect you to follow the guidelines provided to upload a professional picture and only select modalities that you are certified in, in order to get the most suitable client match.', opened: false},
-  {q: 'Will I be able to receive reviews and recommendations?', a: 'You are able to connect any existing Google reviews to your profile to gain credibility right away.<br><br>In addition, we are the first online platform that makes it possible for the wellness providers to endorse you by leaving recommendations for you and to share your offerings on their social., which allows your brand to gain more trust and credibility.', opened: false},
-  {q: 'How do I deactivate or delete my account?', a: 'You can contact the admin at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>', opened: false},
-  {q: 'Is there a verification process?', a: 'Before we approve a listing, we ensure to complete an audit and do a background check to ensure the accuracy of information provided by a health and wellness provider. This is a qualitative review at this time.', opened: false},
+  {
+    q: 'What is PromptHealth and why should I be involved?',
+    a: 'PromptHealth is an online platform created to assist people navigate their health journey by providing education on holistic wellness solutions. We have created an ecosystem where wellness seekers can learn directly from the providers and get connected with them based on areas of interest. To further emphasize an integrative approach and truly create an all-in-one wellness navigator, we list different wellness companies that may assist providers with their service goals or provide supplementary solutions to wellness seekers.',
+    opened: false,
+  },
+  {
+    q: 'What types of wellness companies do we work with?',
+    a: `We work with all kinds of wellness brands who do not fit under the category of being a provider. Some examples include mobile apps, wellness-related products, services, and other resources that benefit the wellness community. 
+      <br><br>
+      Unsure if your company will be a good fit? Email us at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a> to learn more. 
+    `,
+    opened: false,
+  },
+  {
+    q: 'What do I get with a  standard membership?',
+    a: 'You will get listed on our website and app with a profile complete with a  description of your company and what you offer. You can upload images to directly display your products and/or services, and also promote any upcoming offers or events. Any time a new promotion or event is created, our community of both providers and users will receive a notification.  Finally, receive recommendations and endorsements from our wellness providers to gain more credibility. Providers who resonate with your brand have the option to share your company page on their profile.',
+    opened: false,
+  },
+  {
+    q: 'What is the cost to join PromptHealth?',
+    a: `The standard profile for wellness companies costs $200/month. Companies who sign up for an annual membership receive 20% the total price.  
+      <br><br>
+      For companies looking for further brand exposure, we offer custom add-on options, including promotions such as paid ads, mentions in our monthly newsletter, and features on our social media via live sessions, interviews, podcasts, and more. For more information on social media collaborations and custom add-ons, please contact us at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>.
+    `,
+    opened: false,
+  },
+  {
+    q: 'How do I get listed?',
+    a: 'After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your company’s  background and which category of wellness it fits under. . This allows us to ensure your brand is  listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern.',
+    opened: false,
+  },
+  {
+    q: 'How do I create an account?',
+    a: 'Creating an account is easy. Click the “sign-up” link on our site, and follow the steps shown. When creating an account, please ensure that you fill out all requested information, as it helps create the perfect profile for new clients to find and book sessions with you. Our team DOES NOT approve profiles that are partially filled out, as this does not ensure you are placed in the correct category in our search.',
+    opened: false,
+  },
+  {
+    q: 'Will I be able to receive reviews and recommendations?',
+    a: 'Recommendations can be provided by other wellness practitioners and wellness companies. To prevent fake reviews, we are only allowing wellness providers and companies who have already been approved to be on PromptHealth to write a recommendation on your profile. This is meant to boost credibility and online trust for everyone.',
+    opened: false,
+  },
+  {
+    q: 'Is there a verification process?',
+    a: `Before we approve a listing, we ensure to complete an audit to ensure the accuracy of information provided by the company. 
+      <br><br>
+      This involves a careful qualitative approach conducted by the team. We encourage the company to follow any community guidelines. Although this review process is carefully conducted, we cannot guarantee the qualification information provided and cannot be responsible for false information. 
+    `,
+    opened: false,
+  },
+  {
+    q: 'How do I deactivate or delete my account?',
+    a: `To deactivate or delete your account, please You can contact the admin at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>`,
+    opened: false,
+  },
 ]
 

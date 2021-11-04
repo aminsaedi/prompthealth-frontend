@@ -1,25 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { SharedService } from '../../shared/services/shared.service';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
-  selector: 'app-terms-conditions',
-  templateUrl: './terms-conditions.component.html',
-  styleUrls: ['./terms-conditions.component.scss']
+  selector: 'app-privacy-policy',
+  templateUrl: './privacy-policy.component.html',
+  styleUrls: ['./privacy-policy.component.scss']
 })
-export class TermsConditionsComponent implements OnInit {
+export class PrivacyPolicyComponent implements OnInit {
 
   constructor(
     private _router: Router,
     private _uService: UniversalService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this._uService.setMeta(this._router.url, {
-      title: 'Terms and Conditions',
+      title: 'Privacy policy | PromptHealth',
     });
   }
-
 }
