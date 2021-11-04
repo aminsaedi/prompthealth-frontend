@@ -28,8 +28,6 @@ export class ResetPasswordComponent implements OnInit {
   public isUpdating: boolean = false;
   public doneUpdate: boolean = false;
 
-  public result: any;
-
   public isAppNavigationShown: boolean = true;
 
   constructor(
