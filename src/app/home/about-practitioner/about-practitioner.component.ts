@@ -322,53 +322,66 @@ const planFeatures: IPlanFeatureData[] = [
 const faqs: IFAQItem[] = [
   {
     q: 'What is PromptHealth and why should I be involved?',
-    a: 'PromptHealth is an online platform revolutionizing the health and wellness experience. It started off as a two-sided marketplace where people could personalize their search options and connect with different practitioner types proven to help with a specific cause. Now, with the help of our network of practitioners and further technology development, PromptHealth is on track to be the go-to social app and site to provide people with the educational resources they need to make informed decisions about their health, in an engaging format.',
+    a: 'PromptHealth is an online platform created to assist people navigate their health journey by providing education on holistic wellness solutions. Providers listed with us post trusted content to educate the community on their services and field, allowing the community to make informed decisions about their health. People looking for care options can easily sort through providers who offer services that may help them using personalized filters, or by answering our personal match questionnaire. To further emphasize an integrative approach and truly create an all-in-one wellness navigator, we also list different wellness products and services that may assist providers with their service goals or provide supplementary solutions to wellness seekers. ',
     opened: false,
   },
   {
     q: 'How is PromptHealth different from a regular directory?',
-    a: `Unlike regular directories, we don’t assume that people know what providers to search for, and what they all do. Instead, we start from a person’s individual needs and show them all of the options. Our search filters allow people to narrow their search based on preferences such as gender, age speciality, language, location, virtual care, and more.
+    a: `Unlike regular directories, we do not assume that people know which  providers to search for, and what they all do. Instead, we start from a person’s individual needs and show them all of their care options promoting a holistic approach to wellness. Our search filters allow people to narrow their search based on preferences such as gender, age speciality, language, location, virtual care, and more. 
       <br><br>
-      Further, people are able to learn about each practitioner by the content they post on their profile.  Before booking with a practitioner, our users can learn about their area of interest, and follow them to get notified every time a new post is created. This allows our users to make informed decisions about their care, and book with someone they truly trust and feel comfortable with.`,
+      Further, people are able to learn about each practitioner by the content they post on their profile. Before booking with a practitioner, our users can learn about their area of interest, and follow them to get notified every time a new post is created. This allows our users to make informed decisions about their care, and book with someone they truly trust and feel comfortable with.
+    `,
     opened: false,
   },
   {
     q: 'Does it cost to join PromptHealth?',
-    a: 'You have the option of creating a free account. You also have the option to create an enhanced profile for $25/month as a solo provider, or $95/ month as a center with multiple providers. Details of each account type and features can be found on the pricing page.',
+    a: `You have the option of creating a basic profile for free, which allows you to post limited educational content such as quick text notes and voice memos.
+      <br><br>
+      To access all features, including quick text notes, voice memos, articles, events, and recommendations, there is a monthly or annual subscription fee.  Currently, the fee is $25/month for  solo providers, or $95/month as a center with multiple providers. There is a 20% discount if you sign up for annual membership. Details of each account type and features can be found on the pricing page.
+    `,
     opened: false,
   },
   {
     q: 'How do I get listed?',
-    a: 'After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your background and specialities. This allows us to ensure you are listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern.',
+    a: `After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your background and specialities. These questions will take between 5-7 minutes to complete. This allows us to ensure you are listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern.
+      <br><br>
+      Please ensure you answer all of the questions, as your profile may be rejected if there are important details missing. 
+    `,
     opened: false,
   },
   {
     q: 'How do I create an account?',
-    a: 'Creating an account is easy. Click the “sign-up” link on our site, and follow the steps shown.  When creating an account, please ensure that you fill out all requested information, as it helps create the perfect profile for new clients to find and book sessions with you. Our team DOES NOT approve profiles that are partially filled out, as this does not ensure you are placed in the correct category in our search. We expect you to follow the guidelines provided to upload a professional picture and only select modalities that you are certified in, in order to get the most suitable client match.',
+    a: 'Creating an account is easy. Click the “get listed”  link on our site, and follow the steps shown. When creating an account, please ensure that you fill out all requested information, as it helps create the perfect profile for new clients to find and book sessions with you. Our team DOES NOT approve profiles that are partially filled out, as this does not ensure you are placed in the correct category in our search. We expect you to follow the guidelines provided to upload a professional picture and only select modalities that you are certified in, in order to get the most suitable client match.',
     opened: false,
   },
   {
     q: 'How do I create content?',
-    a: `PromptHealth is on a mission to make it easy for people to research, learn, discover, and ultimately make informed decisions about their health, all in one place. Our goal is to eliminate trial and error online by making PromptHealth the modern and user friendly hub for trusted health and wellness information right by you. We have created a platform to display your  knowledge, educate people, and get connected. 
-    <br><br>
-    On your profile, you are able to share wellness content via notes, audio, blogs, events, images, and video (coming soon). Our team is here to support you in the process of creating content, and are happy to provide guidance if needed. Just reach out!`,
+    a: `PromptHealth is on a mission to make it easy for people to research, learn, discover, and ultimately make informed decisions about their health, all in one place. Our goal is to eliminate trial and error when looking for wellness solutions  by making PromptHealth the modern and user friendly hub for trusted health and wellness information right by you. We have created a platform to display your knowledge, educate people, and get connected. 
+      <br><br>
+      On your profile, you are able to share wellness content via quick text notes, voice memos, articles/blogs, and events. . Our team is here to support you in the process of creating content, and are happy to provide guidance if needed. Just reach out!
+    `,
     opened: false,
   },
   {
     q: 'Will I be able to receive reviews and recommendations?',
-    a: `You are able to connect any existing Google reviews to your profile to gain credibility right away. Further, new clients can write you a review after they have attended any booked appointments.
-    <br><br>
-    In addition, we are the first online platform that makes it possible for health and wellness providers to easily find and inter-refer each other. You can do this by providing recommendations on another provider’s profile to build further trust within the health and wellness community.`,
-    opened: false,
-  },
-  {
-    q: 'How do I deactivate or delete my account?',
-    a: 'You can contact the admin at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>',
+    a: `We are the first online platform that makes it possible for health and wellness providers to easily find and inter-refer each other. You can do this by providing recommendations on another provider’s profile to build further trust within the health and wellness community.
+      <br><br>
+      Recommendations can be provided by other wellness practitioners and wellness companies. To prevent fake reviews, we are only allowing providers and companies who have already been approved to be on PromptHealth to write a recommendation on your profile. This is meant to boost credibility and online trust for everyone. 
+    `,
     opened: false,
   },
   {
     q: 'Is there a verification process?',
-    a: 'Before we approve a listing, we ensure to complete an audit and do a background check to ensure the accuracy of information provided by a health and wellness provider. We encourage you to upload your certification in order to receive a verified badge beside your profile, indicating you are verified to build more credibility and trust.',
+    a: `Before we approve a listing, we ensure to complete an audit to ensure the accuracy of information provided by a health and wellness provider. This review process consists of a careful qualitative approach by our team. 
+      <br><br>
+      We encourage you to upload your certification in order to receive a verified badge beside your profile, indicating you are verified to build more credibility and trust. Although this review process is carefully conducted, we cannot guarantee the qualification information provided and cannot be responsible for false information. 
+    `,
+
+    opened: false,
+  },
+  {
+    q: 'How do I deactivate or delete my account?',
+    a: `To deactivate or delete your account, please  contact the admin at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>`,
     opened: false,
   },
 ]

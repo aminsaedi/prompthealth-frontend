@@ -4,7 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { FAQComponent } from "./faq/faq.component";
 // import { MapComponent } from "./map/map.component";
 // import { ProfessionalRegisterComponent } from '../dashboard/professional-register/professional-register.component';
-import { PricvacyPolicyComponent } from "./pricvacy-policy/pricvacy-policy.component";
+import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { TermsConditionsComponent } from "./terms-conditions/terms-conditions.component";
 import { LoyalityProgramsComponent } from "./loyality-programs/loyality-programs.component";
 import { ContactUsComponent } from './contact-us/contact-us.component';
@@ -60,14 +60,10 @@ const routes: Routes = [
   //   path: "map",
   //   component: MapComponent
   // },
-  {
-    path: "policy",
-    component: PricvacyPolicyComponent
-  },
-  {
-    path: "terms",
-    component: TermsConditionsComponent
-  },
+  { path: "policy", component: PrivacyPolicyComponent },
+  { path: "privacy", redirectTo: '/policy' },
+
+  { path: "terms",  component: TermsConditionsComponent },
   { path: 'termConditions', redirectTo: '/terms'},
 
   // {
