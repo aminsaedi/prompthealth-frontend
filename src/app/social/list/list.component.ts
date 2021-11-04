@@ -237,8 +237,7 @@ export class ListComponent implements OnInit {
           params.contentType = 'ARTICLE';
           break;
         case 'event':
-          delete params.timestamp;
-
+          params.page = this.posts?.length > 0 ? Math.ceil(this.posts.length / this.countPerPage) + 1 : 1;
           params.contentType = 'EVENT';
           params.sortBy = 'eventStartTime';
           params.order = 'asc';
@@ -246,8 +245,6 @@ export class ListComponent implements OnInit {
           const meta = this._socialService.metadataOf('event');
           if(meta && meta.eventTimeRange) {
             params.eventTimeRange = meta.eventTimeRange;
-          } else if(this.posts?.length > 0) {
-            params.eventTimeRange = [this.posts[this.posts.length - 1].startAt.toISOString()];
           } else {
             const now = new Date();
             params.eventTimeRange = [now.toISOString()];
@@ -272,6 +269,7 @@ export class ListComponent implements OnInit {
       }
 
       const query = new SocialPostSearchQuery(params).toQueryParams();
+      console.log(query);
       const path = this.isFilterByFollowingOn ? 'note/get-feed' : 'note/filter';
 
       // console.log(path, query)
@@ -289,6 +287,7 @@ export class ListComponent implements OnInit {
               topic: this.selectedTopicId, 
               existMorePost: this.isMorePosts,
               filterByFollowing: this.isFilterByFollowingOn,
+              ...(params.eventTimeRange) && { eventTimeRange: params.eventTimeRange },
             }
           );
           resolve(posts);
