@@ -7,6 +7,7 @@ import { Profile } from 'src/app/models/profile';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'modal-voice-recorder',
@@ -31,6 +32,12 @@ export class ModalVoiceRecorderComponent implements OnInit {
   public timeAudioRecordingRemaining: number = 0; //unit: s;
   public percentAudioPlayCurrent: number = 0;
   public recorder: any;
+
+  private subscriptionRecordeingFailed: Subscription;
+  private subscriptionRecordingStarted: Subscription;
+  private subscriptionTimerRecording: Subscription;
+  private subscriptionRecordingDone: Subscription;
+  private subscriptionProcessingDone: Subscription;
   
   @ViewChild('audioPlayer') private audioPlayer: ElementRef;
   
@@ -49,29 +56,37 @@ export class ModalVoiceRecorderComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.subscriptionRecordeingFailed?.unsubscribe();
+    this.subscriptionRecordingStarted?.unsubscribe();
+    this.subscriptionTimerRecording?.unsubscribe();
+    this.subscriptionRecordingDone?.unsubscribe();
+    this.subscriptionProcessingDone?.unsubscribe();
+  }
+
   ngOnInit(): void {
     this._audioData = this.audioData ? this.audioData.copy() : null;
-    this._audioRecorder.recordingFailed().subscribe((message) => {
+    this.subscriptionRecordeingFailed = this._audioRecorder.recordingFailed().subscribe((message) => {
       this.onAudioRecordingFaild(message);
     });
 
-    this._audioRecorder.recordingStarted().subscribe(() => {
+    this.subscriptionRecordingStarted = this._audioRecorder.recordingStarted().subscribe(() => {
       this.onAudioRecordingStarted();
     });
 
-    this._audioRecorder.timerRecording().subscribe((seconds) => {
+    this.subscriptionTimerRecording =  this._audioRecorder.timerRecording().subscribe((seconds) => {
       this.onTimerAudioRecordingChanged(seconds);
     })
 
-    this._audioRecorder.recordingDone().subscribe((data) => {
+    this.subscriptionRecordingDone = this._audioRecorder.recordingDone().subscribe((data) => {
       this.onAudioRecordingDone(data);
     });
 
-    this._audioRecorder.processingStarted().subscribe(() => {
+    this.subscriptionRecordingStarted = this._audioRecorder.processingStarted().subscribe(() => {
       this.isAudioRecorderBusy = true;
     });
 
-    this._audioRecorder.processingDone().subscribe(() => {
+    this.subscriptionProcessingDone = this._audioRecorder.processingDone().subscribe(() => {
       this.isAudioRecorderBusy = false;
     });
   }
