@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { IAuthTempResult } from 'src/app/models/response-data';
+import { IAuthResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from '../../_helpers/form-settings';
 import { Auth2Service } from '../auth2.service';
@@ -42,9 +42,14 @@ export class ResetPasswordComponent implements OnInit {
       password: this.form.value,
     }
 
-    this._sharedService.postNoAuth(data, 'user/resetPassword').subscribe((res: IAuthTempResult) => {
-      this._authService.storeCredential(res);
-      this.doneUpdate = true;
+    this._sharedService.postNoAuth(data, 'user/resetPassword').subscribe((res: IAuthResult) => {
+      if(res.statusCode == 200) {
+        this._authService.storeCredential(res.data);
+        this.doneUpdate = true;  
+      } else {
+        console.log(res.message);
+        this._toastr.error('Something went wrong. Please try again');
+      }
     }, error => {
       console.log(error);
       this._toastr.error('Something went wrong. Please try again');

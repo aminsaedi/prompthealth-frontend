@@ -13,11 +13,10 @@ export class Auth2Service {
 
   storeCredential(auth: IAuthResult['data']) {
     const ls = this._uService.localStorage;
-    
     ls.setItem('token', auth.loginToken);
     ls.setItem('roles', auth.roles);
     ls.setItem('loginID', auth._id);
-    ls.setItem('isVipAffiliateUser', auth.isVipAffiliateUser.toString());
+    ls.setItem('isVipAffiliateUser', auth.isVipAffiliateUser?.toString() || 'false');
     ls.setItem('user', JSON.stringify(auth));
   }
 }
