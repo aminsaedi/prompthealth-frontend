@@ -86,7 +86,8 @@ export function app() {
   server.use('/thankyou',              (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/join-team',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   
-  server.use('/community/create',      (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/community/drafts',      (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/community/editor',      (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/community/followings',  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/community/followers',   (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/community/notification',(req, res) => { res.sendFile(join(distFolder, 'index.html')); })

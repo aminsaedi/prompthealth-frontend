@@ -11,6 +11,7 @@ import { expandVerticalAnimation, slideHorizontalAnimation } from 'src/app/_help
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 import { first } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-about-practitioner',
@@ -85,6 +86,11 @@ export class AboutPractitionerComponent implements OnInit {
     this._uService.setMeta(this._router.url, {
       title: 'Reach more new patients and grow your practice with PromptHealth',
       description: 'PromptHealth helps providers reach more new patients for in-person visits, video visits or both.',
+      robots: 'index, follow',
+      image: `${environment.config.FRONTEND_BASE}/assets/video/about-practitioner-thumbnail.jpg`,
+      imageWidth: 992,
+      imageHeight: 558,
+      imageType: 'image/jpg'
     });
 
     this.initPlans();

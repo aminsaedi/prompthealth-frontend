@@ -6,9 +6,7 @@ const apiURL = environment.config.API_URL;
 const baseURL = environment.config.FRONTEND_BASE;
 
 import { default as axios } from 'axios';
-import { IUserDetail } from './models/user-detail';
 import { QuestionnaireAnswer } from './shared/services/questionnaire.service';
-import { IGetSocialContentsResult } from './models/response-data';
 const rSitemap = Router();
 
 rSitemap.get('/main', (req, res) => {
@@ -66,7 +64,16 @@ const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
       <loc>${baseURL}</loc>
     </url>
     <url>
+      <loc>${baseURL}/about</loc>
+    </url>
+    <url>
+      <loc>${baseURL}/about/pertner</loc>
+    </url>
+    <url>
       <loc>${baseURL}/plans</loc>
+    </url>
+    <url>
+      <loc>${baseURL}/plans/product</loc>
     </url>
     <url>
       <loc>${baseURL}/products</loc>
@@ -255,7 +262,7 @@ function getSitemapSocial(): Promise<string> {
       const categoryIds = vals[0];
       const practitionerIds = vals[1];
       const contentIds = vals[2];
-      const taxonomies = ['feed', 'article', 'media', 'event'];
+      const taxonomies = ['feed', 'article', 'media', 'event', 'note', 'voice', 'promotion'];
 
       taxonomies.forEach(type => {
         xml += `

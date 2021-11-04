@@ -10,6 +10,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { slideHorizontalAnimation } from 'src/app/_helpers/animations';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
+import { environment } from 'src/environments/environment';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 
 @Component({
@@ -79,6 +80,16 @@ export class AboutCompanyComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Showcase your brand and receive endorsements from wellness providers | PromptHealth',
+      description: 'PromptHealth works with all types of brands relating to wellness - apps, products, services, podcasts, courses, and more.',
+      robots: 'index, follow',
+      image: `${environment.config.FRONTEND_BASE}/assets/video/about-company-thumbnail.jpg`,
+      imageWidth: 992,
+      imageHeight: 558,
+      imageType: 'image/jpg'
+    });
+
     this.initPlans();
     this.initCoupon();
   }

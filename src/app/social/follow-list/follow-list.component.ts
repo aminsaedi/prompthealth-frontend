@@ -47,7 +47,8 @@ export class FollowListComponent implements OnInit {
 
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
-      title: 'Follow list | PromptHealth Community'
+      title: 'Follow list | PromptHealth Community',
+      robots: 'noindex',
     });
 
     this._route.data.subscribe((data: {type: FollowType}) => {
