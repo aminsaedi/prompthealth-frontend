@@ -370,7 +370,7 @@ interface IPostsPerTaxonomy {
     topic?: string;
     userId?: string; // loggedinUserId
     existMorePost?: boolean;
-    eventTimeRange?: Date[]; // not implemented yet. this is for date filter
+    eventTimeRange?: string[]; // ISODateString
     filterByFollowing?: boolean;
   };
 }
