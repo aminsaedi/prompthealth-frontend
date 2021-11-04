@@ -77,9 +77,9 @@ const routes: Routes = [
     },
 
     { path: 'content/:postid', component: PageComponent },
-    { path: 'note/:postid', component: PageComponent, data: {contentType: 'note'} },
-    { path: 'event/:postid', component: PageComponent, data: {contentType: 'event'} },
-    { path: 'article/:postid', component: PageComponent, data: {contentType: 'article'} },
+    // { path: 'note/:postid', component: PageComponent, data: {contentType: 'note'} },
+    // { path: 'event/:postid', component: PageComponent, data: {contentType: 'event'} },
+    // { path: 'article/:postid', component: PageComponent, data: {contentType: 'article'} },
     { path: 'content', pathMatch: 'full', redirectTo: 'feed' },
 
     { path: 'drafts', component: DraftsComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
@@ -88,7 +88,6 @@ const routes: Routes = [
     { path: 'editor/event', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard]},
     { path: 'editor/article/:id', component: EditorComponent, data: {type: 'article'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},
     { path: 'editor/event/:id', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},    
-    { path: 'editor/note/:id', component: EditorComponent, data: {type: 'note'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},    
     { path: 'editor', redirectTo: 'editor/article' },
 
     { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },

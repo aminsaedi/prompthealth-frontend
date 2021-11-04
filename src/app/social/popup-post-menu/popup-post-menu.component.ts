@@ -25,6 +25,10 @@ export class PopupPostMenuComponent implements OnInit {
     return this.post && this.user;
   }
 
+  get eligibleToEdit() {
+    return this.eligibleToDelete && (this.post.isArticle || this.post.isEvent);
+  }
+
   get eligibleToDelete() {
     return this.post.authorId == this.user._id;
   }

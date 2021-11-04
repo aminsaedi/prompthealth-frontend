@@ -1,8 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first } from 'rxjs-compat/operator/first';
 import { ISocialPost } from 'src/app/models/social-post';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { EditorService } from '../editor.service';
@@ -23,8 +21,6 @@ export class CardPostDraftComponent implements OnInit {
     return result;
   }
 
-  public descriptionSanitized: SafeHtml;
-
   @ViewChild('anchor') private anchor: ElementRef;
 
   constructor(
@@ -32,7 +28,6 @@ export class CardPostDraftComponent implements OnInit {
     private _router: Router,
     private _editor: EditorService,
     private _location: Location,
-    private _sanitizer: DomSanitizer,
   ) { }
 
   ngAfterViewInit() {
@@ -50,7 +45,6 @@ export class CardPostDraftComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.descriptionSanitized = this._sanitizer.bypassSecurityTrustHtml(this.post.description);
   }
 
   onClickCard() {

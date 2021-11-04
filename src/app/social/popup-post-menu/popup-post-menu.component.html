@@ -42,6 +42,18 @@ class="position-relative d-inline-block"
           </li>
         </ng-container>
 
+        <ng-container *ngIf="eligibleToEdit">
+          <li>
+            <button 
+            class="btn btn-text-white small w-100"
+            (click)="editContent($event)"
+            >
+              <span>Edit</span>  
+            </button>
+          </li>  
+
+        </ng-container>
+
         <ng-container *ngIf="eligibleToDelete">
           <li>
             <button 

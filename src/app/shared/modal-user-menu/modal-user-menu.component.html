@@ -154,7 +154,7 @@ id="user-menu"
 
       <div class="mb-5p">
         <a
-        *ngIf="!user.isU"
+        *ngIf="user.isEligibleToHaveDraft"
         class="btn btn-text-body small px-0"
         (click)="onClickUserMenuItem(['/community/drafts'])"
         >

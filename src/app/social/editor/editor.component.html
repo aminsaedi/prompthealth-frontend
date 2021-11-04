@@ -292,7 +292,7 @@
             <label class="subtitle2 text-label">Select topics</label>
             <form-item-service
             #formItemService
-            [data]="tagsInitial"
+            [data]="f.tags.value"
             [option]="{showInlineWhenEnabled: true}"
             (changeValue)="onChangeTags($event)"
             ></form-item-service>

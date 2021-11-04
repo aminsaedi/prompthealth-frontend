@@ -161,10 +161,11 @@ export class SocialPostBase implements ISocialPost {
 
   get comments() { return this._comments; };
 
-  get linkToPost() { 
-    const type = this.isNote ? 'note' : this.isArticle ? 'article' : this.isEvent ? 'event' : 'content';
-    return `/community/${type}/${this._id}`; 
-  }
+  get linkToPost() { return '/community/content/' + this._id; }
+  // get linkToPost() { 
+  //   const type = this.isNote ? 'note' : this.isArticle ? 'article' : this.isEvent ? 'event' : 'content';
+  //   return `/community/${type}/${this._id}`; 
+  // }
 
   protected _s3 = environment.config.AWS_S3; 
   protected _summary: string;

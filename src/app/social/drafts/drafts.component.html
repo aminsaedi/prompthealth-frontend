@@ -3,7 +3,7 @@
     <section class="col-12 col-md-2 col-xl-2">
       <div class="text-md-right">
         <button 
-        class="btn btn-text-body small" 
+        class="btn btn-text-body small pl-0" 
         (click)="goback()"
         >
           <i iconPh="arrow-left"></i>
@@ -13,17 +13,25 @@
     </section>
     <section class="col-12 col-md-10 col-lg-8 col-xl-7">
       <ng-container *ngIf="drafts">
-        <div *ngIf="drafts.length == 0">
-          No Drafts found!
+        <div 
+        *ngIf="drafts.length == 0"
+        class="text-center"
+        >
+          <img style="max-width: 100%;" src="/assets/img/general/cards.png" alt="">
+          <div class="subtitle1 mt-30p">
+            No Drafts found!
+          </div>
         </div>
 
         <div *ngIf="drafts.length > 0">
-          <h4>Drafts</h4>
-          <ul 
-          *ngFor="let d of drafts"
-          class="list-unstyled"
-          >
-            <card-post-draft [post]="d"></card-post-draft>
+          <h4>Saved as Draft</h4>
+          <ul class="list-unstyled">
+            <li 
+            *ngFor="let d of drafts"
+            class="mb-15p"
+            >
+              <card-post-draft [post]="d"></card-post-draft>
+            </li>
           </ul>
 
           <div class="text-center">

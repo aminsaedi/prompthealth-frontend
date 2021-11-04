@@ -66,7 +66,7 @@ export class EditorComponent implements OnInit {
   public isSubmitted: boolean = false;
   public isLoadingVoice: boolean = false;
   public isUploading: boolean = false;
-  public tagsInitial: string[] = [];
+
   public minDateTimeEventStart: DateTimeData;
   public minDateTimeEventEnd: DateTimeData;
 
@@ -97,9 +97,7 @@ export class EditorComponent implements OnInit {
     this._editorService.dispose();
     this._headerService.showHeader();
 
-    if(this.subscriptionLoginStatus) {
-      this.subscriptionLoginStatus.unsubscribe();
-    }
+    this.subscriptionLoginStatus?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -113,7 +111,6 @@ export class EditorComponent implements OnInit {
       switch(data.type) {
         case 'article': this.editorType = 'ARTICLE'; break;
         case 'event': this.editorType = 'EVENT'; break;
-        case 'note': this.editorType = 'NOTE'; break;
         default: this.editorType = null;
       }
 
@@ -122,26 +119,8 @@ export class EditorComponent implements OnInit {
         this.user,
       );
 
-      /** for note */
-      if(this.f.images.value) {
-        this.imagesPreview = [this._s3 + this.f.images.value];
-        console.log(this.imagesPreview);
-      }
-      if(this.f.voice.value) {
-        this.isLoadingVoice = true;
-        this._sharedService.fetchFile(this.f.voice.value).then(res => {
-          this.audioPreview = new AudioData({blob: res, title: this.f.voice.value});
-          this.isLoadingVoice = false;
-        }, () => {
-          this.audioPreview = null;
-          this.isLoadingVoice = false;
-        });
-      }
-
-
       const isOnline = this.f.eventType ? this.f.eventType.value == 'ONLINE' : false;
       this.formCheckboxOnlineEvent = new FormControl(isOnline);
-      this.tagsInitial = this._editorService.existsData ? this._editorService.originalData.tags || [] : [];
   
       const now = new Date();
       this.minDateTimeEventStart = {

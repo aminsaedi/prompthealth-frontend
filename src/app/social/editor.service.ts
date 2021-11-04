@@ -24,9 +24,8 @@ export class EditorService {
 
   constructor() { }
 
-  // this function should dispose form data. (reset is not enough.)
   dispose() {
-    this.resetForm();
+    this._form = null;
     this._originalData = null;
     this.unlockEditor();
   }
@@ -86,7 +85,7 @@ export class EditorService {
         eventType: new FormControl(d? d.eventType : 'ONLINE'),
         joinEventLink: new FormControl(d ? d.joinEventLink || '' : ''),  // set validator later
         eventAddress: new FormControl(d ? d.eventAddress || '' : ''),
-        tags: new FormControl([], validators.topics),
+        tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
       });  
     } else if (type == 'ARTICLE') {
       this._form = new FormGroup({
@@ -96,20 +95,20 @@ export class EditorService {
         title: new FormControl(d ? d.title : null, validators.savePostTitle),
         description: new FormControl(d ? d.description : null), // set validator later
         image: new FormControl(d ? d.image || '' : ''),
-        tags: new FormControl([], validators.topics),
+        tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
       });
     } else if (type == 'NOTE') {
       this._form = new FormGroup({
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        description: new FormControl(d ? d.description : ''),
+        description: new FormControl(d ? d.description : null),
 
         // value type: string (path in S3 | blob)
         images: new FormControl(d?.images?.length > 0 ? d.images[0] : null), 
 
         // value type: string (path in S3 | AudioData)
         voice: new FormControl(d?.voice ? d.voice : null),
-        tags: new FormControl([], validators.topics),
+        tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
       }, validators.note);
     } else if (type =='PROMO') {
       this._form = new FormGroup({
@@ -120,7 +119,7 @@ export class EditorService {
         availableUntil: new FormControl(null, validators.promoExpireDate),
         images: new FormControl(), // TODO: need change to FormArray in ver2.1
         link: new FormControl('', validators.promoLink),
-        tags: new FormControl([], validators.topics),
+        tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
       });
     }
 
