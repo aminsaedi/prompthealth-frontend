@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IAuthResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -19,37 +19,42 @@ export class ResetPasswordComponent implements OnInit {
 
   get token() { return this._route.snapshot.params.token; }
 
-  get isAndroid() { return this._uService.isAndroid; }
-  get isIPhone()  { return this._uService.isIphone; }
-  get isAppAvailable() { return this._uService.isAppAvailable; }  
+  // get isAndroid() { return this._uService.isAndroid; }
+  // get isIPhone()  { return this._uService.isIphone; }
+  // get isAppAvailable() { return this._uService.isAppAvailable; }  
 
   public form: FormControl;
   public isSubmitted: boolean = false;
   public isUpdating: boolean = false;
   public doneUpdate: boolean = false;
 
-  public isAppNavigationShown: boolean = true;
+  // public isAppNavigationShown: boolean = true;
 
   constructor(
     private _toastr: ToastrService,
     private _sharedService: SharedService,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _authService: Auth2Service,
     private _uService: UniversalService,
   ) { }
 
   ngOnInit(): void {
     this.form = new FormControl('', validators.password);
+    this._uService.setMeta(this._router.url, {
+      title: 'Reset Password | PromptHealth',
+      robots: 'noindex, follow'
+    });
   }
 
-  openApp() {
-    this._uService.openApp('confirmResetPassword/' + this.token);
-  }
+  // openApp() {
+  //   this._uService.openApp('confirmResetPassword/' + this.token);
+  // }
 
-  closeAppNavigation(e: Event) {
-    e.stopPropagation();
-    this.isAppNavigationShown = false;
-  }
+  // closeAppNavigation(e: Event) {
+  //   e.stopPropagation();
+  //   this.isAppNavigationShown = false;
+  // }
 
   onSubmit() {
     this.isSubmitted = true;
