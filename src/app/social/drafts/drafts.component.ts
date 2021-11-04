@@ -8,6 +8,7 @@ import { SocialNote } from 'src/app/models/social-note';
 import { ISocialPost, SocialPostBase } from 'src/app/models/social-post';
 import { SocialPostGetAllQuery } from 'src/app/models/social-post-get-all-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-draft',
@@ -25,9 +26,14 @@ export class DraftsComponent implements OnInit {
     private _location: Location,
     private _router: Router,
     private _sharedService: SharedService,
+    private _uService: UniversalService,
   ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'My drafts | PromptHealth',
+      robots: 'noindex',
+    });
     this.fetchDrafts();
   }
 

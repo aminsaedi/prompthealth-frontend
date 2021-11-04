@@ -35,9 +35,11 @@ export class UniversalService {
     if(!meta.keyword) {     meta.keyword = ''; }
     if(!meta.pageType) {    meta.pageType = 'website'; }
 
-    meta.robots = 
+    if(!meta.robots) {
+      meta.robots = 
       (path.match(/\/(dashboard|auth|personal-match|compare-practitioners|invitation|unsubscribe|404|thankyou)/)) ? 'noindex' :
       'index, follow';
+    }
 
     if(!meta.image) { 
       meta.image = 'https://prompthealth.ca/assets/img/prompthealth.png?ver=2'; 

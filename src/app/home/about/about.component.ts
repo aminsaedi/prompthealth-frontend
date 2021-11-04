@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { fadeAnimation, slideVerticalStaggerAnimation } from 'src/app/_helpers/animations';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-about',
@@ -49,6 +50,11 @@ export class AboutComponent implements OnInit {
     this._uService.setMeta(this._router.url, {
       title: 'PromptHealth revolutionize the health and wellness experience',
       description: 'It is our mission to help people seeking care reach informed decisions about their health by providing credible educational resources and personalized care options. ',
+      robots: 'index, follow',
+      image: `${environment.config.FRONTEND_BASE}/assets/video/about-thumbnail.jpg`,
+      imageWidth: 992,
+      imageHeight: 558,
+      imageType: 'image/jpg',
     });
   }
 
