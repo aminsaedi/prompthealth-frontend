@@ -28,6 +28,24 @@ export class UniversalService {
   get isServer(){ return isPlatformServer(this.p); }
   get isBrowser() { return !isPlatformServer(this.p); }
 
+  get isIphone() { return !!this.isBrowser && !!window.navigator.userAgent.toLowerCase().match('iphone'); }
+  get isAndroid() { return !!this.isBrowser && !!window.navigator.userAgent.toLowerCase().match('android'); }
+  get isAppAvailable() { return this.isIphone || this.isAndroid; }
+
+  openApp(path: string) {
+    if(this.isBrowser) {
+      window.location.replace('prompthealth://' + path);
+    }
+
+    setTimeout(() => {
+      if(this.isIphone) {
+        window.location.replace('https://apps.apple.com/ca/app/prompthealth/id1532951934');
+      } else if (this.isAndroid) {
+        window.location.replace('https://play.google.com/store/apps/details?id=com.prompthealth&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1');
+      }  
+    },100);
+  }
+
   setMeta(path: string, meta: MetaData = {}){
 
     if(!meta.title) {       meta.title = 'PromptHealth'; }
