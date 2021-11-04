@@ -77,14 +77,14 @@ export class CardNewPostComponent implements OnInit {
 
   onClickButtonArticle() {
     if(this.user.isEligibleToCreateArticle) {
-      this._router.navigate(['/community/create/article']);
+      this._router.navigate(['/community/editor/article']);
     } else {
       this._modalService.show('upgrade-plan');
     }
   }
   onClickButtonEvent() {
     if(this.user.isEligibleToCreateEvent) {
-      this._router.navigate(['/community/create/event']);
+      this._router.navigate(['/community/editor/event']);
     } else {
       this._modalService.show('upgrade-plan');
     }
