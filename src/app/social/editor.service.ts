@@ -101,7 +101,7 @@ export class EditorService {
       this._form = new FormGroup({
         contentType: new FormControl(type),
         authorId: new FormControl(profile._id, validators.savePostAuthorId),
-        description: new FormControl(d ? d.description : null),
+        description: new FormControl(d ? d.description : null, validators.noteDescription),
 
         // value type: string (path in S3 | blob)
         images: new FormControl(d?.images?.length > 0 ? d.images[0] : null), 
@@ -233,14 +233,12 @@ export class SaveQuery implements ISaveQuery {
       authorId: this.authorId,
 
       description: this.description,
-      tags: this.tags,
 
       ... (this._id) && {_id: this._id},
 
-      ... (this.contentType == 'NOTE') && {
-        images: this.images,
-        voice: this.voice,
-      },
+      ... (this.images.length > 0) && {images: this.images},
+      ... (this.voice) && {voice: this.voice},
+      ... (this.tags.length > 0) && {tags: this.tags},
       
       ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {
         status: this.status,

@@ -83,7 +83,7 @@ export class CardNewPromoComponent implements OnInit {
 
   onClickButtonEvent() {
     if(this.user.isEligibleToCreateEvent) {
-      this._router.navigate(['/community/create/event']);
+      this._router.navigate(['/community/editor/event']);
     } else {
       this._toastr.error('You are not eligible to create event.');
     }
