@@ -166,7 +166,8 @@ export class CardNewPostComponent implements OnInit {
   }
 
   onAudioSaved(data: AudioData) {
-    this.audioSaved = data;
+    this.f.voice.setValue(data);
+    this.audioSaved = data.copy();
   }
 
   async onSubmit() {
