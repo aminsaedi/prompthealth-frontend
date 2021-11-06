@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
 import { IGetStaffsResult } from 'src/app/models/response-data';
+import { Staff } from 'src/app/models/staff';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -19,6 +21,7 @@ export class ProfileAboutComponent implements OnInit {
 
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
   get profileAsPartner() { return this.profile as Partner; }
+  get selectedStaff(): Staff { return this._modalService.data; }
 
   public profile: Professional | Partner;
 
@@ -38,6 +41,7 @@ export class ProfileAboutComponent implements OnInit {
     private _uService: UniversalService,
     private _router: Router,
     private _embedService: EmbedVideoService,
+    private _modalService: ModalService,
   ) { }
 
   ngOnDestroy() {
@@ -141,7 +145,7 @@ export class ProfileAboutComponent implements OnInit {
       const path = `staff/get-by-center/${this.profile._id}`;
       this._sharedService.getNoAuth(path).subscribe((res: IGetStaffsResult) => {
         if(res.statusCode == 200) {
-          const staffs = res.data.map(item => item.userId);
+          const staffs = res.data.map(item => new Staff(item));
           this.profile.setStaffs(staffs);
           resolve(true);  
         } else {
@@ -175,6 +179,10 @@ export class ProfileAboutComponent implements OnInit {
     } else {
       this.selectedStaffIds.push(p._id);
     }
+  }
+
+  showModalStaticStaff(data: Staff) {
+    this._modalService.show('team-member', data);
   }
 
   openAmenityViewer() { this.isAmenityViewerShown = true; }

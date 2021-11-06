@@ -295,6 +295,7 @@ export const validators = {
   exactPricingRequired: validatorExactPricingRequired,
   businessKind: validatorRequired,
   productDescription: validatorTextarea,
+  staffDescription: [Validators.maxLength(minmax.noteMax)],
 
   productOfferLink: validatorUrl,
 

@@ -130,32 +130,32 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
           *ngIf="profile.staffs.length > 0"
           >
             <h6>Team members:</h6>
-            <ul 
-            *ngFor="let staff of profile.staffs"
-            class="list-unstyled"
-            >
-              <li class="d-flex">
-                <a [routerLink]="[staff.linkToProfile]">
-                  <profile-image [image]="staff.profileImage" size=70></profile-image>
+            <ul class="list-unstyled row">
+              <ng-template #cardStaffInner let-data>
+                <profile-image [size]="42" [image]="data.profileImage"></profile-image>
+                <div class="ml-10p">
+                  <h6 class="subtitle2 text-body clamp-1line mb-0">{{data.name}}</h6>
+                  <div class="body2 text-label">{{data.title}}</div>                      
+                </div>
+              </ng-template>
+              <li 
+              class="col-12 col-md-6 mb-15p"
+              *ngFor="let staff of profile.staffs"
+              > 
+                <a 
+                *ngIf="staff.linkToProfile"
+                class="card rounded-12p p-10p align-items-center flex-row border-line bg-background"
+                [routerLink]="staff.linkToProfile"
+                >
+                  <ng-container *ngTemplateOutlet="cardStaffInner; context: {$implicit: staff}"></ng-container>
                 </a>
-                <div class="ml-15p">
-                  <a 
-                  class="subtitle1" 
-                  [routerLink]="[staff.linkToProfile]"
-                  >{{staff.name}}</a>
-                  <p 
-                  class="body1 text-label mb-0"
-                  [ngClass]="{'clamp-2line': !isStaffSelected(staff)}"
-                  >{{staff.description}}</p>
-
-                  <button
-                  class="btn btn-text-body small px-0"
-                  (click)="onClickStaffDescription(staff)"
-                  >
-                    <span *ngIf="isStaffSelected(staff)">Show less</span>
-                    <span *ngIf="!isStaffSelected(staff)">Show more</span>
-                  </button>
-                </div>  
+                <div
+                *ngIf="!staff.linkToProfile"
+                class="card rounded-12p p-10p align-items-center flex-row border-line bg-background cursor-pointer"
+                (click)="showModalStaticStaff(staff)"
+                >
+                  <ng-container *ngTemplateOutlet="cardStaffInner; context: {$implicit: staff}"></ng-container>
+                </div>
               </li>
             </ul>
           </div>
@@ -229,3 +229,24 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
 [data]="profileAsPartner.productImageViewerData" 
 (close)="closePartnerViewer()"
 ></image-viewer>
+
+<modal
+id="team-member"
+#modalStaticStaff
+>
+  <ng-container *ngIf="selectedStaff">
+    <div class="text-right">
+      <button class="btn pr-0 btn-icon" (click)="modalStaticStaff.hide()">
+        <i iconPh="cross"></i>
+      </button>
+    </div>
+    <div class="content-container">
+      <div class="text-center">
+        <profile-image [size]="80" [image]="selectedStaff?.profileImage" class="d-inline-block"></profile-image>
+        <h5 class="mt-10p">{{selectedStaff?.name}}</h5>
+        <div class="body1 text-label">{{selectedStaff?.title}}</div>
+      </div>
+      <p class="mt-30p mb-0">{{selectedStaff?.description}}</p>
+    </div>
+  </ng-container>
+</modal>

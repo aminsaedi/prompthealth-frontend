@@ -6,84 +6,208 @@
 
 <h4 class="mb-50p">Manage your team</h4>
 
-<div class="mb-40p">
-    <section>
-        <h6 class="mb-15p" (click)="toggleStateTipShareLink()">
-            <span>Let your members join the team</span>
-            <i iconPh="info" class="text-label ml-5p"></i>
-        </h6>
-        <p *ngIf="isTipShareLinkShown">
-            You can easily let your members to join the team.
-            To do it, please share this link with your members.
-        </p>
-        
-        <div class="border rounded-lg px-3 py-2 mb-2 d-flex align-items-center justify-content-end" >
-            <input class="flex-grow-1 input-link text-body1" 
-            #referralLink
-            [value]="linkToTagStaff" 
-            readonly
-            >
-        <button-share
-        email
-        label="Share"
-        btnClass="btn btn-primary small"
-        [url]="linkToTagStaff"
-        [title]="'Join ' + user.name + ' on PromptHealth'"
-        [text]="user.name + ' invites you to the team on PromptHealth.'"
-        ></button-share>
-        </div>      
-    </section>
-</div>
-
-<div class="">
-    <h6 class="mb-20p">Team members</h6>
-    <ul 
-    *ngIf="staffs && staffs.length > 0"
-    class="list-unstyled"
-    >
-        <li 
-        *ngFor="let staff of staffs;"
-        class="d-flex"
-        >   
-            <profile-image 
-            size=60 
-            [image]="staff.profileImage"
-            ></profile-image>
-            <div class="d-lg-flex align-items-center ml-15p">
-                <div>
-                    <div class="subtitle1">{{staff.name}}</div>
-                    <p class="body2 text-label clamp-2line mb-0">{{staff.description}}</p>
-                </div>
-                <div class="text-nowrap mt-10p mt-0p ml-lg-15p">
-                    <a 
-                    class="btn btn-outline small text-nowrap"
-                    [routerLink]="['/community/profile', staff._id]"
-                    >See profile</a>
-                    <button 
-                    class="btn btn-icon-grey small ml-10p"
-                    (click)="showMenu(staff)"
+<div class="mb-60p">
+    <tabset #tabset>
+        <tab heading="List of members">
+            <div class="mx-15p">
+                <section class="mt-30p">
+                    <h6 class="mb-20p">Team members</h6>
+                    <ul 
+                    *ngIf="staffs && staffs.length > 0"
+                    class="list-unstyled"
                     >
-                        <i iconPh="more-horiz"></i>
-                    </button>    
-                </div>    
+                        <li 
+                        *ngFor="let staff of staffs;"
+                        class="d-flex mb-25p"
+                        >   
+                            <profile-image 
+                            size=60 
+                            [image]="staff.profileImage"
+                            ></profile-image>
+                            <div class="d-lg-flex align-items-center flex-grow-1 justify-content-between ml-15p">
+                                <div>
+                                    <div class="subtitle1">{{staff.name}}</div>
+                                    <p class="body2 text-label clamp-2line mb-0">{{staff.description}}</p>
+                                </div>
+                                <div class="text-nowrap mt-10p mt-0p ml-lg-15p">
+                                    <a 
+                                    *ngIf="!staff.isStatic"
+                                    class="btn btn-outline small text-nowrap"
+                                    [routerLink]="staff.linkToProfile"
+                                    >See profile</a>
+                                    
+                                    <button
+                                    *ngIf="staff.isStatic"
+                                    class="btn btn-outline small text-nowrap"
+                                    (click)="initEditor(staff)"
+                                    >Edit data</button>
+
+                                    <button 
+                                    class="btn btn-icon-error small ml-10p"
+                                    (click)="showMenu(staff)"
+                                    >
+                                        <i iconPh="trash"></i>
+                                    </button>    
+                                </div>    
+                            </div>
+                        </li>
+                    </ul>
+                
+                    <div
+                    *ngIf="staffs && staffs.length == 0"
+                    class="subtitle1"
+                    >  
+                        You have no team members yet.
+                    </div>
+                
+                    <div
+                    *ngIf="isLoading"
+                    class="mt-15p text-center"
+                    >
+                        <loader></loader>
+                    </div>
+                </section>
             </div>
-        </li>
-    </ul>
-
-    <div
-    *ngIf="staffs && staffs.length == 0"
-    class="subtitle1"
-    >  
-        You have no team members yet.
-    </div>
-
-    <div
-    *ngIf="isLoading"
-    class="mt-15p text-center"
-    >
-        <loader></loader>
-    </div>
+        </tab>
+        <tab heading="Add member">
+            <div class="mx-15p">
+                <section class="my-30p">
+                    <h6 class="mb-15p" (click)="toggleStateTipShareLink()">
+                        <span>Have your members joined to PropmptHealth?</span>
+                        <i iconPh="info" class="text-label ml-5p"></i>
+                    </h6>
+                    <p>
+                        You can easily let your members to join the team.
+                        To do it, please share this link with your members.
+                    </p>
+                    
+                    <div class="border rounded-lg px-3 py-2 mb-2 d-flex align-items-center justify-content-end" >
+                        <input class="flex-grow-1 input-link text-body1" 
+                        #referralLink
+                        [value]="linkToTagStaff" 
+                        readonly
+                        >
+                    <button-share
+                    email
+                    label="Share"
+                    btnClass="btn btn-primary small"
+                    [url]="linkToTagStaff"
+                    [title]="'Join ' + user.name + ' on PromptHealth'"
+                    [text]="user.name + ' invites you to the team on PromptHealth.'"
+                    ></button-share>
+                    </div>      
+                </section>
+                <section class="mt-50p">
+                    <h6>Or you can create member data</h6>
+                    <button 
+                    class="btn btn-grey-light small"
+                    (click)="initEditor()"
+                    >
+                        <i iconPh="plus"></i>
+                        <span class="ml-5p">Add new member</span>
+                    </button>
+                </section>
+            </div>
+        </tab>
+    </tabset>
+    
 </div>
+
+<modal
+id="staff-editor"
+#modalAddStaff
+[option]="{disableCloseByClickingDrop: true}"
+>
+    <ng-container *ngIf="formEditor">
+        <div class="title-container d-flex justify-content-between align-items-center">
+            <span class="h5 h4-md mr-3 mb-0 flex-grow-1">{{selectedStaff ? 'Edit' : 'Add'}} member</span>
+            <button class="btn pr-0 btn-text-grey small" (click)="modalAddStaff.hide()">
+                Cancel
+            </button>
+        </div>
+        
+        <div class="content-container position-relative">
+            <form (ngSubmit)="onSubmitEditor()">
+                <div class="mb-10p text-center">
+                    <div class="d-inline-block position-relative">
+                        <profile-image
+                        class="d-inline-block cursor-pointer" 
+                        (click)="onClickStaffImage()"
+                        [image]="staffImageInEditor"
+                        size="60"
+                        [ngClass]="staffImageInEditor ? '' : 'border rounded-8p border-line bg-background'"
+                        ></profile-image>
+                        <input 
+                        type="file" 
+                        class="d-none" 
+                        #inputStaffImage 
+                        imageUploader 
+                        imageType="profileCover"
+                        [shrinkSize]="160"
+                        imageType="staff"
+                        (onChange)="onChangeStaffImage($event)"
+                        (startUpload)="onStartUploadStaffImage()"
+                        (failUpload)="onFailUploadStaffImage()"
+                        (doneUpload)="onDoneUploadStaffImage($event)"
+                        [disabled]="isUploading"
+                        >
+                        <button 
+                        *ngIf="staffImageInEditor"
+                        class="position-absolute btn btn-grey-light p-5p border-line"
+                        style="top: -10px; right: -10px;"
+                        (click)="removeStaffImage()"
+                        >
+                            <i iconPh="cross"></i>
+                        </button>
+                    </div>
+
+                </div>
+                <div class="mb-10p">
+                    <label for="name" class="text-label subtitle2">Name *</label>
+                    <form-item-input
+                    name="name"
+                    label="Name"
+                    placeholder="Enter name..."
+                    [submitted]="isEditorSubmitted"
+                    [controller]="fEditor.firstName"
+                    [max]="minmax.nameMax"
+                    ></form-item-input>        
+                </div>
+                <div class="mb-10p">
+                    <label for="title" class="text-label subtitle2">Title</label>
+                    <form-item-input
+                    name="title"
+                    label="Title"
+                    placeholder="Yoga instructor / ..."
+                    [submitted]="isEditorSubmitted"
+                    [controller]="fEditor.professional_title"
+                    [max]="minmax.professionalTitleMax"
+                    ></form-item-input>
+                </div>
+                <div class="mb-25p">
+                    <label for="title" class="text-label subtitle2">Description</label>
+                    <form-item-textarea
+                    name="description"
+                    label="Description"
+                    [submitted]="isEditorSubmitted"
+                    placeholder="Introduce this member..."
+                    [controller]="fEditor.product_description"
+                    [max]="minmax.noteMax"
+                    ></form-item-textarea>
+                </div>
+                <div class="text-right">
+                    <input 
+                    class="btn btn-primary" 
+                    type="submit" 
+                    value="Save"
+                    [disabled]="isStaffImageUploading || isUploading"
+                    >
+                </div>
+            </form>
+        </div>    
+    </ng-container>
+</modal>
+
 
 <modal 
 id="staff-menu" 
@@ -108,16 +232,16 @@ id="staff-menu"
             </div>
             <div class="subtitle1 mt-20p mb-10p">Remove from your team</div>
             <p class="body1 text-body mb-30p mb-md-60p">
-                Are you sure to remove "{{selectedStaff.nickname}}"?
+                Are you sure to remove "{{selectedStaff.name}}"?
             </p>
         
             <div class="d-flex justify-content-between">
                 <button 
-                class="btn btn-outline-error"
+                class="btn btn-error"
                 (click)="removeStaff(selectedStaff)"
                 >Yes, Remove</button>
                 <button 
-                class="btn btn-primary"
+                class="btn btn-outline"
                 (click)="modalStaffMenu.hide()"
                 >Cancel</button>
             </div>

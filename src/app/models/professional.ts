@@ -5,6 +5,7 @@ import { IProfile, Profile } from './profile';
 import { ReviewData } from './review-data';
 import { IReferral, Referral } from './referral';
 import { ISocialPost } from './social-post';
+import { Staff } from './staff';
 
 export interface IProfessional extends IProfile {
   id: IProfessional['_id']; /** old name (changed to _id) */
@@ -47,7 +48,7 @@ export interface IProfessional extends IProfile {
   recommendationsPreview: Referral[];
 
   team: Professional;
-  staffs: Professional[];
+  staffs: Staff[];
   amenity: ImageViewerData; /** all amenities data */
   amenityPreview: ImageGroupData[]; /** first 3 amenities for preview */
   product: ImageViewerData; /** all products data */
@@ -230,7 +231,7 @@ export class Professional extends Profile implements IProfessional{
   private _priceRange: number[] = [];
 
   private _team: Professional;
-  private _staffs: Professional[] = [];
+  private _staffs: Staff[] = [];
   private _amenities: ImageViewerData;
   private _products: ImageViewerData;
 
@@ -299,9 +300,8 @@ export class Professional extends Profile implements IProfessional{
     this._team = new Professional(team._id, team);
   }
   
-  setStaffs(staffs: IUserDetail[]) { 
-    const ps = staffs.map(item => new Professional(item._id, item));
-    this._staffs = ps;
+  setStaffs(staffs: Staff[]) { 
+    this._staffs = staffs;
   }
 
   setAmenities(amenities: any[]) {

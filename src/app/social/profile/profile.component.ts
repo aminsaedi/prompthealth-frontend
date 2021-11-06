@@ -313,7 +313,7 @@ export class ProfileComponent implements OnInit {
       this._sharedService.getNoAuth(path).subscribe((res: IGetStaffResult) => {
         if(res.statusCode == 200) {
 
-          this.profile.setTeam(res.data.center);
+          this.profile.setTeam(res.data.center as IUserDetail);
           resolve();
         } else {
           // console.log(res.message);

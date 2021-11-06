@@ -18,6 +18,6 @@ class="d-flex justify-content-end mt-1 caption"
   <span *ngIf="max > 0" class="flex-grow-0" 
   [ngClass]="!controller.dirty ? 'text-placeholder' : controller.errors ? 'text-danger' : 'text-success'"
   >
-    {{controller.value.length}}/{{max}}
+    {{controller.value?.length || 0}}/{{max}}
   </span>
 </div>

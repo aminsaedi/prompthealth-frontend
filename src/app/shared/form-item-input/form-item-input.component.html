@@ -52,5 +52,5 @@
   *ngIf="max > 0 && !disabled" 
   class="flex-grow-0 caption" 
   [ngClass]="!controller.dirty ? 'text-placeholder' : controller.errors ? 'text-danger' : 'text-success'"
-  >{{controller.value.length}}/{{max}}</span>
+  >{{controller.value?.length || 0}}/{{max}}</span>
 </div>
