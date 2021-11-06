@@ -32,6 +32,7 @@ export class Staff implements IStaff {
   get title() { return this._title; }
   get profileImage() { return this._profileImage ? (environment.config.AWS_S3 + this._profileImage) : null; }
   get description() { return this._description; }
+  get staffId() { return (this.isStatic || typeof this.data.userId == 'string') ? null : this.data.userId?._id || null; }
   get linkToProfile() { return this._linkToProfile; }
 
   decode() { return this.data; }

@@ -123,7 +123,8 @@ export class AddProfessionalComponent implements OnInit {
     this._modalService.hide();
 
     this.isUploading = true;
-    this._sharedService.deleteContent('staff/delete/' + staff._id).subscribe((res: IResponseData) => {
+    const path = staff.isStatic ? 'staff/' + staff._id : 'staff/delete/' + staff.staffId;
+    this._sharedService.deleteContent(path).subscribe((res: IResponseData) => {
       this.isUploading = false;
       if(res.statusCode == 200) {
         this._toastr.success('Removed this member successfully');
