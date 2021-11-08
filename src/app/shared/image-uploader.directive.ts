@@ -34,8 +34,14 @@ export class ImageUploaderDirective {
 
 
     let imageUploadRequest: Promise<string>;
-    if(this.imageType == 'profileCover' || this.imageType == 'profileImage') {
-      imageUploadRequest = this.uploadImageAndUpdateUserData(imageShrink.file, imageShrink.name);
+    switch(this.imageType) {
+      case 'profileCover':
+      case 'profileImage':
+        imageUploadRequest = this.uploadImageAndUpdateUserData(imageShrink.file, imageShrink.name);
+        break;
+      case 'staff':
+        imageUploadRequest = this.uploadImageTo(imageShrink.file, imageShrink.name, 'staffs');
+        break;
     }
     try {
       this.startUpload.emit();
@@ -89,13 +95,31 @@ export class ImageUploaderDirective {
   //   return new Promise((resolve, reject) => {});
   // }
 
+  uploadImageTo(file: Blob, name: string, location: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const uploadImage = new FormData();
+      uploadImage.append('imgLocation', location);
+      uploadImage.append('images', file, name);
+
+      this._sharedService.imgUpload(uploadImage, 'common/imgUpload').subscribe((res: any) => {
+        if(res.statusCode === 200) {
+          resolve(res.data);
+        } else {
+          console.log(res.message);
+          reject();
+        }
+      }, error => {
+        console.log(error);
+        reject();
+      });
+    });
+  }
   uploadImageAndUpdateUserData(file: Blob, name: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const imageType = this.imageType == 'profileImage' ? 'profileImage' : 'cover';
       const data = new FormData();
       data.append('_id', this.user._id);
       data.append(imageType, file, name);
-
 
       this._sharedService.imgUpload(data, 'user/imgUpload').subscribe((res: any) => {
         if(res.statusCode == 200){
@@ -112,4 +136,4 @@ export class ImageUploaderDirective {
   }
 }
 
-type ImageType = 'profileImage' | 'profileCover';
+type ImageType = 'profileImage' | 'profileCover' | 'staff';
