@@ -383,7 +383,6 @@ export class ExpertFinderComponent implements OnInit {
   search() {
     const payload = this.controller.toPayload();
     this.controller.disposeProfesionnals();
-    console.log(payload);
     this._sharedService.postNoAuth(payload, 'user/filter').subscribe((res: IGetPractitionersResult) => {
       this.controller.setProfessionals(res.data.dataArr);
       const professionals = this.controller.professionalsAll;
