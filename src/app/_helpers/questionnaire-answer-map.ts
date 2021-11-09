@@ -35,6 +35,7 @@ export const questionnaireAnswerMap = {
       mn: "5eb1a4e199957471610e6d51", //mandarin
       pj: "5eb1a4e199957471610e6d53", //punjabi
       sp: "5eb1a4e199957471610e6d4f", //spanish  
+      kr: "6180198dd86c9ae70b13cac8", //korean
     },
   },
   //availability

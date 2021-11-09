@@ -311,10 +311,12 @@ export class ExpertFinderController {
 
     if (this._virtual) {
       res.virtual = true;
-    } else if(this._keyword || this._keyloc){
-      res.latLong = '';
-      res.miles = null;
-    } else if(this._lat && this._lng) {
+    } 
+    // else if(this._keyword || this._keyloc){
+    //   res.latLong = '';
+    //   res.miles = null;
+    // } 
+    else if(this._lat && this._lng) {
       res.latLong = this._lng + ', ' + this._lat;
       res.miles = this._dist;
     } else {

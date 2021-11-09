@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { id } from '@swimlane/ngx-datatable';
-import { FormItemSearchData } from 'src/app/models/form-item-search-data';
-import { FormItemSearchOption, FormItemTextfieldOption, IFormItemSearchOption, IFormItemTextfieldOption } from 'src/app/models/form-item-textfield-option';
+import { FormItemSearchData, IFormItemSearchData } from 'src/app/models/form-item-search-data';
+import { FormItemSearchOption, IFormItemSearchOption } from 'src/app/models/form-item-textfield-option';
 
 @Component({
   selector: 'form-item-search',
@@ -16,7 +15,7 @@ export class FormItemSearchComponent implements OnInit {
   @Input() placeholder: string = '';
   @Input() type: string = 'text';
 
-  @Input() searchData: FormItemSearchData[] = [];
+  @Input() searchData: IFormItemSearchData[] = [];
 
   @Input() disabled: boolean = false;
   @Input() submitted: boolean = false;
@@ -36,13 +35,13 @@ export class FormItemSearchComponent implements OnInit {
   @Output() onSelect = new EventEmitter<FormItemSearchData>();
 
   get dataSelected(): FormItemSearchData { return this._dataSelected; }
-
+  isDataSelected(data: FormItemSearchData) { return this.dataSelected && this.dataSelected.id == data.id; }
 
   public _option: FormItemSearchOption;
   private _searchData: FormItemSearchData[];
   public _searchDataFiltered: FormItemSearchData[];
 
-  public _idDataFocused: string = null;
+  // public _idDataFocused: string = null;
   public _isSelectionsShown: boolean = false;
   private _dataSelected: FormItemSearchData = null;
 
@@ -57,8 +56,8 @@ export class FormItemSearchComponent implements OnInit {
     if(this._option.showSelectionsImmediately && isFocus) {
       this.showSelections();
       this.filterData(this.controller.value);
-      const data = this.getClosestData();
-      this._idDataFocused = data? data.id : null;
+      // const data = this.getClosestData();
+      // this._idDataFocused = data? data.id : null;
     }
   }
 
@@ -71,10 +70,10 @@ export class FormItemSearchComponent implements OnInit {
       this.hideSelections();
     }
 
-    if(this._isSelectionsShown) {
+    if(this._isSelectionsShown && this._searchData?.length > 0) {
       this.filterData(value);
-      const data = this.getClosestData(value);
-      this._idDataFocused = data ? data.id : null;
+      // const data = this.getClosestData(value);
+      // this._idDataFocused = data ? data.id : null;
     }
   }
 
@@ -94,7 +93,7 @@ export class FormItemSearchComponent implements OnInit {
   }
 
   @HostListener('keydown', ['$event']) windowKeydown(e: KeyboardEvent) {
-    if(this._searchData.length > 0){
+    if(this._searchData?.length > 0){
       switch(e.key){
         case 'ArrowUp': 
           e.preventDefault();
@@ -105,8 +104,8 @@ export class FormItemSearchComponent implements OnInit {
         case 'Enter':
           if(this._isSelectionsShown && this._searchDataFiltered.length > 0){
             e.preventDefault();
-            this.selectDataFocused();
-            this.hideSelections();  
+            // this.selectDataFocused();
+            // this.hideSelections();  
           }
           break;
 				case 'Escape':
@@ -116,17 +115,29 @@ export class FormItemSearchComponent implements OnInit {
     }
   }
 
+  ngOnChanges(e: SimpleChanges) {
+    if(e?.searchData) {
+      this.initSearchData();
+    }
+  }
+
   ngOnInit(): void {
     this._option = new FormItemSearchOption(this.option);
+  }
 
-    if(this.searchData.length == 0) {
-      console.error('formItemSearchComponent does not work because search data is empty!');
-    }else {
+  initSearchData() {
+    if(this._searchData?.length > 0) {
+      console.log('searchData is already initialized.')
+    }
+    else if(this.searchData?.length > 0) {
       const searchData = [];
       this.searchData.forEach(data => {
         searchData.push(new FormItemSearchData(data));
       });
       this._searchData = searchData;
+      console.log('searchData is ready.', this.name);
+    } else {
+      console.error('cannot initialize searchData yet.', this.name);
     }
   }
 
@@ -172,20 +183,20 @@ export class FormItemSearchComponent implements OnInit {
 
   selectData(data: FormItemSearchData) {
     this.controller.setValue(data.label);
-    this._idDataFocused = data.id;
+    // this._idDataFocused = data.id;
     this._dataSelected = data;
   }
 
-  selectDataFocused() {
-    this._dataSelected = null;
-    for(let item of this._searchData) {
-      let data: FormItemSearchData;
-      if(data = item.getDataOf(this._idDataFocused)) {
-        this.selectData(data);
-        break;
-      }
-    }
-  }
+  // selectDataFocused() {
+  //   this._dataSelected = null;
+  //   for(let item of this._searchData) {
+  //     let data: FormItemSearchData;
+  //     if(data = item.getDataOf(this._idDataFocused)) {
+  //       this.selectData(data);
+  //       break;
+  //     }
+  //   }
+  // }
 
   emitData() {
     this.onSelect.emit(this._dataSelected);

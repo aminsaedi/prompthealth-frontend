@@ -236,11 +236,11 @@ export class ExpertFinderComponent implements OnInit {
     // this.search();
   }
 
-  onSearchBarSubmitted(e: SearchKeywords) {
-    this.controller.updateFilterByKeywords(e);
-    const [path, query] = this._modalService.currentPathAndQueryParams;
-    this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
-  }
+  // onSearchBarSubmitted(e: SearchKeywords) {
+  //   this.controller.updateFilterByKeywords(e);
+  //   const [path, query] = this._modalService.currentPathAndQueryParams;
+  //   this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
+  // }
   
   onMapZoomChanged(e: number) {
     this.mapDataCurrent.zoom = e;

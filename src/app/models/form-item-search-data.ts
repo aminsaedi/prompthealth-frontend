@@ -1,4 +1,4 @@
-import "../_helpers/levenshtein-distance";
+import { levenshteinDistance } from "../_helpers/levenshtein-distance";
 
 export interface IFormItemSearchData {
   id?: string;
@@ -47,7 +47,7 @@ export class FormItemSearchData implements IFormItemSearchData {
   }
 
   filter(word: string): FormItemSearchData {
-    const regex = new RegExp('^' + (!word ? '' : word.toLowerCase()) );
+    const regex = new RegExp('' + (!word ? '' : word.toLowerCase()) );
     const subFiltered = this._subitems.filter(d => {
       return (!word || word.length == 0 || d.id.toLowerCase().match(regex) || d.label.toLowerCase().match(regex)) ? true: false;
     });

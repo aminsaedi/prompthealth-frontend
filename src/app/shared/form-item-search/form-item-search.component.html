@@ -30,7 +30,7 @@
       <a 
       *ngIf="d.selectable"
       class="d-block text-body subtitle2"
-      [ngClass]="{active: (d.id == _idDataFocused)}"
+      [ngClass]="{active: isDataSelected(d)}"
       (click)="selectData(d)"
       >{{d.label}}</a>
     </li>

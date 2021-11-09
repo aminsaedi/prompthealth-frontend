@@ -4,7 +4,7 @@
   >
     <ul class="searchboxes m-0 justify-content-between align-items-stretch p-0 flex-grow-1">
       <li class="d-flex align-items-center flex-grow-1 py-5p py-md-0 searchbox">
-        <form-item-input
+        <!-- <form-item-input
         class="flex-grow-1"
         name="search"
         prependIcon="briefcase-doctor"
@@ -12,10 +12,22 @@
         type="text"
         [controller]="f.searchBySituation"
         [option]="{transparent: true, showRemoveButton: true}"
-        ></form-item-input>
+        ></form-item-input> -->
+
+        <form-item-search
+        #searchSituation
+        class="flex-grow-1"
+        name="search-by-name"
+        prependIcon="briefcase-doctor"
+        placeholder="Provider Name, Type of Provider"
+        type="text"
+        [controller]="f.searchBySituation"
+        [option]="{transparent: true, showRemoveButton: true, showSelectionsImmediately: true}"
+        [searchData]="categories"
+        ></form-item-search>
 
       </li>
-  
+                                                       
       <li class="d-flex align-items-center flex-grow-1 py-5p py-md-0 searchbox">
         <form-item-search
         #searchLocation
@@ -26,7 +38,7 @@
         prependIcon="pin-filled"
         [controller]="f.searchByLocation"
         [searchData]="_cities"
-        [option]="{transparent: true, showSelectionsImmediately: true}"
+        [option]="{transparent: true, showRemoveButton: true, showSelectionsImmediately: true}"
         ></form-item-search>  
       </li>
     </ul>

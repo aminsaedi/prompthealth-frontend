@@ -1,10 +1,13 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { FormItemSearchData, IFormItemSearchData } from 'src/app/models/form-item-search-data';
 import { validators } from 'src/app/_helpers/form-settings';
 import { locationsNested } from 'src/app/_helpers/location-data';
 import { FormItemSearchComponent } from '../form-item-search/form-item-search.component';
+import { CategoryService } from '../services/category.service';
+import { ModalService } from '../services/modal.service';
 
 @Component({
   selector: 'search-bar',
@@ -20,15 +23,21 @@ export class SearchBarComponent implements OnInit {
 
   public _option: OptionSearchBar;
   public _cities: IFormItemSearchData[] = locationsNested;
+  public categories: IFormItemSearchData[];
   public _afterViewInit: boolean = false;
   private _form: FormGroup;
 
+  private subscriptionCategory: Subscription;
+
   @ViewChild('searchLocation') private searchLocation: FormItemSearchComponent;
+  @ViewChild('searchSituation') private searchSituation: FormItemSearchComponent;
 
   constructor(
     private _fb: FormBuilder,
     private _router: Router,
     private _changeDetector: ChangeDetectorRef,
+    private _catService: CategoryService,
+    private _modalService: ModalService,
   ) { }
 
 
@@ -39,11 +48,37 @@ export class SearchBarComponent implements OnInit {
     });
 
     this._option = new OptionSearchBar(this.option);
+
+    if(this._catService.categoryList) {
+      this.initSearchByCategory();
+    } else {
+      this.subscriptionCategory = this._catService.observeCategoryService().subscribe(() => {
+        this.subscriptionCategory.unsubscribe();
+        this.initSearchByCategory();
+      });
+    }
   }
 
   ngAfterViewInit() {
     this._afterViewInit = true;
     this._changeDetector.detectChanges();
+  }
+
+  initSearchByCategory() {
+    const cats = this._catService.categoryList;
+    this.categories = cats.map(item => { 
+      return {
+        id: item._id,
+        label: item.item_text,
+        subitems: item.subCategory.map(sub => {
+          return {
+            id: sub._id,
+            label: sub.item_text,
+          }
+        })
+      }
+    });
+    console.log(this.categories);
   }
 
   setKeyword(val: string) {
@@ -54,52 +89,49 @@ export class SearchBarComponent implements OnInit {
     this.f.searchByLocation.setValue(val);
   }
 
-  // findClosestLocation(s: string): string {
-  //   if(!s || s.length == 0) {
-  //     return null;
-  //   } else {
-  //     const regex = new RegExp('^' + s.toLowerCase());
-  //     let locationId: string;
-  //     for(let state of this._cities) {
-  //       for(let city of state.subitems) {
-  //         if(city.label.toLowerCase().match(regex)) {
-  //           locationId = city.id;
-  //           break;
-  //         }  
-  //       }
-  //       if(locationId) {
-  //         break;
-  //       }
-  //     }
-  //     return locationId;    
-  //   }
-  // }
-
   _onSubmit() {
     const dataLocation = this.searchLocation.dataSelected;
     const valArea = dataLocation ? dataLocation.id : null;
-    const valLocation = dataLocation ? null : this.f.searchByLocation.value;
-    const valSituation = this.f.searchBySituation.value;
+    const valLocation = valArea ? null : this.f.searchByLocation.value;
+
+    const dataSituation = this.searchSituation.dataSelected;
+    const valCategory = dataSituation ? dataSituation.id : null;
+    const valSituation = valCategory ? null : this.f.searchBySituation.value;
 
     this.onSubmit.emit({
       searchBySituation: valSituation || '',
       searchByLocation: valLocation || '',
       searchByArea: valArea || '',
+      searchByCategory: valCategory || '',
     });
 
     if(this._option.navigateToListing) {
+      let [path, queryParams] = this._modalService.currentPathAndQueryParams;
+      queryParams = {
+        ...queryParams,
+        ...(valSituation && valSituation.length > 0) && {keyword: valSituation},
+        ...(valLocation && valLocation.length > 0) && {keyloc: valLocation},
+      }
+      delete queryParams.modal;
+      delete queryParams.menu;
+
       let route = ["/practitioners"];
-      if(!!dataLocation){ 
-        route = route.concat(['area', dataLocation.id]);
+      if(!!valCategory && !!valArea) {
+        route = route.concat(['category', valCategory, valArea]);
+        delete queryParams.keyword;
+        delete queryParams.keyloc;
+        delete queryParams.svc;
+      } else if(!!valCategory) {
+        route = route.concat(['category', valCategory]);
+        delete queryParams.keyword;
+        delete queryParams.svc;
+      } else if (!!valArea) {
+        route = route.concat(['area', valArea]);
+        delete queryParams.keyloc;
       }
 
-      let params: NavigationExtras = {
-        queryParams: {
-          ...(valSituation && valSituation.length > 0) && {keyword: valSituation},
-          ...(valLocation && valLocation.length > 0) && {keyloc: valLocation},
-        }
-      };
-      this._router.navigate(route, params);
+
+      this._router.navigate(route, {queryParams: queryParams});
     }
   }
 
@@ -109,6 +141,7 @@ export interface SearchKeywords {
   searchBySituation: string;
   searchByLocation: string;
   searchByArea: string;
+  searchByCategory: string;
 }
 
 interface IOptionSearchBar {
