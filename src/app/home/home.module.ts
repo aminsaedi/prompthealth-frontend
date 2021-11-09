@@ -30,7 +30,7 @@ import { SharedModule } from '../shared/shared.module';
 import { NgxSocialShareModule } from 'ngx-social-share';
 import { GetFeaturedTabComponent } from './get-featured-tab/get-featured-tab.component';
 // import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
-import { ListingProductComponent } from './listing-product/listing-product.component';
+import { ListingCompanyComponent } from './listing-company/listing-company.component';
 import { CardProductComponent } from './_elements/card-product/card-product.component';
 import { InvitationComponent } from './invitation/invitation.component';
 import { LandingClubhouseComponent } from './landing-clubhouse/landing-clubhouse.component';
@@ -63,6 +63,7 @@ import { TablePlanFeatureComponent } from './_elements/table-plan-feature/table-
 import { AboutCompanyComponent } from './about-company/about-company.component';
 import { TagProviderComponent } from './tag-provider/tag-provider.component';
 import { AboutPartnerComponent } from './about-partner/about-partner.component';
+import { ButtonsModule } from "../buttons/buttons.module";
 
 
 @NgModule({
@@ -88,7 +89,7 @@ import { AboutPartnerComponent } from './about-partner/about-partner.component';
     subscriptionPlanProductComponent,
     GetFeaturedTabComponent,
     // ProfilePartnerComponent,
-    ListingProductComponent,
+    ListingCompanyComponent,
     CardProductComponent,
     InvitationComponent,
     LandingClubhouseComponent,
@@ -133,6 +134,7 @@ import { AboutPartnerComponent } from './about-partner/about-partner.component';
     ReactiveFormsModule,
     NgxSocialShareModule,
     SharedModule,
+    ButtonsModule,
     AuthModule,
     ModalModule.forRoot(),
     NpnSliderModule,

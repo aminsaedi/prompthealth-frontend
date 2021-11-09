@@ -1,0 +1,30 @@
+<div 
+class="position-relative"
+(clickOutside)="onClick(false)"
+>
+  <button 
+  class="btn small"
+  [ngClass]="isActive ? 'btn-primary' : 'btn-inactive'"
+  (click)="onClick(null)"
+  >
+    <i [iconPh]="icon"></i>
+    <span class="ml-5p">{{label}}</span>
+  </button>
+  
+  <ul 
+  *ngIf="isMenuShown"
+  class="position-absolute p-15p bg-white rounded-8p border border-line list-unstyled"
+  style="z-index: 90; right: 0; top: calc(100% + 15px);"
+  [@expandVertical]
+  >
+    <li *ngFor="let item of items">
+      <button 
+      class="btn text-nowrap small w-100"
+      [ngClass]="isItemActive(item) ? 'btn-text' : 'btn-text-body'"
+      (click)="onClickItem(item)"
+      >
+        {{item.label}}
+      </button>          
+    </li>
+  </ul>
+</div>

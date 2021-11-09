@@ -1,0 +1,11 @@
+<button 
+class="btn btn-inactive small position-relative"
+(click)="onClick()"
+>
+  <i iconPh="sliders-horiz"></i>
+  Filters
+  <div 
+  *ngIf="filterOn"
+  class="filter-indicator"
+  ></div>
+</button>

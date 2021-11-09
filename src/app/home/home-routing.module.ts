@@ -20,7 +20,7 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 // import { subscriptionPlanProductComponent } from "./subscription-plan-product/subscription-plan-product.component";
 // import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
-import { ListingProductComponent } from './listing-product/listing-product.component';
+import { ListingCompanyComponent } from './listing-company/listing-company.component';
 import { InvitationComponent } from './invitation/invitation.component';
 import { LandingClubhouseComponent } from "./landing-clubhouse/landing-clubhouse.component";
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -142,10 +142,11 @@ const routes: Routes = [
     { path: '**', redirectTo: 'gender' },
   ]},
 
-  { path: 'products', component: ListingProductComponent, },
+  { path: 'companies', component: ListingCompanyComponent, },
   // { path: 'products/:id', component: ProfilePartnerComponent },
   { path: 'partners/:id', redirectTo: '/community/profile/:id'},
   { path: 'products/:id', redirectTo: '/community/profile/:id'},
+  { path: 'products', redirectTo: 'companies'},
 
   { path: 'invitation', component: InvitationComponent }, /** invitation for webinars */
   { path: 'invitation/:id', component: LandingAmbassadorComponent, data: {type: 'client'}}, /** invitation for clients by ambassador */

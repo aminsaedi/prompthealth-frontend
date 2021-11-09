@@ -1,0 +1,63 @@
+<div 
+class="position-relative"
+(clickOutside)="onClick(false)"
+>
+  <button 
+  class="bg-primary-light border border-line rounded-4p position-relative selectbox"
+  style="padding: 12px 46px 12px 15px;"
+  [ngStyle]="styles"
+  (click)="onClick(null)"
+  >
+    <span 
+    class="body1 clamp-1line"
+    style="line-height: 19px; height: 19px;"
+    [ngClass]="!isActive ? 'text-placeholder' : 'text-body'"
+    >{{label}}</span>
+  
+    <i 
+    iconPh="chevron-down" 
+    class="text-placeholder position-absolute"
+    style="font-size: 16px; line-height: 1em; right: 15px; top: 50%; transform: translateY(-50%);"
+    ></i>
+  </button>
+
+  <ul 
+  *ngIf="isMenuShown && items?.length > 0"
+  class="position-absolute bg-white p-20p border border-line list-unstyled rounded-8p overflow-hidden"
+  style="top: calc(100% + 10px); left: 50%; transform: translateX(-50%); z-index: 20;"
+  [@expandVertical]
+  >
+    <li 
+    *ngFor="let item of items"
+    class=""
+    >
+      <ng-container *ngIf="multiple">
+        <button
+        class="btn btn-text-body small text-nowrap w-100 text-left"
+        (click)="onClickItem($event, item)"
+        >
+          <i 
+          [iconPh]="isItemActive(item) ? 'checkbox-filled' : 'checkbox'"
+          [ngClass]="isItemActive(item) ? 'text-primary' : 'text-placeholder'"
+          ></i>
+          <span class="ml-5p">{{item.label}}</span>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="!multiple">
+        <button 
+        class="btn small text-nowrap text-center w-100"
+        [ngClass]="isItemActive(item) ? 'btn-text' : 'btn-text-body'"
+        (click)="onClickItem($event, item)"
+        >{{item.label}}</button>
+      </ng-container>
+    </li>
+
+    <li *ngIf="multiple">
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-text-grey small mr-30p" (click)="onReset($event)">Reset</button>
+        <button class="btn btn-primary small" (click)="onSave($event)">Save</button>
+      </div>  
+    </li>
+  </ul>
+</div>
+

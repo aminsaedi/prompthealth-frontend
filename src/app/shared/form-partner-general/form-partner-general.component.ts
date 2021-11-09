@@ -1,10 +1,11 @@
-import { Component, Input, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, Input, OnInit, Output, EventEmitter, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 // import { SharedService } from '../../shared/services/shared.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { IUserDetail } from 'src/app/models/user-detail';
+import { CheckboxSelectionItem, FormItemCheckboxGroupComponent } from '../form-item-checkbox-group/form-item-checkbox-group.component';
 
 @Component({
   selector: 'form-partner-general',
@@ -27,9 +28,18 @@ export class FormPartnerGeneralComponent implements OnInit {
 
   public baseURLImage = environment.config.AWS_S3;
 
+  public companyTypeItems: CheckboxSelectionItem[] = [
+    {id: 'type1', label: 'Apps', value: 'apps'},
+    {id: 'type2', label: 'Services', value: 'services'},
+    {id: 'type3', label: 'Products', value: 'products'},
+    {id: 'type4', label: 'Resource', value: 'resource'},  
+  ];
+
   // private patternPhone = pattern.phone;
 
   get f() { return this.form.controls; }
+
+  @ViewChild('formCompanyType') private formCompanyType: FormItemCheckboxGroupComponent;
 
 
   constructor(
@@ -60,6 +70,8 @@ export class FormPartnerGeneralComponent implements OnInit {
       zipcode: new FormControl((this.data.zipcode ? this.data.zipcode : ''), []),
       placeId: new FormControl((this.data.placeId ? this.data.placeId : ''), []),
 
+      company_type: new FormArray([], validators.companyType),
+
       phone: new FormControl((this.data.phone ? this.data.phone : ''), validators.phone),
       website: new FormControl((this.data.website ? this.data.website : ''), validators.website),
       product_description: new FormControl((this.data.product_description ? this.data.product_description : ''), [
@@ -84,6 +96,9 @@ export class FormPartnerGeneralComponent implements OnInit {
       this._toastr.error('There are some items that require your attention.');
       return;
     }
+
+    const data = this.form.value;
+    data.company_type = this.formCompanyType.getSelected();
 
     this.submitText.emit(this.form.value);
   }

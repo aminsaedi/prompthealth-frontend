@@ -76,7 +76,7 @@ const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
       <loc>${baseURL}/plans/product</loc>
     </url>
     <url>
-      <loc>${baseURL}/products</loc>
+      <loc>${baseURL}/companies</loc>
     </url>
     <url>
       <loc>${baseURL}/ambassador-program</loc>

@@ -1,0 +1,11 @@
+@import "../../../assets/scss/variables";
+
+.filter-indicator {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  top: -2px;
+  right: -2px;
+  border-radius: 7px;
+  background: $colorError;
+}

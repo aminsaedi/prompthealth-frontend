@@ -40,6 +40,26 @@
   </div>
 
   <div class="row mb-4">
+    <label class="col-md-4">
+      Category
+      <span class="text-danger">*</span>
+    </label>
+    <div class="col-md-8">
+      <form-item-checkbox-group
+      #formCompanyType
+      id="company_type"
+      label="Category"
+      [data]="data?.company_type || []"
+      [controller]="f.company_type"
+      [submitted]="isSubmitted"
+      [disabled]="disabled"
+      [selections]="companyTypeItems"
+      [option]="{showInlineWhenEnabled: true}"
+      ></form-item-checkbox-group>
+    </div>
+  </div>
+
+  <div class="row mb-4">
     <label class="col-md-4" for="description">
       Description
       <span class="text-danger">*</span>

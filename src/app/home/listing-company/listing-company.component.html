@@ -1,0 +1,140 @@
+<div class="container my-30p">
+  <h3>Wellness Companies</h3>
+
+  <section class="d-lg-flex my-30p">
+    <div class="flex-grow-1 d-flex">
+      <div 
+      class="mr-0 mr-lg-15p"
+      style="flex: 1 0 43%;"
+      >
+        <form-item-input
+        name="search"
+        label="search"
+        placeholder="What area are you looking for?"
+        prependIcon="search"
+        [controller]="f.search"
+        (keydown.enter)="onSearchEnter()"
+        ></form-item-input>
+      </div>
+      <div 
+      class="d-none d-lg-block mr-15p"
+      style="flex: 0 0 25%"
+      >
+        <form-item-select-box
+        labelInitial="Topics"
+        [items]="topicsItems"
+        (onChange)="onChangeTopic($event)"
+        [multiple]="true"
+        ></form-item-select-box>
+      </div>
+      <div 
+      class="d-none d-lg-block mr-15p"
+      style="flex: 0 0 25%"
+      >
+        <form-item-select-box
+        labelInitial="Categories"
+        [items]="typesItems"
+        [multiple]="true"
+        (onChange)="onChangeType($event)"
+        ></form-item-select-box>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between mt-10p mt-lg-0p">
+      <button-filter
+      class="d-lg-none text-nowrap"
+      [items]="sortItems"
+      [filterOn]="isFilterOn"
+      (onChange)="onChangeSort($event)"
+      ></button-filter>
+      <button-sort
+      class="text-nowrap"
+      [items]="sortItems"
+      (onChange)="onChangeSort($event)"
+      ></button-sort>
+    </div>
+  </section>
+
+  <section>
+    <ul class="row list-unstyled products" *ngIf="!products">
+      <li class="col-12 col-md-6 col-lg-4 mb-30p" *ngFor="let i of [0,1,2,3]">
+        <card-dummy class="rounded-12p border"></card-dummy>
+      </li>
+    </ul>
+
+    <ul class="products list-unstyled row" *ngIf="products && products.length > 0">
+      <li *ngFor="let p of products;" class="col-12 col-md-6 col-lg-4 mb-30p">
+        <div class="partner">
+          <card-product [data]='p'></card-product>
+        </div>
+      </li>
+    </ul>
+
+    <p *ngIf="products && products.length == 0" class="font-italic">
+      There is no one available with your search criteria right now.
+      <br><br>
+      Be sure to check back as our network is growing everyday!
+    </p>
+
+    <!-- <div class="text-center" *ngIf="countPageTotal > 1">
+      <ul class="paginator list-unstyled d-inline-flex flex-nowrap align-items-center">
+        <li>
+          <button class="btn btn-icon small" (click)="backPage()">
+            <i iconPh="chevron-left" class="large"></i>
+          </button>
+       </li>
+        <li *ngFor="let i of paginator;">
+          <button class="btn btn-icon small" (click)="changePage(i)">
+            <div class="btn-circle" [ngClass]="{active: (currentPage == i) }"></div>
+          </button>
+        </li>
+        <li><button class="btn btn-icon small" (click)="nextPage()">
+          <i iconPh="chevron-right" class="large"></i>
+        </button></li>
+      </ul>
+    </div> -->
+  </section>
+</div>
+
+<modal
+#modalCompanyFilter
+id="company-filter"
+[bodyStyle]="{padding: 0, maxWidth: '750px'}"
+>
+  <div class="py-10p px-15p px-md-30p title-container d-flex justify-content-between align-items-center bg-background sticky-top">
+    <button class="btn btn-icon-body small pl-0" (click)="modalCompanyFilter.hide()">
+      <i iconPh="cross" class="large"></i>
+    </button>  
+    <span class="h5 h4-md mr-3 mb-0">Filters</span>
+    <button 
+    class="btn btn-text-body small pr-0"
+    (click)="onFilterReseted()"
+    >Reset</button>
+  </div>
+
+  <div class="content-container px-15p px-md-30p">
+    <div class="mb-30p">
+      <h6 class="mb-10p">Topics</h6>
+      <form-item-service 
+      #formTopics
+      [option]="{showInlineWhenEnabled: true}"
+      ></form-item-service>  
+    </div>
+    <div class="mb-30p">
+      <h6 class="mb-10p">Category</h6>
+      <form-item-checkbox-group
+      #formTypes
+      id="company_type"
+      label="Company type"
+      [selections]="typesItems"
+      [option]="{showInlineWhenEnabled: true}"
+      ></form-item-checkbox-group>
+    </div>
+    <div class="mb-15p">
+      <button 
+      class="btn btn-primary w-100"
+      (click)="onFilterSaved()"
+      >Apply Filters</button>
+    </div>
+  </div>
+</modal>
+
