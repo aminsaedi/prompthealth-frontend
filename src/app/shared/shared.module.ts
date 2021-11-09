@@ -72,6 +72,7 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AlertUploadingComponent } from './alert-uploading/alert-uploading.component';
+import { FormItemSelectBoxComponent } from './form-item-select-box/form-item-select-box.component';
 
 @NgModule({
   imports: [
@@ -151,6 +152,7 @@ import { AlertUploadingComponent } from './alert-uploading/alert-uploading.compo
     ImageUploaderDirective,
     LoaderComponent,
     AlertUploadingComponent,
+    FormItemSelectBoxComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -210,6 +212,7 @@ import { AlertUploadingComponent } from './alert-uploading/alert-uploading.compo
     ImageUploaderDirective,
     LoaderComponent,
     AlertUploadingComponent,
+    FormItemSelectBoxComponent,
   ]
 })
 export class SharedModule { }

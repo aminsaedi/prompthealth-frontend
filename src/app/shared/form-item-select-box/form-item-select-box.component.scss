@@ -1,0 +1,14 @@
+@import "../../../assets/scss/variables";
+
+.selectbox {
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+  &:focus {
+    box-shadow: 0 0 0 1.5px $colorPrimary;
+    outline: none;
+  }
+}
+
+li:not(:last-child) {
+  margin-bottom: 10px;
+}

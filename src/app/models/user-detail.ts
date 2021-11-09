@@ -95,6 +95,7 @@ export interface IUserDetail {
   affiliateLink?: string;
   phListedLink?: string;
   trialLink?: string;
+  company_type?: string[];
 
   /** for P | professionals at C (subscriber) */
   image?: string[] /** used for product images of partner */ | string /** used for professionals belonging at centre */;

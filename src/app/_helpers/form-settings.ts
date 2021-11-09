@@ -288,6 +288,7 @@ export const validators = {
   ageRange: validatorCheckboxSelectedAtLeast(1),
   typicalHours: validatorCheckboxSelectedAtLeast(1),
   customerHealth: validatorNestedCheckboxSelectedAtLeast(1),
+  companyType: validatorCheckboxSelectedAtLeast(1),
   typeOfProvider: [],
   treatmentModality: [],
   service: validatorNestedCheckboxSelectedAtLeast(1),
