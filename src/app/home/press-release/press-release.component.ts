@@ -74,7 +74,7 @@ export class PressReleaseComponent implements OnInit {
     }
 
     this._uService.setMeta(this._router.url, {
-      title: 'Press release | PromptHealth',
+      title: 'News and press | PromptHealth',
       description: 'Find latest news from PromptHealth',
       robots: 'index, follow',
     });
