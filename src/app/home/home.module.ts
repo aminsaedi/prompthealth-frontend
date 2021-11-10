@@ -64,6 +64,7 @@ import { AboutCompanyComponent } from './about-company/about-company.component';
 import { TagProviderComponent } from './tag-provider/tag-provider.component';
 import { AboutPartnerComponent } from './about-partner/about-partner.component';
 import { ButtonsModule } from "../buttons/buttons.module";
+import { PressReleaseComponent } from "./press-release/press-release.component";
 
 
 @NgModule({
@@ -119,6 +120,7 @@ import { ButtonsModule } from "../buttons/buttons.module";
     AboutCompanyComponent,
     TagProviderComponent,
     AboutPartnerComponent,
+    PressReleaseComponent,
     // ProfessionalRegisterComponent
   ],
   imports: [

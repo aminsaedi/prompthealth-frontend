@@ -1,0 +1,202 @@
+<section class="container mt-70p mt-md-100p pb-35p pb-md-65p border-bottom border-line">
+
+  <div class="d-flex">
+    <!-- <i iconPh="megaphone" class="h4 h2-md text-placeholder mr-3"></i> -->
+
+    <div>
+      <h2 class="h4 h2-md">Press release</h2>
+      <p class="subtitle1 mb-0">
+        A collection of 
+        <span>{{postTotal}} news</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="container mt-70p pb-100p border-bottom border-line">
+  <div class="row">
+
+    <ng-container *ngFor="let p of latest || [null, null, null, null]; let i = index">
+      <div 
+      class="col-12 mb-md-100p"
+      [ngClass]="{'col-md-12 mb-55p': (i == 0), 'col-lg-4 mb-30p': (i != 0)}"
+      >
+        <ng-container *ngIf="!p">
+          <ng-container *ngTemplateOutlet="card; context: {$implicit: p, size: ((i == 0) ? 'large' : 'medium')}"></ng-container>
+        </ng-container>
+        <a 
+        *ngIf="p"
+        [routerLink]="p.linkToPost"
+        >
+          <ng-container *ngTemplateOutlet="card; context: {$implicit: p, size: ((i == 0) ? 'large' : 'medium')}"></ng-container>
+        </a>
+      </div>  
+    </ng-container>  
+  </div>
+</section>
+
+<section class="container my-100p">
+  <div class="row justify-content-between align-items-center">
+    <div class="d-none d-lg-block col-lg-4 col-xl-5">
+      <p class="opacity-70pc body1-temp">
+        Want even more content to support you on your health and wellness journey? 
+        Subscribe to the PromptHealth magazine to learn from our experts including fitness advice, recipes, mindfulness tips, and so much more. 
+      </p>  
+    </div>
+    <div class="col-12 col-lg-7 col-xl-6 mb-30p">
+      <h3 class="h4-temp h3-temp-md text-center mb-15p mb-md-30p">
+        Connect and stay engaged with your wellness community. 
+      </h3>
+      <form (ngSubmit)="onSubmit()">
+        <div class="d-flex flex-column justify-content-stretch align-items-stretch flex-md-row justify-content-md-between align-items-md-start">
+          <div class="flex-grow-1 mb-10p mb-md-0p mr-md-10p">
+            <form-item-input 
+            class="w-100"
+            type="text"
+            label="email"
+            autocomplete="off"
+            autocapitalize="off"
+            placeholder="Your email address..."
+            [submitted]="isSubmitted"
+            [controller]="f.email"
+            ></form-item-input>  
+          </div>
+          <input class="btn btn-primary" type="submit" value="Subscribe" [disabled]="isSending">
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="container mt-100p" id="archive">
+  <div class="row">
+    <!-- <ng-container *ngFor="let p of archive; let i = index">
+      <div class="col-12 col-md-6 col-lg-3 mb-30p mb-md-55p">
+        <card-post size="small" [data]="p" [showCategory]="false"></card-post>
+      </div>
+    </ng-container> -->
+  </div>
+</section>
+
+<div class="d-flex align-items-center justify-content-center paginators mb-100p">
+  <ng-container *ngFor="let paginatorGroup of paginators; let i = index;">
+    <ng-container *ngFor="let page of paginatorGroup; let j = index">
+      <a 
+      [routerLink]="[(pageCurrent == 1 ? './' : '../') + (page == 1 ? '' : page)]"
+      class="btn bg-primary-light mx-2"
+      [ngClass]=" {'bg-primary text-white': (pageCurrent == page), 'bg-primary-light text-primary-dark': (pageCurrent != page)}"
+      >
+        <span>{{page}}</span>
+    </a>  
+    </ng-container>
+    <i iconPh="more-horiz"
+    *ngIf="paginators.length - 1 > i"
+    class="text-primary-dark"
+    ></i>
+  </ng-container>
+</div>
+
+<section>
+  <div class="bg-primary-dark pt-30p pb-40p pt-md-50p pb-md-70p">
+    <div class="container text-center">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+          <h5 class="h5-temp h3-temp-md text-white mb-30p mb-md-40p">
+            We are a community of health and wellness providers providing you with the services and resources you need to thrive! 
+          </h5>
+          <a routerLink="/auth/registration/u" class="btn btn-secondary subtitle1-temp">Sign up FREE</a>
+          <p class="d-none d-md-block text-primary-light mt-40p mb-0 body1-temp">Sign up to stay connected with the accredited health providers and resources, all in one place. </p>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+</section>
+
+<ng-template #card let-data let-size="size">
+    <div 
+    class="card-post text-body overflow-hidden position-relative"
+    [ngClass]="size"
+    >
+      <div 
+      class="eyecatch-container position-relative mb-20p"
+      [ngClass]="{'mb-lg-0': size == 'large'}"
+      >
+        <div *ngIf="!data" class="eyecatch-dummy color-dummy"></div>
+        <img 
+        *ngIf="data"
+        class="eyecatch" 
+        [src]="data.image ? s3 + data.image : '/assets/img/prompthealth-4_3.png'" 
+        alt=""
+        crossorigin="anonymous"
+        >
+  
+      </div>
+  
+      <div class="info-container">
+        <div 
+        class="stat-container  body2 opacity-70pc"
+        [ngClass]="{'mb-5p mb-md-25p': size == 'large', 'mb-10p': (size == 'medium' || size == 'small') }"
+        >
+          <div class="d-flex align-items-center flex-wrap">
+            <span class="mb-10p text-nowrap">
+              <i iconPh="calendar" class="mr-1"></i>
+              <span *ngIf="!data" class="color-dummy">Apr 22, 2035</span>
+              <span *ngIf="data">{{data.createdAt | date}}</span>
+            </span>
+          </div>
+        </div>
+  
+        <div 
+        class="content-container"
+        [ngClass]="{'mb-20p mb-md-35p': size == 'large' }"
+        >
+          <ng-container *ngIf="browserS">
+            <h3 
+            class="mb-10p" 
+            [ngClass]="{'h4': size == 'large', 'h5': size == 'medium', 'h6': size == 'small'}"
+            >
+              <div *ngIf="!data">
+                <div><div class="color-dummy" style="height: 0.95em;"></div></div>
+                <div class="mt-2"><div class="color-dummy" style="height: 0.95em;"></div></div>
+              </div>
+              
+              <span *ngIf="data">
+                {{data.title}}
+              </span>
+            </h3>  
+          </ng-container>
+
+          <ng-container *ngIf="!browserS">
+            <h3 
+            class="mb-10p" 
+            [ngClass]="{'h2 clamp-md-3line mb-md-20p': size == 'large', 'h5 clamp-2line': size == 'medium', 'h6 clamp-2line': size == 'small'}"
+            >
+              <div *ngIf="!data">
+                <div><div class="color-dummy" style="height: 0.95em;"></div></div>
+                <div class="mt-2"><div class="color-dummy" style="height: 0.95em;"></div></div>
+              </div>
+              
+              <span *ngIf="data">
+                {{data.title}}
+              </span>
+            </h3>  
+          </ng-container>
+          
+          <div class="body1 mb-20p" [ngClass]="{'clamp-5line': size == 'large', 'clamp-3line opacity-80pc': size == 'medium', 'd-none': size == 'small'}">
+            <div *ngIf="!data">
+              <div class="color-dummy" style="height: 1em;"></div>
+              <div class="mt-1"><div class="color-dummy" style="height: 1em;"></div></div>
+              <div class="mt-1"><div class="color-dummy" style="height: 1em;"></div></div>
+              <div *ngIf="size == 'large'" class="d-none d-md-block mt-1"><div class="color-dummy" style="height: 1em;"></div></div>
+              <div *ngIf="size == 'large'" class="d-none d-md-block mt-1"><div class="color-dummy" style="height: 1em;"></div></div>
+            </div>
+            
+            <p *ngIf="data" class="body1 mb-0" [innerHTML]="data.summary"></p>
+          </div>  
+        </div>
+      </div>
+      <div *ngIf="!data" class="loading-1 bg-white"></div>
+      <div *ngIf="!data" class="loading-2 bg-white"></div>
+    </div>
+</ng-template>
