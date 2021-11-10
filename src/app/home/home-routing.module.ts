@@ -6,7 +6,7 @@ import { FAQComponent } from "./faq/faq.component";
 // import { ProfessionalRegisterComponent } from '../dashboard/professional-register/professional-register.component';
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { TermsConditionsComponent } from "./terms-conditions/terms-conditions.component";
-import { LoyalityProgramsComponent } from "./loyality-programs/loyality-programs.component";
+// import { LoyalityProgramsComponent } from "./loyality-programs/loyality-programs.component";
 import { ContactUsComponent } from './contact-us/contact-us.component';
 // import { ClientComponent } from './client/client.component';
 // import { ProffesionalComponent } from './proffesional/proffesional.component';
@@ -34,7 +34,7 @@ import { UserQuestionnaireItemGenderComponent } from "./user-questionnaire-item-
 import { UserQuestionnaireItemSelectComponent } from "./user-questionnaire-item-select/user-questionnaire-item-select.component";
 import { UserQuestionnaireItemBackgroundComponent } from "./user-questionnaire-item-background/user-questionnaire-item-background.component";
 import { UserQuestionnaireItemSelectMultipleComponent } from "./user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component";
-import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
+// import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
 import { SitemapComponent } from "./sitemap/sitemap.component";
 import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
 import { AboutComponent } from "./about/about.component";
@@ -42,6 +42,7 @@ import { AboutPractitionerComponent } from "./about-practitioner/about-practitio
 import { AboutCompanyComponent } from "./about-company/about-company.component";
 import { TagProviderComponent } from "./tag-provider/tag-provider.component";
 import { AboutPartnerComponent } from "./about-partner/about-partner.component";
+import { PressReleaseComponent } from "./press-release/press-release.component";
 
 const routes: Routes = [
   // {
@@ -147,6 +148,8 @@ const routes: Routes = [
   { path: 'partners/:id', redirectTo: '/community/profile/:id'},
   { path: 'products/:id', redirectTo: '/community/profile/:id'},
   { path: 'products', redirectTo: 'companies'},
+
+  { path: 'press-release', component: PressReleaseComponent, },
 
   { path: 'invitation', component: InvitationComponent }, /** invitation for webinars */
   { path: 'invitation/:id', component: LandingAmbassadorComponent, data: {type: 'client'}}, /** invitation for clients by ambassador */

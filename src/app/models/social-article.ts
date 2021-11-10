@@ -3,7 +3,7 @@ import { ISocialPost, SocialPostBase } from "./social-post";
 export class SocialArticle extends SocialPostBase implements ISocialPost {
   get title() { return this.data.title; }
   
-  get image() { return this.data.image ? this.image : null; }
+  get image() { return this.data.image ? this.data.image : null; }
   
   get readLength() { return this._readLength; } /** UNIT: minute */
   get readLengthLabel() { return this._readLengthLabel; }

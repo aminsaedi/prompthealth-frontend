@@ -150,6 +150,14 @@ export interface IGetSocialContentResult extends IResponseData {
   data: ISocialPost;
 }
 
+export interface IGetPressReleasesResult extends IResponseData {
+    // data: ISocialPost[];
+  data: {
+    data: ISocialPost[];
+    total: number;  
+  }
+}
+
 export interface ICommentCreateResult extends IResponseData {
   data: {
     post: ISocialPost;
