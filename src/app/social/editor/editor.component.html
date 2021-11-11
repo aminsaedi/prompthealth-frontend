@@ -88,6 +88,14 @@
               ></form-item-errors>
             </div>
           </div>
+
+          <div *ngIf="eligibleToMarkAsNews">
+            <form-item-checkbox
+            name="isNews"
+            label="Mark as news"
+            [controller]="f.isNews"
+            ></form-item-checkbox>
+          </div>
             
           <div 
           *ngIf="isEvent"

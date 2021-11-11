@@ -96,6 +96,7 @@ export class EditorService {
         description: new FormControl(d ? d.description : null), // set validator later
         image: new FormControl(d ? d.image || '' : ''),
         tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
+        isNews: new FormControl(d?.isNews ? d.isNews : false),
       });
     } else if (type == 'NOTE') {
       this._form = new FormGroup({

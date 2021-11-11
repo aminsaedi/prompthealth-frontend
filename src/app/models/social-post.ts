@@ -59,6 +59,7 @@ export interface ISocialPost {
   authorFollowed?: boolean;
   descriptionSanitized?: SafeHtml;
   summary?: string;
+  isNews?: boolean;
   isNote?: boolean;
   isArticle?: boolean;
   isEvent?: boolean;
@@ -80,6 +81,8 @@ export interface ISocialPost {
   markAsUnfollow?: () => void;
   markAsBell?: () => void;
   markAsUnbell?: () => void;
+  markAsNews?: () => void;
+  markAsUnnews?: () => void;
 
   // changed() emits only when these status changed for now
   // * follow   * bell
@@ -150,6 +153,7 @@ export class SocialPostBase implements ISocialPost {
   get isArticle() { return this.contentType == 'ARTICLE'; }
   get isEvent() { return this.contentType == 'EVENT'; }
   get isPromo() { return this.contentType == 'PROMO'; }
+  get isNews() { return this.data.isNews || false}
 
   get isLiked() { return !!this.data.liked; }
 
@@ -242,6 +246,16 @@ export class SocialPostBase implements ISocialPost {
 
   markAsUnbell() {
     this.data.author.belled = false;
+    this._changed.next(this);
+  }
+
+  markAsNews() {
+    this.data.isNews = true;
+    this._changed.next(this);
+  }
+
+  markAsUnnews() {
+    this.data.isNews = false;
     this._changed.next(this);
   }
 
