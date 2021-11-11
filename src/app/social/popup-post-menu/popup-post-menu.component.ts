@@ -5,7 +5,7 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { IBellResult, IFollowResult, IUnfollowResult } from 'src/app/models/response-data';
+import { IBellResult, IContentCreateResult, IFollowResult, IUnfollowResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -23,6 +23,10 @@ export class PopupPostMenuComponent implements OnInit {
 
   get eligibleToShowPostMenu() {
     return this.post && this.user;
+  }
+
+  get eligibleToMarkAsNews() {
+    return this.eligibleToDelete && this.post.isArticle && this.user.isSA;
   }
 
   get eligibleToEdit() {
@@ -50,6 +54,7 @@ export class PopupPostMenuComponent implements OnInit {
   }
 
   public isPopupPostMenuShown = false;
+  public isUploading = false;
 
   private subscription: Subscription;
 
@@ -82,6 +87,29 @@ export class PopupPostMenuComponent implements OnInit {
     this._changeDetector.detectChanges();
   }
 
+  toggleMarkAsNews(e: Event, markAsNews: boolean) {
+    this.hidePopup(e);
+
+    this.isUploading = true;
+    this._sharedService.put({isNews: markAsNews}, 'blog/update-status-news/' + this.post._id).subscribe((res: IContentCreateResult) => {
+      if(res.statusCode == 200) {
+        if(markAsNews) {
+          this.post.markAsNews();
+        } else {
+          this.post.markAsUnnews();
+        }
+        this._toastr.success(markAsNews ? 'Marked as news' : 'Marked as NOT news');
+      } else {
+        console.log(res.message);
+        this._toastr.error('Something wrong');
+      }
+    }, error => {
+      console.log(error);
+      this._toastr.error('Something wrong');
+    }, () => {
+      this.isUploading = false;
+    });
+  }
 
   editContent(e: Event) {
     this.hidePopup(e);
@@ -137,6 +165,7 @@ export class PopupPostMenuComponent implements OnInit {
       type: 'user',
     }
 
+    this.isUploading = true;
     this._sharedService.post(data, 'social/follow').subscribe((res: IFollowResult) => {
       if(res.statusCode == 200) {
         this.user.setFollowing(this.post.author, true);
@@ -157,10 +186,13 @@ export class PopupPostMenuComponent implements OnInit {
     }, error => {
       console.log(error);
       this._toastr.error('Something wrong. Could not follow.');
+    }, () => {
+      this.isUploading = false;
     });
   }
 
   unfollow() {
+    this.isUploading = true;
     this._sharedService.deleteContent('social/follow/' + this.post.authorId).subscribe((res: IUnfollowResult) => {
       if (res.statusCode == 200) {
         this.user.removeFollowing(this.post.author, true);
@@ -182,6 +214,8 @@ export class PopupPostMenuComponent implements OnInit {
     }, error => {
       console.log(error);
       this._toastr.error('Something wrong. Could not unfollow.');
+    }, () => {
+      this.isUploading = false;
     });
   }
 
@@ -190,6 +224,7 @@ export class PopupPostMenuComponent implements OnInit {
       id: this.post.authorId,
     }
 
+    this.isUploading = true;
     this._sharedService.post(data, 'social/bell').subscribe((res: IBellResult) => {
       if(res.statusCode == 200) {
         const posts = this._socialService.findPostsByUserId(this.post.authorId);
@@ -205,10 +240,13 @@ export class PopupPostMenuComponent implements OnInit {
     }, error => {
       console.log(error);
       this._toastr.error('Something wrong. Could not follow.');
+    }, () => {
+      this.isUploading = false;
     });
   }
 
   unbell() {
+    this.isUploading = true;
     this._sharedService.deleteContent('social/bell/' + this.post.authorId).subscribe((res: IUnfollowResult) => {
       if (res.statusCode == 200) {
         const posts = this._socialService.findPostsByUserId(this.post.authorId);
@@ -225,6 +263,8 @@ export class PopupPostMenuComponent implements OnInit {
     }, error => {
       console.log(error);
       this._toastr.error('Something wrong. Could not turn on notification.');
+    }, () => {
+      this.isUploading = false;
     });
   }
 }

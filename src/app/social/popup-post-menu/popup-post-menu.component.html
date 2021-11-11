@@ -23,6 +23,7 @@ class="position-relative d-inline-block"
             <button 
             class="btn btn-text-white small w-100"
             (click)="toggleBell($event)"
+            [disabled]="isUploading"
             >
               <span *ngIf="!post.authorBelled">Turn on notification</span>  
               <span *ngIf="post.authorBelled">Turn off notification</span>  
@@ -35,11 +36,34 @@ class="position-relative d-inline-block"
             <button 
             class="btn btn-text-white small w-100"
             (click)="toggleFollow($event)"
+            [disabled]="isUploading"
             >
               <span *ngIf="!post.authorFollowed">Follow</span>  
               <span *ngIf="post.authorFollowed">Unfollow</span>  
             </button>
           </li>
+        </ng-container>
+
+        <ng-container *ngIf="eligibleToMarkAsNews">
+          <li *ngIf="!post.isNews">
+            <button 
+            class="btn btn-text-white small w-100"
+            (click)="toggleMarkAsNews($event, true)"
+            [disabled]="isUploading"
+            >
+              <span>Mark as news</span>  
+            </button>
+          </li>
+          <li *ngIf="!!post.isNews">
+            <button 
+            class="btn btn-text-white small w-100"
+            (click)="toggleMarkAsNews($event, false)"
+            [disabled]="isUploading"
+            >
+              <span>Mark as NOT news</span>
+            </button>
+          </li>
+
         </ng-container>
 
         <ng-container *ngIf="eligibleToEdit">
