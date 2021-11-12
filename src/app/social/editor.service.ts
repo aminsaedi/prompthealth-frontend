@@ -233,9 +233,9 @@ export class SaveQuery implements ISaveQuery {
       contentType: this.contentType,
       authorId: this.authorId,
 
-      description: this.description,
 
       ... (this._id) && {_id: this._id},
+      ... (this.description) && {description: this.description},
 
       ... (this.images.length > 0) && {images: this.images},
       ... (this.voice) && {voice: this.voice},
