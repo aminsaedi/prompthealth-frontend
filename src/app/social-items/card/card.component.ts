@@ -7,7 +7,7 @@ import { Category, CategoryService } from 'src/app/shared/services/category.serv
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar.component';
-import { SocialService } from '../social.service';
+import { SocialService } from '../../social/social.service';
 
 @Component({
   selector: 'card',

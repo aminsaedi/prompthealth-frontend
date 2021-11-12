@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../../social/editor.service';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -10,7 +10,7 @@ import { ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment';
-import { SocialService } from '../social.service';
+import { SocialService } from '../../social/social.service';
 
 @Component({
   selector: 'popup-post-menu',
