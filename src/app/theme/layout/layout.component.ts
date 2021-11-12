@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { SearchBarService } from 'src/app/shared/services/search-bar.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, slideVerticalReverse100pcAnimation } from 'src/app/_helpers/animations';
 import { getListedMenu } from 'src/app/_helpers/get-listed-menu';
@@ -42,6 +43,7 @@ export class LayoutComponent implements OnDestroy, OnInit {
     private _uService: UniversalService,
     private _changeDetector: ChangeDetectorRef,
     private _modalService: ModalService,
+    private _searchBarService: SearchBarService,
   ) {  }
 
   ngOnDestroy() {
@@ -126,6 +128,10 @@ export class LayoutComponent implements OnDestroy, OnInit {
 
   onClickUserIcon() {
     this._modalService.show('user-menu', this.user);
+  }
+
+  onClickFindProviders() {
+    this._searchBarService.dispose();
   }
 
   hideMenuSm(nextRoute: string[] = null) {

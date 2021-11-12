@@ -1,4 +1,4 @@
-import "../_helpers/levenshtein-distance";
+import { levenshteinDistance } from "../_helpers/levenshtein-distance";
 
 export interface IFormItemSearchData {
   id?: string;
@@ -47,13 +47,30 @@ export class FormItemSearchData implements IFormItemSearchData {
   }
 
   filter(word: string): FormItemSearchData {
-    const regex = new RegExp('^' + (!word ? '' : word.toLowerCase()) );
-    const subFiltered = this._subitems.filter(d => {
-      return (!word || word.length == 0 || d.id.toLowerCase().match(regex) || d.label.toLowerCase().match(regex)) ? true: false;
-    });
+    const regex = new RegExp('' + (!word ? '' : word.toLowerCase()) );
+
+    function filterSubitems(parent: FormItemSearchData) {
+      let subsFiltered = [];
+      if(parent.hasSubitems) {
+        parent.subitems.forEach((d,i) => {
+          const matchedWithThisSub = (!word || word.length == 0 || d.id.toLowerCase().match(regex) || d.label.toLowerCase().match(regex)) ? true: false;
+          if (matchedWithThisSub && d.selectable) {
+            subsFiltered.push(d);
+          } else {
+            const dSubFiltered = filterSubitems(d);
+            if(dSubFiltered.subitems.length > 0) {
+              subsFiltered.push(dSubFiltered);
+            }  
+          }
+        });
+      }
     
-    if(subFiltered.length > 0 || (this.selectable && (this.id.toLowerCase().match(regex) || this.label.toLowerCase().match(regex) ))) {
-      return this.copyWith({subitems: subFiltered});
+      return parent.copyWith({subitems: subsFiltered});
+    }
+
+    const filtered = filterSubitems(this);
+    if(filtered.subitems.length > 0 || ((filtered.id.toLowerCase().match(regex) || filtered.label.toLowerCase().match(regex) ) && filtered.selectable)) {
+      return filtered;
     }else {
       return null;
     }

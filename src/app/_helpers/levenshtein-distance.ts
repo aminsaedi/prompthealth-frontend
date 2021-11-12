@@ -1,4 +1,4 @@
-const levenshteinDistance = function(str1: string, str2: string) {
+export const levenshteinDistance = function(str1: string, str2: string) {
   let r: any, c: any, cost: any,
       d = [];
  

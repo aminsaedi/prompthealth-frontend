@@ -2,7 +2,7 @@
 
 .selections {
   z-index: 10;
-  max-height: 200px;
+  max-height: 280px;
   overflow: auto;
   li {
     a, 
@@ -22,10 +22,22 @@
     }
   }
 
-  .sub li {
-    a,
-    span {
-      padding: 12px 15px 12px 25px;
+  .sub {
+    margin-left: 10px;
+    li {
+      a,
+      span {
+        margin-left: -10px;
+        padding: 12px 15px 12px 25px;
+      }
+    }
+
+    .sub li{
+      a,
+      span {
+        margin-left: -20px;
+        padding-left: 35px;
+      }
     }
   }
 }

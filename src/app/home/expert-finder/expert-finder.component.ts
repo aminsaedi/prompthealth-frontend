@@ -112,22 +112,9 @@ export class ExpertFinderComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    const query = this._route.snapshot.queryParams as IExpertFinderFilterQueryParams;
-    if(query.keyword) {
-      this.searchBar.setKeyword(query.keyword);
-    }
-    if(query.keyloc) {
-      this.searchBar.setLocation(query.keyloc);
-    }
-
-    const param = this._route.snapshot.params as IExpertFinderFilterParams;
-    if(param.city) {
-      this.searchBar.setLocation(param.city);
-      const el = this.blurSearchBar.nativeElement as HTMLDivElement;
-      if(el) {
-        el.click();
-      }
-    }
+    this.searchBar.retrieveData();
+    const el = this.blurSearchBar.nativeElement as HTMLDivElement;
+    el?.click();
   }
 
   async ngOnInit() {
@@ -236,11 +223,11 @@ export class ExpertFinderComponent implements OnInit {
     // this.search();
   }
 
-  onSearchBarSubmitted(e: SearchKeywords) {
-    this.controller.updateFilterByKeywords(e);
-    const [path, query] = this._modalService.currentPathAndQueryParams;
-    this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
-  }
+  // onSearchBarSubmitted(e: SearchKeywords) {
+  //   this.controller.updateFilterByKeywords(e);
+  //   const [path, query] = this._modalService.currentPathAndQueryParams;
+  //   this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
+  // }
   
   onMapZoomChanged(e: number) {
     this.mapDataCurrent.zoom = e;

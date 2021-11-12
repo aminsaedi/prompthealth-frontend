@@ -10,6 +10,7 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { Subscription } from 'rxjs';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { getListedMenu } from 'src/app/_helpers/get-listed-menu';
+import { SearchBarService } from 'src/app/shared/services/search-bar.service';
 
 @Component({
   selector: 'app-header',
@@ -34,6 +35,7 @@ export class HeaderComponent implements OnInit {
     private _uService: UniversalService,
     private _changeDetector: ChangeDetectorRef,
     private _modalService: ModalService,
+    private _searchBarService: SearchBarService,
   ) { }
 
   public isHeaderShown = true;
@@ -78,6 +80,10 @@ export class HeaderComponent implements OnInit {
 
   onClickGetListed() {
     this.isPlanMenuShown = !this.isPlanMenuShown;
+  }
+
+  onClickFindProviders() {
+    this._searchBarService.dispose();
   }
 
   hidePlanMenu() {
