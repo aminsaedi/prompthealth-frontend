@@ -110,7 +110,7 @@ export class CardItemToolbarComponent implements OnInit {
     if(!this.user) {
       this._modalService.show('login-menu');
     } else {
-      this.f.body.setValue((this.f.body.value || '').replace(/(<p><br><\/p>)+$/, ''));
+      this.f.body.setValue((this.f.body.value || '').replace(/(<p><br><\/p>)+$/, '').trim());
 
       this.isUploading = true;
       this._sharedService.post(this.formComment.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {

@@ -1,10 +1,7 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax } from 'src/app/_helpers/form-settings';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import getBlobDuration from 'get-blob-duration';
-import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { Profile } from 'src/app/models/profile';
@@ -57,11 +54,8 @@ export class CardNewPostComponent implements OnInit {
   constructor(
     private _sharedService: SharedService,
     private _router: Router,
-    private _route: ActivatedRoute,
     private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
-    private _audioRecorder: AudioRecordService,
-    private _changeDetector: ChangeDetectorRef,
     private _editorService: EditorService,
     private _uploadObserver: UploadObserverService,
     private _modalService: ModalService,
