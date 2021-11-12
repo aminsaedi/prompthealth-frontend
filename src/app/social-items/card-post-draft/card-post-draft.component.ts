@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ISocialPost } from 'src/app/models/social-post';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../../social/editor.service';
 
 @Component({
   selector: 'card-post-draft',

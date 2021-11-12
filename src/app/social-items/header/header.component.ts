@@ -19,7 +19,7 @@ import { HeaderStatusService } from 'src/app/shared/services/header-status.servi
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation, slideHorizontalReverseAnimation, slideVerticalReverseAnimation } from 'src/app/_helpers/animations';
-import { SocialService } from '../social.service';
+import { SocialService } from '../../social/social.service';
 
 @Component({
   selector: 'header-social',

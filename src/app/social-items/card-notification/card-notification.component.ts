@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SocialNotification } from 'src/app/models/notification';
 import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { SocialService } from '../social.service';
+import { SocialService } from '../../social/social.service';
 
 @Component({
   selector: 'card-notification',
