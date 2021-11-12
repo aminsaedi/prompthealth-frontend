@@ -127,7 +127,7 @@ export class FormItemSearchComponent implements OnInit {
 
   initSearchData() {
     if(this._searchData?.length > 0) {
-      console.log('searchData is already initialized.')
+      // console.log('searchData is already initialized.')
     }
     else if(this.searchData?.length > 0) {
       const searchData = [];
@@ -135,9 +135,9 @@ export class FormItemSearchComponent implements OnInit {
         searchData.push(new FormItemSearchData(data));
       });
       this._searchData = searchData;
-      console.log('searchData is ready.', this.name);
+      // console.log('searchData is ready.', this.name);
     } else {
-      console.warn('cannot initialize searchData yet.', this.name);
+      // console.warn('cannot initialize searchData yet.', this.name);
     }
   }
 
@@ -185,6 +185,7 @@ export class FormItemSearchComponent implements OnInit {
     this.controller.setValue(data.label);
     // this._idDataFocused = data.id;
     this._dataSelected = data;
+    this._isSelectionsShown = false;
   }
 
   // selectDataFocused() {

@@ -8,6 +8,7 @@ import { FormItemSearchComponent } from '../form-item-search/form-item-search.co
 import { CategoryService } from '../services/category.service';
 import { ModalService } from '../services/modal.service';
 import { QuestionnaireService, Questionnaire } from '../services/questionnaire.service';
+import { SearchBarService } from '../services/search-bar.service';
 
 @Component({
   selector: 'search-bar',
@@ -17,7 +18,6 @@ import { QuestionnaireService, Questionnaire } from '../services/questionnaire.s
 export class SearchBarComponent implements OnInit {
   
   @Input() option: IOptionSearchBar = {};
-  @Output() onSubmit = new EventEmitter<SearchKeywords>()
 
   get f() { return this._form.controls; }
 
@@ -39,6 +39,7 @@ export class SearchBarComponent implements OnInit {
     private _catService: CategoryService,
     private _modalService: ModalService,
     private _qService: QuestionnaireService,
+    private _searchBarService: SearchBarService,
   ) { }
 
   ngOnDestroy() {
@@ -67,7 +68,6 @@ export class SearchBarComponent implements OnInit {
       promiseAll.push(this.waitForFetchingCategory());
     }
     Promise.all(promiseAll).then(results => {
-      console.log(results)
       const cat = this._catService.categoryList;
       const typeOfProvider: Questionnaire = results[0].typeOfProvider;
 
@@ -132,6 +132,26 @@ export class SearchBarComponent implements OnInit {
     }];
   }
 
+  retrieveData() {
+    const keyword = this._searchBarService.getKeyword();
+    if(keyword) {
+      this.f.searchBySituation.setValue(keyword);
+      const dataSituation = this._searchBarService.get('selectedSituation');
+      if(dataSituation) {
+        this.searchSituation.selectData(dataSituation);
+      }
+    }
+
+    const keyloc = this._searchBarService.getKeyloc();
+    if(keyloc) {
+      this.f.searchByLocation.setValue(keyloc);
+      const dataLocation = this._searchBarService.get('selectedLocation');
+      if(dataLocation) {
+        this.searchLocation.selectData(dataLocation);
+      }
+    }
+  }
+
   setKeyword(val: string) {
     this.f.searchBySituation.setValue(val);
   }
@@ -159,57 +179,72 @@ export class SearchBarComponent implements OnInit {
 
   _onSubmit() {
     const dataLocation = this.searchLocation.dataSelected;
-    const valArea = dataLocation ? dataLocation.id : null;
-    const valLocation = valArea ? null : this.f.searchByLocation.value;
+    if(dataLocation) {
+      this._searchBarService.set('selectedLocation', dataLocation);
+      this._searchBarService.setKeyloc(dataLocation.label);
+    } else if (this.f.searchByLocation.value) {
+      this._searchBarService.remove('selectedLocation');
+      this._searchBarService.setKeyloc(this.f.searchByLocation.value);
+    } else {
+      this._searchBarService.remove('selectedLocation');
+      this._searchBarService.setKeyloc(null);
+    }
 
     const dataSituation = this.searchSituation.dataSelected;
-    let valCategory: string;
-    let valTypeOfProvider: string;
     if(dataSituation) {
-      const selectedSituationType = this.findSituationTypeById(dataSituation.id);
-      valCategory = selectedSituationType == 'category' ? dataSituation.id : null;
-      valTypeOfProvider = selectedSituationType == 'typeOfProvider' ? dataSituation.id : null;
-    }    
-    const valSituation = (valCategory || valTypeOfProvider) ? null : this.f.searchBySituation.value;
-
-    this.onSubmit.emit({
-      searchBySituation: valSituation || '',
-      searchByLocation: valLocation || '',
-      searchByArea: valArea || '',
-      searchByCategory: valCategory || '',
-      searchByTypeOfProvider: valTypeOfProvider || '',
-    });
-
-    if(this._option.navigateToListing) {
-      let [path, queryParams] = this._modalService.currentPathAndQueryParams;
-      queryParams = {
-        ...queryParams,
-        ...(valSituation && valSituation.length > 0) && {keyword: valSituation},
-        ...(valLocation && valLocation.length > 0) && {keyloc: valLocation},
-      }
-      delete queryParams.modal;
-      delete queryParams.menu;
-
-      let route = ["/practitioners"];
-      if(valCategory || valTypeOfProvider) {
-        route = valCategory ? route.concat('category', valCategory) : route.concat('type', valTypeOfProvider);
-
-        delete queryParams.keyword;
-        delete queryParams.svc;
-
-        if(valArea) {
-          route.push(valArea);
-          delete queryParams.keyloc;
-        }
- 
- 
-      } else if (valArea){
-        route = route.concat('area', valArea);
-        delete queryParams.keyloc;
-      }
-
-      this._router.navigate(route, {queryParams: queryParams});
+      this._searchBarService.set('selectedSituation', dataSituation);
+      this._searchBarService.setKeyword(dataSituation.label);
+    } else if(this.f.searchBySituation.value) {
+      this._searchBarService.remove('selectedSituation');
+      this._searchBarService.setKeyword(this.f.searchBySituation.value);
+    } else {
+      this._searchBarService.remove('selectedSituation');
+      this._searchBarService.setKeyword(null);
     }
+
+    const area = dataLocation?.id || null;
+    const keyloc = !area ? this._searchBarService.getKeyloc() : null;
+    
+    const category = dataSituation && this.findSituationTypeById(dataSituation.id) == 'category' ? dataSituation.id : null;
+    const typeOfProvider = dataSituation && this.findSituationTypeById(dataSituation.id) == 'typeOfProvider' ? dataSituation.id : null;
+    const keyword = (!category && !typeOfProvider) ? this._searchBarService.getKeyword() : null;
+
+    let [path, queryParams] = this._modalService.currentPathAndQueryParams;
+    queryParams = {
+      ...queryParams,
+      ...(keyword) && {keyword: keyword},
+      ...(keyloc) && {keyloc: keyloc},
+    }
+    delete queryParams.modal;
+    delete queryParams.menu;
+
+    let route = ["/practitioners"];
+    if(category || typeOfProvider) {
+      route = category ? route.concat('category', category) : route.concat('type', typeOfProvider);
+
+      delete queryParams.keyword;
+      delete queryParams.svc;
+
+      if(area) {
+        route.push(area);
+        delete queryParams.keyloc;
+        delete queryParams.zoom;
+        delete queryParams.dist;
+        delete queryParams.lt;
+        delete queryParams.lg;
+      }
+
+
+    } else if (area){
+      route = route.concat('area', area);
+      delete queryParams.keyloc;
+      delete queryParams.zoom;
+      delete queryParams.dist;
+      delete queryParams.lt;
+      delete queryParams.lg;
+    }
+
+    this._router.navigate(route, {queryParams: queryParams});
   }
 
 }
@@ -229,7 +264,6 @@ interface IOptionSearchBar {
 
 class OptionSearchBar implements IOptionSearchBar {
 
-  get navigateToListing() { return (this.data.navigateToListing === false) ? false : true; }
   get fixAlignHorizontal() { return (this.data.fixAlignHorizontal === true) ? true : false; }
   
   constructor(private data: IOptionSearchBar){}
