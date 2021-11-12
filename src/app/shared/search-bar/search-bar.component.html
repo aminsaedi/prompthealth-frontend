@@ -23,9 +23,8 @@
         type="text"
         [controller]="f.searchBySituation"
         [option]="{transparent: true, showRemoveButton: true, showSelectionsImmediately: true}"
-        [searchData]="categories"
+        [searchData]="searchDataSituation"
         ></form-item-search>
-
       </li>
                                                        
       <li class="d-flex align-items-center flex-grow-1 py-5p py-md-0 searchbox">
@@ -37,7 +36,7 @@
         type="text"
         prependIcon="pin-filled"
         [controller]="f.searchByLocation"
-        [searchData]="_cities"
+        [searchData]="searchDataLocation"
         [option]="{transparent: true, showRemoveButton: true, showSelectionsImmediately: true}"
         ></form-item-search>  
       </li>

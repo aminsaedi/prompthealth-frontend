@@ -35,7 +35,7 @@
       >{{d.label}}</a>
     </li>
 
-    <ul *ngIf="d.hasSubitems" class="sub p-0 m-0">
+    <ul *ngIf="d.hasSubitems" class="sub p-0">
       <ng-template *ngTemplateOutlet="nestedSelections; context: {$implicit: d.subitems}"></ng-template>
     </ul>
 

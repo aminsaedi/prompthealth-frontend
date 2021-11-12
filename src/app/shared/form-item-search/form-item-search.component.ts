@@ -137,7 +137,7 @@ export class FormItemSearchComponent implements OnInit {
       this._searchData = searchData;
       console.log('searchData is ready.', this.name);
     } else {
-      console.error('cannot initialize searchData yet.', this.name);
+      console.warn('cannot initialize searchData yet.', this.name);
     }
   }
 
