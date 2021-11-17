@@ -58,7 +58,7 @@ export class SharedService {
     this.receiveMessage();
     // console.log('fcm loaded');
     // this.type = this._uService.localStorage.getItem('roles');
-    this.http.get('http://ip-api.com/json').toPromise()
+    this.http.get('https://ip-api.com/json').toPromise()
       .then((response: any) => {
         console.log('User\'s Location Data is ', response);
         console.log('User\'s Country', response.country);
