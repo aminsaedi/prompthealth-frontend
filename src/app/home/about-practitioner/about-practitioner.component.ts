@@ -36,7 +36,6 @@ export class AboutPractitionerComponent implements OnInit {
     private _toastr: ToastrService,
     private _el: ElementRef,
   ) {
-    this.currentCountry = this._sharedService.country;
 
   }
 
@@ -59,8 +58,8 @@ export class AboutPractitionerComponent implements OnInit {
 
   @ViewChild('videoPlayer') private videoPlayer: ElementRef;
   @ViewChild('videoLg') private videoLg: ElementRef;
+  currency = 'CAD';
 
-  currentCountry = 'Canada';
 
   @HostListener('window:resize') WindowResize() {
     this.loadVideoLgIfNeeded();
@@ -119,20 +118,13 @@ export class AboutPractitionerComponent implements OnInit {
       this.videoLgMarkedAsLoadStart = true;
     }
   }
-
   initPlans() {
     const path = 'user/get-plans';
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
       if (res.statusCode === 200) {
         res.data.forEach(d => {
-          if (this.currentCountry !== 'CA') {
-            d.price = d.usPrice;
-            d.yearlyPrice = d.usYearlyPrice;
-            d.stripePriceId = d.stripeUSPriceId;
-            d.stripeYearlyPriceId = d.stripeUSYearlyPriceId;
-            d.currency = 'USD';
-          } else {
-            d.currency = 'CAD';
+          if (d.currency && d.currency === 'USD') {
+            this.currency = 'USD';
           }
           if (d.userType.includes('P')) {
             // nothing to do

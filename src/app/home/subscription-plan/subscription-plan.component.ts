@@ -73,7 +73,7 @@ export class SubscriptionPlanComponent implements OnInit {
   errMessage: any;
   selectedPlan: any;
   profile;
-  currentCountry = 'CA';
+
   constructor(
     private _router: Router,
     private _sharedService: SharedService,
@@ -85,7 +85,7 @@ export class SubscriptionPlanComponent implements OnInit {
 
   ngOnInit() {
     this._headerStatusService.setPriceType('practitioner');
-    this.currentCountry = this._sharedService.country;
+
     const ls = this._uService.localStorage;
     const ss = this._uService.sessionStorage;
     this._uService.setMeta(this._router.url, {
@@ -138,19 +138,8 @@ export class SubscriptionPlanComponent implements OnInit {
       if (res.statusCode === 200) {
         //        console.log(res.data);
         res.data.forEach(element => {
-
           if (element.userType.length > 1 && element.name === 'Basic') {
             this.basicPlan = element;
-            return;
-          }
-          if (this.currentCountry !== 'CA') {
-            element.price = element.usPrice;
-            element.yearlyPrice = element.usYearlyPrice;
-            element.stripePriceId = element.stripeUSPriceId;
-            element.stripeYearlyPriceId = element.stripeUSYearlyPriceId;
-            element.currency = 'USD';
-          } else {
-            element.currency = 'CAD';
           }
           if (element.userType.length === 1 && element.userType[0] === 'C') {
             this.cPlan = element;
