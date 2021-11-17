@@ -122,15 +122,16 @@ export class AboutPractitionerComponent implements OnInit {
     const path = 'user/get-plans';
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
       if (res.statusCode === 200) {
+        console.log(res.data);
         res.data.forEach(d => {
           if (d.currency && d.currency === 'USD') {
             this.currency = 'USD';
           }
           if (d.userType.includes('P')) {
             // nothing to do
-          } else if (d.userType.length === 2) {
+          } else if (d.userType.length === 2 && d.name === 'Basic') {
             this.plans.basic.data = d;
-          } else if (d.userType.includes('SP')) {
+          } else if (d.userType.includes('SP') && d.name === 'Premium') {
             this.plans.provider.data = d;
           } else if (d.userType.includes('C')) {
             this.plans.centre.data = d;
