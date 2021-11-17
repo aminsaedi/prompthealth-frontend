@@ -27,6 +27,19 @@ export class AboutPractitionerComponent implements OnInit {
   get isNotLoggedIn() { return this._profileService.loginStatus == 'notLoggedIn'; }
   get isLoggedIn() { return this._profileService.loginStatus == 'loggedIn'; }
 
+  constructor(
+    private _sharedService: SharedService,
+    private _uService: UniversalService,
+    private _profileService: ProfileManagementService,
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _toastr: ToastrService,
+    private _el: ElementRef,
+  ) {
+    this.currentCountry = this._sharedService.country;
+
+  }
+
   public features = features;
   public plans = plans;
   public planFeatures = planFeatures;
@@ -47,35 +60,27 @@ export class AboutPractitionerComponent implements OnInit {
   @ViewChild('videoPlayer') private videoPlayer: ElementRef;
   @ViewChild('videoLg') private videoLg: ElementRef;
 
+  currentCountry = 'Canada';
+
   @HostListener('window:resize') WindowResize() {
     this.loadVideoLgIfNeeded();
-  } 
+  }
 
 
   keepOriginalOrder = (a: any, b: any) => a.key;
 
   isFeatureShowable(i: number, planType: PlanTypePractitioner) {
-    return this.planFeatures[i].targetPlan.indexOf(planType) === 0; 
+    return this.planFeatures[i].targetPlan.indexOf(planType) === 0;
   }
 
-  constructor(
-    private _sharedService: SharedService,
-    private _uService: UniversalService,
-    private _profileService: ProfileManagementService,
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _toastr: ToastrService,
-    private _el: ElementRef,
-  ) { }
-
   ngAfterViewInit() {
-    this._route.fragment.pipe( first() ).subscribe(fragment => {
+    this._route.fragment.pipe(first()).subscribe(fragment => {
       const el: HTMLElement = this._el.nativeElement.querySelector('#' + fragment);
-      if(el) {
+      if (el) {
         setTimeout(() => {
           const top = el.getBoundingClientRect().top;
-          smoothWindowScrollTo(top);  
-        }, 300); 
+          smoothWindowScrollTo(top);
+        }, 300);
       }
     });
 
@@ -98,7 +103,7 @@ export class AboutPractitionerComponent implements OnInit {
   }
 
   loadVideoLgIfNeeded() {
-    if(this.sizeL && this.videoLg?.nativeElement && !this.videoLgMarkedAsLoadStart) {
+    if (this.sizeL && this.videoLg?.nativeElement && !this.videoLgMarkedAsLoadStart) {
       const videoLg = this.videoLg.nativeElement as HTMLVideoElement;
       videoLg.addEventListener('loadeddata', () => {
         const vp = this.videoPlayer?.nativeElement;
@@ -107,19 +112,28 @@ export class AboutPractitionerComponent implements OnInit {
         videoLg.currentTime = currentTime;
         videoLg.loop = true;
         vp.pause();
-        videoLg.play();        
+        videoLg.play();
       });
-  
+
       videoLg.load();
-      this.videoLgMarkedAsLoadStart = true;  
+      this.videoLgMarkedAsLoadStart = true;
     }
   }
 
   initPlans() {
     const path = 'user/get-plans';
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
-      if(res.statusCode == 200) {
+      if (res.statusCode == 200) {
         res.data.forEach(d => {
+          if (this.currentCountry !== 'Canada') {
+            d.price = d.usPrice;
+            d.yearlyPrice = d.usYearlyPrice;
+            d.stripePriceId = d.stripeUSPriceId;
+            d.stripeYearlyPriceId = d.stripeUSYearlyPriceId;
+            d.currency = 'USD';
+          } else {
+            d.currency = 'CAD';
+          }
           if (d.userType.includes('P')) {
             //nothing to do
           } else if (d.userType.length == 2) {
@@ -136,18 +150,18 @@ export class AboutPractitionerComponent implements OnInit {
 
   initCoupon() {
     const coupon = this._uService.sessionStorage.getItem('stripe_coupon_code');
-    if(coupon) {
+    if (coupon) {
       this.couponData = JSON.parse(coupon);
       let isCouponApplicable = false;
       for (let role of ['SP', 'C']) {
-        if(this._sharedService.isCouponApplicableTo(this.couponData, role)) {
+        if (this._sharedService.isCouponApplicableTo(this.couponData, role)) {
           isCouponApplicable = true;
         }
       }
 
-      if(isCouponApplicable) {
-        setTimeout(() => { 
-          this.isCouponShown = true; 
+      if (isCouponApplicable) {
+        setTimeout(() => {
+          this.isCouponShown = true;
         }, 1000);
       }
     }
@@ -158,21 +172,21 @@ export class AboutPractitionerComponent implements OnInit {
   }
 
   scrollTo(el: HTMLElement) {
-    if(el && window) {
+    if (el && window) {
       const top = window.scrollY + el.getBoundingClientRect().top;
       smoothWindowScrollTo(top);
     }
   }
 
-  expandCoupon() { 
-    this.isCouponShrink = false; 
+  expandCoupon() {
+    this.isCouponShrink = false;
   }
 
   shrinkCoupon(e: Event) {
     this.isCouponShrink = true;
     e.stopPropagation();
   }
-  
+
   onClickSignup(type: PlanTypePractitioner) {
     const link = ['/auth', 'registration'];
     switch (type) {
@@ -199,9 +213,9 @@ export class AboutPractitionerComponent implements OnInit {
       this.isLoading = true;
       try {
         const result = await this._sharedService.checkoutPlan(
-          this.profile, 
-          this.plans[type].data, 
-          'default', 
+          this.profile,
+          this.plans[type].data,
+          'default',
           this.isDurationMonthly
         );
         this._toastr.success(result.message);
@@ -274,9 +288,9 @@ const features = [
   //   title: 'Recommend other health professionals you trust.',
   //   content: 'Think your clients will benefit from a different treatment, or do you know another provider you trust? Find and leave recommendations for other practitioners. ',
   // },
-]
+];
 
-const plans: {[k in PlanTypePractitioner]: IPlanData} = {
+const plans: { [k in PlanTypePractitioner]: IPlanData } = {
   basic: {
     id: 'basic',
     icon: 'note-text-outline',
@@ -301,22 +315,22 @@ const plans: {[k in PlanTypePractitioner]: IPlanData} = {
     label: null,
     data: null,
   }
-}
+};
 
 const planFeatures: IPlanFeatureData[] = [
-  {item: 'Get listed with a personalized profile', targetPlan: ['basic', 'provider', 'centre'], detail: null},
-  {item: 'Share your knowledge via voice memos and notes', targetPlan: ['basic', 'provider', 'centre'], detail: null},
-  {item: 'Share your knowledge via voice memos, notes, and images + articles, and events', targetPlan: ['provider', 'centre'], detail: null},
-  {item: 'Receive booking requests', targetPlan: ['provider', 'centre'], detail: null},
-  {item: 'Inter referrals enabled', targetPlan: ['provider', 'centre'], detail: null},
-  {item: 'Ratings and reviews', targetPlan: ['provider', 'centre'], detail: null},
-  {item: 'Performance analytics', targetPlan: ['provider', 'centre'], detail: null},
+  { item: 'Get listed with a personalized profile', targetPlan: ['basic', 'provider', 'centre'], detail: null },
+  { item: 'Share your knowledge via voice memos and notes', targetPlan: ['basic', 'provider', 'centre'], detail: null },
+  { item: 'Share your knowledge via voice memos, notes, and images + articles, and events', targetPlan: ['provider', 'centre'], detail: null },
+  { item: 'Receive booking requests', targetPlan: ['provider', 'centre'], detail: null },
+  { item: 'Inter referrals enabled', targetPlan: ['provider', 'centre'], detail: null },
+  { item: 'Ratings and reviews', targetPlan: ['provider', 'centre'], detail: null },
+  { item: 'Performance analytics', targetPlan: ['provider', 'centre'], detail: null },
 
   // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
-  {item: 'Display company products and amenities', targetPlan: ['centre'], detail: null},
-  {item: 'Enrich your profile with videos', targetPlan: ['centre'], detail: null},
-  {item: 'Tag your providers', targetPlan: ['centre'], detail: null},
-  {item: 'PromptHealth personal assistant for onboarding', targetPlan: ['centre'], detail: null},
+  { item: 'Display company products and amenities', targetPlan: ['centre'], detail: null },
+  { item: 'Enrich your profile with videos', targetPlan: ['centre'], detail: null },
+  { item: 'Tag your providers', targetPlan: ['centre'], detail: null },
+  { item: 'PromptHealth personal assistant for onboarding', targetPlan: ['centre'], detail: null },
 ];
 
 const faqs: IFAQItem[] = [
@@ -327,7 +341,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: 'How is PromptHealth different from a regular directory?',
-    a: `Unlike regular directories, we do not assume that people know which  providers to search for, and what they all do. Instead, we start from a person’s individual needs and show them all of their care options promoting a holistic approach to wellness. Our search filters allow people to narrow their search based on preferences such as gender, age speciality, language, location, virtual care, and more. 
+    a: `Unlike regular directories, we do not assume that people know which  providers to search for, and what they all do. Instead, we start from a person’s individual needs and show them all of their care options promoting a holistic approach to wellness. Our search filters allow people to narrow their search based on preferences such as gender, age speciality, language, location, virtual care, and more.
       <br><br>
       Further, people are able to learn about each practitioner by the content they post on their profile. Before booking with a practitioner, our users can learn about their area of interest, and follow them to get notified every time a new post is created. This allows our users to make informed decisions about their care, and book with someone they truly trust and feel comfortable with.
     `,
@@ -345,7 +359,7 @@ const faqs: IFAQItem[] = [
     q: 'How do I get listed?',
     a: `After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your background and specialities. These questions will take between 5-7 minutes to complete. This allows us to ensure you are listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern.
       <br><br>
-      Please ensure you answer all of the questions, as your profile may be rejected if there are important details missing. 
+      Please ensure you answer all of the questions, as your profile may be rejected if there are important details missing.
     `,
     opened: false,
   },
@@ -356,7 +370,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: 'How do I create content?',
-    a: `PromptHealth is on a mission to make it easy for people to research, learn, discover, and ultimately make informed decisions about their health, all in one place. Our goal is to eliminate trial and error when looking for wellness solutions  by making PromptHealth the modern and user friendly hub for trusted health and wellness information right by you. We have created a platform to display your knowledge, educate people, and get connected. 
+    a: `PromptHealth is on a mission to make it easy for people to research, learn, discover, and ultimately make informed decisions about their health, all in one place. Our goal is to eliminate trial and error when looking for wellness solutions  by making PromptHealth the modern and user friendly hub for trusted health and wellness information right by you. We have created a platform to display your knowledge, educate people, and get connected.
       <br><br>
       On your profile, you are able to share wellness content via quick text notes, voice memos, articles/blogs, and events. . Our team is here to support you in the process of creating content, and are happy to provide guidance if needed. Just reach out!
     `,
@@ -366,15 +380,15 @@ const faqs: IFAQItem[] = [
     q: 'Will I be able to receive reviews and recommendations?',
     a: `We are the first online platform that makes it possible for health and wellness providers to easily find and inter-refer each other. You can do this by providing recommendations on another provider’s profile to build further trust within the health and wellness community.
       <br><br>
-      Recommendations can be provided by other wellness practitioners and wellness companies. To prevent fake reviews, we are only allowing providers and companies who have already been approved to be on PromptHealth to write a recommendation on your profile. This is meant to boost credibility and online trust for everyone. 
+      Recommendations can be provided by other wellness practitioners and wellness companies. To prevent fake reviews, we are only allowing providers and companies who have already been approved to be on PromptHealth to write a recommendation on your profile. This is meant to boost credibility and online trust for everyone.
     `,
     opened: false,
   },
   {
     q: 'Is there a verification process?',
-    a: `Before we approve a listing, we ensure to complete an audit to ensure the accuracy of information provided by a health and wellness provider. This review process consists of a careful qualitative approach by our team. 
+    a: `Before we approve a listing, we ensure to complete an audit to ensure the accuracy of information provided by a health and wellness provider. This review process consists of a careful qualitative approach by our team.
       <br><br>
-      We encourage you to upload your certification in order to receive a verified badge beside your profile, indicating you are verified to build more credibility and trust. Although this review process is carefully conducted, we cannot guarantee the qualification information provided and cannot be responsible for false information. 
+      We encourage you to upload your certification in order to receive a verified badge beside your profile, indicating you are verified to build more credibility and trust. Although this review process is carefully conducted, we cannot guarantee the qualification information provided and cannot be responsible for false information.
     `,
 
     opened: false,
@@ -384,4 +398,4 @@ const faqs: IFAQItem[] = [
     a: `To deactivate or delete your account, please  contact the admin at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>`,
     opened: false,
   },
-]
+];

@@ -1,5 +1,5 @@
 export type PlanTypePractitioner = 'basic' | 'provider' | 'centre';
-export type PlanTypeProduct = 'productBasic' | 'productCustom'
+export type PlanTypeProduct = 'productBasic' | 'productCustom';
 export type PlanType = PlanTypePractitioner | PlanTypeProduct;
 
 export interface IPlanData {
@@ -24,6 +24,8 @@ export interface IDefaultPlan {
   planName: string;
   price: number;
   yearlyPrice: number;
+  usPrice: number;
+  usYearlyPrice: number;
   userType: string[];
   status: boolean;
   isDeleted: boolean;
@@ -45,9 +47,12 @@ export interface IDefaultPlan {
   verifiedBadge: boolean;
   featuredOnHomePage: boolean;
 
-  isDefault: true
+  isDefault: true;
   stripePriceId: string;
+  stripeUSPriceId: string;
   stripeProductId: string;
   stripeYearlyPriceId: string;
+  stripeUSYearlyPriceId: string;
   striperesponse: any;
+  currency: string;
 }

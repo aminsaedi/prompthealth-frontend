@@ -8,7 +8,7 @@ import { BehaviorService } from './behavior.service';
 
 // import { SocialAuthService } from 'angularx-social-login';
 
-import { BehaviorSubject, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 
 // import 'rxjs/add/operator/toPromise';
 import { catchError, map } from 'rxjs/operators';
@@ -29,6 +29,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Professional } from 'src/app/models/professional';
 import { SocialService } from 'src/app/social/social.service';
 import { AngularFireMessaging } from '@angular/fire/messaging';
+import { switchMap } from 'rxjs-compat/operator/switchMap';
+import { shareReplay } from 'rxjs-compat/operator/shareReplay';
 
 export class User {
   constructor(
@@ -56,7 +58,20 @@ export class SharedService {
     this.receiveMessage();
     // console.log('fcm loaded');
     // this.type = this._uService.localStorage.getItem('roles');
+    this.http.get('http://ip-api.com/json').toPromise()
+      .then((response: any) => {
+        console.log('User\'s Location Data is ', response);
+        console.log('User\'s Country', response.country);
+        this.currentCountry = response.country;
+      }
+      );
   }
+
+  get country(): string {
+    return this.currentCountry;
+  }
+
+  private currentCountry = 'Canada';
   currentMessage = new BehaviorSubject(null);
 
   rootUrl: string = environment.config.API_URL;
@@ -157,16 +172,16 @@ export class SharedService {
     return new Promise((resolve, reject) => {
       return this.http.post(
         this.rootUrl + 'common/file-download',
-        {fileKey: path},
-        {responseType: 'blob'},
+        { fileKey: path },
+        { responseType: 'blob' },
       ).subscribe((res: Blob) => {
         resolve(res);
       }, error => {
         console.log('error');
         console.log(error);
         reject();
-      })
-    })
+      });
+    });
   }
 
   downloadFile(filepath: string, filename: string = null): Promise<boolean> {

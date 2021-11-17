@@ -73,7 +73,7 @@ export class SubscriptionPlanComponent implements OnInit {
   errMessage: any;
   selectedPlan: any;
   profile;
-
+  currentCountry = 'Canada';
   constructor(
     private _router: Router,
     private _sharedService: SharedService,
@@ -85,12 +85,14 @@ export class SubscriptionPlanComponent implements OnInit {
 
   ngOnInit() {
     this._headerStatusService.setPriceType('practitioner');
-    
+    this.currentCountry = this._sharedService.country;
     const ls = this._uService.localStorage;
     const ss = this._uService.sessionStorage;
     this._uService.setMeta(this._router.url, {
       title: 'Plans for providers | PromptHealth',
-      description: 'Join us to get exposed to clients. Subscribe premium plan to get more feature such as booking system, connect to google reviews / social medias, performance dashboard and more!',
+      description: 'Join us to get exposed to clients.\
+       Subscribe premium plan to get more feature such as booking system, \
+       connect to google reviews / social medias, performance dashboard and more!',
       image: 'https://prompthealth.ca/assets/img/hero-subscription-plan-s.png',
       imageType: 'image/png',
       imageAlt: 'PromptHealth',
@@ -117,12 +119,12 @@ export class SubscriptionPlanComponent implements OnInit {
     if (ss.getItem('stripe_coupon_code')) {
       this.couponCode = JSON.parse(ss.getItem('stripe_coupon_code'));
       let isCouponApplicable = false;
-      for (let role of ['SP', 'C']) {
-        if(this._sharedService.isCouponApplicableTo(this.couponCode, role)){
+      for (const role of ['SP', 'C']) {
+        if (this._sharedService.isCouponApplicableTo(this.couponCode, role)) {
           isCouponApplicable = true;
         }
       }
-      if(isCouponApplicable) {
+      if (isCouponApplicable) {
         setTimeout(() => { this.isCouponShown = true; }, 1000);
       }
     }
@@ -141,9 +143,27 @@ export class SubscriptionPlanComponent implements OnInit {
           }
           if (element.userType.length === 1 && element.userType[0] === 'C') {
             this.cPlan = element;
+            if (this.currentCountry !== 'Canada') {
+              this.cPlan.price = this.cPlan.usPrice;
+              this.cPlan.yearlyPrice = this.cPlan.usYearlyPrice;
+              this.cPlan.stripePriceId = this.cPlan.stripeUSPriceId;
+              this.cPlan.stripeYearlyPriceId = this.cPlan.stripeUSYearlyPriceId;
+              this.cPlan.currency = 'USD';
+            } else {
+              this.cPlan.currency = 'CAD';
+            }
           }
           if (element.userType.length === 1 && element.userType[0] === 'SP') {
             this.spPlan = element;
+            if (this.currentCountry !== 'Canada') {
+              this.spPlan.price = this.spPlan.usPrice;
+              this.spPlan.yearlyPrice = this.spPlan.usYearlyPrice;
+              this.spPlan.stripePriceId = this.spPlan.stripeUSPriceId;
+              this.spPlan.stripeYearlyPriceId = this.spPlan.stripeUSYearlyPriceId;
+              this.spPlan.currency = 'USD';
+            } else {
+              this.spPlan.currency = 'CAD';
+            }
           }
         });
       } else {
