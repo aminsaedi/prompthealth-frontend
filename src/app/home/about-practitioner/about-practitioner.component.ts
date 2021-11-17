@@ -45,17 +45,17 @@ export class AboutPractitionerComponent implements OnInit {
   public planFeatures = planFeatures;
   public faqs = faqs;
 
-  public isDurationMonthly: boolean = true;
-  public isLoading: boolean = false;
+  public isDurationMonthly = true;
+  public isLoading = false;
 
   public couponData: ICouponData = null;
   public isCouponShown = false;
   public isCouponShrink = false;
 
-  public videoLink = "/assets/video/about-practitioner-sm.mp4";
+  public videoLink = '/assets/video/about-practitioner-sm.mp4';
   public videoLinkLg = '/assets/video/about-practitioner-md.mp4';
-  public videoLgMarkedAsLoadStart: boolean = false;
-  public isVideoLgReady: boolean = false;
+  public videoLgMarkedAsLoadStart = false;
+  public isVideoLgReady = false;
 
   @ViewChild('videoPlayer') private videoPlayer: ElementRef;
   @ViewChild('videoLg') private videoLg: ElementRef;
@@ -123,9 +123,9 @@ export class AboutPractitionerComponent implements OnInit {
   initPlans() {
     const path = 'user/get-plans';
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
-      if (res.statusCode == 200) {
+      if (res.statusCode === 200) {
         res.data.forEach(d => {
-          if (this.currentCountry !== 'Canada') {
+          if (this.currentCountry !== 'CA') {
             d.price = d.usPrice;
             d.yearlyPrice = d.usYearlyPrice;
             d.stripePriceId = d.stripeUSPriceId;
@@ -135,8 +135,8 @@ export class AboutPractitionerComponent implements OnInit {
             d.currency = 'CAD';
           }
           if (d.userType.includes('P')) {
-            //nothing to do
-          } else if (d.userType.length == 2) {
+            // nothing to do
+          } else if (d.userType.length === 2) {
             this.plans.basic.data = d;
           } else if (d.userType.includes('SP')) {
             this.plans.provider.data = d;
@@ -153,7 +153,7 @@ export class AboutPractitionerComponent implements OnInit {
     if (coupon) {
       this.couponData = JSON.parse(coupon);
       let isCouponApplicable = false;
-      for (let role of ['SP', 'C']) {
+      for (const role of ['SP', 'C']) {
         if (this._sharedService.isCouponApplicableTo(this.couponData, role)) {
           isCouponApplicable = true;
         }

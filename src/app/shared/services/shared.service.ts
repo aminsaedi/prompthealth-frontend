@@ -58,7 +58,7 @@ export class SharedService {
     this.receiveMessage();
     // console.log('fcm loaded');
     // this.type = this._uService.localStorage.getItem('roles');
-    this.http.get('https://ip-api.com/json').toPromise()
+    this.http.get('https://ipapi.co/json/').toPromise()
       .then((response: any) => {
         console.log('User\'s Location Data is ', response);
         console.log('User\'s Country', response.country);
@@ -71,7 +71,7 @@ export class SharedService {
     return this.currentCountry;
   }
 
-  private currentCountry = 'Canada';
+  private currentCountry = 'CA';
   currentMessage = new BehaviorSubject(null);
 
   rootUrl: string = environment.config.API_URL;

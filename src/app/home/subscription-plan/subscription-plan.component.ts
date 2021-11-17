@@ -73,7 +73,7 @@ export class SubscriptionPlanComponent implements OnInit {
   errMessage: any;
   selectedPlan: any;
   profile;
-  currentCountry = 'Canada';
+  currentCountry = 'CA';
   constructor(
     private _router: Router,
     private _sharedService: SharedService,
@@ -138,32 +138,25 @@ export class SubscriptionPlanComponent implements OnInit {
       if (res.statusCode === 200) {
         //        console.log(res.data);
         res.data.forEach(element => {
+
           if (element.userType.length > 1 && element.name === 'Basic') {
             this.basicPlan = element;
+            return;
+          }
+          if (this.currentCountry !== 'CA') {
+            element.price = element.usPrice;
+            element.yearlyPrice = element.usYearlyPrice;
+            element.stripePriceId = element.stripeUSPriceId;
+            element.stripeYearlyPriceId = element.stripeUSYearlyPriceId;
+            element.currency = 'USD';
+          } else {
+            element.currency = 'CAD';
           }
           if (element.userType.length === 1 && element.userType[0] === 'C') {
             this.cPlan = element;
-            if (this.currentCountry !== 'Canada') {
-              this.cPlan.price = this.cPlan.usPrice;
-              this.cPlan.yearlyPrice = this.cPlan.usYearlyPrice;
-              this.cPlan.stripePriceId = this.cPlan.stripeUSPriceId;
-              this.cPlan.stripeYearlyPriceId = this.cPlan.stripeUSYearlyPriceId;
-              this.cPlan.currency = 'USD';
-            } else {
-              this.cPlan.currency = 'CAD';
-            }
           }
           if (element.userType.length === 1 && element.userType[0] === 'SP') {
             this.spPlan = element;
-            if (this.currentCountry !== 'Canada') {
-              this.spPlan.price = this.spPlan.usPrice;
-              this.spPlan.yearlyPrice = this.spPlan.usYearlyPrice;
-              this.spPlan.stripePriceId = this.spPlan.stripeUSPriceId;
-              this.spPlan.stripeYearlyPriceId = this.spPlan.stripeUSYearlyPriceId;
-              this.spPlan.currency = 'USD';
-            } else {
-              this.spPlan.currency = 'CAD';
-            }
           }
         });
       } else {
