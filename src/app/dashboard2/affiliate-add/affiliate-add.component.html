@@ -1,0 +1,57 @@
+<h6 class="mb-40p">Send an invitation</h6>
+<form (ngSubmit)="onSubmitEditor()">
+  <div class="mb-25p row">
+    <div class="col-12 col-lg-6 mb-40p mb-lg-0p">
+      <label for="firstName" class="subtitle2">First name</label>      
+      <form-item-input 
+      name="firstName"
+      label="First name"
+      type="text"
+      [controller]="f.firstName"
+      [max]="minmax.nameMax"
+      [submitted]="isEditorSubmitted"
+      ></form-item-input>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <label for="lastName" class="subtitle2">Last name(optional)</label>
+      <form-item-input 
+      name="lastName"
+      label="Last name"
+      type="text"
+      [controller]="f.lastName"
+      [max]="minmax.nameMax"
+      [submitted]="isEditorSubmitted"
+      ></form-item-input>      
+    </div>
+  </div>
+  
+  <div class="mb-25p">
+    <label class="subtitle2">Email</label>
+    <form-item-input 
+    label="Email Address"
+    name="email"
+    type="email"
+    autocomplete="email"
+    autocapitalize="off"
+    [controller]="f.email"
+    [submitted]="isEditorSubmitted"
+    ></form-item-input>
+  </div>
+
+  <div class="mb-25p">
+    <label class="subtitle2">Provider type</label>
+    <form-item-checkbox-group
+    id="type"
+    type="radio"
+    label="Provider type"
+    [controller]="f.role"
+    [submitted]="isEditorSubmitted"
+    [selections]="[{id: 'sp', label: 'Solo provider', value: 'SP'}, {id: 'c', label: 'Centre', value: 'C'}]"
+    ></form-item-checkbox-group>
+  </div>
+
+  <div class="text-right">
+    <input class="btn btn-primary" type="submit" value="Save" [disabled]="isUploading">
+  </div>
+</form>

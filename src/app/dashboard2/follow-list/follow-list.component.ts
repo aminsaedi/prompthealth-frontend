@@ -18,12 +18,13 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 export class FollowListComponent implements OnInit {
 
   get user() { return this._profileService.profile; }
+  get followTypeFormatted() { return this.followType == 'following' ? 'Followings' : 'Followers'; }
   
   public follows: Profile[] = null;
   public existsMore: boolean = true;
   public isLoading: boolean = false;
 
-  private followType: FollowType;
+  public followType: FollowType;
   private countPerPage = 40;
 
   private subscriptionLoginStatus: Subscription;

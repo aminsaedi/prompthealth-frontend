@@ -9,16 +9,13 @@ import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { ModalModule } from "ngx-bootstrap/modal";
 import { SocialModule } from './social/social.module';
 import { AuthModule } from './auth/auth.module';
+import { Dashboard2Module } from './dashboard2/dashboard2.module';
 
 
 const routes: Routes = [
-  {
-    path: 'community',
-    loadChildren: () => SocialModule,
-  },
-  { path: 'auth', 
-    loadChildren: () => AuthModule,
-  },
+  { path: 'community', loadChildren: () => SocialModule, },
+  { path: 'd', loadChildren: () => Dashboard2Module },
+  { path: 'auth', loadChildren: () => AuthModule, },
 
   { path: 'reset-password/:token', redirectTo: 'auth/reset-password/:token'},
 

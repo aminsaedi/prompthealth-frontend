@@ -107,7 +107,7 @@ export interface IUserDetail {
 
   videos?: IVideo[];
 
-  socialLinks?: {_id: string, link: string, type: string}[];
+  socialLinks?: {_id?: string, link: string, type: string, viewCount?: number}[];
   facebookClickCount?: number;
   instagramClickCount?: number;
   linkedinClickCount?: number;

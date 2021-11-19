@@ -1,135 +1,100 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
-  <div class="row mb-5 justify-content-end">
-    <div class="col-12">
-      <label class="mb-3">
-        Are you a private provider or do you take insurance?
-      </label>
-    </div>
-    <div class="col-12 col-md-11">
-      <form-item-checkbox-group
-      id="insurance"
-      type="selectbox"
-      label=""
-      [controller]="f.acceptsInsurance"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      [selections]="selectionsInsuranceType"
-      ></form-item-checkbox-group>
-    </div>
+  <div class="mb-40p">
+    <h6>
+      Are you a private provider or do you take insurance?
+    </h6>
+    <form-item-checkbox-group
+    id="insurance"
+    type="selectbox"
+    label=""
+    [controller]="f.acceptsInsurance"
+    [submitted]="isSubmitted"
+    [selections]="selectionsInsuranceType"
+    ></form-item-checkbox-group>
   </div>
 
-  <div class="row mb-5 justify-content-end">
-    <div class="col-12">
-      <label class="mb-3">
-        Are you able to see people from other regions?
-      </label>
-    </div>
-    <div class="col-12 col-md-11">
-      <form-item-checkbox-group
-      id="seeOtherRegion"
-      type="selectbox"
-      label=""
-      [controller]="f.seeOtherRegion"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      [selections]="selectionsSeeOtherRegion"
-      ></form-item-checkbox-group>
-    </div>
+  <div class="mb-40p">
+    <h6>
+      Are you able to see people from other regions?
+    </h6>
+    <form-item-checkbox-group
+    id="seeOtherRegion"
+    type="selectbox"
+    label=""
+    [controller]="f.seeOtherRegion"
+    [submitted]="isSubmitted"
+    [selections]="selectionsSeeOtherRegion"
+    ></form-item-checkbox-group>
   </div>
 
-  <div class="row mb-5 justify-content-end">
-    <div class="col-12">
-      <label class="mb-3">
-        Service
-        <span class="text-danger">*</span>
-      </label>
-    </div>
-    <div class="col-12 col-md-11">
-      <form-item-service
-      [col2]="true"
-      [disabled]="disabled"
-      [data]="data.services"
-      [controller]="f.service"
-      [submitted]="isSubmitted"
-      ></form-item-service>
-    </div>
+  <div class="mb-60p">
+    <h6 class="mb-20p">
+      Your specialities
+    </h6>
+    <form-item-service
+    [col2]="true"
+    [data]="data.services"
+    [controller]="f.service"
+    [submitted]="isSubmitted"
+    ></form-item-service>
   </div>
 
-  <div class="row mb-5 justify-content-end">
-    <div class="col-12">
-      <label class="mb-3">
-        Status Of Customer's Health
-        <span class="text-danger">*</span>
-      </label>
-    </div>
-    <div class="col-12 col-md-11">
-      <form-item-customer-health
-      *ngIf="selectionsCustomerHealth"
-      [col2]="true"
-      [disabled]="disabled"
-      [data]="data.services"
-      type="detail"
-      [selections]="selectionsCustomerHealth.answers"
-      [controller]="f.customerHealth"
-      [submitted]="isSubmitted"
-      ></form-item-customer-health>
-    </div>
+  <div class="mb-60p">
+    <h6 class="mb-20p">
+      Status of customer's health
+    </h6>
+    <form-item-customer-health
+    *ngIf="selectionsCustomerHealth"
+    [col2]="true"
+    [data]="data.services"
+    type="detail"
+    [selections]="selectionsCustomerHealth.answers"
+    [controller]="f.customerHealth"
+    [submitted]="isSubmitted"
+    ></form-item-customer-health>
   </div>
 
-  <div class="row mb-5 justify-content-end">
-    <div class="col-12 mt-0">
-      <label class="mb-3">
-        Treatment Modality
-        <!-- <span class="text-danger">*</span> -->
-      </label>
-    </div>
-    <div class="col-12 col-md-11">
-      <form-item-checkbox-group
-      *ngIf="selectionsTreatmentModality"
-      id="treatmentModality"
-      type="checkbox"
-      label="Treatment modality"
-      [data]="data.services"
-      [controller]="f.treatmentModality"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      [selections]="selectionsTreatmentModality"
-      ></form-item-checkbox-group>
-    </div>
+  <div class="mb-60p">
+    <h6 class="mb-20p">
+      Type Of Provider (optional)
+    </h6>
+    <form-item-checkbox-group
+    *ngIf="selectionsTypeOfProvider"
+    id="typeOfProvider"
+    type="checkbox"
+    label="Type of provider"
+    [data]="data.services"
+    [controller]="f.typeOfProvider"
+    [submitted]="isSubmitted"  
+    [selections]="selectionsTypeOfProvider"
+    ></form-item-checkbox-group>
   </div>
 
-  <div class="row mb-5 justify-content-end">
-    <div class="col-12 mt-0">
-      <label class="mb-3">
-        Type Of Provider
-        <!-- <span class="text-danger">*</span> -->
-      </label>
-    </div>
-    <div class="col-12 col-md-11">
-      <form-item-checkbox-group
-      *ngIf="selectionsTypeOfProvider"
-      id="typeOfProvider"
-      type="checkbox"
-      label="Type of provider"
-      [data]="data.services"
-      [controller]="f.typeOfProvider"
-      [submitted]="isSubmitted"  
-      [disabled]="disabled"
-      [selections]="selectionsTypeOfProvider"
-      ></form-item-checkbox-group>
-    </div>
+  <div class="mb-60p">
+    <h6 class="mb-20p">
+      Treatment Modality (optional)
+    </h6>
+    <form-item-checkbox-group
+    *ngIf="selectionsTreatmentModality"
+    id="treatmentModality"
+    type="checkbox"
+    label="Treatment modality"
+    [data]="data.services"
+    [controller]="f.treatmentModality"
+    [submitted]="isSubmitted"
+    [selections]="selectionsTreatmentModality"
+    ></form-item-checkbox-group>
   </div>
-
-  <div class="row">
-    <div class="col-12">
-      <p *ngIf="!disabled" class="font-italic bg-lightgrey p-3 line-height-1_5">
-        Please only pick what's applicable to you to allow proper matching.
-        We'll regularly review for inappropriate profiles
-      </p>
-    </div>
-  </div>
-
-  <div class="col-12 text-right" *ngIf="!disabled" [ngClass]="{'d-none': hideSubmit}">
-    <button class="btn btn-primary">Submit</button>
+  
+  <div 
+  class="text-right" 
+  [ngClass]="{'d-none': hideSubmit}"
+  >
+    <input
+    type="submit" 
+    class="btn btn-primary"
+    value="submit"
+    [disabled]="disabled"
+    >
   </div>
 </form>

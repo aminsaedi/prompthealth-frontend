@@ -2,6 +2,7 @@ import { IBooking } from "./booking";
 import { IDefaultPlan } from "./default-plan";
 import { ISocialNotification } from "./notification";
 import { IReferral } from "./referral";
+import { IShowcase } from "./showcase";
 import { ISocialComment, ISocialPost } from "./social-post";
 import { IStaff } from "./staff";
 import { IUserDetail } from "./user-detail";
@@ -31,6 +32,10 @@ export interface IAuthResult extends IResponseData {
 }
 
 export interface IGetProfileResult extends IResponseData{
+  data: IUserDetail;
+}
+
+export interface ISaveProfileResult extends IResponseData {
   data: IUserDetail;
 }
 
@@ -193,6 +198,17 @@ export interface IGetStaffResult extends IResponseData {
 
 export interface ICreateStaffResult extends IResponseData {
   data: IStaff;
+}
+
+export interface IGetShowcaseResult extends IResponseData {
+  data: {
+    data: IShowcase[];
+    total: number;
+  }
+}
+
+export interface ICreateShowcaseResult extends IResponseData {
+  data: IShowcase;
 }
 
 // export interface IMarkAllNotificationsAsReadResult extends IResponseData {

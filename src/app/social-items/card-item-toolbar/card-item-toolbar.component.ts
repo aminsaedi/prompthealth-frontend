@@ -2,7 +2,7 @@ import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { ICommentCreateResult } from 'src/app/models/response-data';
+import { ICommentCreateResult, IResponseData } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -89,6 +89,62 @@ export class CardItemToolbarComponent implements OnInit {
     }
   }
 
+  async onClickBookmark(e: Event) {
+    this.stopPropagation(e);
+
+    const isBookmarkedCurrent = this.post.isBookmarked;
+    this.changeBookmarkStatus(!isBookmarkedCurrent)
+
+    this.isUploading = true;
+    const request = isBookmarkedCurrent ? this.unbookmark() : this.bookmark();
+    try {
+      await request;
+      this.user.markAsBookmarkChanged();
+    } catch (error) {
+      this._toastr.error('Something went wrong. Please try again later.');
+      this.changeBookmarkStatus(isBookmarkedCurrent);
+    }
+    this.isUploading = false;
+  }
+
+  bookmark(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._sharedService.post({}, 'social/bookmark/' + this.post._id).subscribe((res: IResponseData) => {
+        if(res.statusCode == 200) {
+          resolve();
+        } else {
+          reject();
+        }
+      }, error => {
+        console.log(error);
+        reject();
+      });
+    })
+  }
+
+  unbookmark(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._sharedService.deleteContent('social/bookmark/' + this.post._id).subscribe((res: IResponseData) => {
+        if (res.statusCode == 200) {
+          resolve();
+        } else {
+          reject();
+        }
+      }, error => {
+        console.log(error);
+        reject();
+      });
+    });
+  }
+
+  changeBookmarkStatus(isBookmarked: boolean) {
+    if(isBookmarked) {
+      this.post.bookmark();
+    } else {
+      this.post.unbookmark();
+    }
+  }
+
   onClickComment(e: Event) {
     this.stopPropagation(e);
     if(this.isFormCommentShown) {
@@ -96,14 +152,6 @@ export class CardItemToolbarComponent implements OnInit {
     } else {
       this.showComment();
     }
-  }
-
-  onClickBookmark(e: Event) {
-    this.stopPropagation(e);
-    
-    setTimeout(() => {
-      this.post.isBookmarked = this.post.isBookmarked == true ? false : true;
-    }, 500);
   }
 
   onSubmitComment() {

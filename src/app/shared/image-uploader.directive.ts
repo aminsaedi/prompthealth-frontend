@@ -42,6 +42,9 @@ export class ImageUploaderDirective {
       case 'staff':
         imageUploadRequest = this.uploadImageTo(imageShrink.file, imageShrink.name, 'staffs');
         break;
+      case 'showcase':
+        imageUploadRequest = this.uploadImageTo(imageShrink.file, imageShrink.name, 'products');
+        break;
     }
     try {
       this.startUpload.emit();
@@ -136,4 +139,4 @@ export class ImageUploaderDirective {
   }
 }
 
-type ImageType = 'profileImage' | 'profileCover' | 'staff';
+type ImageType = 'profileImage' | 'profileCover' | 'staff' | 'showcase';

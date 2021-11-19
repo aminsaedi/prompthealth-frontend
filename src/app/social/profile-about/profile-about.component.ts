@@ -25,7 +25,7 @@ export class ProfileAboutComponent implements OnInit {
 
   public profile: Professional | Partner;
 
-  public isAmenityViewerShown = false;
+  // public isAmenityViewerShown = false;
   public isProductViewerShown = false;
   public isPartnerViewerShown = false;
 
@@ -63,18 +63,17 @@ export class ProfileAboutComponent implements OnInit {
 
     this.createIframesForVideo();
 
-    if(p && p.isC && !p.triedFetchingAmenity) {
-      p.markAsTriedFetchingAmenity();
-      this.fetchAmenity();
-    }
+    // if(p && p.isC && !p.triedFetchingAmenity) {
+    //   p.markAsTriedFetchingAmenity();
+    //   this.fetchAmenity();
+    // }
 
     if(p && p.isC && !p.triedFetchingProduct) {
       p.markAsTriedFetchingProduct();
       this.fetchProduct();
     }
 
-    if(p && p.eligibleFeatureStaffs && !p.triedFetchingStaffs) {
-      p.markAsTriedFetchingStaffs();
+    if(p && p.eligibleFeatureStaffs && !p.doneInitStaffs) {
       this.fetchStaffs();
     }
   }
@@ -106,22 +105,22 @@ export class ProfileAboutComponent implements OnInit {
     });
   }
 
-  fetchAmenity() {
-    return new Promise((resolve, reject) => {
-      const path = `amenity/get-all/?userId=${this.profile._id}&count=20&page=1&frontend=0`;
-      this._sharedService.getNoAuth(path).subscribe((res: any) => {
-        if (res.statusCode === 200) {
-          this.profile.setAmenities(res.data.data);
-          resolve(true);
-        } else {
-          reject();
-        }
-      }, (error) => {
-        console.log(error);
-        reject();
-      });
-    });
-  }
+  // fetchAmenity() {
+  //   return new Promise((resolve, reject) => {
+  //     const path = `amenity/get-all/?userId=${this.profile._id}&count=20&page=1&frontend=0`;
+  //     this._sharedService.getNoAuth(path).subscribe((res: any) => {
+  //       if (res.statusCode === 200) {
+  //         this.profile.setAmenities(res.data.data);
+  //         resolve(true);
+  //       } else {
+  //         reject();
+  //       }
+  //     }, (error) => {
+  //       console.log(error);
+  //       reject();
+  //     });
+  //   });
+  // }
 
   fetchProduct() {
     return new Promise((resolve, reject) => {
@@ -145,8 +144,7 @@ export class ProfileAboutComponent implements OnInit {
       const path = `staff/get-by-center/${this.profile._id}`;
       this._sharedService.getNoAuth(path).subscribe((res: IGetStaffsResult) => {
         if(res.statusCode == 200) {
-          const staffs = res.data.map(item => new Staff(item));
-          this.profile.setStaffs(staffs);
+          this.profile.setStaffs(res.data);
           resolve(true);  
         } else {
           console.log(res.message);
@@ -185,8 +183,8 @@ export class ProfileAboutComponent implements OnInit {
     this._modalService.show('team-member', data);
   }
 
-  openAmenityViewer() { this.isAmenityViewerShown = true; }
-  closeAmenityViewer() { this.isAmenityViewerShown = false; }
+  // openAmenityViewer() { this.isAmenityViewerShown = true; }
+  // closeAmenityViewer() { this.isAmenityViewerShown = false; }
   openProductViewer() { this.isProductViewerShown = true; }
   closeProductViewer() { this.isProductViewerShown = false; }
   openPartnerViewer() { this.isPartnerViewerShown = true; }

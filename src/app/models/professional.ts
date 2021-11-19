@@ -1,6 +1,6 @@
 import { SocialLinkData } from '../shared/social-buttons/social-buttons.component';
 import { ImageData, ImageGroupData, ImageViewerData } from '../shared/image-viewer/image-viewer.component';
-import { IUserDetail, IVideo } from './user-detail';
+import { IUserDetail } from './user-detail';
 import { IProfile, Profile } from './profile';
 import { ReviewData } from './review-data';
 import { IReferral, Referral } from './referral';
@@ -13,6 +13,8 @@ export interface IProfessional extends IProfile {
   image: IProfessional['profileImage']; /** profile image small size (if not set, return default avator) */
   imageFull: IProfessional['profileImageFull']; /** profile image original size (if not set, return default avator) */
   imageType: IProfessional['profileImageType'] /** profile image file type (same as profileImageType) */
+
+  coverImage: string;
 
   emailToDisplay: string
 
@@ -35,8 +37,6 @@ export interface IProfessional extends IProfile {
   certification: string;
   yearsOfExperience: string;
 
-  socialLink: {isAvailable: boolean, data: SocialLinkData};
-  videos: IVideo[];
   detailByGoogle: google.maps.places.PlaceResult;
   rating: number;
   reviews: any[];
@@ -48,7 +48,6 @@ export interface IProfessional extends IProfile {
   recommendationsPreview: Referral[];
 
   team: Professional;
-  staffs: Staff[];
   amenity: ImageViewerData; /** all amenities data */
   amenityPreview: ImageGroupData[]; /** first 3 amenities for preview */
   product: ImageViewerData; /** all products data */
@@ -81,7 +80,7 @@ export interface IProfessional extends IProfile {
   triedFetchingGoogleReviews: boolean;
   triedFetchingAmenity: boolean;
   triedFetchingProduct: boolean;
-  triedFetchingStaffs: boolean;
+  // triedFetchingStaffs: boolean;
   triedFetchingTeam: boolean;
 
   eligibleFeatureStaffs: boolean;
@@ -91,20 +90,18 @@ export interface IProfessional extends IProfile {
 export class Professional extends Profile implements IProfessional{
 
   protected _defaultAvator = '/assets/img/no-image.jpg';
-  protected _defaultBanner = '/assets/img/professional-banner.png';
+  protected _defaultBanner = '/assets/img/general/banner.png';
 
   get id() { return this._id; }
 
   get image() { return this.profileImage.length > 0 ? this.profileImage : this._defaultAvator; } // if profile image is not set, return default image
   get imageFull() { return this.profileImageFull.length > 0 ? this.profileImageFull : this._defaultAvator; }
   get imageType(){ return this.profileImageType; }
-  get coverImage() { return super.coverImage || this._defaultBanner; }
+  get coverImage() { return this.data.cover ? (this._s3 + this.data.cover) : this._defaultBanner; }
 
-  // get emailToDisplay() { return this.p.displayEmail; }
   get emailToDisplay() { return null; }
 
   get title() { return this.p.professional_title || null; }
-  // get phone() { return this._phone; }
   get phone() { return null; }
   get address() { return (!this.p.hideAddress && this.p.address && this.p.address.length > 0) ? this.p.address : null; }
   get state() { return this.p.state; }
@@ -131,8 +128,6 @@ export class Professional extends Profile implements IProfessional{
   get acceptInsurance() { return this.p.acceptsInsurance || null; }
   get seeOtherRegion() { return this.p.seeOtherRegion || null; }
 
-  get socialLink() { return this._socialLink; }
-  get videos() { return (this.p.plan && this.p.plan.videoUpload) ? this.p.videos : []; } 
   get detailByGoogle(){ return this._detailByGoogle || null; }
   get rating() { return Math.round(this.p.ratingAvg * 10) / 10; }
   get reviews() { return this._reviewData ? this._reviewData.data : []; }
@@ -143,7 +138,6 @@ export class Professional extends Profile implements IProfessional{
   get recommendations() { return this._recommendations; }
   get recommendationsPreview() { return this.recommendations ? this.recommendations.slice(0,3) : []};
   get team() { return this._team; }
-  get staffs() { return (this.p.plan && this.eligibleFeatureStaffs) ? this._staffs : []; }
 
   get amenity() {
     return (this._amenities && this._amenities.imageGroups.length > 0 && this.p.plan && this.p.plan.ListAmenities) ? this._amenities : {imageGroups: []};
@@ -208,7 +202,7 @@ export class Professional extends Profile implements IProfessional{
   get triedFetchingGoogleReviews() { return this._triedFetchingGoogleReviews; }
   get triedFetchingProfessionals() { return this._triedFetchingProfessionals; }
   get triedFetchingRecommendations() { return this._triedFetchingRecommendations; }
-  get triedFetchingStaffs() { return this._triedFetchingStaffs; }
+  // get triedFetchingStaffs() { return this._triedFetchingStaffs; }
   get triedFetchingTeam() { return this._triedFetchingTeam; }
 
   get eligibleFeatureStaffs() { return !!this.p.plan && this.p.plan.ListOfProviders; }
@@ -231,23 +225,10 @@ export class Professional extends Profile implements IProfessional{
   private _priceRange: number[] = [];
 
   private _team: Professional;
-  private _staffs: Staff[] = [];
   private _amenities: ImageViewerData;
   private _products: ImageViewerData;
 
   private _isCheckedForCompared = false;
-
-  private _socialLink: { isAvailable: boolean, data: SocialLinkData } = {
-    isAvailable: false,
-    data: {
-      facebook: null,
-      twitter: null,
-      instagram: null,
-      linkedin: null,
-      tiktok: null,
-      youtube: null,
-    }
-  };
 
   private _detailByGoogle: google.maps.places.PlaceResult;
   private _mapIconUrl: string;
@@ -258,7 +239,7 @@ export class Professional extends Profile implements IProfessional{
   private _triedFetchingProduct = false;
   private _triedFetchingProfessionals = false;
   private _triedFetchingRecommendations = false;
-  private _triedFetchingStaffs = false;
+  // private _triedFetchingStaffs = false;
   private _triedFetchingTeam = false;
 
   constructor(id: string, protected p: IUserDetail, private ans?: any) {
@@ -282,26 +263,16 @@ export class Professional extends Profile implements IProfessional{
       const p = Number(price.trim());
       if (p >= 0) { this._priceRange.push(p); }
     });
-
-    if (p.socialLinks && p.socialLinks.length > 0 && ((p.plan && p.plan.name !== 'Basic') || p.isVipAffiliateUser)) {
-      this._socialLink.isAvailable = true;
-      p.socialLinks.forEach((d: { type: string; link: string }) => {
-        this._socialLink.data[d.type] = d.link;
-      });
-    }
   }
 
   markAsTriedFetchingAmenity() { this._triedFetchingAmenity = true; }
   markAsTriedFetchingProduct() { this._triedFetchingProduct = true; }
-  markAsTriedFetchingStaffs() { this._triedFetchingStaffs = true; }
+  // markAsTriedFetchingStaffs() { this._triedFetchingStaffs = true; }
   markAsTriedFetchingTeam() { this._triedFetchingTeam = true; }
 
+  // set team which the user (provider) belongs to
   setTeam(team: IUserDetail) {
     this._team = new Professional(team._id, team);
-  }
-  
-  setStaffs(staffs: Staff[]) { 
-    this._staffs = staffs;
   }
 
   setAmenities(amenities: any[]) {

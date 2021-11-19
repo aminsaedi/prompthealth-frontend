@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
-// import { SharedService } from '../../shared/services/shared.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { CheckboxSelectionItem, FormItemCheckboxGroupComponent } from '../form-item-checkbox-group/form-item-checkbox-group.component';
@@ -16,17 +14,18 @@ export class FormPartnerGeneralComponent implements OnInit {
 
   @Input() data: IUserDetail;
   @Input() disabled = false;
+  @Input() hideSubmit: boolean = false;
 
   @Output() changeImage = new EventEmitter<string>();
+  @Output() submitForm = new EventEmitter<any>();
   @Output() submitText = new EventEmitter<any>(); /** it does NOT return userID nor imageURL */
 
   public form: FormGroup;
   public isSubmitted = false;
+  public isUploadingProfileImage = false;
 
   public maxName: number = minmax.nameMax;
   public maxTextarea: number = minmax.textareaMax;
-
-  public baseURLImage = environment.config.AWS_S3;
 
   public companyTypeItems: CheckboxSelectionItem[] = [
     {id: 'type1', label: 'Apps', value: 'apps'},
@@ -35,7 +34,6 @@ export class FormPartnerGeneralComponent implements OnInit {
     {id: 'type4', label: 'Resource', value: 'resource'},  
   ];
 
-  // private patternPhone = pattern.phone;
 
   get f() { return this.form.controls; }
 
@@ -44,7 +42,6 @@ export class FormPartnerGeneralComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    // private _sharedService: SharedService,
     private _toastr: ToastrService,
     private _changeDetector: ChangeDetectorRef,
   ) { }
@@ -52,16 +49,8 @@ export class FormPartnerGeneralComponent implements OnInit {
   ngOnInit(): void {
     this.form = this._fb.group({
       profileImage: new FormControl((this.data.profileImage ? this.data.profileImage : ''), []),
-      firstName: new FormControl((this.data.firstName ? this.data.firstName : ''), [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(this.maxName)
-      ]),
-      email: new FormControl((this.data.email ? this.data.email : ''), [
-        Validators.required,
-        Validators.email
-      ]),
-      // displayEmail: new FormControl((this.data.displayEmail ? this.data.displayEmail : ''), validators.displayEmail),
+      firstName: new FormControl((this.data.firstName ? this.data.firstName : ''), validators.nameCentre),
+      email: new FormControl((this.data.email ? this.data.email : ''), validators.email),
       address: new FormControl((this.data.address ? this.data.address : '')),
       latitude: new FormControl(((this.data.location && this.data.location[1]) ? this.data.location[1] : 0), []),
       longitude: new FormControl(((this.data.location && this.data.location[0]) ? this.data.location[0] : 0), []),
@@ -82,8 +71,12 @@ export class FormPartnerGeneralComponent implements OnInit {
     }, { validators: validators.addressSelectedFromSuggestion });
   }
 
-  onChangeImage(imageURL: string) {
-    this.changeImage.emit(imageURL);
+
+  onStartUploadingProfileImage () {
+    this.isUploadingProfileImage = true;
+  }
+  onDoneUploadingProfileImage () {
+    this.isUploadingProfileImage = false;
   }
 
   onChangePlace() {
@@ -101,5 +94,10 @@ export class FormPartnerGeneralComponent implements OnInit {
     data.company_type = this.formCompanyType.getSelected();
 
     this.submitText.emit(this.form.value);
+
+    if(this.data) {
+      data._id = this.data._id;
+    }
+    this.submitForm.emit(this.form.value);
   }
 }

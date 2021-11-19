@@ -1,0 +1,32 @@
+<div class="d-inline-block position-relative">
+  <profile-image
+  class="d-inline-block cursor-pointer" 
+  (click)="onClickImage()"
+  [image]="image"
+  size="80"
+  [ngClass]="image ? '' : 'border rounded-12p border-line bg-background'"
+  ></profile-image>
+  <input 
+  type="file" 
+  class="d-none" 
+  #input 
+  imageUploader 
+  accept="image/jpeg, image/png" 
+  imageType="profileImage"
+  [shrinkSize]="160"
+  (onChange)="onChange($event)"
+  (startUpload)="onStartUpload()"
+  (failUpload)="onFailUpload()"
+  (doneUpload)="onDoneUpload($event)"
+  [disabled]="isUploading"
+  >
+  <button 
+  *ngIf="image"
+  class="position-absolute btn btn-grey-light p-5p border-line"
+  style="top: -10px; right: -10px;"
+  (click)="remove()"
+  type="button"
+  >
+      <i iconPh="cross"></i>
+  </button>
+</div>

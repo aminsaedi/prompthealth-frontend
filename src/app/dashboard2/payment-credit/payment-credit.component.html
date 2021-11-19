@@ -1,0 +1,47 @@
+<h6 class="mb-40p">
+  Balance: 
+  <span 
+  *ngIf="currency"
+  [ngClass]="endingBalance < 0 ? 'text-success' : 'text-error'"
+  >
+    {{creditOf(endingBalance) | currency: currency}}
+  </span>
+</h6>
+
+<div
+*ngIf="credits?.length == 0" 
+class="text-center container"
+>
+  <img src="/assets/img/general/cards.png" alt="" style="max-width: 100%;">
+  <h6 class="text-primary-dark mt-30p">No transactions found!</h6>
+</div>  
+
+<ng-container *ngIf="credits?.length > 0">
+  <h6 class="mb-20p">Latest History</h6>
+  <ul class="list-unstyled">
+    <li 
+    *ngFor="let t of credits"
+    class="p-20p bg-background border border-line rounded-8p mb-20p"
+    >
+      <div class="subtitle1">{{createdAtOf(t.created) | date:'yyyy/MM/dd hh:mm a'}}</div>
+      <div 
+      class="subtitle1 mb-10p"
+      [ngClass]="t.amount < 0 ? 'text-success' : 'text-error'"
+      >
+        {{creditOf(t.amount) | currency: currency}}
+      </div>
+      <div class="body-small text-label">
+        {{t.description}}
+      </div>
+    </li>
+  </ul>
+
+</ng-container>
+
+
+<div 
+*ngIf="isLoading"
+class="mt-30p text-center"
+>
+  <loader></loader>
+</div>

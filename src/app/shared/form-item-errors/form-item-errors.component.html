@@ -24,6 +24,10 @@
     Please select {{controller.errors.topicsSelectedLTE}} or less topics.
   </li>
 
+  <li *ngIf="controller.errors.existAtLeast">
+    Please select at least 1
+  </li>
+
   <li *ngIf="controller.errors.matchPatternURL">
     URL is invalid. Here is sample URL.
     <ul class="mt-1 body-small">

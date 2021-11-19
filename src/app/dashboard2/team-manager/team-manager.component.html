@@ -1,0 +1,26 @@
+<h6>Add new members to your team</h6>
+
+<section class="my-15p">
+  <div class="subtitle1 mb-5p">Have your members joined to PropmptHealth?</div>
+  <p>
+    You can easily let them to join the team.
+    To do it, please share this link with your members.
+  </p>
+
+  <div class="border rounded-lg px-3 py-2 mb-2 d-flex align-items-center justify-content-end">
+    <input class="flex-grow-1 input-link text-body1" #referralLink [value]="linkToTagStaff" readonly>
+    <button-share email label="Share" btnClass="btn btn-primary small" [url]="linkToTagStaff"
+      [title]="'Join ' + user.name + ' on PromptHealth'"
+      [text]="user.name + ' invites you to the team on PromptHealth.'"></button-share>
+  </div>
+</section>
+<section class="mt-50p">
+  <div class="subtitle1 mb-5p">The user doesn't exist on PromptHealth?</div>
+  <p>
+    You can add their profile manually.
+  </p>
+  <button class="btn btn-grey-light small" (click)="showEditor()">
+    <i iconPh="plus"></i>
+    <span class="ml-5p">Add new member</span>
+  </button>
+</section>

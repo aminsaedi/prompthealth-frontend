@@ -19,6 +19,7 @@ import { FormItemCommentComponent } from './form-item-comment/form-item-comment.
 import { PopupPostMenuComponent } from './popup-post-menu/popup-post-menu.component';
 import { AudioPlayerComponent } from './audio-player/audio-player.component';
 import { QuillModule } from 'ngx-quill';
+import { AlertNotApprovedComponent } from './alert-not-approved/alert-not-approved.component';
 
 
 
@@ -38,6 +39,7 @@ import { QuillModule } from 'ngx-quill';
     FormItemCommentComponent,
     PopupPostMenuComponent,
     AudioPlayerComponent,
+    AlertNotApprovedComponent,
   ],
   imports: [
     CommonModule,
@@ -63,6 +65,7 @@ import { QuillModule } from 'ngx-quill';
     FormItemCommentComponent,
     PopupPostMenuComponent,
     AudioPlayerComponent,
+    AlertNotApprovedComponent,
   ]
 })
 export class SocialItemsModule { }

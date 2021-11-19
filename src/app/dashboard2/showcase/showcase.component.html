@@ -1,0 +1,249 @@
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p">
+  <div class="text-primary mb-40p text-center">
+    <i iconPh="apperture" style="font-size: 40px;"></i>
+    <h4 class="text-center">Showcase</h4>
+    <div class="d-inline-block body-small bg-primary-light px-15p py-5p rounded-4p mb-15p">PREMIUM</div>
+    <p>
+      Showcase of amenity and products you provide.<br>
+      Enrich your profile with image gellary
+    </p>
+  </div>
+
+  <ng-container *ngIf="!user.eligibleToManageShowcase">
+    <card-feature-not-eligible></card-feature-not-eligible>
+  </ng-container>
+
+  <ng-container *ngIf="user.eligibleToManageShowcase">
+    <div
+    *ngIf="user.doneInitShowcases && user.showcases.length == 0" 
+    class="text-center container"
+    >
+      <img src="/assets/img/general/cards.png" alt="" style="max-width: 100%;">
+      <h6 class="text-primary-dark mt-30p">No showcase yet!</h6>
+      <button
+      type="button"
+      class="btn btn-primary"
+      (click)="showEditor()"
+      >Add showcase</button>
+    </div>  
+
+    <div *ngIf="user.showcases.length > 0">
+      <ul class="list-unstyled row">
+        <li 
+        *ngFor="let showcase of user.showcases"
+        class="col-12 col-lg-6"
+        >
+          <div class="rounded-12p overflow-hidden shadow mb-20p">
+            <div class="image-container-50pc">
+              <img 
+              [src]="showcase.defaultImage" 
+              crossorigin="anonymous"
+              >
+            </div>
+            <div class="p-15p text-body">
+              <div class="subtitle1 clamp-1line mb-0">{{showcase.title}}</div>
+              <p 
+              *ngIf="showcase.description"
+              class="body1 clamp-2line mb-0 text-label"
+              >
+                {{showcase.description}}
+              </p>
+
+              <div class="d-flex justify-content-end mt-10p">
+                <button
+                type="button"
+                class="btn small btn-icon mr-15p"
+                (click)="showEditor(showcase)"
+                >
+                  <i iconPh="edit"></i>
+                </button>
+                <button
+                type="button"
+                class="btn small btn-icon-error"
+                (click)="showMenu(showcase)"
+                >
+                  <i iconPh="trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="text-center">
+        <button
+        type="button"
+        class="btn btn-inactive small"
+        (click)="showEditor()"
+        >
+          <i iconPh="plus"></i>
+          <span class="ml-5p">Add showcase</span>
+        </button>  
+      </div>
+    </div>
+  </ng-container>
+
+  <div 
+  *ngIf="isLoading"
+  class="mt-30p text-center"
+  >
+    <loader></loader>
+  </div>
+</div>
+
+<modal 
+id="showcase-editor" 
+#modalShowcaseEditor 
+[option]="{disableCloseByClickingDrop: true}"
+(onStateChanged)="onModalEditorStateChanged($event)"
+>
+  <ng-container *ngIf="formEditor">
+    <div class="title-container d-flex justify-content-between align-items-center">
+      <span class="h5 h4-md mr-3 mb-0 flex-grow-1">{{selectedShowcase ? 'Edit' : 'Add'}} showcase</span>
+      <button 
+      class="btn pr-0 btn-text-grey small" 
+      (click)="modalShowcaseEditor.hide()" 
+      type="button"
+      >
+        Cancel
+      </button>
+    </div>
+
+    <div class="content-container position-relative">
+      <form (ngSubmit)="onSubmitEditor()">
+        <div class="mb-25p">
+          <ul class="d-flex list-unstyled showcase-images justify-content-center">
+            <ng-container *ngFor="let image of fEditor.images.value; let i = index;">
+              <li class="rounded overflow-hidden">
+                <img 
+                [src]="s3 + image + '?ver=2.3'" 
+                crossorigin="anonymous"
+                >
+                <button 
+                class="btn btn-icon small btn-remove" 
+                type="button" 
+                (click)="removeShowcaseImage(i)"
+                >
+                  <i iconPh="cross"></i>
+                </button>
+              </li>
+            </ng-container>
+            <li 
+            *ngIf="imageTempInEditor"
+            class="rounded overflow-hidden"
+            >
+              <img [src]="imageTempInEditor">
+            </li>
+
+            <li 
+            class="rounded cursor-pointer"
+            (click)="onClickAddImage()"
+            >
+              <i iconPh="camera" class="icon-add"></i>
+            </li>
+            <input 
+            #inputImage 
+            type="file" 
+            class="d-none" 
+            accept="image/jpeg, image/png" 
+            imageUploader
+            imageType="showcase"
+            (onChange)="onChangeShowcaseImage($event)" 
+            (startUpload)="onStartUploadShowcaseImage()"
+            (failUpload)="onFailUploadShowcaseImage()" 
+            (doneUpload)="onDoneUploadShowcaseImage($event)"
+            [disabled]="isUploading || isUploadingImage"
+            >
+          </ul>
+
+          <form-item-errors
+          [submitted]="isEditorSubmitted"
+          [controller]="fEditor.images"
+          ></form-item-errors>
+
+        </div>
+        <div class="mb-25p">
+          <label for="name" class="text-label subtitle2">Title</label>
+          <form-item-input 
+          name="name" 
+          label="Name" 
+          placeholder="Enter title..." 
+          [submitted]="isEditorSubmitted"
+          [controller]="fEditor.title" 
+          [max]="minmax.nameMax"
+          ></form-item-input>
+        </div>
+
+        <div class="mb-25p">
+          <label for="name" class="text-label subtitle2">Price (optional)</label>
+          <form-item-input 
+          name="price" 
+          label="Price" 
+          placeholder="Enter price..." 
+          prepend="$"
+          [submitted]="isEditorSubmitted"
+          [controller]="fEditor.price" 
+          ></form-item-input>
+        </div>
+
+        <div class="mb-25p">
+          <label for="title" class="text-label subtitle2">Description (optional)</label>
+          <form-item-textarea 
+          name="description" 
+          label="Description" 
+          [submitted]="isEditorSubmitted"
+          placeholder="Introduce this member..." 
+          [controller]="fEditor.description" 
+          [max]="minmax.noteMax"
+          [option]="{rows: 8}"
+          >
+          </form-item-textarea>
+        </div>
+        <div class="text-right">
+          <input class="btn btn-primary" type="submit" value="Save" [disabled]="isUploadingImage || isUploading">
+        </div>
+      </form>
+    </div>
+  </ng-container>
+</modal>
+
+
+<modal 
+id="showcase-menu" 
+#modalShowcaseMenu 
+[bodyStyle]="{'max-width': '380px'}"
+>
+  <ng-container *ngIf="selectedShowcase">
+    <div class="text-right">
+      <button type="button" class="btn btn-icon" (click)="modalShowcaseMenu.hide()">
+        <i iconPh="cross"></i>
+      </button>
+    </div>
+    <div class="content-container text-center">
+      <div class="d-inline-block">
+        <profile-image size="70" [image]="selectedShowcase.defaultImage"></profile-image>
+      </div>
+      <div class="subtitle1 mt-20p mb-10p">Remove from your team</div>
+      <p class="body1 text-body mb-30p mb-md-60p">
+        Are you sure to remove "{{selectedShowcase.title}}"?
+      </p>
+
+      <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-error" (click)="removeShowcase(selectedShowcase)">Yes, Remove</button>
+        <button type="button" class="btn btn-outline" (click)="modalShowcaseMenu.hide()">Cancel</button>
+      </div>
+    </div>
+  </ng-container>
+</modal>
+
+<div *ngIf="!!isUploading" class="modal-view">
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Processing...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

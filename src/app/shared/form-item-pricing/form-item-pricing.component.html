@@ -1,8 +1,14 @@
 <div class="btn-group btn-group-toggle mb-3" *ngIf="!disabled">
-  <label class="btn btn-primary small mt-0" [ngClass]="{active: f.priceMode.value == 'select'}">
+  <label 
+  class="btn small mt-0" 
+  [ngClass]="f.priceMode.value == 'select' ? 'btn-primary-dark' : 'btn-primary'"
+  >
     <input type="radio" name="priceMode" id="option1" autocomplete="off" value="select" [formControl]="f.priceMode">Select a price range
   </label> 
-  <label class="btn btn-primary small mt-0" [ngClass]="{active: f.priceMode.value == 'input'}">
+  <label 
+  class="btn btn-primary small mt-0" 
+  [ngClass]="f.priceMode.value == 'input' ? 'btn-primary-dark' : 'btn-primary'"
+  >
     <input type="radio" name="priceMode" id="option2" autocomplete="off" value="input"  [formControl]="f.priceMode">Enter specific price
   </label>
 </div>
@@ -29,5 +35,6 @@
   [selections]="selectionList"
   [submitted]="submitted"
   [disabled]="disabled"
+  [option]="{showInlineWhenEnabled: true}"
   ></form-item-checkbox-group>
 </div>
