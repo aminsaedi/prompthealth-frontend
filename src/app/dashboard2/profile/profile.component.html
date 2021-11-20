@@ -1,0 +1,52 @@
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p">
+  <ng-container *ngIf="user.isU">
+    <form-client-general
+    [data]="user.decode()"
+    [disabled]="isUploading" 
+    (submitForm)="onSubmit($event)"
+    ></form-client-general>
+  </ng-container>
+
+  <ng-container *ngIf="user.isSP">
+    <form-provider-general
+    [data]="user.decode()"
+    [disabled]="isUploading" 
+    (submitForm)="onSubmit($event)"
+    ></form-provider-general>
+  </ng-container>
+
+  <ng-container *ngIf="user.isC">
+    <form-centre-general
+    [data]="user.decode()"
+    [disabled]="isUploading" 
+    (submitForm)="onSubmit($event)"
+    ></form-centre-general>
+  </ng-container>
+
+
+  <ng-container *ngIf="user.isP">
+    <form-partner-general
+    [data]="user.decode()"
+    [disabled]="isUploading" 
+    (submitForm)="onSubmit($event)"
+    ></form-partner-general>
+  </ng-container>
+
+
+
+</div>  
+
+<div 
+*ngIf="isUploading"
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Uploading...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

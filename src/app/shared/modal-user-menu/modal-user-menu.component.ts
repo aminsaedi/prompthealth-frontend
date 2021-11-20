@@ -81,7 +81,7 @@ export class ModalUserMenuComponent implements OnInit {
   onDoneUploadCoverImage(image: string) {
     this.isUploading = false;
     this.coverImageTemp = null;
-    this._profileService.update({'cover': image});
+    this.user.update({'cover': image});
   }
 
   onChangeProfileImage(image: string) {
@@ -97,7 +97,7 @@ export class ModalUserMenuComponent implements OnInit {
   onDoneUploadProfileImage(image: string) {
     this.isUploading = false;
     this.profileImageTemp = null;
-    this._profileService.update({'profileImage': image});
+    this.user.update({'profileImage': image});
   }
 
 

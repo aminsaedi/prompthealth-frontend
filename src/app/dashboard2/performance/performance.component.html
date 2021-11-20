@@ -1,0 +1,50 @@
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p text-center">
+  <div class="text-primary mb-40p">
+    <i iconPh="dashboard-2" style="font-size: 40px;"></i>
+    <h4 class="text-center">Performance Dashboard</h4>
+    <div class="d-inline-block body-small bg-primary-light px-15p py-5p rounded-4p mb-15p">PREMIUM</div>
+  </div>
+
+  <ng-container *ngIf="user.eligibleToSeePerformance">
+    <section class="mb-60p">
+      <ul class="list-unstyled row justify-content-center">
+        <li class="col-12 col-lg-6">
+          <div class="rounded-8p overflow-hidden performance-card">
+            <div class="py-15p bg-primary text-white subtitle1 text-center">
+              <i iconPh="glasses" class="large"></i>
+              <span class="ml-2">Your Profile View</span>
+            </div>
+            <div class="py-20p text-center body1">{{user.viewCount}}</div>
+          </div>
+        </li>
+      </ul>  
+    </section>
+  
+    <section>
+      <h6 class="mb-15p">Access count to your social medias</h6>
+      <ul class="list-unstyled row justify-content-center">
+        <li 
+        *ngFor="let type of ['facebook', 'twitter', 'linkedin', 'instagram', 'tiktok', 'youtube']"
+        class="col-12 col-md-6 col-lg-4 mb-20p"
+        >
+          <div class="rounded-4p overflow-hidden performance-card">
+            <div class="py-10p text-white text-center subtitle2" [ngClass]="'bg-' + type">
+              <span>
+                <i [iconPh]="type"></i>
+                <span class="ml-5p">{{type | titlecase}}</span>  
+              </span>
+            </div>
+            <div class="py-10p text-center">{{user[type + 'ClickCount'] || 0}}</div>  
+          </div>
+        </li>
+      </ul>
+    </section>
+  </ng-container>
+
+
+  <ng-container *ngIf="!user.eligibleToSeePerformance">
+    <div class="mt-50p">
+      <card-feature-not-eligible></card-feature-not-eligible>
+    </div>
+  </ng-container>
+</div>

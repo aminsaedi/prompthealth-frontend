@@ -123,7 +123,7 @@
         <img 
         *ngIf="data"
         class="eyecatch" 
-        [src]="data.image ? s3 + data.image : '/assets/img/prompthealth-4_3.png'" 
+        [src]="data.image ? s3 + data.image + '?ver=2.3': '/assets/img/prompthealth-4_3.png?ver=2.3'" 
         alt=""
         crossorigin="anonymous"
         >

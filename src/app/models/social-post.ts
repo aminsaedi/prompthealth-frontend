@@ -28,6 +28,8 @@ export interface ISocialPost {
   liked?: boolean;
   likes?: IUserDetail[];
 
+  bookmarked?: boolean;
+
   mentions?: any[];
 
   numComments?: number;
@@ -76,6 +78,8 @@ export interface ISocialPost {
   updateCommentCount?(s: number): void;
   like?(updateNumLikes?: boolean, numLikes?: number): void;
   unlike?(updateNumLikes?: boolean, numLikes?: number): void;
+  bookmark?(): void;
+  unbookmark?(): void;
   getImageTypeOf?(s: string): string;
   markAsFollow?: () => void;
   markAsUnfollow?: () => void;
@@ -138,7 +142,7 @@ export class SocialPostBase implements ISocialPost {
   get authorFollowed() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.followed) ? true : false; } 
   get author() { return (this.data.author && typeof this.data.author != 'string') ? this.data.author : null ; }
 
-  get coverImage() { return this.data.image ? this._s3 + this.data.image : (this.data.images && this.data.images.length > 0) ? this._s3 + this.data.images[0] : '/assets/img/logo-100x35-primary-light.png'; }
+  get coverImage() { return this.data.image ? this._s3 + this.data.image : (this.data.images && this.data.images.length > 0) ? this._s3 + this.data.images[0] + '?ver=2.3' : '/assets/img/logo-100x35-primary-light.png?ver=2.3'; }
   get coverImageType() { return this.getImageTypeOf(this.coverImage); }
 
   get description() { return this.data.description || ''; }
@@ -156,6 +160,7 @@ export class SocialPostBase implements ISocialPost {
   get isNews() { return this.data.isNews || false}
 
   get isLiked() { return !!this.data.liked; }
+  get isBookmarked() { return !!this.data.bookmarked; }
 
   get isMoreShown() { return !!(this._summary.length > this.summary.length); }
   get isCommentDoneInit() { return !!this._comments; }
@@ -227,6 +232,13 @@ export class SocialPostBase implements ISocialPost {
     if(changeNumLikes) {
       this.updateNumLikes(numLikes);
     }
+  }
+
+  bookmark() {
+    this.data.bookmarked = true;
+  }
+  unbookmark() {
+    this.data.bookmarked = false;
   }
 
   markAsFollow() {

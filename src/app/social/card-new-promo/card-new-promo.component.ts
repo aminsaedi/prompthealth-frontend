@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { Profile } from 'src/app/models/profile';
+import { MyProfile } from 'src/app/models/my-profile';
 import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { DateTimeData } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
@@ -24,7 +24,7 @@ export class CardNewPromoComponent implements OnInit {
   @Output() onPublished = new EventEmitter<ISocialPost>();
 
   get userImage(): string { return this.user ? this.user.profileImage : ''; }
-  get user(): Profile { return this._profileService.profile; }
+  get user(): MyProfile { return this._profileService.profile; }
   get f() { return this.form.controls; }
 
   public isEditorFocused: boolean = false;

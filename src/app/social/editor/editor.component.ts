@@ -43,7 +43,7 @@ export class EditorComponent implements OnInit {
 
   get imagePreview() {
     return this._imagePreview ? this._imagePreview :
-     this.form && this.f.image.value && typeof this.f.image.value == 'string' ? this._s3 + this.f.image.value : 
+     this.form && this.f.image.value && typeof this.f.image.value == 'string' ? this._s3 + this.f.image.value + '?ver=2.3' : 
       null;
   }
 

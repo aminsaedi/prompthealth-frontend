@@ -1,0 +1,40 @@
+<section>
+  <ul *ngIf="user.staffs.length > 0" class="list-unstyled">
+    <li *ngFor="let staff of user.staffs;" class="d-flex mb-25p">
+      <div class="d-lg-flex align-items-center flex-grow-1 justify-content-between ml-15p">
+        <div class="d-flex">
+          <profile-image size=60 [image]="staff.profileImage"></profile-image>
+          <div class="ml-20p">
+            <div class="subtitle1">{{staff.name}}</div>
+            <div class="subtitle2">{{staff.title}}</div>
+            <p class="body2 text-label clamp-2line mb-0">{{staff.description}}</p>
+          </div>  
+        </div>
+        <div class="text-nowrap mt-10p mt-0p ml-lg-15p text-right">
+          <a *ngIf="!staff.isStatic" class="btn btn-outline small text-nowrap"
+            [routerLink]="staff.linkToProfile">See profile</a>
+
+          <button 
+          *ngIf="staff.isStatic" 
+          class="btn btn-icon small text-nowrap" 
+          (click)="showEditor(staff)"
+          >
+            <i iconPh="edit"></i>
+          </button>
+
+          <button class="btn btn-icon-error small ml-10p" (click)="showMenu(staff)">
+            <i iconPh="trash"></i>
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <div *ngIf="user.doneInitStaffs && user.staffs.length == 0" class="subtitle1">
+    You have no team members yet.
+  </div>
+
+  <div *ngIf="isLoading" class="mt-15p text-center">
+    <loader></loader>
+  </div>
+</section>

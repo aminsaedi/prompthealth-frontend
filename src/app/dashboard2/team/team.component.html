@@ -1,0 +1,170 @@
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p mb-40p">
+  <div class="text-primary text-center">
+    <i iconPh="users" style="font-size: 40px;"></i>
+    <h4 class="text-center">Team</h4>
+    <div class="d-inline-block body-small bg-primary-light px-15p py-5p rounded-4p mb-15p">PREMIUM</div>
+    <p>
+      Connect with your team member<br>
+      Enhance exposure to clients together.
+    </p>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center border-bottom border-line mb-15p">
+  <a
+  class="text-body subtitle1 btn btn-text px-0 small"
+  [ngClass]="(rla2.isActive ? 'active' : '')"
+  routerLink="./list"
+  #rla2="routerLinkActive"
+  routerLinkActive
+  [routerLinkActiveOptions]="{exact: true}"
+  [replaceUrl]="true"
+  >List</a>
+  
+  <a
+  *ngIf="!user?.isU"
+  class="text-body subtitle1 btn btn-text px-0 small ml-30p"
+  [ngClass]="(rla1.isActive ? 'active' : '')"
+  routerLink="./manage"
+  #rla1="routerLinkActive"
+  routerLinkActive
+  [routerLinkActiveOptions]="{exact: true}"
+  [replaceUrl]="true"
+  >Add new member</a>
+</div>
+
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p">
+  <ng-container *ngIf="!user.eligibleToManageTeam">
+    <div class="mt-50p">
+      <card-feature-not-eligible></card-feature-not-eligible>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="user.eligibleToManageTeam">
+    <router-outlet></router-outlet>
+  </ng-container>
+</div>
+
+<modal 
+id="staff-editor" 
+#modalAddStaff 
+[option]="{disableCloseByClickingDrop: true}"
+(onStateChanged)="onModalEditorStateChanged($event)"
+>
+  <ng-container *ngIf="formEditor">
+    <div class="title-container d-flex justify-content-between align-items-center">
+      <span class="h5 h4-md mr-3 mb-0 flex-grow-1">{{selectedStaff ? 'Edit' : 'Add'}} member</span>
+      <button 
+      class="btn pr-0 btn-text-grey small" 
+      (click)="modalAddStaff.hide()" 
+      type="button"
+      >
+        Cancel
+      </button>
+    </div>
+
+    <div class="content-container position-relative">
+      <form (ngSubmit)="onSubmitEditor()">
+        <div class="mb-10p text-center">
+          <div class="d-inline-block position-relative">
+            <profile-image class="d-inline-block cursor-pointer" (click)="onClickStaffImage()"
+              [image]="staffImageInEditor" size="60"
+              [ngClass]="staffImageInEditor ? '' : 'border rounded-8p border-line bg-background'"></profile-image>
+            <input 
+            type="file" 
+            class="d-none" 
+            #inputStaffImage 
+            imageUploader  
+            [shrinkSize]="160"
+            imageType="staff"
+            accept="image/jpeg, image/png" 
+            (onChange)="onChangeStaffImage($event)" 
+            (startUpload)="onStartUploadStaffImage()"
+            (failUpload)="onFailUploadStaffImage()" 
+            (doneUpload)="onDoneUploadStaffImage($event)"
+            [disabled]="isUploading"
+            >
+            <button 
+            *ngIf="staffImageInEditor" 
+            type="button"
+            class="position-absolute btn btn-grey-light p-5p border-line"
+            style="top: -10px; right: -10px;" 
+            (click)="removeStaffImage()"
+            >
+              <i iconPh="cross"></i>
+            </button>
+          </div>
+
+        </div>
+        <div class="mb-10p">
+          <label for="name" class="text-label subtitle2">Name *</label>
+          <form-item-input name="name" label="Name" placeholder="Enter name..." [submitted]="isEditorSubmitted"
+            [controller]="fEditor.firstName" [max]="minmax.nameMax"></form-item-input>
+        </div>
+        <div class="mb-10p">
+          <label for="title" class="text-label subtitle2">Title</label>
+          <form-item-input name="title" label="Title" placeholder="Yoga instructor / ..."
+            [submitted]="isEditorSubmitted" [controller]="fEditor.professional_title"
+            [max]="minmax.professionalTitleMax"></form-item-input>
+        </div>
+        <div class="mb-25p">
+          <label for="title" class="text-label subtitle2">Description</label>
+          <form-item-textarea 
+          name="description" 
+          label="Description" 
+          [submitted]="isEditorSubmitted"
+          placeholder="Introduce this member..." 
+          [controller]="fEditor.product_description" 
+          [max]="minmax.noteMax"
+          [option]="{rows: 8}"
+          >
+          </form-item-textarea>
+        </div>
+        <div class="text-right">
+          <input class="btn btn-primary" type="submit" value="Save" [disabled]="isStaffImageUploading || isUploading">
+        </div>
+      </form>
+    </div>
+  </ng-container>
+</modal>
+
+
+<modal 
+id="staff-menu" 
+#modalStaffMenu 
+[bodyStyle]="{'max-width': '380px'}"
+>
+  <ng-container *ngIf="selectedStaff">
+    <div class="text-right">
+      <button class="btn btn-icon" (click)="modalStaffMenu.hide()">
+        <i iconPh="cross"></i>
+      </button>
+    </div>
+    <div class="content-container text-center">
+      <div class="d-inline-block">
+        <profile-image size="70" [image]="selectedStaff.profileImage"></profile-image>
+      </div>
+      <div class="subtitle1 mt-20p mb-10p">Remove from your team</div>
+      <p class="body1 text-body mb-30p mb-md-60p">
+        Are you sure to remove "{{selectedStaff.name}}"?
+      </p>
+
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-error" (click)="removeStaff(selectedStaff)">Yes, Remove</button>
+        <button class="btn btn-outline" (click)="modalStaffMenu.hide()">Cancel</button>
+      </div>
+    </div>
+  </ng-container>
+</modal>
+
+<div *ngIf="!!isUploading" class="modal-view">
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Processing...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

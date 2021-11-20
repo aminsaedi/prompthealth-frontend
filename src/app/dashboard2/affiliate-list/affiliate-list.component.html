@@ -1,0 +1,22 @@
+<h6 class="mb-40p">Invitations you sent</h6>
+
+<ul class="list-unstyled row">
+  <li 
+  *ngFor="let user of affiliateUsers;"
+  class="col-12 col-lg-6"
+  >
+    <div class="bg-background border-line border rounded-8p p-20p">
+      <div class="subtitle1">{{fullnameOf(user)}}</div>
+      <div class="body-small text-label clamp-1line">{{user.email}}</div>
+      <div class="d-inline-block px-10p py-5p bg-primary text-white rounded-4p body-small mt-5p">
+        <span *ngIf="user.role == 'SP'">Solo provider</span>
+        <span *ngIf="user.role == 'C'">Centre</span>
+      </div>
+    </div>
+  </li>
+</ul>
+
+
+<div *ngIf="isLoading" class="mt-15p text-center">
+  <loader></loader>
+</div>

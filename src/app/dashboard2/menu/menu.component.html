@@ -1,0 +1,81 @@
+<ul class="bg-white px-20p rounded-8p list-unstyled">
+  <ng-container *ngFor="let menu of menus; let i = index">
+    <li>
+      <ng-container>
+        <a 
+        [routerLink]="[menu.id]"
+        #rla="routerLinkActive" 
+        routerLinkActive 
+        [ngClass]="(rla.isActive ? 'text-primary-dark' : 'text-body')" 
+        >
+          <list-item
+          [leading]="menu.icon"
+          [leadingClass]="rla.isActive ? 'text-primary' : 'text-label'"
+          [action]="sizeS ? 'chevron-right' : ''"
+          [actionClass]="rla.isActive ? 'text-primary' : 'text-label'"
+          >
+            <div class="subtitle1">{{menu.title}}</div>
+          </list-item>
+        </a>
+      </ng-container>
+    </li>
+  </ng-container>
+  <li>
+    <list-item 
+    leading="sign-out"
+    leadingClass="text-label"
+    (click)="modalLogoutAlert.show()"
+    >
+      <div class="subtitle1">Log Out</div>
+    </list-item>
+  </li>
+  <li>
+    <a
+    [routerLink]="[linkToPH]" 
+    class="d-flex align-items-center py-20p"
+    >
+      <div>
+        <img src="/assets/img/logo-sm-white.png" style="width: 20px;" class="mr-5p">
+      </div>
+      <div class="subtitle1 text-body">PromptHealth</div>
+    </a>
+  </li>
+</ul>
+
+<modal
+id="logout-alert"
+[bodyStyle]="{maxWidth: '450px'}"
+#modalLogoutAlert
+>
+  <div class="text-right">
+    <button class="btn pr-0 btn-icon" (click)="modalLogoutAlert.hide()">
+      <i iconPh="cross"></i>
+    </button>  
+  </div>
+
+  <div class="content-container text-center pb-50p">
+    <div class="d-inline-block">
+      <profile-image [image]="user.profileImage" size="70"></profile-image>
+    </div>
+
+    <div class="subtitle1 mt-20p mb-10p">
+      Log Out
+    </div>
+
+    <div class="body1 text-label">
+      Are you sure you want to log out?
+    </div>
+
+    <div class="d-flex justify-content-between mt-40p">
+      <button 
+      class="btn btn-primary"
+      (click)="onClickLogout()"
+      >Yes, Log Out</button>
+      <button 
+      class="btn btn-text-grey"
+      (click)="modalLogoutAlert.hide()"
+      >Cancel</button>
+    </div>
+  </div>
+</modal>
+

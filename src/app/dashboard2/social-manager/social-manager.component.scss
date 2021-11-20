@@ -1,0 +1,12 @@
+@import '../../../assets/scss/variables';
+
+ul.social-list li:not(:last-child) {
+  border-bottom: solid 1px;
+}
+
+.title {
+  @media (min-width: $breakpointLg) {
+    display: inline-block;
+    width: 80px;  
+  }
+}

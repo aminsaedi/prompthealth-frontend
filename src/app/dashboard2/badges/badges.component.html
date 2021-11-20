@@ -1,0 +1,217 @@
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p">
+  <div class="text-primary mb-40p text-center">
+    <i iconPh="award" style="font-size: 40px;"></i>
+    <h4 class="text-center">Badges</h4>
+    <div class="d-inline-block body-small bg-primary-light px-15p py-5p rounded-4p mb-15p">PREMIUM</div>
+    <p>
+      Get badges from PromptHealth.<br>
+      Show badges to everyone to prove your success.
+    </p>
+  </div>
+
+  <ng-container *ngIf="!user.eligibleToManageBadge">
+    <card-feature-not-eligible></card-feature-not-eligible>
+  </ng-container>
+
+  <ng-container *ngIf="user.eligibleToManageBadge">
+    <div class="row justify-content-center">
+
+      <div class="col-12 col-lg-6 mb-20p">
+        <div
+        class="px-10p py-20p border rounded-8p text-center h-100"
+        [ngClass]="{'border-success-dark bg-success-light text-success-dark': verifiedBadgeStatus == 'approved', 'border-yellow-dark bg-yellow-light text-yellow-dark': verifiedBadgeStatus == 'pending', 'border-line bg-background text-body': verifiedBadgeStatus == 'notApplied' }"
+        >
+          <div class="mb-10p">
+            <i iconPh="verified" style="font-size: 40px" class="text-primary"></i>
+            <div class="subtitle1 mt-10p text-body">Verified Badge</div>
+          </div>
+
+          <ng-container *ngIf="isLoadingVerifiedBdage">
+            <div class="mt-50p">
+              <loader></loader>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="!isLoadingVerifiedBdage">
+            <div class="body1">
+              <i [iconPh]="verifiedBadgeStatusIcon"></i>
+              <span class="ml-5p">{{verifiedBadgeStatusFormatted}}</span>
+            </div>
+            <div class="mt-10p">
+              <div 
+              *ngIf="verifiedBadgeStatus == 'pending'"
+              class="d-flex justify-content-center"
+              >
+                <button 
+                class="btn btn-black small mr-25p "
+                (click)="showEditor(certificateForVerifiedBadge)"
+                >Edit</button>
+
+                <button 
+                class="btn btn-error small"
+                (click)="showMenu(certificateForVerifiedBadge)"
+                >Withdraw</button>  
+              </div>
+
+              <button 
+              *ngIf="verifiedBadgeStatus == 'notApplied'"
+              class="btn btn-black small"
+              (click)="showEditor(certificateForVerifiedBadge)"
+              >Apply</button>
+            </div>  
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<modal 
+id="badge-editor" 
+#modalBadgeEditor 
+[option]="{disableCloseByClickingDrop: true}"
+(onStateChanged)="onModalEditorStateChanged($event)"
+>
+  <ng-container *ngIf="formEditor">
+    <div class="title-container d-flex justify-content-between align-items-center">
+      <span class="h5 h4-md mr-3 mb-0 flex-grow-1">{{selectedCertificate ? 'Edit application' : 'Apply for new badge'}}</span>
+      <button 
+      type="button"
+      class="btn pr-0 btn-text-grey small" 
+      (click)="modalBadgeEditor.hide()" 
+      type="button"
+      >
+        Cancel
+      </button>
+    </div>
+
+    <div class="content-container position-relative">
+      <form (ngSubmit)="onSubmitEditor()">
+        <div class="mb-10p text-center">
+          
+
+        </div>
+        <div class="mb-10p">
+          <label for="name" class="text-label subtitle2">Document Name</label>
+          <form-item-input name="name" label="Name" placeholder="Enter name..." [submitted]="isEditorSubmitted"
+            [controller]="fEditor.title" [max]="minmax.nameMax"></form-item-input>
+        </div>
+
+        <div class="mb-10p">
+          <label for="title" class="text-label subtitle2">Description</label>
+          <form-item-textarea 
+          name="description" 
+          label="Description" 
+          [submitted]="isEditorSubmitted"
+          placeholder="Introduce this member..." 
+          [controller]="fEditor.description" 
+          [max]="minmax.noteMax"
+          [option]="{rows: 8}"
+          >
+          </form-item-textarea>
+        </div>
+        <div class="mb-25p">
+          <div class="text-label subtitle2">Certificate document</div>
+          <ul class="list-unstyled justify-content-center">
+            <ng-container *ngFor="let certificate of fEditor.certificateFiles.value; let i = index;">
+              <li class="rounded overflow-hidden body2 d-flex justify-content-between align-items-center">
+                <div class="flex-grow-1 body2 clamp-1line">
+                  <i iconPh="file"></i>
+                  <span class="ml-5p">{{filenameOf(i)}}</span>
+                </div>
+                <div>
+                  <button
+                  *ngIf="isFileDownloadable(i)"
+                  type="button"
+                  class="btn btn-icon small ml-5p"
+                  (click)="downloadCertificateFile(i)"
+                  >
+                    <i iconPh="file-download"></i>
+                  </button>  
+                  <button
+                  *ngIf="!isFileDownloadable(i)"
+                  type="button"
+                  class="btn btn-icon-error small ml-5p"
+                  (click)="removeCertificateFile(i)"
+                  >
+                    <i iconPh="trash"></i>
+                  </button>  
+                </div>
+              </li>
+            </ng-container>
+
+            <li 
+            *ngIf="isUploadingFile"
+            class="rounded overflow-hidden"
+            >
+              <loader class="position: absolute;" style="top: 50%; left: 50%; transform: trasnlate(-50%, -50%)"></loader>
+            </li>
+          </ul>
+          <button 
+          type="button"
+          class="btn btn-outline small" 
+          (click)="onClickAddFile()"
+          >
+            <i iconPh="plus"></i>
+            <span class="ml-5p">Add file</span>
+          </button>
+          <input 
+          #inputFile
+          type="file" 
+          class="d-none" 
+          accept="image/jpeg, image/x-png, image/png, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf" 
+          [disabled]="isUploading || isUploadingFile"
+          (change)="onSelectFile($event)"
+          >
+
+          <div class="mt-5p">
+            <form-item-errors
+            [submitted]="isEditorSubmitted"
+            [controller]="fEditor.certificateFiles"
+            ></form-item-errors>
+          </div>
+        </div>
+        <div class="text-right">
+          <input class="btn btn-primary" type="submit" value="Save" [disabled]="isUploading">
+        </div>
+      </form>
+    </div>
+  </ng-container>
+</modal>
+
+<modal 
+id="badge-menu" 
+#modalBadgeMenu 
+[bodyStyle]="{'max-width': '380px'}"
+>
+  <ng-container *ngIf="selectedCertificate">
+    <div class="text-right">
+      <button type="button" class="btn btn-icon" (click)="modalBadgeMenu.hide()">
+        <i iconPh="cross"></i>
+      </button>
+    </div>
+    <div class="content-container text-center">
+      <h5 class="mb-10p">Withdraw the application</h5>
+      <p class="body1 text-body mb-30p mb-md-60p">
+        Are you sure to withdraw "{{selectedCertificate.title}}"?
+      </p>
+
+      <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-error" (click)="removeCertificate(selectedCertificate)">Yes, Withdraw</button>
+        <button type="button" class="btn btn-outline" (click)="modalBadgeMenu.hide()">Cancel</button>
+      </div>
+    </div>
+  </ng-container>
+</modal>
+
+<div *ngIf="!!isUploading" class="modal-view">
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Processing...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

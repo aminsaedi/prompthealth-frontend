@@ -19,9 +19,9 @@ import { SocialService } from '../social.service';
 })
 export class BaseComponent implements OnInit {
 
-  get userId() { return this.user ? this.user._id : ''; }
-  get userRole() { return this.user ? this.user.role : 'U'; }
-  get userName() { return this.user ? this.user.nickname : ''; }
+  get userId() { return this.user._id; }
+  get userRole() { return this.user.role || 'U'; }
+  get userName() { return this.user.nickname; }
   get user() { return this._profileService.profile; }
 
 
@@ -38,7 +38,6 @@ export class BaseComponent implements OnInit {
   public isDeletingContent: boolean = false;
 
   private isPopState: boolean = false;
-  public isMessageBeingApprovedShownIfNeeded = true;
   
   private subscriptionRouterEvent: Subscription; 
   
@@ -68,8 +67,6 @@ export class BaseComponent implements OnInit {
     if(!this._uService.isServer) {
       this.scrollToTop();
     }
-
-    this.isMessageBeingApprovedShownIfNeeded = !this._uService.sessionStorage.getItem('hide_alert_being_approved');
     
     this.urlPrev = this.getURLset();
 
@@ -133,11 +130,6 @@ export class BaseComponent implements OnInit {
     if(state == 'done') {
       this._modalService.hide();        
     }
-  }
-
-  onClickAlertBeingApproved() {
-    this._uService.sessionStorage.setItem('hide_alert_being_approved', 'true');
-    this.isMessageBeingApprovedShownIfNeeded = false;
   }
 
   onClickDeleteContent(p: ISocialPost) {

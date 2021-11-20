@@ -1,0 +1,330 @@
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p">
+  
+  <ng-container *ngIf="viewType == 'client'">
+    <h4>
+      Bookings with wellness providers
+    </h4>
+  </ng-container>
+
+  <ng-container *ngIf="viewType == 'provider'">
+    <div class="text-primary mb-40p text-center">
+      <i iconPh="inbox-filled" style="font-size: 40px;"></i>
+      <h4 class="text-center">Bookings with clients</h4>
+      <div class="d-inline-block body-small bg-primary-light px-15p py-5p rounded-4p mb-15p">PREMIUM</div>
+      <p>
+        Clients are waiting for your help.<br>
+        Find their contact here and connect.
+      </p>
+    </div>
+  </ng-container>
+  
+  <ng-container *ngIf="!eligibleToShowBookings">
+    <div class="mt-50p">
+      <card-feature-not-eligible></card-feature-not-eligible>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="eligibleToShowBookings">
+    <section *ngIf="!bookingsAll || bookingsAll.length > 0 || !!currentSearch">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="subtitle1">
+          <ng-container *ngIf="bookings">
+            <span>{{totalBookingCount}} </span>
+            <span class="text-label">
+              Book<ng-container *ngIf="bookings.length > 1">s</ng-container>
+            </span>
+          </ng-container>
+        </div>
+    
+        <div
+        class="position-relative"
+        (clickOutside)="hidePopupSort()"
+        >
+          <button
+          class="btn small"
+          [ngClass]="order ? 'btn-primary' : 'btn-inactive'"
+          (click)="togglePopupSort()"
+          >
+            <i [iconPh]="iconSortBy"></i>
+            <span class="ml-5p">{{labelSortBy}}</span>
+          </button>
+    
+          <div
+          *ngIf="isPopupSortShown"
+          class="position-absolute p-15p bg-background rounded-8p border border-line"
+          style="z-index: 90; right: 0; top: calc(100% + 15px);"
+          [@expandVertical]
+          >
+            <button
+            class="btn text-nowrap small mb-10p"
+            [class]="{'btn-text': (order == 'desc'), 'btn-text-body': (order == 'asc')}"
+            (click)="changeSortBy('desc')"
+            >Latest</button>
+            <button
+            class="btn text-nowrap small"
+            [class]="{'btn-text': (order == 'asc'), 'btn-text-body': (order == 'desc')}"
+            (click)="changeSortBy('asc')"
+            >Oldest</button>
+          </div>
+        </div>
+      </div>
+    
+      <div class="mt-30p">
+        <form-item-input
+        name="search"
+        label="Search"
+        placeholder="Search..."
+        prependIcon="search"
+        autocapitalize="off"
+        [controller]="searchForm"
+        (onChangeValue)="onChangeSearch($event)"
+        ></form-item-input>
+      </div>
+    
+      <ul class="list-unstyled row">
+        <li
+        *ngFor="let b of bookings;"
+        class="my-20p my-lg-30p col-12"
+        >
+          <div class="d-flex align-items-start justify-content-between">
+            <ng-container *ngIf="viewType == 'client'">
+              <div class="d-inline-flex align-items-start flex-shrink-1">
+                <profile-image [size]="42" [image]="b.provider.profileImage"></profile-image>
+                <div class="mx-10p">
+                  <div class="subtitle2 clamp-1line">
+                    <span>{{b.provider.name}}</span>
+                    <i iconPh="verified" *ngIf="b.provider.isVerified" class="ml-5p text-primary"></i>
+                  </div>
+                  <div class="body2 text-label">
+                  {{b.createdAt | timeago}}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button
+                class="btn btn-outline small text-nowrap"
+                (click)="onclickDetail(b, false)"
+                >See detail</button>
+              </div>
+            </ng-container>
+    
+            <ng-container *ngIf="viewType == 'provider'">
+              <div class="d-inline-flex align-items-start flex-shrink-1">
+                <div
+                class="align-self-center"
+                style="flex: 0 0 15px"
+                >
+                  <div
+                  *ngIf="!b.isRead"
+                  class="circle-for-unread circle-primary position-relative"
+                  style="width: 7px; height: 7px;"
+                  ></div>
+                </div>
+                <profile-image [size]="42" [image]="b.patientProfileImage"></profile-image>
+                <div class="mx-10p">
+                  <div class="subtitle2 clamp-1line">{{b.patientName}}</div>
+                  <div class="body2 text-label text-nowrap">
+                    {{b.createdAt | timeago}}
+                    <ng-container *ngIf="b.isUrgent">
+                      ・
+                      <span class="body2 text-error">Urgent</span>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button
+                class="btn btn-outline small text-nowrap"
+                (click)="onclickDetail(b, true)"
+                >See detail</button>
+              </div>
+            </ng-container>
+          </div>
+        </li>
+      </ul>
+    </section>
+    
+    <section *ngIf="bookingsAll?.length == 0">
+      <div class="text-center container">
+        <img src="/assets/img/general/cards.png" alt="" style="max-width: 100%;">
+        <h6 class="text-primary-dark mt-30p">No bookings yet!</h6>
+        <a
+        *ngIf="viewType == 'client'"
+        class="btn btn-primary mt-30p"
+        routerLink="/practitioners"
+        >Find practitioners</a>
+      </div>
+    </section>
+    
+    <div
+    *ngIf="isLoading"
+    class="text-center mt-30p"
+    >
+      <loader></loader>
+    </div>
+    
+    <div class="text-right">
+      <button
+      *ngIf="isMoreBookings && !isLoading"
+      class="btn btn-primary"
+      (click)="fetchBookings()"
+      >See more</button>
+    </div>
+  </ng-container>
+</div>
+
+
+<modal 
+id="booking-detail" 
+#modalBookingDetail
+>
+  <ng-container *ngIf="selectedBooking">
+    <ng-container *ngIf="viewType == 'client'">
+      <div class="d-flex justify-content-between">
+        <button 
+        class="btn pl-0 btn-icon-error small"
+        (click)="toggleDetailDeleteMode(true)"
+        >
+          <i iconPh="trash"></i>
+        </button>  
+        <button 
+        class="btn pr-0 btn-icon small"
+        (click)="modalBookingDetail.hide()"
+        >
+          <i iconPh="cross"></i>
+        </button>  
+      </div>
+    
+      <div class="text-center">
+        <div class="d-inline-block">
+          <profile-image [size]="42" [image]="selectedBooking.provider.profileImage"></profile-image>
+        </div>
+        <div class="subtitle1 mb-20p">
+          {{selectedBooking.provider.name}}
+        </div>
+      </div>
+    
+      <div
+      *ngIf="!isDetailDeleteMode" 
+      class="content-container body1 mt-40p"
+      >
+        <div class="mb-20p">
+          <b>Create date: </b>
+          <span class="text-label">{{selectedBooking.createdAt | date : 'yyyy/MM/dd'}}</span>
+        </div>
+        <div class="mb-20p">
+          <b>Priority: </b>
+          <span *ngIf="selectedBooking.isUrgent" class="text-error">Urgent</span>
+          <span *ngIf="!selectedBooking.isUrgent"class="text-label">Not urgent</span>
+        </div>
+        <div class="mb-20p">
+          <b>Status: </b>
+          <span *ngIf="selectedBooking.isRead" class="text-label">Read</span>
+          <span *ngIf="!selectedBooking.isRead"class="text-label">Unread</span>
+        </div>
+
+        <div>
+          <div class="subtitle1">Note:</div>
+          <p 
+          class="text-label" 
+          style="white-space: pre-wrap;"
+          >{{selectedBooking.note}}</p>
+        </div>
+      </div>
+
+      <div 
+      *ngIf="isDetailDeleteMode"
+      class="content-container body1 mt-40p text-center"
+      >
+        <h6>Are you sure to cancel this booking?</h6>
+        <div class="mt-50p d-flex justify-content-between">
+          <button 
+          class="btn btn-primary"
+          (click)="delete(selectedBooking)"
+          >Yes, cancel</button>
+          <button 
+          class="btn btn-text"
+          (click)="toggleDetailDeleteMode(false)"
+          >No</button>
+        </div>
+      </div>
+
+      <div 
+      *ngIf="isDeleting"
+      class="position-absolute px-50p pt-30p pb-20p bg-body text-center rounded-12p"
+      style="top:50%; left: 50%; transform: translate(-50%, -50%)"
+      >
+        <div class="d-inline-block">
+          <loader color="white"></loader>
+        </div>
+        <h6 class="text-white mt-20p mb-0p">Deleting</h6>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="viewType == 'provider'">
+      <div class="text-right">
+        <button 
+        class="btn pr-0 btn-icon small"
+        (click)="modalBookingDetail.hide()"
+        >
+          <i iconPh="cross"></i>
+        </button>  
+      </div>
+    
+      <div class="text-center">
+        <div class="d-inline-block">
+          <profile-image [size]="42" [image]="selectedBooking.patientProfileImage"></profile-image>
+        </div>
+        <div class="subtitle1 mb-20p">
+          {{selectedBooking.patientName}}
+        </div>
+  
+        <div class="d-flex justify-content-center">
+          <a 
+          class="btn btn-primary small mx-15p w-100" 
+          style="flex: 1 1 40%"
+          [href]="'tel:' + selectedBooking.patientPhone"
+          >
+            <i iconPh="smartphone"></i>
+            <span class="ml-5p">Call</span>
+          </a>
+          <a 
+          class="btn btn-outline small mx-15p w-100"
+          style="flex: 1 1 40%"
+          [href]="'mailto:' + selectedBooking.patientEmail"
+          >
+            <i iconPh="email"></i>
+            <span class="ml-5p">E-mail</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="content-container body1 mt-40p">
+        <div class="mb-20p">
+          <b>Create date: </b>
+          <span class="text-label">{{selectedBooking.createdAt | date : 'yyyy/MM/dd'}}</span>
+        </div>
+        <div class="mb-20p">
+          <b>Phone number: </b>
+          <span class="text-label">{{selectedBooking.patientPhone}}</span>
+        </div>
+        <div class="mb-20p">
+          <b>Email: </b>
+          <span class="text-label">{{selectedBooking.patientEmail}}</span>
+        </div>
+        <div class="mb-20p">
+          <b>Priority: </b>
+          <span *ngIf="selectedBooking.isUrgent" class="text-error">Urgent</span>
+          <span *ngIf="!selectedBooking.isUrgent"class="text-label">Not urgent</span>
+        </div>
+        <div>
+          <div class="subtitle1">Note:</div>
+          <p 
+          class="text-label" 
+          style="white-space: pre-wrap;"
+          >{{selectedBooking.note}}</p>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</modal>

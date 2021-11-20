@@ -1,89 +1,54 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="row mb-4">
-    <label class="col-md-4" for="name">
-      Cover photo
-    </label>
-    <div class="col-md-8">
-      <form-item-upload-image-button
-      [userid]="data?._id"
-      label="Cover photo"
-      [disabled]="disabled"
-      [submitted]="isSubmitted"
-      [controller]="f.profileImage"
-      (changeImage)="onChangeImage($event)"
-      ></form-item-upload-image-button>
-    </div>
+  <div class="text-center mb-40p">
+    <form-item-profile-image
+    [controller]="f.profileImage"
+    (onStartUploading)="onStartUploadingProfileImage()"
+    (onFailUploading)="onDoneUploadingProfileImage()"
+    (onDoneUploading)="onDoneUploadingProfileImage()"
+    ></form-item-profile-image>  
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4" for="firstName">
-      Company name 
-      <span class="text-danger">*</span>
-    </label>
-    <div class="col-md-8">
-      <form-item-place
-      name="firstName"
-      label="Company name"
-      type="text"
-      [controllerGroup]="form"
-      [max]="maxName"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      (selectPlace)="onChangePlace()"
-      ></form-item-place>
+  <div class="mb-40p">
+    <label for="firstName" class="subtitle2">Company name</label>
+    <form-item-place
+    name="firstName"
+    label="Company name"
+    type="text"
+    [controllerGroup]="form"
+    [max]="maxName"
+    [submitted]="isSubmitted"
+    (selectPlace)="onChangePlace()"
+    ></form-item-place>
 
-      <div *ngIf="!disabled && !f.placeId.value" class="p-3 bg-background mt-10p">
+    <div 
+    *ngIf="!f.placeId.value" 
+    class="py-10p px-20p bg-primary-light border-left border-primary text-primary-dark mt-10p d-flex rounded-4p"
+    style="border-width: 5px!important;"
+    >
+      <i iconPh="info" class="text-primary"></i>
+      <span class="d-inline-block ml-5p body2">
         You can connect to Google Business account. To connect, enter business name and select from suggestion.
-      </div>
-
+      </span>
     </div>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4">
-      Category
-      <span class="text-danger">*</span>
-    </label>
-    <div class="col-md-8">
-      <form-item-checkbox-group
-      #formCompanyType
-      id="company_type"
-      label="Category"
-      [data]="data?.company_type || []"
-      [controller]="f.company_type"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      [selections]="companyTypeItems"
-      [option]="{showInlineWhenEnabled: true}"
-      ></form-item-checkbox-group>
-    </div>
+  <div class="mb-40p">
+    <label for="company_type" class="subtitle2">Category</label>
+    <form-item-checkbox-group
+    #formCompanyType
+    id="company_type"
+    label="Category"
+    [data]="data?.company_type || []"
+    [controller]="f.company_type"
+    [submitted]="isSubmitted"
+    [selections]="companyTypeItems"
+    [option]="{showInlineWhenEnabled: true}"
+    ></form-item-checkbox-group>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4" for="description">
-      Description
-      <span class="text-danger">*</span>
-    </label>
-    <div class="col-md-8">
-      <form-item-textarea
-      name="description"
-      label="Description"
-      placeholder="Tell a little bit about your company"
-      [controller]="f.product_description"
-      [max]="maxTextarea"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      ></form-item-textarea>
-    </div>
-  </div>
-
-  <div class="row mb-4">
-    <label class="col-md-4" for="email">
-      Email<br>
-      (No one will see)
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
+  <div class="mb-40p row">
+    <div class="col-12 col-lg-6 mb-40p mb-lg-0p">
+      <label for="email" class="subtitle2">Email</label>
       <form-item-input 
       name="email"
       label="Email" 
@@ -95,63 +60,33 @@
       [disabled]="true"
       ></form-item-input>
     </div>
-  </div>
-
-  <!-- <div class="row mb-4">
-    <label class="col-md-4" for="email">
-      Email to display
-    </label>
-    <div class="col-md-8">
-      <form-item-input 
-      name="displayEmail"
-      label="Email to display" 
-      type="email"
-      [controller]="f.displayEmail"
-      [submitted]="isSubmitted" 
-      [disabled]="disabled"
-      autocapitalize="off"
-      autocomplete="email"
-      ></form-item-input>
-    </div>
-  </div> -->
-
-  <div class="row mb-4">
-    <label class="col-md-4" for="phone">
-      Phone Number 
-    </label>
-    <div class="col-md-8">
+    <div class="col-12 col-lg-6">
+      <label for="phone" class="subtitle2">Phone Number (optional)</label>
       <form-item-input 
       name="phone"
       label="Phone number" 
       type="tel"
       [controller]="f.phone" 
       [submitted]="isSubmitted" 
-      [disabled]="disabled || f.placeId.value"
+      [disabled]="f.placeId.value"
       ></form-item-input>           
     </div>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4" for="address">
-      Location 
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
+  <div class="mb-40p row">
+    <div class="col-12 col-lg-6  mb-40p mb-lg-0p">
+      <label for="address" class="subtitle2">Location (optional)</label>
       <form-item-address
       name="address"
       label="Location" 
       [controllerGroup]="form" 
       [submitted]="isSubmitted"
-      [disabled]="disabled || f.placeId.value"
-      ></form-item-address>
+      [disabled]="f.placeId.value"
+      ></form-item-address>  
     </div>
-  </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4" for="website">
-      Website Link 
-    </label>
-    <div class="col-md-8">
+    <div class="col-12 col-lg-6">
+      <label for="website" class="subtitle2">Website (optional)</label>
       <form-item-input 
       name="website"
       label="Website Link" 
@@ -160,27 +95,46 @@
       autocapitalize="off"
       [controller]="f.website" 
       [submitted]="isSubmitted" 
-      [disabled]="disabled || f.placeId.value"
-      ></form-item-input>       
+      [disabled]="f.placeId.value"
+      ></form-item-input>     
     </div>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4" for="message">
-      Message to platform
-    </label>
-    <div class="col-md-8">
-      <form-item-textarea
-      name="message"
-      label="Message"
-      [controller]="f.messageToPlatform"
-      [max]="maxTextarea"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      placeholder="We would like to collaborate with you. Please share your idea how we grow together!"
-      ></form-item-textarea>
-    </div>
+  <div class="mb-40p">
+    <label for="description" class="subtitle2">Description</label>
+    <form-item-textarea
+    name="description"
+    label="Description"
+    placeholder="Tell a little bit about your company"
+    [controller]="f.product_description"
+    [max]="maxTextarea"
+    [submitted]="isSubmitted"
+    [option]="{rows: 8}"
+    ></form-item-textarea>
+  </div>
+  
+  <div class="mb-40p">
+    <label for="message" class="subtitle2">Message to platform (optional)</label>    
+    <form-item-textarea
+    name="message"
+    label="Message"
+    [controller]="f.messageToPlatform"
+    [max]="maxTextarea"
+    [submitted]="isSubmitted"
+    placeholder="We would like to collaborate with you. Please share your idea how we grow together!"
+    ></form-item-textarea>
   </div>
 
-  <input type="submit" class="d-none">
+  <div 
+  class="text-right" 
+  [ngClass]="{'d-none': hideSubmit}"
+  >
+    <input 
+    class="btn btn-primary"
+    type="submit" 
+    value="Submit"
+    [disabled]="isUploadingProfileImage || disabled"
+    >
+  </div>
+
 </form>

@@ -1,0 +1,36 @@
+<div 
+class="bg-background"
+style="min-height: 100vh;"
+>
+  <div class="sticky-top" style="z-index: 90;">
+    <header-social></header-social>
+    <alert-not-approved></alert-not-approved>
+  </div>
+
+  <div class="container pt-30p pb-100p">
+    <div class="row justify-content-center">
+      <div 
+      class="d-md-block col-12 col-md-5 col-lg-4 col-xl-3"
+      [ngClass]="isRoot ? 'd-block' : 'd-none'"
+      >
+        <menu-dashboard></menu-dashboard>
+      </div>
+      <div 
+      class="col-12 col-md-7 col-lg-8 col-xl-6"
+      [ngClass]="isRoot ? 'd-none' : 'd-block'"
+      >
+        <div *ngIf="!isRoot && this.sizeS">
+          <button class="btn btn-text-body small pl-0" (click)="goback()">
+            <i iconPh="arrow-left"></i>
+            Back
+          </button>
+        </div>
+        <router-outlet></router-outlet>        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<modal-user-menu></modal-user-menu>

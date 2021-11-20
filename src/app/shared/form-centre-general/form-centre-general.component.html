@@ -1,67 +1,52 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
-
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <label>
-        Profile image
-        <span class="text-danger">*</span>
-      </label>
-    </div>
-    <div class="col-md-8">
-      <form-item-upload-image-button
-      [userid]="data?._id"
-      label="Profile image"
-      [disabled]="disabled"
-      [submitted]="isSubmitted"
-      [controller]="f.profileImage"
-      (changeImage)="onChangeImage($event)"
-      ></form-item-upload-image-button>
-    </div>
+  <div class="text-center mb-40p">
+    <form-item-profile-image
+    [controller]="f.profileImage"
+    (onStartUploading)="onStartUploadingProfileImage()"
+    (onFailUploading)="onDoneUploadingProfileImage()"
+    (onDoneUploading)="onDoneUploadingProfileImage()"
+    ></form-item-profile-image>  
   </div>
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <label for="firstName">
-        Name
-        <span class="text-danger">*</span>
-      </label>
-    </div>
 
-    <div class="col-md-8">
+  <div class="mb-40p">
+    <label for="firstName" class="subtitle2">Name</label>
+    <ng-container *ngIf="isPremiumAccount">
       <form-item-place
-      *ngIf="isPremiumAccount" 
       name="firstName"
       label="Name"
       type="text"
       [controllerGroup]="form"
       [max]="maxName"
       [submitted]="isSubmitted"
-      [disabled]="disabled"
       (selectPlace)="onChangePlace()"
       ></form-item-place>
-
-      <div *ngIf="isPremiumAccount && !disabled && !f.placeId.value" class="p-3 bg-background mt-10p">
-        You can connect to Google Business account. To connect, enter business name and select from suggestion.
+      <div 
+      *ngIf="isPremiumAccount && !f.placeId.value" 
+      class="py-10p px-20p bg-primary-light border-left border-primary text-primary-dark mt-10p d-flex rounded-4p"
+      style="border-width: 5px!important;"
+      >
+        <i iconPh="info" class="text-primary"></i>
+        <span class="d-inline-block ml-5p body2">
+          You can connect to Google Business account. To connect, enter business name and select from suggestion.
+        </span>
       </div>
+    </ng-container>
 
+    <ng-container *ngIf="!isPremiumAccount">
       <form-item-input 
-      *ngIf="!isPremiumAccount"
       name="firstName"
       label="Name"
       type="text"
       [max]="maxName"
       [controller]="f.firstName"
       [submitted]="isSubmitted"
-      [disabled]="disabled"
       ></form-item-input>
-    </div>
+    </ng-container>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4" for="userType">
-      Membership Type 
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
+  <div class="mb-40p row">
+    <div class="col-12 col-lg-6 mb-40p mb-lg-0p">
+      <label class="subtitle2">Membership type</label>
       <form-item-input 
       name="userType"
       label="Membership type"
@@ -70,15 +55,9 @@
       [disabled]="true"
       ></form-item-input>
     </div>
-  </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4" for="email">
-      Email<br>
-      (No one will see)
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
+    <div class="col-12 col-lg-6">
+      <label class="subtitle2">Email</label>
       <form-item-input 
       name="email"
       label="Email"
@@ -91,109 +70,21 @@
     </div>
   </div>
 
-  <!-- <div class="row mb-4">
-    <label class="col-md-4" for="email">
-      Email to display
-    </label>
-    <div class="col-md-8">
-      <form-item-input 
-      name="displayEmail"
-      label="Email to display" 
-      type="email"
-      [controller]="f.displayEmail"
-      [submitted]="isSubmitted" 
-      [disabled]="disabled"
-      autocapitalize="off"
-      autocomplete="email"
-      ></form-item-input>
-    </div>
-  </div> -->
-
-  <div class="row mb-4">
-    <label class="col-md-4" for="phone">
-      Phone Number 
-    </label>
-    <div class="col-md-8">
+  <div class="mb-40p row">
+    <div class="col-12 col-lg-6 mb-40p mb-lg-0p">
+      <label for="phone" class="subtitle2">Phone (optional)</label>
       <form-item-input 
       name="phone"
       label="Phone number"
       type="tel"
       [controller]="f.phone"
       [submitted]="isSubmitted"
-      [disabled]="disabled || f.placeId.value"
+      [disabled]="f.placeId.value"
       ></form-item-input>
     </div>
-  </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4" for="address">
-      Location 
-      <span class="text-danger">*</span>
-    </label>
-    <div class="col-md-8">
-      <form-item-address
-      name="address"
-      label="Location" 
-      [controllerGroup]="form"
-      [submitted]="isSubmitted"
-      [disabled]="disabled || f.placeId.value"
-      ></form-item-address>
-      <div class="mt-2">
-        <form-item-checkbox
-        *ngIf="!disabled && !f.placeId.value"
-        name="hideAddress"
-        label="Do not show address"
-        [controller]="f.hideAddress"
-        ></form-item-checkbox>
-      </div>
-      <div *ngIf="f.hideAddress.value" class="mt-2 mb-3 font-italic">You'll not be shown on the location based listing page</div>
-    </div>
-  </div>
-
-  <div class="row mb-4">
-    <label class="col-md-4" for="website">
-      Website 
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
-      <form-item-input 
-      name="website"
-      label="Website"
-      type="url"
-      autocomplete="url"
-      autocapitalize="off"
-      [controller]="f.website"
-      [submitted]="isSubmitted"
-      [disabled]="disabled || f.placeId.value"
-      ></form-item-input>
-    </div>
-  </div>
-
-  <div class="row mb-4">
-    <label class="col-md-4" for="bookingURL">
-      Booking URL 
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
-      <form-item-input 
-      name="bookingURL"
-      label="Booking URL"
-      type="url"
-      autocomplete="url"
-      autocapitalize="off"
-      [controller]="f.bookingURL"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      ></form-item-input>
-    </div>
-  </div>
-
-  <div class="row mb-4">
-    <label class="col-md-4" for="professionalTitle">
-      Professional Title 
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
+    <div class="col-12 col-lg-6">
+      <label for="professionalTitle" class="subtitle2">Title (optional)</label>
       <form-item-input 
       name="professionalTitle"
       label="Professional title"
@@ -206,151 +97,174 @@
     </div>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4 mt-0">
-      Available Time
-      <span class="text-danger">*</span>
-    </label>
-    <div class="col-md-8">
-      <form-item-checkbox-group
-      id="typical_hours"
-      label="Available time"
-      [data]="data?.typical_hours"
-      [controller]="f.typical_hours"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      [selections]="typicalHourList"
-      ></form-item-checkbox-group>
+
+  <div class="mb-40p">
+    <label class="subtitle2" for="address">Location</label>
+    <form-item-address
+    name="address"
+    label="Location" 
+    [controllerGroup]="form"
+    [submitted]="isSubmitted"
+    [disabled]="f.placeId.value"
+    ></form-item-address>
+    <div class="mt-10p">
+      <form-item-checkbox
+      *ngIf="!f.placeId.value"
+      name="hideAddress"
+      label="Do not show address"
+      [controller]="f.hideAddress"
+      ></form-item-checkbox>
+    </div>
+    <div 
+    *ngIf="f.hideAddress.value" 
+    class="mt-10p py-10p px-20p bg-yellow-light text-yellow-dark border-left border-yellow-dark rounded-4p d-flex flex-nowrap"
+    style="border-width: 5px!important;"
+    >
+      <i iconPh="info" class="mr-5p"></i>
+      <div class="flex-grow-1 body2">You'll not be shown on the location based listing page</div>
     </div>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4 mt-0">
-      Languages
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
-      <form-item-checkbox-group
-      id="languages"
-      label="Languages"
-      [data]="data?.languages"
-      [controller]="f.languages"
+  <div class="mb-40p row">
+    <div class="col-12 col-lg-6 mb-40p mb-lg-0p">
+      <label for="website" class="subtitle2">Website (optional)</label>
+      <form-item-input 
+      label="Website"
+      name="website"
+      type="url"
+      autocomplete="url"
+      autocapitalize="off"
+      [controller]="f.website"
       [submitted]="isSubmitted"
-      [disabled]="disabled"
-      [selections]="languageList"
-      ></form-item-checkbox-group>
+      ></form-item-input>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <label for="bookingURL" class="subtitle2">Booking URL (optional)</label>
+      <form-item-input 
+      name="bookingURL"
+      label="Booking URL"
+      type="url"
+      autocomplete="url"
+      autocapitalize="off"
+      [controller]="f.bookingURL"
+      [submitted]="isSubmitted"
+      ></form-item-input>
     </div>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4 mt-0">
-      Service Type
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
-      <form-item-checkbox-group
-      id="serviceOfferIds"
-      label="Service type"
-      [data]="data?.serviceOfferIds"
-      [controller]="f.serviceOfferIds"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      [selections]="serviceOfferList"
-      ></form-item-checkbox-group>
-    </div>
+  <div class="mb-40p">
+    <label class="subtitle2" for="productDescription">Practice Philosophy</label>
+    <form-item-textarea 
+    name="productDescription"
+    label="Practice philosophy"
+    placeholder="Tell us more about you in paragraph"
+    [max]="maxTextarea"
+    [controller]="f.product_description"
+    [submitted]="isSubmitted"
+    [option]="{rows: 10}"
+    ></form-item-textarea>
   </div>
 
-
-  <div class="row mb-4">
-    <label class="col-md-4 mt-0">
-      Age Range of Your Clients
-      <span class="text-danger">*</span>
-    </label>
-    <div class="col-md-8">
-      <form-item-checkbox-group
-      id="age_range"
-      label="Age range"
-      [data]="data?.age_range"
-      [controller]="f.age_range"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      ></form-item-checkbox-group>
-    </div>
+  <hr class="my-40p">
+  <div class="mb-40p">
+    <label class="subtitle2">Business type</label>
+    <form-item-checkbox-group
+    id="business_kind"
+    type="radio"
+    label="Kind of business"
+    [data]="data?.business_kind"
+    [controller]="f.business_kind"
+    [submitted]="isSubmitted"
+    [disabled]="disabled"
+    [option]="{showInlineWhenEnabled: true}"
+    ></form-item-checkbox-group>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4 mt-0">
-      Total Years of Experience
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
-      <form-item-checkbox-group
-      id="years_of_experience"
-      type="radio"
-      label="Years of experience"
-      [data]="data?.years_of_experience"
-      [controller]="f.years_of_experience"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      ></form-item-checkbox-group>
-    </div>
+  <div class="mb-40p">
+    <label class="subtitle2">Available Time</label>
+    <form-item-checkbox-group
+    id="typical_hours"
+    label="Available time"
+    [data]="data?.typical_hours"
+    [controller]="f.typical_hours"
+    [submitted]="isSubmitted"
+    [selections]="typicalHourList"
+    [option]="{showInlineWhenEnabled: true}"
+    ></form-item-checkbox-group>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4" [ngClass]="{'mt-0': (f.priceMode.value == 'select' && disabled)}">
-      Price Range Per Hour
-      <span class="text-danger">*</span>
-    </label>
-    <div class="col-md-8">
+  <div class="mb-40p">
+    <label class="subtitle2">Age Range of Your Clients</label>
+    <form-item-checkbox-group
+    id="age_range"
+    label="Age range"
+    [data]="data?.age_range"
+    [controller]="f.age_range"
+    [submitted]="isSubmitted"
+    [option]="{showInlineWhenEnabled: true}"
+    ></form-item-checkbox-group>
+  </div>
+
+  <div class="mb-40p">
+    <label class="subtitle2">Languages (optional)</label>
+    <form-item-checkbox-group
+    id="languages"
+    label="Languages"
+    [data]="data?.languages"
+    [controller]="f.languages"
+    [submitted]="isSubmitted"
+    [selections]="languageList"
+    [option]="{showInlineWhenEnabled: true}"
+    ></form-item-checkbox-group>
+  </div>
+
+  <div class="mb-40p">
+    <label class="subtitle2">Service Type (optional)</label>
+    <form-item-checkbox-group
+    id="serviceOfferIds"
+    label="Service type"
+    [data]="data?.serviceOfferIds"
+    [controller]="f.serviceOfferIds"
+    [submitted]="isSubmitted"
+    [selections]="serviceOfferList"
+    [option]="{showInlineWhenEnabled: true}"
+    ></form-item-checkbox-group>
+  </div>
+
+  <div class="mb-40p">
+    <label class="subtitle2">Total Years of Experience (optional)</label>
+    <form-item-checkbox-group
+    id="years_of_experience"
+    type="radio"
+    label="Years of experience"
+    [data]="data?.years_of_experience"
+    [controller]="f.years_of_experience"
+    [submitted]="isSubmitted"
+    [option]="{showInlineWhenEnabled: true}"
+    ></form-item-checkbox-group>
+  </div>
+
+  <div class="mb-40p">
+    <label class="subtitle2">Price Range Per Hour (optional)</label>
+    <div>
       <form-item-pricing
       [data]="data" 
       [formGroup]="form"
-      [disabled]="disabled"
       [submitted]="isSubmitted"
-      ></form-item-pricing>
+      ></form-item-pricing>  
     </div>
   </div>
 
-  <div class="row mb-4">
-    <label class="col-md-4 mt-0">
-      Kind of Business
-      <span class="text-danger">*</span>
-    </label>
-    <div class="col-md-8">
-      <form-item-checkbox-group
-      id="business_kind"
-      type="radio"
-      label="Kind of business"
-      [data]="data?.business_kind"
-      [controller]="f.business_kind"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      ></form-item-checkbox-group>
-    </div>
+  <div 
+  class="text-right" 
+  [ngClass]="{'d-none': hideSubmit}"
+  >
+    <input 
+    class="btn btn-primary"
+    type="submit" 
+    value="Submit"
+    [disabled]="isUploadingProfileImage || disabled"
+    >
   </div>
-  
-  <div class="row mb-4">
-    <label class="col-md-4" for="productDescription">
-      Practice Philosophy 
-      <!-- <span class="text-danger">*</span> -->
-    </label>
-    <div class="col-md-8">
-      <form-item-textarea 
-      name="productDescription"
-      label="Practice philosophy"
-      placeholder="Tell us more about you in paragraph"
-      [max]="maxTextarea"
-      [controller]="f.product_description"
-      [submitted]="isSubmitted"
-      [disabled]="disabled"
-      ></form-item-textarea>
-    </div>
-  </div>
-
-  <div class="row" *ngIf="!disabled" [ngClass]="{'d-none': hideSubmit}"> 
-    <div class="col text-right">
-      <button class="btn btn-primary">Submit</button>
-    </div>
-  </div>
-
 </form>

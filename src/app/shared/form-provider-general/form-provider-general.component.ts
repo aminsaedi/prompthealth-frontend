@@ -30,6 +30,7 @@ export class FormProviderGeneralComponent implements OnInit {
   public form: FormGroup;
   public isSubmitted = false;
   public isPremiumAccount: boolean;
+  public isUploadingProfileImage = false;
 
   public maxName = minmax.nameMax;
   public maxProfessionalTitle = minmax.professionalTitleMax;
@@ -61,9 +62,8 @@ export class FormProviderGeneralComponent implements OnInit {
       firstName: new FormControl(this.data.firstName ? this.data.firstName : '', validators.nameProvider),
       lastName: new FormControl(this.data.lastName ? this.data.lastName : '', validators.nameProvider),
       
-      userType: new FormControl('Service Provider'),
+      userType: new FormControl('Wellness provider'),
       email: new FormControl(this.data.email ? this.data.email : '', validators.email),
-      // displayEmail: new FormControl(this.data.displayEmail ? this.data.displayEmail : '', validators.displayEmail),
       phone: new FormControl(this.data.phone ? this.data.phone : '', validators.phone),
       gender: new FormControl(this.data.gender ? this.data.gender: '', validators.gender),
       
@@ -137,9 +137,13 @@ export class FormProviderGeneralComponent implements OnInit {
     this._changeDetector.detectChanges();
   }
 
-  onChangeImage(imageURL: string) {
-    this.changeImage.emit(imageURL);
+  onStartUploadingProfileImage () {
+    this.isUploadingProfileImage = true;
   }
+  onDoneUploadingProfileImage () {
+    this.isUploadingProfileImage = false;
+  }
+
 
   onSubmit(){
     if(this.form.invalid){

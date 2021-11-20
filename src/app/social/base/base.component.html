@@ -4,22 +4,7 @@ style="min-height: 100vh;"
 >
   <div class="sticky-top" style="z-index: 90;">
     <header-social></header-social>
-    <div 
-    *ngIf="user && !user.isApproved && this.isMessageBeingApprovedShownIfNeeded"
-    class="bg-line overflow-hidden"
-    (click)="onClickAlertBeingApproved()"
-    [@expandVertical]
-    >
-      <div class="container py-15p d-flex align-items-center justify-content-between">
-        <p class="mb-0">
-          Your profile is being reviewed by our administrator and won't be shown in 
-          <ng-container *ngIf="user.role == 'P'">product listing page</ng-container>
-          <ng-container *ngIf="user.role != 'P'">Expert Finder </ng-container>
-          just yet.
-        </p>
-        <i iconPh="cross"></i>
-      </div>
-    </div>
+    <alert-not-approved></alert-not-approved>
   </div>
 
   <div class="pt-30p pb-100p">

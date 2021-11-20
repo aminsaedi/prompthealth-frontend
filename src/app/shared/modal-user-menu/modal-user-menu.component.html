@@ -21,6 +21,7 @@ id="user-menu"
     *ngIf="userCoverImage"
     [src]="userCoverImage"
     style="z-index: 5;"
+    crossorigin="anonymous"
     (click)="onClickCoverImage()"
     >
     <button
@@ -35,6 +36,7 @@ id="user-menu"
     class="d-none" 
     #inputCoverImage 
     imageUploader 
+    accept="image/jpeg, image/png" 
     imageType="profileCover"
     (onChange)="onChangeCoverImage($event)"
     (startUpload)="onStartUploadImage()"
@@ -58,6 +60,7 @@ id="user-menu"
         class="d-none" 
         #inputProfileImage 
         imageUploader 
+        accept="image/jpeg, image/png" 
         imageType="profileImage"
         (onChange)="onChangeProfileImage($event)"
         (startUpload)="onStartUploadImage()"

@@ -1,0 +1,32 @@
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p">
+  <div class="text-primary text-center mb-40p">
+    <i iconPh="checkbox-square" style="font-size: 40px;"></i>
+    <h4 class="text-center">Services</h4>
+    <p>
+      Please only pick what's applicable to you to allow proper matching with clients. We'll regularly review for inappropriate profiles.
+    </p>
+  </div>
+
+
+  <form-practitioner-service
+  *ngIf="user"
+  [data]="user.decode()"
+  [disabled]="isUploading"
+  (submitForm)="onSubmit($event)"
+  ></form-practitioner-service>
+</div>
+
+<div 
+*ngIf="isUploading"
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Uploading...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

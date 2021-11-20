@@ -4,7 +4,6 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax } from 'src/app/_helpers/form-settings';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
-import { Profile } from 'src/app/models/profile';
 import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
@@ -13,6 +12,7 @@ import { ISocialPost } from 'src/app/models/social-post';
 import { UploadObserverService } from 'src/app/shared/services/upload-observer.service';
 import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { MyProfile } from 'src/app/models/my-profile';
 
 @Component({
   selector: 'card-new-post',
@@ -28,7 +28,7 @@ export class CardNewPostComponent implements OnInit {
   get form() { return this._editorService.form; }
 
   get userImage(): string { return this.user ? this.user.profileImage : ''; }
-  get user(): Profile { return this._profileService.profile; }
+  get user(): MyProfile { return this._profileService.profile; }
 
   get linkToPlan(): string[] { return this.user?.role == 'P' ? ['/plans/product'] : ['/plans']; }
 

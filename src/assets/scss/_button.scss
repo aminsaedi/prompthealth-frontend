@@ -81,6 +81,10 @@
   @include btnOutline($colorError, $colorGsWhite);
 }
 
+.btn.btn-outline-body {
+  @include btnOutline($colorGsBody, $colorGsWhite);
+}
+
 .btn.btn-outline-grey {
   @include btnOutline($colorGsLabel, $colorGsWhite);
 }

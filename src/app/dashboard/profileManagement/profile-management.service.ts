@@ -7,6 +7,7 @@ import { Profile } from 'src/app/models/profile';
 import { Observable, Subject } from 'rxjs';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { IGetProfileResult } from 'src/app/models/response-data';
+import { MyProfile } from 'src/app/models/my-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,9 @@ import { IGetProfileResult } from 'src/app/models/response-data';
 export class ProfileManagementService {
 
   private _user: IUserDetail = null;
-  private _profile: Profile = null;
+  private _profile: MyProfile = null;
 
-  get profile(): Profile { return this._profile || null; }
+  get profile(): MyProfile { return this._profile || null; }
   get user(): IUserDetail { return this._user || null; }
 
   private _loginStatusChanged = new Subject<LoginStatusType>();
@@ -57,7 +58,7 @@ export class ProfileManagementService {
 
   setData(u: IUserDetail) {
     this._user = u;
-    this._profile = new Profile(u);
+    this._profile = new MyProfile(u);
     this.changeLoginStatus('loggedIn');
   }
 
@@ -67,7 +68,7 @@ export class ProfileManagementService {
         this._user[key] = u[key];
       }
     });
-    this._profile = new Profile(this._user);
+    this._profile = new MyProfile(this._user);
   }
 
   init() {

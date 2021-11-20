@@ -39,7 +39,7 @@ export class Booking implements IBooking {
   get patientEmail() { return this.data.email; }
   get patientPhone() { return this.data.phone; }
   get patientNote() { return this.data.note; }
-  get patientProfileImage() { return this._client.profileImage; }
+  get patientProfileImage() { return this._client ? this._client.profileImage : null; }
   
   get note() { return this.data.note; }
   get isUrgent() { return this.data.isUrgent || false; }
@@ -50,8 +50,8 @@ export class Booking implements IBooking {
   _provider: Professional;
   _client: Profile;
   constructor(private data: IBooking) {
-    this._provider = new Professional(data.drId._id, data.drId);
-    this._client = new Profile(data.customerId);
+    this._provider = data.drId ? new Professional(data.drId._id, data.drId) : null;
+    this._client = data.customerId ? new Profile(data.customerId) : null;
   }
 
   markAsRead() {

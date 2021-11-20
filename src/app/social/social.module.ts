@@ -27,7 +27,7 @@ import { AgmCoreModule } from '@agm/core';
 import { NotificationComponent } from './notification/notification.component';
 import { DraftsComponent } from './drafts/drafts.component';
 import { ProfileContactComponent } from './profile-contact/profile-contact.component';
-import { FollowListComponent } from './follow-list/follow-list.component';
+// import { FollowListComponent } from '../dashboard2/follow-list/follow-list.component';
 import { ProfileFollowListComponent } from './profile-follow-list/profile-follow-list.component';
 import { GuardIfNotLoggedInGuard } from '../auth/guard-if-not-logged-in.guard';
 import { NewReferralComponent } from './new-referral/new-referral.component';
@@ -37,7 +37,7 @@ import { GuardIfDataNotSetGuard } from './guard-if-data-not-set.guard';
 import { ModalVoiceRecorderComponent } from './modal-voice-recorder/modal-voice-recorder.component';
 import { ProfilePromotionComponent } from './profile-promotion/profile-promotion.component';
 import { CardNewPromoComponent } from './card-new-promo/card-new-promo.component';
-import { GuardIfUserTypeClientGuard } from './guard-if-user-type-client.guard';
+// import { GuardIfUserTypeClientGuard } from './guard-if-user-type-client.guard';
 import { SocialItemsModule } from '../social-items/social-items.module';
 
 
@@ -77,8 +77,8 @@ const routes: Routes = [
     { path: 'editor/event/:id', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},    
     { path: 'editor', redirectTo: 'editor/article' },
 
-    { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
-    { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfUserTypeClientGuard], },
+    // { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
+    // { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfUserTypeClientGuard], },
     { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },
 
     { path: '', component: HomeComponent, children: [
@@ -111,7 +111,7 @@ const routes: Routes = [
     NotificationComponent,
     DraftsComponent,
     ProfileContactComponent,
-    FollowListComponent,
+    // FollowListComponent,
     ProfileFollowListComponent,
     NewReferralComponent,
     ModalVoiceRecorderComponent,

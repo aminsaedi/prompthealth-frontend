@@ -1,11 +1,12 @@
 import { environment } from "src/environments/environment";
 import { IDefaultPlan } from "./default-plan";
-import { IUserDetail } from "./user-detail";
+import { IShowcase, Showcase } from "./showcase";
+import { IStaff, Staff } from "./staff";
+import { IUserDetail, IVideo } from "./user-detail";
 
 export interface IProfile {
   _id: IUserDetail['_id'];
   role: IUserDetail['roles'];
-  email: IUserDetail['email'];
 
   firstName: IUserDetail['firstName'];
   lastName: IUserDetail['lastName'];
@@ -17,13 +18,19 @@ export interface IProfile {
   profileImage: IUserDetail['profileImage'];
   profileImageFull: IUserDetail['profileImage'];
   profileImageType: string;
-  coverImage: string;
 
   numFollowing: number;
   numFollower: number;
   followings: Profile[]; /** should be saved in socialService? */
   followers: Profile[]; /** should be saved in socialService? */
-  followingTopics: any[];
+
+  videos: IVideo[];
+  staffs: Staff[];
+  showcases: Showcase[];
+  socialLinks: IUserDetail['socialLinks'];
+
+  doneInitStaffs: boolean;
+  doneInitShowcases: boolean;
 
   isC: boolean;
   isP: boolean;
@@ -31,28 +38,23 @@ export interface IProfile {
   isSA: boolean;
   isU: boolean;
   isProvider: boolean;
-  isApproved: boolean;
   isVerified: boolean; /** verified for badge */
 
   hasProfile: boolean;
-  isEligibleToCreateNote: boolean;
-  isEligibleToCreatePromo: boolean;
-  isEligibleToCreateArticle: boolean;
-  isEligibleToCreateEvent: boolean;
-  isEligibleToHaveDraft: boolean;
 
   linkToProfile: string;
 
   gender: string;
 
-  eligibleCreateRecommendation: boolean;
-
-  plan: IDefaultPlan;
+  eligibleToManageTeam: boolean;
+  eligibleToManageShowcase: boolean;
+  eligibleToManageBadge: boolean;
+  eligibleToManageVideo: boolean;
+  eligibleToConnectSocial: boolean;
 }
 
 export class Profile implements IProfile {
   get _id() { return this.data._id; }
-  get email() { return this.data.email || ''; }
   get role() { return this.data.roles; }
 
   get firstName() { return (this.data.firstName || this.data.fname || '').trim(); }
@@ -68,15 +70,17 @@ export class Profile implements IProfile {
   get profileImageFull() { return this._profileImage ? this._s3 + this._profileImage : ''; }
   get profileImageType() { return this._profileImageType; }
 
-  get coverImage() { return this.data.cover ? this._s3 + this.data.cover : ''; }
-
   get followings() { return this._followings; };
   get followers() { return this._followers; }
-  get followingTopics() { return this._followingTopics; }
 
   get numFollowing() { return this.data.follow.following || 0; }
   get numFollower() { return this.data.follow.followed || 0; }
 
+  get staffs() { return (this.eligibleToManageTeam) ? (this._staffs || []) : []; }
+  get showcases() { return (this.eligibleToManageShowcase) ? (this._showcases || []) : []; }
+  get videos() { return (this.eligibleToManageVideo) ? this.data.videos : []; } 
+  get socialLinks() { return this.eligibleToConnectSocial ? this.data.socialLinks : []; }
+   
   get isU() { return !!(this.role == 'U'); }
   get isC() { return !!(this.role == 'C'); }
   get isSP() { return !!(this.role == 'SP'); }
@@ -85,12 +89,7 @@ export class Profile implements IProfile {
   get isSA() { return !!(this.role == 'SA'); }
 
   get hasProfile() { return !this.isU; }
-  get isEligibleToCreateNote() { return this.isProvider || this.isSA; }
-  get isEligibleToCreatePromo() { return this.isP; }
-  get isEligibleToCreateArticle() { return (this.isProvider && this.isPaid) || this.isSA; }
-  get isEligibleToCreateEvent() { return (!this.isU && this.isPaid) || this.isSA; }
-  get isEligibleToHaveDraft() { return this.isEligibleToCreateArticle || this.isEligibleToCreateEvent; }
-  
+
   get isPaid() {
     return (
       this.data.isVipAffiliateUser || 
@@ -98,40 +97,43 @@ export class Profile implements IProfile {
     );
   }
 
-
-  get isApproved() { return this.isU || this.isSA || this.data.isApproved; }
   get isVerified() { return this.isSA || (this.data.verifiedBadge && this.isPaid) || false; }
+
+  get doneInitStaffs() { return !!this._staffs; }
+  get doneInitShowcases() { return !!this._showcases; }
 
   get linkToProfile() { return !this.isU ? '/community/profile/' + this._id : null; }
 
   get gender() { return this.data.gender || ''; }
 
-  get eligibleCreateRecommendation() { 
-    return this.isSA ? 
-      true : 
-      this.isProvider && this.isApproved ?
-        true :
-        false;
-  }
 
-  get plan() { return this.data.plan || null;}
+  get eligibleToManageTeam() { return this.isPaid && this.isC; }
+  get eligibleToManageShowcase() { return this.isPaid && this.isC; }
+  get eligibleToManageBadge() { return this.isPaid && this.isProvider; }
+  get eligibleToManageVideo() { return this.isPaid && this.isC; }
+  get eligibleToConnectSocial() { return (this.isPaid && (this.isProvider || this.isP)) || this.isSA;  }
 
   private _profileImage: string;
   private _profileImageType: string;
   private _followings: IProfile['followings'] = null;
   private _followers: IProfile['followers'] = null;
-  private _followingTopics: IProfile['followingTopics'] = null;
+  private _staffs: Staff[] = null;
+  private _showcases: Showcase[] = null;
 
   protected _s3 = environment.config.AWS_S3;
 
   constructor(protected data: IUserDetail) {
-    const image = (data.profileImage && data.profileImage.length > 0) ? 
-      data.profileImage : 
-      (data.image && typeof(data.image) == 'string' && data.image.length > 0) ? 
-        data.image : 
+    this.initProfileImage();
+  }
+
+  initProfileImage() {
+    const image = (this.data.profileImage && this.data.profileImage.length > 0) ? 
+      this.data.profileImage : 
+      (this.data.image && typeof(this.data.image) == 'string' && this.data.image.length > 0) ? 
+        this.data.image : 
         null;
 
-    this._profileImage = image ? image + '?ver=2' : null;
+    this._profileImage = image ? image + '?ver=2.3' : null;
     let imageType = '';
     if(image) {
       const regex = /\.(jpe?g|png)$/;
@@ -202,14 +204,48 @@ export class Profile implements IProfile {
     this._followers.push(new Profile(user));
   }
 
-  setFollowingTopics(topics: string[]) {
-    if(!this._followingTopics) {
-      this._followingTopics = [];
+  // set staffs belonging to the user (centre)
+  setStaffs(staffs: IStaff[]) { 
+    if(!this._staffs) {
+      this._staffs = [];
     }
-    topics.forEach(t => {
-      this._followingTopics.push(t);
-    })
-  };
+    staffs.forEach(staff => {
+      this.setStaff(staff);
+    });
+  }
+
+  setStaff(staff: IStaff) {
+    if(!this._staffs) {
+      this._staffs = [];
+    }
+    this._staffs.push(new Staff(staff));
+  }
+
+  removeStaff(staff: IStaff) {
+    if(this._staffs) {
+      this._staffs = this._staffs.filter(item => staff._id != item._id);
+    }
+  }
+
+  setShowcases(showcases: IShowcase[]) {
+    if(!this._showcases) {
+      this._showcases = [];
+    }
+    
+    showcases.forEach(showcase => { this.setShowcase(showcase); });
+  }
+
+  setShowcase(showcase: IShowcase) {
+    if(!this._showcases) {
+      this._showcases = [];
+    }
+    
+    this._showcases.push(new Showcase(showcase));
+  }
+
+  removeShowcase(showcase: IShowcase) {
+    this._showcases = this._showcases.filter(item => showcase._id != item._id )
+  }
 
   countupFollowing() { this.data.follow.following = this.data.follow.following ? this.data.follow.following + 1 : 1; }
   countdownFollowing() { this.data.follow.following = this.data.follow.following > 0 ? this.data.follow.following - 1 : 0; }

@@ -13,7 +13,7 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
     {{profile.description}}
   </p>
 
-  <div 
+  <!-- <div 
   *ngIf="profile.socialLink.isAvailable"
   class="mb-30p"
   >
@@ -26,7 +26,7 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
       ></social-buttons>  
     </div>
   
-  </div>
+  </div> -->
 
   <ng-container *ngIf="profile.isProvider">
     <div class="pt-30p border-top border-line">
@@ -81,7 +81,7 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
             ></form-item-checkbox-group>  
           </div>
     
-          <div 
+          <!-- <div 
           class="mb-20p"
           *ngIf="profile.amenityPreview.length > 0"
           >
@@ -92,13 +92,13 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
             class="btn btn-text small px-0" 
             (click)="openAmenityViewer()"
             >Show detail</button>
-          </div>
+          </div> -->
     
           <div 
           class="mb-20p"
           *ngIf="profile.productPreview.length > 0"
           >
-            <h6>Product:</h6>
+            <h6>Showcase:</h6>
             <image-row [images]="profile.productPreview" [option]="{col: 3}"></image-row>
             <button 
             *ngIf="profile.productPreview.length > 0"
@@ -212,11 +212,11 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
 </div>
 
 <!-- NEED CHANGE TO MODAL -->
-<image-viewer
+<!-- <image-viewer
 *ngIf="isAmenityViewerShown"
 [data]="profile.amenity"
 (close)="closeAmenityViewer()"
-></image-viewer>
+></image-viewer> -->
 
 <image-viewer
 *ngIf="isProductViewerShown"

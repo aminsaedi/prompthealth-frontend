@@ -249,6 +249,18 @@ const validatorTopicsSelectedLTE = (maxNum: number): ValidatorFn => {
   }
 }
 
+const validatorExistAtLeast = (minNum: number): ValidatorFn => {
+  return function validate(formControl: FormControl) {
+    const value = formControl.value || [];
+    console.log(value)
+    if(value.length >= minNum) {
+      return null;
+    } else {
+      return {existAtLeast: minNum};
+    }
+  }
+}
+
 
 const validatorFirstNameClient = [Validators.maxLength(minmax.nameMax), Validators.required];
 const validatorLastNameClient = [Validators.maxLength(minmax.nameMax)];
@@ -273,7 +285,6 @@ export const validators = {
   firstnameClient: validatorFirstNameClient,
   lastnameClient: validatorLastNameClient,
   email: validatorEmail,
-  // displayEmail: [Validators.email],
   phone: validatorPhone,
   gender: validatorRequired,
   address: validatorRequired,
@@ -306,6 +317,17 @@ export const validators = {
   passwordOld: [Validators.required],
   password: validatorPatternPassword(),
   accredit: validatorRequiredTrue,
+
+  showcaseName: validatorNameSP,
+  showcasePrice: validatorExactPricing,
+  showcaseDescription: [Validators.maxLength(minmax.noteMax)],
+  showcaseImages: [validatorExistAtLeast(1)],
+
+  certificateTitle: validatorNameSP,
+  certificateDescription: [Validators.required, Validators.maxLength(minmax.noteMax)],
+  certificateFiles: [validatorExistAtLeast(1)],
+
+  videoLink: [Validators.required, Validators.pattern(pattern.urlVideo)],
 
   /** booking form */
   bookingName: validatorFirstNameClient,

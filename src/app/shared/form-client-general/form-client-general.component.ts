@@ -1,12 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChildren, QueryList } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
-import { FormItemCheckboxGroupComponent, CheckboxSelectionItem } from '../form-item-checkbox-group/form-item-checkbox-group.component';
-import { FormItemPricingComponent } from '../form-item-pricing/form-item-pricing.component';
-import { SharedService } from '../services/shared.service';
+import { FormItemCheckboxGroupComponent } from '../form-item-checkbox-group/form-item-checkbox-group.component';
 
 @Component({
   selector: 'form-client-general',
@@ -17,6 +14,7 @@ export class FormClientGeneralComponent implements OnInit {
 
   @Input() data: IUserDetail = {};
   @Input() disabled = false;
+  @Input() hideSubmit: boolean = false;
   
   @Output() submitForm = new EventEmitter<IUserDetail>();
 
@@ -26,6 +24,7 @@ export class FormClientGeneralComponent implements OnInit {
   public isSubmitted = false;
 
   public maxName = minmax.nameMax;
+  public isUploadingProfileImage = false;
 
   @ViewChildren(FormItemCheckboxGroupComponent) formItemCheckboxGroupComponents: QueryList<FormItemCheckboxGroupComponent>;
 
@@ -41,7 +40,7 @@ export class FormClientGeneralComponent implements OnInit {
       firstName: new FormControl(this.data.firstName ? this.data.firstName : '', validators.firstnameClient),
       lastName: new FormControl(this.data.lastName ? this.data.lastName : '', validators.lastnameClient),
       
-      userType: new FormControl('Client'),
+      userType: new FormControl('Wellness seaker'),
       email: new FormControl(this.data.email ? this.data.email : '', validators.email),
       phone: new FormControl(this.data.phone ? this.data.phone : '', validators.phone),
       gender: new FormControl(this.data.gender ? this.data.gender: ''),
@@ -54,10 +53,12 @@ export class FormClientGeneralComponent implements OnInit {
     }, {validators: validators.addressSelectedFromSuggestion});
   }
 
-  onChangeImage(imageURL: string) {
-    // this._profileService.update({profileImage: imageURL});
+  onStartUploadingProfileImage () {
+    this.isUploadingProfileImage = true;
   }
-
+  onDoneUploadingProfileImage () {
+    this.isUploadingProfileImage = false;
+  }
 
   onSubmit(){
     if(this.form.invalid){
@@ -67,7 +68,10 @@ export class FormClientGeneralComponent implements OnInit {
     }
     
     const data: IUserDetail = {};
-    data._id = this.data._id;
+    if(this.data) {
+      data._id = this.data._id;
+    }
+
     for(const key in this.form.controls){
       const f = this.form.controls[key];
       if(key == 'priceMode' || key == 'userType'){

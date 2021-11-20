@@ -1,0 +1,47 @@
+<div class="text-right mb-10p">
+  <a 
+  routerLink="/community/feed"
+  class="btn btn-text small px-0"
+  >
+    <span><u>Community</u></span>
+    <i iconPh="arrow-right-circle" class="ml-10p"></i>
+  </a>
+</div>
+
+<ng-container *ngIf="bookmarks && bookmarks.length > 0">
+  <div 
+  *ngFor="let b of bookmarks"
+  class="mb-20p"
+  style="max-width: 600px; margin: auto;"
+  >
+    <card [post]="b"></card>
+  </div>
+
+  <div 
+  *ngIf="existsMore && !isLoading"
+  class="text-center"
+  >
+    <button
+    class="btn btn-text small px-0"
+    (click)="fetchBookmarks()"
+    >Load more bookmarks</button>  
+  </div>
+</ng-container>
+
+<ng-container *ngIf="bookmarks && bookmarks.length == 0">
+  <div class="bg-white rounded-8p py-50p text-center">
+    <img class="mb-50p" src="/assets/img/general/cards.png" alt="">
+    <h6 class="mb-30p text-primary-dark">No Bookmarks Yet!</h6>
+    <a 
+    class="btn btn-primary"
+    routerLink="/community/feed"
+    >Find contents</a>
+  </div>
+</ng-container>
+
+<div
+*ngIf="isLoading"
+class="mt-10p text-center"
+>
+  <loader></loader>
+</div>

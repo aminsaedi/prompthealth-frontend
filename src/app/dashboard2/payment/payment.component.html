@@ -1,0 +1,45 @@
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p mb-40p">
+  <div class="text-primary text-center">
+    <i iconPh="credit-card" style="font-size: 40px;"></i>
+    <h4 class="text-center">Payment</h4>
+    <p>
+      Find your payment and credit history
+    </p>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center border-bottom border-line mb-15p">
+  <a
+  class="text-body subtitle1 btn btn-text px-0 small mr-30p"
+  [ngClass]="(rla1.isActive ? 'active' : '')"
+  routerLink="./subscription"
+  #rla1="routerLinkActive"
+  routerLinkActive
+  [routerLinkActiveOptions]="{exact: true}"
+  [replaceUrl]="true"
+  >Subscription</a>
+
+  <a
+  class="text-body subtitle1 btn btn-text px-0 small mr-30p"
+  [ngClass]="(rla2.isActive ? 'active' : '')"
+  routerLink="./history"
+  #rla2="routerLinkActive"
+  routerLinkActive
+  [routerLinkActiveOptions]="{exact: true}"
+  [replaceUrl]="true"
+  >History</a>
+
+  <a
+  class="text-body subtitle1 btn btn-text px-0 small"
+  [ngClass]="(rla3.isActive ? 'active' : '')"
+  routerLink="./credit"
+  #rla3="routerLinkActive"
+  routerLinkActive
+  [routerLinkActiveOptions]="{exact: true}"
+  [replaceUrl]="true"
+  >Credit</a>
+</div>
+
+<div class="bg-white py-50p px-15p px-lg-30p rounded-8p">
+  <router-outlet></router-outlet>
+</div>

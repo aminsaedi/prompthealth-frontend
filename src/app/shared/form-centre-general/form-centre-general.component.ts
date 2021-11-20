@@ -30,6 +30,7 @@ export class FormCentreGeneralComponent implements OnInit {
   public form: FormGroup;
   public isSubmitted = false;
   public isPremiumAccount: boolean;
+  public isUploadingProfileImage = false;
 
   public maxName = minmax.nameMax;
   public maxProfessionalTitle = minmax.professionalTitleMax;
@@ -57,9 +58,8 @@ export class FormCentreGeneralComponent implements OnInit {
     this.form = this._fb.group({
       profileImage: new FormControl(this.data.profileImage ? this.data.profileImage : '', validators.profileImageProvider),
       firstName: new FormControl(this.data.firstName ? this.data.firstName : '', validators.nameCentre),
-      userType: new FormControl('Centre'),
+      userType: new FormControl('Wellness provider'),
       email: new FormControl(this.data.email ? this.data.email : '', validators.email),
-      // displayEmail: new FormControl(this.data.displayEmail ? this.data.displayEmail : '', validators.displayEmail),
       phone: new FormControl(this.data.phone ? this.data.phone : '', validators.phone),
       
       address: new FormControl(this.data.address ? this.data.address : '', validators.address),
@@ -128,8 +128,11 @@ export class FormCentreGeneralComponent implements OnInit {
     this._changeDetector.detectChanges();
   }
 
-  onChangeImage(imageURL: string) {
-    this.changeImage.emit(imageURL);
+  onStartUploadingProfileImage () {
+    this.isUploadingProfileImage = true;
+  }
+  onDoneUploadingProfileImage () {
+    this.isUploadingProfileImage = false;
   }
 
   onSubmit(){
@@ -163,7 +166,6 @@ export class FormCentreGeneralComponent implements OnInit {
         });
       }
     }
-
 
     this.submitForm.emit(data);
   }

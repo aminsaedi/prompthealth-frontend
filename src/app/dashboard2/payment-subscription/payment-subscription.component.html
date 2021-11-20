@@ -1,0 +1,57 @@
+
+<h6 class="mb-40p text-center">Your current plan is...</h6>
+
+<div 
+class="p-20p border rounded-8p text-center"
+[ngClass]="user.isPaid ? 'bg-primary-light border-primary-dark text-primary-dark' :  'bg-background bg-line pt-50p pb-30p'"
+>
+  <div 
+  *ngIf="user.isPaid" 
+  class="mb-20p"
+  >
+    <i iconPh="star" style="font-size: 40px;" class="text-primary"></i>
+    <div class="mt-10p">
+      <div class="d-inline-block bg-primary text-white body-small px-10p py-5p rounded-4p">PREMIUM</div>
+    </div>
+
+  </div>
+  <h5 class="mb-20p">{{user.plan?.planName || 'Basic Plan'}}</h5>
+
+  <a
+  *ngIf="user.isPaid" 
+  [routerLink]="linkToPlan" 
+  class="btn btn-text small"
+  >
+    <u>See plan detail</u>
+  </a>
+</div>
+
+
+<div class="text-center mt-20p">
+  <button
+  *ngIf="!!user.isPaid"
+  type="button"
+  class="btn btn-primary"
+  (click)="goStripe()"
+  >Manage subscription</button>
+
+  <a
+  *ngIf="!user.isPaid"
+  type="button"
+  class="btn btn-primary"
+  [routerLink]="linkToPlan"
+  >Upgrade plan</a>
+</div>
+
+
+<div *ngIf="!!isUploading" class="modal-view">
+  <div class="modal-drop"></div>
+  <div class="modal-body" style="max-width: 250px;">
+    <div class="title-container">
+      <h5 class="h4-md text-center">Please wait...</h5>
+    </div>
+    <div class="content-container text-center mt-30p mb-10p">
+      <loader></loader>
+    </div>
+  </div>
+</div>

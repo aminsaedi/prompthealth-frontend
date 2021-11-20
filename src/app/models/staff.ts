@@ -64,8 +64,15 @@ export class Staff implements IStaff {
   // this is used for updating static staff data
   updateWith(data: IStaff) {
     this._name = data.firstName;
+    this.data.firstName = this._name;
+
     this._title = data.professional_title;
+    this.data.professional_title = this._title;
+
     this._description = data.product_description;
+    this.data.product_description = this._description;
+
     this._profileImage = data.profileImage;
+    this.data.profileImage = this._profileImage;
   }
 }

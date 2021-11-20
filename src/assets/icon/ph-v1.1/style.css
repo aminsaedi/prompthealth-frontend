@@ -1309,6 +1309,9 @@ i {
 .icon-insta:before {
   content: "\ec51";
 }
+.icon-instagram:before {
+  content: "\ec51";
+}
 .icon-spotify:before {
   content: "\ec52";
 }

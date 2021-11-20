@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '../services/modal.service';
 
@@ -14,6 +14,8 @@ export class ModalComponent implements OnInit {
   @Input() id: string;
   // @Input() bodyClass: any;
   @Input() option: IModalOption = {};
+
+  @Output() onStateChanged = new EventEmitter<ModalStateType>();
 
   constructor(
     private _route: ActivatedRoute,
@@ -39,8 +41,11 @@ export class ModalComponent implements OnInit {
         }
       }
 
-      this.isShown = isShown;
-      this._changeDetector.detectChanges();  
+      if(this.isShown != isShown) {
+        this.isShown = isShown;
+        this.onStateChanged.emit(isShown ? 'open' : 'close');
+        this._changeDetector.detectChanges();  
+      }
 
       // console.log('modalComponent. id: ', this.id, ': status: ', this.isShown ? 'shown' : 'hidden');
     });
@@ -82,3 +87,5 @@ class ModalOption implements IModalOption {
 
   constructor(private data: IModalOption) {}
 }
+
+export type ModalStateType = 'open' | 'close';
