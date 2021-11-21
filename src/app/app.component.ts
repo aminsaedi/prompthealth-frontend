@@ -20,6 +20,8 @@ declare let fbq: Function;
 export class AppComponent implements OnInit {
 
   get isAlertUploadingInBackgroundShown() { return this.isUploadingInBackground || this.isUploadingDoneInBackground; }
+  get isStaging() { return !environment.production; }
+
   public isUploadingInBackground: boolean = false;
   public isUploadingDoneInBackground: boolean = false;
   private currentUploadingStatus: UploadingStatus;
