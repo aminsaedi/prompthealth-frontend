@@ -5,7 +5,7 @@ import { BehaviorService } from '../../../shared/services/behavior.service';
 import { CategoryService } from '../../../shared/services/category.service';
 import { Questionnaire, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { IUserDetail } from 'src/app/models/user-detail';
-import { ProfileManagementService } from '../profile-management.service';
+import { ProfileManagementService } from '../../../shared/services/profile-management.service';
 import { CheckboxSelectionItem, FormItemCheckboxGroupComponent } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
 import { validators } from 'src/app/_helpers/form-settings';
 import { FormItemCustomerHealthComponent } from 'src/app/shared/form-item-customer-health/form-item-customer-health.component';

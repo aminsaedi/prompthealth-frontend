@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../../shared/services/shared.service';
-import { ProfileManagementService } from '../profile-management.service';
+import { ProfileManagementService } from '../../../shared/services/profile-management.service';
 import { IUserDetail } from '../../../models/user-detail';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { EmbedVideoService } from 'ngx-embed-video';
 import { ToastrService } from 'ngx-toastr';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IResponseData, ISaveProfileResult } from 'src/app/models/response-data';
 import { IVideo } from 'src/app/models/user-detail';
 import { ModalStateType } from 'src/app/shared/modal/modal.component';

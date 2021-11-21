@@ -75,6 +75,18 @@ const routes: Routes = [
     ]
     
   },
+
+  { path: 'subscriptionplan',   redirectTo: '/plans' },
+  { path: 'questionnaire/u',    redirectTo: '/personal-match/gender' },
+  { path: 'questions/User',     redirectTo: '/personal-match/gender' },
+  { path: 'listing',            redirectTo: '/practitioners' },
+  { path: 'listingCompare',     redirectTo: '/compare-practitioners' },
+  { path: 'detail/:id',         redirectTo: '/practitioners/:id' },
+  { path: 'register-product',   redirectTo: '/dashboard-old/register-product/general'},
+  { path: 'register-partner',   redirectTo: '/dashboard-old/register-product/general' },
+  { path: 'professional-info',  redirectTo: '/dashboard-old/register-practitioner/general' },
+  { path: 'register-practitioner', redirectTo: '/dashboard-old/register-practitioner/general'},
+  { path: 'profilemanagement', redirectTo: '/dashboard', },
 ]
 
 @NgModule({
@@ -104,7 +116,6 @@ const routes: Routes = [
     PaymentSubscriptionComponent,
     PaymentHistoryComponent,
     PaymentCreditComponent,
-
   ],
   imports: [
     CommonModule,

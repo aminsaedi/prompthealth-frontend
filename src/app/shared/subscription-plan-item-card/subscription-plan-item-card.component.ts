@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from '../services/shared.service';
-import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from '../services/profile-management.service';
 import { ToastrService } from 'ngx-toastr';
 import { StripeService } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';

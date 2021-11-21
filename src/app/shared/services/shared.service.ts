@@ -15,7 +15,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { PostManagerService } from 'src/app/post-manager/post-manager.service';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 
 import { DOCUMENT } from '@angular/common';
 import { UniversalService } from './universal.service';

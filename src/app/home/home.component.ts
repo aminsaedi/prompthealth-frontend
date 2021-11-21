@@ -16,7 +16,7 @@ import { environment } from 'src/environments/environment';
 import { SocialPostSearchQuery } from '../models/social-post-search-query';
 import { IGetSocialContentsByAuthorResult } from '../models/response-data';
 import { SocialArticle } from '../models/social-article';
-import { ProfileManagementService } from '../dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from '../shared/services/profile-management.service';
 import { ModalService } from '../shared/services/modal.service';
 import { getListedMenu } from '../_helpers/get-listed-menu';
 

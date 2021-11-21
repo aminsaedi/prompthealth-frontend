@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
@@ -13,7 +13,7 @@ export class PaymentCreditComponent implements OnInit {
   
   get user() { return this._profileService.profile; }
   get endingBalance() { return this.credits ? this.credits[0].ending_balance : 0}
-  get currency() { return this.credits ? this.credits[0].currency.toUpperCase() : null; }
+  get currency() { return this.credits ? this.credits[0]?.currency.toUpperCase() : null; }
   
   createdAtOf(timestamp: number) {
     return new Date(timestamp * 1000);

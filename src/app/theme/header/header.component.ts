@@ -4,7 +4,7 @@ import { HeaderStatusService } from '../../shared/services/header-status.service
 import { environment } from '../../../environments/environment';
 import { expandVerticalAnimation, fadeAnimation, fadeFastAnimation, slideHorizontalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
 import { CategoryService } from 'src/app/shared/services/category.service';
-import { ProfileManagementService } from '../../dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from '../../shared/services/profile-management.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { Subscription } from 'rxjs';

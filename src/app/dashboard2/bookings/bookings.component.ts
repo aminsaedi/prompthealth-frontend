@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { Booking } from 'src/app/models/booking';
 import { GetQuery } from 'src/app/models/get-query';
 import { IGetBookingsResult, IUpdateBookingResult } from 'src/app/models/response-data';

@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { SocialPostSearchQuery } from 'src/app/models/social-post-search-query';

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProfileManagementService } from '../profile-management.service';
+import { ProfileManagementService } from '../../../shared/services/profile-management.service';
 import { SharedService } from '../../../shared/services/shared.service';
 import { FormPartnerOfferComponent } from '../../../shared/form-partner-offer/form-partner-offer.component';
 import { ToastrService } from 'ngx-toastr';

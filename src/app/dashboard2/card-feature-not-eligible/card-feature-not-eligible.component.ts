@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 
 @Component({
   selector: 'card-feature-not-eligible',

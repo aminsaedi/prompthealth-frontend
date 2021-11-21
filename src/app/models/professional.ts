@@ -206,7 +206,7 @@ export class Professional extends Profile implements IProfessional{
   get triedFetchingTeam() { return this._triedFetchingTeam; }
 
   get eligibleFeatureStaffs() { return !!this.p.plan && this.p.plan.ListOfProviders; }
-  get eligibleFeatureRecommendation() { return !!this.p.plan && this.p.plan.name !== 'Basic'; }
+  get eligibleFeatureRecommendation() { return this.p?.plan?.name !== 'Basic' || this.isSA; }
 
   uncheckForCompare() { this._isCheckedForCompared = false; }
 

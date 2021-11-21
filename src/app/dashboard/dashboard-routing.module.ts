@@ -165,7 +165,7 @@ const routes: Routes = [
   { path: 'detail/:id',         redirectTo: '/practitioners/:id' },
   { path: 'register-partner',   redirectTo: '/dashboard/register-product/general' },
   { path: 'professional-info',  redirectTo: '/dashboard/register-practitioner/general' },
-  { path: '**',                 redirectTo: '/dashboard/profilemanagement/my-performance' }
+  // { path: '**',                 redirectTo: '/dashboard/profilemanagement/my-performance' }
 ];
 
 @NgModule({

@@ -32,6 +32,14 @@
     ></form-partner-general>
   </ng-container>
 
+  <ng-container *ngIf="user.isSA">
+    <form-admin-general
+    [data]="user.decode()"
+    [disabled]="isUploading" 
+    (submitForm)="onSubmit($event)"
+    ></form-admin-general>
+  </ng-container>
+
 
 
 </div>  

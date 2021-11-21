@@ -10,7 +10,7 @@ import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { IDefaultPlan } from 'src/app/models/default-plan';
-import { ProfileManagementService } from '../profileManagement/profile-management.service';
+import { ProfileManagementService } from '../../shared/services/profile-management.service';
 
 @Component({
   selector: 'app-register-questionnaire',

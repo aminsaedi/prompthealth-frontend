@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { GetShowcaseQuery, SaveShowcaseQuery } from 'src/app/models/get-showcase-query';
 import { ICreateShowcaseResult, IGetShowcaseResult, IResponseData } from 'src/app/models/response-data';
 import { Showcase } from 'src/app/models/showcase';
