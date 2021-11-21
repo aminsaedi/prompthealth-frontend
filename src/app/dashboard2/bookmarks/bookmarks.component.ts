@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { GetQuery } from 'src/app/models/get-query';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';

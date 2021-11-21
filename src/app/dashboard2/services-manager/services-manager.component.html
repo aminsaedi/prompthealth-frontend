@@ -9,11 +9,18 @@
 
 
   <form-practitioner-service
-  *ngIf="user"
+  *ngIf="user?.isProvider"
   [data]="user.decode()"
   [disabled]="isUploading"
   (submitForm)="onSubmit($event)"
   ></form-practitioner-service>
+
+  <form-partner-service
+  *ngIf="user?.isP"
+  [data]="user.decode()"
+  [disabled]="isUploading"
+  (submitForm)="onSubmit($event)"
+  ></form-partner-service>
 </div>
 
 <div 

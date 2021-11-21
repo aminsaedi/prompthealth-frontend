@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { SharedService } from '../../../shared/services/shared.service';
-import { ProfileManagementService } from '../profile-management.service';
+import { ProfileManagementService } from '../../../shared/services/profile-management.service';
 import { ToastrService } from 'ngx-toastr';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { pattern } from 'src/app/_helpers/pattern';

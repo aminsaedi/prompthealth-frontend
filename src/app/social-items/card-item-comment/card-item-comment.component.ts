@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { Profile } from 'src/app/models/profile';
 import { ICommentCreateResult } from 'src/app/models/response-data';
 import { ISocialComment, ISocialPost } from 'src/app/models/social-post';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { environment } from '../../../environments/environment';
 @Injectable()
 export class BehaviorService {

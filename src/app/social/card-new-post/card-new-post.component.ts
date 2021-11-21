@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax } from 'src/app/_helpers/form-settings';
 import { ToastrService } from 'ngx-toastr';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';

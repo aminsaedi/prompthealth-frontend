@@ -1,8 +1,10 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormControl, FormArray} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
+import { FormItemServiceComponent } from '../form-item-service/form-item-service.component';
+import { IUserDetail } from 'src/app/models/user-detail';
 
 @Component({
   selector: 'form-partner-service',
@@ -11,14 +13,19 @@ import { environment } from 'src/environments/environment';
 })
 export class FormPartnerServiceComponent implements OnInit {
 
-  @Input() data: any;
+  @Input() data: IUserDetail = {};
   @Input() disabled = false;
+  @Input() hideSubmit: boolean = false;
 
   @Output() changeService = new EventEmitter<string[]>();
   @Output() changeImage = new EventEmitter<string[]>();
+  @Output() submitForm = new EventEmitter<IUserDetail>();
 
   public formImages: FormArray;
   public baseURLImage = environment.config.AWS_S3;
+  public isUploadingImage: boolean = false;
+
+  @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
 
   constructor(
     private _toastr: ToastrService,
@@ -29,7 +36,7 @@ export class FormPartnerServiceComponent implements OnInit {
   ngOnInit(): void {
     this.formImages = new FormArray([]);
     if(this.data.image){
-      this.data.image.forEach((image: string) => {
+      (this.data.image as string[]).forEach((image: string) => {
         this.formImages.push(new FormControl(image));
       });  
     }
@@ -51,7 +58,7 @@ export class FormPartnerServiceComponent implements OnInit {
       let imageCountTooBig = 0;
       for(var i=0; i<files.length; i++){
         try { 
-          const image = await this._sharedService.shrinkImage(files.item(i)); 
+          const image = await this._sharedService.shrinkImageByFixedWidth(files.item(i), 1200); 
           imagesUploading.push(image);
         }
         catch(err){
@@ -65,16 +72,18 @@ export class FormPartnerServiceComponent implements OnInit {
       }
 
       if(imagesUploading.length > 0){
-        this._sharedService.loader('show');
+        this.isUploadingImage = true;
         try{
           const result = await this.uploadImages(imagesUploading);
           result.forEach(path => {
             this.formImages.push(new FormControl(path));
           });
           this.emitImage();
-        }
-        catch(err){ this._toastr.error(err); }
-        finally{ this._sharedService.loader('hide'); }
+        } catch(err){ 
+          this._toastr.error(err); 
+        } finally {
+          this.isUploadingImage = false;
+        } 
       }
     }
   }
@@ -116,5 +125,15 @@ export class FormPartnerServiceComponent implements OnInit {
       images.push(control.value);
     });
     this.changeImage.emit(images);
+  }
+
+  onSubmit() {
+    const data = {
+      ... this.data._id && { _id: this.data._id }, 
+      services: this.formItemService.getSelected(),
+      image: this.formImages.value,
+    }
+
+    this.submitForm.emit(data);
   }
 }

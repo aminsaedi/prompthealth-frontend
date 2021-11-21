@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment';
@@ -34,18 +34,20 @@ export class MenuComponent implements OnInit {
   initMenu(){
     switch(this.user.role) {
       case 'U' :
-        this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, menuNotification, menuPassword ];
+        this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, /*menuNotification, */ menuPassword ];
         break;
       case 'SP':
-        this.menus = [ menuGeneral, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuFollow, menuBookmark, menuNotification, menuPassword, menuPayment, menuAffiliate ];
+        this.menus = [ menuGeneral, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
         break;
       case 'C':
-        this.menus = [ menuGeneral, menuServices, menuPerformance, menuBookProvider, menuBadge, menuTeam, menuShowcase, menuVideo, menuSocial, menuFollow, menuBookmark, menuNotification, menuPassword, menuPayment, menuAffiliate ];
+        this.menus = [ menuGeneral, menuServices, menuPerformance, menuBookProvider, menuBadge, menuTeam, menuShowcase, menuVideo, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
         break;
       case 'P':
-        this.menus = [ menuGeneral, menuFollow, menuNotification, menuPassword, menuPayment, menuAffiliate ];
+        this.menus = [ menuGeneral, menuServices, menuFollow, /*menuNotification, */ menuPassword, menuPayment, menuAffiliate ];
         break;
-
+      case 'SA':
+        this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, menuPassword];
+        break;
     }
   }
 
@@ -76,13 +78,13 @@ const menuPerformance: MenuItem = {
 
 const menuFollow: MenuItem = {
   id: 'follow',
-  title: 'My Following',
+  title: 'My Followings',
   icon: 'verified',
 };
 
 const menuBook: MenuItem = {
   id: 'booking',
-  title: 'My Booking',
+  title: 'My Bookings',
   icon: 'inbox-filled',
 };
 

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { LoginStatusType, ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { LoginStatusType, ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { GetQuery } from 'src/app/models/get-query';
 import { Profile } from 'src/app/models/profile';
 import { IGetFollowingsResult } from 'src/app/models/response-data';

@@ -1,0 +1,73 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
+  <div class="text-center mb-15p">
+    <form-item-profile-image
+    [controller]="f.profileImage"
+    (onStartUploading)="onStartUploadingProfileImage()"
+    (onFailUploading)="onDoneUploadingProfileImage()"
+    (onDoneUploading)="onDoneUploadingProfileImage()"
+    ></form-item-profile-image>  
+  </div>
+
+  <div class="mb-40p">
+    <label for="firstName" class="subtitle2">Name</label>
+    <form-item-input 
+    name="firstName"
+    label="Name"
+    type="text"
+    [controller]="f.firstName"
+    [max]="maxName"
+    [submitted]="isSubmitted"
+    ></form-item-input>  
+  </div>
+
+  <div class="mb-40p row">
+    <div class="col-12 col-lg-6 mb-40p mb-lg-0p">
+      <label class="subtitle2">Membership type</label>        
+      <form-item-input 
+      name="userType"
+      label="Membership type"
+      type="text"
+      [controller]="f.userType"
+      [disabled]="true"
+      ></form-item-input>  
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <label class="subtitle2">Email</label>
+      <form-item-input 
+      name="email"
+      label="Email Address"
+      type="email"
+      autocapitalize="off"
+      autocomplete="email"
+      [controller]="f.email"
+      [disabled]="true"
+      ></form-item-input>
+    </div>
+  </div>
+
+  <div class="mb-40p">
+    <label class="subtitle2" for="description">Practice Philosophy (optional)</label>
+    <form-item-textarea 
+    name="description"
+    label="Description"
+    placeholder="Enter description..."
+    [max]="maxTextarea"
+    [controller]="f.product_description"
+    [submitted]="isSubmitted"
+    [option]="{rows: 10}"
+    ></form-item-textarea>
+  </div>
+
+  <div 
+  class="text-right" 
+  [ngClass]="{'d-none': hideSubmit}"
+  >
+    <input 
+    class="btn btn-primary"
+    type="submit" 
+    value="Submit"
+    [disabled]="isUploadingProfileImage || disabled"
+    >
+  </div>
+</form>

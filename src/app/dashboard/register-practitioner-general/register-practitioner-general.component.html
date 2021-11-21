@@ -25,19 +25,16 @@
 (submitForm)="update($event)"
 ></form-provider-general>
 
-<div class="row mb-5">
-  <div class="col-md-4"></div>
-  <div class="col-md-8">
-    <form-item-checkbox
-    type="checkbox"
-    name="accreditInCanada"
-    label="I verify I am an accredited Provider in Canada"
-    [controller]="fAccredit"
-    ></form-item-checkbox>
-    <form-item-errors
-    label="This item"
-    [submitted]="isSubmitted"
-    [controller]="fAccredit"
-    ></form-item-errors>
-  </div>
+<div class="mb-25p">
+  <form-item-checkbox
+  type="checkbox"
+  name="accreditInCanada"
+  label="I verify that all information provided by me is accurate"
+  [controller]="fAccredit"
+  ></form-item-checkbox>
+  <form-item-errors
+  label="This item"
+  [submitted]="isSubmitted"
+  [controller]="fAccredit"
+  ></form-item-errors>
 </div>

@@ -4,7 +4,7 @@ import { SharedService } from '../../../shared/services/shared.service';
 import { BehaviorService } from '../../../shared/services/behavior.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
-import { ProfileManagementService } from '../profile-management.service';
+import { ProfileManagementService } from '../../../shared/services/profile-management.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';

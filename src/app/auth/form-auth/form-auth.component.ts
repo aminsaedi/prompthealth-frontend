@@ -9,7 +9,7 @@ import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
 import { MustMatch } from '../../_helpers/must-match.validator';
 import { validators } from 'src/app/_helpers/form-settings';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { SocialService } from 'src/app/social/social.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
@@ -219,10 +219,10 @@ export class FormAuthComponent implements OnInit, OnChanges {
             break;
           case 'sp':
           case 'c':
-            next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/register-practitioner';
+            next = (this.authType == 'signin') ? '/community' : '/dashboard/register-practitioner';
             break;
           case 'p':
-            next = (this.authType == 'signin') ? '/dashboard/profilemanagement' : '/dashboard/register-product';
+            next = (this.authType == 'signin') ? '/community' : '/dashboard/register-product';
             break;
         }
       }

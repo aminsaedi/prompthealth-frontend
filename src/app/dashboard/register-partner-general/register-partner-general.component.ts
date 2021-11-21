@@ -52,7 +52,6 @@ export class RegisterPartnerGeneralComponent implements OnInit {
   update(data: any){
     this._qService.updateUser(data);
     this._qService.goNext(this._route);
-    console.log(this._qService.getUser())
   }
 }
 

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SharedService } from '../../../shared/services/shared.service';
-import { ProfileManagementService } from '../profile-management.service';
+import { ProfileManagementService } from '../../../shared/services/profile-management.service';
 
 @Component({
   selector: 'app-videos-blogs',

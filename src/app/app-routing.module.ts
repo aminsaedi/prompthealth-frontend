@@ -14,15 +14,14 @@ import { Dashboard2Module } from './dashboard2/dashboard2.module';
 
 const routes: Routes = [
   { path: 'community', loadChildren: () => SocialModule, },
-  { path: 'd', loadChildren: () => Dashboard2Module },
+
+  { path: 'dashboard', loadChildren: () => Dashboard2Module },
+
   { path: 'auth', loadChildren: () => AuthModule, },
 
   { path: 'reset-password/:token', redirectTo: 'auth/reset-password/:token'},
 
-  {
-    path: '',
-    loadChildren: () => ThemeModule
-  },
+  { path: '', loadChildren: () => ThemeModule },
 ];
 
 @NgModule({

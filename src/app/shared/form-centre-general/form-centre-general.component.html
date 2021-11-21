@@ -154,7 +154,7 @@
   </div>
 
   <div class="mb-40p">
-    <label class="subtitle2" for="productDescription">Practice Philosophy</label>
+    <label class="subtitle2" for="productDescription">Practice Philosophy (optional)</label>
     <form-item-textarea 
     name="productDescription"
     label="Practice philosophy"
@@ -207,6 +207,17 @@
   </div>
 
   <div class="mb-40p">
+    <label class="subtitle2">Price Range Per Hour</label>
+    <div>
+      <form-item-pricing
+      [data]="data" 
+      [formGroup]="form"
+      [submitted]="isSubmitted"
+      ></form-item-pricing>  
+    </div>
+  </div>
+
+  <div class="mb-40p">
     <label class="subtitle2">Languages (optional)</label>
     <form-item-checkbox-group
     id="languages"
@@ -243,17 +254,6 @@
     [submitted]="isSubmitted"
     [option]="{showInlineWhenEnabled: true}"
     ></form-item-checkbox-group>
-  </div>
-
-  <div class="mb-40p">
-    <label class="subtitle2">Price Range Per Hour (optional)</label>
-    <div>
-      <form-item-pricing
-      [data]="data" 
-      [formGroup]="form"
-      [submitted]="isSubmitted"
-      ></form-item-pricing>  
-    </div>
   </div>
 
   <div 

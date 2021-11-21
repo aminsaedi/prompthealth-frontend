@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { first } from 'rxjs/operators';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { ICouponData } from 'src/app/models/coupon-data';
 import { IPlanData, IPlanFeatureData, PlanTypeProduct } from 'src/app/models/default-plan';
 import { IGetPlansResult } from 'src/app/models/response-data';

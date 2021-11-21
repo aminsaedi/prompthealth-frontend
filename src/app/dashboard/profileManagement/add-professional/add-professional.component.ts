@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
-import { ProfileManagementService } from '../profile-management.service';
+import { ProfileManagementService } from '../../../shared/services/profile-management.service';
 import { ICreateStaffResult, IGetStaffsResult, IResponseData } from 'src/app/models/response-data';
 import { ModalService } from 'src/app/shared/services/modal.service'
 import { IStaff, Staff } from 'src/app/models/staff';

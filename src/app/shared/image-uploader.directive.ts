@@ -1,5 +1,5 @@
 import { Directive, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-import { ProfileManagementService } from '../dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from './services/profile-management.service';
 import { SharedService } from './services/shared.service';
 
 @Directive({

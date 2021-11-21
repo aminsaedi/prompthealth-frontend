@@ -4,7 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';;
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { GetReferralsQuery } from 'src/app/models/get-referrals-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';

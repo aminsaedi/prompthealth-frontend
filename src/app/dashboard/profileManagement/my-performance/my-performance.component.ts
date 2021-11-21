@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProfileManagementService } from '../profile-management.service';
+import { ProfileManagementService } from '../../../shared/services/profile-management.service';
 import { SharedService } from '../../../shared/services/shared.service';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';

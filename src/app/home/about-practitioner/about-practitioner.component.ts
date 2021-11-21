@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { ICouponData } from 'src/app/models/coupon-data';
 import { IPlanData, IPlanFeatureData, PlanTypePractitioner } from 'src/app/models/default-plan';
 import { IGetPlansResult } from 'src/app/models/response-data';

@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd, ActivationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SearchBarService } from 'src/app/shared/services/search-bar.service';

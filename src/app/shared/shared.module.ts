@@ -74,6 +74,7 @@ import { environment } from 'src/environments/environment';
 import { AlertUploadingComponent } from './alert-uploading/alert-uploading.component';
 import { FormItemSelectBoxComponent } from './form-item-select-box/form-item-select-box.component';
 import { FormItemProfileImageComponent } from './form-item-profile-image/form-item-profile-image.component';
+import { FormAdminGeneralComponent } from './form-admin-general/form-admin-general.component';
 
 @NgModule({
   imports: [
@@ -155,6 +156,7 @@ import { FormItemProfileImageComponent } from './form-item-profile-image/form-it
     AlertUploadingComponent,
     FormItemSelectBoxComponent,
     FormItemProfileImageComponent,
+    FormAdminGeneralComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -216,6 +218,7 @@ import { FormItemProfileImageComponent } from './form-item-profile-image/form-it
     AlertUploadingComponent,
     FormItemSelectBoxComponent,
     FormItemProfileImageComponent,
+    FormAdminGeneralComponent,
   ]
 })
 export class SharedModule { }

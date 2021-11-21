@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, SimpleChanges, ViewChild } from '@angula
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { ICreateStaffResult, IGetStaffsResult, IResponseData } from 'src/app/models/response-data';
 import { Staff } from 'src/app/models/staff';
 import { ModalStateType } from 'src/app/shared/modal/modal.component';

@@ -10,7 +10,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { SharedService } from '../../../shared/services/shared.service';
-import { ProfileManagementService } from '../profile-management.service';
+import { ProfileManagementService } from '../../../shared/services/profile-management.service';
 
 @Component({
   selector: 'app-my-booking',

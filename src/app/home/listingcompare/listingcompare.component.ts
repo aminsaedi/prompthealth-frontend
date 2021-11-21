@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { UniversalService } from "src/app/shared/services/universal.service";
 import { Router } from "@angular/router";
 import { Professional } from "src/app/models/professional";
-import { ProfileManagementService } from "src/app/dashboard/profileManagement/profile-management.service";
+import { ProfileManagementService } from "src/app/shared/services/profile-management.service";
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from "src/app/shared/services/questionnaire.service";
 import { IOptionCheckboxGroup } from "src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component";
 import { CategoryService } from "src/app/shared/services/category.service";

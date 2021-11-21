@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { LoginStatusType, ProfileManagementService } from '../dashboard/profileManagement/profile-management.service';
+import { LoginStatusType, ProfileManagementService } from '../shared/services/profile-management.service';
 
 @Injectable({
   providedIn: 'root'

@@ -4,7 +4,7 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service';
 import getBlobDuration from 'get-blob-duration';
 import { Profile } from 'src/app/models/profile';
-import { ProfileManagementService } from 'src/app/dashboard/profileManagement/profile-management.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { Subscription } from 'rxjs';
