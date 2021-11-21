@@ -134,8 +134,8 @@ export class AboutPractitionerComponent implements OnInit {
 
           // plan name should not be used to connect providerPlan | centrePlan  
           //because it will be changed possibly
-          } else if (d.userType.includes('SP') && d.name === 'Premium') {
-            this.plans.provider.data = d;
+          // } else if (d.userType.includes('SP') && d.name === 'Premium') {
+          //   this.plans.provider.data = d;
           } else if (d.userType.includes('SP')) {
             this.plans.provider.data = d;
           } else if (d.userType.includes('C')) {
