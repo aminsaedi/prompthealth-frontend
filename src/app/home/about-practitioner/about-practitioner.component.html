@@ -1,19 +1,19 @@
 <div class="hero-video overflow-hidden">
   <video 
-  #videoPlayer
-  [muted]="true"
+  #videoPlayer 
+  [muted]="true" 
   autoplay 
   loop 
   playsinline 
   [ngClass]="isVideoLgReady ? 'd-none' : ''"
-  [src]="videoLink"
+  [src]="videoLink" 
   poster="/assets/video/about-practitioner-thumbnail.jpg"
   ></video>
-  <video
-  #videoLg
-  playinline
-  [muted]="true"
-  [ngClass]="!isVideoLgReady ? 'd-none' : ''"
+  <video 
+  #videoLg 
+  playinline 
+  [muted]="true" 
+  [ngClass]="!isVideoLgReady ? 'd-none' : ''" 
   preload="none"
   [src]="videoLinkLg"
   ></video>
@@ -44,23 +44,25 @@
     <div class="mt-60p mb-40p">
       <a id="plan" class="scroll-anchor"></a>
       <div 
-      class="d-inline-block position-relative ml-70p ml-md-0p"
+      class="d-inline-block position-relative ml-70p ml-md-0p" 
       style="width: 170px"
       >
         <div class="discount-popup body-small text-body">
           20% Discount
-        </div>      <switch 
-        [labels]="['Annually', 'Monthly']"
-        [initialState]="'on'"
+        </div>
+        <switch 
+        [labels]="['Annually', 'Monthly']" 
+        [initialState]="'on'" 
         (changeState)="onChangeDuration($event)"
         ></switch>
-      </div>  
+      </div>
+
     </div>
   </div>
 
   <div class="row">
     <div 
-    *ngFor="let plan of plans | keyvalue:keepOriginalOrder; let i = index"
+    *ngFor="let plan of plans | keyvalue:keepOriginalOrder; let i = index" 
     class="col-12 col-lg-4 mb-20p mb-lg-0p"
     >
       <div 
@@ -68,15 +70,15 @@
       [ngClass]="{active: plan.key == 'provider'}"
       >
         <div 
-        *ngIf="plan.value.label"
+        *ngIf="plan.value.label" 
         class="label body1"
         >
           {{plan.value.label}}
         </div>
         <div clas="mb-10p">
           <i 
-          [iconPh]="plan.value.icon"
-          style="font-size: 30px"
+          [iconPh]="plan.value.icon" 
+          style="font-size: 30px" 
           class="text-primary"
           ></i>
         </div>
@@ -84,12 +86,12 @@
         <p class="mb-0 body2 text-label">{{plan.value.subtitle}}</p>
 
         <h2 
-        *ngIf="plan.value.data"
+        *ngIf="plan.value.data" 
         class="my-25p"
         >
-          <ng-container *ngIf="!plan.value">  </ng-container>
-          <ng-container *ngIf="plan.value && isDurationMonthly">${{plan.value.data.price}}</ng-container>
-          <ng-container *ngIf="plan.value && !isDurationMonthly">${{plan.value.data.yearlyPrice}}</ng-container>
+          <ng-container *ngIf="!plan.value"> </ng-container>
+          <ng-container *ngIf="plan.value && isDurationMonthly">{{plan.value.data.price | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
+          <ng-container *ngIf="plan.value && !isDurationMonthly">{{plan.value.data.yearlyPrice | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
 
           <span class="h4 text-label">
             <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
@@ -98,19 +100,16 @@
         </h2>
 
         <ul class="list-unstyled pl-25p plan-features flex-grow-1">
-          <li 
-          *ngIf="i > 0"
-          class="position-relative mb-20p subtitle2"
-          >
+          <li *ngIf="i > 0" class="position-relative mb-20p subtitle2">
             <span *ngIf="i == 1">All Basic features +</span>
             <span *ngIf="i == 2">All Advanced features +</span>
           </li>
 
           <ng-container *ngFor="let feature of planFeatures; let j = index">
             <li 
-            *ngIf="isFeatureShowable(j, plan.key)"
+            *ngIf="isFeatureShowable(j, plan.key)" 
             class="position-relative mb-20p subtitle2"
-            >  
+            >
               <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
               <span>{{feature.item}}</span>
             </li>
@@ -123,9 +122,9 @@
         </ul>
 
         <button 
-        *ngIf="isNotLoggedIn"
+        *ngIf="isNotLoggedIn" 
         class="btn"
-        [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
+        [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')" 
         (click)="onClickSignup(plan.key)"
         >
           <ng-container *ngIf="plan.key == 'basic'">Sign-up Free</ng-container>
@@ -135,21 +134,21 @@
 
         <ng-container *ngIf="isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')">
           <button 
-          class="btn"
+          class="btn" 
           [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
-          [disabled]="isLoading"
+          [disabled]="isLoading" 
           (click)="onClickCheckout(plan.key)"
           >
             <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
             <ng-container *ngIf="plan.key != 'provider'">Select</ng-container>
-          </button>  
+          </button>
         </ng-container>
       </div>
     </div>
   </div>
 
   <div class="mt-30p text-center body1">
-    Looking for social media collaborations? 
+    Looking for social media collaborations?
     <a class="ml-10p btn-text-primary" routerLink="/contact-us"><u>Contact us</u></a>
   </div>
 </section>
@@ -163,14 +162,14 @@
 <section class="container">
   <a #anchorPlanFeatures class="scroll-anchor"></a>
   <table-plan-feature 
-  [planFeatures]="planFeatures"
+  [planFeatures]="planFeatures" 
   [plans]="plans"
   ></table-plan-feature>
 </section>
 
 <section class="container my-100p position-relative">
   <a 
-  id="faq" 
+  id="faq"
   style="top: -100px; position: absolute;"
   ></a>
   <div class="row justify-content-center">
@@ -178,10 +177,10 @@
       <h2 class="h3 h2-md mb-50p text-center">
         Frequently Asked Questions
       </h2>
-      
+
       <ul class="list-unstyled mb-0">
         <li 
-        *ngFor="let faq of faqs;"
+        *ngFor="let faq of faqs;" 
         class="mb-20p"
         >
           <faq-item [data]="faq"></faq-item>

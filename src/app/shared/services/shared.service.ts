@@ -157,16 +157,16 @@ export class SharedService {
     return new Promise((resolve, reject) => {
       return this.http.post(
         this.rootUrl + 'common/file-download',
-        {fileKey: path},
-        {responseType: 'blob'},
+        { fileKey: path },
+        { responseType: 'blob' },
       ).subscribe((res: Blob) => {
         resolve(res);
       }, error => {
         console.log('error');
         console.log(error);
         reject();
-      })
-    })
+      });
+    });
   }
 
   downloadFile(filepath: string, filename: string = null): Promise<boolean> {

@@ -85,12 +85,14 @@ export class SubscriptionPlanComponent implements OnInit {
 
   ngOnInit() {
     this._headerStatusService.setPriceType('practitioner');
-    
+
     const ls = this._uService.localStorage;
     const ss = this._uService.sessionStorage;
     this._uService.setMeta(this._router.url, {
       title: 'Plans for providers | PromptHealth',
-      description: 'Join us to get exposed to clients. Subscribe premium plan to get more feature such as booking system, connect to google reviews / social medias, performance dashboard and more!',
+      description: 'Join us to get exposed to clients.\
+       Subscribe premium plan to get more feature such as booking system, \
+       connect to google reviews / social medias, performance dashboard and more!',
       image: 'https://prompthealth.ca/assets/img/hero-subscription-plan-s.png',
       imageType: 'image/png',
       imageAlt: 'PromptHealth',
@@ -117,12 +119,12 @@ export class SubscriptionPlanComponent implements OnInit {
     if (ss.getItem('stripe_coupon_code')) {
       this.couponCode = JSON.parse(ss.getItem('stripe_coupon_code'));
       let isCouponApplicable = false;
-      for (let role of ['SP', 'C']) {
-        if(this._sharedService.isCouponApplicableTo(this.couponCode, role)){
+      for (const role of ['SP', 'C']) {
+        if (this._sharedService.isCouponApplicableTo(this.couponCode, role)) {
           isCouponApplicable = true;
         }
       }
-      if(isCouponApplicable) {
+      if (isCouponApplicable) {
         setTimeout(() => { this.isCouponShown = true; }, 1000);
       }
     }
