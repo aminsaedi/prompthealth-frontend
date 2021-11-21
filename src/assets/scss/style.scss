@@ -9,7 +9,7 @@
 @import "alignment";
 @import "image";
 
-[class^=handwritten-highlight],
+[class*=handwritten-highlight],
 .handwritten-highlight {
   position: relative;
   &:after {

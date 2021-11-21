@@ -370,7 +370,7 @@ const faqs: IFAQItem[] = [
     q: 'How do I create content?',
     a: `PromptHealth is on a mission to make it easy for people to research, learn, discover, and ultimately make informed decisions about their health, all in one place. Our goal is to eliminate trial and error when looking for wellness solutions  by making PromptHealth the modern and user friendly hub for trusted health and wellness information right by you. We have created a platform to display your knowledge, educate people, and get connected.
       <br><br>
-      On your profile, you are able to share wellness content via quick text notes, voice memos, articles/blogs, and events. . Our team is here to support you in the process of creating content, and are happy to provide guidance if needed. Just reach out!
+      On your profile, you are able to share wellness content via quick text notes, voice memos, articles/blogs, and events. Our team is here to support you in the process of creating content, and are happy to provide guidance if needed. Just reach out!
     `,
     opened: false,
   },
