@@ -62,7 +62,7 @@
   <div class="row justify-content-center">
     <div 
     *ngFor="let plan of plans | keyvalue:keepOriginalOrder; let i = index"
-    class="col-12 col-lg-4 mb-20p mb-lg-0p"
+    class="col-12 col-lg-5 col-xl-4 mb-20p mb-lg-0p"
     >
       <div 
       class="card h-100 text-left rounded12p p-15p p-md-30p rounded-12p position-relative"
@@ -89,8 +89,8 @@
         <p class="mb-0 body2 text-label">{{plan.value.subtitle}}</p>
 
         <h2 class="my-25p clamp-1line h2">
-          <ng-container *ngIf="plan.value?.data && isDurationMonthly">${{plan.value.data.price}}</ng-container>
-          <ng-container *ngIf="plan.value?.data && !isDurationMonthly">${{plan.value.data.yearlyPrice}}</ng-container>
+          <ng-container *ngIf="plan.value?.data && isDurationMonthly">{{plan.value.data.price | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
+          <ng-container *ngIf="plan.value?.data && !isDurationMonthly">{{plan.value.data.yearlyPrice | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
 
           <span class="h4 text-label" *ngIf="plan.value?.data">
             <ng-container *ngIf="isDurationMonthly">/mo</ng-container>

@@ -58,7 +58,6 @@ export class AboutPractitionerComponent implements OnInit {
 
   @ViewChild('videoPlayer') private videoPlayer: ElementRef;
   @ViewChild('videoLg') private videoLg: ElementRef;
-  currency = 'CAD';
 
 
   @HostListener('window:resize') WindowResize() {
@@ -123,9 +122,11 @@ export class AboutPractitionerComponent implements OnInit {
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
       if (res.statusCode == 200) {
         res.data.forEach(d => {
-          if (d.currency && d.currency === 'USD') {
-            this.currency = 'USD';
+          //if currency data doesn't exist, it means CAD
+          if (!d.currency) {
+            d.currency = 'CAD';
           }
+
           if (d.userType.includes('P')) {
             // nothing to do
           } else if (d.userType.length == 2) {

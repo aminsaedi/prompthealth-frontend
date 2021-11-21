@@ -90,8 +90,8 @@
         class="my-25p"
         >
           <ng-container *ngIf="!plan.value"> </ng-container>
-          <ng-container *ngIf="plan.value && isDurationMonthly">${{plan.value.data.price}}</ng-container>
-          <ng-container *ngIf="plan.value && !isDurationMonthly">${{plan.value.data.yearlyPrice}}</ng-container>
+          <ng-container *ngIf="plan.value && isDurationMonthly">{{plan.value.data.price | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
+          <ng-container *ngIf="plan.value && !isDurationMonthly">{{plan.value.data.yearlyPrice | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
 
           <span class="h4 text-label">
             <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
@@ -146,7 +146,6 @@
       </div>
     </div>
   </div>
-  <p>*Price shown in {{currency}}</p>
 
   <div class="mt-30p text-center body1">
     Looking for social media collaborations?
