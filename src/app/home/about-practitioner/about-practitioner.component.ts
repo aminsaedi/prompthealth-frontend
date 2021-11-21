@@ -73,7 +73,7 @@ export class AboutPractitionerComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this._route.fragment.pipe(first()).subscribe(fragment => {
+    this._route.fragment.pipe( first() ).subscribe(fragment => {
       const el: HTMLElement = this._el.nativeElement.querySelector('#' + fragment);
       if (el) {
         setTimeout(() => {
@@ -121,17 +121,21 @@ export class AboutPractitionerComponent implements OnInit {
   initPlans() {
     const path = 'user/get-plans';
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
-      if (res.statusCode === 200) {
-        console.log(res.data);
+      if (res.statusCode == 200) {
         res.data.forEach(d => {
           if (d.currency && d.currency === 'USD') {
             this.currency = 'USD';
           }
           if (d.userType.includes('P')) {
             // nothing to do
-          } else if (d.userType.length === 2 && d.name === 'Basic') {
+          } else if (d.userType.length == 2) {
             this.plans.basic.data = d;
+
+          // plan name should not be used to connect providerPlan | centrePlan  
+          //because it will be changed possibly
           } else if (d.userType.includes('SP') && d.name === 'Premium') {
+            this.plans.provider.data = d;
+          } else if (d.userType.includes('SP')) {
             this.plans.provider.data = d;
           } else if (d.userType.includes('C')) {
             this.plans.centre.data = d;

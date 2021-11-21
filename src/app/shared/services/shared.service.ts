@@ -8,7 +8,7 @@ import { BehaviorService } from './behavior.service';
 
 // import { SocialAuthService } from 'angularx-social-login';
 
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 
 // import 'rxjs/add/operator/toPromise';
 import { catchError, map } from 'rxjs/operators';
@@ -29,8 +29,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Professional } from 'src/app/models/professional';
 import { SocialService } from 'src/app/social/social.service';
 import { AngularFireMessaging } from '@angular/fire/messaging';
-import { switchMap } from 'rxjs-compat/operator/switchMap';
-import { shareReplay } from 'rxjs-compat/operator/shareReplay';
 
 export class User {
   constructor(
@@ -59,7 +57,6 @@ export class SharedService {
     // console.log('fcm loaded');
     // this.type = this._uService.localStorage.getItem('roles');
   }
-
   currentMessage = new BehaviorSubject(null);
 
   rootUrl: string = environment.config.API_URL;

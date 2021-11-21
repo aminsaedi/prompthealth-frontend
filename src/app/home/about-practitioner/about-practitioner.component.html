@@ -1,8 +1,22 @@
 <div class="hero-video overflow-hidden">
-  <video #videoPlayer [muted]="true" autoplay loop playsinline [ngClass]="isVideoLgReady ? 'd-none' : ''"
-    [src]="videoLink" poster="/assets/video/about-practitioner-thumbnail.jpg"></video>
-  <video #videoLg playinline [muted]="true" [ngClass]="!isVideoLgReady ? 'd-none' : ''" preload="none"
-    [src]="videoLinkLg"></video>
+  <video 
+  #videoPlayer 
+  [muted]="true" 
+  autoplay 
+  loop 
+  playsinline 
+  [ngClass]="isVideoLgReady ? 'd-none' : ''"
+  [src]="videoLink" 
+  poster="/assets/video/about-practitioner-thumbnail.jpg"
+  ></video>
+  <video 
+  #videoLg 
+  playinline 
+  [muted]="true" 
+  [ngClass]="!isVideoLgReady ? 'd-none' : ''" 
+  preload="none"
+  [src]="videoLinkLg"
+  ></video>
 </div>
 
 
@@ -10,7 +24,10 @@
 
 <section class="container mt-100p mb-50p">
   <ul class="row list-unstyled justify-content-center">
-    <li *ngFor="let feature of features" class="mb-50p col-12 col-md-6 col-xl-5">
+    <li 
+    *ngFor="let feature of features" 
+    class="mb-50p col-12 col-md-6 col-xl-5"
+    >
       <div class="mb-25p">
         <i [iconPh]="feature.icon" style="font-size: 30px;"></i>
       </div>
@@ -26,31 +43,52 @@
     <!-- <p class="mt-20p">Free 14-day trial on our paid plans. Just cancel before the trial period is over!</p> -->
     <div class="mt-60p mb-40p">
       <a #anchorPlans class="scroll-anchor"></a>
-      <div class="d-inline-block position-relative ml-70p ml-md-0p" style="width: 170px">
+      <div 
+      class="d-inline-block position-relative ml-70p ml-md-0p" 
+      style="width: 170px"
+      >
         <div class="discount-popup body-small text-body">
           20% Discount
         </div>
-        <switch [labels]="['Annually', 'Monthly']" [initialState]="'on'" (changeState)="onChangeDuration($event)">
-        </switch>
+        <switch 
+        [labels]="['Annually', 'Monthly']" 
+        [initialState]="'on'" 
+        (changeState)="onChangeDuration($event)"
+        ></switch>
       </div>
 
     </div>
   </div>
 
   <div class="row">
-    <div *ngFor="let plan of plans | keyvalue:keepOriginalOrder; let i = index" class="col-12 col-lg-4 mb-20p mb-lg-0p">
-      <div class="card h-100 text-left rounded12p p-15p p-md-30p px-lg-15p px-xl-30p rounded-12p"
-        [ngClass]="{active: plan.key == 'provider'}">
-        <div *ngIf="plan.value.label" class="label body1">
+    <div 
+    *ngFor="let plan of plans | keyvalue:keepOriginalOrder; let i = index" 
+    class="col-12 col-lg-4 mb-20p mb-lg-0p"
+    >
+      <div 
+      class="card h-100 text-left rounded12p p-15p p-md-30p px-lg-15p px-xl-30p rounded-12p"
+      [ngClass]="{active: plan.key == 'provider'}"
+      >
+        <div 
+        *ngIf="plan.value.label" 
+        class="label body1"
+        >
           {{plan.value.label}}
         </div>
         <div clas="mb-10p">
-          <i [iconPh]="plan.value.icon" style="font-size: 30px" class="text-primary"></i>
+          <i 
+          [iconPh]="plan.value.icon" 
+          style="font-size: 30px" 
+          class="text-primary"
+          ></i>
         </div>
         <h4 class="mb-0">{{plan.value.title}}</h4>
         <p class="mb-0 body2 text-label">{{plan.value.subtitle}}</p>
 
-        <h2 *ngIf="plan.value.data" class="my-25p">
+        <h2 
+        *ngIf="plan.value.data" 
+        class="my-25p"
+        >
           <ng-container *ngIf="!plan.value"> </ng-container>
           <ng-container *ngIf="plan.value && isDurationMonthly">${{plan.value.data.price}}</ng-container>
           <ng-container *ngIf="plan.value && !isDurationMonthly">${{plan.value.data.yearlyPrice}}</ng-container>
@@ -68,7 +106,10 @@
           </li>
 
           <ng-container *ngFor="let feature of planFeatures; let j = index">
-            <li *ngIf="isFeatureShowable(j, plan.key)" class="position-relative mb-20p subtitle2">
+            <li 
+            *ngIf="isFeatureShowable(j, plan.key)" 
+            class="position-relative mb-20p subtitle2"
+            >
               <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
               <span>{{feature.item}}</span>
             </li>
@@ -80,16 +121,24 @@
           </li>
         </ul>
 
-        <button *ngIf="isNotLoggedIn" class="btn"
-          [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')" (click)="onClickSignup(plan.key)">
+        <button 
+        *ngIf="isNotLoggedIn" 
+        class="btn"
+        [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')" 
+        (click)="onClickSignup(plan.key)"
+        >
           <ng-container *ngIf="plan.key == 'basic'">Sign-up Free</ng-container>
           <ng-container *ngIf="plan.key == 'provider'">Sign-up</ng-container>
           <ng-container *ngIf="plan.key == 'centre'">Sign-up</ng-container>
         </button>
 
         <ng-container *ngIf="isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')">
-          <button class="btn" [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
-            [disabled]="isLoading" (click)="onClickCheckout(plan.key)">
+          <button 
+          class="btn" 
+          [ngClass]="(plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline')"
+          [disabled]="isLoading" 
+          (click)="onClickCheckout(plan.key)"
+          >
             <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
             <ng-container *ngIf="plan.key != 'provider'">Select</ng-container>
           </button>
@@ -113,11 +162,17 @@
 
 <section class="container">
   <a #anchorPlanFeatures class="scroll-anchor"></a>
-  <table-plan-feature [planFeatures]="planFeatures" [plans]="plans"></table-plan-feature>
+  <table-plan-feature 
+  [planFeatures]="planFeatures" 
+  [plans]="plans"
+  ></table-plan-feature>
 </section>
 
 <section class="container my-100p position-relative">
-  <a id="faq" style="top: -100px; position: absolute;"></a>
+  <a 
+  id="faq"
+  style="top: -100px; position: absolute;"
+  ></a>
   <div class="row justify-content-center">
     <div class="col-12 col-xl-10">
       <h2 class="h3 h2-md mb-50p text-center">
@@ -125,7 +180,10 @@
       </h2>
 
       <ul class="list-unstyled mb-0">
-        <li *ngFor="let faq of faqs;" class="mb-20p">
+        <li 
+        *ngFor="let faq of faqs;" 
+        class="mb-20p"
+        >
           <faq-item [data]="faq"></faq-item>
         </li>
       </ul>
