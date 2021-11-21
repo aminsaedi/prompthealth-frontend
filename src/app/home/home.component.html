@@ -82,21 +82,24 @@
         <h6 
         class="h6 text-primary-dark mb-20p"
         style="font-weight: 400"
-        >Find vetted wellness providers and start your health journey today.</h6>
+        >Discover. Learn. Connect.</h6>
         <h2 class="h3 h2-md mb-55p text-primary-dark">
           Your 
           <span class="handwritten-highlight-secondary">wellness</span> 
           navigator.</h2>
         
-        <div class="bg-white color-border-primary-light-dark border rounded-lg mb-40p">
-          <search-bar></search-bar>
+        <div class="mb-40p">
+          <div class="bg-white color-border-primary-light-dark border rounded-lg mb-10p">
+            <search-bar></search-bar>
+          </div>
+          <p class="body1 text-label">Know what you’re looking for? Start here.</p>
         </div>
 
         <div class="mb-55p text-label body1">
           <img src="/assets/img/home/three-providers.png" alt="" style="vertical-align: middle;">
           <div class="d-inline-block ml-10p" style="vertical-align: middle;">
             <span class="text-primary">+500</span> Providers <br class="d-md-none">
-            from all across Canada
+            from all across North America
           </div>
         </div>
 
@@ -159,8 +162,8 @@
 <!-- category start -->
 <div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="onIntersectCategory($event)"></div>
 <section class="container my-40p my-md-100p">
-  <h2 class="text-center mb-50p">
-    <span class="handwritten-highlight">Specialities</span>
+  <h2 class="h3 h2-md text-center mb-50p">
+    <span class="handwritten-highlight">What type of care<br>are you looking for?</span>
   </h2>
   <ul class="row list-unstyled p-0">
     <ng-container *ngFor="let dataPerRow of categoryController?.dataPerRows; let i = index;">
@@ -221,7 +224,7 @@
 <!-- expert finder start -->
 <section class="mt-100p bg-primary-light pt-70p pb-100p">
   <div class="container mb-25p">
-    <h2 class="text-center mb-30p">
+    <h2 class="h3 h2-md text-center mb-30p">
       <span class="handwritten-highlight-white">Expert Finder</span>
     </h2>
     <div class="row justify-content-center">
@@ -342,8 +345,8 @@
   <div class="container">
     <div class="row">
       <div class="col-12 col-xl-4">
-        <h2 class="mb-30p mb-lg-40p mb-xl-30p text-center text-xl-left">
-          <span class="handwritten-highlight-white">What people think of us</span>
+        <h2 class="h3 h2-md mb-30p mb-lg-40p mb-xl-30p text-center text-xl-left">
+          <span class="handwritten-highlight-white">What people <br> think of us</span>
         </h2>
         <p class="subtitle1 opacity-70pc mb-45p text-center text-xl-left">When our members are happy, we are too.</p>
         <!-- <a class="btn btn-primary">Read More Testimonials</a> -->
