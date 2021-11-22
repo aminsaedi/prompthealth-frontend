@@ -90,10 +90,14 @@
         class="my-25p"
         >
           <ng-container *ngIf="!plan.value"> </ng-container>
-          <ng-container *ngIf="plan.value && isDurationMonthly">{{plan.value.data.price | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
-          <ng-container *ngIf="plan.value && !isDurationMonthly">{{plan.value.data.yearlyPrice | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
+          <ng-container *ngIf="plan.value?.data.price == 0">Free</ng-container>
+          <ng-container *ngIf="plan.value?.data.price != 0 &&  isDurationMonthly">{{plan.value.data.price | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
+          <ng-container *ngIf="plan.value?.data.price != 0 && !isDurationMonthly">{{plan.value.data.yearlyPrice | currency:plan.value.data.currency:'code':'1.0-0'}}</ng-container>
 
-          <span class="h4 text-label">
+          <span 
+          *ngIf="plan.value?.data.price != 0"
+          class="h4 text-label"
+          >
             <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
             <ng-container *ngIf="!isDurationMonthly">/yr</ng-container>
           </span>
