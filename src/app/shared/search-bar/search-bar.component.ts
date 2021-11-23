@@ -3,7 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { IFormItemSearchData } from 'src/app/models/form-item-search-data';
-import { locationsNested } from 'src/app/_helpers/location-data';
+import { locations, locationsNested } from 'src/app/_helpers/location-data';
+import { findAbbrByFullnameOf } from 'src/app/_helpers/questionnaire-answer-map';
 import { FormItemSearchComponent } from '../form-item-search/form-item-search.component';
 import { CategoryService } from '../services/category.service';
 import { ModalService } from '../services/modal.service';
@@ -214,37 +215,40 @@ export class SearchBarComponent implements OnInit {
       ...queryParams,
       ...(keyword) && {keyword: keyword},
       ...(keyloc) && {keyloc: keyloc},
+      ...(category) && {cat: findAbbrByFullnameOf(category, 'cat')},
+      ...(typeOfProvider) && {type: findAbbrByFullnameOf(typeOfProvider, 'type')},
+      ...(area) && {
+        zoom: locations[area].zoom,
+        lt: locations[area].lat,
+        lg: locations[area].lng,
+        dist: locations[area].distance,
+      }       
     }
     delete queryParams.modal;
     delete queryParams.menu;
 
-    let route = ["/practitioners"];
-    if(category || typeOfProvider) {
-      route = category ? route.concat('category', category) : route.concat('type', typeOfProvider);
-
+    if(!keyword) {
       delete queryParams.keyword;
-      delete queryParams.cat;
+    } 
 
-      if(area) {
-        route.push(area);
-        delete queryParams.keyloc;
-        delete queryParams.zoom;
-        delete queryParams.dist;
-        delete queryParams.lt;
-        delete queryParams.lg;
-      }
-
-
-    } else if (area){
-      route = route.concat('area', area);
+    if(!keyloc) {
       delete queryParams.keyloc;
-      delete queryParams.zoom;
-      delete queryParams.dist;
-      delete queryParams.lt;
-      delete queryParams.lg;
     }
 
-    this._router.navigate(route, {queryParams: queryParams});
+    if (!category) {
+      delete queryParams.cat;
+    }
+
+    if (!typeOfProvider) {
+      delete queryParams.type;
+    }
+
+    if (!area) {
+      //keep current location. but reset distance filter. so that user can see more data around the location
+      queryParams.dist = 100;
+    }
+
+    this._router.navigate(['/practitioners'], {queryParams: queryParams});
   }
 
 }

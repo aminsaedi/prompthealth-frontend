@@ -29,7 +29,7 @@ import { titleCaseOf } from 'src/app/_helpers/titlecase';
 export class ExpertFinderComponent implements OnInit {
 
   get sizeS() { return !window || window.innerWidth < 768; }
-  get f() { return this.formFilter.controls; }
+  get f() { return this.formFilter?.controls; }
   get fCompare() { return this.formCompare.controls; }
   get isFilterApplied() { return this.controller.isFilterApplied; }
   get isVirtual() { return this.controller.isVirtual; }
@@ -213,7 +213,7 @@ export class ExpertFinderComponent implements OnInit {
       ...this._route.snapshot.params as IExpertFinderFilterParams,
     }
     this.controller = new ExpertFinderController(filterData, {countPerPage: 10});
-    if(!this.formFilter) {
+    if (!this.formFilter) {
       this.formFilter = this.controller.createForm();
       this.f.distance.valueChanges.subscribe(() => {
         this.showFilterDistanceLabel();

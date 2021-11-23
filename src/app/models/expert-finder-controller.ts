@@ -25,7 +25,10 @@ export interface IExpertFinderFilterQueryParams extends Params {
   age: string,  //1,2,3  (array) --> age_range
   lt: string, //123.09475 (string) --> latLong
   lg: string, //49.09934 (string) --> latLong
-  svc: string, //1,2,3 (array) --> services (customerHealth, category, typeOfProvider, treatmentModality)
+  cat: string, // category (id array)
+  cnd: string, // customerHealth (id array)
+  type: string, // type of provider (id array)
+  // svc: string, //1,2,3 (array) --> services (customerHealth, category, typeOfProvider, treatmentModality) ** deprecated
   keyword: string, ///adfaer (string)
   keyloc: string, ///british columbia (string)
   zoom: string, //8 (string)
@@ -138,6 +141,7 @@ export class ExpertFinderController {
       serviceOfferIds: 'offr',
       category: 'cat',
       customerHealth: 'cnd',
+      typeOfProvider: 'type',
     }
 
     for (let key in fields) {
@@ -228,6 +232,7 @@ export class ExpertFinderController {
       distance: new FormControl(this._dist),
       category: new FormGroup({}),
       customerHealth: new FormGroup({}),
+      typeOfProvider: new FormArray([]),
     });
   }
 
@@ -241,7 +246,8 @@ export class ExpertFinderController {
       age_range: 'age',
       serviceOfferIds: 'offr',
       category: 'cat',
-      customerHealth: 'cnd'
+      customerHealth: 'cnd',
+      typeOfProvider: 'type',
     }
 
     for (let key in fields) {
@@ -399,7 +405,7 @@ export class ExpertFinderController {
   checkIfFilterApplied() {
     let applied = false;
     applied = this._rating > 0;
-    const arrayFields: FilterFieldName[] = ['gender', 'languageId', 'typical_hours', 'price_per_hours', 'age_range', 'serviceOfferIds', 'category', 'customerHealth'];
+    const arrayFields: FilterFieldName[] = ['gender', 'languageId', 'typical_hours', 'price_per_hours', 'age_range', 'serviceOfferIds', 'category', 'customerHealth', 'typeOfProvider'];
     for(let name of arrayFields) {
       const data = this['_' + name];
       if(data && data.length > 0) {
@@ -420,7 +426,7 @@ export class ExpertFinderController {
 
 export type FilterFieldName = 
   'gender' | 'languageId' | 'serviceOfferIds' | 'typical_hours' | 'price_per_hours' | 'age_range' | //string[]
-  'category' | 'customerHealth' | //string[]. merged into services
+  'category' | 'customerHealth' | 'typeOfProvider' | //string[]. merged into services
   'rating' | 'lat' | 'lng' | 'zoom' | 'dist' |  // number
   'keyword' | 'keyloc' | // string
   'virtual'; // boolean

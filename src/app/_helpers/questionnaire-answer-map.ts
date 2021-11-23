@@ -158,7 +158,6 @@ export const questionnaireAnswerMap = {
   cnd: {
     full: 'customerHealth',
     abbrs: {
-      /** customer health */
       hc: '5eb1a4e199957471610e6cd4', //clonic health
       hc1: '5eb1a771c73c4f748f4581c3', //Cancer
       hc2: '5eb1a771c73c4f748f4581bc', //Cardiopulmonary Condition
@@ -174,6 +173,50 @@ export const questionnaireAnswerMap = {
       // hn: '5eb1a4e199957471610e6cd1', //not cricical
     }
   },
+  type: {
+    full: 'typeOfProvider',
+    abbrs: {
+      p00: '5eb1a4e199957471610e6d3e', //Acupuncturist
+      p01: '5eb1a4e199957471610e6d34', //Athletic Therapist
+      p02: '5eb1a4e199957471610e6d2d', //Audiologist
+      p03: '5eb1a4e199957471610e6d49', //Body Worker
+      p04: '5eb1a4e199957471610e6d31', //Certified Exercise Physiologist
+      p05: '5eb1a4e199957471610e6d39', //Chiropractor
+      p06: '5eb1a4e199957471610e6d41', //Counsellor
+      p07: '5eb1a4e199957471610e6d2f', //Dental Hygienist
+      p08: '5eb1a4e199957471610e6d2e', //Dentist
+      p09: '5eb1a4e199957471610e6d4b', //Doula
+      p10: '5eb1a4e199957471610e6d48', //Energy Healer
+      p11: '5eb1a4e199957471610e6d40', //Homeopath
+      p12: '5eb1a4e199957471610e6d30', //Kinesiologist
+      p13: '5eb1a4e199957471610e6d45', //Life/Wellness Coach
+      p14: '5eb1a4e199957471610e6d28', //Medical Doctor
+      p15: '5eb1a4e199957471610e6d46', //Meditation /Yoga Instructor
+      p16: '5eb1a4e199957471610e6d4a', //Midwife
+      p17: '5eb1a4e199957471610e6d3d', //Naturopath
+      p18: '5eb1a4e199957471610e6d43', //Neuropsychologist
+      p19: '5eb1a4e199957471610e6d2b', //Nurse
+      p20: '5eb1a4e199957471610e6d2a', //Nurse Practitioner
+      p21: '5eb1a4e199957471610e6d36', //Nutritionist
+      p22: '5eb1a4e199957471610e6d38', //Occupational Therapist
+      p23: '5eb1a4e199957471610e6d2c', //Optometrist
+      p24: '5eb1a4e199957471610e6d3c', //Osteopath
+      p25: '5eb1a4e199957471610e6d3a', //Pedortist
+      p26: '5eb1a4e199957471610e6d32', //Personal Trainer
+      p27: '5eb1a4e199957471610e6d29', //Pharmacist
+      p28: '5eb1a4e199957471610e6d37', //Physiotherapist
+      p29: '5eb1a4e199957471610e6d47', //Pilates Instructor
+      p30: '5eb1a4e199957471610e6d42', //Psychologist
+      p31: '5eb1a4e199957471610e6d35', //Registered Dietician
+      p32: '5eb1a4e199957471610e6d3b', //Registered Massage Therapist
+      p33: '5eb1a4e199957471610e6d44', //Social Worker
+      p34: '5eb1a4e199957471610e6d33', //Sports Coach
+      p35: '5eb1a4e199957471610e6d3f', //Traditional Chinese Medicine
+      p36: '5f47ff0fb6eaa8aaaa53fb44', //Speech therapist
+      p37: '5f47ff41b6eaa8aaaa53fb45', //Sleep consultant
+      p38: '61266c22ed810ffdd0b588e7', //Speech therapist
+    }
+  }
 
   // svc: {
   //   full: 'services',
@@ -282,4 +325,4 @@ export const questionnaireAnswerMap = {
   // },
 }
 
-type QuestionnaireAnswerAbbrGroupName = 'gndr' | 'lng' | 'aval' | 'offr' | 'age' | 'cat' | 'cnd';
+type QuestionnaireAnswerAbbrGroupName = 'gndr' | 'lng' | 'aval' | 'offr' | 'age' | 'cat' | 'cnd' |'type';

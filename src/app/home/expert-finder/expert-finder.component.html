@@ -321,7 +321,7 @@
 <modal
 #modalExpertFinderFilter
 id="expert-finder-filter"
-[bodyStyle]="{padding: 0, maxWidth: '750px'}"
+[bodyStyle]="{padding: 0, maxWidth: '850px'}"
 >
   <div class="py-10p px-15p px-md-30p title-container d-flex justify-content-between align-items-center bg-background sticky-top">
     <button class="btn btn-icon-body small pl-0" (click)="modalExpertFinderFilter.hide()">
@@ -469,6 +469,19 @@ id="expert-finder-filter"
               [option]="{showInlineWhenEnabled: true}"
               ></form-item-checkbox-group>
             </div>
+          </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Provider type</h6>
+            <form-item-checkbox-group
+            #filter
+            id="typeOfProvider"
+            label="Provider type"
+            [data]="controller.typeOfProvider"
+            [selectionsByQuestionnaire]="questionnaires.typeOfProvider"
+            [controller]="f.typeOfProvider"
+            [option]="{showInlineWhenEnabled: true}"
+            ></form-item-checkbox-group>
           </div>
 
           <div class="mb-30p">
