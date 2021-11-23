@@ -15,6 +15,7 @@
       name="firstName"
       label="First name"
       type="text"
+      placeholder="Enter first name..."
       [controller]="f.firstName"
       [max]="maxName"
       [submitted]="isSubmitted"
@@ -27,6 +28,7 @@
       name="lastName"
       label="Last name"
       type="text"
+      placeholder="Enter last name..."
       [controller]="f.lastName"
       [max]="maxName"
       [submitted]="isSubmitted"
@@ -68,6 +70,7 @@
       label="Phone number"
       type="tel"
       [controller]="f.phone"
+      placeholder="123-456-7890"
       [submitted]="isSubmitted"
       ></form-item-input>
     </div>
@@ -77,6 +80,7 @@
       <form-item-input 
       name="professionalTitle"
       label="Professional title"
+      placeholder="Yoga instructor"
       type="text"
       [max]="maxProfessionalTitle"
       [controller]="f.professional_title"
