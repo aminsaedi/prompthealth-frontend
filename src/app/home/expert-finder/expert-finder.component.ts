@@ -29,10 +29,40 @@ import { titleCaseOf } from 'src/app/_helpers/titlecase';
 export class ExpertFinderComponent implements OnInit {
 
   get sizeS() { return !window || window.innerWidth < 768; }
-  get f() { return this.formFilter.controls; }
+  get f() { return this.formFilter?.controls; }
   get fCompare() { return this.formCompare.controls; }
   get isFilterApplied() { return this.controller.isFilterApplied; }
   get isVirtual() { return this.controller.isVirtual; }
+
+  // list of selected category & typeOfProvider
+  // used for showing which field are selected. 
+  get selectedTypesLabel() {
+    return this.selectedTypes.length == 0 ? 
+        'all different fields' :
+        this.selectedTypes.length == 1 ? 
+          this.selectedTypes[0].item_text : 
+          'several fields that you select';
+  }
+  get selectedTypes() {
+    const result = [];
+    if(this._catService.categoryList && this.questionnaires) {
+      this.controller.category.forEach(id => {
+        const cat = this._catService.categoryListFlatten.find(item => item._id == id);
+        if(cat) {
+          result.push(cat);
+        }
+      });
+      
+      this.controller.typeOfProvider.forEach(id => {
+        const type = this.questionnaires.typeOfProvider.answers.find(item => item._id == id);
+        if(type) {
+          result.push(type);
+        }
+      })
+    }
+    return result;
+  }
+
 
 
   professionalOf(id: string) {
@@ -183,7 +213,7 @@ export class ExpertFinderComponent implements OnInit {
       ...this._route.snapshot.params as IExpertFinderFilterParams,
     }
     this.controller = new ExpertFinderController(filterData, {countPerPage: 10});
-    if(!this.formFilter) {
+    if (!this.formFilter) {
       this.formFilter = this.controller.createForm();
       this.f.distance.valueChanges.subscribe(() => {
         this.showFilterDistanceLabel();

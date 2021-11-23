@@ -1,12 +1,12 @@
 <div class="d-flex flex-nowrap align-items-start">
   <div class="pt-30p px-15p py-15p p-md-30p list-container">
     <div class="d-md-flex justify-content-between align-items-center">
-      <div class="d-md-flex align-items-center">
+      <div class="d-md-flex justify-content-between align-items-center">
         <h3 class="mb-md-0">Expert Finder</h3>
-        <div
-        *ngIf="controller.professionalsInitialized"
-        class="subtitle2 text-placeholder ml-md-15p"
-        >{{controller.countAll}} providers found</div>
+        <div 
+        *ngIf="controller?.countAll"
+        class="subtitle2 text-placeholder ml-md-20p"
+        >{{controller?.countAll}} providers found</div>
       </div>
       <div class="text-right mb-10p mb-md-0p">
         <a class="body1" routerLink="/personal-match">
@@ -20,7 +20,7 @@
       <div #blurSearchbar></div>
     </div>
 
-    <div class="mt-30p d-flex justify-content-between">
+    <div class="mt-15p d-flex justify-content-between">
       <div>
         <button 
         class="btn small px-5p px-md-15p"
@@ -68,6 +68,11 @@
       </div>
     </div>
 
+    <div class="subtitle2 mt-25p text-placeholder">
+      Here is what we found based on your search. You may see providers from different fields who can help with your concern.
+      <!-- We found {{controller?.countAll}} providers from {{selectedTypesLabel}}. Narrow your search further here. -->
+    </div>
+
     <div
     *ngIf="compareList && compareList.length > 0"
     [@expandVertical]
@@ -100,7 +105,7 @@
     </div>
   
     <div 
-    class="mt-30p" 
+    class="mt-15p" 
     [ngClass]="{'hidden': (viewState.style == 'map')}"
     >
       <ng-container *ngIf="controller.professionalsInitialized">
@@ -155,17 +160,17 @@
                 </div>
               </div>
               <div class="grid-3 d-md-flex align-items-center">
-                <div>
-                  <span 
-                  *ngIf="p.address" 
-                  class="body1 text-label clamp-1line"
-                  >
+                <div 
+                *ngIf="p.address" 
+                class="mr-md-15p"
+                >
+                  <span class="body1 text-label clamp-1line">
                     <i iconPh="pin"></i>
                     <span>{{p.address}}</span>
                   </span>
                 </div>
-                <div class="flex-grow-1 d-flex justify-content-between align-items-center ml-md-15p">
-                  <span class="text-label">
+                <div class="flex-grow-1 d-flex justify-content-between justify-content-md-end align-items-center">
+                  <span class="text-label mr-md-15p">
                     <ng-container *ngIf="p.distance">
                       <i iconPh="compass"></i>
                       <span>{{p.distance | distance}}</span>
@@ -316,7 +321,7 @@
 <modal
 #modalExpertFinderFilter
 id="expert-finder-filter"
-[bodyStyle]="{padding: 0, maxWidth: '750px'}"
+[bodyStyle]="{padding: 0, maxWidth: '850px'}"
 >
   <div class="py-10p px-15p px-md-30p title-container d-flex justify-content-between align-items-center bg-background sticky-top">
     <button class="btn btn-icon-body small pl-0" (click)="modalExpertFinderFilter.hide()">
@@ -465,6 +470,43 @@ id="expert-finder-filter"
               ></form-item-checkbox-group>
             </div>
           </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Provider type</h6>
+            <form-item-checkbox-group
+            #filter
+            id="typeOfProvider"
+            label="Provider type"
+            [data]="controller.typeOfProvider"
+            [selectionsByQuestionnaire]="questionnaires.typeOfProvider"
+            [controller]="f.typeOfProvider"
+            [option]="{showInlineWhenEnabled: true}"
+            ></form-item-checkbox-group>
+          </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Speciality</h6>
+            <form-item-service
+            #filter
+            id="category"
+            label="Speciality"
+            [data]="controller.category"
+            [controller]="f.category"
+            ></form-item-service>
+          </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Health condition</h6>
+            <form-item-customer-health
+            #filter
+            id="customerHealth"
+            label="Health condition"
+            [data]="controller.customerHealth"
+            [selections]="questionnaires.customerHealth.answers"
+            [controller]="f.customerHealth"
+            ></form-item-customer-health>
+          </div>
+
       </div>
       <div class="text-right sticky-bottom blur pt-10p pb-15p pb-md-30p px-15p px-md-30p">
         <input type="submit" class="btn btn-primary w-100" value="Apply Filter">

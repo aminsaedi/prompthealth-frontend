@@ -87,15 +87,23 @@ export class UserQuestionaireComponent implements OnInit {
             params.age = age_range.join(',');
           }
 
-          const services = [];
+          const cat = []; // category
+          const cnd = []; // customerHealth
           personalMatch.services.forEach(s => {
-            const abbr = findAbbrByFullnameOf(s, 'svc');
-            if(abbr) {
-              services.push(abbr);
+            const abbrCat = findAbbrByFullnameOf(s, 'cat');
+            const abbrCnd = findAbbrByFullnameOf(s, 'cnd');
+            if(abbrCat) {
+              cat.push(abbrCat);
+            }
+            if(abbrCnd) {
+              cnd.push(abbrCnd);
             }
           });
-          if(services.length > 0) {
-            params.svc = services.join(',');
+          if(cat.length > 0) {
+            params.cat = cat.join(',');
+          }
+          if(cnd.length > 0) {
+            params.cnd = cnd.join(',');
           }
 
           // const data = this._qService.getUserTracking();

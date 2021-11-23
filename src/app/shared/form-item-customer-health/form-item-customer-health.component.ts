@@ -10,6 +10,8 @@ import { QuestionnaireAnswer } from '../services/questionnaire.service';
 })
 export class FormItemCustomerHealthComponent implements OnInit {
 
+  @Input() id: string = null;
+
   @Input() data: string[] = null; /** value[] | valueForTracking[]*/
   @Input() col2: boolean = true; /** only available when mode == form  */
   @Input() disabled: boolean = false; /** only available when mode == form */
@@ -71,6 +73,14 @@ export class FormItemCustomerHealthComponent implements OnInit {
       }
     });
     this.getSelectedValue(true);    
+  }
+
+  deselectAll() {
+    this.controller.reset();
+  }
+  
+  getSelected(){
+    return this.getSelectedValue(false);
   }
 
   /** get seleceted values */ 
