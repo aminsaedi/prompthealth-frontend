@@ -121,7 +121,7 @@ export class ProfileFeedComponent implements OnInit {
       const params: ISocialPostSearchQuery = {
         count: this.countPerPage,
         ... (this.posts && this.posts.length > 0) && {
-          page: (Math.ceil(this.posts.length / this.countPerPage) + 1),
+          // page: (Math.ceil(this.posts.length / this.countPerPage) + 1),
           timestamp: this.posts[this.posts.length -1].createdAt,
         },
         ... (contentType) && { contentType: contentType.toUpperCase() },
@@ -132,6 +132,7 @@ export class ProfileFeedComponent implements OnInit {
         }
       }
       const query = new SocialPostSearchQuery(params);
+
 
       this.isLoading = true;
       const path = 'note/get-by-author/' + this.profile._id + query.toQueryParams();
