@@ -7,7 +7,6 @@ import { locations } from "../_helpers/location-data";
 import { findAbbrByFullnameOf, findFullnameByAbbrOf } from "../_helpers/questionnaire-answer-map";
 import { Professional } from "./professional";
 import { IGetPractitionersResult } from "./response-data";
-import { IUserDetail } from "./user-detail";
 
 export interface IExpertFinderFilterParams extends Params {
   categoryId: string,
@@ -46,7 +45,11 @@ export class ExpertFinderController {
   get price_per_hours() { return this._price_per_hours; }
   get age_range() { return this._age_range; }
   get serviceOfferIds() { return this._serviceOfferIds; }
-  get services() { return this._services; }
+  get category() { return this._category || []; }
+  get typeOfProvider() { return this._typeOfProvider || []; }
+  get customerHealth() { return this._customerHealth || []; }
+  get services() { return this._category.concat(this._typeOfProvider).concat(this._customerHealth); }
+
   // get rating() { return this._rating; }
   // get virtual() { return this._virtual; }
 
@@ -80,7 +83,9 @@ export class ExpertFinderController {
   private _typical_hours: string[] = [];
   private _age_range: string[] = [];
   private _serviceOfferIds: string[] = [];
-  private _services: string[] = [];
+  private _category: string[] = [];
+  private _typeOfProvider: string[] = [];
+  private _customerHealth: string[] = [];
 
   private _price_per_hours: string[] = [];
 
@@ -107,8 +112,8 @@ export class ExpertFinderController {
     const o = new OptionExpertFinderController(option);
     this._countPerPage = o.countPerPage;
 
-    if(data.categoryId) { this._services.push(data.categoryId); }
-    if(data.typeOfProviderId) { this._services.push(data.typeOfProviderId); }
+    if(data.categoryId) { this._category.push(data.categoryId); }
+    if(data.typeOfProviderId) { this._typeOfProvider.push(data.typeOfProviderId); }
 
     this._lat = Number(data.lt) || null;
     this._lng = Number(data.lg) || null;
@@ -131,7 +136,8 @@ export class ExpertFinderController {
       typical_hours: 'aval',
       age_range: 'age',
       serviceOfferIds: 'offr',
-      services: 'svc',
+      category: 'cat',
+      customerHealth: 'cnd',
     }
 
     for (let key in fields) {
@@ -220,6 +226,8 @@ export class ExpertFinderController {
       rating: new FormControl(this._rating),
       virtual: new FormControl(this._virtual),
       distance: new FormControl(this._dist),
+      category: new FormGroup({}),
+      customerHealth: new FormGroup({}),
     });
   }
 
@@ -232,13 +240,13 @@ export class ExpertFinderController {
       typical_hours: 'aval',
       age_range: 'age',
       serviceOfferIds: 'offr',
-      services: 'svc',
+      category: 'cat',
+      customerHealth: 'cnd'
     }
 
     for (let key in fields) {
       const data: string[] = this['_' + key];
-      if(data && data.length > 0) {
-
+      if(data?.length > 0) {
         const abbrs = [];
         data.forEach(d => {
           const val = findAbbrByFullnameOf(d, fields[key]);
@@ -246,7 +254,9 @@ export class ExpertFinderController {
             abbrs.push(val);
           }
         });
-        res[fields[key]] = abbrs.join(',');
+        if(abbrs.length > 0) {
+          res[fields[key]] = abbrs.join(',');
+        }
       }
     }
 
@@ -389,7 +399,7 @@ export class ExpertFinderController {
   checkIfFilterApplied() {
     let applied = false;
     applied = this._rating > 0;
-    const arrayFields: FilterFieldName[] = ['gender', 'languageId', 'typical_hours', 'price_per_hours', 'age_range', 'serviceOfferIds'];
+    const arrayFields: FilterFieldName[] = ['gender', 'languageId', 'typical_hours', 'price_per_hours', 'age_range', 'serviceOfferIds', 'category', 'customerHealth'];
     for(let name of arrayFields) {
       const data = this['_' + name];
       if(data && data.length > 0) {
@@ -409,7 +419,8 @@ export class ExpertFinderController {
 }
 
 export type FilterFieldName = 
-  'gender' | 'languageId' | 'serviceOfferIds' | 'typical_hours' | 'price_per_hours' | 'age_range' | 'services' | //string[]
+  'gender' | 'languageId' | 'serviceOfferIds' | 'typical_hours' | 'price_per_hours' | 'age_range' | //string[]
+  'category' | 'customerHealth' | //string[]. merged into services
   'rating' | 'lat' | 'lng' | 'zoom' | 'dist' |  // number
   'keyword' | 'keyloc' | // string
   'virtual'; // boolean

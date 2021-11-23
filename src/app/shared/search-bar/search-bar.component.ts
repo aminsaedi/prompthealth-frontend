@@ -223,7 +223,7 @@ export class SearchBarComponent implements OnInit {
       route = category ? route.concat('category', category) : route.concat('type', typeOfProvider);
 
       delete queryParams.keyword;
-      delete queryParams.svc;
+      delete queryParams.cat;
 
       if(area) {
         route.push(area);

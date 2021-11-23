@@ -10,6 +10,7 @@ import { Category, CategoryService } from '../services/category.service';
 })
 export class FormItemServiceComponent implements OnInit {
 
+  @Input() id: string = null;
   @Input() data: string[] = null; /** serviceId[] */
   @Input() col2: boolean = true;
   @Input() disabled: boolean = false;

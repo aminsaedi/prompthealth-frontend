@@ -8,7 +8,19 @@ import { SharedService } from './shared.service';
 })
 export class CategoryService {
 
+  get categoryListFlatten(): {_id: string, item_text: string}[] {
+    let result = [];
+    if(this.categoryList) {
+      for (let cat of this.categoryList) {
+        result.push({_id: cat._id, item_text: cat.item_text});
+        result = result.concat(cat.subCategory); 
+      }
+    }
+    return result;
+  }
+
   public categoryList: Category[];
+
 
   constructor(
     // private toastr: ToastrService,

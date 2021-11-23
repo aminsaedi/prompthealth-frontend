@@ -1,13 +1,7 @@
 <div class="d-flex flex-nowrap align-items-start">
   <div class="pt-30p px-15p py-15p p-md-30p list-container">
     <div class="d-md-flex justify-content-between align-items-center">
-      <div class="d-md-flex align-items-center">
-        <h3 class="mb-md-0">Expert Finder</h3>
-        <div
-        *ngIf="controller.professionalsInitialized"
-        class="subtitle2 text-placeholder ml-md-15p"
-        >{{controller.countAll}} providers found</div>
-      </div>
+      <h3 class="mb-md-0">Expert Finder</h3>
       <div class="text-right mb-10p mb-md-0p">
         <a class="body1" routerLink="/personal-match">
           <u>Start personal match</u>
@@ -20,7 +14,14 @@
       <div #blurSearchbar></div>
     </div>
 
-    <div class="mt-30p d-flex justify-content-between">
+    <div 
+    class="subtitle2 mt-15p"
+    [ngClass]="controller.professionalsInitialized ? 'text-placeholder' : 'text-white'"
+    >
+      We found {{controller?.countAll}} providers from {{selectedTypesLabel}}. Narrow your search further here.
+    </div>
+
+    <div class="mt-15p d-flex justify-content-between">
       <div>
         <button 
         class="btn small px-5p px-md-15p"
@@ -465,6 +466,30 @@ id="expert-finder-filter"
               ></form-item-checkbox-group>
             </div>
           </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Speciality</h6>
+            <form-item-service
+            #filter
+            id="category"
+            label="Speciality"
+            [data]="controller.category"
+            [controller]="f.category"
+            ></form-item-service>
+          </div>
+
+          <div class="mb-30p">
+            <h6 class="mb-10p">Health condition</h6>
+            <form-item-customer-health
+            #filter
+            id="customerHealth"
+            label="Health condition"
+            [data]="controller.customerHealth"
+            [selections]="questionnaires.customerHealth.answers"
+            [controller]="f.customerHealth"
+            ></form-item-customer-health>
+          </div>
+
       </div>
       <div class="text-right sticky-bottom blur pt-10p pb-15p pb-md-30p px-15p px-md-30p">
         <input type="submit" class="btn btn-primary w-100" value="Apply Filter">
