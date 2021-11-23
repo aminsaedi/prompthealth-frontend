@@ -1,0 +1,42 @@
+<div>
+  <a
+  routerLink="../" 
+  class="btn btn-text small pl-0"
+  >
+  <i iconPh="arrow-left-circle"></i>
+  <span>Upcoming events</span>
+  </a>  
+</div>
+
+<div 
+*ngIf="events"
+class="mt-15p"
+>
+  <ng-container *ngFor="let p of events; let i = index">
+    <div 
+    class="mb-15p" 
+    [@fade]
+    >
+      <card 
+      class="pointer-events: initial;"
+      [post]="p" 
+      [shorten]="true"
+      [option]="{showLinkToDetail: true}"
+      ></card>
+    </div>
+  
+  </ng-container>
+  
+  <ng-container *ngIf="events?.length == 0">
+    <div class="mb-15p bg-white py-20p rounded-8p">
+      <card-no-content label="No contents yet!"></card-no-content>
+    </div>
+  </ng-container>
+</div>
+
+<div 
+*ngIf="!profile || !events"
+class="mt-30p text-center"
+>
+  <loader></loader>
+</div>
