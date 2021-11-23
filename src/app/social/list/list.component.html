@@ -99,9 +99,9 @@
 </ng-container>
 
 <ng-container *ngIf="posts && posts.length == 0">
-  <div class="mb-15p subtitle1 text-body">
-    No contents found...<br>
-    Please try again later.
+  <div class="mb-15p bg-white rounded-8p py-20p">
+    <card-no-content
+     [label]="'No ' + selectedTaxonomyType + ' yet!'"></card-no-content>
   </div>
 </ng-container>
 

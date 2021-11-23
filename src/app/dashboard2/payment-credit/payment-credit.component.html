@@ -10,10 +10,9 @@
 
 <div
 *ngIf="credits?.length == 0" 
-class="text-center container"
+class="container"
 >
-  <img src="/assets/img/general/cards.png" alt="" style="max-width: 100%;">
-  <h6 class="text-primary-dark mt-30p">No transactions found!</h6>
+  <card-no-content label="No transactions yet!"></card-no-content>
 </div>  
 
 <ng-container *ngIf="credits?.length > 0">

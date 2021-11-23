@@ -37,6 +37,7 @@
       name="firstName"
       label="Name"
       type="text"
+      placeholder="Enter a business name..."
       [max]="maxName"
       [controller]="f.firstName"
       [submitted]="isSubmitted"
@@ -77,6 +78,7 @@
       name="phone"
       label="Phone number"
       type="tel"
+      placeholder="123-456-7890"
       [controller]="f.phone"
       [submitted]="isSubmitted"
       [disabled]="f.placeId.value"
@@ -84,11 +86,12 @@
     </div>
 
     <div class="col-12 col-lg-6">
-      <label for="professionalTitle" class="subtitle2">Title (optional)</label>
+      <label for="professionalTitle" class="subtitle2">Title</label>
       <form-item-input 
       name="professionalTitle"
       label="Professional title"
       type="text"
+      placeholder="Chiropractic"
       [max]="maxProfessionalTitle"
       [controller]="f.professional_title"
       [submitted]="isSubmitted"

@@ -27,7 +27,6 @@ import { AgmCoreModule } from '@agm/core';
 import { NotificationComponent } from './notification/notification.component';
 import { DraftsComponent } from './drafts/drafts.component';
 import { ProfileContactComponent } from './profile-contact/profile-contact.component';
-// import { FollowListComponent } from '../dashboard2/follow-list/follow-list.component';
 import { ProfileFollowListComponent } from './profile-follow-list/profile-follow-list.component';
 import { GuardIfNotLoggedInGuard } from '../auth/guard-if-not-logged-in.guard';
 import { NewReferralComponent } from './new-referral/new-referral.component';
@@ -37,8 +36,10 @@ import { GuardIfDataNotSetGuard } from './guard-if-data-not-set.guard';
 import { ModalVoiceRecorderComponent } from './modal-voice-recorder/modal-voice-recorder.component';
 import { ProfilePromotionComponent } from './profile-promotion/profile-promotion.component';
 import { CardNewPromoComponent } from './card-new-promo/card-new-promo.component';
-// import { GuardIfUserTypeClientGuard } from './guard-if-user-type-client.guard';
 import { SocialItemsModule } from '../social-items/social-items.module';
+import { ProfileEventComponent } from './profile-event/profile-event.component';
+import { ProfileEventUpcomingComponent } from './profile-event-upcoming/profile-event-upcoming.component';
+import { ProfileEventPastComponent } from './profile-event-past/profile-event-past.component';
 
 
 const routes: Routes = [
@@ -48,7 +49,10 @@ const routes: Routes = [
       { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
       { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
       { path: 'promotion', component: ProfilePromotionComponent, data: {order: 3}, canDeactivate: [GuardIfEditorLockedGuard] },
-      { path: 'event', component: ProfileFeedComponent, data: {order: 4, contentType: 'event'} },
+      { path: 'event', component: ProfileEventComponent, data: {order: 4}, children: [
+        { path: '', component: ProfileEventUpcomingComponent },
+        { path: 'past', component: ProfileEventPastComponent },
+      ] },
       { path: 'review', component: ProfileReviewComponent, data: {order: 5} },
     ] },
 
@@ -77,16 +81,16 @@ const routes: Routes = [
     { path: 'editor/event/:id', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},    
     { path: 'editor', redirectTo: 'editor/article' },
 
-    // { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
-    // { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfUserTypeClientGuard], },
     { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },
+
+    { path: 'followings', redirectTo: '/dashboard/follow/followings'},
+    { path: 'followers',  redirectTo: '/dashboard/follow/followers'},
 
     { path: '', component: HomeComponent, children: [
       { path: ':taxonomyType', component: ListComponent },
       { path: ':taxonomyType/:topicId', component: ListComponent },  
 
       { path: '', pathMatch: 'full', redirectTo: 'feed', },
-
     ]},
   ]},
 
@@ -117,6 +121,9 @@ const routes: Routes = [
     ModalVoiceRecorderComponent,
     ProfilePromotionComponent,
     CardNewPromoComponent,
+    ProfileEventComponent,
+    ProfileEventUpcomingComponent,
+    ProfileEventPastComponent,
   ],
   providers: [
     CategoryService,
