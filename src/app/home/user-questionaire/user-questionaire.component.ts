@@ -71,7 +71,7 @@ export class UserQuestionaireComponent implements OnInit {
 
           const params: Params = {}
 
-          const gndr = findAbbrByFullnameOf(personalMatch.gender.toLowerCase(), 'gndr');
+          const gndr = personalMatch.gender ? findAbbrByFullnameOf(personalMatch.gender.toLowerCase(), 'gndr') : null;
           if(gndr) {
             params.gndr = gndr;
           }
