@@ -75,6 +75,7 @@ import { AlertUploadingComponent } from './alert-uploading/alert-uploading.compo
 import { FormItemSelectBoxComponent } from './form-item-select-box/form-item-select-box.component';
 import { FormItemProfileImageComponent } from './form-item-profile-image/form-item-profile-image.component';
 import { FormAdminGeneralComponent } from './form-admin-general/form-admin-general.component';
+import { CardNoContentComponent } from './card-no-content/card-no-content.component';
 
 @NgModule({
   imports: [
@@ -157,6 +158,7 @@ import { FormAdminGeneralComponent } from './form-admin-general/form-admin-gener
     FormItemSelectBoxComponent,
     FormItemProfileImageComponent,
     FormAdminGeneralComponent,
+    CardNoContentComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -219,6 +221,7 @@ import { FormAdminGeneralComponent } from './form-admin-general/form-admin-gener
     FormItemSelectBoxComponent,
     FormItemProfileImageComponent,
     FormAdminGeneralComponent,
+    CardNoContentComponent,
   ]
 })
 export class SharedModule { }

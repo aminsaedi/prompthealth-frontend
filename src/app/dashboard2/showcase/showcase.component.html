@@ -18,11 +18,10 @@
     *ngIf="user.doneInitShowcases && user.showcases.length == 0" 
     class="text-center container"
     >
-      <img src="/assets/img/general/cards.png" alt="" style="max-width: 100%;">
-      <h6 class="text-primary-dark mt-30p">No showcase yet!</h6>
+      <card-no-content label="No showcase yet!"></card-no-content>
       <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-primary mt-30p"
       (click)="showEditor()"
       >Add showcase</button>
     </div>  

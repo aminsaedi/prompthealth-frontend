@@ -13,15 +13,11 @@
     </section>
     <section class="col-12 col-md-10 col-lg-8 col-xl-7">
       <ng-container *ngIf="drafts">
-        <div 
-        *ngIf="drafts.length == 0"
-        class="text-center"
-        >
-          <img style="max-width: 100%;" src="/assets/img/general/cards.png" alt="">
-          <div class="subtitle1 mt-30p">
-            No Drafts found!
-          </div>
-        </div>
+          <card-no-content 
+          *ngIf="drafts.length == 0"
+          label="No drafts yet!"
+          ></card-no-content>
+
 
         <div *ngIf="drafts.length > 0">
           <h4>Saved as Draft</h4>
