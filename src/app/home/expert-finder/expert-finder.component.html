@@ -1,7 +1,13 @@
 <div class="d-flex flex-nowrap align-items-start">
   <div class="pt-30p px-15p py-15p p-md-30p list-container">
     <div class="d-md-flex justify-content-between align-items-center">
-      <h3 class="mb-md-0">Expert Finder</h3>
+      <div class="d-md-flex justify-content-between align-items-center">
+        <h3 class="mb-md-0">Expert Finder</h3>
+        <div 
+        *ngIf="controller?.countAll"
+        class="subtitle2 text-placeholder ml-md-20p"
+        >{{controller?.countAll}} providers found</div>
+      </div>
       <div class="text-right mb-10p mb-md-0p">
         <a class="body1" routerLink="/personal-match">
           <u>Start personal match</u>
@@ -12,13 +18,6 @@
     <div class="mt-30p bg-primary-light rounded-8p border border-background">      
       <search-bar #searchBar></search-bar>
       <div #blurSearchbar></div>
-    </div>
-
-    <div 
-    class="subtitle2 mt-15p"
-    [ngClass]="controller.professionalsInitialized ? 'text-placeholder' : 'text-white'"
-    >
-      We found {{controller?.countAll}} providers from {{selectedTypesLabel}}. Narrow your search further here.
     </div>
 
     <div class="mt-15p d-flex justify-content-between">
@@ -69,6 +68,11 @@
       </div>
     </div>
 
+    <div class="subtitle2 mt-25p text-placeholder">
+      Here is what we found based on your search. You may see providers from different fields who can help with your concern.
+      <!-- We found {{controller?.countAll}} providers from {{selectedTypesLabel}}. Narrow your search further here. -->
+    </div>
+
     <div
     *ngIf="compareList && compareList.length > 0"
     [@expandVertical]
@@ -101,7 +105,7 @@
     </div>
   
     <div 
-    class="mt-30p" 
+    class="mt-15p" 
     [ngClass]="{'hidden': (viewState.style == 'map')}"
     >
       <ng-container *ngIf="controller.professionalsInitialized">
@@ -156,17 +160,17 @@
                 </div>
               </div>
               <div class="grid-3 d-md-flex align-items-center">
-                <div>
-                  <span 
-                  *ngIf="p.address" 
-                  class="body1 text-label clamp-1line"
-                  >
+                <div 
+                *ngIf="p.address" 
+                class="mr-md-15p"
+                >
+                  <span class="body1 text-label clamp-1line">
                     <i iconPh="pin"></i>
                     <span>{{p.address}}</span>
                   </span>
                 </div>
-                <div class="flex-grow-1 d-flex justify-content-between align-items-center ml-md-15p">
-                  <span class="text-label">
+                <div class="flex-grow-1 d-flex justify-content-between justify-content-md-end align-items-center">
+                  <span class="text-label mr-md-15p">
                     <ng-container *ngIf="p.distance">
                       <i iconPh="compass"></i>
                       <span>{{p.distance | distance}}</span>
