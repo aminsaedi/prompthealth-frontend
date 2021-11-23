@@ -128,7 +128,7 @@
               [ngClass]="(rlah.isActive ? 'btn-text active' : 'btn-text-grey')"
               #rlah="routerLinkActive"
               routerLinkActive
-              [routerLinkActiveOptions]="{exact: false}"
+              [routerLinkActiveOptions]="{exact: item.id == 'about' ? true : false}"
               [replaceUrl]="true"
               >{{item.label}}</a>
               
