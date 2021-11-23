@@ -106,7 +106,7 @@ id="user-menu"
     <div class="d-flex mt-20p">
       <a
       class="text-body"
-      routerLink="/community/followings"
+      routerLink="/dashboard/follow/followings"
       [replaceUrl]="true"
       >
         <div class="subtitle2">Following</div>
@@ -115,7 +115,7 @@ id="user-menu"
       <a
       *ngIf="!user.isU"
       class="ml-20p text-body"
-      routerLink="/community/followers"
+      routerLink="/dashboard/follow/followers"
       [replaceUrl]="true"
       >
         <div class="subtitle2">Followers</div>
