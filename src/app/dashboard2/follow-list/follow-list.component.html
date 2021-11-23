@@ -55,11 +55,10 @@
   *ngIf="follows && follows.length == 0"
   class="subtitle1 mt-25p text-center"
   >
-    <img class="mb-50p" src="/assets/img/general/cards.png" alt="">
-    <h6 class="mb-30p text-primary-dark">No {{followTypeFormatted}} Yet!</h6>
+    <card-no-content [label]="'No ' + followTypeFormatted + ' yet!'"></card-no-content>
     <a 
     *ngIf="followType == 'following'"
-    class="btn btn-primary"
+    class="btn btn-primary mt-30p"
     routerLink="/practitioners"
     >Find providers</a>
   </div>

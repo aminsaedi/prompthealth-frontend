@@ -30,10 +30,9 @@
 
 <ng-container *ngIf="bookmarks && bookmarks.length == 0">
   <div class="bg-white rounded-8p py-50p text-center">
-    <img class="mb-50p" src="/assets/img/general/cards.png" alt="">
-    <h6 class="mb-30p text-primary-dark">No Bookmarks Yet!</h6>
+    <card-no-content label="No bookmarks yet!"></card-no-content>
     <a 
-    class="btn btn-primary"
+    class="btn btn-primary mt-30p"
     routerLink="/community/feed"
     >Find contents</a>
   </div>

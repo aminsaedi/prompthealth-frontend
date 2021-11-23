@@ -18,9 +18,8 @@
   </ng-container>
   
   <ng-container *ngIf="posts && posts.length == 0">
-    <div class="mb-15p subtitle1 text-body">
-      No contents found...<br>
-      Please try again later.
+    <div class="mb-15p bg-white py-20p rounded-8p">
+      <card-no-content label="No contents yet!"></card-no-content>
     </div>
   </ng-container>
 </div>

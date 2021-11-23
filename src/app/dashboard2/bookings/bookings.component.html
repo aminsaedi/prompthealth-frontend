@@ -146,8 +146,7 @@
     
     <section *ngIf="bookingsAll?.length == 0">
       <div class="text-center container">
-        <img src="/assets/img/general/cards.png" alt="" style="max-width: 100%;">
-        <h6 class="text-primary-dark mt-30p">No bookings yet!</h6>
+        <card-no-content label="No bookings yet!"></card-no-content>
         <a
         *ngIf="viewType == 'client'"
         class="btn btn-primary mt-30p"
