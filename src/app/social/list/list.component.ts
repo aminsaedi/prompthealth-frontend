@@ -269,7 +269,6 @@ export class ListComponent implements OnInit {
       }
 
       const query = new SocialPostSearchQuery(params).toQueryParams();
-      console.log(query);
       const path = this.isFilterByFollowingOn ? 'note/get-feed' : 'note/filter';
 
       // console.log(path, query)
