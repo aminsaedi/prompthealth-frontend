@@ -77,16 +77,16 @@ const routes: Routes = [
     { path: 'editor/event/:id', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},    
     { path: 'editor', redirectTo: 'editor/article' },
 
-    // { path: 'followings', component: FollowListComponent, data: {type: 'following'}, canActivate: [GuardIfNotLoggedInGuard], },
-    // { path: 'followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfUserTypeClientGuard], },
     { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },
+
+    { path: 'followings', redirectTo: '/dashboard/follow/followings'},
+    { path: 'followers',  redirectTo: '/dashboard/follow/followers'},
 
     { path: '', component: HomeComponent, children: [
       { path: ':taxonomyType', component: ListComponent },
       { path: ':taxonomyType/:topicId', component: ListComponent },  
 
       { path: '', pathMatch: 'full', redirectTo: 'feed', },
-
     ]},
   ]},
 

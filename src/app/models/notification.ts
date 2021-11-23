@@ -31,7 +31,7 @@ export class SocialNotification implements ISocialNotification{
   get linkToTarget() {
     let link = '';
     switch(this.data.type) {
-      case 'following': link = '/community/followers'; break;
+      case 'following': link = '/dashboard/followers'; break;
 
       case 'tag-provider': link = '/dashboard/profilemanagement/add-professionals'; break;
       case 'password-change': link = '/dashboard/profilemanagement/my-password'; break;
