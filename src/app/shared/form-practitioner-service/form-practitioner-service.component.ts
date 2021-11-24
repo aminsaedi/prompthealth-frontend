@@ -53,7 +53,7 @@ export class FormPractitionerServiceComponent implements OnInit {
       acceptsInsurance: new FormControl(this.data.acceptsInsurance || null),
       seeOtherRegion: new FormControl(this.data.seeOtherRegion || null),
 
-      service: new FormGroup({}, validators.service),
+      service: new FormGroup({}),
       treatmentModality: new FormArray([], validators.treatmentModality),
       typeOfProvider: new FormArray([], validators.typeOfProvider),
       customerHealth: new FormGroup({}, validators.customerHealth),      

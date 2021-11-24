@@ -62,10 +62,21 @@ class="list-unstyled checkbox-group-root"
       </ul>
     </li>  
   </ng-container>
+
+  <div
+  *ngIf="getFormArray('root')?.invalid"
+  class="mt-5p"
+  >
+    <form-item-errors
+    label="Main category"
+    [controller]="getFormArray('root')"
+    [submitted]="submitted"
+    ></form-item-errors>
+  </div>
 </ul>
 
 <form-item-errors
-label="Service"
+label="Category"
 [controller]="controller"
 [submitted]="submitted"
 ></form-item-errors>

@@ -1,7 +1,7 @@
 <h3 class="mb-4">Company Services</h3>
 <form-partner-service
 [data]="user"
-(changeService)="onChangeSelectedServices($event)"
 (changeImage)="onChangeUploadedImages($event)"
 [hideSubmit]="true"
+(submitForm)="update($event)"
 ></form-partner-service>

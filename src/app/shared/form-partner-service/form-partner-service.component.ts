@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FormControl, FormArray} from '@angular/forms';
+import { FormControl, FormArray, FormGroup} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
@@ -22,8 +22,10 @@ export class FormPartnerServiceComponent implements OnInit {
   @Output() submitForm = new EventEmitter<IUserDetail>();
 
   public formImages: FormArray;
+  public formService = new FormGroup({});
   public baseURLImage = environment.config.AWS_S3;
   public isUploadingImage: boolean = false;
+  public isSubmitted = false;
 
   @ViewChild('formItemService') private formItemService: FormItemServiceComponent;
 
@@ -128,6 +130,12 @@ export class FormPartnerServiceComponent implements OnInit {
   }
 
   onSubmit() {
+    this.isSubmitted = true;
+    if(this.formItemService.controller.invalid) {
+      this._toastr.error('There is an item that requires your attention');
+      return;
+    }
+
     const data = {
       ... this.data._id && { _id: this.data._id }, 
       services: this.formItemService.getSelected(),
