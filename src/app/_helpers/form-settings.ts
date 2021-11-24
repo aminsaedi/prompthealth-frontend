@@ -21,7 +21,7 @@ export const minmax = {
 
 
 
-const validatorCheckboxSelectedAtLeast = (minRequired: number = 1): ValidatorFn => {
+export const validatorCheckboxSelectedAtLeast = (minRequired: number = 1): ValidatorFn => {
   return function validate(formArray: FormArray) {
     let checked = 0;
 
@@ -35,11 +35,24 @@ const validatorCheckboxSelectedAtLeast = (minRequired: number = 1): ValidatorFn 
       return null;
     } else {
       const errors = {};
-      errors['requiredCheckboxSelectedAtLeast' + minRequired] = true;
+      errors['requiredCheckboxSelectedAtLeast'] = minRequired;
       return errors;
     }
   };
 };
+
+export const validatorCheckboxSelectedAtMost = (maxRequired: number = 3): ValidatorFn => {
+  return function validate(formArray: FormArray) {
+    const checkedArray = (formArray.value as boolean[]).filter(bool => !!bool);
+    if(checkedArray.length <= maxRequired) {
+      return null;
+    } else {
+      const errors = {}
+      errors['requiredCheckboxSelectedAtMost'] = maxRequired;
+      return errors;
+    }
+  }
+}
 
 const validatorNestedCheckboxSelectedAtLeast = (minRequired: number = 1): ValidatorFn => {
   return function validate(formGroup: FormGroup) {
@@ -56,7 +69,7 @@ const validatorNestedCheckboxSelectedAtLeast = (minRequired: number = 1): Valida
       return null;
     } else {
       const errors = {};
-      errors['requiredCheckboxSelectedAtLeast' + minRequired] = true;
+      errors['requiredCheckboxSelectedAtLeast'] = minRequired;
       return errors;
     }
   };
@@ -302,7 +315,7 @@ export const validators = {
   companyType: validatorCheckboxSelectedAtLeast(1),
   typeOfProvider: [],
   treatmentModality: [],
-  service: validatorNestedCheckboxSelectedAtLeast(1),
+  // mainCategory: validatorNestedCheckboxSelectedAtLeast(1),
   exactPricing: validatorExactPricing,
   exactPricingRequired: validatorExactPricingRequired,
   businessKind: validatorRequired,

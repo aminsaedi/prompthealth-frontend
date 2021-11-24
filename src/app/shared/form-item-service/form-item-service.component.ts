@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { validatorCheckboxSelectedAtLeast, validatorCheckboxSelectedAtMost, validators } from 'src/app/_helpers/form-settings';
 import { IOptionCheckboxGroup, OptionCheckboxGroup } from '../form-item-checkbox-group/form-item-checkbox-group.component';
 import { Category, CategoryService } from '../services/category.service';
 
@@ -19,6 +20,8 @@ export class FormItemServiceComponent implements OnInit {
   @Input() option: IOptionCheckboxGroupService = {};
   @Input() type: 'checkbox' | 'chip' = 'checkbox';
 
+  @Input() requiredMainAtLeast: number = 0;
+  @Input() requiredMainAtMost: number = 0;
 
   @Output() changeValue = new EventEmitter<string[]>();
 
@@ -34,7 +37,15 @@ export class FormItemServiceComponent implements OnInit {
   async ngOnInit() {
     this._option = new OptionCheckboxGroupService(this.option);
 
-    this.controller.setControl('root', new FormArray([]));
+    const validator = [];
+    if(this.requiredMainAtMost) {
+      validator.push(validatorCheckboxSelectedAtMost(this.requiredMainAtMost));
+    }
+    if(this.requiredMainAtLeast) {
+      validator.push(validatorCheckboxSelectedAtLeast(this.requiredMainAtLeast));
+    }
+    
+    this.controller.setControl('root', new FormArray([], validator));
 
     const cats = await this._catService.getCategoryAsync();
     this.categories = cats;

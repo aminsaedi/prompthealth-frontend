@@ -5,6 +5,8 @@
     #formItemService
     [data]="data.services"
     [disabled]="disabled"
+    [requiredMainAtLeast]="1"
+    [requiredMainAtMost]="3"
     (changeValue)=onChangeSelectedServices($event)
     ></form-item-service>
   </div>

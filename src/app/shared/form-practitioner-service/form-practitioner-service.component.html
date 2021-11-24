@@ -28,12 +28,23 @@
   </div>
 
   <div class="mb-60p">
-    <h6 class="mb-20p">
-      Your specialities
-    </h6>
+    <div class="mb-20p">
+      <h6>Your specialities</h6>
+      <div 
+      class="py-10p px-20p bg-yellow-light border-left border-yellow text-yellow-dark mt-10p d-flex rounded-4p"
+      style="border-width: 5px!important;"
+      >
+        <i iconPh="info" class="text-yellow-dark"></i>
+        <span class="d-inline-block ml-5p body2">
+          Please select only categories that you are well known.
+        </span>
+      </div>
+    </div>
     <form-item-service
     [col2]="true"
     [data]="data.services"
+    [requiredMainAtLeast]="1"
+    [requiredMainAtMost]="3"
     [controller]="f.service"
     [submitted]="isSubmitted"
     ></form-item-service>
