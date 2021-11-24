@@ -1,5 +1,16 @@
 <form (ngSubmit)="onSubmit()">
-  <h5>Your company's specialities</h5>
+  <div class="mb-20p">
+    <h6>Your company's specialities</h6>
+    <div 
+    class="py-10p px-20p bg-yellow-light border-left border-yellow text-yellow-dark mt-10p d-flex rounded-4p"
+    style="border-width: 5px!important;"
+    >
+      <i iconPh="info" class="text-yellow-dark"></i>
+      <span class="d-inline-block ml-5p body2">
+        Please select only categories that you are well known.
+      </span>
+    </div>
+  </div>
   <div class="mb-5">
     <form-item-service
     #formItemService
@@ -7,12 +18,14 @@
     [disabled]="disabled"
     [requiredMainAtLeast]="1"
     [requiredMainAtMost]="3"
+    [controller]="formService"
+    [submitted]="isSubmitted"
     (changeValue)=onChangeSelectedServices($event)
     ></form-item-service>
   </div>
 
 
-  <h5>Product Images (max 5)</h5>
+  <h6>Product Images (max 5)</h6>
 
   <ul class="d-flex list-unstyled product-images">
     <ng-container *ngFor="let imageForm of formImages.controls; let i = index;">

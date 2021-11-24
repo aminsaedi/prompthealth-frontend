@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { RegisterQuestionnaireService } from '../register-questionnaire.service'; 
 import { Subscription } from 'rxjs';
 import { BehaviorService } from '../../shared/services/behavior.service'; 
+import { FormPartnerServiceComponent } from 'src/app/shared/form-partner-service/form-partner-service.component';
 
 @Component({
   selector: 'app-register-partner-service',
@@ -13,15 +13,15 @@ import { BehaviorService } from '../../shared/services/behavior.service';
 export class RegisterPartnerServiceComponent implements OnInit {
 
   public user: any;
-  private selectedServices: string[] = [];
 
   private subscriptionNavigation: Subscription;
+
+  @ViewChild(FormPartnerServiceComponent) formServiceCompoennt: FormPartnerServiceComponent
 
   /** copy start */
   constructor(
     private _qService: RegisterQuestionnaireService,
     private _route: ActivatedRoute,
-    private _toastr: ToastrService,
     private _bsService: BehaviorService,
   ) {
   }
@@ -32,10 +32,9 @@ export class RegisterPartnerServiceComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this._qService.getUser();
-    this.selectedServices = this.user.services || [];
 
     this.subscriptionNavigation = this._qService.observeNavigation().subscribe(type => {
-      if(type == 'next'){ this.onSubmit(); }
+      if(type == 'next'){ this.formServiceCompoennt.onSubmit(); }
       else if(type == 'back'){ this._qService.goBack(this._route); }
     });
     this._route.data.subscribe((data: {index: number, next?: string})=>{
@@ -45,23 +44,14 @@ export class RegisterPartnerServiceComponent implements OnInit {
   /** copy end */
 
   /** original start */
-  onChangeSelectedServices(services: string[]){
-    this.selectedServices = services;
-  }
-
   onChangeUploadedImages(images: string[]){
     this._bsService.setUserDataOf('image', images);
     this._qService.updateUser({image: images});
   }
 
-  onSubmit(){
-    if(this.selectedServices.length == 0){
-      this._toastr.error('Please select at least 1 service.');
-      return;
-    }
-
+  update(data: any){
     /** update only services. image is updated right after it's uploaded */
-    this._qService.updateUser({services: this.selectedServices});
+    this._qService.updateUser({services: data.services});
     this._qService.goNext(this._route);
   }
 }
