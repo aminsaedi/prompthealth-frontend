@@ -2,13 +2,10 @@
   <div class="row align-items-start">
     <section class="col-12 col-md-2 col-xl-2">
       <div class="text-md-right">
-        <button 
-        class="btn btn-text-body small px-0 pt-0" 
-        (click)="goback()"
-        >
-          <i iconPh="arrow-left"></i>
-          <span>Back</span>
-        </button>
+        <button-goback 
+        buttonClass="pl-0 pt-0" 
+        [link]="['/community', 'feed']"
+        ></button-goback>
       </div>
     </section>
     <section class="col-12 col-md-10 col-xl-8">

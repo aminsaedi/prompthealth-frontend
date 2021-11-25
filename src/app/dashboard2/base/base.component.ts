@@ -41,14 +41,4 @@ export class BaseComponent implements OnInit {
       }
     });
   }
-
-  goback() {
-    const state = this._location.getState() as any;
-    if (!state || state.navigationId == 1) {
-      this._router.navigate(['./'], {relativeTo: this._route, replaceUrl: true});
-    } else {
-      this._location.back();
-    }
-  }
-
 }

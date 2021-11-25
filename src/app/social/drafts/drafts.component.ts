@@ -37,15 +37,6 @@ export class DraftsComponent implements OnInit {
     this.fetchDrafts();
   }
 
-  goback() {
-    const state = this._location.getState() as any;
-    if(state && state.navigationId == 1) {
-      this._router.navigate(['/community/feed']);
-    } else {
-      this._location.back();
-    }
-  }
-
   fetchDrafts() {
     this.isLoading = true;
     const query = new SocialPostGetAllQuery({

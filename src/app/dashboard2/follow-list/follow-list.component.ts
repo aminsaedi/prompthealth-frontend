@@ -116,17 +116,6 @@ export class FollowListComponent implements OnInit {
     const total = this.followType == 'following' ? this.user.numFollowing : this.user.numFollower;
     this.existsMore = !!(this.follows.length < total);
   }
-
-  goback() {
-    const state = this._location.getState() as any;
-    if(state.navigationId == 1) {
-      this._router.navigate(['/community/feed']);
-    } else {
-      this._location.back();
-    }
-  }
-
-
 }
 
 type FollowType = 'following' | 'followed';

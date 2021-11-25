@@ -51,15 +51,6 @@ export class NotificationComponent implements OnInit {
     });
   }
 
-  goback() {
-    const state = this._location.getState() as any;
-    if(state.navigationId == 1) {
-      this._router.navigate(['/community/feed']);
-    } else {
-      this._location.back();
-    }
-  }
-
   archiveAllNotifications() {
     this.isUploading = true;
     this._sharedService.post(null, 'notification/clear-all').subscribe((res: IResponseData) => {

@@ -18,6 +18,17 @@ import { SocialService } from '../social.service';
 })
 export class ProfileFollowListComponent implements OnInit {
 
+  get linkToBack() {
+    const profileId = this._route.snapshot.params.userid;
+    let link: string[];
+    if(profileId) {
+      link = ['/community/profile', profileId];
+    } else {
+      link = ['/community/feed'];
+    }
+    return link;
+}
+
   public profile: Professional | Partner;
 
   public follows: Profile[] = null;
