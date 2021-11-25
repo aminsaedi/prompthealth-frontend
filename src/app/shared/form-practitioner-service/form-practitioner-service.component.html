@@ -52,22 +52,7 @@
 
   <div class="mb-60p">
     <h6 class="mb-20p">
-      Status of customer's health
-    </h6>
-    <form-item-customer-health
-    *ngIf="selectionsCustomerHealth"
-    [col2]="true"
-    [data]="data.services"
-    type="detail"
-    [selections]="selectionsCustomerHealth.answers"
-    [controller]="f.customerHealth"
-    [submitted]="isSubmitted"
-    ></form-item-customer-health>
-  </div>
-
-  <div class="mb-60p">
-    <h6 class="mb-20p">
-      Type Of Provider (optional)
+      Type Of Provider
     </h6>
     <form-item-checkbox-group
     *ngIf="selectionsTypeOfProvider"
@@ -79,6 +64,21 @@
     [submitted]="isSubmitted"  
     [selections]="selectionsTypeOfProvider"
     ></form-item-checkbox-group>
+  </div>
+
+  <div class="mb-60p">
+    <h6 class="mb-20p">
+      Status of customer's health
+    </h6>
+    <form-item-customer-health
+    *ngIf="selectionsCustomerHealth"
+    [col2]="true"
+    [data]="data.services"
+    type="detail"
+    [selections]="selectionsCustomerHealth.answers"
+    [controller]="f.customerHealth"
+    [submitted]="isSubmitted"
+    ></form-item-customer-health>
   </div>
 
   <div class="mb-60p">

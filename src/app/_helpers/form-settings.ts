@@ -313,7 +313,7 @@ export const validators = {
   typicalHours: validatorCheckboxSelectedAtLeast(1),
   customerHealth: validatorNestedCheckboxSelectedAtLeast(1),
   companyType: validatorCheckboxSelectedAtLeast(1),
-  typeOfProvider: [],
+  typeOfProvider: [validatorCheckboxSelectedAtLeast(1)],
   treatmentModality: [],
   // mainCategory: validatorNestedCheckboxSelectedAtLeast(1),
   exactPricing: validatorExactPricing,

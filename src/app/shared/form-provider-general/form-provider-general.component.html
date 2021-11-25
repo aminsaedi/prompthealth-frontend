@@ -129,6 +129,30 @@
     ></form-item-checkbox-group>
   </div>
 
+  <div class="mb-40p">
+    <label for="professionalAssociation" class="subtitle2">Professional association / college</label>
+    <form-item-input 
+    name="professionalAssociation"
+    label="Professional association"
+    type="text"
+    [max]="maxProfessionalOrganization"
+    [controller]="f.professional_organization"
+    [submitted]="isSubmitted"
+    ></form-item-input>
+  </div>
+
+  <div class="mb-40p">
+    <label class="subtitle2" for="professionalTitle">Certification</label>
+    <form-item-input 
+    name="Certification"
+    label="Certification"
+    type="text"
+    [max]="maxCertification"
+    [controller]="f.certification"
+    [submitted]="isSubmitted"
+    ></form-item-input>
+  </div>
+
   <div class="mb-40p row">
     <div class="col-12 col-lg-6 mb-40p mb-lg-0p">
       <label for="website" class="subtitle2">Website (optional)</label>
@@ -156,31 +180,6 @@
       ></form-item-input>
     </div>
   </div>
-
-  <div class="mb-40p">
-    <label for="professionalAssociation" class="subtitle2">Professional association / college</label>
-    <form-item-input 
-    name="professionalAssociation"
-    label="Professional association"
-    type="text"
-    [max]="maxProfessionalOrganization"
-    [controller]="f.professional_organization"
-    [submitted]="isSubmitted"
-    ></form-item-input>
-  </div>
-
-  <div class="mb-40p">
-    <label class="subtitle2" for="professionalTitle">Certification</label>
-    <form-item-input 
-    name="Certification"
-    label="Certification"
-    type="text"
-    [max]="maxCertification"
-    [controller]="f.certification"
-    [submitted]="isSubmitted"
-    ></form-item-input>
-  </div>
-
   
   <div class="mb-40p">
     <label class="subtitle2" for="productDescription">Practice Philosophy (optional)</label>
