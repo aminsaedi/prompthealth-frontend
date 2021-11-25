@@ -30,8 +30,8 @@
 </div>
 
 <a
-*ngIf="post && isReturnToAppShown" 
-[href]="linkToReturnApp"
+*ngIf="isReturnToAppShown" 
+href="prompthealth://goBack"
 class="position-fixed btn btn-primary shadow" 
 style="z-index: 100; bottom: 15px; left: 50%; transform: translateX(-50%); width: calc(100vw - 60px); max-width: 400px;"
 >
