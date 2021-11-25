@@ -16,6 +16,14 @@ import { SocialService } from '../social.service';
 })
 export class PageComponent implements OnInit {
 
+  get pathToApp() {
+    let path = '';
+    if(this.post?.isNote || this.post?.isPromo) {
+      path = this.post.contentType.toLowerCase() + '/' + this.post._id;
+    }
+    return path;
+  }
+
   public post: ISocialPost;
   private postId: string;
 

@@ -63,6 +63,14 @@ export class ProfileComponent implements OnInit {
     return canRecommend;
   }
 
+  get pathToApp() {
+    let path = '';
+    if(this.profile?.isProvider) {
+      path = 'provider/' + this.profile._id;
+    }
+    return path;
+  }
+
   linkToChildRoute(link: string) {
     const route = ['/community/profile', this.profileId];
     if(link) {
