@@ -6,7 +6,6 @@ import { ToastrService } from 'ngx-toastr';
 import { IGetSocialContentResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
-import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString } from 'src/app/_helpers/date-formatter';
@@ -113,16 +112,7 @@ export class PageComponent implements OnInit {
       imageAlt: 'A note from ' + this.post.authorName,
     });
   }
-
-  goback() {
-    const state = this._location.getState() as any;
-    if(state && state.navigationId == 1) {
-      this._router.navigate(['/community/profile', this.post.authorId]);
-    } else {
-      this._location.back();
-    }
-  }
-  
+ 
   showReturnToAppIfNeeded() {
     const params = this._route.snapshot.queryParams;
     if(params.returnToApp) {

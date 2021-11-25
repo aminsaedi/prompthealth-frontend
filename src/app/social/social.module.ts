@@ -40,6 +40,7 @@ import { SocialItemsModule } from '../social-items/social-items.module';
 import { ProfileEventComponent } from './profile-event/profile-event.component';
 import { ProfileEventUpcomingComponent } from './profile-event-upcoming/profile-event-upcoming.component';
 import { ProfileEventPastComponent } from './profile-event-past/profile-event-past.component';
+import { ButtonsModule } from '../buttons/buttons.module';
 
 
 const routes: Routes = [
@@ -133,6 +134,7 @@ const routes: Routes = [
     CommonModule,
     SharedModule,
     FormsModule,
+    ButtonsModule,
     AuthModule,
     SocialItemsModule,
     ReactiveFormsModule,

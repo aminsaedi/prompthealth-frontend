@@ -2,13 +2,10 @@
   <div class="row align-items-start">
     <section class="col-12 col-md-2 col-xl-2 sticky-top" style="top: 100px;">
       <div class="text-md-right">
-        <button 
-        class="btn btn-text-body small"
-        (click)="goback()"
-        >
-          <i iconPh="arrow-left"></i>
-          <span>Back</span>
-        </button>
+        <button-goback 
+        buttonClass="pl-0" 
+        [link]="linkToBack"
+        ></button-goback>
       </div>
     </section>
     <section class="col-12 col-md-10 col-xl-8">
