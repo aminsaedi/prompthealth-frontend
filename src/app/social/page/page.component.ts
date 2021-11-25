@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IGetSocialContentResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString } from 'src/app/_helpers/date-formatter';
@@ -16,8 +18,12 @@ import { SocialService } from '../social.service';
 })
 export class PageComponent implements OnInit {
 
+  get linkToReturnApp() { return 'prompthealth://' + this.post?.contentType.toLowerCase() + '/' + this.post._id; }
+
   public post: ISocialPost;
   private postId: string;
+
+  public isReturnToAppShown = false;
 
   constructor(
     private _route: ActivatedRoute,
@@ -27,13 +33,24 @@ export class PageComponent implements OnInit {
     private _sharedService: SharedService,
     private _toastr: ToastrService,
     private _uService: UniversalService,
+    private _headerService: HeaderStatusService,
+    private _modalService: ModalService,
   ) { }
+
+  ngOnDestroy() {
+    this.hideReturnToApp();
+  }
 
   ngOnInit(): void {
     this._route.params.subscribe((param: {postid: string}) => {
       this.postId = param.postid;
       this.initPost();
-    }); 
+
+      //when url is changed within this component after second time, then returnToApp should be false;
+      this.hideReturnToApp();
+    });
+
+    this.showReturnToAppIfNeeded();
   }
 
   async initPost() {
@@ -103,5 +120,26 @@ export class PageComponent implements OnInit {
     } else {
       this._location.back();
     }
+  }
+
+  showReturnToAppIfNeeded() {
+    const params = this._route.snapshot.queryParams;
+    if(params.returnToApp) {
+      this.showReturnToApp();
+    }
+
+    const [path, query] = this._modalService.currentPathAndQueryParams;
+    delete query.returnToApp;
+    this._router.navigate([path], {queryParams: query, replaceUrl: true});
+  }
+
+  showReturnToApp() {
+    this.isReturnToAppShown = true;
+    this._headerService.hideHeader();
+  }
+
+  hideReturnToApp() {
+    this.isReturnToAppShown = false;
+    this._headerService.showHeader();
   }
 }

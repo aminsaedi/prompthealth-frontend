@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../social.service';
+import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 
 @Component({
   selector: 'app-base',
@@ -24,7 +25,6 @@ export class BaseComponent implements OnInit {
   get userName() { return this.user.nickname; }
   get user() { return this._profileService.profile; }
 
-
   get postForModal() { return this._modalService.data as ISocialPost; }
   get postTitleForModal() {
     const d: ISocialPost = this._modalService.data;
@@ -36,10 +36,12 @@ export class BaseComponent implements OnInit {
   }
 
   public isDeletingContent: boolean = false;
+  public isHeaderShown = true;
 
   private isPopState: boolean = false;
   
-  private subscriptionRouterEvent: Subscription; 
+  private subscriptionRouterEvent: Subscription;
+  private subscriptionHeaderStatus: Subscription;
   
   private urlPrev: {
     path: string,
@@ -55,12 +57,13 @@ export class BaseComponent implements OnInit {
     private _uService: UniversalService,
     private _socialService: SocialService,
     private _toastr: ToastrService,
+    private _headerService: HeaderStatusService,
+    private _changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnDestroy() {
-    if(this.subscriptionRouterEvent) {
-      this.subscriptionRouterEvent.unsubscribe();
-    }
+    this.subscriptionRouterEvent?.unsubscribe();
+    this.subscriptionHeaderStatus?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -68,6 +71,13 @@ export class BaseComponent implements OnInit {
       this.scrollToTop();
     }
     
+    this.subscriptionHeaderStatus = this._headerService.observeHeaderStatus().subscribe(([key, val, animate]) => {
+      if(key == 'isHeaderShown') {
+        this.isHeaderShown = val;
+        this._changeDetector.detectChanges();
+      }
+    });
+
     this.urlPrev = this.getURLset();
 
     this.subscriptionRouterEvent = this._router.events.subscribe(e => {

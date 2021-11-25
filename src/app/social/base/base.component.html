@@ -3,7 +3,9 @@ class="bg-background"
 style="min-height: 100vh;"
 >
   <div class="sticky-top" style="z-index: 90;">
-    <header-social></header-social>
+    <div *ngIf="isHeaderShown">
+      <header-social></header-social>
+    </div>
     <alert-not-approved></alert-not-approved>
   </div>
 
