@@ -11,7 +11,7 @@
     <div 
     *ngFor="let plan of plans | keyvalue:keepOriginalOrder"
     class="col-item text-center"
-    >{{plan.key | titlecase}}</div>
+    >{{plan.value.title | titlecase}}</div>
   </div>
 
   <div 
