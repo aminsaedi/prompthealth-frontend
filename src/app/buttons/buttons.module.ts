@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonSortComponent } from './button-sort/button-sort.component';
 import { SharedModule } from '../shared/shared.module';
 import { ButtonFilterComponent } from './button-filter/button-filter.component';
+import { ButtonGobackComponent } from './button-goback/button-goback.component';
 
 
 
@@ -10,6 +11,7 @@ import { ButtonFilterComponent } from './button-filter/button-filter.component';
   declarations: [
     ButtonSortComponent,
     ButtonFilterComponent,
+    ButtonGobackComponent,
   ],
   imports: [
     CommonModule,
@@ -18,6 +20,7 @@ import { ButtonFilterComponent } from './button-filter/button-filter.component';
   exports: [
     ButtonSortComponent,
     ButtonFilterComponent,
+    ButtonGobackComponent,
   ]
   ,
 })

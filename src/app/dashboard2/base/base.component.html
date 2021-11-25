@@ -20,10 +20,10 @@ style="min-height: 100vh;"
       [ngClass]="isRoot ? 'd-none' : 'd-block'"
       >
         <div *ngIf="!isRoot && this.sizeS">
-          <button class="btn btn-text-body small pl-0" (click)="goback()">
-            <i iconPh="arrow-left"></i>
-            Back
-          </button>
+          <button-goback 
+          buttonClass="pl-0" 
+          [link]="['dashboard']"
+          ></button-goback>
         </div>
         <router-outlet></router-outlet>        
       </div>

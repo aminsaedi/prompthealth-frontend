@@ -33,6 +33,7 @@ import { PaymentComponent } from './payment/payment.component';
 import { PaymentSubscriptionComponent } from './payment-subscription/payment-subscription.component';
 import { PaymentHistoryComponent } from './payment-history/payment-history.component';
 import { PaymentCreditComponent } from './payment-credit/payment-credit.component';
+import { ButtonsModule } from '../buttons/buttons.module';
 
 
 const routes: Routes = [
@@ -123,6 +124,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     SocialItemsModule,
     SharedModule,
+    ButtonsModule,
     TabsModule.forRoot(),
     RouterModule.forChild(routes),
     AgmCoreModule.forRoot({

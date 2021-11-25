@@ -348,15 +348,6 @@ export class ProfileComponent implements OnInit {
     }); 
   }
 
-  goback() {
-    const state = this._location.getState() as any;
-    if(state && state.navigationId == 1) {
-      this._router.navigate(['/community/feed']);
-    } else {
-      this._location.back();
-    }
-  }
-
   onClickLogin() {
     this._modalService.show('login-menu');
   }
