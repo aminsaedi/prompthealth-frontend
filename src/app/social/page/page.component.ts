@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IGetSocialContentResult } from 'src/app/models/response-data';
@@ -17,7 +16,6 @@ import { SocialService } from '../social.service';
 })
 export class PageComponent implements OnInit {
 
-  get linkToReturnApp() { return this._sanitizer.bypassSecurityTrustResourceUrl('prompthealth://' + this.post?.contentType.toLowerCase() + '/' + this.post._id); }
   get pathToApp() {
     let path = '';
     if(this.post?.isNote || this.post?.isPromo) {
@@ -39,7 +37,6 @@ export class PageComponent implements OnInit {
     private _toastr: ToastrService,
     private _uService: UniversalService,
     private _headerService: HeaderStatusService,
-    private _sanitizer: DomSanitizer,
   ) { }
 
   ngOnDestroy() {
