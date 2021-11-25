@@ -1,0 +1,23 @@
+<div
+*ngIf="isAppAvailable && !isActionSheetHidden && !!path" 
+class="position-fixed d-md-none w-100 p-20p bg-white shadow border-top border-line"
+style="bottom: 0; left: 0;"
+[@slideVertical]
+>
+  <ul class="list-unstyled text-center mb-0">
+    <li>
+      <button 
+      class="btn btn-primary small w-100"
+      (click)="onClickOpenApp()"
+      >Open in app</button>
+    </li>
+    <li>
+      <button 
+      class="btn btn-text-body small mt-5p pb-0"
+      (click)="onClickContinueWithWeb()"
+      >
+        <u>Continue with web</u>
+      </button>
+    </li>
+  </ul>
+</div>

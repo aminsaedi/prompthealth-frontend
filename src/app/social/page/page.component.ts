@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,6 +18,13 @@ import { SocialService } from '../social.service';
 export class PageComponent implements OnInit {
 
   get linkToReturnApp() { return this._sanitizer.bypassSecurityTrustResourceUrl('prompthealth://' + this.post?.contentType.toLowerCase() + '/' + this.post._id); }
+  get pathToApp() {
+    let path = '';
+    if(this.post?.isNote || this.post?.isPromo) {
+      path = this.post.contentType.toLowerCase() + '/' + this.post._id;
+    }
+    return path;
+  }
 
   public post: ISocialPost;
   private postId: string;
@@ -28,7 +34,6 @@ export class PageComponent implements OnInit {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _location: Location,
     private _socialService: SocialService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
