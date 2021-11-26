@@ -19,6 +19,8 @@ import { ErrorInterceptor } from './shared/services/error.interceptor';
 import { EmbedVideo } from 'ngx-embed-video';
 import { SharedModule } from './shared/shared.module';
 import { Dashboard2Module } from './dashboard2/dashboard2.module';
+import { NgxStripeModule } from 'ngx-stripe';
+import { environment } from 'src/environments/environment';
 // import { SharedService } from './shared/services/shared.service';
 
 @NgModule({
@@ -34,12 +36,14 @@ import { Dashboard2Module } from './dashboard2/dashboard2.module';
     ToastrModule.forRoot(),
     EmbedVideo.forRoot(),
     SharedModule,
+    NgxStripeModule.forRoot(environment.config.stripeKey),
   ],
   providers: [
     BehaviorService,
     CookieService,
     // SharedService,
     CanonicalLinkService,
+    
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]

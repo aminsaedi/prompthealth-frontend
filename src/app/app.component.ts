@@ -7,6 +7,9 @@ import { UniversalService } from './shared/services/universal.service';
 import { BehaviorService } from './shared/services/behavior.service';
 import { UploadingStatus, UploadObserverService } from './shared/services/upload-observer.service';
 import { slideVerticalAnimation } from './_helpers/animations';
+import { SharedService } from './shared/services/shared.service';
+import { IResponseData } from './models/response-data';
+import { RegionService, RegionType } from './shared/services/region.service';
 
 declare let gtag: Function;
 declare let fbq: Function;
@@ -26,6 +29,8 @@ export class AppComponent implements OnInit {
   public isUploadingDoneInBackground: boolean = false;
   private currentUploadingStatus: UploadingStatus;
 
+  public isModalRegionMenuShown = false;
+
   constructor(
     private _uService: UniversalService,
     private _bService: BehaviorService,
@@ -34,6 +39,8 @@ export class AppComponent implements OnInit {
     private _toastr: ToastrService,
     private _location: Location,
     private _uploadObserver: UploadObserverService,
+    private _sharedService: SharedService,
+    private _regionService: RegionService,
   ) { }
 
   @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
@@ -70,6 +77,45 @@ export class AppComponent implements OnInit {
       // try { await this.getPosition(); }
       // catch(error){ console.log(error); }
     }
+
+    //check ipaddress and show select region modal if needed.
+    if(this._uService.isBrowser) {
+      const isIpChanged = await this.checkIpChanged();
+      if(isIpChanged) {
+        this._uService.localStorage.removeItem('region');
+        this.isModalRegionMenuShown = true;
+      } else {
+        this._regionService.changeStatus('ready');
+      }
+    } else {
+      this._uService.localStorage.setItem('region', 'CA');
+      this._regionService.changeStatus('ready');
+    }
+  }
+
+  async checkIpChanged() {
+    const ipCurrent = this._uService.localStorage.getItem('ip');
+    if(ipCurrent) {
+      const ip = await this.refreshIpInLocalstorage();
+      return ip != ipCurrent;
+    } else {
+      this.refreshIpInLocalstorage();
+      return true;
+    }
+  }
+
+  refreshIpInLocalstorage(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this._regionService.changeStatus('checking');
+      this._sharedService.getNoAuth('common/get-ipaddress').subscribe((res: IResponseData)   => {
+        this._uService.localStorage.setItem('ip', res.data);
+        resolve(res.data);
+      }, error => {
+        console.log(error);
+        this._uService.localStorage.setItem('ip', null);
+        resolve(null);
+      })
+    });
   }
 
   onUploadingStatusChanged(status: UploadingStatus) {
@@ -140,6 +186,16 @@ export class AppComponent implements OnInit {
     if(this.isUploadingDoneInBackground) {
       //hide done message forcibly;
       this.isUploadingDoneInBackground = false;
+    }
+  }
+
+  onRegionSelected(region: RegionType) {
+    if(region) {
+      this.isModalRegionMenuShown = false;
+      this._uService.localStorage.setItem('region', region);
+      this._regionService.changeStatus('ready');  
+    } else {
+      this._toastr.error('Please select resion.');
     }
   }
 }
