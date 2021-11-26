@@ -12,6 +12,8 @@ import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 import { first } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { RegionService } from 'src/app/shared/services/region.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-about-practitioner',
@@ -35,6 +37,7 @@ export class AboutPractitionerComponent implements OnInit {
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
     private _el: ElementRef,
+    private _regionService: RegionService,
   ) {
 
   }
@@ -56,6 +59,8 @@ export class AboutPractitionerComponent implements OnInit {
   public videoLgMarkedAsLoadStart = false;
   public isVideoLgReady = false;
 
+  private subscriptionRegionStatus: Subscription;
+
   @ViewChild('videoPlayer') private videoPlayer: ElementRef;
   @ViewChild('videoLg') private videoLg: ElementRef;
 
@@ -69,6 +74,10 @@ export class AboutPractitionerComponent implements OnInit {
 
   isFeatureShowable(i: number, planType: PlanTypePractitioner) {
     return this.planFeatures[i].targetPlan.indexOf(planType) === 0;
+  }
+
+  ngOnDestroy() {
+    this.subscriptionRegionStatus?.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -96,7 +105,12 @@ export class AboutPractitionerComponent implements OnInit {
       imageType: 'image/jpg'
     });
 
-    this.initPlans();
+    this.subscriptionRegionStatus = this._regionService.statusChanged().subscribe(status => {
+      if(status == 'ready') {
+        this.initPlans();
+      }
+    })
+
     this.initCoupon();
   }
 
@@ -117,8 +131,10 @@ export class AboutPractitionerComponent implements OnInit {
       this.videoLgMarkedAsLoadStart = true;
     }
   }
+  
   initPlans() {
-    const path = 'user/get-plans';
+    const region = this._uService.localStorage.getItem('region');
+    const path = 'user/get-plans?region=' + region;
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
       if (res.statusCode == 200) {
         res.data.forEach(d => {

@@ -12,6 +12,8 @@ import { slideHorizontalAnimation } from 'src/app/_helpers/animations';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { environment } from 'src/environments/environment';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
+import { RegionService } from 'src/app/shared/services/region.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-about-company',
@@ -41,6 +43,7 @@ export class AboutCompanyComponent implements OnInit {
   public videoLgMarkedAsLoadStart: boolean = false;
   public isVideoLgReady: boolean = false;
 
+  private subscriptionRegionStatus: Subscription;
 
   @ViewChild('videoPlayer') private videoPlayer: ElementRef;
   @ViewChild('videoLg') private videoLg: ElementRef;
@@ -63,6 +66,7 @@ export class AboutCompanyComponent implements OnInit {
     private _toastr: ToastrService,
     private _route: ActivatedRoute,
     private _el: ElementRef,
+    private _regionService: RegionService,
   ) { }
 
   ngAfterViewInit() {
@@ -79,6 +83,10 @@ export class AboutCompanyComponent implements OnInit {
     this.loadVideoLgIfNeeded();
   }
 
+  ngOnDestroy() {
+    this.subscriptionRegionStatus?.unsubscribe();
+  }
+
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
       title: 'Showcase your brand and receive endorsements from wellness providers | PromptHealth',
@@ -90,7 +98,12 @@ export class AboutCompanyComponent implements OnInit {
       imageType: 'image/jpg'
     });
 
-    this.initPlans();
+    this.subscriptionRegionStatus = this._regionService.statusChanged().subscribe(status => {
+      if(status == 'ready') {
+        this.initPlans();
+      }
+    })
+
     this.initCoupon();
   }
 
@@ -113,7 +126,8 @@ export class AboutCompanyComponent implements OnInit {
   }
 
   initPlans() {
-    const path = 'user/get-plans';
+    const region = this._uService.localStorage.getItem('region');
+    const path = 'user/get-plans?region=' + region;
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
       if(res.statusCode == 200) {
         res.data.forEach(d => {

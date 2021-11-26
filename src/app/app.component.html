@@ -30,3 +30,26 @@ style="bottom: 10px; right: 10px;"
   <div class="subtitle2">DEVELOP MODE</div>
   <a href="https://prompthealth.ca" class="body2 text-yellow-dark"><u>Go Live</u></a>
 </div>
+
+
+<div
+*ngIf="isModalRegionMenuShown" 
+class="modal-view"
+>
+  <div class="modal-drop"></div>
+
+  <div class="modal-body">
+    <h4 class="mb-25p text-center pb-15p pb-md-25p border-bottom border-line">Select Country</h4>
+
+    <div class="content-container">
+      <ul class="list-unstyled mb-0">
+        <li class="mb-10p">
+          <button class="btn btn-text-body w-100" (click)="onRegionSelected('US')">United States</button>
+        </li>
+        <li>
+          <button class="btn btn-text-body w-100" (click)="onRegionSelected('CA')">Canada</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
