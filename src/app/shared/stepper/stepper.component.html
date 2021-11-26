@@ -1,24 +1,17 @@
-<!-- stepper for midium view or more-->
-<div 
-*ngIf="type != 'simple'"
-class="position-relative d-flex"
-[ngClass]="'item-count-' + data.length"
->
-  <div 
-  *ngFor="let item of data; let i = index;" 
-  class="stepper-item text-center"
-  [ngClass]="{active: (current >= i)}"
-  >
-    <div class="hand"></div>
-    <div *ngIf="!item.route" class="point rounded-circle d-block"></div>
-    <a *ngIf="item.route" [routerLink]="['./', item.route]">
-      <div class="point rounded-circle d-block"></div>
-      <span class="label" *ngIf="current != i">{{item.label}}</span>  
-    </a>
-  </div>  
-</div>
-
-<!-- stepper for small view -->
-<div [ngClass]="'item-count-simple-' + data.length" *ngIf="type == 'simple'">
-  <div class="stepper-simple-road" [class]="'pos-' + current"></div>
+<div class="d-flex flex-nowrap">
+  <ng-container *ngFor="let item of data; let i = index;">
+    <div *ngIf="i != 0" class="hand mx-10p flex-grow-1"></div>
+    <div 
+    style="width:36px; height: 36px;"
+    class="rounded-circle position-relative"
+    [ngClass]="{'bg-primary text-white': isItemActive(i), 'bg-success text-white': isItemDone(i), 'text-label bg-line': isItemInactive(i)}"
+    >
+      <span 
+      class="position-absolute" 
+      style="top: 50%; left: 50%; transform: translate(-50%, -50%)"
+      >
+        {{i + 1}}
+      </span>
+    </div>  
+  </ng-container>
 </div>

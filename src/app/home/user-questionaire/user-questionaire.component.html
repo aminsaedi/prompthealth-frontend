@@ -6,28 +6,7 @@
 
 <section class="heightH-100 d-flex flex-column w-100">
 
-  <!-- stepper for small view-->
-  <div class="container-fruid d-md-none flex-grow-0 sticky-top-sm pb-3">
-    <div class="stepper-road-sm" [class]="'pos-' + currentIdx"></div>
-    <div class="container">
-      <div class="stepper-item-sm font-weight-bold mt-4">{{data[currentIdx].label}}</div>
-    </div>
-  </div>
-
-  <!-- stepper for midium view or more-->
-  <div class='container-fluid pt-5 d-none d-md-block flex-grow-0 mb-5'>
-    <div class="max-w-1200">
-      <div class="d-inline-flex position-relative">
-        <div class="stepper-road"></div>
-        <div *ngFor="let type of data; let i = index;" class="stepper-item mx-4 mx-lg-5 text-center"
-          [ngClass]="{active: (currentIdx == i)}">
-          <div class="point rounded-circle d-block"></div>
-          <span class="label">{{type.label}}</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
+ <stepper></stepper>
 
   <div class="container-fluid mt-3 flex-grow-1 position-relative">
     <div class="max-w-1200 user-input-wrapper">
