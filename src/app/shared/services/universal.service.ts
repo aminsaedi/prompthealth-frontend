@@ -86,6 +86,7 @@ export class UniversalService {
     // this._meta.updateTag({property: 'og:image:width', content: meta.imageWidth.toString()});
     // this._meta.updateTag({property: 'og:image:height', content: meta.imageWidth.toString()});
     this._meta.updateTag({property: 'og:image:alt', content: meta.imageAlt});
+    this._meta.updateTag({name: 'apple-itunes-app', content: 'app-id=1532951934' + (meta.iosLink ? `, app-argument=prompthealth://${meta.iosLink}` : '')});
   }
 }
 
@@ -111,6 +112,7 @@ export interface MetaData {
   imageAlt?: string;
   pageType?: 'article' | 'website' | 'blog';
   robots?: string;
+  iosLink?: string;
 }
 
 type TwitterCardType = 'summary' | 'summary_large_image';

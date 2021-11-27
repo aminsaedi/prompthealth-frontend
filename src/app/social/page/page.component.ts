@@ -112,6 +112,7 @@ export class PageComponent implements OnInit {
       image: this.post.coverImage,
       imageType: this.post.coverImageType,
       imageAlt: 'A note from ' + this.post.authorName,
+      ...this.pathToApp && {iosLink: this.pathToApp},
     });
   }
  
