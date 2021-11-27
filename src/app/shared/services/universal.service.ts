@@ -52,9 +52,6 @@ export class UniversalService {
     if(!meta.description) { meta.description = ''; }
     if(!meta.keyword) {     meta.keyword = ''; }
     if(!meta.pageType) {    meta.pageType = 'website'; }
-    if(!meta.iosLink) { meta.iosLink = 'app-id: id1532951934'; }
-    
-    meta.iosLink = 'app-id: id1532951934' + meta.iosLink ? `, app-argument=${meta.iosLink}` : '';
 
     if(!meta.robots) {
       meta.robots = 
