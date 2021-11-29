@@ -36,20 +36,43 @@ style="bottom: 10px; right: 10px;"
 *ngIf="isModalRegionMenuShown" 
 class="modal-view"
 >
-  <div class="modal-drop"></div>
+  <div 
+  class="modal-drop"
+  (click)="onRegionSelected(selectedRegion)"
+  ></div>
 
   <div class="modal-body">
     <h4 class="mb-25p text-center pb-15p pb-md-25p border-bottom border-line">Select Country</h4>
 
     <div class="content-container">
       <ul class="list-unstyled mb-0">
-        <li class="mb-10p">
-          <button class="btn btn-text-body w-100" (click)="onRegionSelected('US')">United States</button>
+        <li 
+        class="mb-15p d-flex cursor-pointer"
+        (click)="onRegionSelected('US')"
+        >
+          <img src="assets/img/general/region-us.png" alt="" height="50px" class="rounded-4p">
+          <button 
+          class="btn flex-grow-1 ml-15p" 
+          [ngClass]="selectedRegion == 'US' ? 'btn-primary' : 'btn-outline-body'"
+          >{{regionFormatted('US')}}</button>
         </li>
-        <li>
-          <button class="btn btn-text-body w-100" (click)="onRegionSelected('CA')">Canada</button>
+        <li 
+        class="d-flex cursor-pointer"
+        (click)="onRegionSelected('CA')"
+        >
+          <img src="assets/img/general/region-ca.png" alt="" height="50px" class="rounded-4p">
+          <button 
+          class="btn flex-grow-1 ml-15p" 
+          [ngClass]="selectedRegion == 'CA' ? 'btn-primary' : 'btn-outline-body'"
+          >{{regionFormatted('CA')}}</button>
         </li>
       </ul>
+      <div class="text-right mt-25p">
+        <button 
+        class="btn btn-text p-0"
+        (click)="onRegionSelected(selectedRegion)"
+        >Skip</button>
+      </div>
     </div>
   </div>
 </div>
