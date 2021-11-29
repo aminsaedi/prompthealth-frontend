@@ -1,8 +1,14 @@
 @import "../../../assets/scss/variables";
 
-li:not(:first-child) {
-  &::before {
-    content: '';
-    
+.hand {
+  height: 3px;
+  background-image : linear-gradient(to right, $colorGsLine, $colorGsLine 6px, transparent 6px, transparent 12px);
+  background-size: 12px 2px;
+  background-position: left center;
+  background-repeat: repeat-x;     
+
+  &.active {
+    background: $colorSuccess;
+    border-radius: 3px;
   }
 }

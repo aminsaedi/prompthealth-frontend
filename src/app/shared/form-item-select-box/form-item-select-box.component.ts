@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { CheckboxSelectionItem } from '../form-item-checkbox-group/form-item-checkbox-group.component';
 
@@ -17,22 +18,31 @@ export class FormItemSelectBoxComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() submitted: boolean = false;
   @Input() styles: any = {width: '100%'};
+  @Input() controller: FormControl;
 
   @Output() onChange = new EventEmitter<CheckboxSelectionItem[] | CheckboxSelectionItem>();
-  get label() { return this.isActive ? this.selectedItems?.map(item => item.label).join(', ') : this.labelInitial; }
 
-  get isActive() { return this.selectedItems.length > 0; }
+  get selectedItem(): CheckboxSelectionItem { return this._selectedItems?.length > 0 ? this._selectedItems[0] : null; }
+  get selectedItems(): CheckboxSelectionItem[] { return this._selectedItems ? this._selectedItems : []; }
+
+  get label() { return this.isActive ? this._selectedItems?.map(item => item.label).join(', ') : this.labelInitial; }
+
+  get isActive() { return this._selectedItems.length > 0; }
   isItemActive(data: CheckboxSelectionItem) {
-    return this.selectedItemsPre?.findIndex(item => item.id == data.id) >= 0;
+    return this._selectedItemsPre?.findIndex(item => item.id == data.id) >= 0;
   }
 
-  private selectedItems: CheckboxSelectionItem[] = [];
-  private selectedItemsPre: CheckboxSelectionItem[] = [];
+  private _selectedItems: CheckboxSelectionItem[] = [];
+  private _selectedItemsPre: CheckboxSelectionItem[] = [];
   public isMenuShown: boolean = false;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  setItem(item: CheckboxSelectionItem) {
+    this._selectedItems = [item];
   }
 
   onClick(open: boolean = null) {
@@ -45,14 +55,14 @@ export class FormItemSelectBoxComponent implements OnInit {
 
     if (this.multiple) {
       if(this.isItemActive(data)) {
-        this.selectedItemsPre = this.selectedItemsPre.filter(item => item.id != data.id);
+        this._selectedItemsPre = this._selectedItemsPre.filter(item => item.id != data.id);
       } else {
-        this.selectedItemsPre.push(data);
+        this._selectedItemsPre.push(data);
       }  
     } else {
-      const item = this.selectedItems[0];
+      const item = this._selectedItems[0];
       if(!item || item.id != data.id) {
-        this.selectedItems = [data];
+        this._selectedItems = [data];
         this.onChange.emit(data);
       }
       this.toggleMenuVisibility(false);
@@ -63,10 +73,10 @@ export class FormItemSelectBoxComponent implements OnInit {
     e.stopPropagation();
     e.preventDefault();
 
-    if(this.selectedItems) {
-      this.selectedItems = [];
-      this.selectedItemsPre = [];
-      this.onChange.emit(this.selectedItems);
+    if(this._selectedItems) {
+      this._selectedItems = [];
+      this._selectedItemsPre = [];
+      this.onChange.emit(this._selectedItems);
     }
 
     this.toggleMenuVisibility(false);
@@ -76,9 +86,9 @@ export class FormItemSelectBoxComponent implements OnInit {
     e.stopPropagation();
     e.preventDefault();
     
-    this.selectedItems = this.selectedItemsPre;
-    this.selectedItemsPre = null;
-    this.onChange.emit(this.selectedItems);
+    this._selectedItems = this._selectedItemsPre;
+    this._selectedItemsPre = null;
+    this.onChange.emit(this._selectedItems);
     this.toggleMenuVisibility(false);
   }
 
@@ -90,7 +100,7 @@ export class FormItemSelectBoxComponent implements OnInit {
     }
 
     if(this.isMenuShown) {
-      this.selectedItemsPre = Array.from(this.selectedItems);
+      this._selectedItemsPre = Array.from(this._selectedItems);
     }
   }
 

@@ -1,13 +1,19 @@
-<div class="d-flex flex-nowrap">
+<div class="d-flex flex-nowrap align-items-center">
   <ng-container *ngFor="let item of data; let i = index;">
-    <div *ngIf="i != 0" class="hand mx-10p flex-grow-1"></div>
+    <div 
+    *ngIf="i != 0" 
+    class="hand mx-20p flex-grow-1"
+    [class]="isItemInactive(i) ? '' : 'active'"
+    ></div>
+
     <div 
     style="width:36px; height: 36px;"
     class="rounded-circle position-relative"
-    [ngClass]="{'bg-primary text-white': isItemActive(i), 'bg-success text-white': isItemDone(i), 'text-label bg-line': isItemInactive(i)}"
+    [ngClass]="{'bg-primary': isItemActive(i), 'bg-success': isItemDone(i), 'bg-line': isItemInactive(i)}"
     >
       <span 
       class="position-absolute" 
+      [ngClass]="isItemInactive(i) ? 'text-label' : 'text-white'"
       style="top: 50%; left: 50%; transform: translate(-50%, -50%)"
       >
         {{i + 1}}

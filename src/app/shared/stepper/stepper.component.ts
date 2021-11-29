@@ -15,7 +15,7 @@ export class StepperComponent implements OnInit {
   ];
 
   @Input() type: string = 'regular' /** regular ==> for midium or bigger, simple ==> for small */;
-  @Input() current: number = 2;
+  @Input() current: number = 0;
 
   isItemActive(i: number) { return this.current == i; }
   isItemDone(i: number) { return this.current > i; }

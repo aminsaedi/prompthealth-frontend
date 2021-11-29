@@ -12,7 +12,7 @@ import { ProfileManagementModule } from './profileManagement/profile-mangement.m
 // import { ProfessionalRegisterComponent } from './professional-register/professional-register.component';
 // import { ProfessionalHomeComponent } from './professional-home/professional-home.component';
 
-// import { UserQuestionaireComponent } from '../home/user-questionaire/user-questionaire.component';
+// import { PersonalMatchComponent } from '../home/user-questionaire/user-questionaire.component';
 import { RegisterQuestionnaireComponent } from './register-questionnaire/register-questionnaire.component';
 import { RegisterPartnerGeneralComponent } from './register-partner-general/register-partner-general.component';
 import { RegisterPartnerServiceComponent } from './register-partner-service/register-partner-service.component';
@@ -51,13 +51,13 @@ const routes: Routes = [
   // },
   // {
   //   path: 'questionnaire/u',
-  //   component: UserQuestionaireComponent,
+  //   component: PersonalMatchComponent,
   //   canActivate: [AuthGuard],
   //   redirectTo: 'questions/User'
   // },
   // {
     // path: 'questions/User',
-    // component: UserQuestionaireComponent, children: [
+    // component: PersonalMatchComponent, children: [
     //   { path: 'gender', component: UserQuestionnaireItemGenderComponent, data: {index: 0} },
     //   { path: 'age', component: UserQuestionnaireItemSelectComponent, data: {index: 1, q: 'age' } },
     //   { path: 'background', component: UserQuestionnaireItemBackgroundComponent, data: {index: 2} },

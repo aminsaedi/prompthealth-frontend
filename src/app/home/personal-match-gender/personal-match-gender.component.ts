@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { RegisterQuestionnaireService } from 'src/app/dashboard/register-questionnaire.service';
 import { CheckboxSelectionItem } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
+import { FormItemSelectBoxComponent } from 'src/app/shared/form-item-select-box/form-item-select-box.component';
 import { QuestionnaireService, Questionnaire } from 'src/app/shared/services/questionnaire.service';
 import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
-  selector: 'app-user-questionnaire-item-gender',
-  templateUrl: './user-questionnaire-item-gender.component.html',
-  styleUrls: ['./user-questionnaire-item-gender.component.scss']
+  selector: 'app-personal-match-gender',
+  templateUrl: './personal-match-gender.component.html',
+  styleUrls: ['./personal-match-gender.component.scss']
 })
-export class UserQuestionnaireItemGenderComponent implements OnInit {
+export class PersonalMatchGenderComponent implements OnInit {
 
   public form: FormGroup;
   public isSubmitted = false;
@@ -26,6 +27,9 @@ export class UserQuestionnaireItemGenderComponent implements OnInit {
   private subscriptionSubmit: Subscription;
 
   get f() { return this.form.controls; };
+
+  @ViewChild('formGender') private formGender: FormItemSelectBoxComponent;
+  @ViewChild('formSpGender') private formSpGender: FormItemSelectBoxComponent;
   
   constructor(
     private _questionnaireService: QuestionnaireService,
@@ -40,20 +44,17 @@ export class UserQuestionnaireItemGenderComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.form = new FormGroup({
+      gender: new FormControl(null, validators.personalMatchGender),
+      spGender: new FormControl(null, validators.personalMatchGender),
+    });
+
+    const data = this._route.snapshot.data;
+    this._qService.canActivate(this._route, data.index);
+
     this.subscriptionSubmit = this._qService.observeNavigation().subscribe((type) => {
       if(type == 'next'){ this.update(); }
       else if(type == 'back'){ this._qService.goBack(this._route); }
-    });
-
-    this._route.data.subscribe((data: {index: number, q: string}) => {
-      this._qService.canActivate(this._route, data.index);
-      const clientData = this._qService.getUserTracking();
-      const filterData = this._qService.getUser();
-
-      this.form = this._fb.group({
-        gender: new FormControl(clientData.gender ? clientData.gender : null, validators.personalMatchGender),
-        spGender: new FormControl(filterData.gender ? filterData.gender : null, validators.personalMatchGender),
-      });
     });
 
     const q = await this._questionnaireService.getPersonalMatch();
@@ -77,12 +78,29 @@ export class UserQuestionnaireItemGenderComponent implements OnInit {
         value: a.item_text,
       });
     });
+
+    const clientData = this._qService.getUserTracking();
+    const filterData = this._qService.getUser();
+    
+    if(clientData.gender) {
+      const genderData = this.dataGender.find(item => item.value == clientData.gender);
+      this.formGender.setItem(genderData);
+    }
+
+    if(filterData.gender) {
+      const genderData = this.dataSpGender.find(item => item.value == filterData.gender);
+      this.formSpGender.setItem(genderData);
+    }
   }
 
+
   update() {
+    this.f.gender.setValue(this.formGender.selectedItem?.value || null);
+    this.f.spGender.setValue(this.formSpGender.selectedItem?.value || null);
+
     this.isSubmitted = true;
     if(this.form.invalid){
-      this._toastr.error('There is some items that require your attention');
+      this._toastr.error('There are some items that require your attention');
       return;
     }
 

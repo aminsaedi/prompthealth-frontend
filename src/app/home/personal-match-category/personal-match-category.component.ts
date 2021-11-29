@@ -8,11 +8,11 @@ import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-
 
 
 @Component({
-  selector: 'app-user-questionnaire-item-select-multiple',
-  templateUrl: './user-questionnaire-item-select-multiple.component.html',
-  styleUrls: ['./user-questionnaire-item-select-multiple.component.scss']
+  selector: 'app-personal-match-category',
+  templateUrl: './personal-match-category.component.html',
+  styleUrls: ['./personal-match-category.component.scss']
 })
-export class UserQuestionnaireItemSelectMultipleComponent implements OnInit {
+export class PersonalMatchCategoryComponent implements OnInit {
 
   public data: string[];
   public type: string;
@@ -39,30 +39,17 @@ export class UserQuestionnaireItemSelectMultipleComponent implements OnInit {
     this._route.data.subscribe((data: {index: number, q: string}) => {
       this._qService.canActivate(this._route, data.index);
       const user = this._qService.getUserTracking();
-      this.type = data.q;
-      switch(data.q){
-        case 'goal':
-          this.data = user.services ? user.services : [];
-          this.title = 'What are your health interests and goals for enrolling with Prompt Health?';
-          break;
-        default:
-      }
+      this.data = user.services ? user.services : [];
     });
   }
 
   update(){
     const data: {[k: string]: string[]} = {}
     const dataTracking: {[k: string]: string[]} = {}
-    switch(this.type){
-      case 'background': 
-        data.customer_health = this.formHealthComponent.getSelectedValue(); 
-        dataTracking.customer_health = this.formHealthComponent.getSelectedValueForTracking();
-        break;
-      case 'goal': 
-        data.services = this.formServiceComponent.getSelected(); 
-        dataTracking.services = this.formServiceComponent.getSelected();
-        break;
-    }
+
+    data.services = this.formServiceComponent.getSelected(); 
+    dataTracking.services = this.formServiceComponent.getSelected();
+
     this._qService.updateUser(data);
     this._qService.updateUserTracking(dataTracking);
     this._qService.goNext(this._route);
