@@ -1,0 +1,33 @@
+<h4 class="mb-30p">Gender</h4>
+
+<h6 class="mb-3">{{qGender?.c_question}}</h6>
+<div class="row">
+  <div class="col-12 col-md-6">
+    <form-item-select-box
+    #formGender
+    [items]="dataGender"
+    [disabled]="dataGender"
+    ></form-item-select-box>    
+  </div>
+</div>
+<form-item-errors
+label="This question"
+[submitted]="isSubmitted"
+[controller]="f.gender"
+></form-item-errors>
+
+<h6 class="mt-5 mb-3">{{qSpGender?.c_question}}</h6>
+<div class="row">
+  <div class="col-12 col-md-6">
+    <form-item-select-box
+    #formSpGender
+    [items]="dataSpGender"
+    [disabled]="dataSpGender"
+    ></form-item-select-box>
+  </div>
+</div>
+<form-item-errors
+label="This question"
+[submitted]="isSubmitted"
+[controller]="f.spGender"
+></form-item-errors>

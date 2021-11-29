@@ -1,0 +1,19 @@
+<h4 class="mb-30p">Age</h4>
+
+<h6 class="mb-3">
+  What is your age range or that of the loved one for whom you are seeking service?
+</h6>
+
+<div class="row">
+  <div class="col-12 col-md-6">
+    <form-item-select-box
+    #formAge
+    [items]="dataAge"
+    ></form-item-select-box>    
+  </div>  
+</div>
+<form-item-errors
+label="This question"
+[submitted]="isSubmitted"
+[controller]="form"
+></form-item-errors>

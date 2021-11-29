@@ -44,11 +44,11 @@ import { LandingAmbassadorComponent } from './landing-ambassador/landing-ambassa
 // import { FilterDropdownSelectComponent } from "./filter-dropdown-select/filter-dropdown-select.component";
 // import { FilterDropdownSliderComponent } from "./filter-dropdown-slider/filter-dropdown-slider.component";
 import { ListingcompareComponent } from "./listingcompare/listingcompare.component";
-import { UserQuestionnaireItemSelectMultipleComponent } from "./user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component";
-import { UserQuestionnaireItemBackgroundComponent } from "./user-questionnaire-item-background/user-questionnaire-item-background.component";
-import { UserQuestionnaireItemSelectComponent } from "./user-questionnaire-item-select/user-questionnaire-item-select.component";
-import { UserQuestionaireComponent } from "./user-questionaire/user-questionaire.component";
-import { UserQuestionnaireItemGenderComponent } from "./user-questionnaire-item-gender/user-questionnaire-item-gender.component";
+import { PersonalMatchCategoryComponent } from "./personal-match-category/personal-match-category.component";
+import { PersonalMatchHealthComponent } from "./personal-match-health/personal-match-health.component";
+import { PersonalMatchAgeComponent } from "./personal-match-age/personal-match-age.component";
+import { PersonalMatchComponent } from "./personal-match/personal-match.component";
+import { PersonalMatchGenderComponent } from "./personal-match-gender/personal-match-gender.component";
 import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
 import { AuthModule } from "../auth/auth.module";
 import { SitemapComponent } from './sitemap/sitemap.component';
@@ -104,11 +104,11 @@ import { PressReleaseComponent } from "./press-release/press-release.component";
     // FilterDropdownLocationComponent,
     // FilterDropdownSelectComponent,
     // FilterDropdownSliderComponent,
-    UserQuestionaireComponent,
-    UserQuestionnaireItemGenderComponent,
-    UserQuestionnaireItemSelectComponent,
-    UserQuestionnaireItemBackgroundComponent,
-    UserQuestionnaireItemSelectMultipleComponent,
+    PersonalMatchComponent,
+    PersonalMatchGenderComponent,
+    PersonalMatchAgeComponent,
+    PersonalMatchHealthComponent,
+    PersonalMatchCategoryComponent,
     SitemapComponent,
     CardTestimonialComponent,
     ExpertFinderComponent,

@@ -1,20 +1,19 @@
-import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SharedService } from '../../shared/services/shared.service';
-import { Router, NavigationEnd, ActivatedRoute, Params } from '@angular/router';
+import { Router, Params } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { IUserDetail } from 'src/app/models/user-detail';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { QuestionnaireItemData, RegisterQuestionnaireService } from 'src/app/dashboard/register-questionnaire.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { findAbbrByFullnameOf } from 'src/app/_helpers/questionnaire-answer-map';
 
 @Component({
-  selector: 'app-user-questionaire',
-  templateUrl: './user-questionaire.component.html',
-  styleUrls: ['./user-questionaire.component.scss']
+  selector: 'app-personal-match',
+  templateUrl: './personal-match.component.html',
+  styleUrls: ['./personal-match.component.scss']
 })
-export class UserQuestionaireComponent implements OnInit {
+export class PersonalMatchComponent implements OnInit {
 
   public data: QuestionnaireItemData[] = [
     {route: 'gender', label: 'Gender', isComplete: false},

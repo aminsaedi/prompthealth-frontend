@@ -151,7 +151,7 @@ const age_range: CheckboxSelectionItem[] = [
   { id: 'age5', label: 'Senior (>64)', value: '5eb1a4e199957471610e6cdb' },
 ];
 
-const age_range_detail: CheckboxSelectionItem[] = [
+export const age_range_detail: CheckboxSelectionItem[] = [
   { id: 'age1', label: 'Under 12 years old',    value: '5eb1a4e199957471610e6cd8' },
   { id: 'age2', label: '12 - 17 years old',     value: '5eb1a4e199957471610e6cd9' },
   { id: 'age3', label: '18 - 24 years old',     value: '5eb1a4e199957471610e6cda' },

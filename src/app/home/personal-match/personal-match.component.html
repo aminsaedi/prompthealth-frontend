@@ -1,0 +1,47 @@
+<div class="bg-background" style="min-height: calc(100vh - 47px)">
+  <div class="container pt-30p">
+    <div class="row justify-content-between">
+      <div class="col-12 col-lg-8 col-xl-7">
+        <div class="bg-white rounded-8p p-20p">
+          <div class="d-flex justify-content-between mb-20p">
+            <h5 class="mb-0">Personal Match</h5>
+            <a 
+            routerLink="/practitioners"
+            class="btn btn-text-body p-0"
+            >Cancel</a>
+          </div>
+          <div>
+            <stepper [current]="currentIdx"></stepper>
+          </div>
+  
+          <div class="mt-50p">
+            <router-outlet></router-outlet>
+  
+            <div class="d-flex justify-content-between mt-30p">
+              <button 
+              *ngIf="currentIdx != 0" 
+              class="btn btn-text pl-0" 
+              type="button"
+              (click)="onClickNavigation('back')"
+              >Previous</button>
+              <div></div>
+              <button 
+              class="btn btn-primary" 
+              (click)="onClickNavigation('next')"
+              >Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-none d-lg-block col-4">
+        <div class="mt-40p">
+          <img class="w-100" src="assets/img/personal-match/personal-match.png" alt="">
+          <div class="text-center mt-40p">
+            <h4>Let us know your better.</h4>
+            <p>Your basic info will lead to a better match.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,11 +7,11 @@ import { FormItemCustomerHealthComponent, CustomerHealthSelectionItem } from 'sr
 import { Questionnaire, QuestionnaireAnswer, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 
 @Component({
-  selector: 'app-user-questionnaire-item-background',
-  templateUrl: './user-questionnaire-item-background.component.html',
-  styleUrls: ['./user-questionnaire-item-background.component.scss']
+  selector: 'app-personal-match-health',
+  templateUrl: './personal-match-health.component.html',
+  styleUrls: ['./personal-match-health.component.scss']
 })
-export class UserQuestionnaireItemBackgroundComponent implements OnInit {
+export class PersonalMatchHealthComponent implements OnInit {
 
   public qBackground: Questionnaire;
   public selected: string[];

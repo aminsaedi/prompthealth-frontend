@@ -29,11 +29,11 @@ import { AmbassadorProgramGuardGuard } from "./ambassador-program-guard.guard";
 // import { DetailComponent } from "./detail/detail.component";
 // import { ListingComponent } from "./listing/listing.component";
 import { ListingcompareComponent } from "./listingcompare/listingcompare.component";
-import { UserQuestionaireComponent } from "./user-questionaire/user-questionaire.component";
-import { UserQuestionnaireItemGenderComponent } from "./user-questionnaire-item-gender/user-questionnaire-item-gender.component";
-import { UserQuestionnaireItemSelectComponent } from "./user-questionnaire-item-select/user-questionnaire-item-select.component";
-import { UserQuestionnaireItemBackgroundComponent } from "./user-questionnaire-item-background/user-questionnaire-item-background.component";
-import { UserQuestionnaireItemSelectMultipleComponent } from "./user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component";
+import { PersonalMatchComponent } from "./personal-match/personal-match.component";
+import { PersonalMatchGenderComponent } from "./personal-match-gender/personal-match-gender.component";
+import { PersonalMatchAgeComponent } from "./personal-match-age/personal-match-age.component";
+import { PersonalMatchHealthComponent } from "./personal-match-health/personal-match-health.component";
+import { PersonalMatchCategoryComponent } from "./personal-match-category/personal-match-category.component";
 // import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
 import { SitemapComponent } from "./sitemap/sitemap.component";
 import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
@@ -135,11 +135,11 @@ const routes: Routes = [
 
   {
     path: 'personal-match',
-    component: UserQuestionaireComponent, children: [
-    { path: 'gender', component: UserQuestionnaireItemGenderComponent, data: {index: 0} },
-    { path: 'age', component: UserQuestionnaireItemSelectComponent, data: {index: 1, q: 'age' } },
-    { path: 'background', component: UserQuestionnaireItemBackgroundComponent, data: {index: 2} },
-    { path: 'goal', component: UserQuestionnaireItemSelectMultipleComponent, data: {index: 3, q: 'goal'} },
+    component: PersonalMatchComponent, children: [
+    { path: 'gender', component: PersonalMatchGenderComponent, data: {index: 0} },
+    { path: 'age', component: PersonalMatchAgeComponent, data: {index: 1, q: 'age' } },
+    { path: 'background', component: PersonalMatchHealthComponent, data: {index: 2} },
+    { path: 'goal', component: PersonalMatchCategoryComponent, data: {index: 3, q: 'goal'} },
     { path: '**', redirectTo: 'gender' },
   ]},
 
