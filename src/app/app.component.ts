@@ -4,12 +4,12 @@ import { ActivationStart, NavigationEnd, Router, ActivatedRoute } from '@angular
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from './shared/services/universal.service';
-import { BehaviorService } from './shared/services/behavior.service';
 import { UploadingStatus, UploadObserverService } from './shared/services/upload-observer.service';
 import { slideVerticalAnimation } from './_helpers/animations';
 import { SharedService } from './shared/services/shared.service';
 import { IResponseData } from './models/response-data';
 import { RegionService, RegionType } from './shared/services/region.service';
+import { Subscription } from 'rxjs';
 
 declare let gtag: Function;
 declare let fbq: Function;
@@ -24,16 +24,19 @@ export class AppComponent implements OnInit {
 
   get isAlertUploadingInBackgroundShown() { return this.isUploadingInBackground || this.isUploadingDoneInBackground; }
   get isStaging() { return !environment.production; }
+  regionFormatted(region: RegionType) { return this._regionService.formatRegion(region); }
 
   public isUploadingInBackground: boolean = false;
   public isUploadingDoneInBackground: boolean = false;
   private currentUploadingStatus: UploadingStatus;
 
+  public selectedRegion: RegionType = 'CA';
+
   public isModalRegionMenuShown = false;
+  private subscriptionModalRegionVisibility: Subscription;
 
   constructor(
     private _uService: UniversalService,
-    private _bService: BehaviorService,
     private _router: Router,
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
@@ -50,6 +53,10 @@ export class AppComponent implements OnInit {
   }
 
   private disableAnalytics: boolean = environment.config.disableAnalytics;
+
+  ngOnDestroy() {
+    this.subscriptionModalRegionVisibility?.unsubscribe();
+  }
 
   async ngOnInit() {
     if (!this._uService.isServer) {
@@ -79,11 +86,22 @@ export class AppComponent implements OnInit {
     }
 
     //check ipaddress and show select region modal if needed.
+    this.subscriptionModalRegionVisibility = this._regionService.modalVisibilityChanged().subscribe(isShown => {
+      if(isShown) {
+        this.selectedRegion = this._uService.localStorage.getItem('region') as RegionType || 'CA';
+        this.isModalRegionMenuShown = true;    
+      } else {
+        this.isModalRegionMenuShown = false;
+      }
+    });
+
     if(this._uService.isBrowser) {
+      if(!this._uService.localStorage.getItem('region')) {
+        this._uService.localStorage.removeItem('ip');
+      }
       const isIpChanged = await this.checkIpChanged();
       if(isIpChanged) {
-        this._uService.localStorage.removeItem('region');
-        this.isModalRegionMenuShown = true;
+        this._regionService.changeModalVisibility(true);
       } else {
         this._regionService.changeStatus('ready');
       }
@@ -92,6 +110,7 @@ export class AppComponent implements OnInit {
       this._regionService.changeStatus('ready');
     }
   }
+
 
   async checkIpChanged() {
     const ipCurrent = this._uService.localStorage.getItem('ip');
