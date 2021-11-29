@@ -47,24 +47,25 @@ class="modal-view"
     <div class="content-container">
       <ul class="list-unstyled mb-0">
         <li 
-        class="mb-15p d-flex cursor-pointer"
-        (click)="onRegionSelected('US')"
+        *ngFor="let region of ['US', 'CA']"
+        class="mb-15p d-flex cursor-pointer align-items-center"
+        (click)="onRegionSelected(region)"
         >
-          <img src="assets/img/general/region-us.png" alt="" height="50px" class="rounded-4p">
-          <button 
-          class="btn flex-grow-1 ml-15p" 
-          [ngClass]="selectedRegion == 'US' ? 'btn-primary' : 'btn-outline-body'"
-          >{{regionFormatted('US')}}</button>
-        </li>
-        <li 
-        class="d-flex cursor-pointer"
-        (click)="onRegionSelected('CA')"
-        >
-          <img src="assets/img/general/region-ca.png" alt="" height="50px" class="rounded-4p">
-          <button 
-          class="btn flex-grow-1 ml-15p" 
-          [ngClass]="selectedRegion == 'CA' ? 'btn-primary' : 'btn-outline-body'"
-          >{{regionFormatted('CA')}}</button>
+          <i 
+          *ngIf="selectedRegion == region" 
+          iconPh="checkbox-circle" 
+          style="font-size: 40px;"
+          ></i>
+          <img 
+          *ngIf="selectedRegion != region" 
+          [src]="'assets/img/general/region-' + region.toLowerCase() + '.png'" 
+          alt="" 
+          width="40px" 
+          class="rounded-4p"
+          >
+          <button class="btn flex-grow-1 ml-15p btn-text-body text-left pl-0" >
+            {{regionFormatted(region)}}
+          </button>
         </li>
       </ul>
       <div class="text-right mt-25p">
