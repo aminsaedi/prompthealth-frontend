@@ -6,7 +6,6 @@ import { HomeComponent } from './../home/home.component';
 import { DashboardModule } from '../dashboard/dashboard.module';
 
 import { ThankuPageComponent } from './thanku-page/thanku-page.component';
-import { MagazineModule } from '../magazine/magazine.module';
 
 const routes: Routes = [
 
@@ -25,11 +24,6 @@ const routes: Routes = [
       },
 
       // { path: 'community', loadChildren: () => SocialModule },
-      
-      {
-        path: 'magazines',
-        loadChildren: () => MagazineModule,
-      },
       // {
       //   path: 'auth',
       //   loadChildren: () => AuthModule,

@@ -7,6 +7,8 @@ import 'zone.js/dist/zone-node';
 /** If third party module is not compatible with universal, try to add global variable here */
 global['MouseEvent'] = {};  
 global['HTMLElement'] = {};
+global['HTMLAnchorElement'] = {prototype: {}}; // for datebook
+
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
