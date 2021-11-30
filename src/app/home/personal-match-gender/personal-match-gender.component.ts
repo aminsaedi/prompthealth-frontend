@@ -68,14 +68,15 @@ export class PersonalMatchGenderComponent implements OnInit {
       this.dataGender.push({
         id: 'gender' + i,
         label: a.item_text,
-        value: a.item_text,
+        value: a.item_text.toLowerCase().replace('-', ''),
       });
     });
+
     q.spGender.answers.forEach((a,i)=>{
       this.dataSpGender.push({
         id: 'spGender' + i,
         label: a.item_text,
-        value: a.item_text,
+        value: a.item_text.toLowerCase().replace('-', ''),
       });
     });
 
