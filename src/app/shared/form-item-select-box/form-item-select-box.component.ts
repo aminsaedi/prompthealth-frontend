@@ -39,6 +39,7 @@ export class FormItemSelectBoxComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.items)
   }
 
   setItem(item: CheckboxSelectionItem) {
