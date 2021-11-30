@@ -1,0 +1,73 @@
+<section class="container mt-70p mt-md-100p pb-35p pb-md-65p border-bottom border-line">
+
+  <div class="d-flex">
+    <i iconPh="tag-2" *ngIf="taxonomyType == 'tag'" class="h4 h2-md text-placeholder mr-3"></i>
+    <i iconPh="folder" *ngIf="taxonomyType == 'category'" class="h4 h2-md text-placeholder mr-3"></i>
+    <i iconPh="video-camera" *ngIf="taxonomyType == 'video'" class="h4 h2-md text-placeholder mr-3"></i>
+    <i iconPh="volume-high" *ngIf="taxonomyType == 'podcast'" class="h4 h2-md text-placeholder mr-3"></i>
+    <div>
+      <h2 class="h4 h2-md">{{taxonomyName | titlecase}}</h2>
+      <p class="subtitle1 mb-0">
+        A collection of 
+        <span>
+          <span>{{postTotal}} {{postType}}</span>
+          <span *ngIf="postTotal > 1 && postType !== 'news'">s</span>
+        </span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="container mt-70p pb-100p border-bottom border-line">
+  <div class="row">
+    <ng-container *ngIf="latest && latest.length == 0">
+      <div class="col-12">
+        <p class="subtitle1">No posts found...</p>
+      </div>
+    </ng-container>
+    <ng-container *ngFor="let p of latest; let i = index">
+      <div 
+      class="col-12 mb-md-100p"
+      [ngClass]="{'col-md-12 mb-55p': (i == 0), 'col-lg-4 mb-30p': (i != 0)}"
+      >
+        <card-post [size]="(i == 0) ? 'large' : 'medium'" [data]="p" [showCategory]="false"></card-post>
+      </div>  
+    </ng-container>
+  </div>
+</section>
+
+<section class="container my-100p">
+  <section-subscription></section-subscription>
+</section>
+
+<section class="container mt-100p" id="archive">
+  <div class="row">
+    <ng-container *ngFor="let p of archive; let i = index">
+      <div class="col-12 col-md-6 col-lg-3 mb-30p mb-md-55p">
+        <card-post size="small" [data]="p" [showCategory]="false"></card-post>
+      </div>
+    </ng-container>
+  </div>
+</section>
+
+<div class="d-flex align-items-center justify-content-center paginators mb-100p">
+  <ng-container *ngFor="let paginatorGroup of paginators; let i = index;">
+    <ng-container *ngFor="let page of paginatorGroup; let j = index">
+      <a 
+      [routerLink]="[(pageCurrent == 1 ? './' : '../') + (page == 1 ? '' : page)]"
+      class="btn bg-primary-light mx-2"
+      [ngClass]=" {'bg-primary text-white': (pageCurrent == page), 'bg-primary-light text-primary-dark': (pageCurrent != page)}"
+      >
+        <span>{{page}}</span>
+    </a>  
+    </ng-container>
+    <i iconPh="more-horiz"
+    *ngIf="paginators.length - 1 > i"
+    class="text-primary-dark"
+    ></i>
+  </ng-container>
+</div>
+
+<section>
+  <section-signup></section-signup>
+</section>

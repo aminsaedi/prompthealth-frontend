@@ -1,0 +1,252 @@
+<div>
+  <div class="mb-20p row justify-content-center">
+    <div class="col-12 col-md-12 col-lg-10 col-xl-9 text-center">
+  
+      <div *ngIf="!data" class="eyecatch-container ratio-5--3">
+        <div class="eyecatch-dummy bg-background"></div>
+      </div>
+      <div *ngIf="data?.isVideo" class="eyecatch-container ratio-16--9">
+        <div class="eyecatch" [innerHTML]="data.videosEmbedded[0]"></div>
+      </div>
+      <div *ngIf="!data?.isVideo && data?.isPodcast" class="eyecatch-container ratio-for-podcast">
+        <div class="eyecatch" [innerHTML]="data.podcastsEmbedded[0]"></div>
+      </div>
+      <div *ngIf="!!data && !data.isVideo && !data.isPodcast" class="eyecatch-container ratio-5--3">
+        <img [src]="data.image" class="eyecatch" alt="">
+      </div>
+    </div>
+  </div>
+  
+  <div class="row justify-content-center mb-30p">
+    <div
+    class="col-12"
+    [ngClass]="{'col-md-12 col-lg-10 col-xl-9': !!(data?.isEvent), 'col-md-11 col-lg-9 col-xl-8': (!data || !data.isEvent)}"
+    >
+      <div class="row align-items-center body2">
+        <div class="col-12 col-md-4 mb-10p mb-md-0 border-md-right">
+          <div *ngIf="!data" class="d-flex align-items-center">
+            <div class="author-dummy color-dummy mr-2"></div>
+            <span class="color-dummy">Author name</span>            
+          </div>
+          <a
+          *ngIf="data"
+          class="d-flex align-items-center"
+          [ngStyle]="{'pointer-events': (!data || data.authorRole == 'SA' ? 'none' : 'inherit') }"
+          [routerLink]="['/',(data?.authorRole == 'P' ? 'products' : 'practitioners'), (data ? data.authorId : '')]"
+          >
+            <img [src]="data.authorImage" alt="" class="author mr-2">
+            <span class="opacity-70pc text-body">{{data?.author}}</span>
+          </a>
+
+        </div>
+        <div class="col-12 col-md-8 d-flex justify-content-between flex-column flex-md-row align-items-start align-items-md-center">
+          <div>
+            <div class="d-flex flex-column flex-md-row flex-nowrap opacity-70pc">
+              <span class="mr-4 mb-10p mb-md-0 text-nowrap">
+                <i iconPh="calendar" class="mr-2"></i>
+                <span *ngIf="!data" class="color-dummy">June 25, 2035</span>
+                <span *ngIf="data && !data.isEvent">{{data.createdAt | date:'longDate'}}</span>
+                <span *ngIf="data && data.isEvent">{{data.event.startAt | date:'MMM d, yyyy hh:mm a'}}</span>
+              </span>
+  
+              <span class="mr-4 mb-10p mb-md-0 text-nowrap">
+                <i iconPh="timer" class="mr-2"></i>
+                <span *ngIf="!data" class="color-dummy">120mins read</span>
+                <span *ngIf="data && !data.isEvent">{{data.readLengthFormatted}} read</span>
+                <span *ngIf="data && data.isEvent">{{data?.event.durationFormatted}}</span>
+              </span>
+  
+              <span *ngIf="data?.isEvent" class="mb-10p mb-md-0 text-nowrap">
+                <i iconPh="video-camera" class="mr-2"></i>
+                <span *ngIf="data.event.eventOn">On {{data.event.eventOn | titlecase}}</span>
+                <span *ngIf="!data.event.eventOn">Virtual</span>
+              </span>
+            </div>
+          </div>
+          <div *ngIf="data?.isEvent" class="d-flex align-items-center mb-10p mb-md-0">
+            <div class="event-status mr-2"
+            [ngClass]="{'bg-success': !data.event.isFinished, 'bg-danger': data.event.isFinished}"></div>
+            <span class="opacity-70pc">{{data.event.status | titlecase}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-11 col-lg-9 col-xl-8">
+      <h2 class="h4 h2-md mb-25p text-center">
+        {{data?.title}}
+      </h2>
+  
+      <div class="body1 page-content">
+        <div *ngIf="!shorten" [innerHTML]="data?.descriptionSanitized"></div>
+        <p *ngIf="!!shorten" class="summary body1 clamp-5line" [innerHTML]="data?.summary"></p>
+      </div>
+
+      <div *ngIf="data && data.tags && data.tags.length > 0">
+        <div class="subtitle1 mt-40p mb-15p">Tags</div>
+        <ul class="list-unstyled p-0 mb-20p">
+          <li 
+          *ngFor="let t of data.tags" 
+          class="mr-15p mb-10p d-inline-block"
+          >
+            <a [routerLink]="['/magazines/tag', t.slug]"
+            class="text-body body2 rounded-pill border px-20p py-5p mr-5p mb-5p d-inline-block"
+            
+            >{{t.title}}</a>
+          </li>
+        </ul>
+      </div>
+  
+      <div
+      *ngIf="data?.isEvent"
+      class="mt-50p mb-30p d-flex flex-column flex-md-row align-items-stretch justify-content-md-center btn-group-event"
+      >
+        <div class="mr-md-25p">
+          <button 
+          *ngIf="!alreadySubscribed"
+          (click)="toggleSubscribeMenu()" 
+          class="btn btn-primary w-100"
+          >Subscribe</button>
+          <a 
+          *ngIf="alreadySubscribed"
+          [href]="data?.event.link"
+          target="_blank"
+          class="btn btn-primary w-100"
+          >Join now</a>
+        </div>
+  
+        <div class="mx-md-25p mt-15p mt-md-0p">
+          <button class="btn btn-outline w-100" (click)="toggleCalendarMenu()">Add to calendar</button>
+        </div>
+
+        <!-- <div class="ml-md-25p mt-15p mt-md-0 ">
+          <a class="btn btn-outline w-100" routerLink="/subscribe/newsletter">Subscribe</a>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  
+  <div
+  *ngIf="urlCurrent && !shorten"
+  class="sticky-bottom btn-group-social py-20p px-lg-10p d-flex justify-content-md-center d-lg-inline-flex flex-lg-column align-items-center">
+    <span class="subtitle2 mr-15p mr-lg-0p mb-lg-15p text-placeholder">Share</span>
+    <a 
+    class="text-placeholder mr-15p mr-lg-0p mb-lg-15p" 
+    [href]="'https://www.facebook.com/share.php?u=' + urlCurrent"
+    >
+      <i iconPh="facebook" class="icon-social"></i>
+    </a>
+    <a 
+    class="text-placeholder mr-15p mr-lg-0p mb-lg-15p"
+    [href]="'https://twitter.com/share?url=' + urlCurrent"
+    >
+      <i iconPh="twitter" class="icon-social"></i>
+    </a>
+    <a 
+    class="text-placeholder"
+    [href]="'https://www.linkedin.com/sharing/share-offsite/?url=' + urlCurrent"
+    >
+      <i iconPh="linkedin" class="icon-social"></i>
+    </a>
+  </div>
+</div>
+
+<!-- modal: calendar menu -->
+<div 
+*ngIf="isCalendarMenuShown"
+class="modal-view"
+>
+  <div class="modal-drop"
+  (click)="hideCalendarMenu()"
+  ></div>
+  <div class="modal-body">
+
+    <div class="title-container d-flex justify-content-between align-items-center">
+      <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Add to calendar</span>
+      <button class="btn pr-0 btn-icon" (click)="hideCalendarMenu()">
+        <i iconPh="cross"></i>
+      </button>  
+    </div>
+
+    <div class="content-container">
+      <p class="body1 mb-25p">Please select calendar type</p>
+      <ul class="list-unstyled">
+          <li class="mb-15p">
+            <button class="btn btn-outline w-100" (click)="addToCalendar('ical')">iCalendar</button>
+          </li>
+          <li class="mb-15p">
+            <button class="btn btn-outline w-100" (click)="addToCalendar('google')">Google Calendar</button>
+          </li>
+          <li class="mb-15p">
+            <button class="btn btn-outline w-100" (click)="addToCalendar('outlook')">Outlook Calendar</button>
+          </li>
+          <li class="">
+            <button class="btn btn-outline w-100" (click)="addToCalendar('yahoo')">Yahoo Calendar</button>
+          </li>
+
+        </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- modal: subscribe-menu -->
+<div 
+*ngIf="isSubscribeMenuShown"
+class="modal-view"
+>
+  <div class="modal-drop"
+  (click)="hideSubscribeMenu()"
+  ></div>
+  <div 
+  class="modal-body"
+  style="max-width: 600px"
+  >
+
+    <div class="title-container d-flex justify-content-between align-items-center">
+      <span class="h5 h4-md mr-3 mb-0 flex-grow-1">Subscribe</span>
+      <button class="btn pr-0 btn-icon" (click)="hideSubscribeMenu()">
+        <i iconPh="cross"></i>
+      </button>  
+    </div>
+
+    <div class="content-container">
+      <p class="body1 text-body mb-30p mb-md-60p">
+        Subscribe to receive a recap of our favourite tools and educational resources from our Virtual Summer Wellness Series!
+      </p>
+      
+      <div>
+        <form-subscribe 
+        #formSubscribe
+        [referrer]="'event_' + data?._id" 
+        [option]="{hideSubmitButton: true, hideUserType: true, defaultUserType: 'seeker', hideProfessionalTitle: true}"
+        (onSuccess)="onSuccessSubscribe()"
+        (onError)="onErrorSubscribe()"
+        ></form-subscribe>
+      </div>
+      <div class="text-center">
+        <div class="d-flex justify-content-between mt-45p">
+          <a
+          class="btn btn-text-black flex-shrink-1 mr-15p px-0 text-left"
+          [href]="data?.event.link"
+          target="_blank"
+          >skip</a>
+
+          <button
+          class="btn btn-primary flex-grow-1 ml-15p"
+          (click)="onSubmitSubscribe()"
+          [disabled]="isLoading"
+          >Submit and join event</button>
+        </div>
+        <p 
+        *ngIf="isRedirecting" 
+        class="body-small mt-20p"
+        >You will be redirect to event page in {{timeRedirect}} seconds</p>
+      </div>
+    </div>
+
+  </div>
+</div>
