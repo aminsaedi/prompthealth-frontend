@@ -1,0 +1,154 @@
+<a [routerLink]="['/magazines/' + (data ? data.slug : '')]">
+  <div class="card-post text-body overflow-hidden position-relative">
+    <div class="row">
+      <div 
+      class="col-12 col-lg-4"
+      [ngClass]="{'col-lg-4': sizeL}"
+      >
+        <div class="eyecatch-container position-relative rounded-12p overflow-hidden">
+          <div *ngIf="!data" class="eyecatch-dummy color-dummy"></div>
+          <img *ngIf="data" class="eyecatch" [src]="data.image" alt="">
+
+          <div *ngIf="data"
+          class="position-absolute px-10p py-5p mt-10p ml-10p rounded-8p"
+          [ngClass]="{'bg-white': !data.event.isFinished, 'bg-danger text-light': data.event.isFinished}"
+          >
+            <div class="h6 text-center">{{data.event.startAt | date:'dd'}}</div>
+            <div class="caption opacity-70pc text-center">{{data.event.startAt | date:'MMM' | uppercase}}</div>
+          </div>
+        </div>
+      </div>
+      <div 
+      class="col-12"
+      [ngClass]="{'col-lg-8': sizeL}"
+      >
+        <div class="info-container mt-10p">
+          <div 
+          class="stat-container body2 opacity-70pc "
+          [ngClass]="{'mb-5p mb-md-25p': sizeL, 'mb-10p': !sizeL }"
+          >
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between  ">
+              <div class="d-flex align-items-center flex-wrap">
+                <div *ngIf="!sizeL"
+                class="mb-10p mr-15p"
+                >
+                  <div *ngIf="!data" class="author-dummy color-dummy"></div>
+                  <a
+                  *ngIf="data"
+                  [ngStyle]="{'pointer-events': (data.authorRole == 'SA' ? 'none' : 'inherit') }"
+                  [routerLink]="['/',(data.authorRole == 'P' ? 'products' : 'practitioners'), data.authorId]"
+                  >
+                    <img [src]="data.authorImage" alt="" class="author">
+                  </a>
+                </div>
+                <!-- <span
+                class="mb-10p mr-15p text-nowrap"
+                [ngClass]="{'mr-md-25p': sizeL}"
+                >
+                  <i iconPh="calendar" class="mr-1"></i>
+                  <span *ngIf="!data" class="color-dummy">Apr 22, 2035</span>
+                  <span *ngIf="data && !sizeL">{{data.event.startAt | date}}</span>
+                  <span *ngIf="data && sizeL">{{data.event.startAt | date:'MMM d, yyyy hh:mm a'}}</span>
+                </span> -->
+              
+                <span
+                class="mb-10p mr-15p text-nowrap"
+                [ngClass]="{'mr-md-25p': sizeL}"
+                >
+                  <i iconPh="timer" class="mr-1"></i>
+                  <span *ngIf="!data" class="color-dummy">2 hours</span>
+                  <span *ngIf="data">{{data.event.durationFormatted}}</span>
+                </span>
+              
+                <!-- <span *ngIf="showCategory && (!data || data.category)"
+                class="ml-2 mb-10p text-nowrap"
+                [ngClass]="{'mr-25p': sizeL, 'mr-2': !sizeL}"
+                >
+                  <i class="far fa-folder mr-1"></i>
+                  <span *ngIf="!data" class="color-dummy">News</span>
+                  <span *ngIf="data">{{data.catTitle}}</span>
+                </span> -->
+                <span class="mb-10p text-nowrap">
+                  <i iconPh="video-camera" class="mr-1"></i>
+                  <span *ngIf="!data" class="color-dummy">On Meet</span>
+                  <span *ngIf="data && data.event.eventOn">On {{data.event.eventOn | titlecase}}</span>
+                  <span *ngIf="data && !data.event.eventOn">Virtual</span>
+                </span>
+              </div>
+              <div *ngIf="sizeL"
+              class="d-inline-flex align-items-center mb-10p"
+              >
+                <div 
+                class="event-status mr-2"
+                [ngClass]="{'bg-success': !data?.event.isFinished, 'bg-danger': data?.event.isFinished}"
+                ></div>
+                <span class="opacity-70pc">{{data?.event.status | titlecase}}</span>
+              </div>
+            </div>
+
+            <!-- <div class="mb-10p text-nowrap" *ngIf="!data || (data.tags && data.tags.length > 0)">
+              <i class="fas fa-tag"></i>
+              <span *ngIf="!data" class="color-dummy ml-1">Hormonal Health</span>
+              <ul *ngIf="data" class="list-unstyled d-inline-flex flex-wrap clamp-1line body2 mb-0">
+                <ng-container *ngFor="let t of data.tags; let i = index">
+                  <ng-container *ngIf="i < 3">
+                    <li class="ml-1">{{t.title}}</li>
+                    <li *ngIf="i + 1 < data.tags.length && i + 1 < 3" class="ml-1" > / </li>    
+                  </ng-container>
+                </ng-container>
+              </ul> 
+            </div>-->
+          </div>
+
+          <h4 
+          class="h6 mb-10p"
+          [ngClass]="{'clamp-2line': !sizeL}"
+          >
+            <div *ngIf="!data"><div class="color-dummy" style="height: 0.95em;"></div></div>
+            <span *ngIf="data">{{data.title}}</span>
+          </h4>
+
+          <div 
+          class="body1 mb-20p"
+          [ngClass]="{'clamp-2line': sizeL, 'clamp-3line': !sizeL}"
+          >
+            <div *ngIf="!data">
+              <div class="color-dummy" style="height: 1em;"></div>
+              <div class="mt-1"><div class="color-dummy" style="height: 1em;"></div></div>  
+            </div>
+            <p *ngIf="data" class="body1 mb-0 opacity-80pc" [innerHTML]="data.summary"></p>
+          </div>
+
+          <div class="d-flex align-items-center" *ngIf="sizeL && !data">
+            <div
+            class="author-dummy color-dummy mr-2"
+            [ngClass]="{'large': sizeL}"
+            ></div>
+            <p class="m-0 opacity-70pc body1 clamp-1line">
+              <span class="color-dummy">By author name</span>
+            </p>
+          </div>
+
+          <a
+          *ngIf="sizeL && data"
+          class="d-flex align-items-center"
+          [ngStyle]="{'pointer-events': (data.authorRole == 'SA' ? 'none' : 'inherit') }"
+          [routerLink]="['/',(data.authorRole == 'P' ? 'products' : 'practitioners'), data.authorId]"
+          >
+            <img 
+            [src]="data.authorImage" 
+            class="author mr-2"
+            [ngClass]="{'large': sizeL}"
+            alt="" 
+            >
+            <p class="m-0 opacity-70pc body1 clamp-1line">
+              <span class="text-body">{{data.author}}</span>
+            </p>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!data" class="loading-1" [ngStyle]="{backgroundColor: _option.colorLightForDummy}"></div>
+    <div *ngIf="!data" class="loading-2" [ngStyle]="{backgroundColor: _option.colorLightForDummy}"></div>
+  </div>
+</a>
