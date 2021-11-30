@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CanActivate, Routes, RouterModule, CanActivateChild } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { HomeModule } from '../home/home.module';
 import { LayoutComponent } from './layout/layout.component';
 import { HomeComponent } from './../home/home.component';
@@ -23,28 +23,16 @@ const routes: Routes = [
         path: '',
         loadChildren: () => HomeModule
       },
-
-      // { path: 'community', loadChildren: () => SocialModule },
       
       {
         path: 'magazines',
         loadChildren: () => MagazineModule,
       },
-      // {
-      //   path: 'auth',
-      //   loadChildren: () => AuthModule,
-      // },
+
       {
         path: 'dashboard-old',
         loadChildren: () => DashboardModule,
-        // CanActivate: [AuthGuard]
       },
-
-
-      // {
-      //   path: 'subscriptionplan',
-      //   component: SubscriptionPlanComponent
-      // },
 
     ]
   },
