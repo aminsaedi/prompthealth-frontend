@@ -33,7 +33,7 @@ export class CardItemArticleComponent implements OnInit {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
   }
 
-  onClickLinkExternalLink(e: Event) {
+  onClickExternalLink(e: Event) {
     e.stopPropagation();
   }
 }
