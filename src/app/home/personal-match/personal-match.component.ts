@@ -65,7 +65,7 @@ export class PersonalMatchComponent implements OnInit {
         try{
           const personalMatch = this._qService.getUser();
 
-          if(personalMatch.gender == 'Prefer Not To Say') { personalMatch.gender = null; }
+          if(personalMatch.gender == 'prefer not to say') { personalMatch.gender = null; }
           personalMatch.services = personalMatch.services.concat(personalMatch.customer_health);
 
           const params: Params = {}

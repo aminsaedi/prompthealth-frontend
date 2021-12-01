@@ -155,12 +155,12 @@ export const age_range_detail: CheckboxSelectionItem[] = [
   { id: 'age1', label: 'Under 12 years old',    value: '5eb1a4e199957471610e6cd8' },
   { id: 'age2', label: '12 - 17 years old',     value: '5eb1a4e199957471610e6cd9' },
   { id: 'age3', label: '18 - 24 years old',     value: '5eb1a4e199957471610e6cda' },
-  { id: 'age3', label: '25 - 34 years old',     value: '5eb1a4e199957471610e6cda' },
-  { id: 'age4', label: '35 - 44 years old',     value: '5eb1a4e199957471610e6cda' },
-  { id: 'age5', label: '45 - 54 years old',     value: '5eb1a4e199957471610e6cda' },
-  { id: 'age6', label: '55 - 64 years old',     value: '5eb1a4e199957471610e6cda' },
-  { id: 'age7', label: '65 - 74 years old',     value: '5eb1a4e199957471610e6cdb' },
-  { id: 'age8', label: '75 years old or older', value: '5eb1a4e199957471610e6cdb' },
+  { id: 'age4', label: '25 - 34 years old',     value: '5eb1a4e199957471610e6cda' },
+  { id: 'age5', label: '35 - 44 years old',     value: '5eb1a4e199957471610e6cda' },
+  { id: 'age6', label: '45 - 54 years old',     value: '5eb1a4e199957471610e6cda' },
+  { id: 'age7', label: '55 - 64 years old',     value: '5eb1a4e199957471610e6cda' },
+  { id: 'age8', label: '65 - 74 years old',     value: '5eb1a4e199957471610e6cdb' },
+  { id: 'age9', label: '75 years old or older', value: '5eb1a4e199957471610e6cdb' },
 ];
 
 const years_of_experience: CheckboxSelectionItem[] = [
