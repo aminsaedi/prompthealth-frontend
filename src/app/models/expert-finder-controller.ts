@@ -349,11 +349,13 @@ export class ExpertFinderController {
     this._professionalsInitialized = false;
   }
 
-  setProfessionals(data: IGetPractitionersResult['data']['dataArr']) {
+  setProfessionals(data: IGetPractitionersResult['data']['dataArr'], createCanvas: boolean = true) {
     const professionals = [];
     data.forEach(d => {
-      const p = new Professional(d.userId, d.userData)
-      p.setMapIcon();
+      const p = new Professional(d.userId, d.userData);
+      if(createCanvas) {
+        p.setMapIcon();
+      }
       professionals.push(p);
     });
 

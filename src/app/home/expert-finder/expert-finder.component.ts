@@ -402,7 +402,7 @@ export class ExpertFinderComponent implements OnInit {
     const payload = this.controller.toPayload();
     this.controller.disposeProfesionnals();
     this._sharedService.postNoAuth(payload, 'user/filter').subscribe((res: IGetPractitionersResult) => {
-      this.controller.setProfessionals(res.data.dataArr);
+      this.controller.setProfessionals(res.data.dataArr, this._uService.isBrowser);
       const professionals = this.controller.professionalsAll;
       this.formCompare = new FormGroup({});
       if(professionals){
