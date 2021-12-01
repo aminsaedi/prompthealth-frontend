@@ -14,7 +14,6 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
-import { PostManagerService } from 'src/app/post-manager/post-manager.service';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 
 import { DOCUMENT } from '@angular/common';
@@ -45,7 +44,6 @@ export class SharedService {
     private _bs: BehaviorService,
     private _uService: UniversalService,
     private _stripeService: StripeService,
-    private _postManager: PostManagerService,
     private _profileManager: ProfileManagementService,
     private _socialManager: SocialService,
     private _toastr: ToastrService,
@@ -104,7 +102,6 @@ export class SharedService {
     });
 
     this._socialManager.dispose();
-    this._postManager.dispose();
     this._profileManager.dispose();
 
     const ls = this._uService.localStorage;
