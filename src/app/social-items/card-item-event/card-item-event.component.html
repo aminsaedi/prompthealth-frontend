@@ -64,21 +64,24 @@
 </ul>
 
 <div class="d-flex flex-column flex-lg-row align-items-stretch justify-content-lg-center btn-group mb-30p">
-  <div class="mr-lg-25p">
-    <button 
+  <div 
+  *ngIf="post?.link"
+  class="mr-lg-25p mb-15p mb-lg-0p"
+  >
+    <!-- <button 
     *ngIf="!alreadySubscribed"
     (click)="showMenu($event, 'subscribe-menu')" 
     class="btn btn-primary w-100"
-    >Subscribe</button>
+    >Register</button> -->
     <a 
-    *ngIf="alreadySubscribed"
-    [href]="post?.link"
+    [href]="post.link"
     target="_blank"
     class="btn btn-primary w-100"
-    >Join now</a>
+    (click)="onClickLinkToEvent($event)"
+    >Register</a>
   </div>
   
-  <div class="mx-lg-25p mt-15p mt-lg-0p">
+  <div>
     <button class="btn btn-outline w-100" (click)="showMenu($event, 'calendar-menu')">Add to calendar</button>
   </div>
 </div>
