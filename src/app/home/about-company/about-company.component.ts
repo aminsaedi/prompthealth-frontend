@@ -131,9 +131,10 @@ export class AboutCompanyComponent implements OnInit {
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
       if(res.statusCode == 200) {
         res.data.forEach(d => {
-          //if currency data doesn't exist, it means CAD
-          if (!d.currency) {
-            d.currency = 'CAD';
+          switch(region) {
+            case 'CA': d.currency = 'CAD'; break;
+            case 'US': d.currency = 'USD'; break;
+            default:   d.currency = '$';
           }
           
           if (d.userType.includes('P')) {

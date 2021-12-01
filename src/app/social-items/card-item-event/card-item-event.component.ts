@@ -46,5 +46,9 @@ export class CardItemEventComponent implements OnInit {
 
   markCurrentPosition() {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
-  } 
+  }
+
+  onClickLinkToEvent(e: Event) {
+    e.stopPropagation();
+  }
 }
