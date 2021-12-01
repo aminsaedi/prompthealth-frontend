@@ -49,16 +49,20 @@ export interface ISocialPost {
     profileImage?: IUserDetail['profileImage'];
     verifiedBadge?: IUserDetail['verifiedBadge'];
     // roles: IUserDetail['roles'];
-    // product_description: IUserDetail['product_description'];
-    // professional_title: IUserDetail['professional_title'];
+    product_description?: IUserDetail['product_description'];
+    professional_title?: IUserDetail['professional_title'];
+    website?: IUserDetail['website'];
     followed?: boolean;
     belled?: boolean;
   };
   authorName?: string;
+  authorTitle?: string;
   authorImage?: string;
   authorVerified?: boolean;
   authorBelled?: boolean;
   authorFollowed?: boolean;
+  authorDescription?: string;
+  authorWebsite?: string;
   descriptionSanitized?: SafeHtml;
   summary?: string;
   isNews?: boolean;
@@ -136,7 +140,10 @@ export class SocialPostBase implements ISocialPost {
     return name;      
   }
   get authorId(): string { return (typeof this.data.author == 'string') ? this.data.author : this.data.author ?  this.data.author._id : 'noid'; }
+  get authorTitle(): string { return (typeof this.data.author != 'string' && this.data.author.professional_title) ? this.data.author.professional_title : ''; }
+  get authorDescription(): string { return (typeof this.data.author != 'string' && this.data.author.product_description) ? this.data.author.product_description : ''; }
   get authorImage() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.profileImage) ? this._s3 + '350x220/' + this.data.author.profileImage : 'assets/img/logo-sm-square.png'}
+  get authorWebsite() { return this.author?.website || ''; }
   get authorVerified() {return (this.data.author && typeof this.data.author != 'string' && this.data.author.verifiedBadge) ? true : false; }
   get authorBelled() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.belled) ? true : false; } 
   get authorFollowed() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.followed) ? true : false; } 

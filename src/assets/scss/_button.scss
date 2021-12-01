@@ -103,6 +103,10 @@
 .btn.btn-text {
   @include btnText($colorPrimary, $colorPrimaryDark);
 }
+
+.btn.btn-text-primary-dark {
+  @include btnText($colorPrimaryDark, $colorPrimary);
+}
 .btn.btn-text-black,
 .btn.btn-text-body {
   @include btnText($colorGsBody, $colorGsBlack);
