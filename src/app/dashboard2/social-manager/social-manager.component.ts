@@ -7,6 +7,8 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-social-manager',
@@ -36,10 +38,14 @@ export class SocialManagerComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
-
+    private _uService: UniversalService,
+    private _router: Router,
   ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'My profile - Connect social media | PromptHealth',
+    })
   }
 
   showEditor(type: string) {

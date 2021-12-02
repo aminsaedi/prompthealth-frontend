@@ -10,6 +10,8 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
 import { pattern } from 'src/app/_helpers/pattern';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-video-manager',
@@ -37,12 +39,18 @@ export class VideoManagerComponent implements OnInit {
     private _embedService: EmbedVideoService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _uService: UniversalService,
+    private _router: Router,
   ) { }
 
   ngOnInit(): void {
     if(this.user.eligibleToManageVideo) {
       this.initIframesForVideo();
     }
+
+    this._uService.setMeta(this._router.url, {
+      title: 'My profile - Videos | PromptHealth'
+    });
   }
 
   initIframesForVideo() {

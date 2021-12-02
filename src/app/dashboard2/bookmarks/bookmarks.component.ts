@@ -4,6 +4,8 @@ import { GetQuery } from 'src/app/models/get-query';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bookmarks',
@@ -24,6 +26,8 @@ export class BookmarksComponent implements OnInit {
   constructor(
     private _sharedService: SharedService,
     private _profileService: ProfileManagementService,
+    private _uService: UniversalService,
+    private _router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -36,6 +40,10 @@ export class BookmarksComponent implements OnInit {
     } else {
       this.existsMore = this.currentPage * this.countPerPage == this.bookmarks.length;
     }
+
+    this._uService.setMeta(this._router.url, {
+      title: 'My profile - bookmarks | PromptHealth',
+    });
   }
 
   fetchBookmarks() {

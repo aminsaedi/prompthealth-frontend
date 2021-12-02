@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
-import { ICreateStaffResult, IGetStaffsResult, IResponseData } from 'src/app/models/response-data';
+import { ICreateStaffResult, IResponseData } from 'src/app/models/response-data';
 import { Staff } from 'src/app/models/staff';
 import { ModalStateType } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
@@ -47,9 +47,15 @@ export class TeamComponent implements OnInit {
     private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
     private _modalService: ModalService,
+    private _uService: UniversalService,
+    private _router: Router
+
   ) { }
  
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'My profile - Team | PromptHealth',
+    });
   }
 
   onModalEditorStateChanged(state: ModalStateType) {

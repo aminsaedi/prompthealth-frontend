@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-affiliate',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AffiliateComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _uService: UniversalService,
+    private _router: Router,
+  ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'My profile - Affiliate | PromptHealth',
+    });
   }
 
 }

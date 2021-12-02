@@ -73,9 +73,6 @@ export class BookingsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this._uService.setMeta(this._router.url, {
-      title: 'My bookings | PromptHealth',
-    });
 
     this._route.data.subscribe((data: {type: 'provider' | 'client' }) => {
       this.viewType = data.type;
@@ -84,6 +81,10 @@ export class BookingsComponent implements OnInit {
     if(this.eligibleToShowBookings) {
       this.fetchBookings();
     }
+
+    this._uService.setMeta(this._router.url, {
+      title: `My profile - Bookings${this.viewType == 'provider' ? ' with clients' : ''} | PromptHealth`,
+    });
   }
 
   fetchBookings() {

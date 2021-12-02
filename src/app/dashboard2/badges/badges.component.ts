@@ -9,6 +9,8 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-badges',
@@ -80,12 +82,18 @@ export class BadgesComponent implements OnInit {
     private _sharedService: SharedService,
     private _modalService: ModalService,
     private _toastr: ToastrService,
+    private _router: Router,
+    private _uService: UniversalService,
   ) { }
 
   ngOnInit(): void {
     if(this.user.eligibleToManageBadge && !this.user.isVerified) {
       this.fetchCertificateForVerifiedBadge();
     }
+
+    this._uService.setMeta(this._router.url, {
+      title: 'My profile - Badges | PromptHealth',
+    });
   }
 
   fetchCertificateForVerifiedBadge() {

@@ -1,8 +1,8 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
   selector: 'app-base',
@@ -24,7 +24,7 @@ export class BaseComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _location: Location,
+    private _uService: UniversalService,
   ) { }
 
   ngOnDestroy() {
@@ -39,6 +39,10 @@ export class BaseComponent implements OnInit {
       if(status == 'notLoggedIn') {
         this._router.navigate(['/community']);
       }
+    });
+
+    this._uService.setMeta(this._router.url, {
+      title: 'My profile | PromptHealth',
     });
   }
 }
