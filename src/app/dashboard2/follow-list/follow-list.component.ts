@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -33,7 +32,6 @@ export class FollowListComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _location: Location,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
     private _uService: UniversalService,
@@ -48,7 +46,7 @@ export class FollowListComponent implements OnInit {
 
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
-      title: 'Follow list | PromptHealth Community',
+      title: 'My profile - Follow list | PromptHealth Community',
       robots: 'noindex',
     });
 
