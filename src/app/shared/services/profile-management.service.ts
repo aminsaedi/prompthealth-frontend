@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-// import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from '../../models/user-detail';
-import { Profile } from 'src/app/models/profile';
 import { Observable, Subject } from 'rxjs';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { IGetProfileResult, IGetReferralsResult } from 'src/app/models/response-data';
@@ -137,7 +135,6 @@ export class ProfileManagementService {
 
     this.http.get(path, {headers}).subscribe((res: IGetReferralsResult) => {
       if(res.statusCode == 200) {
-        console.log(res)
         this._profile.setRecommendationsByMe(res.data);
       }
     });
