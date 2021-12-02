@@ -27,10 +27,6 @@ import { RegisterPartnerGeneralComponent } from './register-partner-general/regi
 import { RegisterPartnerServiceComponent } from './register-partner-service/register-partner-service.component';
 import { RegisterPartnerOfferComponent } from './register-partner-offer/register-partner-offer.component';
 import { RegisterPartnerTermComponent } from './register-partner-term/register-partner-term.component';
-// import { RegisterQuestionnaireCompleteComponent } from './register-questionnaire-complete/register-questionnaire-complete.component';
-// import { UserQuestionnaireItemSelectMultipleComponent } from './user-questionnaire-item-select-multiple/user-questionnaire-item-select-multiple.component';
-// import { UserQuestionnaireItemGenderComponent } from './user-questionnaire-item-gender/user-questionnaire-item-gender.component';
-// import { UserQuestionnaireItemBackgroundComponent } from './user-questionnaire-item-background/user-questionnaire-item-background.component';
 import { RegisterPractitionerGeneralComponent } from './register-practitioner-general/register-practitioner-general.component';
 import { RegisterPractitionerServiceComponent } from './register-practitioner-service/register-practitioner-service.component';
 
@@ -46,10 +42,6 @@ import { RegisterPractitionerServiceComponent } from './register-practitioner-se
     RegisterPartnerServiceComponent,
     RegisterPartnerOfferComponent,
     RegisterPartnerTermComponent,
-    // RegisterQuestionnaireCompleteComponent,
-    // UserQuestionnaireItemSelectMultipleComponent,
-    // UserQuestionnaireItemGenderComponent,
-    // UserQuestionnaireItemBackgroundComponent,
     RegisterPractitionerGeneralComponent,
     RegisterPractitionerServiceComponent,
   ],
