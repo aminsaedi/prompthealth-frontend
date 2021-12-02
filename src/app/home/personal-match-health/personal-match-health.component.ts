@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { RegisterQuestionnaireService } from 'src/app/dashboard/register-questionnaire.service';
-import { FormItemCustomerHealthComponent, CustomerHealthSelectionItem } from 'src/app/shared/form-item-customer-health/form-item-customer-health.component';
+import { FormItemCustomerHealthComponent } from 'src/app/shared/form-item-customer-health/form-item-customer-health.component';
 import { Questionnaire, QuestionnaireAnswer, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 
 @Component({

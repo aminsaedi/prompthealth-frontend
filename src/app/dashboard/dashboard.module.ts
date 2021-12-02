@@ -17,8 +17,6 @@ import { EmbededURLPipe } from '../shared/pipes/embeded-url';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-import { NpnSliderModule } from 'npn-slider';
-
 import { AgmCoreModule } from '@agm/core';
 import { AddOnCardComponent } from './add-on-card/add-on-card.component';
 import { environment } from 'src/environments/environment';
@@ -63,7 +61,6 @@ import { RegisterPractitionerServiceComponent } from './register-practitioner-se
     NgxStripeModule.forRoot(environment.config.stripeKey),
     NgMultiSelectDropDownModule.forRoot(),
     UiSwitchModule,
-    NpnSliderModule,
     ModalModule.forRoot(),
   ]
 })

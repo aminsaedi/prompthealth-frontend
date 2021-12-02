@@ -1,40 +1,22 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-// import { HomeComponent } from "./home.component";
 import { FAQComponent } from "./faq/faq.component";
-// import { MapComponent } from "./map/map.component";
-// import { ProfessionalRegisterComponent } from '../dashboard/professional-register/professional-register.component';
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { TermsConditionsComponent } from "./terms-conditions/terms-conditions.component";
-// import { LoyalityProgramsComponent } from "./loyality-programs/loyality-programs.component";
 import { ContactUsComponent } from './contact-us/contact-us.component';
-// import { ClientComponent } from './client/client.component';
-// import { ProffesionalComponent } from './proffesional/proffesional.component';
-// import { EnterpriceComponent } from './enterprice/enterprice.component';
-// import { DoctorFilterComponent } from './doctor-filter/doctor-filter.component';
-// import { AffiliateComponent } from './affiliate/affiliate.component';
-// import { BlogComponent } from './blog/blog.component';
-// import { BlogDetailComponent } from './blog-detail/blog-detail.component';
-// import { BlogCategoryComponent } from './blog-category/blog-category.component';
-// import { SubscriptionComponent } from './subscription/subscription.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
-// import { subscriptionPlanProductComponent } from "./subscription-plan-product/subscription-plan-product.component";
-// import { ProfilePartnerComponent } from './profile-partner/profile-partner.component';
 import { ListingCompanyComponent } from './listing-company/listing-company.component';
 import { InvitationComponent } from './invitation/invitation.component';
 import { LandingClubhouseComponent } from "./landing-clubhouse/landing-clubhouse.component";
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingAmbassadorComponent } from "./landing-ambassador/landing-ambassador.component";
 import { AmbassadorProgramGuardGuard } from "./ambassador-program-guard.guard";
-// import { DetailComponent } from "./detail/detail.component";
-// import { ListingComponent } from "./listing/listing.component";
 import { ListingcompareComponent } from "./listingcompare/listingcompare.component";
 import { PersonalMatchComponent } from "./personal-match/personal-match.component";
 import { PersonalMatchGenderComponent } from "./personal-match-gender/personal-match-gender.component";
 import { PersonalMatchAgeComponent } from "./personal-match-age/personal-match-age.component";
 import { PersonalMatchHealthComponent } from "./personal-match-health/personal-match-health.component";
 import { PersonalMatchCategoryComponent } from "./personal-match-category/personal-match-category.component";
-// import { SubscriptionPlanComponent } from "./subscription-plan/subscription-plan.component";
 import { SitemapComponent } from "./sitemap/sitemap.component";
 import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
 import { AboutComponent } from "./about/about.component";
@@ -45,64 +27,20 @@ import { AboutPartnerComponent } from "./about-partner/about-partner.component";
 import { PressReleaseComponent } from "./press-release/press-release.component";
 
 const routes: Routes = [
-  // {
-  //   path: "home",
-  //   component: HomeComponent
-  // },
   {
     path: "faq",
     component: FAQComponent
   },
-  // {
-  //   path: "subscribe-email",
-  //   component: SubscriptionComponent
-  // },
-  // {
-  //   path: "map",
-  //   component: MapComponent
-  // },
   { path: "policy", component: PrivacyPolicyComponent },
   { path: "privacy", redirectTo: '/policy' },
 
   { path: "terms",  component: TermsConditionsComponent },
   { path: 'termConditions', redirectTo: '/terms'},
 
-  // {
-  //   path: "loyalty",
-  //   component: LoyalityProgramsComponent
-  // },
-  // { path: "blogs/:id", redirectTo: '/magazines/:id'},
-  // { path: 'blog-detail/:id', redirectTo: '/magazines/:id'},
-
-  // { path: "blogs/category/:id", redirectTo: '/magazines'}, /** catId is deprecated. use slug to show category list. */
-  // { path: 'blogs/category', redirectTo: '/magazines'},
-  // { path: 'blog-category/:id', redirectTo: '/magazines'}, /** old route */
-  // { path: "blogs", redirectTo: '/magazines' },
-
   {
     path: "contact-us",
     component: ContactUsComponent
   },
-  // {
-  //   path: "client",
-  //   component: ClientComponent
-  // },
-  // {
-  //   path: "professional",
-  //   component: ProffesionalComponent
-  // },
-  // {
-  //   path: "enterprise",
-  //   component: EnterpriceComponent
-  // },
-  // {
-  //   path:'doctor-filter',
-  //   component: DoctorFilterComponent
-  // },
-  // {
-  //   path:'affiliate',
-  //   component: AffiliateComponent
-  // },
   {
     path:'unsubscribe/:email',
     component: UnsubscribeComponent
@@ -113,7 +51,6 @@ const routes: Routes = [
   { path: 'about/partner', component: AboutPartnerComponent, },
 
   { path: 'plans', component: AboutPractitionerComponent },
-  // { path: 'plans', component: SubscriptionPlanComponent },
   { path: 'plans/product', component: AboutCompanyComponent },
   { path: 'subscriptionplan', redirectTo: '/plans'},
 
@@ -128,8 +65,6 @@ const routes: Routes = [
   { path: 'practitioners/type', redirectTo: 'practitioners' },
   { path: 'practitioners/area', redirectTo: 'practitioners' },
   
-
-  // { path: 'practitioners/:id', component: DetailComponent }, 
   {path: 'practitioners/:id', redirectTo: '/community/profile/:id'},
   { path: 'compare-practitioners', component: ListingcompareComponent},
 
@@ -144,7 +79,6 @@ const routes: Routes = [
   ]},
 
   { path: 'companies', component: ListingCompanyComponent, },
-  // { path: 'products/:id', component: ProfilePartnerComponent },
   { path: 'partners/:id', redirectTo: '/community/profile/:id'},
   { path: 'products/:id', redirectTo: '/community/profile/:id'},
   { path: 'products', redirectTo: 'companies'},
