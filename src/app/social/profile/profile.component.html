@@ -289,11 +289,12 @@
       </section>
 
       <div clas="text-center">
-        <a 
+        <button
         *ngIf="canRecommend"
-        routerLink="new-recommend"
+        type="button"
         class="btn btn-text small px-0 mt-20p"
-        >Write a recommendation?</a>  
+        (click)="onClickWriteRecommendation()"
+        >Write a recommendation?</button>  
       </div>
     </div>
   </div>

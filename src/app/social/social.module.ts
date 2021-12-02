@@ -22,7 +22,7 @@ import { ProfileReviewComponent } from './profile-review/profile-review.componen
 import { ProfileServiceComponent } from './profile-service/profile-service.component';
 import { ProfileFeedComponent } from './profile-feed/profile-feed.component';
 import { AuthModule } from '../auth/auth.module';
-import { GuardIfNotEligbleToCreatePostGuard } from './guard-if-not-eligble-to-create-post.guard';
+import { GuardIfNotEligibleToAcessEditorGuard } from './guard-if-not-eligible-to-access-editor.guard';
 import { AgmCoreModule } from '@agm/core';
 import { NotificationComponent } from './notification/notification.component';
 import { DraftsComponent } from './drafts/drafts.component';
@@ -61,11 +61,11 @@ const routes: Routes = [
     { path: 'profile/:userid/followings', component: ProfileFollowListComponent, data: {type: 'following'}},
 
     { path: 'profile/:userid/new-review', component: NewReferralComponent, data: {type: 'review'}, 
-      canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfNotProfileSelectedGuard],
+      canActivate: [GuardIfNotEligibleToAcessEditorGuard, GuardIfNotProfileSelectedGuard],
       canDeactivate: [GuardIfNewReferralIncompletedGuard]
     },
     { path: 'profile/:userid/new-recommend', component: NewReferralComponent, data: {type: 'recommend'}, 
-      canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfNotProfileSelectedGuard],
+      canActivate: [GuardIfNotEligibleToAcessEditorGuard, GuardIfNotProfileSelectedGuard],
       canDeactivate: [GuardIfNewReferralIncompletedGuard]
     },
 
@@ -75,12 +75,12 @@ const routes: Routes = [
     // { path: 'article/:postid', component: PageComponent, data: {contentType: 'article'} },
     { path: 'content', pathMatch: 'full', redirectTo: 'feed' },
 
-    { path: 'drafts', component: DraftsComponent, canActivate: [GuardIfNotEligbleToCreatePostGuard] },
+    { path: 'drafts', component: DraftsComponent, canActivate: [GuardIfNotEligibleToAcessEditorGuard] },
 
-    { path: 'editor/article', component: EditorComponent, data: {type: 'article'},  canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard]},
-    { path: 'editor/event', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard], canDeactivate: [GuardIfEditorLockedGuard]},
-    { path: 'editor/article/:id', component: EditorComponent, data: {type: 'article'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},
-    { path: 'editor/event/:id', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligbleToCreatePostGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},    
+    { path: 'editor/article', component: EditorComponent, data: {type: 'article'},  canActivate: [GuardIfNotEligibleToAcessEditorGuard], canDeactivate: [GuardIfEditorLockedGuard]},
+    { path: 'editor/event', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligibleToAcessEditorGuard], canDeactivate: [GuardIfEditorLockedGuard]},
+    { path: 'editor/article/:id', component: EditorComponent, data: {type: 'article'},  canActivate: [GuardIfNotEligibleToAcessEditorGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},
+    { path: 'editor/event/:id', component: EditorComponent, data: {type: 'event'},  canActivate: [GuardIfNotEligibleToAcessEditorGuard, GuardIfDataNotSetGuard], canDeactivate: [GuardIfEditorLockedGuard]},    
     { path: 'editor', redirectTo: 'editor/article' },
 
     { path: 'notification', component: NotificationComponent, canActivate: [GuardIfNotLoggedInGuard], },

@@ -51,16 +51,7 @@ export class ProfileComponent implements OnInit {
   }
 
   get canRecommend() {
-    let canRecommend = false;
-    if(this.user && this.profile && !this.isProfileMyself && this.profile.eligibleFeatureRecommendation && this.user.eligibleCreateRecommendation && this.profile.doneInitRecommendations) {
-      canRecommend = true;
-    }
-
-    if(canRecommend) {
-      const alreadyCreateRecomendation = !!this.profile.recommendations.find(item => item.from == this.user._id);
-      canRecommend = !alreadyCreateRecomendation;
-    }
-    return canRecommend;
+    return this.profile && this.user?.eligibleToRecommend && !this.user.recommendationsByMe.find(item => item.to == this.profile._id);
   }
 
   get pathToApp() {
@@ -498,6 +489,12 @@ export class ProfileComponent implements OnInit {
       });
     });
   }
+
+  onClickWriteRecommendation() {
+    this._socialService.setProfileForReferral(this.profile);
+    this._router.navigate(['/community/profile/', this.profile._id, 'new-recommend']);
+  }
+
 
   onSubmitBooking() {
     this.submittedFormBooking = true;

@@ -185,8 +185,8 @@ export interface IGetReferralsResult extends IResponseData {
   data: IReferral[];
 }
 
-export interface ICreateReferralsResult extends IResponseData {
-  data: IReferral[];
+export interface ICreateReferralResult extends IResponseData {
+  data: IReferral;
 }
 export interface IGetStaffsResult extends IResponseData {
   data: IStaff[]
