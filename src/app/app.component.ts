@@ -10,10 +10,10 @@ import { SharedService } from './shared/services/shared.service';
 import { IResponseData } from './models/response-data';
 import { RegionService, RegionType } from './shared/services/region.service';
 import { Subscription } from 'rxjs';
+import { } from 'googlemaps';
 
 declare let gtag: Function;
 declare let fbq: Function;
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
