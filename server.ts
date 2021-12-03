@@ -14,6 +14,7 @@ import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
 import * as proxy from 'http-proxy-middleware';
 import { join } from 'path';
+import * as compression from 'compression';
 
 import { existsSync } from 'fs';
 import * as domino from 'domino';
@@ -28,7 +29,8 @@ import { routerRedirectForMagazine } from 'src/app/app.server.redirect.module';
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
   const server = express();
-
+  server.use(compression());
+  
   const isProductionMode = !!(server.get('env') == 'production');
   const distFolder = join(process.cwd(), './dist/wellness-frontend/browser');
 
