@@ -50,10 +50,55 @@ class="h4"
 [innerHTML]="post.title"
 ></h2>
 
-<div class="mb-10p">
+<div class="mb-30p">
   <div #content
   class="post-content"
   [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
   [innerHTML]="post.descriptionSanitized"
   ></div>
 </div>
+
+<a 
+*ngIf="!shorten"
+[routerLink]="['/community', 'profile', post.authorId]"
+class="d-inline-block mb-10p bg-primary-light border border-line p-20p rounded-4p text-body"
+style="max-width: 400px; width: 100%;"
+>
+  <h4 class="h6 mb-15p"><u>About the author</u></h4>
+  <div class="d-flex mb-10p">
+    <profile-image [image]="post.authorImage" [size]="45"></profile-image>
+    <div class="ml-10p">
+      <h5 class="subtitle1 mb-0">{{post.authorName}}</h5>
+      <h6 class="body2 mb-0">
+        <span>{{post.authorTitle}}</span>
+        <span *ngIf="post.authorTitle && post.authorOrganization"> ・ </span>
+        <span>{{post.authorOrganization}}</span>
+        <span *ngIf="post.authorCertification && post.authorOrganization"> ・ </span>
+        <span>{{post.authorCertification}}</span>
+      </h6>
+    </div>
+  </div>
+  <p 
+  class="body2 mt-5p mb-0" 
+  style="white-space: pre; max-height: 66px; display: -webkit-box; text-overflow: ellipsis; overflow: hidden; -webkit-line-clamp: 3; -webkit-box-orient: vertical;"
+  >
+    {{post.authorDescription}}
+  </p>  
+
+  <button class="btn btn-text-primary-dark small p-0 mt-10p">
+    <u>See profile</u>
+  </button>
+  <div 
+  *ngIf="post.authorWebsite"
+  class="text-right body-small clamp-1line"
+  style="margin: 15px -5px -10px 0;"
+  >
+    <a 
+    [href]="post.authorWebsite" 
+    target="_blank"
+    class="d-inline-block text-label"
+    style="word-break: break-all; max-width: 80%;"
+    (click)="onClickExternalLink($event)"
+    >{{post.authorWebsite}}</a>
+  </div>
+</a>
