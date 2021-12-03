@@ -102,8 +102,13 @@ caption, .caption { @include typography(12px, 16px, $fontWeightRegular, 0.2px); 
 }
 
 
-@mixin clamp($line, $height) {
-  height: $line * $height;
+@mixin clamp($line, $height, $fixedHeight: true) {
+  @if $fixedHeight {
+    height: $line * $height;
+  } @else {
+    max-height: $line * $height;
+  }
+
   display: -webkit-box;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -113,15 +118,22 @@ caption, .caption { @include typography(12px, 16px, $fontWeightRegular, 0.2px); 
 
 @mixin clampTemplate($name, $height) {
   @for $i from 1 through 5{
-    .#{$name}.clamp-#{$i}line { @include clamp($i, $height); }
+    .#{$name}.clamp-#{$i}line { @include clamp($i, $height, true); }
+    .#{$name}.clamp-#{$i}line-or-less { @include clamp($i, $height, false); }
   }
 }
 @mixin clampTemplateMd($name, $height) {
   @for $i from 1 through 5{
     .#{$name}-md.clamp-#{$i}line {     @include clamp($i, $height); }
+    .#{$name}-md.clamp-#{$i}lin-or-less { @include clamp($i, $height, false); }
     .#{$name}.clamp-md-#{$i}line {     
       @media (min-width: $breakpointMd) {
         @include clamp($i, $height);
+      }
+    }
+    .#{$name}.clamp-md-#{$i}line-or-less {     
+      @media (min-width: $breakpointMd) {
+        @include clamp($i, $height, false);
       }
     }
   }
@@ -129,9 +141,15 @@ caption, .caption { @include typography(12px, 16px, $fontWeightRegular, 0.2px); 
 @mixin clampTemplateLg($name, $height) {
   @for $i from 1 through 5{
     .#{$name}-lg.clamp-#{$i}line {     @include clamp($i, $height); }
+    .#{$name}-lg.clamp-#{$i}line-or-less { @include clamp($i, $height, false); }
     .#{$name}.clamp-lg-#{$i}line {     
       @media (min-width: $breakpointLg) {
         @include clamp($i, $height);
+      }
+    }
+    .#{$name}.clamp-lg-#{$i}line-or-less {     
+      @media (min-width: $breakpointLg) {
+        @include clamp($i, $height, false);
       }
     }
   }
@@ -139,9 +157,15 @@ caption, .caption { @include typography(12px, 16px, $fontWeightRegular, 0.2px); 
 @mixin clampTemplateXl($name, $height) {
   @for $i from 1 through 5{
     .#{$name}-xl.clamp-#{$i}line {     @include clamp($i, $height); }
+    .#{$name}-xl.clamp-#{$i}line-or-less { @include clamp($i, $height, false); }
     .#{$name}.clamp-xl-#{$i}line {     
       @media (min-width: $breakpointXl) {
         @include clamp($i, $height);
+      }
+    }
+    .#{$name}.clamp-xl-#{$i}line-or-less {     
+      @media (min-width: $breakpointXl) {
+        @include clamp($i, $height, false);
       }
     }
   }

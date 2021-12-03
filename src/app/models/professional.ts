@@ -47,6 +47,12 @@ export interface IProfessional extends IProfile {
   recommendations: Referral[];
   recommendationsPreview: Referral[];
 
+  doneInitRecommendationsByMeToProviders: boolean;
+  recommendationsByMeToProviders: Referral[];
+
+  doneInitRecommendationsByMeToCompanies: boolean;
+  recommendationsByMeToCompanies: Referral[];
+
   team: Professional;
   amenity: ImageViewerData; /** all amenities data */
   amenityPreview: ImageGroupData[]; /** first 3 amenities for preview */
@@ -135,8 +141,14 @@ export class Professional extends Profile implements IProfessional{
   get reviewCount() { return this.reviews.length; }
 
   get doneInitRecommendations() { return !!this._recommendations; }
-  get recommendations() { return this._recommendations; }
+  get recommendations() { return this._recommendations || []; }
   get recommendationsPreview() { return this.recommendations ? this.recommendations.slice(0,3) : []};
+
+  get doneInitRecommendationsByMeToProviders() { return !!this._recommendationsByMeToProviders; }
+  get doneInitRecommendationsByMeToCompanies() { return !!this._recommendationsByMeToCompanies; }
+  get recommendationsByMeToProviders() { return this._recommendationsByMeToProviders || []; }
+  get recommendationsByMeToCompanies() { return this._recommendationsByMeToCompanies || []; }
+
   get team() { return this._team; }
 
   get amenity() {
@@ -221,6 +233,8 @@ export class Professional extends Profile implements IProfessional{
   // private _phone: string;
   private _reviewData: ReviewData;
   private _recommendations: Referral[];
+  private _recommendationsByMeToProviders: Referral[];
+  private _recommendationsByMeToCompanies: Referral[];
 
   private _priceRange: number[] = [];
 
@@ -339,15 +353,15 @@ export class Professional extends Profile implements IProfessional{
     });
   }
 
-  setRecomendations(data: IReferral[]) {
+  setRecommendations(data: IReferral[]) {
     if(!this._recommendations) {
       this._recommendations = [];
     }
     data.forEach(d => {
-      this.setRecomendation(d);
+      this.setRecommendation(d);
     });
   }
-  setRecomendation(data: IReferral, insertAt: number = -1) {
+  setRecommendation(data: IReferral, insertAt: number = -1) {
     if(!this._recommendations) {
       this._recommendations = [];
     }
@@ -357,6 +371,30 @@ export class Professional extends Profile implements IProfessional{
       this._recommendations.push(new Referral(data));
     }
   }
+
+  setRecommendationsByMeToProviders(data: IReferral[]) {
+    data.forEach(d => {
+      this.setRecommendationByMeToProviders(d);
+    })
+  }
+  setRecommendationByMeToProviders(data: IReferral) {
+    if(!this._recommendationsByMeToProviders) {
+      this._recommendationsByMeToProviders = [];
+    }
+    this._recommendationsByMeToProviders.push(new Referral(data));
+  }
+
+  setRecommendationsByMeToCompanies(data: IReferral[]) {
+    data.forEach(d => {
+      this.setRecommendationByMeToCompanies(d);
+    });
+  }
+  setRecommendationByMeToCompanies(data: IReferral) {
+    if(!this._recommendationsByMeToCompanies) {
+      this._recommendationsByMeToCompanies = [];
+    }
+    this._recommendationsByMeToCompanies.push(new Referral(data));
+  } 
 
   async setGoogleReviews(): Promise<google.maps.places.PlaceResult>{
     return new Promise( async (resolve, reject) => {

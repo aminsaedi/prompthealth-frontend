@@ -44,7 +44,8 @@ export interface IMyProfile {
 
   recommendationsByMe: Referral[];
   doneInitRecommendationsByMe: boolean;
-
+  setRecommendationsByMe(recomemendations: IReferral[]): void;
+  setRecommendationByMe(recommendation: IReferral): void;
 }
 
 export class MyProfile extends Profile implements IMyProfile{
@@ -78,8 +79,9 @@ export class MyProfile extends Profile implements IMyProfile{
   get bookingsAsClient() { return this._bookingsAsClient; }
   get bookingsAsProvider() { return this._bookingsAsPractitioner; }
 
-  get doneInitRecommendationsByMe() { return !!this._recommendationsByMe; }
   get recommendationsByMe() { return this._recommendationsByMe || []; }
+  get doneInitRecommendationsByMe() { return !!this._recommendationsByMe; }
+
 
   get plan() { return this.data.plan || null;}
 
@@ -89,8 +91,8 @@ export class MyProfile extends Profile implements IMyProfile{
   private _isBookmarksChanged: boolean = false;
   private _bookingsAsClient: any = null;
   private _bookingsAsPractitioner: any = null;
-
   private _recommendationsByMe: Referral[] = null;
+
   
   constructor(protected data: IUserDetail) {
     super(data);

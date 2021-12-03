@@ -296,10 +296,57 @@
         (click)="onClickWriteRecommendation()"
         >Write a recommendation?</button>  
       </div>
+
+      <section 
+      *ngIf="profile?.recommendationsByMeToProviders.length > 0 || profile?.recommendationsByMeToCompanies.length > 0"
+      class="bg-white rounded-12p overflow-hidden mt-25p"
+      >
+        <div class="mx-15p mx-md-20p py-15p py-md-20p">
+          <h6 class="text-primary pb-15p border-bottom border-line">Top Picks</h6>
+          <div 
+          *ngIf="profile?.recommendationsByMeToProviders.length > 0"
+          class="my-15p"
+          >
+            <h6 class="header-accent">Providers</h6>
+            <ul class="list-unstyled mt-15p">
+              <li 
+              *ngFor="let recommendation of profile.recommendationsByMeToProviders"
+              class="mb-25p"
+              >
+                <ng-container *ngTemplateOutlet="recommendationByMe; context: {$implicit: recommendation}"></ng-container>
+              </li>
+            </ul>  
+          </div>
+
+          <div
+          *ngIf="profile?.recommendationsByMeToCompanies.length > 0"
+          class="my-15p"
+          >
+            <h6 class="header-accent">Companies</h6>
+            <ul class="list-unstyled mt-15p">
+              <li *ngFor="let recommendation of profile.recommendationsByMeToCompanies">
+                <ng-container *ngTemplateOutlet="recommendationByMe; context: {$implicit: recommendation}"></ng-container>
+              </li>
+            </ul>  
+          </div>
+        </div>
+      </section>
     </div>
   </div>
-
 </div>
+
+<ng-template #recommendationByMe let-data>
+  <a 
+  class="d-flex text-body"
+  [routerLink]="['/community/profile', data.to]"
+  >
+    <profile-image [image]="data.toImage"></profile-image>
+    <div class="ml-15p">
+      <div class="subtitle1">{{data.toName}}</div>
+      <p class="mb-0 body2 clamp-3line-or-less">{{data.body}}</p>  
+    </div>
+  </a>
+</ng-template>
 
 <modal
 id="booking"
