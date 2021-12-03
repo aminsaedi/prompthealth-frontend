@@ -4,6 +4,8 @@ import { ProfileManagementService } from 'src/app/shared/services/profile-manage
 import { ISaveProfileResult } from 'src/app/models/response-data';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-services-manager',
@@ -20,9 +22,14 @@ export class ServicesManagerComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _uService: UniversalService,
+    private _router: Router,
   ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'My profile - Services | PromptHealth',
+    })
   }
 
   onSubmit(data: IUserDetail){

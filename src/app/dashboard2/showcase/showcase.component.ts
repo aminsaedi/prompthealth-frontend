@@ -10,6 +10,8 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
+import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-showcase',
@@ -39,12 +41,18 @@ export class ShowcaseComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _uService: UniversalService,
+    private _router: Router,
   ) { }
 
   ngOnInit(): void {
     if(this.user.eligibleToManageShowcase && !this.user.doneInitShowcases) {
       this.fetchShowcases();
     }
+
+    this._uService.setMeta(this._router.url, {
+      title: 'My profile - Showcase | PromptHealth',
+    });
   }
 
   fetchShowcases() {

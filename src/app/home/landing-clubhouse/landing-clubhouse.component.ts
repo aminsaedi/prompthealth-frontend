@@ -1,10 +1,8 @@
-import { Component, HostBinding, HostListener, OnInit, ElementRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { Component, OnInit, ElementRef } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { validators } from 'src/app/_helpers/form-settings';
 
 @Component({
   selector: 'app-landing-clubhouse',
@@ -18,11 +16,9 @@ export class LandingClubhouseComponent implements OnInit {
   constructor(
     _fb: FormBuilder,
     _el: ElementRef,
-		private _toastr: ToastrService,
 		private _sharedService: SharedService,
 		private _uService: UniversalService,
 		private _router: Router,
-		private _route: ActivatedRoute,
   ) {
 		this._uService.setMeta(this._router.url, {
 			title: 'Newsletter | PromptHealth',

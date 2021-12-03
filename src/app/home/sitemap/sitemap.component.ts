@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { QuestionnaireAnswer, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';

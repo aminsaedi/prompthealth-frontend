@@ -6,7 +6,6 @@ import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup } from '@angular/forms';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
-import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 
 @Component({
   selector: 'app-contact-us',

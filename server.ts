@@ -23,6 +23,7 @@ import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 import { routerSitemap } from './src/app/app.server.sitemap.module';
 import { environment } from 'src/environments/environment';
+import { routerRedirectForMagazine } from 'src/app/app.server.redirect.module';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
@@ -78,9 +79,13 @@ export function app() {
   server.use('/stripe', stripeProxy);
 
 
+  /** redirect for SEO */
+  server.use('/magazines', routerRedirectForMagazine);
+  
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/dashboard',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/dashboard-old',         (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/personal-match',        (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/compare-practitioners', (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/unsubscribe',           (req, res) => { res.sendFile(join(distFolder, 'index.html')); })

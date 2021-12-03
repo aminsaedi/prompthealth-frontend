@@ -8,7 +8,6 @@ import { Professional } from "src/app/models/professional";
 import { ProfileManagementService } from "src/app/shared/services/profile-management.service";
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from "src/app/shared/services/questionnaire.service";
 import { IOptionCheckboxGroup } from "src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component";
-import { CategoryService } from "src/app/shared/services/category.service";
 
 @Component({
   selector: "app-listingcompare",
