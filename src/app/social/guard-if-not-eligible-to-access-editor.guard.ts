@@ -5,7 +5,7 @@ import { LoginStatusType, ProfileManagementService } from '../shared/services/pr
 @Injectable({
   providedIn: 'root'
 })
-export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
+export class GuardIfNotEligibleToAcessEditorGuard implements CanActivate {
   
   constructor(
     private _profileService: ProfileManagementService,
@@ -46,7 +46,7 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
     }
   }
 
-  validate(loginStatus: LoginStatusType, editorType?: 'article' | 'event' | 'promo' | 'note') {
+  validate(loginStatus: LoginStatusType, editorType?: 'article' | 'event' | 'promo' | 'note' | 'review' | 'recommend') {
     let isValidated = false;
 
     if(loginStatus == 'loggedIn') {
@@ -56,6 +56,8 @@ export class GuardIfNotEligbleToCreatePostGuard implements CanActivate {
         case 'event': isValidated = user.isEligibleToCreateEvent; break;
         case 'note': isValidated = user.isEligibleToCreateNote; break; //not used for now nor being tested
         case 'promo': isValidated = user.isEligibleToCreatePromo; break; //not used for now nor being tested
+        case 'recommend': isValidated = user.eligibleToRecommend; break;
+        case 'review': isValidated = true; break;
         default: isValidated = true;
       }
     }

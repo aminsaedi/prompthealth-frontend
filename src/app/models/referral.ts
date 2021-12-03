@@ -21,11 +21,11 @@ export interface IReferral {
 
 export class Referral implements IReferral {
   
-  get to() { return this._to ? this._to._id : null; }
+  get to() { return (this._to ? this._to._id : this.data.to) as string; }
   get toName() { return this._to ? this._to.nickname : null; }
   get toImage() { return this._to ? this._to.profileImage : null; }
   get toLinkToProfile() { return this._to ? this._to.linkToProfile : null; }
-  get from() { return this._from ? this._from._id : null; }
+  get from() { return (this._from ? this._from._id : this.data.from) as string; }
   get fromName() { return this._from ? this._from.nickname : null; }
   get fromImage() { return this._from ? this._from.profileImage : null; }
   get fromLinkToProfile() { return this._from ? this._from.linkToProfile : null; }

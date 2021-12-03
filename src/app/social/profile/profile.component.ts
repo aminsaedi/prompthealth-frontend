@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';;
@@ -11,7 +10,7 @@ import { Professional } from 'src/app/models/professional';
 import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetStaffResult, IGetReferralsResult, IUnbellResult, IUnfollowResult, IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
 import { IUserDetail } from 'src/app/models/user-detail';
-import { DateTimeData, FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
+import { FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
@@ -51,16 +50,7 @@ export class ProfileComponent implements OnInit {
   }
 
   get canRecommend() {
-    let canRecommend = false;
-    if(this.user && this.profile && !this.isProfileMyself && this.profile.eligibleFeatureRecommendation && this.user.eligibleCreateRecommendation && this.profile.doneInitRecommendations) {
-      canRecommend = true;
-    }
-
-    if(canRecommend) {
-      const alreadyCreateRecomendation = !!this.profile.recommendations.find(item => item.from == this.user._id);
-      canRecommend = !alreadyCreateRecomendation;
-    }
-    return canRecommend;
+    return this.profile && !this.isProfileMyself && this.user?.eligibleToRecommend && !this.user.recommendationsByMe.find(item => item.to == this.profile._id);
   }
 
   get pathToApp() {
@@ -109,7 +99,6 @@ export class ProfileComponent implements OnInit {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _location: Location,
     private _sharedService: SharedService,
     private _socialService: SocialService,
     private _qService: QuestionnaireService,
@@ -166,6 +155,7 @@ export class ProfileComponent implements OnInit {
     if(profile) {
       this.profile = profile;
       this.initRecommendation();
+      this.initRecommendationByMe();
       this.setProfileMenu();
       this._socialService.setProfile(this.profile);
       // this.setMetaForAbout();
@@ -178,6 +168,7 @@ export class ProfileComponent implements OnInit {
       Promise.all(promiseAll).then(async (vals) => {
         this.profile = vals[0];
         this.initRecommendation();
+        this.initRecommendationByMe();
         this.setProfileMenu();
         this._socialService.setProfile(this.profile);
 
@@ -209,14 +200,14 @@ export class ProfileComponent implements OnInit {
       });
       this._sharedService.getNoAuth('referral/get/' + this.profile._id + query.toQueryParamsString()).subscribe((res: IGetReferralsResult) => {
         if(res.statusCode == 200) {
-          this.profile.setRecomendations(res.data);
+          this.profile.setRecommendations(res.data);
         } else {
           console.log(res.message);
-          this.profile.setRecomendations([]);
+          this.profile.setRecommendations([]);
         }
       }, error => {
         console.log(error);
-        this.profile.setRecomendations([]);
+        this.profile.setRecommendations([]);
       }, () => {
         setTimeout(() => {
           this.startRecommendationCarousel();
@@ -226,6 +217,45 @@ export class ProfileComponent implements OnInit {
       setTimeout(() => {
         this.startRecommendationCarousel();
       }, 300);
+    }
+  }
+
+  initRecommendationByMe() {
+    if(!this.profile.doneInitRecommendationsByMeToCompanies) {
+      const queryCompany = new GetReferralsQuery({
+        type: 'recommend',
+        roles: ['P'],
+        count: 3,
+      });
+      this._sharedService.getNoAuth('referral/get-by/' + this.profile._id + queryCompany.toQueryParamsString()).subscribe((res: IGetReferralsResult) => {
+        if(res.statusCode == 200) {
+          this.profile.setRecommendationsByMeToCompanies(res.data);
+        } else {
+          console.log(res.message);
+          this.profile.setRecommendationsByMeToCompanies([]);
+        }
+      }, error => {
+        console.log(error);
+        this.profile.setRecommendationsByMeToCompanies([]);
+      });
+    }
+    if(!this.profile.doneInitRecommendationsByMeToProviders) {
+      const queryProvider = new GetReferralsQuery({
+        type: 'recommend',
+        roles: ['SP', 'C', 'SA'],
+        count: 3,
+      });
+      this._sharedService.getNoAuth('referral/get-by/' + this.profile._id + queryProvider.toQueryParamsString()).subscribe((res: IGetReferralsResult) => {
+        if(res.statusCode == 200) {
+          this.profile.setRecommendationsByMeToProviders(res.data);
+        } else {
+          console.log(res.message);
+          this.profile.setRecommendationsByMeToProviders([]);
+        }
+      }, error => {
+        console.log(error);
+        this.profile.setRecommendationsByMeToProviders([]);
+      });
     }
   }
 
@@ -498,6 +528,12 @@ export class ProfileComponent implements OnInit {
       });
     });
   }
+
+  onClickWriteRecommendation() {
+    this._socialService.setProfileForReferral(this.profile);
+    this._router.navigate(['/community/profile/', this.profile._id, 'new-recommend']);
+  }
+
 
   onSubmitBooking() {
     this.submittedFormBooking = true;

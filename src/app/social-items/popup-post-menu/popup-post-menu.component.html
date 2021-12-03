@@ -44,6 +44,18 @@ class="position-relative d-inline-block"
           </li>
         </ng-container>
 
+        <ng-container *ngIf="eligibleToRecommend && !isAuthorRecommended">
+          <li>
+            <button
+            type="button"
+            class="btn btn-text-white small w-100"
+            (click)="onClickWriteRecommendation($event)"
+            >
+              Write recommendation
+          </button>
+          </li>
+        </ng-container>
+
         <ng-container *ngIf="eligibleToMarkAsNews">
           <li *ngIf="!post.isNews">
             <button 

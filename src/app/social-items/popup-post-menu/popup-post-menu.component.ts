@@ -11,6 +11,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment';
 import { SocialService } from '../../social/social.service';
+import { Profile } from 'src/app/models/profile';
 
 @Component({
   selector: 'popup-post-menu',
@@ -46,6 +47,19 @@ export class PopupPostMenuComponent implements OnInit {
 
   get eligibleToBell() {
     return this.post.authorId != this.user._id;
+  }
+
+  get eligibleToRecommend() {
+    return this.post.authorId != this.user._id && this.user.eligibleToRecommend;
+  }
+
+  // check the post author is already recommended by loggedin user
+  // how to: (this data is not populated by backend. need to populate in frotnend)
+  //// get referrals the loggedin user has created at initializing socialModule (socialModule.baseComponent.ts)
+  //// save the referrals in MyProfile (myProfile.ts)
+  //// check if the post author is recommended here
+  get isAuthorRecommended() {
+    return !!this.user.recommendationsByMe.find(item => item.to == this.post.authorId);
   }
 
 
@@ -85,6 +99,13 @@ export class PopupPostMenuComponent implements OnInit {
     e.preventDefault();
     this.isPopupPostMenuShown = true;
     this._changeDetector.detectChanges();
+  }
+
+  onClickWriteRecommendation(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+    this._socialService.setProfileForReferral(new Profile(this.post.author));
+    this._router.navigate(['/community/profile', this.post.authorId, 'new-recommend']);
   }
 
   toggleMarkAsNews(e: Event, markAsNews: boolean) {

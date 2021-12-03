@@ -3,11 +3,13 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
 import { ISocialNotification, SocialNotification } from '../models/notification';
 import { Professional } from '../models/professional';
+import { Profile } from '../models/profile';
 import { SocialArticle } from '../models/social-article';
 import { SocialEvent } from '../models/social-event';
 import { SocialNote } from '../models/social-note';
 import { ISocialPost, SocialPostBase } from '../models/social-post';
 import { SocialPromo } from '../models/social-promo';
+import { IUserDetail } from '../models/user-detail';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,16 +19,22 @@ export class SocialService {
   private notificationCache: SocialNotification[];
 
   private _selectedProfile: Professional = null;
+  
+  // set by popupPostMenuComponent | profileComponent to enable to access newRefferalComponent
+  // dispose by newRefferalComponent
+  // it doesn't have to have full profile data such as this._selectedProfile
+  private _selectedProfileForReferral: Profile = null; 
 
   get notifications(): SocialNotification[] { return this.notificationCache; }
   get doneInitNotification(): boolean { return !!this.notificationCache; }
-
 
   get selectedProfile() { return this._selectedProfile; }
   private _selectedProfileChanged = new Subject<Professional>();
   selectedProfileChanged(): Observable<Professional> {
     return this._selectedProfileChanged.asObservable();
   }
+
+  get selectedProfileForReferral() { return this._selectedProfileForReferral; }
 
   private _selectedTaxonomyType: SocialPostTaxonomyType;
   get selectedTaxonomyType() { return this._selectedTaxonomyType; }
@@ -59,6 +67,14 @@ export class SocialService {
   disposeProfile() { 
     this._selectedProfile = null; 
     this._selectedProfileChanged.next(null);
+  }
+
+  setProfileForReferral(p: Profile) {
+    this._selectedProfileForReferral = p;
+  }
+  
+  disposeProfileForReferral() {
+    this._selectedProfileForReferral = null;
   }
 
   constructor(
