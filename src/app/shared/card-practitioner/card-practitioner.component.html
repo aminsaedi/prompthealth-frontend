@@ -1,14 +1,16 @@
 <div class="card p-3 text-center rounded-12p align-items-center">
-  <div class="img-wrapper mb-20p">
-    <user-image
-    style="width: 70px;"
-    [verified]="p.isVerified"
-    [shapedCircle]='false'
+  <div class="d-inline-block position-relative mb-20p">
+    <profile-image
+    [size]="70"
     [image]="p.image"
     [alt]="p.name"
-    [borderWidthVerified]="1"
-    [badgeSize]="28"
-    ></user-image>
+    ></profile-image>
+    <i 
+    *ngIf="p.isVerified" 
+    iconPh="verified"
+    class="position-absolute text-primary"
+    style="bottom: -8px; right: -12px; font-size: 28px;"
+    ></i>
   </div>
   <h6 class="subtitle1 mb-1 clamp-1line">{{p.name}}</h6>
   <div class="subtitle2 text-primary-dark clamp-1line mb-5p">{{p.price}}</div>

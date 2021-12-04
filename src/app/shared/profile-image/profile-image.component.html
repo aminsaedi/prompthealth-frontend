@@ -8,6 +8,7 @@ class="profile-image-container"
   [src]="image"
   [alt]="alt" 
   crossorigin="anonymous"
+  loading="lazy"
   >
   <i *ngIf="!image" 
   [iconPh]="_option.dummyIcon"
