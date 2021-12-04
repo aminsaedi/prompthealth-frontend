@@ -76,7 +76,7 @@
           *ngFor="let image of holisticImages"
           class="overflow-hidden rounded-12p position-relative item"
           >
-            <img [src]="image" alt="">
+            <img [src]="image" alt="" loading="lazy" />
           </li>
         </ul>
       </div>
@@ -106,6 +106,7 @@
           class="d-inline-block mr-5p"
           style="margin-top: -5px;"
           height="20"
+          loading="lazy"
           >
           <b>
             <span class="text-primary">PromptHealth </span>
@@ -137,7 +138,7 @@
         class="col-12 col-md-3 image-container order-1 order-md-2"
         style="min-height: 360px;"
         >
-          <img src="/assets/img/about/hedieh.png" alt="Hedieh Safiyari" class="cover-md">
+          <img src="/assets/img/about/hedieh.png" alt="Hedieh Safiyari" class="cover-md" loading="lazy" />
         </div>
       </div>      
     </div>
@@ -171,6 +172,7 @@
             <img
             [src]="'/assets/img/about/' + member.image"
             [alt]="member.name"
+            loading="lazy"
             >
             <p 
             class="member-content position-absolute px-20p py-15p text-white mb-0 rounded-12p"

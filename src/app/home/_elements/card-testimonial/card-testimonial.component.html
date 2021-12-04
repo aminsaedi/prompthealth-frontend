@@ -4,7 +4,7 @@
     [routerLink]="['/community/profile', data.profileId]"
     class="image-container-100pc mr-10p overflow-hidden"
     >
-      <img [src]="data.image">
+      <img [src]="data.image" loading="lazy" />
     </a>
     <div class="mt-5p">
       <a [routerLink]="['/community/profile', data.profileId]">
