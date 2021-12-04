@@ -8,8 +8,8 @@
     <div class="d-flex justify-content-between justify-content-lg-start align-items-center">
       <div>
         <a routerLink="/">
-          <img class="d-md-none d-lg-block d-xl-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20">
-          <img class="d-none d-md-block d-lg-none d-xl-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="25">
+          <img class="d-md-none d-lg-block d-xl-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20" loading="lazy" />
+          <img class="d-none d-md-block d-lg-none d-xl-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="25" loading="lazy" />
         </a>
       </div>
       <nav>
@@ -96,7 +96,7 @@
         </div>
 
         <div class="mb-55p text-label body1">
-          <img src="/assets/img/home/three-providers.png" alt="" style="vertical-align: middle;">
+          <img src="/assets/img/home/three-providers.png" alt="" style="vertical-align: middle;" loading="lazy" />
           <div class="d-inline-block ml-10p" style="vertical-align: middle;">
             <span class="text-primary">+500</span> Providers <br class="d-md-none">
             from all across North America
@@ -117,16 +117,16 @@
           <div class="col-4 d-md-none"></div> -->
           <div class="col-4 col-md col-lg-4 mb-15p">
             <a href="https://lifesciencesbc.ca/members/personalized-healthcare-with-prompt-health-the-new-wave-of-health-and-wellness/" target="_blank">
-              <img src="/assets/img/medias/life-sciences.png?ver=2.3.3" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc">
+              <img src="/assets/img/medias/life-sciences.png?ver=2.3.3" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc" loading="lazy" />
             </a>    
           </div>
           <div class="col-4 col-md col-lg-4 mb-15p">
             <a href="https://medcitynews.com/2021/02/prompt-health-is-creating-marketplace-for-smart-referrals/" target="_blank">
-              <img src="/assets/img/medias/medcity-news.png?ver=2.3" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc">
+              <img src="/assets/img/medias/medcity-news.png?ver=2.3" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc" loading="lazy" />
             </a>    
           </div>
           <div class="col-4 col-md col-lg-4 mb-15p">
-            <img src="/assets/img/medias/canadian-insider.png?ver=2.3" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc">
+            <img src="/assets/img/medias/canadian-insider.png?ver=2.3" alt="" style="width: 90%; height: auto;" class="filter-black opacity-50pc" loading="lazy" />
           </div>
         </div>  
 
@@ -139,7 +139,7 @@
               *ngFor="let item of slideshow; let i = index"
               class="item overflow-hidden rounded-8p"
               >
-                <img [src]="'assets/img/home/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;">
+                <img [src]="'assets/img/home/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;" loading="lazy" />
               </div>  
             </ng-container>
           </div>
@@ -149,7 +149,7 @@
                 *ngFor="let item of slideshowReverse; let i = index"
                 class="item-reverse overflow-hidden rounded-8p"
                 >
-                  <img [src]="'assets/img/home/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;">
+                  <img [src]="'assets/img/home/' + item" alt="" style="object-fit: cover; width: 100%; height: 100%;" loading="lazy" />
                 </div>                    
               </ng-container>
             </div>          
@@ -314,7 +314,7 @@
           </div>
           <div class="mx-5p mx-md-20p mx-lg-10p mx-xl-20p mt-30p" style="flex: 0 1 33%">
             <div class="text-center">
-              <img src="/assets/img/home/community-people.png" alt="" class="mb-30p">  
+              <img src="/assets/img/home/community-people.png" alt="" class="mb-30p" loading="lazy" />  
             </div>
             <ng-container *ngTemplateOutlet="cardPostType; context: {data: introductionPostType.video}"></ng-container>
           </div>
@@ -399,12 +399,12 @@
       <div class="d-flex justify-content-center align-items-center flex-nowrap">
         <a href="https://apps.apple.com/ca/app/prompthealth/id1532951934" target="_blank" class="mr-md-3">
           <img class="badge-appstore-top" src="/assets/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
-            alt="Download on app store">
+            alt="Download on app store" loading="lazy" />
         </a>
         <a href='https://play.google.com/store/apps/details?id=com.prompthealth&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
           target="_blank">
           <img class="badge-playstore-top" alt='Get it on Google Play'
-            src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' />
+            src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' loading="lazy" />
         </a>
       </div>
 
@@ -451,6 +451,7 @@
               class="mobile-inner splash" 
               [ngClass]="{scaleup: selectedAppFeature !== null}"
               src="assets/img/home/app-feature-splash.png"
+              loading="lazy"
               >
               <!-- <ng-container *ngFor="let i of [0,1,2,3,4,5]">
                 <img 
@@ -463,8 +464,9 @@
               class="mobile-inner item"
               [ngClass]="{'active': selectedAppFeature >= 0}"
               [src]="'assets/img/home/app-feature-item.png'"
+              loading="lazy"
               >  
-            <img class="mobile-body position-relative" src="assets/img/home/app-feature-body.png" alt="PromptHealth app is available on App Store and Google Play">  
+            <img class="mobile-body position-relative" src="assets/img/home/app-feature-body.png" alt="PromptHealth app is available on App Store and Google Play" loading="lazy" />  
             </div>
           </div>
           <ul class="list-unstyled app-features mb-0 ml-md-50p ml-xl-90p">

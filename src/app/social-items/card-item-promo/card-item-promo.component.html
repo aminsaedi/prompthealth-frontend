@@ -47,7 +47,7 @@ class="list-unstyled mb-10p"
   *ngFor="let image of images" 
   [ngClass]="shorten ? 'image-container-40pc rounded-12p overflow-hidden' : 'image-container'"
   >
-    <img [src]="image" alt="">
+    <img [src]="image" alt="" loading="lazy">
   </li>
 </ul>
 

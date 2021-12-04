@@ -1,69 +1,7 @@
-$colorBlueLight: #EDF4FF; 
-$colorBlue: #3377C5;
-$colorBlueDark: #00208F;
-$colorBlueTag: #95B3EF;
-
-.text-blue{ color: $colorBlue;}
-.bg-blue{ background: $colorBlue; }
-.border-blue{ border: solid 1px $colorBlue; }
-.bg-tagblue{ background: $colorBlueTag; }
-
-.border-darkblue{ border: solid 1px $colorBlueDark; }
-.text-darkblue{ color: $colorBlueDark; }
-
-.fa-video{ color: #00D147; }
-
-
 .card{ 
   overflow: hidden; 
   margin: auto;
   border: solid 1px #E9F2FF;
   box-shadow: 0 6px 25px rgba($color: #0051be, $alpha: 0.1);
   max-width: 350px;
-}
-
-.title{ 
-  height: 38px;
-  overflow: hidden;
-}
-
-.img-wrapper{
-  position: relative;
-}
-
-.button-compare{
-  position: absolute;
-  display: block;
-  text-align: center;
-  padding: 0;
-
-  .form-check-input{
-    position: relative;
-    margin: 0 auto;
-    display: block;
-    transform: scale(1.4);
-  }
-  .form-check-label{
-    margin: 5px 0 0;
-  }    
-}
-
-.price-tag{
-  color: black;
-  position: absolute;
-  top: 0;
-  right: -100px;
-  width: 200px;
-  padding: 35px 0 10px;
-  transform-origin: 50% 0;
-  transform: rotate(45deg);
-}
-
-.indicators{
-  height: 20px;
-  i{ font-size: 20px; }
-}
-.address{
-  line-height: 1.5em;
-  height: 4.5em;
 }
