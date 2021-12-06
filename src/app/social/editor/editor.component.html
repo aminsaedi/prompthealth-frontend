@@ -115,10 +115,10 @@
           >
             <label class="subtitle2 text-label">Restricted to</label>
             <form-item-checkbox-group
-            [data]="f.restrictedTo?.value"
-            [selections]="itemsRestrictedTo"
+            [data]="f.rolesRestrictedTo?.value"
+            [selections]="itemsRolesRestrictedTo"
             [option]="{showInlineWhenEnabled: true}"
-            (changeValue)="onChangeRestrictedTo($event)"
+            (changeValue)="onChangeRolesRestrictedTo($event)"
             ></form-item-checkbox-group>
           </div>
             

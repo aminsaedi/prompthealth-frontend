@@ -76,7 +76,7 @@ export class EditorComponent implements OnInit {
   public audioPreview: AudioData = null;
   public imagesPreview: (string|ArrayBuffer)[] = [];
 
-  public itemsRestrictedTo: CheckboxSelectionItem[] = [
+  public itemsRolesRestrictedTo: CheckboxSelectionItem[] = [
     {id: 'client', label: 'Client', value: 'U'},
     {id: 'provider', label: 'Service Provider', value: 'SP+C'},
     {id: 'company', label: 'Company', value: 'P'},
@@ -289,13 +289,13 @@ export class EditorComponent implements OnInit {
     this.f.tags.setValue(ids);
   }
 
-  onChangeRestrictedTo(vals: string[]) {
+  onChangeRolesRestrictedTo(vals: string[]) {
     let roles = [];
     vals.forEach(val => {
       const valArray = val.split('+');
       roles = roles.concat(valArray);
     });
-    this.f.restrictedTo.setValue(roles);
+    this.f.rolesRestrictedTo.setValue(roles);
   }
 
   onClickButtonAudio() {

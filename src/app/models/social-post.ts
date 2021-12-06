@@ -23,7 +23,7 @@ export interface ISocialPost {
   eventType?: 'ONLINE' | 'OFFLINE';
   eventAddress?: string;
 
-  restrictedTo?: IUserDetail['roles'][];
+  rolesRestrictedTo?: IUserDetail['roles'][];
 
   isDeleted?: boolean;
 
@@ -318,7 +318,7 @@ export class SocialPostBase implements ISocialPost {
     this.setSummary(data.description || '');
     this.data.tags = data.tags || [];
     if(this.isArticle) {
-      this.data.restrictedTo = data.restrictedTo || null;      
+      this.data.rolesRestrictedTo = data.rolesRestrictedTo || null;      
       this.data.isNews = data.isNews || false;
       this.data.isAcademy = data.isAcademy || false;
     }

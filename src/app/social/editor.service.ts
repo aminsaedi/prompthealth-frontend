@@ -88,10 +88,10 @@ export class EditorService {
         tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
       });  
     } else if (type == 'ARTICLE') {
-      let restrictedTo = null;
-      if(d?.restrictedTo) {
-        restrictedTo = d.restrictedTo.map(item => item == 'SP' || item == 'C' ? 'SP+C' : item);
-        restrictedTo = Array.from(new Set(restrictedTo));
+      let rolesRestrictedTo = null;
+      if(d?.rolesRestrictedTo) {
+        rolesRestrictedTo = d.rolesRestrictedTo.map(item => item == 'SP' || item == 'C' ? 'SP+C' : item);
+        rolesRestrictedTo = Array.from(new Set(rolesRestrictedTo));
       }
       this._form = new FormGroup({
         status: new FormControl(d ? d.status : 'DRAFT'),
@@ -103,7 +103,7 @@ export class EditorService {
         tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
         isNews: new FormControl(d?.isNews ? d.isNews : false),
         isAcademy: new FormControl(d?.isAcademy ? d.isAcademy : false),
-        restrictedTo: new FormControl(restrictedTo),
+        rolesRestrictedTo: new FormControl(rolesRestrictedTo),
       });
     } else if (type == 'NOTE') {
       this._form = new FormGroup({
@@ -152,8 +152,8 @@ export class EditorService {
       f.description.setValue(desc.replace(/(<p><br><\/p>)+$/, ''));
     }
 
-    if(f.restrictedTo?.value?.length == 0) {
-      f.restrictedTo.setValue(null);
+    if(f.rolesRestrictedTo?.value?.length == 0) {
+      f.rolesRestrictedTo.setValue(null);
     }
   }
 
@@ -217,7 +217,7 @@ export interface ISaveQuery {
 
   isNews?: boolean;
   isAcademy?: boolean;
-  restrictedTo?: string[];
+  rolesRestrictedTo?: string[];
 }
 
 export class SaveQuery implements ISaveQuery {
@@ -245,7 +245,7 @@ export class SaveQuery implements ISaveQuery {
   
   get isNews() { return this.data.isNews || false; }
   get isAcademy() { return this.data.isAcademy || false; }
-  get restrictedTo() { return this.data.restrictedTo || null; }
+  get rolesRestrictedTo() { return this.data.rolesRestrictedTo || null; }
 
   toJson() { 
     const data: ISaveQuery = {
@@ -261,7 +261,7 @@ export class SaveQuery implements ISaveQuery {
       ... (this.tags.length > 0) && {tags: this.tags},
      
       ... (this.contentType == 'ARTICLE') && {
-        restrictedTo: this.restrictedTo,
+        rolesRestrictedTo: this.rolesRestrictedTo,
         isNews: this.isNews,
         isAcademy: this.isAcademy,
       },
