@@ -44,6 +44,7 @@
 a {
   color: $colorPrimary;
   cursor: pointer;
+  transition: background-color 160ms;
 
   &:not([href]) {
     color: $colorPrimary;
@@ -63,6 +64,10 @@ a {
     &:not([href]):hover {
       color: $colorGsPlaceholder;
     }    
+  }
+
+  &.bg-primary:hover {
+    background: $colorPrimaryDark!important;
   }
 }
 

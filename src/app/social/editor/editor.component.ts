@@ -21,6 +21,7 @@ import { environment } from 'src/environments/environment';
 import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.component';
 import { SocialService } from '../social.service';
+import { CheckboxSelectionItem } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
 
 @Component({
   selector: 'app-editor',
@@ -74,6 +75,12 @@ export class EditorComponent implements OnInit {
 
   public audioPreview: AudioData = null;
   public imagesPreview: (string|ArrayBuffer)[] = [];
+
+  public itemsRestrictedTo: CheckboxSelectionItem[] = [
+    {id: 'client', label: 'Client', value: 'U'},
+    {id: 'provider', label: 'Service Provider', value: 'SP+C'},
+    {id: 'company', label: 'Company', value: 'P'},
+  ];
 
   private _s3 = environment.config.AWS_S3;
   private subscriptionLoginStatus: Subscription;
@@ -282,6 +289,15 @@ export class EditorComponent implements OnInit {
     this.f.tags.setValue(ids);
   }
 
+  onChangeRestrictedTo(vals: string[]) {
+    let roles = [];
+    vals.forEach(val => {
+      const valArray = val.split('+');
+      roles = roles.concat(valArray);
+    });
+    this.f.restrictedTo.setValue(roles);
+  }
+
   onClickButtonAudio() {
     this._modalService.show('audio-recorder');
   }
@@ -394,8 +410,8 @@ export class EditorComponent implements OnInit {
         this.isEditMode ? `note/update/${this._editorService.originalData._id}` : `note/create`
       ) :
         this.isEditMode ? this._sharedService.put(payload, `blog/update/${this._editorService.originalData._id}`) : 
-        this._sharedService.post(data, 'blog/create');
-  
+        this._sharedService.post(payload, 'blog/create');
+        
       req.subscribe((res: IContentCreateResult) => {
         this.isUploading = false;
         if(res.statusCode === 200) {

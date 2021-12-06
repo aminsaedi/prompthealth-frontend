@@ -88,6 +88,11 @@ export class EditorService {
         tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
       });  
     } else if (type == 'ARTICLE') {
+      let restrictedTo = null;
+      if(d?.restrictedTo) {
+        restrictedTo = d.restrictedTo.map(item => item == 'SP' || item == 'C' ? 'SP+C' : item);
+        restrictedTo = Array.from(new Set(restrictedTo));
+      }
       this._form = new FormGroup({
         status: new FormControl(d ? d.status : 'DRAFT'),
         contentType: new FormControl(type),
@@ -97,6 +102,8 @@ export class EditorService {
         image: new FormControl(d ? d.image || '' : ''),
         tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
         isNews: new FormControl(d?.isNews ? d.isNews : false),
+        isAcademy: new FormControl(d?.isAcademy ? d.isAcademy : false),
+        restrictedTo: new FormControl(restrictedTo),
       });
     } else if (type == 'NOTE') {
       this._form = new FormGroup({
@@ -143,6 +150,10 @@ export class EditorService {
       let desc = f.description.value || '';
       desc = desc.trim();
       f.description.setValue(desc.replace(/(<p><br><\/p>)+$/, ''));
+    }
+
+    if(f.restrictedTo?.value?.length == 0) {
+      f.restrictedTo.setValue(null);
     }
   }
 
@@ -203,6 +214,10 @@ export interface ISaveQuery {
   availableUntil?: Date;
   promo?: string;
   link?: string;
+
+  isNews?: boolean;
+  isAcademy?: boolean;
+  restrictedTo?: string[];
 }
 
 export class SaveQuery implements ISaveQuery {
@@ -228,6 +243,10 @@ export class SaveQuery implements ISaveQuery {
   get promo() { return this.data.promo || null; }
   get link() { return this.data.link || null; }
   
+  get isNews() { return this.data.isNews || false; }
+  get isAcademy() { return this.data.isAcademy || false; }
+  get restrictedTo() { return this.data.restrictedTo || null; }
+
   toJson() { 
     const data: ISaveQuery = {
       contentType: this.contentType,
@@ -240,7 +259,12 @@ export class SaveQuery implements ISaveQuery {
       ... (this.images.length > 0) && {images: this.images},
       ... (this.voice) && {voice: this.voice},
       ... (this.tags.length > 0) && {tags: this.tags},
-      
+     
+      ... (this.contentType == 'ARTICLE') && {
+        restrictedTo: this.restrictedTo,
+        isNews: this.isNews,
+        isAcademy: this.isAcademy,
+      },
       ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {
         status: this.status,
         image: this.image,
