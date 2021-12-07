@@ -90,7 +90,7 @@ class="position-relative rounded-8p bg-white p-20p p-lg-30p body1 text-body"
     </ul>
   </div>
 
-  <ng-container *ngIf="profile.recommendations && profile.recommendations.length > 0">
+  <ng-container *ngIf="profile.eligibleFeatureRecommendation && profile.recommendations && profile.recommendations.length > 0">
     <h5>Recommendations from other providers</h5>
     <ul class="mt-30p list-unstyled">
       <li class="mb-20p mb-lg-30p" *ngFor="let recommendation of profile.recommendations">

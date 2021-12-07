@@ -5,8 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
-import { Professional } from 'src/app/models/professional';
-import { ICreateReferralsResult } from 'src/app/models/response-data';
+import { ICreateReferralResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { SocialService } from '../social.service';
@@ -19,7 +18,7 @@ import { SocialService } from '../social.service';
 export class NewReferralComponent implements OnInit {
 
   get user() { return this._profileService.profile; }
-  get profile() { return this._socialService.selectedProfile; }
+  get profile() { return this._socialService.selectedProfileForReferral; }
 
   get isRecommend() { return this.referralType == 'recommend'; }
   get isReview() { return this.referralType == 'review'; }
@@ -52,9 +51,8 @@ export class NewReferralComponent implements OnInit {
   private subscriptionLoginStatus: Subscription;
 
   ngOnDestroy() {
-    if(this.subscriptionLoginStatus) {
-      this.subscriptionLoginStatus.unsubscribe();
-    }
+    this._socialService.disposeProfileForReferral();
+    this.subscriptionLoginStatus?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -100,9 +98,10 @@ export class NewReferralComponent implements OnInit {
     }
 
     this.isUploading = true;
-    this._sharedService.post(payload, 'referral/create').subscribe((res: ICreateReferralsResult) => {
+    this._sharedService.post(payload, 'referral/create').subscribe((res: ICreateReferralResult) => {
       this.isUploading = false;
       if(res.statusCode == 200) {
+        this.user.setRecommendationByMe(res.data)
         this.isSubmitted = false;
         this.isLocked = false;
         this.goback();

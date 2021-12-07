@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-// import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from '../../models/user-detail';
-import { Profile } from 'src/app/models/profile';
 import { Observable, Subject } from 'rxjs';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { IGetProfileResult } from 'src/app/models/response-data';
+import { IGetProfileResult, IGetReferralsResult } from 'src/app/models/response-data';
 import { MyProfile } from 'src/app/models/my-profile';
 
 @Injectable({
@@ -110,6 +108,9 @@ export class ProfileManagementService {
         this.http.get( path, {headers} ).subscribe((res: IGetProfileResult)=>{
           if(res.statusCode == 200) {
             this.setData(res.data);
+            if(this.profile.eligibleToRecommend) {
+              this.fetchRecommendationsByMe();
+            }
             resolve(this._user);
           } else{ 
             checkAccessToken(res);
@@ -123,6 +124,18 @@ export class ProfileManagementService {
           this.dispose();
           reject('cannot connect to server'); 
         });
+      }
+    });
+  }
+  fetchRecommendationsByMe() {
+    const path = environment.config.API_URL + 'referral/get-simple-by';
+    const headers = new HttpHeaders()
+          .set('Authorization', localStorage.getItem('token'))
+          .set('Content-Type', 'application/json');
+
+    this.http.get(path, {headers}).subscribe((res: IGetReferralsResult) => {
+      if(res.statusCode == 200) {
+        this._profile.setRecommendationsByMe(res.data);
       }
     });
   }

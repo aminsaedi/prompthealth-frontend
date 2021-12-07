@@ -1,6 +1,7 @@
 import { Booking, IBooking } from "./booking";
 import { IDefaultPlan } from "./default-plan";
 import { Profile } from "./profile";
+import { IReferral, Referral } from "./referral";
 import { SocialArticle } from "./social-article";
 import { SocialEvent } from "./social-event";
 import { SocialNote } from "./social-note";
@@ -23,9 +24,10 @@ export interface IMyProfile {
   isEligibleToCreateArticle: boolean;
   isEligibleToCreateEvent: boolean;
   isEligibleToHaveDraft: boolean;
-  eligibleCreateRecommendation: boolean;
+  eligibleToRecommend: boolean;
   eligibleToManageBookings: boolean;
   eligibleToSeePerformance: boolean; 
+  
 
   bookmarks: ISocialPost[];
   isBookmarksChanged: boolean;
@@ -39,6 +41,11 @@ export interface IMyProfile {
   bookingsAsProvider: Booking[];
   setBookingsAsClient(bookings: IBooking[]): void;
   setBookingAsClient(booking: IBooking): void;
+
+  recommendationsByMe: Referral[];
+  doneInitRecommendationsByMe: boolean;
+  setRecommendationsByMe(recomemendations: IReferral[]): void;
+  setRecommendationByMe(recommendation: IReferral): void;
 }
 
 export class MyProfile extends Profile implements IMyProfile{
@@ -58,7 +65,7 @@ export class MyProfile extends Profile implements IMyProfile{
 
   get eligibleToManageBookings() { return this.isPaid && this.isProvider; }
   get eligibleToSeePerformance() { return (this.isPaid && this.isProvider) || this.isSA; }
-  get eligibleCreateRecommendation() { 
+  get eligibleToRecommend() { 
     return this.isSA ? 
       true : 
       this.isProvider && this.isApproved ?
@@ -72,14 +79,20 @@ export class MyProfile extends Profile implements IMyProfile{
   get bookingsAsClient() { return this._bookingsAsClient; }
   get bookingsAsProvider() { return this._bookingsAsPractitioner; }
 
+  get recommendationsByMe() { return this._recommendationsByMe || []; }
+  get doneInitRecommendationsByMe() { return !!this._recommendationsByMe; }
+
+
+  get plan() { return this.data.plan || null;}
+
   private _followingTopics: IMyProfile['followingTopics'] = null;
 
   private _bookmarks: ISocialPost[] = null;
   private _isBookmarksChanged: boolean = false;
   private _bookingsAsClient: any = null;
   private _bookingsAsPractitioner: any = null;
+  private _recommendationsByMe: Referral[] = null;
 
-  get plan() { return this.data.plan || null;}
   
   constructor(protected data: IUserDetail) {
     super(data);
@@ -144,6 +157,22 @@ export class MyProfile extends Profile implements IMyProfile{
       this._bookingsAsClient = [];
     }
     this._bookingsAsClient.push(new Booking(booking));
+  }
+
+  setRecommendationsByMe(recommendations: IReferral[]) {
+    if(!this._recommendationsByMe) {
+      this._recommendationsByMe = [];
+    }
+    recommendations.forEach(r => {
+      this.setRecommendationByMe(r);
+    });
+  }
+
+  setRecommendationByMe(recommendation: IReferral) {
+    if(!this._recommendationsByMe) {
+      this._recommendationsByMe = [];
+    }
+    this._recommendationsByMe.push(new Referral(recommendation));
   }
 
   update(data: IUserDetail) {
