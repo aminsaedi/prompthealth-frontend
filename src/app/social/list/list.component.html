@@ -15,6 +15,18 @@
 (onPublished)="onPublishNewPost($event)"
 ></card-new-post>
 
+<ng-container *ngFor="let n of newPosts; let j = index">
+  <div [@expandVertical]>
+    <div class="pb-15p">
+      <card
+      class="pointer-events: initial;"
+      [post]="n"
+      [shorten]="true"
+      ></card>
+    </div>
+  </div>
+</ng-container>
+
 <ng-container *ngIf="noFollowings || isSelectTopicsUploadDone">
   <div 
   class="mb-20p position-relative rounded-8p bg-white body1 text-body px-20p py-20p overflow-hidden"
@@ -62,18 +74,6 @@
           <h5 class="mt-10p text-white mb-0">Updated!</h5>
         </div>
       </div>
-    </div>
-  </div>
-</ng-container>
-
-<ng-container *ngFor="let n of newPosts; let j = index">
-  <div [@expandVertical]>
-    <div class="pb-15p">
-      <card
-      class="pointer-events: initial;"
-      [post]="n"
-      [shorten]="true"
-      ></card>
     </div>
   </div>
 </ng-container>
