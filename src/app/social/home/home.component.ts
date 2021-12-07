@@ -4,6 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 // import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
@@ -20,6 +21,7 @@ import { SocialPostTaxonomyType, SocialService } from '../social.service';
 export class HomeComponent implements OnInit {
 
   get topics() { return this._catService.categoryList; }
+  get user() { return this._profileService.profile; }
   // get imageSponsor() {
   //   return this.sponsor?.productImages?.length > 0 ? 
   //     this.sponsor.productImages[0].url :
@@ -48,6 +50,7 @@ export class HomeComponent implements OnInit {
     private _modalService: ModalService,
     private _socialService: SocialService,
     private _changeDetector: ChangeDetectorRef,
+    private _profileService: ProfileManagementService,
     // private _sharedService: SharedService,
   ) { }
 

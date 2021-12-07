@@ -89,12 +89,47 @@
             </div>
           </div>
 
-          <div *ngIf="eligibleToMarkAsNews">
+          <div 
+          *ngIf="eligibleToMarkAsNews"
+          class="mt-30p"
+          >
+            <label class="subtitle2 text-label">Marks as...</label>
             <form-item-checkbox
             name="isNews"
-            label="Mark as news"
+            label="News (Press release)"
             [controller]="f.isNews"
             ></form-item-checkbox>
+
+            <div class="mt-10p">
+              <form-item-checkbox
+              name="isAcademy"
+              label="Online academy"
+              [controller]="f.isAcademy"
+              ></form-item-checkbox>  
+            </div>
+          </div>
+
+          <div 
+          *ngIf="eligibleToMarkAsNews"
+          class="mt-30p" 
+          >
+            <label class="subtitle2 text-label">Restricted to</label>
+            <div 
+            class="py-10p px-20p bg-primary-light border-left border-primary text-primary-dark d-flex rounded-4p"
+            style="border-width: 5px!important;"
+            >
+              <i iconPh="info" class="text-primary"></i>
+              <span class="d-inline-block ml-5p body2">
+                Please select target user types. you can select multiple user types<br>
+                (Tips: if you don't select anything or select everything, no restriction.)
+              </span>
+            </div>
+            <form-item-checkbox-group
+            [data]="f.rolesRestrictedTo?.value"
+            [selections]="itemsRolesRestrictedTo"
+            [option]="{showInlineWhenEnabled: true}"
+            (changeValue)="onChangeRolesRestrictedTo($event)"
+            ></form-item-checkbox-group>
           </div>
             
           <div 
