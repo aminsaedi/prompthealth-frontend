@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
 import { priceRange } from '../form-item-pricing/form-item-pricing.component';
 import { Questionnaire, QuestionnaireAnswer } from '../services/questionnaire.service';
@@ -26,6 +26,8 @@ export class FormItemCheckboxGroupComponent implements OnInit {
   @Input() responsive = false; /** this is used for selectbox */
 
   @Input() option: IOptionCheckboxGroup = {};
+
+  @Output() changeValue = new EventEmitter<string[] | string>(); // only available for checkbox
 
   public selectionList: CheckboxSelectionItem[];
   public _option: OptionCheckboxGroup;
@@ -78,17 +80,22 @@ export class FormItemCheckboxGroupComponent implements OnInit {
         if(item.value == this.controller.value){ this.idxItemSelected = i; }
       });
     }
+
+    this.controller.valueChanges.subscribe(() => {
+      this.getSelected(true);
+    })
   }
 
   /** checkbox control start */
-  /** getSelected is used by parent compoennt to obtain selected values array */
-  getSelected(): string[] {
+  getSelected(emit: boolean = false): string[] {
     const selected = [];
     (this.controller.value as boolean[]).forEach((isSelected, i) => {
       if(isSelected) {
         selected.push(this.selectionList[i].value);        
       }
-    })
+    });
+
+    if(emit) { this.changeValue.emit(selected); }
     return selected;
   }
 

@@ -124,6 +124,7 @@ export class ListComponent implements OnInit {
       case 'note': desc = `Find latest update${topic ? ' about ' + topic : '' } from best providers`; break;
       case 'voice': desc = `Find latest update with voice note${topic ? ' about ' + topic : '' } from best providers`; break;
       case 'promotion': desc = `Find your favorite products`; break;
+      case 'academy': desc = `Learn with PromptHealth`; break;
     } 
 
     this._uService.setMeta(this._router.url, {
@@ -264,6 +265,10 @@ export class ListComponent implements OnInit {
         case 'promotion':
           params.contentType = 'PROMO';
           params.excludeExpiredPromo = true;
+          break;
+        case 'academy':
+          params.isAcademy = true;
+          break;
         default:
           console.log('oops. this taxonomy type is not implemented yet.: ', this.selectedTaxonomyType);
       }

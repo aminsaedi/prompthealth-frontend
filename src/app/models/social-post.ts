@@ -23,6 +23,8 @@ export interface ISocialPost {
   eventType?: 'ONLINE' | 'OFFLINE';
   eventAddress?: string;
 
+  rolesRestrictedTo?: IUserDetail['roles'][];
+
   isDeleted?: boolean;
 
   liked?: boolean;
@@ -70,6 +72,7 @@ export interface ISocialPost {
   descriptionSanitized?: SafeHtml;
   summary?: string;
   isNews?: boolean;
+  isAcademy?: boolean;
   isNote?: boolean;
   isArticle?: boolean;
   isEvent?: boolean;
@@ -171,6 +174,7 @@ export class SocialPostBase implements ISocialPost {
   get isEvent() { return this.contentType == 'EVENT'; }
   get isPromo() { return this.contentType == 'PROMO'; }
   get isNews() { return this.data.isNews || false}
+  get isAcademy() { return this.data.isAcademy || false; }
 
   get isLiked() { return !!this.data.liked; }
   get isBookmarked() { return !!this.data.bookmarked; }
@@ -313,6 +317,11 @@ export class SocialPostBase implements ISocialPost {
     this.data.description = data.description;
     this.setSummary(data.description || '');
     this.data.tags = data.tags || [];
+    if(this.isArticle) {
+      this.data.rolesRestrictedTo = data.rolesRestrictedTo || null;      
+      this.data.isNews = data.isNews || false;
+      this.data.isAcademy = data.isAcademy || false;
+    }
   }
 }
 

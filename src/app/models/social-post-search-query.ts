@@ -15,6 +15,7 @@ export interface ISocialPostSearchQuery {
   authorId?: string;
   excludeExpiredPromo?: boolean;
   excludePastEvent?: boolean;
+  isAcademy?: boolean;
 }
 
 export class SocialPostSearchQuery implements ISocialPostSearchQuery {
@@ -33,6 +34,7 @@ export class SocialPostSearchQuery implements ISocialPostSearchQuery {
   get contentType() { return this.data.contentType || null; }
   get excludeExpiredPromo() { return this.data.excludeExpiredPromo || null; }
   get excludePastEvent() { return this.data.excludePastEvent || null; }
+  get isAcademy() { return this.data.isAcademy || null; }
 
   toJson() {
     const data: ISocialPostSearchQuery = {
@@ -50,6 +52,7 @@ export class SocialPostSearchQuery implements ISocialPostSearchQuery {
       ... (this.contentType) && {contentType: this.contentType},
       ... (this.excludeExpiredPromo) && {excludeExpiredPromo: this.excludeExpiredPromo},
       ... (this.excludePastEvent) && {excludePastEvent: this.excludePastEvent},
+      ... (this.isAcademy) && {isAcademy: this.isAcademy},
     };
     return data;
   }
