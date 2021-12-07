@@ -68,7 +68,7 @@ export class MyProfile extends Profile implements IMyProfile{
   get eligibleToRecommend() { 
     return this.isSA ? 
       true : 
-      this.isProvider && this.isApproved ?
+      (this.isProvider || this.isP) && this.isApproved ?
         true :
         false;
   }
