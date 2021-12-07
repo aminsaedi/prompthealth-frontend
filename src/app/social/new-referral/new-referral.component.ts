@@ -104,6 +104,7 @@ export class NewReferralComponent implements OnInit {
         this.user.setRecommendationByMe(res.data)
         this.isSubmitted = false;
         this.isLocked = false;
+        this._toastr.error('Thank you for creating ' + this.referralType);
         this.goback();
       } else {  
         this._toastr.error(res.message);
