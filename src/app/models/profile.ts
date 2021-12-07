@@ -1,6 +1,4 @@
 import { environment } from "src/environments/environment";
-import { IDefaultPlan } from "./default-plan";
-import { IReferral, Referral } from "./referral";
 import { IShowcase, Showcase } from "./showcase";
 import { IStaff, Staff } from "./staff";
 import { IUserDetail, IVideo } from "./user-detail";
@@ -81,8 +79,6 @@ export class Profile implements IProfile {
   get showcases() { return (this.eligibleToManageShowcase) ? (this._showcases || []) : []; }
   get videos() { return (this.eligibleToManageVideo) ? this.data.videos : []; } 
   get socialLinks() { return this.eligibleToConnectSocial ? this.data.socialLinks : []; }
-
-
    
   get isU() { return !!(this.role == 'U'); }
   get isC() { return !!(this.role == 'C'); }
@@ -116,14 +112,12 @@ export class Profile implements IProfile {
   get eligibleToManageVideo() { return this.isPaid && this.isC; }
   get eligibleToConnectSocial() { return (this.isPaid && (this.isProvider || this.isP)) || this.isSA;  }
 
-
   private _profileImage: string;
   private _profileImageType: string;
   private _followings: IProfile['followings'] = null;
   private _followers: IProfile['followers'] = null;
   private _staffs: Staff[] = null;
   private _showcases: Showcase[] = null;
-
 
   protected _s3 = environment.config.AWS_S3;
 
@@ -251,8 +245,6 @@ export class Profile implements IProfile {
   removeShowcase(showcase: IShowcase) {
     this._showcases = this._showcases.filter(item => showcase._id != item._id )
   }
-
-
 
   countupFollowing() { this.data.follow.following = this.data.follow.following ? this.data.follow.following + 1 : 1; }
   countdownFollowing() { this.data.follow.following = this.data.follow.following > 0 ? this.data.follow.following - 1 : 0; }
