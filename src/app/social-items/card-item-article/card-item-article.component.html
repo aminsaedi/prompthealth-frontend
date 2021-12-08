@@ -31,9 +31,12 @@
   </div>
 
   <div class="text-label">
-    <span class="mr-10p">
+    <span 
+    *ngIf="post && !post.isAcademy"
+    class="mr-10p"
+    >
       <i iconPh="timer" class="mr-1"></i>
-      <span *ngIf="post" class="subtitle2">
+      <span class="subtitle2">
         <span>{{post.readLengthLabel}}</span>
         <span class="d-none d-md-inline"> read</span>            
       </span>
@@ -46,20 +49,20 @@
 
 <h2 
 class="h4"
-[ngClass]="{'clamp-1line': shorten}"
+[ngClass]="{'clamp-1line': (shorten && !post.isAcademy)}"
 [innerHTML]="post.title"
 ></h2>
 
 <div class="mb-30p">
   <div #content
   class="post-content"
-  [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
+  [ngClass]="{shorten: (shorten && !post.isAcademy), hidden: isContentGradientShown}"
   [innerHTML]="post.descriptionSanitized"
   ></div>
 </div>
 
 <a 
-*ngIf="!shorten"
+*ngIf="!shorten && !post.isAcademy"
 [routerLink]="['/community', 'profile', post.authorId]"
 class="d-inline-block mb-10p bg-primary-light border border-line p-20p rounded-4p text-body"
 style="max-width: 400px; width: 100%;"

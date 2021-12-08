@@ -23,7 +23,7 @@ export class CardItemArticleComponent implements OnInit {
 
   ngAfterViewInit() {
     const el = this.content.nativeElement as HTMLDivElement;
-    this.isContentGradientShown = (el.clientHeight >= 200);
+    this.isContentGradientShown = (el.clientHeight >= (this.post?.isAcademy ? 400 : 200));
   }
 
   ngOnInit(): void {
