@@ -154,29 +154,29 @@ style="z-index: 100;"
       </div>
     </div>
 
-    <div class="container my-15p">
-      <a
-      class="d-block rounded-8p overflow-hidden"
-      routerLink="/community/academy"
-      >
+    <div 
+    class="container my-15p"
+    *ngIf="!user || !user.isU"
+    >
+      <div class="d-block rounded-8p overflow-hidden">
         <div class="image-container">
           <img src="/assets/img/social/online-academy.png" alt="Learn with PromptHealth">
           <div
-            class="mb-20p mx-30p position-absolute text-white"
-            style="bottom:0; text-shadow: 1px 1px 3px #747474"
-            >
-              <div class="subtitle1 mb-10p">
-                <img style="width: auto; height: 12px; filter: brightness(0.85)" class="mr-5p" src="assets/img/logo-sm-small.png" alt="">
-                PromptHealth
-              </div>
-              <h5 class="mb-15p">ONLINE ACADEMY</h5>
-              <a 
-              routerLink="/community/academy"
-              class="btn btn-primary small"
-              >See tutorials</a>
+          class="mb-20p mx-30p position-absolute text-white"
+          style="bottom:0; text-shadow: 1px 1px 3px #747474"
+          >
+            <div class="subtitle1 mb-10p">
+              <img style="width: auto; height: 12px; filter: brightness(0.85)" class="mr-5p" src="assets/img/logo-sm-small.png" alt="">
+              PromptHealth
             </div>
+            <h5 class="mb-15p">ONLINE ACADEMY</h5>
+            <a 
+            routerLink="/community/academy"
+            class="btn btn-primary"
+            >See tutorials</a>
+          </div>
         </div>
-      </a>
+      </div>
     </div>
 
     <div class="container">
