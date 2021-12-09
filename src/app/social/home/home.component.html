@@ -2,30 +2,30 @@
   <div class="row align-items-stretch justify-content-between">
     <!-- left -->
     <section class="col-3 d-none d-xl-block">
-      <div class="sticky-top" style="top: 80px">
-        <div class="mb-20p" *ngIf="topics" [@expandVertical]>
-          <div class="bg-white rounded-8p overflow-hidden">
-            <div
-            *ngFor="let topic of topics; let i = index"
-            class="px-20p"
-            [ngClass]="{'bg-primary-light': (selectedTopicId == topic._id)}"
+      <div class="mb-20p" *ngIf="topics" [@expandVertical]>
+        <div class="bg-white rounded-8p overflow-hidden">
+          <div
+          *ngFor="let topic of topics; let i = index"
+          class="px-20p"
+          [ngClass]="{'bg-primary-light': (selectedTopicId == topic._id)}"
+          >
+            <list-item
+            [leading]="iconOf(topic)"
+            leadingClass="text-primary"
+            action="chevron-right"
+            actionClass="text-primary"
+            [option]="{hideBorderBottom: (i == topics.length - 1)}"
+            (onTap)="onTapTopic(topic)"
             >
-              <list-item
-              [leading]="iconOf(topic)"
-              leadingClass="text-primary"
-              action="chevron-right"
-              actionClass="text-primary"
-              [option]="{hideBorderBottom: (i == topics.length - 1)}"
-              (onTap)="onTapTopic(topic)"
-              >
-                <div 
-                class="subtitle2"
-                [ngClass]="{'text-primary': (selectedTopicId == topic._id)}"
-                >{{topic.item_text}}</div>
-              </list-item>
-            </div>
+              <div 
+              class="subtitle2"
+              [ngClass]="{'text-primary': (selectedTopicId == topic._id)}"
+              >{{topic.item_text}}</div>
+            </list-item>
           </div>
-        </div>        
+        </div>
+      </div>        
+      <div class="sticky-top" style="top: 80px">
         <div
         *ngIf="!user || !user.isU"
         class="d-block rounded-8p overflow-hidden"
