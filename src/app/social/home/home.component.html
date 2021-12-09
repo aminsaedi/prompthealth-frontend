@@ -26,25 +26,29 @@
             </div>
           </div>
         </div>        
-        <a
+        <div
         *ngIf="!user || !user.isU"
         class="d-block rounded-8p overflow-hidden"
-        routerLink="/community/academy"
+        
         >
           <div class="image-container">
             <img src="/assets/img/social/online-academy.png" alt="Learn with PromptHealth">
             <div
-            class="mb-0 position-absolute text-white text-center"
-            style="top: 50%; left: 50%; transform: translate(-50%, -50%);"
+            class="mb-20p mx-30p position-absolute text-white"
+            style="bottom:0; text-shadow: 1px 1px 3px #747474"
             >
-              <div class="subtitle2 mb-5p">
-                <img style="width: auto; height: 12px;" class="mr-5p" src="assets/img/logo-sm-small.png" alt="">
+              <div class="subtitle1 mb-10p">
+                <img style="width: auto; height: 12px; filter: brightness(0.85)" class="mr-5p" src="assets/img/logo-sm-small.png" alt="">
                 PromptHealth
               </div>
-              <h6 class="subtitle1 mb-0">ONLINE<br>ACADEMY</h6>  
+              <h5 class="mb-15p">ONLINE ACADEMY</h5>
+              <a 
+              routerLink="/community/academy"
+              class="btn btn-primary small"
+              >See tutorials</a>
             </div>
           </div>
-        </a>
+        </div>
       </div>
     </section>
 
