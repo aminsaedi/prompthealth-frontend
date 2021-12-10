@@ -38,6 +38,7 @@ import { TagProviderComponent } from './tag-provider/tag-provider.component';
 import { AboutPartnerComponent } from './about-partner/about-partner.component';
 import { ButtonsModule } from "../buttons/buttons.module";
 import { PressReleaseComponent } from "./press-release/press-release.component";
+import { TestimonialComponent } from './testimonial/testimonial.component';
 
 
 @NgModule({
@@ -72,6 +73,7 @@ import { PressReleaseComponent } from "./press-release/press-release.component";
     TagProviderComponent,
     AboutPartnerComponent,
     PressReleaseComponent,
+    TestimonialComponent,
   ],
   imports: [
     FormsModule,

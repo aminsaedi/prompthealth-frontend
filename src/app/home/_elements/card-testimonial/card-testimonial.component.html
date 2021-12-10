@@ -1,15 +1,31 @@
 <div class="bg-body pt-30p px-30p text-white rounded-12p h-100 d-flex flex-column">
   <section class="d-flex align-items-start">
-    <a 
+    <a
+    *ngIf="data.profileId" 
     [routerLink]="['/community/profile', data.profileId]"
-    class="image-container-100pc mr-10p overflow-hidden"
+    class="mr-10p image-container-100pc overflow-hidden has-account"
     >
-      <img [src]="data.image" loading="lazy" />
+      <img 
+      *ngIf="data.image"
+      [src]="data.image" loading="lazy" />
     </a>
+    <ng-container *ngIf="!data.profileId">
+      <div class="mr-10p image-container-100pc overflow-hidden">
+        <img 
+        *ngIf="data.image"
+        [src]="data.image" loading="lazy" />  
+      </div>
+    </ng-container>  
+
     <div class="mt-5p">
-      <a [routerLink]="['/community/profile', data.profileId]">
+      <a 
+      *ngIf="data.profileId" 
+      [routerLink]="['/community/profile', data.profileId]">
         <div class="subtitle1 text-white">{{data.name}}</div>
       </a>
+      <ng-container *ngIf="!data.profileId">
+        <div class="subtitle1 text-white">{{data.name}}</div>
+      </ng-container>
       <div class="subtitle2 text-placeholder">{{data.location}}</div>
       <!-- <div class="d-flex">
         <div class="text-center">
@@ -31,8 +47,11 @@
     </p>
   </section>
 
-  <section class="">
-    <div class="pb-20p border-bottom">
+  <section>
+    <div 
+    *ngIf="data.rating"
+    class="pb-20p"
+    >
       <star-rate 
       [rate]="data.rating"
       margin="small"
@@ -40,15 +59,16 @@
     </div>
 
     <a 
-    class="d-flex justify-content-between py-20p"
+    *ngIf="data.link"
+    class="d-flex justify-content-between py-20p border-top"
     [href]="data.link"
     target="_blank"
     >
-      <span>
+      <span class="subtitle2 clamp-1line">
         <i iconPh="link-1" class="text-white mr-2"></i>
-        <span class="text-placeholder subtitle2">{{data.name}}</span>
+        <span class="text-placeholder">{{data.name}}</span>
       </span>
-      <i iconPh="arrow-right-circle" class="text-primary"></i>
+      <i iconPh="arrow-right-circle" class="text-primary"></i>  
     </a>
   </section>
   

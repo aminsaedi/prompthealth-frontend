@@ -25,6 +25,7 @@ import { AboutCompanyComponent } from "./about-company/about-company.component";
 import { TagProviderComponent } from "./tag-provider/tag-provider.component";
 import { AboutPartnerComponent } from "./about-partner/about-partner.component";
 import { PressReleaseComponent } from "./press-release/press-release.component";
+import { TestimonialComponent } from "./testimonial/testimonial.component";
 
 const routes: Routes = [
   {
@@ -53,6 +54,8 @@ const routes: Routes = [
   { path: 'plans', component: AboutPractitionerComponent },
   { path: 'plans/product', component: AboutCompanyComponent },
   { path: 'subscriptionplan', redirectTo: '/plans'},
+
+  { path: 'testimonial', component: TestimonialComponent, },
 
   { path: 'practitioners', component: ExpertFinderComponent },
   { path: 'practitioners/category/:categoryId', component: ExpertFinderComponent },

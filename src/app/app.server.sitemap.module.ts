@@ -85,6 +85,9 @@ const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
       <loc>${baseURL}/press-release</loc>
     </url>
     <url>
+      <loc>${baseURL}/testimonial</loc>
+    </url>
+    <url>
       <loc>${baseURL}/faq</loc>
     </url>       
     <url>

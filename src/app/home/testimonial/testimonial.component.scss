@@ -1,0 +1,16 @@
+@import '../../../assets/scss/variables';
+
+.card-container {
+  @media (min-width: $breakpointMd) {
+    flex: 0 0 46%;
+    margin: 0 2%;
+  }
+  @media (min-width: $breakpointLg) {
+    flex: 0 0 30%;
+    margin: 0 2%;
+  }
+  @media (min-width: $breakpointXl) {
+    flex: 0 0 23%;
+    margin: 0 1%;
+  }
+}
