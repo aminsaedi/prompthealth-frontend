@@ -1,0 +1,43 @@
+
+<div class="hero-video overflow-hidden">
+  <img src="/assets/img/about/top-testimonial.png" alt="" loading="lazy" />
+</div>
+
+
+<div class="container my-100p">
+  <div>
+    <div class="text-center">
+      <h2 class="h2-md">Testimonials</h2>
+      <div class="h4 h3-lg subtitle1 text-placeholder">See what people think of us</div>
+    </div>
+
+    <section class="mt-40p">
+      <div class="d-none d-md-block mb-10p text-right">
+        <button 
+        class="btn btn-icon small mr-10p"
+        (click)="scrollPrev()"
+        >
+          <i iconPh="arrow-left-circle"></i>
+        </button>
+        <button 
+        class="btn btn-icon small"
+        (click)="scrollNext()"
+        >
+          <i iconPh="arrow-right-circle"></i>
+        </button>
+      </div>
+
+      <div 
+      #testimonialsContainer
+      class="d-flex flex-column flex-md-row overflow-auto pb-20p"
+      >
+        <div 
+        *ngFor="let t of testimonials;"
+        class="mb-20p mb-md-0p card-container"
+        >
+          <card-testimonial [data]="t"></card-testimonial>
+      </div>
+    </div>
+  
+    </section>
+</div>
