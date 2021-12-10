@@ -1,4 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
 
 @Component({
@@ -11,21 +13,36 @@ export class TestimonialComponent implements OnInit {
   public testimonials = testimonials; 
   @ViewChild('testimonialsContainer') private testimonialsContainer: ElementRef;
 
-  constructor() { }
+  constructor(
+    private _uService: UniversalService,
+    private _router: Router,
+  ) { }
 
   ngOnInit(): void {
+    this._uService.setMeta(this._router.url, {
+      title: 'Testimonials about PromptHealth',
+      robots: 'index, follow',
+    });
   }
 
   scrollNext() { 
     const el: HTMLElement = this.testimonialsContainer.nativeElement;
     if(el) {
-      smoothHorizontalScrolling(el,160, el.clientWidth, el.scrollLeft);
+      const w = el.clientWidth;
+      const l = el.scrollLeft;
+      const currentIndex = Math.floor(l / w);
+      const amount = (currentIndex + 1) * w - l;
+      smoothHorizontalScrolling(el,160, amount, l);
     }
   }
   scrollPrev() {
     const el: HTMLElement = this.testimonialsContainer.nativeElement;
     if(el) {
-      smoothHorizontalScrolling(el,160, -el.clientWidth, el.scrollLeft);
+      const w = el.clientWidth;
+      const l = el.scrollLeft;
+      const currentIndex = Math.ceil(l / w);
+      const amount = (currentIndex - 1) * w - l
+      smoothHorizontalScrolling(el,160, amount, l);
     }
   }
 
