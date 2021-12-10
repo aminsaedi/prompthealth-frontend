@@ -2,9 +2,13 @@
 
 .image-container-100pc {
   flex: 0 0 75px;
-  background: white;
-  border: solid 3px $colorSecondary;
+  background: #505870;
+  border: solid 3px transparent;
   border-radius: 75px;
+}
+
+.has-account {
+  border: solid 3px $colorSecondary;
 }
 
 .icon-quote {

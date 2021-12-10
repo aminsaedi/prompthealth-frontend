@@ -550,6 +550,20 @@ textarea.form-control {
   top: 0;
 }
 
+[class*=sticky-lg-top] {
+  @media (min-width: $breakpointLg) {
+    z-index: 10;
+    position: sticky;
+    top: 0;  
+  }
+}
+
+.sticky-lg-top-100p {
+  @media (min-width: $breakpointLg) {
+    top: 100px;
+  }
+}
+
 .sticky-bottom{
   z-index: 10;
   position: sticky;
