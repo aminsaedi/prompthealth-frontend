@@ -7,13 +7,17 @@
     >
       <img 
       *ngIf="data.image"
-      [src]="data.image" loading="lazy" />
+      [src]="data.image" 
+      crossorigin="anonymous"
+      loading="lazy" />
     </a>
     <ng-container *ngIf="!data.profileId">
       <div class="mr-10p image-container-100pc overflow-hidden">
         <img 
         *ngIf="data.image"
-        [src]="data.image" loading="lazy" />  
+        [src]="data.image" 
+        crossorigin="anonymous"
+        loading="lazy" />  
       </div>
     </ng-container>  
 
