@@ -28,6 +28,7 @@
               "src/assets",
               "src/manifest.webmanifest",
               "src/firebase-messaging-sw.js",
+              "src/ads.txt",
               "src/manifest.json"
             ],
             "styles": [
@@ -135,8 +136,7 @@
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/assets/scss/style.scss"
             ],
-            "scripts": [
-            ]
+            "scripts": []
           }
         },
         "lint": {
