@@ -36,7 +36,7 @@ export class FormProviderGeneralComponent implements OnInit {
   public maxProfessionalTitle = minmax.professionalTitleMax;
   public maxProfessionalOrganization = minmax.professionalOrganizationMax;
   public maxCertification = minmax.certificationMax;
-  public maxTextarea = minmax.textareaMax;
+  public maxTextarea = minmax.descriptionMax;
   public serviceOfferList: CheckboxSelectionItem[];
   public typicalHourList: CheckboxSelectionItem[];
   public languageList: CheckboxSelectionItem[];

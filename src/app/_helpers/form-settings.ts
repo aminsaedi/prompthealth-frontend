@@ -1,7 +1,13 @@
-import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { Blog } from '../models/blog';
-import { formatStringToDate } from './date-formatter';
-import { pattern } from './pattern';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
+import { Blog } from "../models/blog";
+import { formatStringToDate } from "./date-formatter";
+import { pattern } from "./pattern";
 
 export const minmax = {
   nameMax: 100,
@@ -17,15 +23,17 @@ export const minmax = {
   referralMax: 500,
   promoCodeMax: 30,
   noteMax: 400,
+  descriptionMax: 500,
+  descriptionMin: 75
 };
 
-
-
-export const validatorCheckboxSelectedAtLeast = (minRequired: number = 1): ValidatorFn => {
+export const validatorCheckboxSelectedAtLeast = (
+  minRequired: number = 1
+): ValidatorFn => {
   return function validate(formArray: FormArray) {
     let checked = 0;
 
-    (formArray.value as boolean[]).forEach(val => {
+    (formArray.value as boolean[]).forEach((val) => {
       if (val) {
         checked++;
       }
@@ -35,26 +43,32 @@ export const validatorCheckboxSelectedAtLeast = (minRequired: number = 1): Valid
       return null;
     } else {
       const errors = {};
-      errors['requiredCheckboxSelectedAtLeast'] = minRequired;
+      errors["requiredCheckboxSelectedAtLeast"] = minRequired;
       return errors;
     }
   };
 };
 
-export const validatorCheckboxSelectedAtMost = (maxRequired: number = 3): ValidatorFn => {
+export const validatorCheckboxSelectedAtMost = (
+  maxRequired: number = 3
+): ValidatorFn => {
   return function validate(formArray: FormArray) {
-    const checkedArray = (formArray.value as boolean[]).filter(bool => !!bool);
-    if(checkedArray.length <= maxRequired) {
+    const checkedArray = (formArray.value as boolean[]).filter(
+      (bool) => !!bool
+    );
+    if (checkedArray.length <= maxRequired) {
       return null;
     } else {
-      const errors = {}
-      errors['requiredCheckboxSelectedAtMost'] = maxRequired;
+      const errors = {};
+      errors["requiredCheckboxSelectedAtMost"] = maxRequired;
       return errors;
     }
-  }
-}
+  };
+};
 
-const validatorNestedCheckboxSelectedAtLeast = (minRequired: number = 1): ValidatorFn => {
+const validatorNestedCheckboxSelectedAtLeast = (
+  minRequired: number = 1
+): ValidatorFn => {
   return function validate(formGroup: FormGroup) {
     let checked = 0;
     if (formGroup.value.root && formGroup.value.root.length > 0) {
@@ -69,7 +83,7 @@ const validatorNestedCheckboxSelectedAtLeast = (minRequired: number = 1): Valida
       return null;
     } else {
       const errors = {};
-      errors['requiredCheckboxSelectedAtLeast'] = minRequired;
+      errors["requiredCheckboxSelectedAtLeast"] = minRequired;
       return errors;
     }
   };
@@ -168,7 +182,14 @@ const validatorComparePostEventEndTime = (): ValidatorFn => {
     const regex = new RegExp(pattern.datetime);
     const fs = formGroup.controls.eventStartTime;
     const fe = formGroup.controls.eventEndTime;
-    if (fs && fs.value && fs.value.match(regex) && fe && fe.value && fe.value.match(regex)) {
+    if (
+      fs &&
+      fs.value &&
+      fs.value.match(regex) &&
+      fe &&
+      fe.value &&
+      fe.value.match(regex)
+    ) {
       const errors: any = {};
 
       const start = formatStringToDate(fs.value);
@@ -183,7 +204,6 @@ const validatorComparePostEventEndTime = (): ValidatorFn => {
       } else {
         return null;
       }
-
     } else {
       return null;
     }
@@ -198,14 +218,22 @@ const validatorPatternURL = (): ValidatorFn => {
     if (!val) {
       return null;
     } else if (!val.match(/^http(s)?:\/\//)) {
-      val = 'http://' + val;
+      val = "http://" + val;
       isValueUpdated = true;
     }
 
     if (val.match(/^http(s)?:\/\/www/)) {
-      isValueMatched = (val.match(/^http(s)?:\/\/www\.[\w-\.]+(\.\w{2,})([\/\w-%?=@&+#:\.]*)?$/)) ? true : false;
+      isValueMatched = val.match(
+        /^http(s)?:\/\/www\.[\w-\.]+(\.\w{2,})([\/\w-%?=@&+#:\.]*)?$/
+      )
+        ? true
+        : false;
     } else {
-      isValueMatched = (val.match(/^http(s)?:\/\/[\w-\.]+(\.\w{2,})([\/\w-%?=@&+#:\.]*)?$/)) ? true : false;
+      isValueMatched = val.match(
+        /^http(s)?:\/\/[\w-\.]+(\.\w{2,})([\/\w-%?=@&+#:\.]*)?$/
+      )
+        ? true
+        : false;
     }
 
     if (isValueMatched) {
@@ -222,73 +250,97 @@ const validatorPatternURL = (): ValidatorFn => {
 const validatorNoteHasAtLeastOneField = (): ValidatorFn => {
   return function validate(formGroup: FormGroup) {
     const g = formGroup.controls;
-    let description = (g.description.value as string || '');
-    description = description.replace(/<[^>]*>?/gm, '').trim();
+    let description = (g.description.value as string) || "";
+    description = description.replace(/<[^>]*>?/gm, "").trim();
 
-    const image = g.images.value as {file: File|Blog, filename: string};
+    const image = g.images.value as { file: File | Blog; filename: string };
     const voice = g.voice.value as string;
-    if(!description && !image && !voice) {
-      return {noteHasAtLeastOneField: true};
+    if (!description && !image && !voice) {
+      return { noteHasAtLeastOneField: true };
     } else {
       return null;
     }
-  }
-}
+  };
+};
 
 //note cannot have image / voice /video together.
 const validatorNoteHasOnlyOneMedia = (): ValidatorFn => {
   return function validate(formGroup: FormGroup) {
     const g = formGroup.controls;
-    const image = g.images.value as {file: File|Blog, filename: string};
+    const image = g.images.value as { file: File | Blog; filename: string };
     const voice = g.voice.value as string;
-    if(!!image && !!voice) {
-      return {noteHasOnlyOneMedia: true};
+    if (!!image && !!voice) {
+      return { noteHasOnlyOneMedia: true };
     } else {
       return null;
     }
-  }
-}
-
-
+  };
+};
 
 const validatorTopicsSelectedLTE = (maxNum: number): ValidatorFn => {
   return function validate(formControl: FormControl) {
     const topics = formControl.value || [];
-    if(topics.length > maxNum) {
-      return {topicsSelectedLTE: maxNum};
+    if (topics.length > maxNum) {
+      return { topicsSelectedLTE: maxNum };
     } else {
       return null;
     }
-  }
-}
+  };
+};
 
 const validatorExistAtLeast = (minNum: number): ValidatorFn => {
   return function validate(formControl: FormControl) {
     const value = formControl.value || [];
-    console.log(value)
-    if(value.length >= minNum) {
+    console.log(value);
+    if (value.length >= minNum) {
       return null;
     } else {
-      return {existAtLeast: minNum};
+      return { existAtLeast: minNum };
     }
-  }
-}
+  };
+};
 
-
-const validatorFirstNameClient = [Validators.maxLength(minmax.nameMax), Validators.required];
+const validatorFirstNameClient = [
+  Validators.maxLength(minmax.nameMax),
+  Validators.required,
+];
 const validatorLastNameClient = [Validators.maxLength(minmax.nameMax)];
-const validatorNameSP = [Validators.required, Validators.minLength(3), Validators.maxLength(minmax.nameMax)];
+const validatorNameSP = [
+  Validators.required,
+  Validators.minLength(3),
+  Validators.maxLength(minmax.nameMax),
+];
 const validatorEmail = [Validators.required, Validators.email];
-const validatorPhone = [Validators.pattern(pattern.phone), Validators.minLength(minmax.phoneMin), Validators.maxLength(minmax.phoneMax)];
+const validatorPhone = [
+  Validators.pattern(pattern.phone),
+  Validators.minLength(minmax.phoneMin),
+  Validators.maxLength(minmax.phoneMax),
+];
 const validatorRequired = [Validators.required];
 const validatorRequiredTrue = [Validators.requiredTrue];
 const validatorUrl = [validatorPatternURL()];
-const validatorProfessionalTitle = [Validators.required, Validators.maxLength(minmax.professionalTitleMax)];
-const validatorProfessionalOrganization = [Validators.required, Validators.maxLength(minmax.professionalOrganizationMax)];
-const validatorCertification = [Validators.required, Validators.maxLength(minmax.certificationMax)];
+const validatorProfessionalTitle = [
+  Validators.required,
+  Validators.maxLength(minmax.professionalTitleMax),
+];
+const validatorProfessionalOrganization = [
+  Validators.required,
+  Validators.maxLength(minmax.professionalOrganizationMax),
+];
+const validatorCertification = [
+  Validators.required,
+  Validators.maxLength(minmax.certificationMax),
+];
 const validatorExactPricing = [Validators.pattern(pattern.price)];
-const validatorExactPricingRequired = [Validators.pattern(pattern.price), Validators.required];
-const validatorTextarea = [Validators.maxLength(minmax.textareaMax)];
+const validatorExactPricingRequired = [
+  Validators.pattern(pattern.price),
+  Validators.required,
+];
+const validatorTextarea = [
+  Validators.required,
+  Validators.maxLength(minmax.descriptionMax),
+  Validators.minLength(minmax.descriptionMin)
+];
 
 export const validators = {
   profileImageProvider: [],
@@ -313,7 +365,7 @@ export const validators = {
   typicalHours: validatorCheckboxSelectedAtLeast(1),
   customerHealth: validatorNestedCheckboxSelectedAtLeast(1),
   companyType: validatorCheckboxSelectedAtLeast(1),
-  typeOfProvider: [validatorCheckboxSelectedAtLeast(1)],
+  typeOfProvider: [validatorCheckboxSelectedAtLeast(1),validatorCheckboxSelectedAtMost(2)],
   treatmentModality: [],
   // mainCategory: validatorNestedCheckboxSelectedAtLeast(1),
   exactPricing: validatorExactPricing,
@@ -326,7 +378,7 @@ export const validators = {
 
   personalMatchGender: validatorRequired,
   personalMatchAgeRange: validatorRequired,
-  
+
   passwordOld: [Validators.required],
   password: validatorPatternPassword(),
   accredit: validatorRequiredTrue,
@@ -337,7 +389,10 @@ export const validators = {
   showcaseImages: [validatorExistAtLeast(1)],
 
   certificateTitle: validatorNameSP,
-  certificateDescription: [Validators.required, Validators.maxLength(minmax.noteMax)],
+  certificateDescription: [
+    Validators.required,
+    Validators.maxLength(minmax.noteMax),
+  ],
   certificateFiles: [validatorExistAtLeast(1)],
 
   videoLink: [Validators.required, Validators.pattern(pattern.urlVideo)],
@@ -345,8 +400,17 @@ export const validators = {
   /** booking form */
   bookingName: validatorFirstNameClient,
   bookingEmail: validatorEmail,
-  bookingPhone: [Validators.pattern(pattern.phone), Validators.minLength(minmax.phoneMin), Validators.maxLength(minmax.phoneMax), Validators.required],
-  bookingDateTime: [validatorPatternDateTime(), validatorCompareBookingDateTime(), Validators.required],
+  bookingPhone: [
+    Validators.pattern(pattern.phone),
+    Validators.minLength(minmax.phoneMin),
+    Validators.maxLength(minmax.phoneMax),
+    Validators.required,
+  ],
+  bookingDateTime: [
+    validatorPatternDateTime(),
+    validatorCompareBookingDateTime(),
+    Validators.required,
+  ],
   bookingNote: [Validators.maxLength(minmax.bookingNoteMax)],
 
   /** contact form */
@@ -357,14 +421,21 @@ export const validators = {
   /** blog post for users */
   publishPostDescription: [Validators.required],
   publishPostDescriptionNote: [Validators.maxLength(minmax.noteMax)],
-  publishPostEventStartTime: [Validators.required, validatorPatternDateTime(), validatorComparePostEventStartTime()],
+  publishPostEventStartTime: [
+    Validators.required,
+    validatorPatternDateTime(),
+    validatorComparePostEventStartTime(),
+  ],
   publishPostEventEndTime: [Validators.required, validatorPatternDateTime()],
   publishPostEventLink: [Validators.required, validatorPatternURL()],
   publishPostEventAddress: [Validators.required],
   savePostTitle: [Validators.required],
   savePostDescription: [],
   savePostCategory: [Validators.required],
-  savePostEventStartTime: [validatorPatternDateTime(), validatorComparePostEventStartTime()],
+  savePostEventStartTime: [
+    validatorPatternDateTime(),
+    validatorComparePostEventStartTime(),
+  ],
   savePostEventEndTime: [validatorPatternDateTime()],
   savePostEventLink: [validatorPatternURL()],
   savePostEventAddress: [],
@@ -377,10 +448,14 @@ export const validators = {
   comment: [Validators.required],
   note: [validatorNoteHasAtLeastOneField(), validatorNoteHasOnlyOneMedia()],
   noteDescription: [Validators.maxLength(minmax.noteMax + 1)], // need + 1 because description has \n at last before submit
-  referral: [Validators.required, Validators.maxLength(minmax.referralMax), Validators.minLength(minmax.referralMin)],
+  referral: [
+    Validators.required,
+    Validators.maxLength(minmax.referralMax),
+    Validators.minLength(minmax.referralMin),
+  ],
 
   promoCode: [Validators.maxLength(minmax.promoCodeMax)],
   promoExpireDate: [validatorPatternDate()],
   promoLink: validatorUrl,
   topics: [validatorTopicsSelectedLTE(3)],
-}
+};

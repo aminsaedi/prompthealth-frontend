@@ -34,7 +34,8 @@ export class FormCentreGeneralComponent implements OnInit {
 
   public maxName = minmax.nameMax;
   public maxProfessionalTitle = minmax.professionalTitleMax;
-  public maxTextarea = minmax.textareaMax;
+  public maxTextarea = minmax.descriptionMax;
+  public minTextarea = minmax.descriptionMin;
   public serviceOfferList: CheckboxSelectionItem[];
   public typicalHourList: CheckboxSelectionItem[];
   public languageList: CheckboxSelectionItem[];
