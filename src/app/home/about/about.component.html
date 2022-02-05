@@ -1,60 +1,82 @@
 <div class="hero-video overflow-hidden">
-  <video 
-  #videoPlayer
-  autoplay 
-  [muted]="true"
-  loop 
-  playsinline 
-  [ngClass]="isVideoLgReady ? 'd-none' : ''"
-  [src]="videoLink"
-  poster="/assets/video/about-thumbnail.jpg"
+  <video
+    #videoPlayer
+    autoplay
+    [muted]="true"
+    loop
+    playsinline
+    [ngClass]="isVideoLgReady ? 'd-none' : ''"
+    [src]="videoLink"
+    poster="/assets/video/about-thumbnail.jpg"
   ></video>
   <video
-  #videoLg
-  playinline
-  [muted]="true"
-  [ngClass]="!isVideoLgReady ? 'd-none' : ''"
-  preload="none"
-  [src]="videoLinkLg"
+    #videoLg
+    playinline
+    [muted]="true"
+    [ngClass]="!isVideoLgReady ? 'd-none' : ''"
+    preload="none"
+    [src]="videoLinkLg"
   ></video>
 </div>
 
-<div class="intersection-observer" intersectionObserver rootMargin="-80px 0px 10000px 0px" (changeStatus)="changeHeaderShadowStatus($event)"></div>
+<div
+  class="intersection-observer"
+  intersectionObserver
+  rootMargin="-80px 0px 10000px 0px"
+  (changeStatus)="changeHeaderShadowStatus($event)"
+></div>
 <section class="overflow-hidden" style="max-width: 100vw">
   <div class="container my-80p my-md-100p">
     <div class="row py-md-50p justify-content-between">
       <div class="col-12 col-md-7 col-lg-8 col-xl-7">
         <h2 class="h4 h3-md mb-30p">
-          We are on a mission to reimagine the wellness journey for Canadians.  
+          We are on a mission to empower holistic providers to collaborate in a
+          digital space
         </h2>
         <p class="text-label position-relative explanation">
           <svg
-          class="position-absolute icon-ph-half"
-          width="235"
-          height="166"
-          viewBox="0 0 235 166"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+            class="position-absolute icon-ph-half"
+            width="235"
+            height="166"
+            viewBox="0 0 235 166"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M230.871 4.72431C224.571 -1.2117 216.585 -1.5609 209.426 4.50208C205.448 7.86688 202.394 12.2792 198.798 16.1202C173.375 43.1338 147.888 70.1156 122.497 97.1609C114.574 105.605 106.747 114.144 99.0468 122.778C94.3694 128.047 93.7649 128.365 88.6103 123.064C79.8283 114.048 71.1418 104.906 62.4871 95.7642C60.8326 94.0183 59.178 92.2725 57.5234 90.4949C52.1143 84.7811 46.7369 79.0672 41.455 73.2582C39.8323 71.4806 38.1777 69.7029 36.5868 67.8936C31.623 62.2432 29.8094 55.4502 31.7503 48.054C34.614 37.2295 44.8278 29.6429 55.0734 30.4364C63.8871 31.1348 70.0282 33.8647 73.7828 38.9119C80.7511 31.5157 87.7193 24.1195 94.6558 16.7233C81.4511 2.85145 60.5462 -3.56071 39.5141 1.99438C-0.577449 12.6284 -10.9503 59.0054 12.0227 85.7968C14.8228 89.0346 17.7183 92.209 20.5502 95.4151C27.423 103.16 34.4231 110.779 41.5187 118.334C54.2143 131.793 67.1327 145.093 79.8601 158.489C89.7557 168.901 99.3331 168.33 108.911 157.759C124.82 140.237 140.761 122.714 156.861 105.351C173.312 87.6062 190.08 70.1156 206.562 52.3711C214.803 43.5147 222.917 34.5313 230.681 25.2623C236.535 18.374 236.281 9.80324 230.871 4.72431Z" fill="#E9F2FF"/>
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M230.871 4.72431C224.571 -1.2117 216.585 -1.5609 209.426 4.50208C205.448 7.86688 202.394 12.2792 198.798 16.1202C173.375 43.1338 147.888 70.1156 122.497 97.1609C114.574 105.605 106.747 114.144 99.0468 122.778C94.3694 128.047 93.7649 128.365 88.6103 123.064C79.8283 114.048 71.1418 104.906 62.4871 95.7642C60.8326 94.0183 59.178 92.2725 57.5234 90.4949C52.1143 84.7811 46.7369 79.0672 41.455 73.2582C39.8323 71.4806 38.1777 69.7029 36.5868 67.8936C31.623 62.2432 29.8094 55.4502 31.7503 48.054C34.614 37.2295 44.8278 29.6429 55.0734 30.4364C63.8871 31.1348 70.0282 33.8647 73.7828 38.9119C80.7511 31.5157 87.7193 24.1195 94.6558 16.7233C81.4511 2.85145 60.5462 -3.56071 39.5141 1.99438C-0.577449 12.6284 -10.9503 59.0054 12.0227 85.7968C14.8228 89.0346 17.7183 92.209 20.5502 95.4151C27.423 103.16 34.4231 110.779 41.5187 118.334C54.2143 131.793 67.1327 145.093 79.8601 158.489C89.7557 168.901 99.3331 168.33 108.911 157.759C124.82 140.237 140.761 122.714 156.861 105.351C173.312 87.6062 190.08 70.1156 206.562 52.3711C214.803 43.5147 222.917 34.5313 230.681 25.2623C236.535 18.374 236.281 9.80324 230.871 4.72431Z"
+              fill="#E9F2FF"
+            />
           </svg>
-    
+
           <span class="position-relative">
-            One size does not fit all, especially when it comes to choosing a wellness service or provider. We want people to feel empowered through their journey by being aware of different options for care.<br><br>
-            Helping Canadians feel <span class="text-body">empowered</span> through their wellness journey, <span class="text-body">not overwhelmed</span> - the way it should be when we are taking care of ourselves. 
+            It is evident that the times are constantly changing and having a
+            relevant social media presence is becoming the norm. However, there
+            is an issue of whether the information coming from these platforms
+            is legitimate. PromptHealth aims to be the space where vetted
+            professionals can share information and network with one another to
+            give users trustworthy solutions. We facilitate networking between
+            providers by building inter-professional connections and offering a
+            referral system.
           </span>
         </p>
       </div>
 
       <div class="col-12 col-md-5 col-lg-4 mt-15p mt-md-0p">
-        <div class="bg-primary-light rounded-12p pt-45p pb-30p px-25p px-md-15p px-xl-25p position-relative">
-          <i 
-          iconPh="quotes-2" 
-          class="text-primary-dark position-absolute"
-          style="top: -20px; left: 10px; font-size: 50px;"
+        <div
+          class="bg-primary-light rounded-12p pt-45p pb-30p px-25p px-md-15p px-xl-25p position-relative"
+        >
+          <i
+            iconPh="quotes-2"
+            class="text-primary-dark position-absolute"
+            style="top: -20px; left: 10px; font-size: 50px"
           ></i>
-          <b class="explanation" style="font-size: 17px;">
-            On PromptHealth, you have the option of filtering through providers based on categories that are important to you, searching with keywords, or doing a personal match quiz that easily gives you a personalized list of wellness providers. 
+          <b class="explanation" style="font-size: 17px">
+            A comment that often arises is “I don’t know where to start.”
+            PromptHealth provides you the stepping stones on where to start, how
+            to create engaging posts and show you the avenues you can take with
+            your content to expand your business horizons.
           </b>
         </div>
       </div>
@@ -62,19 +84,24 @@
   </div>
 </section>
 
-<div class="intersection-observer" intersectionObserver rootMargin="-70% 0px 10000px 0px" (changeStatus)="onHolisticIntersected($event)"></div>
+<div
+  class="intersection-observer"
+  intersectionObserver
+  rootMargin="-70% 0px 10000px 0px"
+  (changeStatus)="onHolisticIntersected($event)"
+></div>
 <section class="container mb-80p mb-md-100p">
   <div class="row">
     <div class="col-12 col-md-6 order-2 order-md-1">
       <div class="holistic-images-container">
-        <ul 
-        class="holistic-images p-0 m-0 list-unstyled"
-        [@slideVerticalStagger]="holisticImages.length"
-        [@.disabled]="disableAnimationHolistic"  
+        <ul
+          class="holistic-images p-0 m-0 list-unstyled"
+          [@slideVerticalStagger]="holisticImages.length"
+          [@.disabled]="disableAnimationHolistic"
         >
-          <li 
-          *ngFor="let image of holisticImages"
-          class="overflow-hidden rounded-12p position-relative item"
+          <li
+            *ngFor="let image of holisticImages"
+            class="overflow-hidden rounded-12p position-relative item"
           >
             <img [src]="image" alt="" loading="lazy" />
           </li>
@@ -84,7 +111,10 @@
     <div class="col-12 col-md-6 order-1 order-md-2">
       <h2 class="h3 h2-md mb-20p">Why a holistic approach?</h2>
       <p class="explanation">
-        Feeling unwell in one aspect of ourselves - mind, body, or spirit - can make us feel unwell in other aspects. We believe that approaching wellness in a way that addresses the whole self is the best way to achieve optimal health.
+        Feeling unwell in one aspect of ourselves - mind, body, or spirit - can
+        make us feel unwell in other aspects. We believe that approaching
+        wellness in a way that addresses the whole self is the best way to
+        achieve optimal health.
       </p>
     </div>
   </div>
@@ -96,21 +126,35 @@
       <div class="p-15p p-md-40p px-lg-100p">
         <h4 class="text-center mb-20p">The Company</h4>
         <p class="explanation">
-          In our traditional healthcare system, finding treatment is often illness-focused and does not take into account all the elements of our wellbeing - mental, physical, social, emotional, and spiritual health. Instead, it only treats symptoms. PromptHealth was created to solve the gap between people seeking preventative care, and the wellness providers who provide complementary solutions to traditional healthcare. 
-          <br><br>
-          In a world where people seek health information online, we are enabling trusted providers to share their knowledge and resources to those seeking wellness solutions, all in one place. Our app acts as a social platform that allows users to find and learn from wellness providers in whatever media format they prefer, including notes, voices, events, and articles. 
-          <br><br>
-          <img 
-          src="/assets/img/logo-sm.png" 
-          alt="PromptHealth"
-          class="d-inline-block mr-5p"
-          style="margin-top: -5px;"
-          height="20"
-          loading="lazy"
-          >
+          In our traditional healthcare system, finding treatment is often
+          illness-focused and does not take into account all the elements of our
+          wellbeing - mental, physical, social, emotional, and spiritual health.
+          Instead, it only treats symptoms. PromptHealth was originally created
+          to solve the gap between people seeking preventative care, and the
+          wellness providers who provide complementary solutions to traditional
+          healthcare.
+          <br /><br />
+          We soon found out that a struggle exists where providers are unable to
+          effectively find their voice in a digital world. We are here to give
+          them the tools to share their knowledge. Our app acts as a social
+          platform that allows users to find and learn from wellness providers
+          in whatever media format they prefer, including notes, voices, events,
+          and articles.
+          <br /><br />
+          <img
+            src="/assets/img/logo-sm.png"
+            alt="PromptHealth"
+            class="d-inline-block mr-5p"
+            style="margin-top: -5px"
+            height="20"
+            loading="lazy"
+          />
           <b>
             <span class="text-primary">PromptHealth </span>
-            educates people on all of their care options, empowering them with the knowledge and resources to facilitate their wellness journey.  
+            educates people on all of their care options through empowering
+            accredited professionals to share their content online. Our goal is
+            to enhance your digital presence by teaching you everything you need
+            to know to stay engage with your current and potential new clients
           </b>
         </p>
       </div>
@@ -123,65 +167,95 @@
     <div class="col-12">
       <h4>The Founder</h4>
       <div class="row justify-content-between">
-        <div class="col-12 col-md-9 col-lg-8 order-2 order-md-1 mt-20p mt-md-0p">
-          <p>
-            At 16-years old, PromptHealth Founder and CEO Hedieh Safiyari immigrated to Canada from Iran. 
-            Hedieh’s interest in health and wellness led to obtaining her undergrad in kinesiology at the University of British Columbia. 
-            She went on to finish a master’s degree in cardiac rehab, and worked as a clinician in cardiac rehab for over 15 years at one of the pioneer companies of private healthcare in Canada. 
-            After 20 years in the health and wellness industry, Hedieh knew there were gaps in the way people discovered care options, and wanted to do something about it. 
-            In 2015, she pursued an executive MBA at SFU to learn how she could approach this issue. 
-            After completing 2 years of consultancy work in the health and wellness industry, PromptHealth was launched in 2020. 
-            Since then, the team has grown to over 10 people - all on the same mission to help people seeking care reach informed decisions about their health. 
-          </p>    
-        </div>
-        <div 
-        class="col-12 col-md-3 image-container order-1 order-md-2"
-        style="min-height: 360px;"
+        <div
+          class="col-12 col-md-9 col-lg-8 order-2 order-md-1 mt-20p mt-md-0p"
         >
-          <img src="/assets/img/about/hedieh.png" alt="Hedieh Safiyari" class="cover-md" loading="lazy" />
+          <p>
+            At 16-years old, PromptHealth Founder and CEO Hedieh Safiyari
+            immigrated to Canada from Iran. Hedieh’s interest in health and
+            wellness led to obtaining her undergrad in kinesiology at the
+            University of British Columbia. She went on to finish a master’s
+            degree in cardiac rehab, and worked as a clinician in cardiac rehab
+            for over 15 years at one of the pioneer companies of private
+            healthcare in Canada. After 20 years in the health and wellness
+            industry, Hedieh knew there were gaps in the way people discovered
+            care options, and wanted to do something about it. In 2015, she
+            pursued an executive MBA at SFU to learn how she could approach this
+            issue. After completing 2 years of consultancy work in the health
+            and wellness industry, PromptHealth was launched in 2020. Since
+            then, the team has grown to over 10 people - all on the same mission
+            to help people seeking care reach informed decisions about their
+            health.
+          </p>
         </div>
-      </div>      
+        <div
+          class="col-12 col-md-3 image-container order-1 order-md-2"
+          style="min-height: 360px"
+        >
+          <img
+            src="/assets/img/about/hedieh.png"
+            alt="Hedieh Safiyari"
+            class="cover-md"
+            loading="lazy"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<div class="intersection-observer" intersectionObserver rootMargin="-40% 0px 10000px 0px" (changeStatus)="onTeamIntersected($event)"></div>
+<div
+  class="intersection-observer"
+  intersectionObserver
+  rootMargin="-40% 0px 10000px 0px"
+  (changeStatus)="onTeamIntersected($event)"
+></div>
 <section class="container my-80p my-md-100p">
   <div class="row justify-content-center py-md-50p">
     <div class="col-12 col-lg-12">
       <div class="d-md-flex justify-content-between align-items-end mb-50p">
         <h2 class="h3 h2-md mb-0">
-          Some of the people <div class="d-none d-md-block"></div>
+          Some of the people
+          <div class="d-none d-md-block"></div>
           you’ll be working with
         </h2>
-        <a href="https://www.linkedin.com/company/prompthealth/" target="_blank" class="btn btn-outline mt-20p mt-md-0p px-50p">Join us</a>
+        <a
+          href="https://www.linkedin.com/company/prompthealth/"
+          target="_blank"
+          class="btn btn-outline mt-20p mt-md-0p px-50p"
+          >Join us</a
+        >
       </div>
 
       <div
-      class="row"
-      [ngStyle]="{minHeight: (teamData.length == 0 ? '800px' : 'auto')}"
-      [@slideVerticalStagger]="teamData.length"
-      [@.disabled]="disableAnimationTeam"
+        class="row"
+        [ngStyle]="{ minHeight: teamData.length == 0 ? '800px' : 'auto' }"
+        [@slideVerticalStagger]="teamData.length"
+        [@.disabled]="disableAnimationTeam"
       >
         <div
-        *ngFor="let member of teamData; let i = index"
-        class="col-12 col-md-6 col-lg-4 mb-50p cursor-pointer"
-        (click)="onMemberClicked(i)"
+          *ngFor="let member of teamData; let i = index"
+          class="col-12 col-md-6 col-lg-4 mb-50p cursor-pointer"
+          (click)="onMemberClicked(i)"
         >
-          <div class="image-container-100pc image-container-md-130pc image-container-lg-130pc image-container-xl-100pc mb-20p rounded-12p overflow-hidden member-image-container">
+          <div
+            class="image-container-100pc image-container-md-130pc image-container-lg-130pc image-container-xl-100pc mb-20p rounded-12p overflow-hidden member-image-container"
+          >
             <img
-            [src]="'/assets/img/about/' + member.image"
-            [alt]="member.name"
-            loading="lazy"
+              [src]="'/assets/img/about/' + member.image"
+              [alt]="member.name"
+              loading="lazy"
+            />
+            <p
+              class="member-content position-absolute px-20p py-15p text-white mb-0 rounded-12p"
+              *ngIf="i == idxSelectedMember"
+              [@fade]
             >
-            <p 
-            class="member-content position-absolute px-20p py-15p text-white mb-0 rounded-12p"
-            *ngIf="i == idxSelectedMember"
-            [@fade]
-            >{{member.content}}</p>
+              {{ member.content }}
+            </p>
           </div>
-          <h4>{{member.name}}</h4>
-          <div class="body1 text-label">{{member.title}}</div>
+          <h4>{{ member.name }}</h4>
+          <div class="body1 text-label">{{ member.title }}</div>
         </div>
       </div>
     </div>
@@ -194,10 +268,15 @@
       <div class="col-12 col-lg-10">
         <div class="d-xl-flex justify-content-between align-items-center">
           <h2 class="h3 h2-md mb-0">
-            Have questions, or <div class="d-none d-xl-block"></div>
+            Have questions, or
+            <div class="d-none d-xl-block"></div>
             feedback for us?
           </h2>
-          <a routerLink="/contact-us" class="btn btn-outline mt-20p mt-xl-0p px-50p text-nowrap">Contact us</a>
+          <a
+            routerLink="/contact-us"
+            class="btn btn-outline mt-20p mt-xl-0p px-50p text-nowrap"
+            >Contact us</a
+          >
         </div>
       </div>
     </div>
