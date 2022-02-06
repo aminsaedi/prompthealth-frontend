@@ -33,6 +33,11 @@
   </ng-container>
 
   <ng-container *ngIf="user.isSA">
+    <form-provider-general
+    [data]="user.decode()"
+    [disabled]="isUploading" 
+    (submitForm)="onSubmit($event)"
+    ></form-provider-general>
     <form-admin-general
     [data]="user.decode()"
     [disabled]="isUploading" 

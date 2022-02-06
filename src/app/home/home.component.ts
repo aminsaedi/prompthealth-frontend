@@ -362,37 +362,37 @@ const appFeatureItems = [
   [
     {
       icon: 'verified-outline', 
-      title: 'Find trusted wellness providers based on your personalized needs.',
-      content: 'Do a personal match or use search filter options.',
+      title: 'A network of trusted wellness providers.',
+      content: '',
     },
     {
       icon: 'checkbox-square-outline',
-      title: 'Browse and learn from our content library.',
-      content: 'View resources by category and filter by media type to find expert created content that matters to you.',
+      title: 'Expert created content.',
+      content: '',
     },
     {
       icon: 'users-outline',
-      title: 'Compare and book.',
-      content: 'Read reviews and make informed decisions about your care.',
+      title: 'Connect and learn.',
+      content: '',
     }
   ],
   [
     {
       icon: 'book-open-outline',
-      title: 'Stay connected with your favourite experts.',
-      content: 'Appointment go well? Follow your provider’s page for updates and additional resources.',
+      title: 'Stay engaged with your favorites experts',
+      content: '',
     },
     {
       icon: 'tags-2-outline',
-      title: 'Find wellness events and workshops.',
+      title: 'Wellness events and workshops.',
       content: '',
       // content: 'Your privacy and security is ensured.',
       // content: 'Your privacy and security is ensured. PIPEDA/HIPPA approved.',
     },
     {
       icon: 'shield-check-outline',
-      title: 'Discover deals on recommended wellness products and services.',
-      content: 'Browse through wellness products recommended by the experts themselves.',
+      title: 'Holistic products and services.',
+      content: '',
     }
   ],
 ]

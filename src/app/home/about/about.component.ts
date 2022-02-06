@@ -198,6 +198,18 @@ const teamData = [
   //   content: 'Evan joined the team in August 2021 with a running record of sales experiences to unveil and expand the myriad of health services for those in need. In the process of completing his bachelor’s degree in commerce, he is seeking to emulate his values of altruism and service by assisting those who practice health. Generating channels for service providers gives him purpose and has proven to be his vocation.'
   // },
   {
+    name: 'Amin Saedi',
+    title: 'Full Stack Developer',
+    image: 'amin.png',
+    content: 'Amin just joined Prompt Health in September 2021 as a Full-Stack developer and currently studying computer science. He is interested in changing people\'s experience of the healthcare system, and he hopes the technology can do more to serve the health of society.',
+  },
+  {
+    name: 'Reza Ghenaat',
+    title: 'Product Designer',
+    image: 'reza.png',
+    content: 'Reza is an experienced UI/UX designer with over 8 years of experience, creating a design solution for a mobile and desktop version of the PromptHealth and redesigning existing Web/App designs to meet accessibility standards.',
+  },
+  {
     name: 'Otto Hu',
     title: 'Software Developer',
     image: 'otto.png',
@@ -208,18 +220,6 @@ const teamData = [
     title: 'Software Developer',
     image: 'takayuki.png',
     content: 'Takayuki joined the team as frontend engineer in December 2020, with MEAN stack experience, contributing to PromptHealth web platform. He believes in the power of combination of the healthcare system and web service and is eager to make user experience on the platform better.'
-  },
-  {
-    name: 'Amin Saedi',
-    title: 'Mobile App Developer',
-    image: 'amin.png',
-    content: 'Amin just joined Prompt Health in September 2021 as a Mobile application developer and currently studying computer science. He is interested in changing people\'s experience of the healthcare system, and he hopes the technology can do more to serve the health of society.',
-  },
-  {
-    name: 'Reza Ghenaat',
-    title: 'Product Designer',
-    image: 'reza.png',
-    content: 'Reza is an experienced UI/UX designer with over 8 years of experience, creating a design solution for a mobile and desktop version of the PromptHealth and redesigning existing Web/App designs to meet accessibility standards.',
   },
 
 ]

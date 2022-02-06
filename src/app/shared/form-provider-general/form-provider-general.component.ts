@@ -52,11 +52,11 @@ export class FormProviderGeneralComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-
+    console.log(this.data)
     this.isPremiumAccount = (this.data.isVipAffiliateUser || (this.data.plan && this.data.plan.name.toLowerCase() !== 'basic')) ? true : false;
     try { await this.getQuestions(); }
     catch(error){ this._toastr.error(error); }
-
+    this._toastr.info("Question received")
     this.form = this._fb.group({
       profileImage: new FormControl(this.data.profileImage ? this.data.profileImage : '', validators.profileImageProvider),
       firstName: new FormControl(this.data.firstName ? this.data.firstName : '', validators.nameProvider),
@@ -73,7 +73,7 @@ export class FormProviderGeneralComponent implements OnInit {
       city: new FormControl(this.data.city ? this.data.city : '' ),
       state: new FormControl( this.data.state ? this.data.state : '' ),
       zipcode: new FormControl( this.data.zipcode ? this.data.zipcode : '' ),
-      // placeId: new FormControl( this.data.placeId ? this.data.placeId : '' ),
+      placeId: new FormControl( this.data.placeId ? this.data.placeId : '' ),
       hideAddress: new FormControl( this.data.hideAddress ? this.data.hideAddress : false ),
 
       website: new FormControl( this.data.website ? this.data.website : '', validators.website),
@@ -97,7 +97,9 @@ export class FormProviderGeneralComponent implements OnInit {
 
       product_description: new FormControl( this.data.product_description ? this.data.product_description : '', validators.productDescription),
 
-    }, {validators: validators.addressSelectedFromSuggestion});
+    });
+    console.log("FORM", this.form)
+    // , {validators: validators.addressSelectedFromSuggestion}
 
   }
 
