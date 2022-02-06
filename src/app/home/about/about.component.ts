@@ -197,18 +197,6 @@ const teamData = [
   //   image: 'evan.png',
   //   content: 'Evan joined the team in August 2021 with a running record of sales experiences to unveil and expand the myriad of health services for those in need. In the process of completing his bachelor’s degree in commerce, he is seeking to emulate his values of altruism and service by assisting those who practice health. Generating channels for service providers gives him purpose and has proven to be his vocation.'
   // },
-  // {
-  //   name: 'Otto Hu',
-  //   title: 'Software Developer',
-  //   image: 'otto.png',
-  //   content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, providers and product companies.'
-  // },
-  // {
-  //   name: 'Takayuki Hiraishi',
-  //   title: 'Software Developer',
-  //   image: 'takayuki.png',
-  //   content: 'Takayuki joined the team as frontend engineer in December 2020, with MEAN stack experience, contributing to PromptHealth web platform. He believes in the power of combination of the healthcare system and web service and is eager to make user experience on the platform better.'
-  // },
   {
     name: 'Amin Saedi',
     title: 'Full Stack Developer',
@@ -220,6 +208,18 @@ const teamData = [
     title: 'Product Designer',
     image: 'reza.png',
     content: 'Reza is an experienced UI/UX designer with over 8 years of experience, creating a design solution for a mobile and desktop version of the PromptHealth and redesigning existing Web/App designs to meet accessibility standards.',
+  },
+  {
+    name: 'Otto Hu',
+    title: 'Software Developer',
+    image: 'otto.png',
+    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, providers and product companies.'
+  },
+  {
+    name: 'Takayuki Hiraishi',
+    title: 'Software Developer',
+    image: 'takayuki.png',
+    content: 'Takayuki joined the team as frontend engineer in December 2020, with MEAN stack experience, contributing to PromptHealth web platform. He believes in the power of combination of the healthcare system and web service and is eager to make user experience on the platform better.'
   },
 
 ]
