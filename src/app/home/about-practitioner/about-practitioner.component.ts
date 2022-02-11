@@ -81,7 +81,7 @@ export class AboutPractitionerComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this._route.fragment.pipe( first() ).subscribe(fragment => {
+    this._route.fragment.pipe(first()).subscribe(fragment => {
       const el: HTMLElement = this._el.nativeElement.querySelector('#' + fragment);
       if (el) {
         setTimeout(() => {
@@ -106,7 +106,7 @@ export class AboutPractitionerComponent implements OnInit {
     });
 
     this.subscriptionRegionStatus = this._regionService.statusChanged().subscribe(status => {
-      if(status == 'ready') {
+      if (status == 'ready') {
         this.initPlans();
       }
     })
@@ -131,17 +131,17 @@ export class AboutPractitionerComponent implements OnInit {
       this.videoLgMarkedAsLoadStart = true;
     }
   }
-  
+
   initPlans() {
     const region = this._uService.localStorage.getItem('region');
     const path = 'user/get-plans?region=' + region;
     this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
       if (res.statusCode == 200) {
         res.data.forEach(d => {
-          switch(region) {
+          switch (region) {
             case 'CA': d.currency = 'CAD'; break;
             case 'US': d.currency = 'USD'; break;
-            default:   d.currency = '$';
+            default: d.currency = '$';
           }
 
           if (d.userType.includes('P')) {
@@ -149,10 +149,10 @@ export class AboutPractitionerComponent implements OnInit {
           } else if (d.userType.length == 2) {
             this.plans.basic.data = d;
 
-          // plan name should not be used to connect providerPlan | centrePlan  
-          //because it will be changed possibly
-          // } else if (d.userType.includes('SP') && d.name === 'Premium') {
-          //   this.plans.provider.data = d;
+            // plan name should not be used to connect providerPlan | centrePlan  
+            //because it will be changed possibly
+            // } else if (d.userType.includes('SP') && d.name === 'Premium') {
+            //   this.plans.provider.data = d;
           } else if (d.userType.includes('SP')) {
             this.plans.provider.data = d;
           } else if (d.userType.includes('C')) {
@@ -255,7 +255,7 @@ const features = [
   {
     icon: 'user-check-outline',
     title: 'Get discovered.',
-    content: 'Share your wellness philosophy and knowledge, allowing people to discover you and your unique services before making an appointment.',
+    content: 'Share your wellness philosophy and knowledge, allowing people to discover you and your unique services.',
   },
   {
     icon: 'text-block-outline',
@@ -263,15 +263,35 @@ const features = [
     content: 'Whether it’s through text, voice notes, images, articles, or online events, we made it easy for you to share your knowledge using the medium that you enjoy creating with.',
   },
   {
-    icon: 'cast-outline',
+    icon: 'user-check-outline',
     title: 'Connect and engage.',
-    content: 'Be a part of our wellness community. Engage with new and potential clients, and other providers in your area who align with your values and approach to wellness.',
+    content: 'Be a part of our wellness community. connect with other holistic providers who align with your values and have a similar approach to wellness. who align with your values and approach to wellness.',
   },
-  {
-    icon: 'lightning-outline',
-    title: 'Fun and simple to use.',
-    content: 'Your profile, your rules! PromptHealth is where wellness providers are leading the conversation around the topics they are experts in, and having fun doing it.',
-  },
+  // {
+  //   icon: 'cast-outline',
+  //   title: 'Fun and simple to use.',
+  //   content: 'Be a part of our wellness community. Engage with new and potential clients, and other providers in your area who align with your values and approach to wellness.',
+  // },
+  // {
+  //   icon: 'verified-outline',
+  //   title: 'voice memos, notes, and images + articles, and events',
+  //   content: 'This is a test This is a test This is a test This is a test This is a test This is a test This is a test This is.',
+  // },
+  // {
+  //   icon: 'thumbs-up-outline',
+  //   title: 'Receive booking requests',
+  //   content: 'This is a test This is a test This is a test This is a test This is a test This is a test This is a test This  This is a test This is a test This is a test This.',
+  // },
+  // {
+  //   icon: 'cast-outline',
+  //   title: 'Inter referrals enabled',
+  //   content: 'This is a test This is a test This is a test This is a test This is a test This is a test This is a test This is.',
+  // },
+  // {
+  //   icon: 'verified-outline',
+  //   title: 'Ratings and reviews',
+  //   content: 'This is a test This is a test This is a test This is a test This is a test This is a test This is a test This is.',
+  // },
 
   // {
   //   icon: 'lightning-outline',
