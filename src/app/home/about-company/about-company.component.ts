@@ -261,22 +261,22 @@ export class AboutCompanyComponent implements OnInit {
 
 const features = [
   {
+    icon: "bell-outline",
+    title: "Notifications.",
+    content:
+      "Create personalized offers and easily notify our users of any promotions or discounts your brand is offering.",
+  },
+  {
     icon: "users-outline",
     title: "Reach a new audience.",
     content:
-      "Display your brand to people actively seeking wellness solutions and those providing them, as they will receive a notification every time a new company is created.",
+    "Introduce yourself and educate wellness providers about your products.",
   },
   {
     icon: "verified-outline",
     title: "Expert recommendations.",
     content:
-      "Receive endorsements from vetted wellness providers that love what you’re doing to boost credibility as a wellness brand.",
-  },
-  {
-    icon: "bell-outline",
-    title: "Alert users of your promotions or events.",
-    content:
-      "Notifications are pushed to both health seekers and providers every time you create personalized offers such as discounts or sales as well as custom events such as summits, webinars and courses.",
+      "Find providers with wellness philosophies that align with yours to endorse your products.",
   },
 ];
 
