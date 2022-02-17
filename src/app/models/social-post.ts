@@ -72,7 +72,9 @@ export interface ISocialPost {
   descriptionSanitized?: SafeHtml;
   summary?: string;
   isNews?: boolean;
+  online_academy_category?: string;
   isAcademy?: boolean;
+  isFreeAcademy?: boolean;
   isNote?: boolean;
   isArticle?: boolean;
   isEvent?: boolean;
@@ -175,6 +177,7 @@ export class SocialPostBase implements ISocialPost {
   get isPromo() { return this.contentType == 'PROMO'; }
   get isNews() { return this.data.isNews || false}
   get isAcademy() { return this.data.isAcademy || false; }
+  get isFreeAcademy() { return this.data.isFreeAcademy || false; }
 
   get isLiked() { return !!this.data.liked; }
   get isBookmarked() { return !!this.data.bookmarked; }
@@ -321,6 +324,7 @@ export class SocialPostBase implements ISocialPost {
       this.data.rolesRestrictedTo = data.rolesRestrictedTo || null;      
       this.data.isNews = data.isNews || false;
       this.data.isAcademy = data.isAcademy || false;
+      this.data.isFreeAcademy = data.isFreeAcademy || false;
     }
   }
 }

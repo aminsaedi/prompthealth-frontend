@@ -458,4 +458,5 @@ export const validators = {
   promoExpireDate: [validatorPatternDate()],
   promoLink: validatorUrl,
   topics: [validatorTopicsSelectedLTE(3)],
+  online_academy_category: [Validators.required],
 };

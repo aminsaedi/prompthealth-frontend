@@ -1,11 +1,10 @@
-<form 
-*ngIf="form"
-(ngSubmit)="publish()"
->
+<form *ngIf="form" (ngSubmit)="publish()">
   <div class="container-fluid container-md">
     <div class="row justify-content-center">
       <div class="col-12 col-lg-9 col-xl-8">
-        <div class="bg-white pt-15p px-15p pt-md-20p px-md-20p editor-container">
+        <div
+          class="bg-white pt-15p px-15p pt-md-20p px-md-20p editor-container"
+        >
           <div class="d-flex justify-content-between align-items-center mb-20p">
             <h5 class="mb-0">
               <span *ngIf="isEvent">
@@ -25,156 +24,227 @@
                 a note
               </span>
             </h5>
-            <button 
-            class="btn btn-text-body small px-0"
-            type="button"
-            (click)="goback()"
-            >Cancel</button>
+            <button
+              class="btn btn-text-body small px-0"
+              type="button"
+              (click)="goback()"
+            >
+              Cancel
+            </button>
           </div>
-          <div 
-          *ngIf="isArticle || isEvent"
-          class="cover-image-container cursor-pointer overflow-hidden"
+          <div
+            *ngIf="isArticle || isEvent"
+            class="cover-image-container cursor-pointer overflow-hidden"
           >
             <div *ngIf="imagePreview">
-              <img [src]="imagePreview" class="cover-image">
-              <button 
-              class="btn btn-icon-body small blur p-5p btn-remove-image"
-              (click)="onClickButtonRemoveCoverImage()"
+              <img [src]="imagePreview" class="cover-image" />
+              <button
+                class="btn btn-icon-body small blur p-5p btn-remove-image"
+                (click)="onClickButtonRemoveCoverImage()"
               >
                 <i iconPh="cross"></i>
-              </button>  
+              </button>
             </div>
 
             <div *ngIf="!imagePreview">
               <div class="text-placeholder text-center cover-image-placeholder">
                 <div>
-                  <i iconPh="image-3" style="font-size: 50px;"></i>
+                  <i iconPh="image-3" style="font-size: 50px"></i>
                 </div>
                 <span class="subtitle1 mt-15p">
-                  Add cover image<br>
+                  Add cover image<br />
                   (100 W x 35 H)
                 </span>
               </div>
-                
-              <input 
-              type="file"
-              accept="image/jpeg, image/png"
-              (change)="onSelectCoverImage($event)"
-              >
-            </div>  
-          </div>        
-        
-          <div 
-          *ngIf="isArticle || isEvent"
-          class="mt-15p"
-          >
+
+              <input
+                type="file"
+                accept="image/jpeg, image/png"
+                (change)="onSelectCoverImage($event)"
+              />
+            </div>
+          </div>
+
+          <div *ngIf="isArticle || isEvent" class="mt-15p">
             <label class="subtitle2 text-label">
               <span *ngIf="isEvent">Event name</span>
               <span *ngIf="isArticle">Main title</span>
             </label>
-            <div 
-            class="form-control title contenteditable body1"
-            [ngClass]="{'error': (isSubmitted && f.title.invalid), 'success': (isSubmitted && f.title.valid)}"
-            contenteditable
-            [formControl]="f.title"
-            (beforeinput)="onBeforeInputTitle($event)"
-            (input)="onInputTitle($event)"
+            <div
+              class="form-control title contenteditable body1"
+              [ngClass]="{
+                error: isSubmitted && f.title.invalid,
+                success: isSubmitted && f.title.valid
+              }"
+              contenteditable
+              [formControl]="f.title"
+              (beforeinput)="onBeforeInputTitle($event)"
+              (input)="onInputTitle($event)"
             ></div>
             <div class="mt-10p">
               <form-item-errors
-              label="Title"
-              [controller]="f.title"
-              [submitted]="isSubmitted"
+                label="Title"
+                [controller]="f.title"
+                [submitted]="isSubmitted"
               ></form-item-errors>
             </div>
           </div>
 
-          <div 
-          *ngIf="eligibleToMarkAsNews"
-          class="mt-30p"
-          >
+          <div *ngIf="eligibleToMarkAsNews" class="mt-30p">
             <label class="subtitle2 text-label">Marks as...</label>
             <form-item-checkbox
-            name="isNews"
-            label="News (Press release)"
-            [controller]="f.isNews"
+              name="isNews"
+              label="News (Press release)"
+              [controller]="f.isNews"
             ></form-item-checkbox>
 
             <div class="mt-10p">
               <form-item-checkbox
-              name="isAcademy"
-              label="Online academy"
-              [controller]="f.isAcademy"
-              ></form-item-checkbox>  
+                name="isAcademy"
+                label="Online academy"
+                [controller]="f.isAcademy"
+              ></form-item-checkbox>
+            </div>
+            <div *ngIf="eligibleToSetOnlineAcademyCategory" class="mt-10p">
+              <form-item-checkbox
+                name="isFreeAcademy"
+                label="Is Free"
+                [controller]="f.isFreeAcademy"
+              ></form-item-checkbox>
             </div>
           </div>
 
-          <div 
-          *ngIf="eligibleToMarkAsNews"
-          class="mt-30p" 
-          >
+          <div *ngIf="eligibleToSetOnlineAcademyCategory" class="mt-30p">
+            <label class="subtitle2 text-label"
+              >Online Academy Category...</label
+            >
+            <form-item-checkbox
+              name="online_academy_category"
+              value="templates"
+              label="Templates"
+              type="radio"
+              [controller]="f.online_academy_category"
+            ></form-item-checkbox>
+            <form-item-checkbox
+              name="online_academy_category"
+              value="promptHealthTutorials"
+              label="PromptHealth Tutorials"
+              type="radio"
+              [controller]="f.online_academy_category"
+            ></form-item-checkbox>
+            <form-item-checkbox
+              name="online_academy_category"
+              value="marketingAndBusinessStrategy"
+              label="Marketing & Business Strategy"
+              type="radio"
+              [controller]="f.online_academy_category"
+            ></form-item-checkbox>
+            <form-item-checkbox
+              name="online_academy_category"
+              value="gettingStarted"
+              label="Getting Started"
+              type="radio"
+              [controller]="f.online_academy_category"
+            ></form-item-checkbox>
+            <form-item-checkbox
+              name="online_academy_category"
+              value="dosAndDonts"
+              label="Do's and Don'ts"
+              type="radio"
+              [controller]="f.online_academy_category"
+            ></form-item-checkbox>
+            <form-item-checkbox
+              name="online_academy_category"
+              value="whyAndHow"
+              label="Why and How"
+              type="radio"
+              [controller]="f.online_academy_category"
+            ></form-item-checkbox>
+            <form-item-errors
+              label="Online Academy Category"
+              [controller]="f.online_academy_category"
+              [submitted]="isSubmitted"
+            ></form-item-errors>
+          </div>
+
+          <div *ngIf="eligibleToMarkAsNews" class="mt-30p">
             <label class="subtitle2 text-label">Restricted to</label>
-            <div 
-            class="py-10p px-20p bg-primary-light border-left border-primary text-primary-dark d-flex rounded-4p"
-            style="border-width: 5px!important;"
+            <div
+              class="py-10p px-20p bg-primary-light border-left border-primary text-primary-dark d-flex rounded-4p"
+              style="border-width: 5px !important"
             >
               <i iconPh="info" class="text-primary"></i>
               <span class="d-inline-block ml-5p body2">
-                Please select target user types. you can select multiple user types<br>
-                (Tips: if you don't select anything or select everything, no restriction.)
+                Please select target user types. you can select multiple user
+                types<br />
+                (Tips: if you don't select anything or select everything, no
+                restriction.)
               </span>
             </div>
             <form-item-checkbox-group
-            [data]="f.rolesRestrictedTo?.value"
-            [selections]="itemsRolesRestrictedTo"
-            [option]="{showInlineWhenEnabled: true}"
-            (changeValue)="onChangeRolesRestrictedTo($event)"
+              [data]="f.rolesRestrictedTo?.value"
+              [selections]="itemsRolesRestrictedTo"
+              [option]="{ showInlineWhenEnabled: true }"
+              (changeValue)="onChangeRolesRestrictedTo($event)"
             ></form-item-checkbox-group>
           </div>
-            
-          <div 
-          *ngIf="isEvent"
-          class="mt-15p" 
-          >
+
+          <div *ngIf="isEvent" class="mt-15p">
             <div class="row">
               <div class="col-12 col-md">
                 <label class="subtitle2 text-label">Start at</label>
                 <form-item-datetime
-                label="Start time"
-                [controller]="f.eventStartTime"
-                [minDateTime]="minDateTimeEventStart"
-                (changeValue)="onChangeStartDateTime()"
-                [submitted]="isSubmitted"
+                  label="Start time"
+                  [controller]="f.eventStartTime"
+                  [minDateTime]="minDateTimeEventStart"
+                  (changeValue)="onChangeStartDateTime()"
+                  [submitted]="isSubmitted"
                 ></form-item-datetime>
               </div>
               <div class="col-12 mt-15p col-md mt-md-0p">
                 <label class="subtitle2 text-label">End at</label>
                 <form-item-datetime
-                label="End time"
-                [controller]="f.eventEndTime"
-                [minDateTime]="minDateTimeEventEnd"
-                (changeValue)="onChangeEndDateTime($event)"
-                [submitted]="isSubmitted"
+                  label="End time"
+                  [controller]="f.eventEndTime"
+                  [minDateTime]="minDateTimeEventEnd"
+                  (changeValue)="onChangeEndDateTime($event)"
+                  [submitted]="isSubmitted"
                 ></form-item-datetime>
               </div>
             </div>
           </div>
-            
+
           <div class="mt-15p">
-            <div class="intersection-observer" intersectionObserver (changeStatus)="changeStickyStatus($event)"></div>
+            <div
+              class="intersection-observer"
+              intersectionObserver
+              (changeStatus)="changeStickyStatus($event)"
+            ></div>
             <label class="subtitle2 text-label">Description</label>
-            <div 
-            class="form-control description"
-            [ngClass]="{'simple': (isEvent || isNote) , 'rich': isArticle, 'error': (isSubmitted && f.description.invalid), 'success': (isSubmitted && f.description.valid)}"
+            <div
+              class="form-control description"
+              [ngClass]="{
+                simple: isEvent || isNote,
+                rich: isArticle,
+                error: isSubmitted && f.description.invalid,
+                success: isSubmitted && f.description.valid
+              }"
             >
               <quill-editor
-              [styles]="{minHeight: (isArticle ? '360px' : '72px'), border: 'none'}"
-              placeholder="Type..."
-              [formControl]="f.description"
-              (onEditorCreated)="onEditorCreated($event)"
-              (onEditorChanged)="onEditorChanged($event)"
+                [styles]="{
+                  minHeight: isArticle ? '360px' : '72px',
+                  border: 'none'
+                }"
+                placeholder="Type..."
+                [formControl]="f.description"
+                (onEditorCreated)="onEditorCreated($event)"
+                (onEditorChanged)="onEditorChanged($event)"
               >
-                <div quill-editor-toolbar class="sticky-top bg-white" style="z-index: 95">
+                <div
+                  quill-editor-toolbar
+                  class="sticky-top bg-white"
+                  style="z-index: 95"
+                >
                   <div class="d-md-none sticky-left">
                     <span class="ql-formats d-flex flex-nowrap">
                       <button class="ql-image" title="Add image"></button>
@@ -183,147 +253,167 @@
                     </span>
                   </div>
 
-                  <div class="d-flex flex-nowrap flex-md-wrap ">
+                  <div class="d-flex flex-nowrap flex-md-wrap">
                     <span class="ql-formats d-flex flex-nowrap">
                       <button class="ql-bold" title="Bold"></button>
                       <button class="ql-italic" title="Italic"></button>
                       <button class="ql-underline" title="Underline"></button>
                       <button class="ql-clean" title="Reset"></button>
                     </span>
-      
+
                     <span class="ql-formats d-flex flex-nowrap">
-                      <button class="ql-header" value="1" title="Header1"></button>
-                      <button class="ql-header" value="2" title="Header2"></button>
+                      <button
+                        class="ql-header"
+                        value="1"
+                        title="Header1"
+                      ></button>
+                      <button
+                        class="ql-header"
+                        value="2"
+                        title="Header2"
+                      ></button>
                     </span>
-    
+
                     <span class="ql-formats d-flex flex-nowrap">
-                      <button class="ql-list" value="bullet" title="List bullet"></button>
-                      <button class="ql-list" value="ordered" title="List ordered"></button>
+                      <button
+                        class="ql-list"
+                        value="bullet"
+                        title="List bullet"
+                      ></button>
+                      <button
+                        class="ql-list"
+                        value="ordered"
+                        title="List ordered"
+                      ></button>
                     </span>
-      
+
                     <!-- <span class="ql-formats flex-nowrap d-none d-lg-flex">
                       <select class="ql-color" title="Text color"></select>
                       <select class="ql-background" title="Background color"></select>
                     </span> -->
-      
+
                     <span class="ql-formats flex-nowrap d-none d-md-flex">
                       <button class="ql-image" title="Add image"></button>
                       <button class="ql-video" title="Add video"></button>
                       <button class="ql-link" title="Add link"></button>
-                    </span>  
+                    </span>
                   </div>
                 </div>
-              </quill-editor>  
+              </quill-editor>
             </div>
             <div class="mt-10p">
               <form-item-errors
-              label="Description"
-              [controller]="f.description"
-              [submitted]="isSubmitted"
+                label="Description"
+                [controller]="f.description"
+                [submitted]="isSubmitted"
               ></form-item-errors>
             </div>
           </div>
-            
+
           <ng-container *ngIf="isEvent">
             <div class="mt-15p">
-              <label class="subtitle2 text-label">Registration or broadcast link</label>
+              <label class="subtitle2 text-label"
+                >Registration or broadcast link</label
+              >
               <form-item-input
-              label="Link"
-              type="url"
-              placeholder="https://..."
-              autocapitalize="off"
-              [controller]="f.joinEventLink"
-              [submitted]="isSubmitted"
+                label="Link"
+                type="url"
+                placeholder="https://..."
+                autocapitalize="off"
+                [controller]="f.joinEventLink"
+                [submitted]="isSubmitted"
               ></form-item-input>
             </div>
-            
+
             <div class="mt-15p">
               <form-item-checkbox
-              name="online-event"
-              [controller]="formCheckboxOnlineEvent"
-              label="This is an online event"
-              (changeValue)="onChangeEventType($event)"
+                name="online-event"
+                [controller]="formCheckboxOnlineEvent"
+                label="This is an online event"
+                (changeValue)="onChangeEventType($event)"
               ></form-item-checkbox>
             </div>
-              
+
             <div class="mt-15p" *ngIf="!formCheckboxOnlineEvent.value">
               <label class="subtitle2 text-label">Address</label>
               <form-item-input
-              label="Address"
-              type="text"
-              placeholder="Type address..."
-              autocapitalize="off"
-              [controller]="f.eventAddress"
-              [submitted]="isSubmitted"
+                label="Address"
+                type="text"
+                placeholder="Type address..."
+                autocapitalize="off"
+                [controller]="f.eventAddress"
+                [submitted]="isSubmitted"
               ></form-item-input>
             </div>
           </ng-container>
 
           <ng-container *ngIf="isNote">
-            <div *ngIf="imagesPreview || audioPreview" class="d-flex overflow-auto mb-15p">
-              <ul 
-              *ngIf="imagesPreview.length > 0" 
-              class="list-unstyled mb-0 d-flex"
+            <div
+              *ngIf="imagesPreview || audioPreview"
+              class="d-flex overflow-auto mb-15p"
+            >
+              <ul
+                *ngIf="imagesPreview.length > 0"
+                class="list-unstyled mb-0 d-flex"
               >
-                <li 
-                *ngFor="let image of imagesPreview; let i = index;"
-                class="position-relative overflow-hidden rounded-4p mr-10p"
+                <li
+                  *ngFor="let image of imagesPreview; let i = index"
+                  class="position-relative overflow-hidden rounded-4p mr-10p"
                 >
-                  <img [src]="image" alt="" height="100" width="auto">
+                  <img [src]="image" alt="" height="100" width="auto" />
                   <button
-                  type="button"
-                  class="btn btn-icon-body small blur p-5p btn-remove-media"
-                  (click)="onClickButtonRemoveMediaOf(i)"
+                    type="button"
+                    class="btn btn-icon-body small blur p-5p btn-remove-media"
+                    (click)="onClickButtonRemoveMediaOf(i)"
                   >
                     <i iconPh="cross"></i>
-                  </button>    
+                  </button>
                 </li>
               </ul>
-              
-              <div 
-              *ngIf="isLoadingVoice"
-              class="m-15p"
-              >
+
+              <div *ngIf="isLoadingVoice" class="m-15p">
                 <loader></loader>
               </div>
 
-              <div *ngIf="audioPreview"
-              class="position-relative d-inline-block border border-line rounded-4p preview-file"
-              (click)="onClickButtonAudio()"
+              <div
+                *ngIf="audioPreview"
+                class="position-relative d-inline-block border border-line rounded-4p preview-file"
+                (click)="onClickButtonAudio()"
               >
                 <i iconPh="mic" class="icon-file-type"></i>
-                <button 
-                type="button"
-                class="btn btn-icon-body small blur p-5p btn-remove-media"
-                (click)="onClickButtonRemoveAudio()"
+                <button
+                  type="button"
+                  class="btn btn-icon-body small blur p-5p btn-remove-media"
+                  (click)="onClickButtonRemoveAudio()"
                 >
                   <i iconPh="cross"></i>
-                </button>  
+                </button>
               </div>
             </div>
 
             <div class="d-flex">
               <div>
-                <button 
-                type="button"
-                class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
-                (click)="onClickButtonMedia()"
+                <button
+                  type="button"
+                  class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
+                  (click)="onClickButtonMedia()"
                 >
                   <i iconPh="image-3"></i>
                   <span class="d-none d-lg-inline">Media</span>
                 </button>
-                <input #inputMedia
-                class="position-absolute d-none"
-                type="file" 
-                accept="image/jpeg, image/png" 
-                (change)="onSelectMedia($event)"
-                >
-              </div>     
-          
+                <input
+                  #inputMedia
+                  class="position-absolute d-none"
+                  type="file"
+                  accept="image/jpeg, image/png"
+                  (change)="onSelectMedia($event)"
+                />
+              </div>
+
               <button
-              type="button" 
-              class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
-              (click)="onClickButtonAudio()"
+                type="button"
+                class="btn btn-text-grey border-lg-line small mr-20p mr-lg-10p mb-10p px-0 px-lg-5p"
+                (click)="onClickButtonAudio()"
               >
                 <i iconPh="mic"></i>
                 <span class="d-none d-lg-inline">Voice</span>
@@ -334,38 +424,44 @@
           <div class="mt-30p">
             <label class="subtitle2 text-label">Select topics</label>
             <form-item-service
-            #formItemService
-            [data]="f.tags.value"
-            [option]="{showInlineWhenEnabled: true}"
-            (changeValue)="onChangeTags($event)"
+              #formItemService
+              [data]="f.tags.value"
+              [option]="{ showInlineWhenEnabled: true }"
+              (changeValue)="onChangeTags($event)"
             ></form-item-service>
-            <form-item-errors 
-            [submitted]="isSubmitted" 
-            [controller]="f.tags"
+            <form-item-errors
+              [submitted]="isSubmitted"
+              [controller]="f.tags"
             ></form-item-errors>
           </div>
 
-          <div class="mt-25p text-right sticky-bottom pb-30p button-bottom-group blur">
-            <div 
-            class="d-flex"
-            [ngClass]="!!isPublished ? 'justify-content-end' : 'justify-content-between'"
+          <div
+            class="mt-25p text-right sticky-bottom pb-30p button-bottom-group blur"
+          >
+            <div
+              class="d-flex"
+              [ngClass]="
+                !!isPublished
+                  ? 'justify-content-end'
+                  : 'justify-content-between'
+              "
             >
               <button
-              *ngIf="!isPublished"
-              type="button"
-              class="btn btn-outline"
-              (click)="saveAsDraft()"
-              [disabled]="isUploading"
+                *ngIf="!isPublished"
+                type="button"
+                class="btn btn-outline"
+                (click)="saveAsDraft()"
+                [disabled]="isUploading"
               >
                 <span>Save as draft</span>
               </button>
 
-              <input 
-              type="submit" 
-              class="btn btn-primary" 
-              [disabled]="isUploading"
-              [value]="isPublished ? 'Update' : 'Publish'"
-              >
+              <input
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="isUploading"
+                [value]="isPublished ? 'Update' : 'Publish'"
+              />
             </div>
           </div>
         </div>
@@ -374,12 +470,9 @@
   </div>
 </form>
 
-<div 
-*ngIf="isUploading"
-class="modal-view"
->
+<div *ngIf="isUploading" class="modal-view">
   <div class="modal-drop"></div>
-  <div class="modal-body" style="max-width: 250px;">
+  <div class="modal-body" style="max-width: 250px">
     <div class="title-container">
       <h5 class="h4-md text-center">Uploading...</h5>
     </div>
@@ -390,6 +483,6 @@ class="modal-view"
 </div>
 
 <modal-voice-recorder
-[audioData]="audioPreview"
-(onSave)="onAudioSaved($event)"
+  [audioData]="audioPreview"
+  (onSave)="onAudioSaved($event)"
 ></modal-voice-recorder>

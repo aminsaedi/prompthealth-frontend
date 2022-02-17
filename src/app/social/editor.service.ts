@@ -102,7 +102,9 @@ export class EditorService {
         image: new FormControl(d ? d.image || '' : ''),
         tags: new FormControl(d?.tags ? d.tags :[], validators.topics),
         isNews: new FormControl(d?.isNews ? d.isNews : false),
+        online_academy_category: new FormControl(d?.online_academy_category ? d.online_academy_category : 'templates'),
         isAcademy: new FormControl(d?.isAcademy ? d.isAcademy : false),
+        isFreeAcademy: new FormControl(d?.isFreeAcademy ? d.isFreeAcademy : false),
         rolesRestrictedTo: new FormControl(rolesRestrictedTo),
       });
     } else if (type == 'NOTE') {
@@ -216,7 +218,9 @@ export interface ISaveQuery {
   link?: string;
 
   isNews?: boolean;
+  online_academy_category?: string;
   isAcademy?: boolean;
+  isFreeAcademy?: boolean;
   rolesRestrictedTo?: string[];
 }
 
@@ -244,7 +248,9 @@ export class SaveQuery implements ISaveQuery {
   get link() { return this.data.link || null; }
   
   get isNews() { return this.data.isNews || false; }
+  get online_academy_category() { return this.data.online_academy_category || 'templates'; }
   get isAcademy() { return this.data.isAcademy || false; }
+  get isFreeAcademy() { return this.data.isFreeAcademy || false; }
   get rolesRestrictedTo() { return this.data.rolesRestrictedTo || null; }
 
   toJson() { 
@@ -263,7 +269,9 @@ export class SaveQuery implements ISaveQuery {
       ... (this.contentType == 'ARTICLE') && {
         rolesRestrictedTo: this.rolesRestrictedTo,
         isNews: this.isNews,
+        online_academy_category: this.online_academy_category,
         isAcademy: this.isAcademy,
+        isFreeAcademy: this.isFreeAcademy,
       },
       ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {
         status: this.status,

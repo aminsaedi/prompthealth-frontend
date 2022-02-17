@@ -50,6 +50,8 @@ export class EditorComponent implements OnInit {
 
   get eligibleToMarkAsNews() { return this.user?.isSA && this.isArticle; }
 
+  get eligibleToSetOnlineAcademyCategory() { return this.f.isAcademy.value }
+
   @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
     if(this._editorService.isEditorLocked) {
       e.returnValue = true;
