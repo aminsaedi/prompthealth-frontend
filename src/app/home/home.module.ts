@@ -39,6 +39,7 @@ import { AboutPartnerComponent } from './about-partner/about-partner.component';
 import { ButtonsModule } from "../buttons/buttons.module";
 import { PressReleaseComponent } from "./press-release/press-release.component";
 import { TestimonialComponent } from './testimonial/testimonial.component';
+import { OnlineAcademyComponent } from './online-academy/online-academy.component';
 
 
 @NgModule({
@@ -74,6 +75,7 @@ import { TestimonialComponent } from './testimonial/testimonial.component';
     AboutPartnerComponent,
     PressReleaseComponent,
     TestimonialComponent,
+    OnlineAcademyComponent,
   ],
   imports: [
     FormsModule,

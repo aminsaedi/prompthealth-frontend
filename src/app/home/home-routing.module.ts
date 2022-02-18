@@ -25,6 +25,7 @@ import { AboutCompanyComponent } from "./about-company/about-company.component";
 import { TagProviderComponent } from "./tag-provider/tag-provider.component";
 import { AboutPartnerComponent } from "./about-partner/about-partner.component";
 import { PressReleaseComponent } from "./press-release/press-release.component";
+import { OnlineAcademyComponent } from "./online-academy/online-academy.component";
 import { TestimonialComponent } from "./testimonial/testimonial.component";
 
 const routes: Routes = [
@@ -87,6 +88,7 @@ const routes: Routes = [
   { path: 'products', redirectTo: 'companies'},
 
   { path: 'press-release', component: PressReleaseComponent, },
+  { path: 'online-academy', component: OnlineAcademyComponent, },
 
   { path: 'invitation', component: InvitationComponent }, /** invitation for webinars */
   { path: 'invitation/:id', component: LandingAmbassadorComponent, data: {type: 'client'}}, /** invitation for clients by ambassador */
