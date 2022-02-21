@@ -83,12 +83,18 @@
             /
             <a routerLink="/auth/registration/u" class="text-body">Register</a>
           </li>
-
+          
           <li *ngIf="isLoggedIn" class="mx-10p mx-lg-15p cursor-pointer">
             <profile-image
-              [image]="user?.profileImageFull"
-              (click)="onClickUserIcon()"
+            [image]="user?.profileImageFull"
+            (click)="onClickUserIcon()"
             ></profile-image>
+          </li>
+          <li class="ml-10p ml-lg-15p">
+            <a routerLink="/online-academy" class="btn btn-secondary small">
+              <i class="text-primary-dark" iconPh="users"></i>
+              <span class="text-primary-dark">Online Academy</span>
+            </a>
           </li>
           <li class="ml-10p ml-lg-15p">
             <a routerLink="/community/feed" class="btn btn-primary small">
@@ -166,7 +172,7 @@
               <img
                 src="/assets/img/medias/authority-magazine.png?ver=2.3.3"
                 alt=""
-                style="max-width: 50px;max-height: 50px;"
+                style="max-width: 50px; max-height: 50px"
                 class="filter-black opacity-50pc"
                 loading="lazy"
               />

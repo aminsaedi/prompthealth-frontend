@@ -1,1 +1,368 @@
-<p>online-academy works!</p>
+<section class="container-fluid py-35p py-md-100p position-relative">
+  <img src="assets/img/online-academy-header.png" class="header-image" />
+  <div class="bg-yellow-light header-backdrop"></div>
+  <div
+    class="d-flex justify-content-center text-center position-relative"
+    style="z-index: 3"
+  >
+    <div>
+      <h1 class="h4 h2-md">Online Academy</h1>
+      <p class="text-body">
+        Advance your online presence with our free<br />
+        depository of resources and videos.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="container">
+  <div class="d-flex flex-wrap justify-content-between">
+    <button
+      class="btn px-4 py-2 category-button mr-10p my-20p"
+      [ngClass]="selectedCategory === 'all' ? 'btn-primary' : 'btn-outline'"
+      (click)="changeCategory('all')"
+    >
+      All
+    </button>
+    <button
+      class="btn px-2 py-2 category-button mr-10p my-20p"
+      [ngClass]="
+        selectedCategory === 'templates' ? 'btn-primary' : 'btn-outline'
+      "
+      (click)="changeCategory('templates')"
+    >
+      Templates
+    </button>
+    <button
+      class="btn px-2 py-2 category-button mr-10p my-20p"
+      [ngClass]="
+        selectedCategory === 'tutorials' ? 'btn-primary' : 'btn-outline'
+      "
+      (click)="changeCategory('tutorials')"
+    >
+      PromptHealth Tutorials
+    </button>
+    <button
+      class="btn px-2 py-2 category-button mr-10p my-20p"
+      [ngClass]="
+        selectedCategory === 'marketingAndBusiness'
+          ? 'btn-primary'
+          : 'btn-outline'
+      "
+      (click)="changeCategory('marketingAndBusiness')"
+    >
+      Marketing & Business Strategy
+    </button>
+    <button
+      class="btn px-2 py-2 category-button mr-10p my-20p"
+      [ngClass]="
+        selectedCategory === 'gettingStarted' ? 'btn-primary' : 'btn-outline'
+      "
+      (click)="changeCategory('gettingStarted')"
+    >
+      Getting Started
+    </button>
+    <button
+      class="btn px-2 py-2 category-button mr-10p my-20p"
+      [ngClass]="
+        selectedCategory === 'dosAndDonts' ? 'btn-primary' : 'btn-outline'
+      "
+      (click)="changeCategory('dosAndDonts')"
+    >
+      Do's and Don'ts
+    </button>
+    <button
+      class="btn px-2 py-2 category-button mr-10p my-20p"
+      [ngClass]="
+        selectedCategory === 'whyAndWho' ? 'btn-primary' : 'btn-outline'
+      "
+      (click)="changeCategory('whyAndWho')"
+    >
+      Why and How
+    </button>
+  </div>
+  <div class="d-flex justify-content-between mt-20p">
+    <span class="h3">All Contents</span>
+    <div class="d-flex justify-content-between align-items-center">
+      <button class="btn btn-link p-2 mr-2" (click)="onChangeOnlyFree()">
+        <ng-container *ngIf="onlyShowFreeContent">View All</ng-container>
+        <ng-container *ngIf="!onlyShowFreeContent">View Only Free</ng-container>
+      </button>
+      <button-sort
+        class="text-nowrap"
+        [items]="sortItems"
+        (onChange)="onChangeSort($event)"
+      ></button-sort>
+    </div>
+  </div>
+</section>
+
+<section class="container mt-20p pb-100p">
+  <div class="row">
+    <ng-container
+      *ngFor="let p of latest || [null, null, null, null]; let i = index"
+    >
+      <div class="col-12 mb-md-100p col-lg-4 mb-30p">
+        <ng-container *ngIf="!p">
+          <ng-container
+            *ngTemplateOutlet="card; context: { $implicit: p, size: 'medium' }"
+          ></ng-container>
+        </ng-container>
+        <a *ngIf="p" (click)="onClickPost(p.data)">
+          <ng-container
+            *ngTemplateOutlet="card; context: { $implicit: p, size: 'medium' }"
+          ></ng-container>
+        </a>
+      </div>
+    </ng-container>
+    <div
+      class="d-flex w-100 justify-content-center align-items-center"
+      *ngIf="latest && latest.length == 0"
+    >
+      <card-no-content label="No content yet!"></card-no-content>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="container my-20p rounded py-100p bg-yellow-light">
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <div>
+      <p class="h2">Subscribe for Updates</p>
+    </div>
+    <div>
+      <p class="text-body">
+        Connect and stay engaged with your wellness community.
+      </p>
+    </div>
+    <div class="d-flex justify-content-between">
+      <form-item-checkbox
+        name="academy"
+        label="Academy"
+        [controller]="f.types"
+      ></form-item-checkbox>
+      <form-item-checkbox
+        name="monthlyChallenges"
+        label="Monthly Challenges"
+        [controller]="f.types"
+      ></form-item-checkbox>
+      <form-item-checkbox
+        name="newsUpdates"
+        label="News Updates"
+        [controller]="f.types"
+      ></form-item-checkbox>
+    </div>
+    <div class="d-flex justify-content-between">
+      <form-item-input placeholder="Your Email Address"></form-item-input>
+      <button class="btn btn-primary">Subscribe</button>
+    </div>
+  </div>
+</section> -->
+
+<ng-template #card let-data let-size="size">
+  <div class="card-post text-body overflow-hidden position-relative medium">
+    <div class="eyecatch-container position-relative mb-20p">
+      <div *ngIf="!data" class="eyecatch-dummy color-dummy"></div>
+      <img
+        *ngIf="data"
+        class="eyecatch"
+        [src]="
+          data.image
+            ? s3 + data.image + '?ver=2.3'
+            : '/assets/img/prompthealth-4_3.png?ver=2.3'
+        "
+        alt=""
+        crossorigin="anonymous"
+        loading="lazy"
+      />
+      <img
+        *ngIf="data && !data.isFreeAcademy"
+        src="/assets/img/lock.svg"
+        class="lockImg"
+      />
+      <span *ngIf="data && data.online_academy_category" class="category">
+        {{ data.online_academy_category }}
+      </span>
+    </div>
+
+    <div class="info-container">
+      <div class="stat-container body2 mb-10p">
+        <div class="d-flex align-items-center flex-wrap">
+          <span class="mb-10p text-nowrap">
+            <i
+              *ngIf="data && data.isFreeAcademy"
+              iconPh="bookmark"
+              class="mr-1 text-green"
+            ></i>
+            <span *ngIf="!data" class="color-dummy">Free</span>
+            <span *ngIf="data && !data.isFreeAcademy" class="text-yellow-dark"
+              >Premium</span
+            >
+            <span *ngIf="data && data.isFreeAcademy" class="text-green"
+              >Free</span
+            >
+          </span>
+        </div>
+      </div>
+
+      <div class="content-container">
+        <ng-container *ngIf="browserS">
+          <h3 class="mb-10p h5">
+            <div *ngIf="!data">
+              <div><div class="color-dummy" style="height: 0.95em"></div></div>
+              <div class="mt-2">
+                <div class="color-dummy" style="height: 0.95em"></div>
+              </div>
+            </div>
+
+            <span *ngIf="data">
+              {{ data.title }}
+            </span>
+          </h3>
+        </ng-container>
+
+        <ng-container *ngIf="!browserS">
+          <h3 class="mb-10p h5 clamp-2line">
+            <div *ngIf="!data">
+              <div><div class="color-dummy" style="height: 0.95em"></div></div>
+              <div class="mt-2">
+                <div class="color-dummy" style="height: 0.95em"></div>
+              </div>
+            </div>
+
+            <span *ngIf="data">
+              {{ data.title }}
+            </span>
+          </h3>
+        </ng-container>
+
+        <div class="body1 mb-20p clamp-3line opacity-80pc">
+          <div *ngIf="!data">
+            <div class="color-dummy" style="height: 1em"></div>
+            <div class="mt-1">
+              <div class="color-dummy" style="height: 1em"></div>
+            </div>
+            <div class="mt-1">
+              <div class="color-dummy" style="height: 1em"></div>
+            </div>
+            <div *ngIf="size == 'large'" class="d-none d-md-block mt-1">
+              <div class="color-dummy" style="height: 1em"></div>
+            </div>
+            <div *ngIf="size == 'large'" class="d-none d-md-block mt-1">
+              <div class="color-dummy" style="height: 1em"></div>
+            </div>
+          </div>
+
+          <p *ngIf="data" class="body1 mb-0" [innerHTML]="data.summary"></p>
+        </div>
+        <div class="byPromptContainer">
+          <div class="bg-primary square">
+            <svg
+              width="25"
+              height="12"
+              viewBox="0 0 25 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M7.08261 8.79495C7.63322 8.17608 8.19294 7.56402 8.75949 6.9588C8.76062 6.95653 8.76233 6.95482 8.76404 6.95311C8.76574 6.95141 8.76745 6.9497 8.76859 6.94743C9.26005 7.5026 9.76061 8.04866 10.268 8.59018C9.4398 9.49346 8.61387 10.4013 7.79022 11.3091C7.10536 12.0668 6.4205 12.1078 5.71289 11.3615C5.33282 10.9613 4.95042 10.5628 4.56791 10.1643C3.30626 8.84966 2.04347 7.53387 0.859718 6.15108C-0.783033 4.23074 -0.0412921 0.906561 2.82556 0.144342C4.43191 -0.28341 6.02688 0.269483 6.95291 1.40712L5.3898 2.97024C5.13952 2.49015 4.66853 2.2376 3.93817 2.18072C3.20553 2.12383 2.47517 2.66763 2.27039 3.4435C2.1316 3.97364 2.26129 4.46055 2.61623 4.86555C3.03816 5.3469 3.47733 5.81101 3.91724 6.27588C3.98261 6.34498 4.04801 6.41408 4.11337 6.48327C4.85056 7.26369 5.58775 8.04411 6.33632 8.81543C6.70491 9.1954 6.74814 9.17265 7.08261 8.79495ZM14.9758 0.317319C15.4878 -0.117259 16.0589 -0.092233 16.5094 0.333244C16.8962 0.697289 16.9166 1.31161 16.5003 1.81673C15.9451 2.48111 15.3649 3.12501 14.7756 3.75981C14.1934 4.38581 13.6081 5.00949 13.0228 5.6331C12.604 6.07933 12.1853 6.52552 11.7677 6.97251C11.6494 6.84509 11.5311 6.71995 11.4127 6.59481C11.026 6.18526 10.6414 5.77571 10.2637 5.35933C10.7816 4.80622 11.3005 4.25413 11.8198 3.70169C12.0716 3.43376 12.3235 3.16574 12.5754 2.89748C13.0714 2.36734 13.5697 1.8372 14.068 1.30706C14.1181 1.25473 14.1681 1.2024 14.2159 1.15007C14.3088 1.05053 14.3967 0.945638 14.4845 0.840877C14.6396 0.655884 14.7943 0.471299 14.9758 0.317319Z"
+                fill="white"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M23.8078 0.440188C23.3573 0.0147111 22.7862 -0.0103186 22.2743 0.42426C21.9898 0.665439 21.7714 0.981704 21.5143 1.25701C19.6964 3.19327 17.8739 5.12726 16.0582 7.0658C15.4916 7.67102 14.9319 8.28307 14.3813 8.90195C14.0468 9.27965 14.0036 9.3024 13.635 8.92243C13.007 8.27625 12.3859 7.62097 11.767 6.96569C11.6487 6.84055 11.5304 6.71541 11.4121 6.58799C11.0253 6.17844 10.6408 5.76889 10.2631 5.35251C10.147 5.2251 10.0287 5.09768 9.91494 4.96799C9.56 4.56299 9.4303 4.07608 9.5691 3.54594C9.77387 2.77007 10.5042 2.22628 11.2369 2.28317C11.8671 2.33322 12.3063 2.52889 12.5747 2.89066C13.073 2.36052 13.5713 1.83038 14.0673 1.30024C13.1231 0.305947 11.6282 -0.15366 10.1243 0.244514C7.25741 1.00673 6.51567 4.33091 8.15842 6.25125C8.35865 6.48333 8.5657 6.71086 8.7682 6.94066C9.25966 7.49583 9.76022 8.04189 10.2676 8.58341C11.1754 9.54813 12.0992 10.5015 13.0093 11.4616C13.7169 12.2079 14.4018 12.167 15.0866 11.4093C16.2243 10.1534 17.3642 8.8974 18.5155 7.65282C19.6918 6.38094 20.8909 5.12726 22.0695 3.85538C22.6588 3.22058 23.239 2.57668 23.7941 1.91229C24.2128 1.41856 24.1946 0.804233 23.8078 0.440188Z"
+                fill="#87D4FF"
+              />
+            </svg>
+          </div>
+          <span class="body2">By PromptHealth</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!data" class="loading-1 bg-white"></div>
+    <div *ngIf="!data" class="loading-2 bg-white"></div>
+  </div>
+</ng-template>
+
+<modal id="upgrade-plan-with-user" #alertUpgradePlanUser>
+  <div
+    class="title-container d-flex justify-content-between align-items-center"
+  >
+    <h6 class="h5-md mb-0">Only for Premium Providers</h6>
+    <button class="btn pr-0 btn-icon" (click)="alertUpgradePlanNoUser.hide()">
+      <i iconPh="cross"></i>
+    </button>
+  </div>
+
+  <div class="content-container">
+    <h5 class="h4-md mb-0">
+      Become a premium member and unlock all these cool features
+    </h5>
+    <ul class="list-unstyled flex-grow-1 mt-10p">
+      <li class="position-relative mb-20p body2">
+        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
+        <span>Test Access to all basic features</span>
+      </li>
+      <li class="position-relative mb-20p body2">
+        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
+        <span>Exclusive access to Online Academy Resources</span>
+      </li>
+      <li class="position-relative mb-20p body2">
+        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
+        <span>Social Collaborations with PromptHealth</span>
+      </li>
+      <li class="position-relative mb-20p body2">
+        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
+        <span>Monthly Check- In with a PromptHealth Mentor</span>
+      </li>
+    </ul>
+    <div class="text-center mt-30p">
+      <a routerLink="/plans" class="btn btn-primary"
+        ><span class="subtitle2">UPGRADE NOW</span
+        ><span class="body2"> - For Only 25$/m</span></a
+      >
+    </div>
+  </div>
+</modal>
+<modal id="upgrade-plan-with-out-user" #alertUpgradePlanNoUser>
+  <div
+    class="title-container d-flex justify-content-between align-items-center"
+  >
+    <h6 class="h5-md mb-0">Only for Premium Providers</h6>
+    <button class="btn pr-0 btn-icon" (click)="alertUpgradePlanNoUser.hide()">
+      <i iconPh="cross"></i>
+    </button>
+  </div>
+
+  <div class="content-container">
+    <h5 class="h4-md mb-0">
+      Become a premium member and unlock all these cool features
+    </h5>
+    <ul class="list-unstyled flex-grow-1 mt-10p">
+      <li class="position-relative mb-20p body2">
+        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
+        <span>Test Access to all basic features</span>
+      </li>
+      <li class="position-relative mb-20p body2">
+        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
+        <span>Exclusive access to Online Academy Resources</span>
+      </li>
+      <li class="position-relative mb-20p body2">
+        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
+        <span>Social Collaborations with PromptHealth</span>
+      </li>
+      <li class="position-relative mb-20p body2">
+        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
+        <span>Monthly Check- In with a PromptHealth Mentor</span>
+      </li>
+    </ul>
+    <div class="text-center mt-30p">
+      <a routerLink="/plans" class="btn btn-primary"
+        ><span class="subtitle2">UPGRADE NOW</span
+        ><span class="body2"> - For Only 25$/m</span></a
+      >
+    </div>
+  </div>
+</modal>

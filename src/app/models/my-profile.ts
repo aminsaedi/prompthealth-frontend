@@ -26,8 +26,9 @@ export interface IMyProfile {
   isEligibleToHaveDraft: boolean;
   eligibleToRecommend: boolean;
   eligibleToManageBookings: boolean;
-  eligibleToSeePerformance: boolean; 
-  
+  eligibleToSeePerformance: boolean;
+  isEligibleToSeePremiumAcademy: boolean;
+
 
   bookmarks: ISocialPost[];
   isBookmarksChanged: boolean;
@@ -48,7 +49,7 @@ export interface IMyProfile {
   setRecommendationByMe(recommendation: IReferral): void;
 }
 
-export class MyProfile extends Profile implements IMyProfile{
+export class MyProfile extends Profile implements IMyProfile {
 
   get email() { return this.data.email || ''; }
   get coverImage() { return this.data.cover ? this._s3 + this.data.cover + '?ver=2.3' : ''; }
@@ -58,6 +59,7 @@ export class MyProfile extends Profile implements IMyProfile{
 
   get isApproved() { return this.isU || this.isSA || this.data.isApproved; }
   get isEligibleToCreateNote() { return this.isProvider || this.isSA; }
+  get isEligibleToSeePremiumAcademy() { return this.isPaid || this.isSA; }
   get isEligibleToCreatePromo() { return this.isP; }
   get isEligibleToCreateArticle() { return (this.isProvider && this.isPaid) || this.isSA; }
   get isEligibleToCreateEvent() { return (!this.isU && this.isPaid) || this.isSA; }
@@ -65,9 +67,9 @@ export class MyProfile extends Profile implements IMyProfile{
 
   get eligibleToManageBookings() { return this.isPaid && this.isProvider; }
   get eligibleToSeePerformance() { return (this.isPaid && this.isProvider) || this.isSA; }
-  get eligibleToRecommend() { 
-    return this.isSA ? 
-      true : 
+  get eligibleToRecommend() {
+    return this.isSA ?
+      true :
       (this.isProvider || this.isP) && this.isApproved ?
         true :
         false;
@@ -83,7 +85,7 @@ export class MyProfile extends Profile implements IMyProfile{
   get doneInitRecommendationsByMe() { return !!this._recommendationsByMe; }
 
 
-  get plan() { return this.data.plan || null;}
+  get plan() { return this.data.plan || null; }
 
   private _followingTopics: IMyProfile['followingTopics'] = null;
 
@@ -93,13 +95,13 @@ export class MyProfile extends Profile implements IMyProfile{
   private _bookingsAsPractitioner: any = null;
   private _recommendationsByMe: Referral[] = null;
 
-  
+
   constructor(protected data: IUserDetail) {
     super(data);
   }
 
   setFollowingTopics(topics: string[]) {
-    if(!this._followingTopics) {
+    if (!this._followingTopics) {
       this._followingTopics = [];
     }
     topics.forEach(t => {
@@ -108,7 +110,7 @@ export class MyProfile extends Profile implements IMyProfile{
   };
 
   setBookmarks(posts: ISocialPost[]) {
-    if(!this._bookmarks) {
+    if (!this._bookmarks) {
       this._bookmarks = [];
     }
     posts.forEach(post => {
@@ -117,15 +119,15 @@ export class MyProfile extends Profile implements IMyProfile{
   }
 
   setBookmark(post: ISocialPost) {
-    if(!this._bookmarks) {
+    if (!this._bookmarks) {
       this._bookmarks = [];
     }
 
     this._bookmarks.push(
       post.contentType == 'NOTE' ? new SocialNote(post) :
-      post.contentType == 'ARTICLE' ? new SocialArticle(post) :
-      post.contentType == 'EVENT' ? new SocialEvent(post) :
-      new SocialPostBase(post)
+        post.contentType == 'ARTICLE' ? new SocialArticle(post) :
+          post.contentType == 'EVENT' ? new SocialEvent(post) :
+            new SocialPostBase(post)
     )
   }
 
@@ -144,7 +146,7 @@ export class MyProfile extends Profile implements IMyProfile{
   }
 
   setBookingsAsClient(bookings: IBooking[]) {
-    if(!this._bookingsAsClient) {
+    if (!this._bookingsAsClient) {
       this._bookingsAsClient = [];
     }
     bookings.forEach(b => {
@@ -153,14 +155,14 @@ export class MyProfile extends Profile implements IMyProfile{
   }
 
   setBookingAsClient(booking: IBooking) {
-    if(!this._bookingsAsClient) {
+    if (!this._bookingsAsClient) {
       this._bookingsAsClient = [];
     }
     this._bookingsAsClient.push(new Booking(booking));
   }
 
   setRecommendationsByMe(recommendations: IReferral[]) {
-    if(!this._recommendationsByMe) {
+    if (!this._recommendationsByMe) {
       this._recommendationsByMe = [];
     }
     recommendations.forEach(r => {
@@ -169,7 +171,7 @@ export class MyProfile extends Profile implements IMyProfile{
   }
 
   setRecommendationByMe(recommendation: IReferral) {
-    if(!this._recommendationsByMe) {
+    if (!this._recommendationsByMe) {
       this._recommendationsByMe = [];
     }
     this._recommendationsByMe.push(new Referral(recommendation));
@@ -177,7 +179,7 @@ export class MyProfile extends Profile implements IMyProfile{
 
   update(data: IUserDetail) {
     Object.keys(data).forEach(key => {
-      if(key != '_id') {
+      if (key != '_id') {
         this.data[key] = data[key];
       }
     });

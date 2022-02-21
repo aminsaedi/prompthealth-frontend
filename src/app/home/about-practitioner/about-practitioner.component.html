@@ -34,7 +34,7 @@
   </ul>
 </section>
 
-<section class="container mt-100p mb-50p">
+<section class="container mt-100p mb-50p d-none">
   <h2 class="h3 h2-md text-center">Other facilities available</h2>
   <div class="row">
     <div class="col-12 col-md-6 mt-20p">
@@ -131,14 +131,18 @@
       </div>
     </div>
   </div>
-  <div class="text-center mt-30p" >
-    <button (click)="onClickSignup('basic')" class="btn btn-primary px-lg-30p" routerLink="/auth/registration/c"
-      >Register on PromptHealth</button
+  <div class="text-center mt-30p">
+    <button
+      (click)="onClickSignup('basic')"
+      class="btn btn-primary px-lg-30p"
+      routerLink="/auth/registration/c"
     >
+      Register on PromptHealth
+    </button>
   </div>
 </section>
 
-<section class="container d-none">
+<section class="container">
   <div class="text-center">
     <h2 class="h3 h2-md">It’s easy to get started</h2>
     <!-- <p class="mt-20p">Free 14-day trial on our paid plans. Just cancel before the trial period is over!</p> -->
@@ -164,112 +168,156 @@
       class="col-12 col-lg-4 mb-20p mb-lg-0p"
     >
       <div
-        class="card h-100 text-left rounded12p p-15p p-md-30p px-lg-15p px-xl-30p rounded-12p"
-        [ngClass]="{ active: plan.key == 'provider' }"
+        class="card h-100 text-left rounded12p rounded-12p"
+        [ngClass]="plan.key == 'centre' ? 'bg-yellow-light' : ''"
       >
-        <div *ngIf="plan.value.label" class="label body1">
-          {{ plan.value.label }}
+        <div *ngIf="plan.key == 'centre'" class="mb-10p">
+          <img
+            class="rounded12p rounded-12p"
+            style="object-fit: contain; width: 100%; height: auto"
+            src="assets/img/provider-plans-left.jpg"
+          />
         </div>
-        <div clas="mb-10p">
-          <i
-            [iconPh]="plan.value.icon"
-            style="font-size: 30px"
-            class="text-primary"
-          ></i>
-        </div>
-        <h4 class="mb-0">{{ plan.value.title }}</h4>
-        <p class="mb-0 body2 text-label">{{ plan.value.subtitle }}</p>
-
-        <h2 *ngIf="plan.value.data" class="my-25p">
-          <ng-container *ngIf="!plan.value"> </ng-container>
-          <ng-container *ngIf="plan.value?.data.price == 0">Free</ng-container>
-          <ng-container
-            *ngIf="plan.value?.data.price != 0 && isDurationMonthly"
-            >{{
-              plan.value.data.price
-                | currency: plan.value.data.currency:"code":"1.0-0"
-            }}</ng-container
-          >
-          <ng-container
-            *ngIf="plan.value?.data.price != 0 && !isDurationMonthly"
-            >{{
-              plan.value.data.yearlyPrice
-                | currency: plan.value.data.currency:"code":"1.0-0"
-            }}</ng-container
-          >
-
-          <span *ngIf="plan.value?.data.price != 0" class="h4 text-label">
-            <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
-            <ng-container *ngIf="!isDurationMonthly">/yr</ng-container>
-          </span>
-        </h2>
-
-        <ul class="list-unstyled pl-25p plan-features flex-grow-1">
-          <li *ngIf="i > 0" class="position-relative mb-20p subtitle2">
-            <span *ngIf="i == 1">All Basic features +</span>
-            <span *ngIf="i == 2">All Advanced features +</span>
-          </li>
-
-          <ng-container *ngFor="let feature of planFeatures; let j = index">
-            <li
-              *ngIf="isFeatureShowable(j, plan.key)"
-              class="position-relative mb-20p subtitle2"
+        <div
+          class="h-100 text-left p-15p p-md-30p px-lg-15p px-xl-30p"
+          style="display: flex; flex-direction: column; position: relative"
+        >
+          <div *ngIf="plan.value.label" class="label body1">
+            {{ plan.value.label }}
+          </div>
+          <div *ngIf="plan.key != 'centre'" clas="mb-10p">
+            <i
+              [iconPh]="plan.value.icon"
+              style="font-size: 30px"
+              class="text-primary"
+            ></i>
+          </div>
+          <h4 class="mb-0">{{ plan.value.title }}</h4>
+          <p class="mb-0 body2 text-label">{{ plan.value.subtitle }}</p>
+          <h2 *ngIf="plan.value.data && plan.key != 'centre'" class="my-25p">
+            <ng-container *ngIf="!plan.value"> </ng-container>
+            <ng-container *ngIf="plan.value?.data.price == 0"
+              >Free</ng-container
             >
-              <i
-                class="icon-pre text-placeholder"
-                iconPh="checkbox-square-outline"
-              ></i>
-              <span>{{ feature.item }}</span>
+            <ng-container
+              *ngIf="plan.value?.data.price != 0 && isDurationMonthly"
+              >{{
+                plan.value.data.price
+                  | currency: plan.value.data.currency:"code":"1.0-0"
+              }}</ng-container
+            >
+            <ng-container
+              *ngIf="plan.value?.data.price != 0 && !isDurationMonthly"
+              >{{
+                plan.value.data.yearlyPrice
+                  | currency: plan.value.data.currency:"code":"1.0-0"
+              }}</ng-container
+            >
+            <span *ngIf="plan.value?.data.price != 0" class="h4 text-label">
+              <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
+              <ng-container *ngIf="!isDurationMonthly">/yr</ng-container>
+            </span>
+          </h2>
+          <p *ngIf="plan.key == 'centre'">
+            Increase your visibility and reach by utilizing our custom promotion
+            services. We tailor our services based on your needs.
+          </p>
+          <ul class="list-unstyled pl-25p plan-features flex-grow-1">
+            <li *ngIf="i > 0" class="position-relative mb-20p subtitle2">
+              <span *ngIf="i == 1">All Basic features +</span>
+              <!-- <span *ngIf="i == 2">All Advanced features +</span> -->
             </li>
-          </ng-container>
-
-          <li class="position-relative mt-40p mb-20p subtitle2">
-            <i class="icon-pre text-primary" iconPh="megaphone"></i>
-            <a routerLink="/ambassador-program"
-              >Become ambassador and get credit</a
-            >
-          </li>
-        </ul>
-
-        <button
-          *ngIf="isNotLoggedIn"
-          class="btn"
-          [ngClass]="
-            plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline'
-          "
-          (click)="onClickSignup(plan.key)"
-        >
-          <ng-container *ngIf="plan.key == 'basic'">Sign-up Free</ng-container>
-          <ng-container *ngIf="plan.key == 'provider'">Sign-up</ng-container>
-          <ng-container *ngIf="plan.key == 'centre'">Sign-up</ng-container>
-        </button>
-
-        <ng-container
-          *ngIf="isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')"
-        >
+            <ng-container *ngFor="let feature of planFeatures; let j = index">
+              <li
+                *ngIf="isFeatureShowable(j, plan.key)"
+                class="position-relative mb-20p subtitle2"
+              >
+                <i
+                  class="icon-pre text-placeholder"
+                  iconPh="checkbox-square-outline"
+                ></i>
+                <span>{{ feature.item }}</span>
+              </li>
+            </ng-container>
+            <!-- <li class="position-relative mt-40p mb-20p subtitle2">
+              <i class="icon-pre text-primary" iconPh="megaphone"></i>
+              <a routerLink="/ambassador-program"
+                >Become ambassador and get credit</a
+              >
+            </li> -->
+          </ul>
           <button
+            *ngIf="isNotLoggedIn"
             class="btn"
             [ngClass]="
               plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline'
             "
-            [disabled]="isLoading"
-            (click)="onClickCheckout(plan.key)"
+            (click)="onClickSignup(plan.key)"
           >
-            <ng-container *ngIf="plan.key == 'provider'"
-              >Order now</ng-container
+            <ng-container *ngIf="plan.key == 'basic'"
+              >Sign-up Free</ng-container
             >
-            <ng-container *ngIf="plan.key != 'provider'">Select</ng-container>
+            <ng-container *ngIf="plan.key == 'provider'">Sign-up</ng-container>
+            <ng-container *ngIf="plan.key == 'centre'">Contact Us</ng-container>
           </button>
-        </ng-container>
+          <ng-container
+            *ngIf="
+              isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')
+            "
+          >
+            <button
+              class="btn"
+              [ngClass]="
+                plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline'
+              "
+              [disabled]="isLoading"
+              (click)="onClickCheckout(plan.key)"
+            >
+              <ng-container *ngIf="plan.key == 'provider'"
+                >Order now</ng-container
+              >
+              <ng-container *ngIf="plan.key !== 'provider'">Contact Us</ng-container>
+            </button>
+          </ng-container>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="mt-30p text-center body1">
+  <div class="mt-30p text-center body1 d-none">
     Looking for social media collaborations?
     <a class="ml-10p btn-text-primary" routerLink="/contact-us"
       ><u>Contact us</u></a
     >
+  </div>
+</section>
+
+<section class="container text-center mt-70p mb-100p">
+  <h2>Advertising</h2>
+  <div class="row w-100 justify-content-between">
+    <div class="col-12 mt-20p col-md-6">
+      <img src="assets/img/advertising.jpg" style="width: 100%" />
+    </div>
+    <div class="col-12 mt-20p p-20p col-md-6 text-left d-flex flex-column justify-content-between">
+      <p>Use PromptHealth to showcase yourself to wellness providers.</p>
+      <ul class="list-unstyled pl-25p mt-20p plan-features flex-grow-1">
+        <li class="position-relative mb-20p subtitle2">
+          <i
+            class="icon-pre text-placeholder"
+            iconPh="checkbox-square-outline"
+          ></i>
+          <span>Promotional Ad space on PromptHealth homepage</span>
+        </li>
+        <li class="position-relative mb-20p subtitle2">
+          <i
+            class="icon-pre text-placeholder"
+            iconPh="checkbox-square-outline"
+          ></i>
+          <span>Custom promotional content made for your brand</span>
+        </li>
+      </ul>
+      <button class="btn btn-primary w-50" routerLink="/contact-us" >Contact Us</button>
+    </div>
   </div>
 </section>
 
