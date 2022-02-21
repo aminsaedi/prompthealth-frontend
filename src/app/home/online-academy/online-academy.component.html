@@ -36,20 +36,20 @@
     <button
       class="btn px-2 py-2 category-button mr-10p my-20p"
       [ngClass]="
-        selectedCategory === 'tutorials' ? 'btn-primary' : 'btn-outline'
+        selectedCategory === 'promptHealthTutorials' ? 'btn-primary' : 'btn-outline'
       "
-      (click)="changeCategory('tutorials')"
+      (click)="changeCategory('promptHealthTutorials')"
     >
       PromptHealth Tutorials
     </button>
     <button
       class="btn px-2 py-2 category-button mr-10p my-20p"
       [ngClass]="
-        selectedCategory === 'marketingAndBusiness'
+        selectedCategory === 'marketingAndBusinessStrategy'
           ? 'btn-primary'
           : 'btn-outline'
       "
-      (click)="changeCategory('marketingAndBusiness')"
+      (click)="changeCategory('marketingAndBusinessStrategy')"
     >
       Marketing & Business Strategy
     </button>
@@ -74,9 +74,9 @@
     <button
       class="btn px-2 py-2 category-button mr-10p my-20p"
       [ngClass]="
-        selectedCategory === 'whyAndWho' ? 'btn-primary' : 'btn-outline'
+        selectedCategory === 'whyAndHow' ? 'btn-primary' : 'btn-outline'
       "
-      (click)="changeCategory('whyAndWho')"
+      (click)="changeCategory('whyAndHow')"
     >
       Why and How
     </button>
