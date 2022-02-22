@@ -80,7 +80,7 @@ export class AboutCompanyComponent implements OnInit {
     private _route: ActivatedRoute,
     private _el: ElementRef,
     private _regionService: RegionService
-  ) {}
+  ) { }
 
   ngAfterViewInit() {
     this._route.fragment.pipe(first()).subscribe((fragment) => {
@@ -216,17 +216,16 @@ export class AboutCompanyComponent implements OnInit {
   }
 
   onClickSignup(type: PlanTypeProduct) {
-    this._uService.sessionStorage.setItem(
-      "selectedPlan",
-      JSON.stringify(this.plans[type].data)
-    );
-    this._uService.sessionStorage.setItem(
-      "selectedMonthly",
-      this.isDurationMonthly.toString()
-    );
+    this._router.navigate(["/auth", "registration", "sp"]);
+    // this._uService.sessionStorage.setItem(
+    //   "selectedPlan",
+    //   JSON.stringify(this.plans[type].data)
+    // );
+    // this._uService.sessionStorage.setItem(
+    //   "selectedMonthly",
+    //   this.isDurationMonthly.toString()
+    // );
 
-    const link = ["/auth", "registration", "p"];
-    this._router.navigate(link);
   }
 
   async onClickCheckout(type: PlanTypeProduct) {
@@ -270,7 +269,7 @@ const features = [
     icon: "users-outline",
     title: "Reach a new audience.",
     content:
-    "Introduce yourself and educate wellness providers about your products.",
+      "Introduce yourself and educate wellness providers about your products.",
   },
   {
     icon: "verified-outline",
@@ -314,12 +313,12 @@ const planFeatures: IPlanFeatureData[] = [
     detail: "explain yourself here.",
   },
   {
-    item: "Create dynamic discounts and send notifications to wellness seekers and providers about new promotions",
+    item: "Create dynamic discounts and send notifications",
     targetPlan: ["productBasic"],
     detail: "explain yourself here.",
   },
   {
-    item: "Create events and send notifications to wellness seekers and providers about your upcoming summit, course or webinar",
+    item: "Create events and notify users about upcoming summits, course or webinar",
     targetPlan: ["productBasic"],
     detail: "explain yourself here.",
   },
@@ -330,17 +329,17 @@ const planFeatures: IPlanFeatureData[] = [
   },
 
   {
-    item: "Promotion on side panels of our social feed for custom duration of time",
+    item: "3 month bundle",
     targetPlan: ["productCustom"],
     detail: null,
   },
   {
-    item: "Promotion on our social channels and podcast",
+    item: "6 month bundle",
     targetPlan: ["productCustom"],
     detail: null,
   },
   {
-    item: "Promotion via monthly internal newsletter",
+    item: "Social Media Management",
     targetPlan: ["productCustom"],
     detail: null,
   },
