@@ -225,7 +225,7 @@ export class AboutCompanyComponent implements OnInit {
     //   "selectedMonthly",
     //   this.isDurationMonthly.toString()
     // );
-    this._router.navigate(["/auth", "registration", "sp"]);
+    this._router.navigate(["/auth", "registration", "p"]);
 
   }
 
