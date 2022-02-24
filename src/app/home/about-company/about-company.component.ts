@@ -283,7 +283,7 @@ const plans: { [k in PlanTypeProduct]: IPlanData } = {
   productBasic: {
     id: "basic",
     icon: "shopping-bag-outline",
-    title: "Basic",
+    title: "Free",
     subtitle: "",
     label: null,
     data: null,
