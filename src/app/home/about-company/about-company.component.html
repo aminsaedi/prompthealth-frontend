@@ -152,7 +152,7 @@
           <h4 class="mb-0">{{ plan.value.title }}</h4>
           <p class="mb-0 body2 text-label">{{ plan.value.subtitle }}</p>
           <h2 *ngIf="plan.key != 'productCustom'" class="my-25p clamp-1line h2">
-            <ng-container *ngIf="plan.value?.data && isDurationMonthly">{{
+            <!-- <ng-container *ngIf="plan.value?.data && isDurationMonthly">{{
               plan.value.data.price
                 | currency: plan.value.data.currency:"code":"1.0-0"
             }}</ng-container>
@@ -163,7 +163,7 @@
             <span class="h4 text-label" *ngIf="plan.value?.data">
               <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
               <ng-container *ngIf="!isDurationMonthly">/yr</ng-container>
-            </span>
+            </span> -->
           </h2>
           <p *ngIf="plan.key == 'productCustom'">
             Increase your visibility and reach by utilizing our custom promotion
@@ -188,6 +188,7 @@
               *ngIf="!user"
               class="btn btn-primary-dark"
               (click)="onClickSignup(plan.key)"
+              
             >
               <ng-container *ngIf="plan.key == 'productBasic'"
                 >Sign-up</ng-container

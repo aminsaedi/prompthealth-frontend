@@ -216,7 +216,7 @@ export class AboutCompanyComponent implements OnInit {
   }
 
   onClickSignup(type: PlanTypeProduct) {
-    this._router.navigate(["/auth", "registration", "sp"]);
+    // console.log(this.plans[type].data,this.isDurationMonthly)
     // this._uService.sessionStorage.setItem(
     //   "selectedPlan",
     //   JSON.stringify(this.plans[type].data)
@@ -225,6 +225,7 @@ export class AboutCompanyComponent implements OnInit {
     //   "selectedMonthly",
     //   this.isDurationMonthly.toString()
     // );
+    this._router.navigate(["/auth", "registration", "sp"]);
 
   }
 
