@@ -61,12 +61,12 @@ export class MyProfile extends Profile implements IMyProfile {
   get isEligibleToCreateNote() { return this.isProvider || this.isSA; }
   get isEligibleToSeePremiumAcademy() { return this.isPaid || this.isSA; }
   get isEligibleToCreatePromo() { return this.isP; }
-  get isEligibleToCreateArticle() { return (this.isProvider && this.isPaid) || this.isSA; }
-  get isEligibleToCreateEvent() { return (!this.isU && this.isPaid) || this.isSA; }
+  get isEligibleToCreateArticle() { return (this.isProvider) || this.isSA; }
+  get isEligibleToCreateEvent() { return (!this.isU) || this.isSA; }
   get isEligibleToHaveDraft() { return this.isEligibleToCreateArticle || this.isEligibleToCreateEvent; }
 
-  get eligibleToManageBookings() { return this.isPaid && this.isProvider; }
-  get eligibleToSeePerformance() { return (this.isPaid && this.isProvider) || this.isSA; }
+  get eligibleToManageBookings() { return this.isProvider; }
+  get eligibleToSeePerformance() { return (this.isProvider) || this.isSA; }
   get eligibleToRecommend() {
     return this.isSA ?
       true :
