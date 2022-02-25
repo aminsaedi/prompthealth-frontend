@@ -404,53 +404,68 @@ const planFeatures: IPlanFeatureData[] = [
     detail: null,
   },
   {
-    item: "Share your knowledge via voice memos and notes",
+    item: "Follow and engage with other users",
     targetPlan: ["basic", "provider", "centre"],
     detail: null,
   },
   {
-    item: "Share your knowledge via voice memos, notes, and images + articles, and events",
-    targetPlan: ["provider", "centre"],
+    item: "Share your knowledge via voice memos, notes, and images",
+    targetPlan: ["basic", "provider", "centre"],
     detail: null,
   },
   {
     item: "Receive booking requests",
+    targetPlan: ["basic", "provider", "centre"],
+    detail: null,
+  },
+  {
+    item: "Recommendations by other providers",
+    targetPlan: ["basic", "provider", "centre"],
+    detail: null,
+  },
+  {
+    item: "Access to all basic features",
     targetPlan: ["provider", "centre"],
     detail: null,
   },
   {
-    item: "Inter referrals enabled",
+    item: "Exclusive access to Online Academy Resources",
     targetPlan: ["provider", "centre"],
     detail: null,
   },
   {
-    item: "Ratings and reviews",
+    item: "Social Collaborations with PromptHealth",
     targetPlan: ["provider", "centre"],
     detail: null,
   },
   {
-    item: "Performance analytics",
+    item: "Monthly Check- In with a PromptHealth Mentor",
     targetPlan: ["provider", "centre"],
     detail: null,
   },
+  // {
+  //   item: "Performance analytics",
+  //   targetPlan: ["provider", "centre"],
+  //   detail: null,
+  // },
 
   // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
   {
-    item: "Display company products and amenities",
+    item: "3 month bundle",
     targetPlan: ["centre"],
     detail: null,
   },
   {
-    item: "Enrich your profile with videos",
+    item: "6 month bundle",
     targetPlan: ["centre"],
     detail: null,
   },
-  { item: "Tag your providers", targetPlan: ["centre"], detail: null },
-  {
-    item: "PromptHealth personal assistant for onboarding",
-    targetPlan: ["centre"],
-    detail: null,
-  },
+  { item: "Social Media Management", targetPlan: ["centre"], detail: null },
+  // {
+  //   item: "PromptHealth personal assistant for onboarding",
+  //   targetPlan: ["centre"],
+  //   detail: null,
+  // },
 ];
 
 const faqs: IFAQItem[] = [
