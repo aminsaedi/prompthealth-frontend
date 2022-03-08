@@ -165,13 +165,13 @@
   <div class="row">
     <div
       *ngFor="let plan of plans | keyvalue: keepOriginalOrder; let i = index"
-      class="col-12 col-lg-4 mb-20p mb-lg-0p"
+      class="col-12 col-lg-3 mb-20p mb-lg-0p"
     >
       <div
         class="card h-100 text-left rounded12p rounded-12p"
-        [ngClass]="plan.key == 'centre' ? 'bg-yellow-light' : ''"
+        [ngClass]="plan.key == 'custom' ? 'bg-yellow-light' : ''"
       >
-        <div *ngIf="plan.key == 'centre'" class="mb-10p">
+        <div *ngIf="plan.key == 'custom'" class="mb-10p">
           <img
             class="rounded12p rounded-12p"
             style="object-fit: contain; width: 100%; height: auto"
@@ -185,7 +185,7 @@
           <div *ngIf="plan.value.label" class="label body1">
             {{ plan.value.label }}
           </div>
-          <div *ngIf="plan.key != 'centre'" clas="mb-10p">
+          <div *ngIf="plan.key != 'custom'" class="mb-10p">
             <i
               [iconPh]="plan.value.icon"
               style="font-size: 30px"
@@ -194,7 +194,7 @@
           </div>
           <h4 class="mb-0">{{ plan.value.title }}</h4>
           <p class="mb-0 body2 text-label">{{ plan.value.subtitle }}</p>
-          <h2 *ngIf="plan.value.data && plan.key != 'centre'" class="my-25p">
+          <h3 *ngIf="plan.value.data && plan.key != 'custom'" class="my-25p">
             <ng-container *ngIf="!plan.value"> </ng-container>
             <ng-container *ngIf="plan.value?.data.price == 0"
               >Free</ng-container
@@ -217,14 +217,15 @@
               <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
               <ng-container *ngIf="!isDurationMonthly">/yr</ng-container>
             </span>
-          </h2>
-          <p *ngIf="plan.key == 'centre'">
+          </h3>
+          <p *ngIf="plan.key == 'custom'">
             Increase your visibility and reach by utilizing our custom promotion
             services. We tailor our services based on your needs.
           </p>
           <ul class="list-unstyled pl-25p plan-features flex-grow-1">
             <li *ngIf="i > 0" class="position-relative mb-20p subtitle2">
               <span *ngIf="i == 1">All Basic features +</span>
+              <span *ngIf="i == 2">All Provider features +</span>
               <!-- <span *ngIf="i == 2">All Advanced features +</span> -->
             </li>
             <ng-container *ngFor="let feature of planFeatures; let j = index">
@@ -250,7 +251,7 @@
             *ngIf="isNotLoggedIn"
             class="btn"
             [ngClass]="
-              plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline'
+              plan.key == 'basic' ? 'btn-primary-dark' : 'btn-outline'
             "
             (click)="onClickSignup(plan.key)"
           >
@@ -258,7 +259,8 @@
               >Sign-up Free</ng-container
             >
             <ng-container *ngIf="plan.key == 'provider'">Sign-up</ng-container>
-            <ng-container *ngIf="plan.key == 'centre'">Contact Us</ng-container>
+            <ng-container *ngIf="plan.key == 'centre'">Sign-up</ng-container>
+            <ng-container *ngIf="plan.key == 'custom'">Contact Us</ng-container>
           </button>
           <ng-container
             *ngIf="

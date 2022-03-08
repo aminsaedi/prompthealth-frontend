@@ -240,8 +240,12 @@ export class AboutPractitionerComponent implements OnInit {
         link.push("sp");
         break;
 
-      case "centre":
+      case "custom":
         link = ["/contact-us"];
+        break;
+        
+        case "centre":
+        link.push("c")
         break;
     }
     this._uService.sessionStorage.setItem(
@@ -380,7 +384,7 @@ const plans: { [k in PlanTypePractitioner]: IPlanData } = {
   provider: {
     id: "provider",
     icon: "verified-outline",
-    title: "Advanced",
+    title: "Providers",
     subtitle: "",
     // subtitle: 'For solo providers.',
     label: "Popular",
@@ -388,6 +392,15 @@ const plans: { [k in PlanTypePractitioner]: IPlanData } = {
   },
   centre: {
     id: "centre",
+    icon: "users-outline",
+    title: "Centre",
+    // subtitle: 'For centers with multiple providers.',
+    subtitle: "",
+    label: null,
+    data: null,
+  },
+  custom: {
+    id: "custom",
     icon: "users-outline",
     title: "Custom",
     // subtitle: 'For centers with multiple providers.',
@@ -423,11 +436,11 @@ const planFeatures: IPlanFeatureData[] = [
     targetPlan: ["basic", "provider", "centre"],
     detail: null,
   },
-  {
-    item: "Access to all basic features",
-    targetPlan: ["provider", "centre"],
-    detail: null,
-  },
+  // {
+  //   item: "Access to all basic features",
+  //   targetPlan: ["provider", "centre"],
+  //   detail: null,
+  // },
   {
     item: "Exclusive access to Online Academy Resources",
     targetPlan: ["provider", "centre"],
@@ -451,16 +464,21 @@ const planFeatures: IPlanFeatureData[] = [
 
   // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
   {
-    item: "3 month bundle",
+    item: "List all your providers for free",
     targetPlan: ["centre"],
     detail: null,
   },
   {
-    item: "6 month bundle",
-    targetPlan: ["centre"],
+    item: "3 month bundle",
+    targetPlan: ["custom"],
     detail: null,
   },
-  { item: "Social Media Management", targetPlan: ["centre"], detail: null },
+  {
+    item: "6 month bundle",
+    targetPlan: ["custom"],
+    detail: null,
+  },
+  { item: "Social Media Management", targetPlan: ["custom"], detail: null },
   // {
   //   item: "PromptHealth personal assistant for onboarding",
   //   targetPlan: ["centre"],

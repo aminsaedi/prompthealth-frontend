@@ -1,4 +1,4 @@
-export type PlanTypePractitioner = 'basic' | 'provider' | 'centre';
+export type PlanTypePractitioner = 'basic' | 'provider' | 'centre' | 'custom';
 export type PlanTypeProduct = 'productBasic' | 'productCustom';
 export type PlanType = PlanTypePractitioner | PlanTypeProduct;
 

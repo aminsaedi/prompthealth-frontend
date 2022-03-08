@@ -167,24 +167,24 @@ const teamData = [
     image: 'renee.png',
     content: '20+ years experience leading marketing teams with speciality in technology and SaaS & Media and Marketing Services SMBs',
   }, 
-  {
-    name: 'Jasmine Marahar',
-    title: 'Product Manager',
-    image: 'jasmine.png',
-    content: 'Jasmine joined the team in January 2020 with a background in HR Management to help on the mission to educate others on their treatment options. As someone who has battled mental health challenges all her life, Jasmine knows first-hand that individual care needs for what can diagnostically be the same issue can still be different. Helping others find information and care that is reliable and works best for their needs is important to her.'
-  },
-  {
-    name: 'Jaden Kim',
-    title: 'Digital Marketing and Social Media Manager',
-    image: 'jaden.png',
-    content: 'Jaden joined the team in May, with a background in social media and marketing, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue her passion for marketing and making health services more accessible. Working at PromptHealth means a lot to her, as she feels strongly about the value that PromptHealth can bring to people.'
-  },
-  {
-    name: 'Jersey Flores',
-    title: 'Customer Success Manager',
-    image: 'jersey.jpg',
-    content: 'Jersey recently joined PromptHealth as a Marketing and Communications student with a passion for healthy practices and bringing out each individual\'s best potential.',
-  },  
+  // {
+  //   name: 'Jasmine Marahar',
+  //   title: 'Product Manager',
+  //   image: 'jasmine.png',
+  //   content: 'Jasmine joined the team in January 2020 with a background in HR Management to help on the mission to educate others on their treatment options. As someone who has battled mental health challenges all her life, Jasmine knows first-hand that individual care needs for what can diagnostically be the same issue can still be different. Helping others find information and care that is reliable and works best for their needs is important to her.'
+  // },
+  // {
+  //   name: 'Jaden Kim',
+  //   title: 'Digital Marketing and Social Media Manager',
+  //   image: 'jaden.png',
+  //   content: 'Jaden joined the team in May, with a background in social media and marketing, excited to contribute to PromptHealth’s mission after years of struggling within the current healthcare system. As she completes her business degree at the University of British Columbia, she hopes to continue her passion for marketing and making health services more accessible. Working at PromptHealth means a lot to her, as she feels strongly about the value that PromptHealth can bring to people.'
+  // },
+  // {
+  //   name: 'Jersey Flores',
+  //   title: 'Customer Success Manager',
+  //   image: 'jersey.jpg',
+  //   content: 'Jersey recently joined PromptHealth as a Marketing and Communications student with a passion for healthy practices and bringing out each individual\'s best potential.',
+  // },  
   // {
   //   name: 'Leah King',
   //   title: 'Digital Marketing and Communications Manager',
@@ -209,17 +209,17 @@ const teamData = [
     image: 'reza.png',
     content: 'Reza is an experienced UI/UX designer with over 8 years of experience, creating a design solution for a mobile and desktop version of the PromptHealth and redesigning existing Web/App designs to meet accessibility standards.',
   },
-  {
-    name: 'Otto Hu',
-    title: 'Software Developer',
-    image: 'otto.png',
-    content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, providers and product companies.'
-  },
-  {
-    name: 'Takayuki Hiraishi',
-    title: 'Software Developer',
-    image: 'takayuki.png',
-    content: 'Takayuki joined the team as frontend engineer in December 2020, with MEAN stack experience, contributing to PromptHealth web platform. He believes in the power of combination of the healthcare system and web service and is eager to make user experience on the platform better.'
-  },
+  // {
+  //   name: 'Otto Hu',
+  //   title: 'Software Developer',
+  //   image: 'otto.png',
+  //   content: 'Otto is a full-stack software developer who graduated at SFU with B.Sci in computer science. He has been a key member of the team since November 2020. Otto has helped transform and consolidate the project. He also idealized and shaped the platform with the idea of an ecosystem in health, composed of patients, providers and product companies.'
+  // },
+  // {
+  //   name: 'Takayuki Hiraishi',
+  //   title: 'Software Developer',
+  //   image: 'takayuki.png',
+  //   content: 'Takayuki joined the team as frontend engineer in December 2020, with MEAN stack experience, contributing to PromptHealth web platform. He believes in the power of combination of the healthcare system and web service and is eager to make user experience on the platform better.'
+  // },
 
 ]
