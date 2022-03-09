@@ -31,16 +31,18 @@
       "
       (click)="changeCategory('templates')"
     >
-      Templates
+      Tutorials
     </button>
     <button
       class="btn px-2 py-2 category-button mr-10p my-20p"
       [ngClass]="
-        selectedCategory === 'promptHealthTutorials' ? 'btn-primary' : 'btn-outline'
+        selectedCategory === 'promptHealthTutorials'
+          ? 'btn-primary'
+          : 'btn-outline'
       "
       (click)="changeCategory('promptHealthTutorials')"
     >
-      PromptHealth Tutorials
+      PromptHealth Guide
     </button>
     <button
       class="btn px-2 py-2 category-button mr-10p my-20p"
