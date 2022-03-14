@@ -349,28 +349,25 @@ const planFeatures: IPlanFeatureData[] = [
 const faqs: IFAQItem[] = [
   {
     q: "What is PromptHealth and why should I be involved?",
-    a: "PromptHealth is an online platform created to assist people navigate their health journey by providing education on holistic wellness solutions. We have created an ecosystem where wellness seekers can learn directly from the providers and get connected with them based on areas of interest. To further emphasize an integrative approach and truly create an all-in-one wellness navigator, we list different wellness companies that may assist providers with their service goals or provide supplementary solutions to wellness seekers.",
+    a: "PromptHealth is a network of holistic care practitioners. It empowers providers to showcase their knowledge in different formats for better online exposure and to educate the wellness community. They can also collaborate with other practitioners and with PromptHealth, itself. Wellness seekers can learn directly from the trusted sources and connect when the need arises. Product companies listed on PromptHealth can become partners with providers that align with their wellness philosophies.",
     opened: false,
   },
   {
     q: "What types of wellness companies do we work with?",
-    a: `We work with all kinds of wellness brands who do not fit under the category of being a provider. Some examples include mobile apps, wellness-related products, services, and other resources that benefit the wellness community. 
-      <br><br>
-      Unsure if your company will be a good fit? Email us at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a> to learn more. 
+    a: `We work with all kinds of wellness brands who do not fit under the category of being a provider. Some examples include mobile apps, wellness-related products,services, and other resources that benefit the wellness community.
+    <br><br>
+    Unsure if your company will be a good fit? Email us at info@prompthealth.ca to learn more. 
     `,
     opened: false,
   },
   {
     q: "What do I get with a  standard membership?",
-    a: "You will get listed on our website and app with a profile complete with a  description of your company and what you offer. You can upload images to directly display your products and/or services, and also promote any upcoming offers or events. Any time a new promotion or event is created, our community of both providers and users will receive a notification.  Finally, receive recommendations and endorsements from our wellness providers to gain more credibility. Providers who resonate with your brand have the option to share your company page on their profile.",
+    a: "You will get listed on our website and app with a profile complete with a description of your company and what you offer. You can upload images to directly display your products and/or services, and also promote any upcoming offers or events. Any time a new promotion or event is created, our community of both providers and users will receive a notification. Finally, receive recommendations and endorsements from our wellness providers to gain more credibility. Providers who resonate with your brand have the option to share your company page on their profile.",
     opened: false,
   },
   {
     q: "What is the cost to join PromptHealth?",
-    a: `The standard profile for wellness companies costs $200/month. Companies who sign up for an annual membership receive 20% the total price.  
-      <br><br>
-      For companies looking for further brand exposure, we offer custom add-on options, including promotions such as paid ads, mentions in our monthly newsletter, and features on our social media via live sessions, interviews, podcasts, and more. For more information on social media collaborations and custom add-ons, please contact us at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>.
-    `,
+    a: `It is free to create a profile. For companies interested in furthering brand exposure, you have the option to receive promotional advertising space on PromptHealth. We also offer custom packages including additional services to expand your audience reach. For more information on social media collaborations and custom add-ons, please contact us at info@prompthealth.ca.`,
     opened: false,
   },
   {
@@ -390,9 +387,9 @@ const faqs: IFAQItem[] = [
   },
   {
     q: "Is there a verification process?",
-    a: `Before we approve a listing, we ensure to complete an audit to ensure the accuracy of information provided by the company. 
-      <br><br>
-      This involves a careful qualitative approach conducted by the team. We encourage the company to follow any community guidelines. Although this review process is carefully conducted, we cannot guarantee the qualification information provided and cannot be responsible for false information. 
+    a: `Before we approve a listing, we ensure to complete an audit to ensure the accuracy of information provided by the company.
+    <br><br>
+    This involves a careful qualitative approach conducted by the team. We encourage the company to follow any community guidelines. Although this review process is carefully conducted, we cannot guarantee the qualification information provided and cannot be responsible for false information.
     `,
     opened: false,
   },
