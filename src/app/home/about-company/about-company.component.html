@@ -36,7 +36,7 @@
 
 <section class="my-100p container">
   <div
-    class="row justify-content-center py-25p pb-30p  bg-background rounded-8p"
+    class="row justify-content-center py-25p pb-30p bg-background rounded-8p"
   >
     <div class="col-12">
       <h3 class="h4 h3-md text-center">Trusted Companies</h3>
@@ -99,7 +99,7 @@
   <div class="text-center">
     <h2 class="h3 h2-md mb-40p">It’s easy to get started</h2>
     <!-- <p class="mt-20p">Free 14-day trial on best plan - No Credit Card Requeired</p> -->
-    <!-- <div class="mt-60p mb-40p">
+    <div class="mt-60p mb-40p">
       <a id="plan" class="scroll-anchor"></a>
       <div
         class="d-inline-block position-relative ml-70p ml-md-0p"
@@ -112,7 +112,7 @@
           (changeState)="onChangeDuration($event)"
         ></switch>
       </div>
-    </div> -->
+    </div>
   </div>
 
   <div class="row justify-content-center">
@@ -151,8 +151,8 @@
           </div>
           <h4 class="mb-0">{{ plan.value.title }}</h4>
           <p class="mb-0 body2 text-label">{{ plan.value.subtitle }}</p>
-          <h2 *ngIf="plan.key != 'productCustom'" class="my-25p clamp-1line h2">
-            <!-- <ng-container *ngIf="plan.value?.data && isDurationMonthly">{{
+          <h2 class="my-25p clamp-1line h2">
+            <ng-container *ngIf="plan.value?.data && isDurationMonthly">{{
               plan.value.data.price
                 | currency: plan.value.data.currency:"code":"1.0-0"
             }}</ng-container>
@@ -160,10 +160,14 @@
               plan.value.data.yearlyPrice
                 | currency: plan.value.data.currency:"code":"1.0-0"
             }}</ng-container>
+
             <span class="h4 text-label" *ngIf="plan.value?.data">
               <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
               <ng-container *ngIf="!isDurationMonthly">/yr</ng-container>
-            </span> -->
+            </span>
+            <ng-container *ngIf="plan.value?.id == 'free'">
+              Free
+            </ng-container>
           </h2>
           <p *ngIf="plan.key == 'productCustom'">
             Increase your visibility and reach by utilizing our custom promotion
@@ -188,10 +192,9 @@
               *ngIf="!user"
               class="btn btn-primary-dark"
               (click)="onClickSignup(plan.key)"
-              
             >
               <ng-container *ngIf="plan.key == 'productBasic'"
-                >Sign-up Free</ng-container
+                >Sign-up</ng-container
               >
             </button>
             <button
@@ -204,6 +207,27 @@
                 >Order now</ng-container
               >
             </button>
+          </ng-container>
+          <ng-container *ngIf="plan.key == 'productFree'">
+            <button
+              *ngIf="!user"
+              class="btn btn-outline"
+              (click)="onClickSignup(plan.key)"
+            >
+              <ng-container *ngIf="plan.key == 'productFree'"
+                >Sign-up Free</ng-container
+              >
+            </button>
+            <!-- <button
+              *ngIf="!!user"
+              class="btn btn-primary-dark"
+              [disabled]="isLoading"
+              (click)="onClickCheckout(plan.key)"
+            >
+              <ng-container *ngIf="plan.key == 'productFree'"
+                >Order now</ng-container
+              >
+            </button> -->
           </ng-container>
           <ng-container *ngIf="plan.key == 'productCustom'">
             <a class="btn btn-outline" routerLink="/contact-us">Contact us</a>
@@ -218,12 +242,14 @@
   <h2>Advertising</h2>
   <div class="row w-100 justify-content-between">
     <div class="col-12 mt-20p col-md-6">
-      <img src="assets/img/advertising.jpg" style="width: 100%" />
+      <img src="assets/img/ad2.jpg" style="width: 100%" />
     </div>
     <div
       class="col-12 mt-20p col-md-6 p-20p text-left d-flex flex-column justify-content-between"
     >
-      <p class="subtitle2" >Use PromptHealth to showcase yourself to wellness providers.</p>
+      <p class="subtitle2">
+        Use PromptHealth to showcase yourself to wellness providers.
+      </p>
       <ul class="list-unstyled pl-25p mt-20p plan-features flex-grow-1">
         <li class="position-relative mb-20p subtitle2">
           <i

@@ -27,6 +27,7 @@ import { first } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { RegionService } from "src/app/shared/services/region.service";
 import { Subscription } from "rxjs";
+import { ModalService } from "../../shared/services/modal.service";
 
 @Component({
   selector: "app-about-practitioner",
@@ -57,7 +58,8 @@ export class AboutPractitionerComponent implements OnInit {
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
     private _el: ElementRef,
-    private _regionService: RegionService
+    private _regionService: RegionService,
+    private _modalService: ModalService
   ) { }
 
   public features = features;
@@ -232,10 +234,32 @@ export class AboutPractitionerComponent implements OnInit {
     e.stopPropagation();
   }
 
-  onClickSignup(type: PlanTypePractitioner) {
+  onClickFreePlan(type: 'basic') {
+    this._modalService.show("select-plan-type");
+    // let link = ["/auth", "registration"];
+    // if (type === "provider") {
+    //   link.push("sp");
+    // } else if (type === "centre") {
+    //   link.push("c");
+    // }
+    // this._uService.sessionStorage.setItem(
+    //   "selectedPlan",
+    //   JSON.stringify(this.plans.basic.data)
+    // );
+    // this._uService.sessionStorage.setItem(
+    //   "selectedMonthly",
+    //   this.isDurationMonthly.toString()
+    // );
+
+    // this._router.navigate(link);
+  }
+
+  onClickSignup(type: PlanTypePractitioner, fromModal: boolean = false) {
     let link = ["/auth", "registration"];
     switch (type) {
       case "basic":
+      // TODO: Show ask modal
+      // this._modalService.show("select-plan-type");
       case "provider":
         link.push("sp");
         break;
@@ -245,18 +269,25 @@ export class AboutPractitionerComponent implements OnInit {
         break;
 
       case "centre":
-        link.push("c")
+        link.push("c");
         break;
     }
-    this._uService.sessionStorage.setItem(
-      "selectedPlan",
-      JSON.stringify(this.plans[type].data)
-    );
-    this._uService.sessionStorage.setItem(
-      "selectedMonthly",
-      this.isDurationMonthly.toString()
-    );
+    if (!fromModal) {
+      this._uService.sessionStorage.setItem(
+        "selectedPlan",
+        JSON.stringify(this.plans[type].data)
+      );
+      this._uService.sessionStorage.setItem(
+        "selectedMonthly",
+        this.isDurationMonthly.toString()
+      );
 
+    } else {
+      this._uService.sessionStorage.setItem(
+        "selectedPlan",
+        "null"
+      );
+    }
     this._router.navigate(link);
   }
 
@@ -385,8 +416,8 @@ const plans: { [k in PlanTypePractitioner]: IPlanData } = {
     id: "provider",
     icon: "verified-outline",
     title: "Providers",
-    subtitle: "",
-    // subtitle: 'For solo providers.',
+    // subtitle: "",
+    subtitle: 'For solo providers.',
     label: "Popular",
     data: null,
   },
@@ -394,8 +425,8 @@ const plans: { [k in PlanTypePractitioner]: IPlanData } = {
     id: "centre",
     icon: "users-outline",
     title: "Centre",
-    // subtitle: 'For centers with multiple providers.',
-    subtitle: "",
+    subtitle: 'For centers with multiple providers.',
+    // subtitle: "",
     label: null,
     data: null,
   },
@@ -447,8 +478,18 @@ const planFeatures: IPlanFeatureData[] = [
     detail: null,
   },
   {
-    item: "Social Collaborations with PromptHealth",
+    item: "Monthly features on all PromptHealth's social media channels (Guest post, live conversations, etc) ",
     targetPlan: ["provider", "centre"],
+    detail: null,
+  },
+  {
+    item: "Exclusive access to Online Academy Resources",
+    targetPlan: ["centre"],
+    detail: null,
+  },
+  {
+    item: "Monthly features on all PromptHealth's social media channels (Guest post, live conversations, etc) ",
+    targetPlan: ["centre"],
     detail: null,
   },
   {
@@ -463,6 +504,7 @@ const planFeatures: IPlanFeatureData[] = [
   // },
 
   // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
+ 
   {
     item: "List all your providers for free",
     targetPlan: ["centre"],

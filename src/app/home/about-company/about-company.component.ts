@@ -68,7 +68,8 @@ export class AboutCompanyComponent implements OnInit {
   keepOriginalOrder = (a: any, b: any) => a.key;
 
   isFeatureShowable(i: number, planType: PlanTypeProduct) {
-    return this.planFeatures[i].targetPlan.indexOf(planType) === 0;
+    return this.planFeatures[i].targetPlan.includes(planType);
+    // return true;
   }
 
   constructor(
@@ -216,17 +217,19 @@ export class AboutCompanyComponent implements OnInit {
   }
 
   onClickSignup(type: PlanTypeProduct) {
-    // console.log(this.plans[type].data,this.isDurationMonthly)
-    // this._uService.sessionStorage.setItem(
-    //   "selectedPlan",
-    //   JSON.stringify(this.plans[type].data)
-    // );
-    // this._uService.sessionStorage.setItem(
-    //   "selectedMonthly",
-    //   this.isDurationMonthly.toString()
-    // );
-    this._router.navigate(["/auth", "registration", "p"]);
+    if (this.plans[type].data) {
+      this._uService.sessionStorage.setItem(
+        "selectedPlan",
+        JSON.stringify(this.plans[type].data)
+      );
+      this._uService.sessionStorage.setItem(
+        "selectedMonthly",
+        this.isDurationMonthly.toString()
+      );
+    }
 
+    const link = ["/auth", "registration", "p"];
+    this._router.navigate(link);
   }
 
   async onClickCheckout(type: PlanTypeProduct) {
@@ -281,10 +284,18 @@ const features = [
 ];
 
 const plans: { [k in PlanTypeProduct]: IPlanData } = {
+  productFree: {
+    id: "free",
+    icon: "shopping-bag-outline",
+    title: "Free",
+    subtitle: "",
+    label: null,
+    data: null,
+  },
   productBasic: {
     id: "basic",
     icon: "shopping-bag-outline",
-    title: "Free",
+    title: "Basic",
     subtitle: "",
     label: null,
     data: null,
@@ -310,21 +321,26 @@ const plans: { [k in PlanTypeProduct]: IPlanData } = {
 const planFeatures: IPlanFeatureData[] = [
   {
     item: "Create a personalized profile",
-    targetPlan: ["productBasic"],
+    targetPlan: ["productBasic", "productFree"],
     detail: "explain yourself here.",
   },
   {
     item: "Create dynamic discounts and send notifications",
-    targetPlan: ["productBasic"],
+    targetPlan: ["productBasic", "productFree"],
     detail: "explain yourself here.",
   },
   {
-    item: "Create events and notify users about upcoming summits, course or webinar",
-    targetPlan: ["productBasic"],
+    item: "Share information about your product/services in the community section in different formats",
+    targetPlan: ["productBasic", "productFree"],
     detail: "explain yourself here.",
   },
   {
     item: "Receive recommendations and endorsement from wellness providers",
+    targetPlan: ["productBasic", "productFree"],
+    detail: "explain yourself here.",
+  },
+  {
+    item: "PromptHealth promotes your company to the providers via community, social media and internal newsletter",
     targetPlan: ["productBasic"],
     detail: "explain yourself here.",
   },
@@ -343,7 +359,7 @@ const planFeatures: IPlanFeatureData[] = [
     item: "Social Media Management",
     targetPlan: ["productCustom"],
     detail: null,
-  },
+  }
 ];
 
 const faqs: IFAQItem[] = [

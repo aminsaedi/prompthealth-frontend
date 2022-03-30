@@ -224,8 +224,8 @@
           </p>
           <ul class="list-unstyled pl-25p plan-features flex-grow-1">
             <li *ngIf="i > 0" class="position-relative mb-20p subtitle2">
-              <span *ngIf="i == 1">All Basic features +</span>
-              <span *ngIf="i == 2">All Provider features +</span>
+              <!-- <span *ngIf="i == 1">All Basic features +</span> -->
+              <!-- <span *ngIf="i == 2">All Provider features +</span> -->
               <!-- <span *ngIf="i == 2">All Advanced features +</span> -->
             </li>
             <ng-container *ngFor="let feature of planFeatures; let j = index">
@@ -248,11 +248,15 @@
             </li> -->
           </ul>
           <button
-            *ngIf="isNotLoggedIn"
-            class="btn"
-            [ngClass]="
-              plan.key == 'basic' ? 'btn-primary-dark' : 'btn-outline'
-            "
+            *ngIf="isNotLoggedIn && plan.key == 'basic'"
+            class="btn btn-primary-dark"
+            (click)="onClickFreePlan(plan.key)"
+          >
+            Sign-up Free
+          </button>
+          <button
+            *ngIf="isNotLoggedIn && plan.key != 'basic'"
+            class="btn btn-primary-dark"
             (click)="onClickSignup(plan.key)"
           >
             <ng-container *ngIf="plan.key == 'basic'"
@@ -278,7 +282,9 @@
               <ng-container *ngIf="plan.key == 'provider'"
                 >Order now</ng-container
               >
-              <ng-container *ngIf="plan.key !== 'provider'">Contact Us</ng-container>
+              <ng-container *ngIf="plan.key !== 'provider'"
+                >Contact Us</ng-container
+              >
             </button>
           </ng-container>
         </div>
@@ -298,9 +304,11 @@
   <h2>Advertising</h2>
   <div class="row w-100 justify-content-between">
     <div class="col-12 mt-20p col-md-6">
-      <img src="assets/img/advertising.jpg" style="width: 100%" />
+      <img src="assets/img/ad2.jpg" style="width: 100%;" />
     </div>
-    <div class="col-12 mt-20p p-20p col-md-6 text-left d-flex flex-column justify-content-between">
+    <div
+      class="col-12 mt-20p p-20p col-md-6 text-left d-flex flex-column justify-content-between"
+    >
       <p>Use PromptHealth to showcase yourself to wellness providers.</p>
       <ul class="list-unstyled pl-25p mt-20p plan-features flex-grow-1">
         <li class="position-relative mb-20p subtitle2">
@@ -318,7 +326,9 @@
           <span>Custom promotional content made for your brand</span>
         </li>
       </ul>
-      <button class="btn btn-primary w-50" routerLink="/contact-us" >Contact Us</button>
+      <button class="btn btn-primary w-50" routerLink="/contact-us">
+        Contact Us
+      </button>
     </div>
   </div>
 </section>
@@ -368,3 +378,22 @@
 
   <card-coupon [couponData]="couponData"></card-coupon>
 </div>
+
+<modal id="select-plan-type" #selectPlanType>
+  <div
+    class="title-container d-flex justify-content-between align-items-center"
+  >
+    <h6 class="h5-md mb-0">Who are you?</h6>
+    <button class="btn pr-0 btn-icon" (click)="selectPlanType.hide()">
+      <i iconPh="cross"></i>
+    </button>
+  </div>
+
+  <div class="content-container">
+    <h5 class="h4-md mb-0">Tell us who are you?</h5>
+    <div class="d-flex justify-content-between mt-30p">
+      <button class="btn btn-outline" (click)="onClickSignup('centre', true)" >Center</button>
+      <button class="btn btn-outline" (click)="onClickSignup('provider', true)" >Provider</button>
+    </div>
+  </div>
+</modal>

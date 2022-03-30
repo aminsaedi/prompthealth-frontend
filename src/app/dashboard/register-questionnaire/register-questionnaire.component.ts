@@ -115,8 +115,8 @@ export class RegisterQuestionnaireComponent implements OnInit {
           }
         } else {
           this._toastr.error('You haven\'t selected plan yet. Please select Plan.');
-          const route = ['/plans'];
-          if(this.userRole == 'P') { route.push('product'); }
+          const route = ['/'];
+          // if(this.userRole == 'P') { route.push('product'); }
           this._router.navigate(route); 
         }
       }catch(err){
@@ -170,7 +170,7 @@ export class RegisterQuestionnaireComponent implements OnInit {
       const planStr = this._uService.sessionStorage.getItem('selectedPlan');
       if(planStr) {
         const plan: IDefaultPlan = JSON.parse(planStr);
-        if(plan.userType.includes(this.userRole)) {
+        if(plan?.userType?.includes(this.userRole)) {
           planSelected = plan;
         }
       }
