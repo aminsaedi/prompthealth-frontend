@@ -224,8 +224,8 @@
           </p>
           <ul class="list-unstyled pl-25p plan-features flex-grow-1">
             <li *ngIf="i > 0" class="position-relative mb-20p subtitle2">
-              <!-- <span *ngIf="i == 1">All Basic features +</span> -->
-              <!-- <span *ngIf="i == 2">All Provider features +</span> -->
+              <span *ngIf="i == 1">All Basic features +</span>
+              <span *ngIf="i == 2">All Provider features +</span>
               <!-- <span *ngIf="i == 2">All Advanced features +</span> -->
             </li>
             <ng-container *ngFor="let feature of planFeatures; let j = index">
@@ -383,7 +383,7 @@
   <div
     class="title-container d-flex justify-content-between align-items-center"
   >
-    <h6 class="h5-md mb-0">Who are you?</h6>
+    <h6 class="h5-md mb-0">Make a selection</h6>
     <button class="btn pr-0 btn-icon" (click)="selectPlanType.hide()">
       <i iconPh="cross"></i>
     </button>

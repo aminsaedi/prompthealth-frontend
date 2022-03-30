@@ -321,26 +321,31 @@ const plans: { [k in PlanTypeProduct]: IPlanData } = {
 const planFeatures: IPlanFeatureData[] = [
   {
     item: "Create a personalized profile",
-    targetPlan: ["productBasic", "productFree"],
+    targetPlan: ["productFree"],
     detail: "explain yourself here.",
   },
   {
     item: "Create dynamic discounts and send notifications",
-    targetPlan: ["productBasic", "productFree"],
+    targetPlan: ["productFree"],
     detail: "explain yourself here.",
   },
   {
     item: "Share information about your product/services in the community section in different formats",
-    targetPlan: ["productBasic", "productFree"],
+    targetPlan: ["productFree"],
     detail: "explain yourself here.",
   },
   {
     item: "Receive recommendations and endorsement from wellness providers",
-    targetPlan: ["productBasic", "productFree"],
+    targetPlan: ["productFree"],
     detail: "explain yourself here.",
   },
   {
     item: "PromptHealth promotes your company to the providers via community, social media and internal newsletter",
+    targetPlan: ["productBasic"],
+    detail: "explain yourself here.",
+  },
+  {
+    item: "Monthly Check-In with a social media manger",
     targetPlan: ["productBasic"],
     detail: "explain yourself here.",
   },

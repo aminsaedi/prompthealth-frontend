@@ -483,18 +483,8 @@ const planFeatures: IPlanFeatureData[] = [
     detail: null,
   },
   {
-    item: "Exclusive access to Online Academy Resources",
+    item: "Monthly Check-In with a social media manger",
     targetPlan: ["centre"],
-    detail: null,
-  },
-  {
-    item: "Monthly features on all PromptHealth's social media channels (Guest post, live conversations, etc) ",
-    targetPlan: ["centre"],
-    detail: null,
-  },
-  {
-    item: "Monthly Check- In with a PromptHealth Mentor",
-    targetPlan: ["provider", "centre"],
     detail: null,
   },
   // {

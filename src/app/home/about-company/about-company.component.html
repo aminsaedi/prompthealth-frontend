@@ -174,6 +174,11 @@
             services. We tailor our services based on your needs.
           </p>
           <ul class="list-unstyled pl-25p plan-features flex-grow-1">
+            <li *ngIf="i > 0" class="position-relative mb-20p subtitle2">
+              <span *ngIf="i == 1">All Free features +</span>
+              <!-- <span *ngIf="i == 2">All Provider features +</span> -->
+              <!-- <span *ngIf="i == 2">All Advanced features +</span> -->
+            </li>
             <ng-container *ngFor="let feature of planFeatures; let j = index">
               <li
                 *ngIf="isFeatureShowable(j, plan.key)"
