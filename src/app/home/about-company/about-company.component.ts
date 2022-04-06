@@ -25,6 +25,7 @@ import { IFAQItem } from "../_elements/faq-item/faq-item.component";
 import { RegionService } from "src/app/shared/services/region.service";
 import { Subscription } from "rxjs";
 
+declare let fbq: Function;
 @Component({
   selector: "app-about-company",
   templateUrl: "./about-company.component.html",
@@ -229,6 +230,7 @@ export class AboutCompanyComponent implements OnInit {
     }
 
     const link = ["/auth", "registration", "p"];
+    fbq("track", "Subscribe");
     this._router.navigate(link);
   }
 

@@ -29,6 +29,7 @@ import { RegionService } from "src/app/shared/services/region.service";
 import { Subscription } from "rxjs";
 import { ModalService } from "../../shared/services/modal.service";
 
+declare let fbq: Function;
 @Component({
   selector: "app-about-practitioner",
   templateUrl: "./about-practitioner.component.html",
@@ -288,6 +289,7 @@ export class AboutPractitionerComponent implements OnInit {
         "null"
       );
     }
+    fbq("track", "Subscribe");
     this._router.navigate(link);
   }
 
