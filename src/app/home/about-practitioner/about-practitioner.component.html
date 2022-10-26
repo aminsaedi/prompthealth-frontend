@@ -1,30 +1,13 @@
 <div class="hero-video overflow-hidden">
-  <video
-    #videoPlayer
-    [muted]="true"
-    autoplay
-    loop
-    playsinline
-    [ngClass]="isVideoLgReady ? 'd-none' : ''"
-    [src]="videoLink"
-    poster="/assets/video/about-practitioner-thumbnail.png"
-  ></video>
-  <video
-    #videoLg
-    playinline
-    [muted]="true"
-    [ngClass]="!isVideoLgReady ? 'd-none' : ''"
-    preload="none"
-    [src]="videoLinkLg"
-  ></video>
+  <video #videoPlayer [muted]="true" autoplay loop playsinline [ngClass]="isVideoLgReady ? 'd-none' : ''"
+    [src]="videoLink" poster="/assets/video/about-practitioner-thumbnail.png"></video>
+  <video #videoLg playinline [muted]="true" [ngClass]="!isVideoLgReady ? 'd-none' : ''" preload="none"
+    [src]="videoLinkLg"></video>
 </div>
 
 <section class="container mt-100p mb-50p">
   <ul class="row list-unstyled justify-content-center">
-    <li
-      *ngFor="let feature of features"
-      class="mb-50p col-12 col-md-6 col-xl-4"
-    >
+    <li *ngFor="let feature of features" class="mb-50p col-12 col-md-6 col-xl-4">
       <div class="mb-25p">
         <i [iconPh]="feature.icon" style="font-size: 30px"></i>
       </div>
@@ -38,9 +21,7 @@
   <h2 class="h3 h2-md text-center">Other facilities available</h2>
   <div class="row">
     <div class="col-12 col-md-6 mt-20p">
-      <div
-        class="mb-25p bg-yellow-light rounded-12p overflow-hidden h-100 d-flex flex-column"
-      >
+      <div class="mb-25p bg-yellow-light rounded-12p overflow-hidden h-100 d-flex flex-column">
         <div>
           <img src="assets/img/provider-plans-left.jpg" class="w-100" />
         </div>
@@ -51,42 +32,35 @@
               Showcase your practice by using our advertising services
             </p>
             <div class="d-flex align-items-center mt-10p">
-              <i class="icon-checkbox-square-outline text-primary"
-                ><span class="path1"></span><span class="path2"></span
-              ></i>
+              <i class="icon-checkbox-square-outline text-primary"><span class="path1"></span><span
+                  class="path2"></span></i>
               <p class="text-black ml-5p m-0 d-inline-block">
                 Featured posts on our Homepage
               </p>
             </div>
             <div class="d-flex align-items-center mt-10p">
-              <i class="icon-checkbox-square-outline text-primary"
-                ><span class="path1"></span><span class="path2"></span
-              ></i>
+              <i class="icon-checkbox-square-outline text-primary"><span class="path1"></span><span
+                  class="path2"></span></i>
               <p class="text-black ml-5p m-0 d-inline-block">
                 Promotions on PromptHealth social channels
               </p>
             </div>
             <div class="d-flex align-items-center mt-10p">
-              <i class="icon-checkbox-square-outline text-primary"
-                ><span class="path1"></span><span class="path2"></span
-              ></i>
+              <i class="icon-checkbox-square-outline text-primary"><span class="path1"></span><span
+                  class="path2"></span></i>
               <p class="text-black ml-5p m-0 d-inline-block">
                 First option for this First option for this
               </p>
             </div>
           </div>
           <div class="text-center mt-60p">
-            <a class="btn btn-primary px-lg-30p" routerLink="/contact-us"
-              >Contact Us</a
-            >
+            <a class="btn btn-primary px-lg-30p" routerLink="/contact-us">Contact Us</a>
           </div>
         </div>
       </div>
     </div>
     <div class="col-12 col-md-6 mt-20p">
-      <div
-        class="mb-25p bg-primary-light rounded-12p overflow-hidden h-100 d-flex flex-column"
-      >
+      <div class="mb-25p bg-primary-light rounded-12p overflow-hidden h-100 d-flex flex-column">
         <div>
           <img src="assets/img/provider-plans-right.jpg" class="w-100" />
         </div>
@@ -98,121 +72,109 @@
               us help!
             </p>
             <div class="d-flex align-items-center mt-10p">
-              <i class="icon-checkbox-square-outline text-primary"
-                ><span class="path1"></span><span class="path2"></span
-              ></i>
+              <i class="icon-checkbox-square-outline text-primary"><span class="path1"></span><span
+                  class="path2"></span></i>
               <p class="text-black ml-5p m-0 d-inline-block">
                 One-on-One Mentoring
               </p>
             </div>
             <div class="d-flex align-items-center mt-10p">
-              <i class="icon-checkbox-square-outline text-primary"
-                ><span class="path1"></span><span class="path2"></span
-              ></i>
+              <i class="icon-checkbox-square-outline text-primary"><span class="path1"></span><span
+                  class="path2"></span></i>
               <p class="text-black ml-5p m-0 d-inline-block">
                 Custom Promo Videos
               </p>
             </div>
             <div class="d-flex align-items-center mt-10p">
-              <i class="icon-checkbox-square-outline text-primary"
-                ><span class="path1"></span><span class="path2"></span
-              ></i>
+              <i class="icon-checkbox-square-outline text-primary"><span class="path1"></span><span
+                  class="path2"></span></i>
               <p class="text-black ml-5p m-0 d-inline-block">
                 Social Media Management
               </p>
             </div>
           </div>
           <div class="text-center mt-60p">
-            <a class="btn btn-primary-dark px-lg-30p" routerLink="/contact-us"
-              >Contact Us</a
-            >
+            <a class="btn btn-primary-dark px-lg-30p" routerLink="/contact-us">Contact Us</a>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="text-center mt-30p">
-    <button
-      (click)="onClickSignup('basic')"
-      class="btn btn-primary px-lg-30p"
-      routerLink="/auth/registration/c"
-    >
+    <button (click)="onClickSignup('basic')" class="btn btn-primary px-lg-30p" routerLink="/auth/registration/c">
       Register on PromptHealth
     </button>
   </div>
 </section>
 
+
 <section class="container">
-  <div class="text-center">
-    <h2 class="h3 h2-md">It’s easy to get started</h2>
-    <!-- <p class="mt-20p">Free 14-day trial on our paid plans. Just cancel before the trial period is over!</p> -->
-    <div class="mt-60p mb-40p">
-      <a id="plan" class="scroll-anchor"></a>
-      <div
-        class="d-inline-block position-relative ml-70p ml-md-0p"
-        style="width: 170px"
-      >
-        <div class="discount-popup body-small text-body">20% Discount</div>
-        <switch
-          [labels]="['Annually', 'Monthly']"
-          [initialState]="'on'"
-          (changeState)="onChangeDuration($event)"
-        ></switch>
+  <div class="text-center border rounded-12p mb-40p">
+    <h2 class="mt-20p h3 h2-md">Prompt Academy</h2>
+    <h3 class="h4 h3-md text-label mb-0">Exclusive to PromptHealth subscribers</h3>
+    <div class="row w-100 justify-content-between">
+      <div class="col-12 mt-20p col-md-6">
+        <img src="assets/img/online-academy-banner.png" class="w-100 m-2 rounded-12p" />
+      </div>
+      <div class="col-12 mt-20p p-20p col-md-6 text-left d-flex flex-column justify-content-between">
+        <p>One time package to access to library of videos on tips and strategies to boost business online and excel on
+          social media by Hedieh Safiyari with over 500 K+ on TikTok</p>
+        <ul class="list-unstyled pl-25p mt-20p plan-features flex-grow-1">
+          <li class="position-relative mb-20p subtitle2">
+            <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
+            <span>For PromptHealth subscribers, you can get more benefits including free collaboration and monthly check
+              ins for the same price.</span>
+          </li>
+        </ul>
+        <a class="btn btn-primary w-50 mx-auto" target="_blank" href="http://www.hediehsafiyari.com/products">
+          Click To Buy
+        </a>
       </div>
     </div>
   </div>
-
-  <div class="row">
-    <div
-      *ngFor="let plan of plans | keyvalue: keepOriginalOrder; let i = index"
-      class="col-12 col-lg-3 mb-20p mb-lg-0p"
-    >
-      <div
-        class="card h-100 text-left rounded12p rounded-12p"
-        [ngClass]="plan.key == 'custom' ? 'bg-yellow-light' : ''"
-      >
+  <div class="text-center">
+    <h3 class="h4 h3-md">Exclusive to PromptHealth subscribers</h3>
+    <h4 class="h5 h4-md text-label">helping you to excel your business online</h4>
+    <!-- <p class="mt-20p">Free 14-day trial on our paid plans. Just cancel before the trial period is over!</p> -->
+    <div class="mt-60p mb-40p">
+      <a id="plan" class="scroll-anchor"></a>
+      <div class="d-inline-block position-relative ml-70p ml-md-0p" style="width: 170px">
+        <div class="discount-popup body-small text-body">20% Discount</div>
+        <switch [labels]="['Annually', 'Monthly']" [initialState]="'on'" (changeState)="onChangeDuration($event)">
+        </switch>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div *ngFor="let plan of plans | keyvalue: keepOriginalOrder; let i = index"
+      class="col-12 col-lg-3 mb-20p mb-lg-0p">
+      <div class="card h-100 text-left rounded12p rounded-12p"
+        [ngClass]="plan.key == 'custom' ? 'bg-yellow-light' : ''">
         <div *ngIf="plan.key == 'custom'" class="mb-10p">
-          <img
-            class="rounded12p rounded-12p"
-            style="object-fit: contain; width: 100%; height: auto"
-            src="assets/img/provider-plans-left.jpg"
-          />
+          <img class="rounded12p rounded-12p" style="object-fit: contain; width: 100%; height: auto"
+            src="assets/img/provider-plans-left.jpg" />
         </div>
-        <div
-          class="h-100 text-left p-15p p-md-30p px-lg-15p px-xl-30p"
-          style="display: flex; flex-direction: column; position: relative"
-        >
+        <div class="h-100 text-left p-15p p-md-30p px-lg-15p px-xl-30p"
+          style="display: flex; flex-direction: column; position: relative">
           <div *ngIf="plan.value.label" class="label body1">
             {{ plan.value.label }}
           </div>
           <div *ngIf="plan.key != 'custom'" class="mb-10p">
-            <i
-              [iconPh]="plan.value.icon"
-              style="font-size: 30px"
-              class="text-primary"
-            ></i>
+            <i [iconPh]="plan.value.icon" style="font-size: 30px" class="text-primary"></i>
           </div>
           <h4 class="mb-0">{{ plan.value.title }}</h4>
           <p class="mb-0 body2 text-label">{{ plan.value.subtitle }}</p>
           <h3 *ngIf="plan.value.data && plan.key != 'custom'" class="my-25p">
             <ng-container *ngIf="!plan.value"> </ng-container>
-            <ng-container *ngIf="plan.value?.data.price == 0"
-              >Free</ng-container
-            >
-            <ng-container
-              *ngIf="plan.value?.data.price != 0 && isDurationMonthly"
-              >{{
-                plan.value.data.price
-                  | currency: plan.value.data.currency:"code":"1.0-0"
-              }}</ng-container
-            >
-            <ng-container
-              *ngIf="plan.value?.data.price != 0 && !isDurationMonthly"
-              >{{
-                plan.value.data.yearlyPrice
-                  | currency: plan.value.data.currency:"code":"1.0-0"
-              }}</ng-container
-            >
+            <ng-container *ngIf="plan.value?.data.price == 0">Free</ng-container>
+            <ng-container *ngIf="plan.value?.data.price != 0 && isDurationMonthly">{{
+              plan.value.data.price
+              | currency: plan.value.data.currency:"code":"1.0-0"
+              }}</ng-container>
+            <ng-container *ngIf="plan.value?.data.price != 0 && !isDurationMonthly">{{
+              plan.value.data.yearlyPrice
+              | currency: plan.value.data.currency:"code":"1.0-0"
+              }}</ng-container>
             <span *ngIf="plan.value?.data.price != 0" class="h4 text-label">
               <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
               <ng-container *ngIf="!isDurationMonthly">/yr</ng-container>
@@ -229,14 +191,8 @@
               <!-- <span *ngIf="i == 2">All Advanced features +</span> -->
             </li>
             <ng-container *ngFor="let feature of planFeatures; let j = index">
-              <li
-                *ngIf="isFeatureShowable(j, plan.key)"
-                class="position-relative mb-20p subtitle2"
-              >
-                <i
-                  class="icon-pre text-placeholder"
-                  iconPh="checkbox-square-outline"
-                ></i>
+              <li *ngIf="isFeatureShowable(j, plan.key)" class="position-relative mb-20p subtitle2">
+                <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
                 <span>{{ feature.item }}</span>
               </li>
             </ng-container>
@@ -247,44 +203,25 @@
               >
             </li> -->
           </ul>
-          <button
-            *ngIf="isNotLoggedIn && plan.key == 'basic'"
-            class="btn btn-primary-dark"
-            (click)="onClickFreePlan(plan.key)"
-          >
+          <button *ngIf="isNotLoggedIn && plan.key == 'basic'" class="btn btn-primary-dark"
+            (click)="onClickFreePlan(plan.key)">
             Sign-up Free
           </button>
-          <button
-            *ngIf="isNotLoggedIn && plan.key != 'basic'"
-            class="btn btn-primary-dark"
-            (click)="onClickSignup(plan.key)"
-          >
-            <ng-container *ngIf="plan.key == 'basic'"
-              >Sign-up Free</ng-container
-            >
+          <button *ngIf="isNotLoggedIn && plan.key != 'basic'" class="btn btn-primary-dark"
+            (click)="onClickSignup(plan.key)">
+            <ng-container *ngIf="plan.key == 'basic'">Sign-up Free</ng-container>
             <ng-container *ngIf="plan.key == 'provider'">Sign-up</ng-container>
             <ng-container *ngIf="plan.key == 'centre'">Sign-up</ng-container>
             <ng-container *ngIf="plan.key == 'custom'">Contact Us</ng-container>
           </button>
-          <ng-container
-            *ngIf="
+          <ng-container *ngIf="
               isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')
-            "
-          >
-            <button
-              class="btn"
-              [ngClass]="
+            ">
+            <button class="btn" [ngClass]="
                 plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline'
-              "
-              [disabled]="isLoading"
-              (click)="onClickCheckout(plan.key)"
-            >
-              <ng-container *ngIf="plan.key == 'provider'"
-                >Order now</ng-container
-              >
-              <ng-container *ngIf="plan.key !== 'provider'"
-                >Contact Us</ng-container
-              >
+              " [disabled]="isLoading" (click)="onClickCheckout(plan.key)">
+              <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
+              <ng-container *ngIf="plan.key !== 'provider'">Contact Us</ng-container>
             </button>
           </ng-container>
         </div>
@@ -294,9 +231,7 @@
 
   <div class="mt-30p text-center body1 d-none">
     Looking for social media collaborations?
-    <a class="ml-10p btn-text-primary" routerLink="/contact-us"
-      ><u>Contact us</u></a
-    >
+    <a class="ml-10p btn-text-primary" routerLink="/contact-us"><u>Contact us</u></a>
   </div>
 </section>
 
@@ -306,23 +241,15 @@
     <div class="col-12 mt-20p col-md-6">
       <img src="assets/img/ad2.jpg" style="width: 100%;" />
     </div>
-    <div
-      class="col-12 mt-20p p-20p col-md-6 text-left d-flex flex-column justify-content-between"
-    >
+    <div class="col-12 mt-20p p-20p col-md-6 text-left d-flex flex-column justify-content-between">
       <p>Use PromptHealth to showcase yourself to wellness providers.</p>
       <ul class="list-unstyled pl-25p mt-20p plan-features flex-grow-1">
         <li class="position-relative mb-20p subtitle2">
-          <i
-            class="icon-pre text-placeholder"
-            iconPh="checkbox-square-outline"
-          ></i>
+          <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
           <span>Promotional Ad space on PromptHealth homepage</span>
         </li>
         <li class="position-relative mb-20p subtitle2">
-          <i
-            class="icon-pre text-placeholder"
-            iconPh="checkbox-square-outline"
-          ></i>
+          <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
           <span>Custom promotional content made for your brand</span>
         </li>
       </ul>
@@ -341,10 +268,7 @@
 
 <section class="container d-none">
   <a #anchorPlanFeatures class="scroll-anchor"></a>
-  <table-plan-feature
-    [planFeatures]="planFeatures"
-    [plans]="plans"
-  ></table-plan-feature>
+  <table-plan-feature [planFeatures]="planFeatures" [plans]="plans"></table-plan-feature>
 </section>
 
 <section class="container my-100p position-relative">
@@ -362,13 +286,8 @@
   </div>
 </section>
 
-<div
-  [@slideHorizontal]
-  class="message-coupon blur"
-  *ngIf="isCouponShown"
-  [ngClass]="{ shrink: isCouponShrink }"
-  (click)="expandCoupon()"
->
+<div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{ shrink: isCouponShrink }"
+  (click)="expandCoupon()">
   <div class="d-flex justify-content-between align-items-center mb-10p">
     <div class="subtitle1 mb-0">You have coupon!</div>
     <button class="btn btn-shrink" (click)="shrinkCoupon($event)">
@@ -380,9 +299,7 @@
 </div>
 
 <modal id="select-plan-type" #selectPlanType>
-  <div
-    class="title-container d-flex justify-content-between align-items-center"
-  >
+  <div class="title-container d-flex justify-content-between align-items-center">
     <h6 class="h5-md mb-0">Make a selection</h6>
     <button class="btn pr-0 btn-icon" (click)="selectPlanType.hide()">
       <i iconPh="cross"></i>
@@ -392,8 +309,8 @@
   <div class="content-container">
     <h5 class="h4-md mb-0">Tell us who are you?</h5>
     <div class="d-flex justify-content-between mt-30p">
-      <button class="btn btn-outline" (click)="onClickSignup('centre', true)" >Center</button>
-      <button class="btn btn-outline" (click)="onClickSignup('provider', true)" >Provider</button>
+      <!-- <button class="btn btn-outline" (click)="onClickSignup('centre', true)">Center</button> -->
+      <button class="btn btn-outline" (click)="onClickSignup('provider', true)">Provider</button>
     </div>
   </div>
 </modal>

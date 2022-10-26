@@ -61,7 +61,7 @@ export class AboutPractitionerComponent implements OnInit {
     private _el: ElementRef,
     private _regionService: RegionService,
     private _modalService: ModalService
-  ) { }
+  ) {}
 
   public features = features;
   public plans = plans;
@@ -188,9 +188,10 @@ export class AboutPractitionerComponent implements OnInit {
             //   this.plans.provider.data = d;
           } else if (d.userType.includes("SP")) {
             this.plans.provider.data = d;
-          } else if (d.userType.includes("C")) {
-            this.plans.centre.data = d;
           }
+          // else if (d.userType.includes("C")) {
+          //   this.plans.centre.data = d;
+          // }
         });
       }
     });
@@ -235,7 +236,7 @@ export class AboutPractitionerComponent implements OnInit {
     e.stopPropagation();
   }
 
-  onClickFreePlan(type: 'basic') {
+  onClickFreePlan(type: "basic") {
     this._modalService.show("select-plan-type");
     // let link = ["/auth", "registration"];
     // if (type === "provider") {
@@ -269,9 +270,9 @@ export class AboutPractitionerComponent implements OnInit {
         link = ["/contact-us"];
         break;
 
-      case "centre":
-        link.push("c");
-        break;
+      // case "centre":
+      //   link.push("c");
+      //   break;
     }
     if (!fromModal) {
       this._uService.sessionStorage.setItem(
@@ -282,12 +283,8 @@ export class AboutPractitionerComponent implements OnInit {
         "selectedMonthly",
         this.isDurationMonthly.toString()
       );
-
     } else {
-      this._uService.sessionStorage.setItem(
-        "selectedPlan",
-        "null"
-      );
+      this._uService.sessionStorage.setItem("selectedPlan", "null");
     }
     fbq("track", "Subscribe");
     this._router.navigate(link);
@@ -297,10 +294,10 @@ export class AboutPractitionerComponent implements OnInit {
     if (this.profile.roles == "U") {
       this._toastr.error("You don't need to buy this plan");
     } else {
-      if (type === "centre") {
-        this._router.navigate(["/contact-us"]);
-        return;
-      }
+      // if (type === "centre") {
+      //   this._router.navigate(["/contact-us"]);
+      //   return;
+      // }
       this.isLoading = true;
       try {
         const result = await this._sharedService.checkoutPlan(
@@ -417,21 +414,21 @@ const plans: { [k in PlanTypePractitioner]: IPlanData } = {
   provider: {
     id: "provider",
     icon: "verified-outline",
-    title: "Providers",
+    title: "Wellness brands/providers",
     // subtitle: "",
-    subtitle: 'For solo providers.',
+    subtitle: "For solo providers.",
     label: "Popular",
     data: null,
   },
-  centre: {
-    id: "centre",
-    icon: "users-outline",
-    title: "Centre",
-    subtitle: 'For centers with multiple providers.',
-    // subtitle: "",
-    label: null,
-    data: null,
-  },
+  // centre: {
+  //   id: "centre",
+  //   icon: "users-outline",
+  //   title: "Centre",
+  //   subtitle: "For centers with multiple providers.",
+  //   // subtitle: "",
+  //   label: null,
+  //   data: null,
+  // },
   custom: {
     id: "custom",
     icon: "users-outline",
@@ -446,47 +443,47 @@ const plans: { [k in PlanTypePractitioner]: IPlanData } = {
 const planFeatures: IPlanFeatureData[] = [
   {
     item: "Get listed with a personalized profile",
-    targetPlan: ["basic", "provider", "centre"],
+    targetPlan: ["basic", "provider"],
     detail: null,
   },
   {
     item: "Follow and engage with other users",
-    targetPlan: ["basic", "provider", "centre"],
+    targetPlan: ["basic", "provider"],
     detail: null,
   },
   {
     item: "Share your knowledge via voice memos, notes, and images",
-    targetPlan: ["basic", "provider", "centre"],
+    targetPlan: ["basic", "provider"],
     detail: null,
   },
   {
     item: "Receive booking requests",
-    targetPlan: ["basic", "provider", "centre"],
+    targetPlan: ["basic", "provider"],
     detail: null,
   },
   {
     item: "Recommendations by other providers",
-    targetPlan: ["basic", "provider", "centre"],
+    targetPlan: ["basic", "provider"],
     detail: null,
   },
   // {
   //   item: "Access to all basic features",
-  //   targetPlan: ["provider", "centre"],
+  //   targetPlan: ["provider", ],
   //   detail: null,
   // },
   {
-    item: "Exclusive access to Online Academy Resources",
-    targetPlan: ["provider", "centre"],
+    item: "Exclusive access to Prompt Academy Resources",
+    targetPlan: ["provider"],
     detail: null,
   },
   {
     item: "Monthly features on all PromptHealth's social media channels (Guest post, live conversations, etc) ",
-    targetPlan: ["provider", "centre"],
+    targetPlan: ["provider"],
     detail: null,
   },
   {
     item: "Monthly Check-In with a social media manger",
-    targetPlan: ["centre"],
+    targetPlan: ["provider"],
     detail: null,
   },
   // {
@@ -496,10 +493,10 @@ const planFeatures: IPlanFeatureData[] = [
   // },
 
   // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
- 
+
   {
     item: "List all your providers for free",
-    targetPlan: ["centre"],
+    targetPlan: [],
     detail: null,
   },
   {
@@ -536,7 +533,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: "Does it cost to join PromptHealth?",
-    a: `You have the option of creating a free account. You also have the option to create an enhanced profile for $25/month as a solo provider, or $95/ month as a center with multiple providers to have access to the online academy created exclusively with the intent to empower you to market your services more effectively, as well as the opportunity for social collaboration with us. Details of each account type and features can be found on the pricing page.`,
+    a: `You have the option of creating a free account. You also have the option to create an enhanced profile for $25/month as a solo provider, or $95/ month as a center with multiple providers to have access to the Prompt Academy created exclusively with the intent to empower you to market your services more effectively, as well as the opportunity for social collaboration with us. Details of each account type and features can be found on the pricing page.`,
     opened: false,
   },
   {

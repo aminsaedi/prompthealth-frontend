@@ -3,8 +3,10 @@
     <div class="d-flex justify-content-between align-items-center">
       <div>
         <a routerLink="/">
-          <img class="d-md-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20" loading="lazy" />
-          <img class="d-none d-md-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="25" loading="lazy" />
+          <img class="d-md-none" src="assets/img/logo-sm.png" alt="PromptHealth" width="auto" height="20"
+            loading="lazy" />
+          <img class="d-none d-md-block" src="assets/img/logo.png" alt="PromptHealth" width="auto" height="25"
+            loading="lazy" />
         </a>
       </div>
       <nav>
@@ -24,7 +26,8 @@
           </li> -->
 
           <li class="mx-15p d-none d-lg-block position-relative" (clickOutside)="hidePlanMenu()">
-            <a class="text-body" (click)="onClickGetListed()">Pricing</a>
+            <a routerLink="/pricing" class="text-body">Pricing</a>
+            <!-- <a class="text-body" (click)="onClickGetListed()">Pricing</a>
             <i iconPh="chevron-down" class="ml-5p"></i>
             <div 
             *ngIf="isPlanMenuShown"
@@ -47,7 +50,7 @@
                   <p class="mb-0 body2 text-label">{{item.text}}</p>
                 </div>
               </a>
-            </div>
+            </div> -->
           </li>
 
           <li *ngIf="!isLoggedIn" class="mx-15p d-none d-lg-block">
@@ -62,7 +65,7 @@
           <li class="ml-10p ml-lg-15p">
             <a routerLink="/online-academy" class="btn btn-secondary small">
               <i class="text-primary-dark" iconPh="users"></i>
-              <span class="text-primary-dark">Online Academy</span>
+              <span class="text-primary-dark">Prompt Academy</span>
             </a>
           </li>
           <li class="ml-10p ml-lg-15p">
@@ -81,4 +84,3 @@
     </div>
   </div>
 </header>
-
