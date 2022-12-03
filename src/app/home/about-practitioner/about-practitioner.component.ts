@@ -500,16 +500,16 @@ const planFeatures: IPlanFeatureData[] = [
     detail: null,
   },
   {
-    item: "3 month bundle",
+    item: "Full Social Media Management",
     targetPlan: ["custom"],
     detail: null,
   },
   {
-    item: "6 month bundle",
+    item: "Social Media Mentorship",
     targetPlan: ["custom"],
     detail: null,
   },
-  { item: "Social Media Management", targetPlan: ["custom"], detail: null },
+  // { item: "Social Media Management", targetPlan: ["custom"], detail: null },
   // {
   //   item: "PromptHealth personal assistant for onboarding",
   //   targetPlan: ["centre"],

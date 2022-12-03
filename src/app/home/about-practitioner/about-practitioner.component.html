@@ -110,15 +110,15 @@
 
 <section class="container">
   <div class="text-center border rounded-12p mb-40p">
-    <h2 class="mt-20p h3 h2-md">Prompt Academy</h2>
-    <h3 class="h4 h3-md text-label mb-0">Exclusive to PromptHealth subscribers</h3>
+    <h2 class="mt-20p h3 h2-md">Learn to do it yourself</h2>
+    <h3 class="h4 h3-md text-label mb-0">Non PromptHealth members</h3>
     <div class="row w-100 justify-content-between">
       <div class="col-12 mt-20p col-md-6">
         <img src="assets/img/online-academy-banner.png" class="w-100 m-2 rounded-12p" />
       </div>
       <div class="col-12 mt-20p p-20p col-md-6 text-left d-flex flex-column justify-content-between">
         <p>One time package to access to library of videos on tips and strategies to boost business online and excel on
-          social media by Hedieh Safiyari with over 500 K+ on TikTok</p>
+          social media by Hedieh Safiyari with over 600K+ on TikTok</p>
         <ul class="list-unstyled pl-25p mt-20p plan-features flex-grow-1">
           <li class="position-relative mb-20p subtitle2">
             <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
@@ -126,7 +126,7 @@
               ins for the same price.</span>
           </li>
         </ul>
-        <a class="btn btn-primary w-50 mx-auto" target="_blank" href="http://www.hediehsafiyari.com/products">
+        <a class="btn btn-primary w-50 mx-auto" target="_blank" href="http://www.hediehsafiyari.com">
           Click To Buy
         </a>
       </div>
@@ -187,7 +187,7 @@
           <ul class="list-unstyled pl-25p plan-features flex-grow-1">
             <li *ngIf="i > 0" class="position-relative mb-20p subtitle2">
               <span *ngIf="i == 1">All Basic features +</span>
-              <span *ngIf="i == 2">All Provider features +</span>
+              <!-- <span *ngIf="i == 2">All Provider features +</span> -->
               <!-- <span *ngIf="i == 2">All Advanced features +</span> -->
             </li>
             <ng-container *ngFor="let feature of planFeatures; let j = index">
@@ -212,7 +212,7 @@
             <ng-container *ngIf="plan.key == 'basic'">Sign-up Free</ng-container>
             <ng-container *ngIf="plan.key == 'provider'">Sign-up</ng-container>
             <ng-container *ngIf="plan.key == 'centre'">Sign-up</ng-container>
-            <ng-container *ngIf="plan.key == 'custom'">Contact Us</ng-container>
+            <ng-container *ngIf="plan.key == 'custom'">Sign-up</ng-container>
           </button>
           <ng-container *ngIf="
               isLoggedIn && !(this.profile.plan && plan.value.id == 'basic')
@@ -221,7 +221,7 @@
                 plan.key == 'provider' ? 'btn-primary-dark' : 'btn-outline'
               " [disabled]="isLoading" (click)="onClickCheckout(plan.key)">
               <ng-container *ngIf="plan.key == 'provider'">Order now</ng-container>
-              <ng-container *ngIf="plan.key !== 'provider'">Contact Us</ng-container>
+              <ng-container *ngIf="plan.key !== 'provider'">Sign-up</ng-container>
             </button>
           </ng-container>
         </div>
