@@ -481,11 +481,11 @@ const planFeatures: IPlanFeatureData[] = [
     targetPlan: ["provider"],
     detail: null,
   },
-  {
-    item: "Monthly Check-In with a social media manger",
-    targetPlan: ["provider"],
-    detail: null,
-  },
+  // {
+  //   item: "Monthly Check-In with a social media manger",
+  //   targetPlan: ["provider"],
+  //   detail: null,
+  // },
   // {
   //   item: "Performance analytics",
   //   targetPlan: ["provider", "centre"],
