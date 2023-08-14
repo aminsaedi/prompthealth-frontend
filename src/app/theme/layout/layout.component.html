@@ -1,28 +1,18 @@
 <div style="min-height: 100vh">
-    <div 
-    *ngIf="!onHomepage && isHeaderShown"
-    class="sticky-top" 
-    style="z-index: 90;"
-    [@slideVertical100pc]
-    [@.disabled]="disableHeaderAnimation"
-    >
-        <app-header></app-header>
-    </div>
+  <div *ngIf="!onHomepage && isHeaderShown" class="sticky-top" style="z-index: 90;" [@slideVertical100pc]
+    [@.disabled]="disableHeaderAnimation">
+    <app-header></app-header>
+  </div>
 
-    <div
-    *ngIf="!!onHomepage && isHeaderShown"
-    class="position-fixed w-100"
-    style="z-index: 90;"
-    [@slideVertical100pc]
-    [@.disabled]="disableHeaderAnimation"
-    >
-        <app-header></app-header>
-    </div>
-    
-    <div class="wrapper">
-        <router-outlet appHighlight></router-outlet>
-        <div class="push"></div>
-    </div>
+  <div *ngIf="!!onHomepage && isHeaderShown" class="position-fixed w-100" style="z-index: 90;" [@slideVertical100pc]
+    [@.disabled]="disableHeaderAnimation">
+    <app-header></app-header>
+  </div>
+
+  <div class="wrapper">
+    <router-outlet appHighlight></router-outlet>
+    <div class="push"></div>
+  </div>
 </div>
 
 <app-footer *ngIf="showFooter" class="footer"></app-footer>
@@ -31,74 +21,67 @@
 
 <!-- Menu for Small view-->
 <div class="menu-sm bg-white" *ngIf="isMenuSmShown">
-    <div class="py-5p py-md-10p container">
-      <div class="d-flex justify-content-end align-items-center">
-        <div *ngIf="user" class="mx-10p">
-          <profile-image [image]="user?.profileImage" (click)="onClickUserIcon()"></profile-image>
-        </div>
-        <a routerLink="/community" class="btn btn-primary small ml-10p">
-          <i iconPh="users"></i>
-          <span>Community</span>
-        </a>
-        <button class="btn btn-icon small pr-0 py-5p ml-10p">
-          <i class="large" iconPh="cross" (click)="hideMenuSm()"></i>
-        </button>
+  <div class="py-5p py-md-10p container">
+    <div class="d-flex justify-content-end align-items-center">
+      <div *ngIf="user" class="mx-10p">
+        <profile-image [image]="user?.profileImage" (click)="onClickUserIcon()"></profile-image>
       </div>
-  
+      <a routerLink="/community" class="btn btn-primary small ml-10p">
+        <i iconPh="users"></i>
+        <span>Community</span>
+      </a>
+      <button class="btn btn-icon small pr-0 py-5p ml-10p">
+        <i class="large" iconPh="cross" (click)="hideMenuSm()"></i>
+      </button>
     </div>
-  
-    <div class="d-flex flex-nowrap overflow-hidden mt-60p" #menuSm>
-      <div class="menu-inner">
-        <div class="container">
-          <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/')">
-            <div class="subtitle1">Home</div>
-          </list-item>
-  
-          <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/practitioners')">
-            <div class="subtitle1" (click)="onClickFindProviders()">Find Providers</div>
-          </list-item>
-  
-          <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/about')">
-            <div class="subtitle1">About</div>
-          </list-item>
-  
-          <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/companies')">
+
+  </div>
+
+  <div class="d-flex flex-nowrap overflow-hidden mt-60p" #menuSm>
+    <div class="menu-inner">
+      <div class="container">
+        <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/')">
+          <div class="subtitle1">Home</div>
+        </list-item>
+
+        <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/practitioners')">
+          <div class="subtitle1" (click)="onClickFindProviders()">Find Providers</div>
+        </list-item>
+
+        <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/about')">
+          <div class="subtitle1">About</div>
+        </list-item>
+
+        <!-- <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/companies')">
             <div class="subtitle1">Companies</div>  
-          </list-item>
-  
-          <!-- <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/plans')">
+          </list-item> -->
+
+        <!-- <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/plans')">
             <div class="subtitle1">Get Listed</div>
           </list-item> -->
-  
-          <list-item action="chevron-down" (onTap)="onClickGetListed()">
-            <div class="subtitle1">Pricing</div>  
-          </list-item>
-  
-          <div 
-          *ngIf="isPlanMenuShown"
-          [@expandVertical]
-          >
-            <list-item 
-            *ngFor="let item of planMenuData;" 
-            action="chevron-right"
-            (onTap)="onClickMenuItemSm(item.link)"
-            >
-              <div class="subtitle1 text-primary mb-5p">
-                <i [iconPh]="item.icon" class="mr-5p"></i>
-                <span class="text-body">{{item.title}}</span>
-              </div>
-              <p class="mb-0 body2">{{item.text}}</p>
-            </list-item>
-          </div>
-  
-          <list-item *ngIf="!isLoggedIn">
-            <div>
-              <a class="subtitle1 text-body" (click)="onClickMenuItemSm('/auth/login')">Login</a>
-              <span> / </span>
-              <a class="subtitle1 text-body" (click)="onClickMenuItemSm('/auth/registration/u')">Register</a>
+
+        <list-item action="chevron-down" (onTap)="onClickGetListed()">
+          <div class="subtitle1">Pricing</div>
+        </list-item>
+
+        <div *ngIf="isPlanMenuShown" [@expandVertical]>
+          <list-item *ngFor="let item of planMenuData;" action="chevron-right" (onTap)="onClickMenuItemSm(item.link)">
+            <div class="subtitle1 text-primary mb-5p">
+              <i [iconPh]="item.icon" class="mr-5p"></i>
+              <span class="text-body">{{item.title}}</span>
             </div>
+            <p class="mb-0 body2">{{item.text}}</p>
           </list-item>
         </div>
+
+        <list-item *ngIf="!isLoggedIn">
+          <div>
+            <a class="subtitle1 text-body" (click)="onClickMenuItemSm('/auth/login')">Login</a>
+            <span> / </span>
+            <a class="subtitle1 text-body" (click)="onClickMenuItemSm('/auth/registration/u')">Register</a>
+          </div>
+        </list-item>
       </div>
     </div>
   </div>
+</div>

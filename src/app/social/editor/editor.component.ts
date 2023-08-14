@@ -81,7 +81,7 @@ export class EditorComponent implements OnInit {
   public itemsRolesRestrictedTo: CheckboxSelectionItem[] = [
     {id: 'client', label: 'Client', value: 'U'},
     {id: 'provider', label: 'Service Provider', value: 'SP+C'},
-    {id: 'company', label: 'Company', value: 'P'},
+    // {id: 'company', label: 'Company', value: 'P'},
   ];
 
   private _s3 = environment.config.AWS_S3;

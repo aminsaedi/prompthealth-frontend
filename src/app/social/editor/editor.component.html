@@ -69,17 +69,17 @@
             <label class="subtitle2 text-label">Marks as...</label>
             <form-item-checkbox name="isNews" label="News (Press release)" [controller]="f.isNews"></form-item-checkbox>
 
-            <div class="mt-10p">
+            <!-- <div class="mt-10p">
               <form-item-checkbox name="isAcademy" label="Prompt academy" [controller]="f.isAcademy">
               </form-item-checkbox>
             </div>
             <div *ngIf="eligibleToSetOnlineAcademyCategory" class="mt-10p">
               <form-item-checkbox name="isFreeAcademy" label="Is Free" [controller]="f.isFreeAcademy">
               </form-item-checkbox>
-            </div>
+            </div> -->
           </div>
 
-          <div *ngIf="eligibleToSetOnlineAcademyCategory" class="mt-30p">
+          <!-- <div *ngIf="eligibleToSetOnlineAcademyCategory" class="mt-30p">
             <label class="subtitle2 text-label">Prompt Academy Category...</label>
             <form-item-checkbox name="online_academy_category" value="templates" label="Tutorials" type="radio"
               [controller]="f.online_academy_category"></form-item-checkbox>
@@ -96,7 +96,7 @@
               [controller]="f.online_academy_category"></form-item-checkbox>
             <form-item-errors label="Prompt Academy Category" [controller]="f.online_academy_category"
               [submitted]="isSubmitted"></form-item-errors>
-          </div>
+          </div> -->
 
           <div *ngIf="eligibleToMarkAsNews" class="mt-30p">
             <label class="subtitle2 text-label">Restricted to</label>

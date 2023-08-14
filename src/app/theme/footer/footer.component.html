@@ -11,10 +11,14 @@
           <div class="col-12 col-lg-3">
             <div class="subtitle1 text-white my-30p mt-lg-0">Find providers</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
-              <li class="mb-3"><a class="btn btn-text-lightgrey small p-0" [routerLink]="['/practitioners/area/toronto']">In Toronto</a></li>
-              <li class="mb-3"><a class="btn btn-text-lightgrey small p-0" [routerLink]="['/practitioners/area/vancouver']">In Vancouver</a></li>
-              <li class="mb-3" *ngFor="let a of typeOfProviderListHighlight"><a class="btn btn-text-lightgrey small p-0" [routerLink]="['/practitioners/type/', a._id]">{{a.item_text}}</a></li>
-              <li class="mb-3"><a class="btn btn-text-lightgrey small p-0" [routerLink]="['/sitemaps']">See all cities & types</a></li>
+              <li class="mb-3"><a class="btn btn-text-lightgrey small p-0"
+                  [routerLink]="['/practitioners/area/toronto']">In Toronto</a></li>
+              <li class="mb-3"><a class="btn btn-text-lightgrey small p-0"
+                  [routerLink]="['/practitioners/area/vancouver']">In Vancouver</a></li>
+              <li class="mb-3" *ngFor="let a of typeOfProviderListHighlight"><a class="btn btn-text-lightgrey small p-0"
+                  [routerLink]="['/practitioners/type/', a._id]">{{a.item_text}}</a></li>
+              <li class="mb-3"><a class="btn btn-text-lightgrey small p-0" [routerLink]="['/sitemaps']">See all cities &
+                  types</a></li>
             </ul>
           </div>
 
@@ -24,9 +28,9 @@
               <li class="mb-3">
                 <a routerLink="/plans" class="btn btn-text-lightgrey small p-0">Plans for providers</a>
               </li>
-              <li class="mb-3">
+              <!-- <li class="mb-3">
                 <a routerLink="/plans/product" class="btn btn-text-lightgrey small p-0">Plans for companies</a>
-              </li>
+              </li> -->
               <li class="mb-3" *ngIf="!isU">
                 <a routerLink="/ambassador-program" class="btn btn-text-lightgrey small p-0">Ambassador program</a>
               </li>
@@ -38,7 +42,7 @@
               </li>
             </ul>
           </div>
-          
+
           <div class="col-12 col-lg-3">
             <div class="subtitle1 text-white my-30p mt-lg-0">PromptHealth</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
@@ -68,22 +72,21 @@
 
             <div class="mb-10p">
               <a href="https://apps.apple.com/ca/app/prompthealth/id1532951934" target="_blank">
-                <img width="130" src="/assets/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg" alt="Download on app store" loading="lazy" />
+                <img width="130" src="/assets/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
+                  alt="Download on app store" loading="lazy" />
               </a>
             </div>
             <div>
               <a href='https://play.google.com/store/apps/details?id=com.prompthealth&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
                 target="_blank">
                 <img class="badge-playstore" alt='Get it on Google Play' width="150"
-                  src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' loading="lazy" />
+                  src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'
+                  loading="lazy" />
               </a>
             </div>
 
             <div class="mt-90p mb-10p opacity-70pc">
-              <button 
-              class="btn btn-text-lightgrey p-0 small"
-              (click)="showModalRegion()"
-              >{{regionFormatted}}</button>
+              <button class="btn btn-text-lightgrey p-0 small" (click)="showModalRegion()">{{regionFormatted}}</button>
             </div>
           </div>
 
@@ -91,7 +94,7 @@
         </div>
       </div>
     </section>
-    
+
     <section class="row justify-content-between align-items-center text-center text-md-left">
       <div class="col-12 col-md mt-20p mt-md-0 order-2 order-md-1">
         <div class="text-placeholder body2">© 2021 PromptHealth. All Rights Reserved</div>
@@ -100,7 +103,7 @@
         <social-buttons></social-buttons>
       </div>
     </section>
-    
+
   </div>
 </footer>
 <!-- 
