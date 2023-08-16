@@ -472,12 +472,17 @@ const planFeatures: IPlanFeatureData[] = [
   //   detail: null,
   // },
   {
-    item: "Exclusive access to Prompt Academy Resources",
+    item: "Get Discovered: Boost SEO with our blogs as well as your articles in our community of verified health experts to rank highly on Google.",
     targetPlan: ["provider"],
     detail: null,
   },
   {
-    item: "Monthly features on all PromptHealth's social media channels (Guest post, live conversations, etc) ",
+    item: "Share your expertise with over a million of therapy seekers: Yearly video introduction and monthly repost features and shoutouts on our social platforms (Only for annual subscriptions)",
+    targetPlan: ["provider"],
+    detail: null,
+  },
+  {
+    item: "Connect and engage: Get ideal client matches and introduce your events and courses through our community with comprehensive filters so clients can find what they are looking for easier.",
     targetPlan: ["provider"],
     detail: null,
   },
