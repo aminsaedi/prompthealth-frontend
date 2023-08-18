@@ -180,7 +180,7 @@ export class AboutPractitionerComponent implements OnInit {
           if (d.userType.includes("P")) {
             // nothing to do
           } else if (d.userType.length == 2) {
-            this.plans.basic.data = d;
+            // this.plans.basic.data = d;
 
             // plan name should not be used to connect providerPlan | centrePlan
             //because it will be changed possibly
@@ -259,16 +259,16 @@ export class AboutPractitionerComponent implements OnInit {
   onClickSignup(type: PlanTypePractitioner, fromModal: boolean = false) {
     let link = ["/auth", "registration"];
     switch (type) {
-      case "basic":
+      // case "basic":
       // TODO: Show ask modal
       // this._modalService.show("select-plan-type");
       case "provider":
         link.push("sp");
         break;
 
-      case "custom":
-        link = ["/contact-us"];
-        break;
+      // case "custom":
+      //   link = ["/contact-us"];
+      //   break;
 
       // case "centre":
       //   link.push("c");
@@ -329,19 +329,19 @@ const features = [
     icon: "user-check-outline",
     title: "Get discovered.",
     content:
-      "Share your wellness philosophy and knowledge, allowing people to discover you and your unique services.",
+      "Boost SEO with our blogs as well as your articles in our community of verified health experts to rank highly on Google.",
   },
   {
-    icon: "text-block-outline",
+    icon: "video-library",
     title: "Share your expertise.",
     content:
-      "Whether it’s through text, voice notes, images, articles, or online events, we made it easy for you to share your knowledge using the medium that you enjoy creating with.",
+      "1 live interview and 4 short video collaborations per quarter (for yearly memberships only) on our social media channels of million followers.",
   },
   {
     icon: "user-check-outline",
     title: "Connect and engage.",
     content:
-      "Be a part of our wellness community. connect with other holistic providers who align with your values and have a similar approach to wellness. who align with your values and approach to wellness.",
+      "Get ideal client matches and introduce your events and courses through our community with comprehensive filters so clients can find what they are looking for easier.",
   },
   // {
   //   icon: 'cast-outline',
@@ -402,22 +402,22 @@ const features = [
 ];
 
 const plans: { [k in PlanTypePractitioner]: IPlanData } = {
-  basic: {
-    id: "basic",
-    icon: "note-text-outline",
-    title: "Basic",
-    // subtitle: 'Get started with PromptHealth for free!',
-    subtitle: "",
-    label: null,
-    data: null,
-  },
+  // basic: {
+  //   id: "basic",
+  //   icon: "note-text-outline",
+  //   title: "Basic",
+  //   // subtitle: 'Get started with PromptHealth for free!',
+  //   subtitle: "",
+  //   label: null,
+  //   data: null,
+  // },
   provider: {
     id: "provider",
-    icon: "verified-outline",
-    title: "Wellness brands/providers",
-    // subtitle: "",
-    subtitle: "For solo providers.",
-    label: "Popular",
+    icon: "",
+    title: "",
+    subtitle: "",
+    // subtitle: "For solo providers.",
+    label: "",
     data: null,
   },
   // centre: {
@@ -429,63 +429,73 @@ const plans: { [k in PlanTypePractitioner]: IPlanData } = {
   //   label: null,
   //   data: null,
   // },
-  custom: {
-    id: "custom",
-    icon: "users-outline",
-    title: "Custom",
-    // subtitle: 'For centers with multiple providers.',
-    subtitle: "",
-    label: null,
-    data: null,
-  },
+  // custom: {
+  //   id: "custom",
+  //   icon: "users-outline",
+  //   title: "Custom",
+  //   // subtitle: 'For centers with multiple providers.',
+  //   subtitle: "",
+  //   label: null,
+  //   data: null,
+  // },
 };
 
 const planFeatures: IPlanFeatureData[] = [
-  {
-    item: "Get listed with a personalized profile",
-    targetPlan: ["basic", "provider"],
-    detail: null,
-  },
-  {
-    item: "Follow and engage with other users",
-    targetPlan: ["basic", "provider"],
-    detail: null,
-  },
-  {
-    item: "Share your knowledge via voice memos, notes, and images",
-    targetPlan: ["basic", "provider"],
-    detail: null,
-  },
-  {
-    item: "Receive booking requests",
-    targetPlan: ["basic", "provider"],
-    detail: null,
-  },
-  {
-    item: "Recommendations by other providers",
-    targetPlan: ["basic", "provider"],
-    detail: null,
-  },
+  // {
+  //   item: "Get listed with a personalized profile",
+  //   targetPlan: [
+  //     // "basic", 
+  //   "provider"],
+  //   detail: null,
+  // },
+  // {
+  //   item: "Follow and engage with other users",
+  //   targetPlan: [
+  //     // "basic",
+  //      "provider"],
+  //   detail: null,
+  // },
+  // {
+  //   item: "Share your knowledge via voice memos, notes, and images",
+  //   targetPlan: [
+  //     // "basic",
+  //      "provider"],
+  //   detail: null,
+  // },
+  // {
+  //   item: "Receive booking requests",
+  //   targetPlan: [
+  //     // "basic",
+  //      "provider"],
+  //   detail: null,
+  // },
+  // {
+  //   item: "Recommendations by other providers",
+  //   targetPlan: [
+  //     // "basic",
+  //      "provider"],
+  //   detail: null,
+  // },
   // {
   //   item: "Access to all basic features",
   //   targetPlan: ["provider", ],
   //   detail: null,
   // },
-  {
-    item: "Get Discovered: Boost SEO with our blogs as well as your articles in our community of verified health experts to rank highly on Google.",
-    targetPlan: ["provider"],
-    detail: null,
-  },
-  {
-    item: "Share your expertise with over a million of therapy seekers: Yearly video introduction and monthly repost features and shoutouts on our social platforms (Only for annual subscriptions)",
-    targetPlan: ["provider"],
-    detail: null,
-  },
-  {
-    item: "Connect and engage: Get ideal client matches and introduce your events and courses through our community with comprehensive filters so clients can find what they are looking for easier.",
-    targetPlan: ["provider"],
-    detail: null,
-  },
+  // {
+  //   item: "Get Discovered: Boost SEO with our blogs as well as your articles in our community of verified health experts to rank highly on Google.",
+  //   targetPlan: ["provider"],
+  //   detail: null,
+  // },
+  // {
+  //   item: "Share your expertise with over a million of therapy seekers: Yearly video introduction and monthly repost features and shoutouts on our social platforms (Only for annual subscriptions)",
+  //   targetPlan: ["provider"],
+  //   detail: null,
+  // },
+  // {
+  //   item: "Connect and engage: Get ideal client matches and introduce your events and courses through our community with comprehensive filters so clients can find what they are looking for easier.",
+  //   targetPlan: ["provider"],
+  //   detail: null,
+  // },
   // {
   //   item: "Monthly Check-In with a social media manger",
   //   targetPlan: ["provider"],
@@ -499,21 +509,21 @@ const planFeatures: IPlanFeatureData[] = [
 
   // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
 
-  {
-    item: "List all your providers for free",
-    targetPlan: [],
-    detail: null,
-  },
-  {
-    item: "Full Social Media Management",
-    targetPlan: ["custom"],
-    detail: null,
-  },
-  {
-    item: "Social Media Mentorship",
-    targetPlan: ["custom"],
-    detail: null,
-  },
+  // {
+  //   item: "List all your providers for free",
+  //   targetPlan: [],
+  //   detail: null,
+  // },
+  // {
+  //   item: "Full Social Media Management",
+  //   targetPlan: ["custom"],
+  //   detail: null,
+  // },
+  // {
+  //   item: "Social Media Mentorship",
+  //   targetPlan: ["custom"],
+  //   detail: null,
+  // },
   // { item: "Social Media Management", targetPlan: ["custom"], detail: null },
   // {
   //   item: "PromptHealth personal assistant for onboarding",
@@ -536,11 +546,11 @@ const faqs: IFAQItem[] = [
     `,
     opened: false,
   },
-  {
-    q: "Does it cost to join PromptHealth?",
-    a: `You have the option of creating a free account. You also have the option to create an enhanced profile for $25/month as a solo provider, or $95/ month as a center with multiple providers to have access to the Prompt Academy created exclusively with the intent to empower you to market your services more effectively, as well as the opportunity for social collaboration with us. Details of each account type and features can be found on the pricing page.`,
-    opened: false,
-  },
+  // {
+  //   q: "Does it cost to join PromptHealth?",
+  //   a: `You have the option of creating a free account. You also have the option to create an enhanced profile for $25/month as a solo provider, or $95/ month as a center with multiple providers to have access to the Prompt Academy created exclusively with the intent to empower you to market your services more effectively, as well as the opportunity for social collaboration with us. Details of each account type and features can be found on the pricing page.`,
+  //   opened: false,
+  // },
   {
     q: "How do I get listed?",
     a: `After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your background and specialities. This allows us to ensure you are listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern.`,

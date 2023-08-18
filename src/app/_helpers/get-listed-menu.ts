@@ -5,10 +5,10 @@ export const getListedMenu = [
     link: "/plans",
     icon: "verified",
   },
-  {
-    title: "Wellness Companies",
-    text: "Partner with us and we will promote you to our community with special deals, promotions and your events.",
-    link: "/plans/product",
-    icon: "briefcase-2",
-  },
+  // {
+  //   title: "Wellness Companies",
+  //   text: "Partner with us and we will promote you to our community with special deals, promotions and your events.",
+  //   link: "/plans/product",
+  //   icon: "briefcase-2",
+  // },
 ];

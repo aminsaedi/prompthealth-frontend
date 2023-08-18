@@ -100,18 +100,18 @@
       </div>
     </div>
   </div>
-  <div class="text-center mt-30p">
+  <!-- <div class="text-center mt-30p">
     <button (click)="onClickSignup('basic')" class="btn btn-primary px-lg-30p" routerLink="/auth/registration/c">
       Register on PromptHealth
     </button>
-  </div>
+  </div> -->
 </section>
 
 
-<section class="container">
+<section class="container card pt-3">
   <div class="text-center">
-    <h3 class="h4 h3-md">Exclusive to PromptHealth subscribers</h3>
-    <h4 class="h5 h4-md text-label">helping you to excel your business online</h4>
+    <h3 class="h4 h3-md">PromptHealth Member Benefits</h3>
+    <h4 class="h5 h4-md text-label">No plans or contracts. Enjoy full benefits for a fixed price.</h4>
     <!-- <p class="mt-20p">Free 14-day trial on our paid plans. Just cancel before the trial period is over!</p> -->
     <div class="mt-60p mb-40p">
       <a id="plan" class="scroll-anchor"></a>
@@ -125,8 +125,7 @@
   <div class="row justify-content-center">
     <div *ngFor="let plan of plans | keyvalue: keepOriginalOrder; let i = index"
       class="col-12 col-lg-3 mb-20p mb-lg-0p">
-      <div class="card h-100 text-left rounded12p rounded-12p"
-        [ngClass]="plan.key == 'custom' ? 'bg-yellow-light' : ''">
+      <div class="h-100 text-left rounded12p rounded-12p" [ngClass]="plan.key == 'custom' ? 'bg-yellow-light' : ''">
         <div *ngIf="plan.key == 'custom'" class="mb-10p">
           <img class="rounded12p rounded-12p" style="object-fit: contain; width: 100%; height: auto"
             src="assets/img/provider-plans-left.jpg" />
@@ -235,21 +234,22 @@
 </section>
 
 <section class="container text-center mt-70p mb-100p">
-  <h2>Advertising</h2>
+  <h2>Custom Solutions</h2>
   <div class="row w-100 justify-content-between">
     <div class="col-12 mt-20p col-md-6">
       <img src="assets/img/ad2.jpg" style="width: 100%;" />
     </div>
     <div class="col-12 mt-20p p-20p col-md-6 text-left d-flex flex-column justify-content-between">
-      <p>Use PromptHealth to showcase yourself to wellness providers.</p>
+      <p>Increase your visibility and reach by utilizing our custom promotion services. We tailor our services based on
+        your needs.</p>
       <ul class="list-unstyled pl-25p mt-20p plan-features flex-grow-1">
         <li class="position-relative mb-20p subtitle2">
           <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
-          <span>Promotional Ad space on PromptHealth homepage</span>
+          <span>Full Social Media Management</span>
         </li>
         <li class="position-relative mb-20p subtitle2">
           <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
-          <span>Custom promotional content made for your brand</span>
+          <span>Social Media / Business Mentorship</span>
         </li>
       </ul>
       <button class="btn btn-primary w-50" routerLink="/contact-us">
