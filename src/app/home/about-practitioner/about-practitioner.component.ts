@@ -335,7 +335,7 @@ const features = [
     icon: "video-library",
     title: "Share your expertise.",
     content:
-      "1 live interview and 4 short video collaborations per quarter (for yearly memberships only) on our social media channels of million followers.",
+      "Professional “BRAND STORY”with a multi channel approach on Instagram, TikTok and YouTube to over a million followers.",
   },
   {
     icon: "user-check-outline",
