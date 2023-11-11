@@ -4,7 +4,7 @@ export const environment = {
     APP_NAME: 'Wellness',
 
     BASE_URL: 'https://prompthealth.ca/',
-    API_URL: 'https://api.prompthealth.ca/api/v1/',
+    API_URL: 'https://ocean.prompthealth.ca/api/v1/',
 
     FRONTEND_BASE: 'https://prompthealth.ca',
     BACKEND_BASE: 'http://127.0.0.1:3001', // used only for proxy
