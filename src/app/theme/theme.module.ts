@@ -38,7 +38,7 @@ import { BannerTopComponent } from './banner-top/banner-top.component';
   ],
   imports: [
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDDfIO3nUUgAA_QCs2XTv2xvd8t9-0oYDs',
+      apiKey: 'AIzaSyCEn-p_qT9RNRn2qwRvIyUwfaWD09xDhkI',
       libraries: ['places']
     }),
     GooglePlaceModule,

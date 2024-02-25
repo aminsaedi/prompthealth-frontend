@@ -81,7 +81,7 @@ import { OnlineAcademyComponent } from './online-academy/online-academy.componen
     FormsModule,
     NgxSpinnerModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDDfIO3nUUgAA_QCs2XTv2xvd8t9-0oYDs',
+      apiKey: 'AIzaSyCEn-p_qT9RNRn2qwRvIyUwfaWD09xDhkI',
       libraries: ['places']
     }),
     CommonModule,
