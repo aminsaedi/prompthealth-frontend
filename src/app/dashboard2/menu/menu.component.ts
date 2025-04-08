@@ -60,7 +60,7 @@ export class MenuComponent implements OnInit {
     event.preventDefault();
 
     const token = window.localStorage.getItem('token');
-    const formUrl = 'https://form.prompthealth.ca';
+    const formUrl = 'https://n8n.prompthealth.ca/webhook/form';
 
     if (token) {
       // If you control the target app, it can read the token from query param
