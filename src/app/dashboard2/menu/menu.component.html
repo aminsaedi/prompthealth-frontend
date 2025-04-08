@@ -1,39 +1,32 @@
 <ul class="bg-white px-20p rounded-8p list-unstyled">
   <ng-container *ngFor="let menu of menus; let i = index">
     <li>
-      <ng-container>
-        <a 
-        [routerLink]="[menu.id]"
-        #rla="routerLinkActive" 
-        routerLinkActive 
-        [ngClass]="(rla.isActive ? 'text-primary-dark' : 'text-body')" 
-        >
-          <list-item
-          [leading]="menu.icon"
-          [leadingClass]="rla.isActive ? 'text-primary' : 'text-label'"
-          [action]="sizeS ? 'chevron-right' : ''"
-          [actionClass]="rla.isActive ? 'text-primary' : 'text-label'"
-          >
+      <ng-container *ngIf="menu.id === 'form'; else defaultMenu">
+        <a href="#" (click)="redirectToForm($event)" [ngClass]="'text-body'">
+          <list-item [leading]="menu.icon" [leadingClass]="'text-label'" [action]="sizeS ? 'chevron-right' : ''"
+            [actionClass]="'text-label'">
             <div class="subtitle1">{{menu.title}}</div>
           </list-item>
         </a>
       </ng-container>
+      <ng-template #defaultMenu>
+        <a [routerLink]="[menu.id]" #rla="routerLinkActive" routerLinkActive
+          [ngClass]="(rla.isActive ? 'text-primary-dark' : 'text-body')">
+          <list-item [leading]="menu.icon" [leadingClass]="rla.isActive ? 'text-primary' : 'text-label'"
+            [action]="sizeS ? 'chevron-right' : ''" [actionClass]="rla.isActive ? 'text-primary' : 'text-label'">
+            <div class="subtitle1">{{menu.title}}</div>
+          </list-item>
+        </a>
+      </ng-template>
     </li>
   </ng-container>
   <li>
-    <list-item 
-    leading="sign-out"
-    leadingClass="text-label"
-    (click)="modalLogoutAlert.show()"
-    >
+    <list-item leading="sign-out" leadingClass="text-label" (click)="modalLogoutAlert.show()">
       <div class="subtitle1">Log Out</div>
     </list-item>
   </li>
   <li>
-    <a
-    [routerLink]="[linkToPH]" 
-    class="d-flex align-items-center py-20p"
-    >
+    <a [routerLink]="[linkToPH]" class="d-flex align-items-center py-20p">
       <div>
         <img src="/assets/img/logo-sm-white.png" style="width: 20px;" class="mr-5p">
       </div>
@@ -42,15 +35,11 @@
   </li>
 </ul>
 
-<modal
-id="logout-alert"
-[bodyStyle]="{maxWidth: '450px'}"
-#modalLogoutAlert
->
+<modal id="logout-alert" [bodyStyle]="{maxWidth: '450px'}" #modalLogoutAlert>
   <div class="text-right">
     <button class="btn pr-0 btn-icon" (click)="modalLogoutAlert.hide()">
       <i iconPh="cross"></i>
-    </button>  
+    </button>
   </div>
 
   <div class="content-container text-center pb-50p">
@@ -67,15 +56,8 @@ id="logout-alert"
     </div>
 
     <div class="d-flex justify-content-between mt-40p">
-      <button 
-      class="btn btn-primary"
-      (click)="onClickLogout()"
-      >Yes, Log Out</button>
-      <button 
-      class="btn btn-text-grey"
-      (click)="modalLogoutAlert.hide()"
-      >Cancel</button>
+      <button class="btn btn-primary" (click)="onClickLogout()">Yes, Log Out</button>
+      <button class="btn btn-text-grey" (click)="modalLogoutAlert.hide()">Cancel</button>
     </div>
   </div>
 </modal>
-

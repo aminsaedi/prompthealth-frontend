@@ -37,7 +37,7 @@ export class MenuComponent implements OnInit {
         this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, /*menuNotification, */ menuPassword ];
         break;
       case 'SP':
-        this.menus = [ menuGeneral, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
+        this.menus = [ menuGeneral, menuContent, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
         break;
       case 'C':
         this.menus = [ menuGeneral, menuServices, menuPerformance, menuBookProvider, menuBadge, menuTeam, menuShowcase, menuVideo, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
@@ -56,6 +56,20 @@ export class MenuComponent implements OnInit {
     this.modalLogoutAlert.hide();
   }
 
+  redirectToForm(event: MouseEvent) {
+    event.preventDefault();
+
+    const token = window.localStorage.getItem('token');
+    const formUrl = 'https://form.prompthealth.ca';
+
+    if (token) {
+      // If you control the target app, it can read the token from query param
+      window.open(`${formUrl}?token=${encodeURIComponent(token)}`, '_blank');
+    } else {
+      window.open(formUrl, '_blank');
+    }
+  }
+
 }
 
 const menuGeneral: MenuItem = {
@@ -63,6 +77,12 @@ const menuGeneral: MenuItem = {
   title: 'Profile',
   icon: 'user-square',
 };
+
+const menuContent: MenuItem = {
+  id: 'form',
+  title: 'Content',
+  icon: 'file-text',
+}
 
 const menuServices: MenuItem = {
   id: 'service',
