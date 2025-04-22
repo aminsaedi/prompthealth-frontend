@@ -59,15 +59,9 @@ export class MenuComponent implements OnInit {
   redirectToForm(event: MouseEvent) {
     event.preventDefault();
 
-    const token = window.localStorage.getItem('token');
-    const formUrl = 'https://n8n.prompthealth.ca/webhook/form';
+    const formUrl = 'https://calendly.com/conversationwithhedieh/30min';
 
-    if (token) {
-      // If you control the target app, it can read the token from query param
-      window.open(`${formUrl}?token=${encodeURIComponent(token)}`, '_blank');
-    } else {
-      window.open(formUrl, '_blank');
-    }
+    window.open(formUrl, '_blank');
   }
 
 }

@@ -1,7 +1,7 @@
 <ul class="bg-white px-20p rounded-8p list-unstyled">
   <ng-container *ngFor="let menu of menus; let i = index">
     <li>
-      <ng-container *ngIf="menu.id === 'form'; else defaultMenu">
+      <ng-container *ngIf="menu.id === 'interview'; else defaultMenu">
         <a href="#" (click)="redirectToForm($event)" [ngClass]="'text-body'">
           <list-item [leading]="menu.icon" [leadingClass]="'text-label'" [action]="sizeS ? 'chevron-right' : ''"
             [actionClass]="'text-label'">
