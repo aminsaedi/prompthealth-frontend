@@ -4,7 +4,7 @@ import { ProfileManagementService } from 'src/app/shared/services/profile-manage
 import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
-  selector: 'request-video',
+  selector: 'app-request-video',
   templateUrl: './request-video.component.html',
   styleUrls: ['./request-video.component.scss']
 })
