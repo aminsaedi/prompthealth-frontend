@@ -37,7 +37,7 @@ export class MenuComponent implements OnInit {
         this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, /*menuNotification, */ menuPassword ];
         break;
       case 'SP':
-        this.menus = [ menuGeneral, menuContent, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
+        this.menus = [ menuGeneral, menuBookInterview,menuRquestAdditionalVideo, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
         break;
       case 'C':
         this.menus = [ menuGeneral, menuServices, menuPerformance, menuBookProvider, menuBadge, menuTeam, menuShowcase, menuVideo, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
@@ -78,10 +78,16 @@ const menuGeneral: MenuItem = {
   icon: 'user-square',
 };
 
-const menuContent: MenuItem = {
-  id: 'form',
-  title: 'Content',
-  icon: 'file-text',
+const menuBookInterview: MenuItem = {
+  id: 'interview',
+  title: 'Book an Interview',
+  icon: 'calendar',
+}
+
+const menuRquestAdditionalVideo: MenuItem = {
+  id: 'request-video',
+  title: 'Request Additional Video',
+  icon: 'video',
 }
 
 const menuServices: MenuItem = {
