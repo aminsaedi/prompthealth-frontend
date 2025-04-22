@@ -441,6 +441,21 @@ const plans: { [k in PlanTypePractitioner]: IPlanData } = {
 };
 
 const planFeatures: IPlanFeatureData[] = [
+  {
+    item: "Monthly Video Feature",
+    detail: " Be seen by a global audience of over 1 million with a professionally produced expert interview. We’ll post the full video on YouTube and share short clips on Instagram and TikTok to amplify your reach.",
+    targetPlan: ["provider"],
+  },
+  {
+    item: "Trusted Exposure",
+    detail: "Get discovered as a credible voice in wellness. Only certified professionals are featured—building trust with a health-conscious audience.",
+    targetPlan: ["provider"],
+  },
+  {
+    item: "Wellness Community",
+    detail: "Become part of a growing network of like-minded health providers committed to education, credibility, and impact.",
+    targetPlan: ["provider"],
+  },
   // {
   //   item: "Get listed with a personalized profile",
   //   targetPlan: [
