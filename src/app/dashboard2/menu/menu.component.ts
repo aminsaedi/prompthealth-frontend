@@ -81,7 +81,7 @@ const menuBookInterview: MenuItem = {
 const menuRquestAdditionalVideo: MenuItem = {
   id: 'request-video',
   title: 'Request Additional Video',
-  icon: 'video',
+  icon: 'video-library',
 }
 
 const menuServices: MenuItem = {
