@@ -549,39 +549,48 @@ const planFeatures: IPlanFeatureData[] = [
 
 const faqs: IFAQItem[] = [
   {
-    q: "What is PromptHealth and why should I be involved?",
-    a: "PromptHealth is a network of holistic care practitioners. It empowers providers to showcase their knowledge in different formats for better online exposure and to educate the wellness community. They can also collaborate with other practitioners and with PromptHealth, itself. Wellness seekers can learn directly from the trusted sources and connect when the need arises.",
-    opened: false,
-  },
-  {
-    q: "How is PromptHealth different from a regular directory?",
-    a: `Unlike regular directories, we don’t assume that people know what providers to search for, and what they all do. Instead, we start from a person’s individual needs and show them all of the options. Our search filters allow people to narrow their search based on preferences such as gender, age speciality, language, location, virtual care, and more. 
-      <br><br>
-      Further, people are able to learn about each practitioner by the content they post on their profile.  Before booking with a practitioner, our users can learn about their area of interest, and follow them to get notified every time a new post is created. This allows our users to make informed decisions about their care, and book with someone they truly trust and feel comfortable with.
+    q: "What are the benefits of joining PromptHealth?",
+    a: `As a certified provider, you'll receive:
+      <ul>
+        <li>Exposure to <strong>1M+ health-conscious followers</strong> across TikTok, Instagram & YouTube</li>
+        <li>A <strong>professionally produced video interview</strong>, edited and posted for maximum impact</li>
+        <li>Increased credibility as a featured expert in a <strong>vetted wellness network</strong></li>
+        <li>Connection to a global audience of wellness seekers</li>
+      </ul>
     `,
     opened: false,
   },
-  // {
-  //   q: "Does it cost to join PromptHealth?",
-  //   a: `You have the option of creating a free account. You also have the option to create an enhanced profile for $25/month as a solo provider, or $95/ month as a center with multiple providers to have access to the Prompt Academy created exclusively with the intent to empower you to market your services more effectively, as well as the opportunity for social collaboration with us. Details of each account type and features can be found on the pricing page.`,
-  //   opened: false,
-  // },
   {
-    q: "How do I get listed?",
-    a: `After signing up by email, or by connecting your Facebook or Google account, you will be asked a series of questions to help us understand your background and specialities. This allows us to ensure you are listed under all of our relevant categories, and will show up when a user is searching for solutions to a particular concern.`,
+    q: "Do I have to film or edit anything myself?",
+    a: `Nope! We handle everything. You'll be interviewed over Zoom, and our team will professionally edit and publish the content across our platforms.`,
     opened: false,
   },
   {
-    q: "How do I create an account?",
-    a: "Creating an account is easy. Click the “get listed”  link on our site, and follow the steps shown. When creating an account, please ensure that you fill out all requested information, as it helps create the perfect profile for new clients to find and book sessions with you. Our team DOES NOT approve profiles that are partially filled out, as this does not ensure you are placed in the correct category in our search. We expect you to follow the guidelines provided to upload a professional picture and only select modalities that you are certified in, in order to get the most suitable client match.",
+    q: "What kind of content will be posted?",
+    a: `
+<ul>
+  <li>Short-form clips (30–60 sec) from your interview will be shared on TikTok and Instagram</li>
+  <li>A long-form version will be posted on our YouTube channel</li>
+  <li>Posts are shared as a collab (tagging your account for exposure)</li>
+</ul>
+    `,
     opened: false,
   },
   {
-    q: "How do I create content?",
-    a: `PromptHealth is on a mission to make it easy for people to research, learn, discover, and ultimately make informed decisions about their health, all in one place. Our goal is to eliminate trial and error online by making PromptHealth the modern and user friendly hub for trusted health and wellness information right by you. We have created a platform to display your  knowledge, educate people, and get connected.
+    q: "Can I do more than one feature?",
+    a: `Yes! Additional video features are available for an extra fee. Contact us for a custom package that fits your goals.`,
+    opened: false,
+  },
+  {
+    q: "How do I get started?",
+    a: "Click <strong>Get Featured Now</strong> on our homepage, complete the brief onboarding, and we'll schedule your Zoom interview.",
+    opened: false,
+  },
+  {
+    q: "What's the cost and value of this service?",
+    a: `Think of this as an affordable PR strategy. For $500/month (just $125/week), you receive professionally produced, authentic content distributed to a highly targeted audience of wellness seekers.
     <br><br>
-    On your profile, you are able to share wellness content via notes, audio, blogs, events, images, and video (coming soon). Our team is here to support you in the process of creating content, and are happy to provide guidance if needed. Just reach out!
-    `,
+ Hiring a marketing agency or running generic social media ads often costs much more—and typically reaches a broad, non-specific audience. With PromptHealth, your message lands in front of the right people, through trusted, human content that builds real engagement and credibility`,
     opened: false,
   },
   {
