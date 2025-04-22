@@ -4,9 +4,9 @@ import { ProfileManagementService } from 'src/app/shared/services/profile-manage
 import { UniversalService } from 'src/app/shared/services/universal.service';
 
 @Component({
-  selector: 'app-performance',
-  templateUrl: './performance.component.html',
-  styleUrls: ['./performance.component.scss']
+  selector: 'request-video',
+  templateUrl: './request-video.component.html',
+  styleUrls: ['./request-video.component.scss']
 })
 export class RequestVideoComponent implements OnInit {
 
