@@ -36,8 +36,8 @@ export class RegionService {
   formatRegion(type: RegionType) {
     let result: string;
     switch(type) {
-      case 'CA': result = 'Canada'; break;
-      case 'US': result = 'United States'; break;
+      case 'CA': result = 'CAD'; break;
+      case 'US': result = 'USD'; break;
     }    
     return result;
   }

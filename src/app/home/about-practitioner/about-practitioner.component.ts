@@ -329,7 +329,7 @@ const features = [
     icon: "user-check-outline",
     title: "Get discovered.",
     content:
-      "Boost SEO with our blogs as well as your articles in our community of verified health experts to rank highly on Google.",
+      "Increase your visibility with a professionally produced feature video shared on our wellness platform. Expand your reach and grow your brand within a trusted health network.",
   },
   {
     icon: "video-library",
@@ -341,7 +341,7 @@ const features = [
     icon: "user-check-outline",
     title: "Connect and engage.",
     content:
-      "Get ideal client matches and introduce your events and courses through our community with comprehensive filters so clients can find what they are looking for easier.",
+      "Position yourself as a go-to expert by sharing your insights through engaging video content. Build credibility and connect with an audience seeking trusted health guidance.",
   },
   // {
   //   icon: 'cast-outline',
