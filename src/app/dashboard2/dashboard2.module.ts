@@ -33,6 +33,7 @@ import { PaymentComponent } from './payment/payment.component';
 import { PaymentSubscriptionComponent } from './payment-subscription/payment-subscription.component';
 import { PaymentHistoryComponent } from './payment-history/payment-history.component';
 import { PaymentCreditComponent } from './payment-credit/payment-credit.component';
+import { RequestVideoComponent } from './request-video/request-video.component';
 import { ButtonsModule } from '../buttons/buttons.module';
 
 
@@ -65,6 +66,7 @@ const routes: Routes = [
         { path: 'subscription', component: PaymentSubscriptionComponent, },
         { path: 'history', component: PaymentHistoryComponent, },
         { path: 'credit', component: PaymentCreditComponent, },
+        { path: 'request-video', component: RequestVideoComponent, },
         { path: '', redirectTo: 'subscription'},
       ]},
 
