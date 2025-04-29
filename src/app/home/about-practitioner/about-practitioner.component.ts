@@ -447,12 +447,27 @@ const planFeatures: IPlanFeatureData[] = [
     targetPlan: ["provider"],
   },
   {
-    item: "Trusted Exposure",
+    item: "Reach 1M+ with Video Content",
     detail: "Get discovered as a credible voice in wellness. Only certified professionals are featured—building trust with a health-conscious audience.",
     targetPlan: ["provider"],
   },
   {
-    item: "Wellness Community",
+    item: "Trusted Professional Exposure",
+    detail: "Become part of a growing network of like-minded health providers committed to education, credibility, and impact.",
+    targetPlan: ["provider"],
+  },
+  {
+    item: "Join a Credible Network",
+    detail: "Become part of a growing network of like-minded health providers committed to education, credibility, and impact.",
+    targetPlan: ["provider"],
+  },
+  {
+    item: "Wellness Provider Community",
+    detail: "Become part of a growing network of like-minded health providers committed to education, credibility, and impact.",
+    targetPlan: ["provider"],
+  },
+  {
+    item: "Grow with Like-Minded Experts",
     detail: "Become part of a growing network of like-minded health providers committed to education, credibility, and impact.",
     targetPlan: ["provider"],
   },
