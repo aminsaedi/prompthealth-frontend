@@ -1,14 +1,10 @@
 <section>
-  <button class="btn btn-google w-100 mb-3 small"
-  (click)="signinWith('google')"
-  >
+  <button class="btn btn-google w-100 mb-3 small" (click)="signinWith('google')">
     <i iconPh="google" class="mr-2"></i>
     <span>Sign in with Google</span>
   </button>
 
-  <a class="btn btn-facebook w-100 mb-2 small" 
-  (click)="signinWith('facebook')"
-  >
+  <a class="btn btn-facebook w-100 mb-2 small" (click)="signinWith('facebook')">
     <i iconPh="facebook" class="mr-2"></i>
     <span>Sign in with Facebook</span>
   </a>
@@ -17,18 +13,10 @@
 
 <section>
   <form [formGroup]="form" (ngSubmit)="signinEmail()">
-    <div 
-    *ngIf="authType == 'signup'"
-    class="mb-3"
-    >
+    <div *ngIf="authType == 'signup'" class="mb-3">
       <label class="subtitle2">You are...</label>
-      <form-item-input 
-      name="type" 
-      type="text" 
-      [disabled]="true"
-      [controller]="formRole"
-      ></form-item-input>
-      
+      <form-item-input name="type" type="text" [disabled]="true" [controller]="formRole"></form-item-input>
+
     </div>
     <div class="mb-3">
       <label class="subtitle2">Email Address <span class="text-danger">*</span></label>
@@ -60,25 +48,16 @@
 
     <div class="mb-3" *ngIf="authType == 'signup'">
       <form-item-checkbox
-      label="I agree to the <a href='/terms' target='_blank'>terms of service</a> and <a href='/terms' target='_blank'>privacy policy</a>"
-      [controller]="f.t_c"
-      ></form-item-checkbox>
-      <form-item-errors
-      [controller]="f.t_c"
-      label="Agreement"
-      [submitted]="isSubmitted"
-      ></form-item-errors>
+        label="I agree to the <a href='/terms' target='_blank'>terms of service</a> and <a href='/terms' target='_blank'>privacy policy</a>"
+        [controller]="f.t_c"></form-item-checkbox>
+      <form-item-errors [controller]="f.t_c" label="Agreement" [submitted]="isSubmitted"></form-item-errors>
     </div>
 
     <div class="mb-2">
-      <input 
-      class="btn btn-primary w-100"
-      type="submit"
-      [disabled]="isLoading"
-      [value]="(authType == 'signin') ? 'Sign In' : 'Sign Up'"
-      >
+      <input class="btn btn-primary w-100" type="submit" [disabled]="isLoading"
+        [value]="(authType == 'signin') ? 'Sign In' : 'Sign Up'">
     </div>
- 
+
     <div class="text-right mb-3" *ngIf="authType == 'signin'">
       <a [routerLink]="['/auth/forgot-password']" class="btn btn-text-black small pr-0">Forgot Password?</a>
     </div>
@@ -87,7 +66,7 @@
       <hr>
       <a [routerLink]="['/auth/registration/U']" class="btn btn-text small w-100">Create Account</a>
       <div class="body2 text-center">Or</div>
-      <a routerLink="/plans" class="btn btn-text small w-100">Get listed on PromptHealth</a>
+      <a routerLink="/plans" class="btn btn-text small w-100">Get featured now on PromptHealth</a>
     </div>
 
     <div *ngIf="authType == 'signup'">
