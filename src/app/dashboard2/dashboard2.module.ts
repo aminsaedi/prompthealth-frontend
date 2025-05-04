@@ -54,6 +54,7 @@ const routes: Routes = [
       { path: 'follow/followers', component: FollowListComponent, data: {type: 'followed'}, canActivate: [GuardIfUserTypeClientGuard]},
       { path: 'follow', redirectTo: 'follow/followings'},
 
+      { path: 'request-video', component: RequestVideoComponent, },
       { path: 'badge', component: BadgesComponent, },
       { path: 'showcase', component: ShowcaseComponent, },
       { path: 'video', component: VideoManagerComponent, },
@@ -66,7 +67,6 @@ const routes: Routes = [
         { path: 'subscription', component: PaymentSubscriptionComponent, },
         { path: 'history', component: PaymentHistoryComponent, },
         { path: 'credit', component: PaymentCreditComponent, },
-        { path: 'request-video', component: RequestVideoComponent, },
         { path: '', redirectTo: 'subscription'},
       ]},
 
