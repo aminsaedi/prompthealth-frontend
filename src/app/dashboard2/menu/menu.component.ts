@@ -59,7 +59,7 @@ export class MenuComponent implements OnInit {
   redirectToForm(event: MouseEvent) {
     event.preventDefault();
 
-    const formUrl = 'https://calendly.com/conversationwithhedieh/30min';
+    const formUrl = 'https://calendly.com/hediehsafiyari/brand-consult';
 
     window.open(formUrl, '_blank');
   }
