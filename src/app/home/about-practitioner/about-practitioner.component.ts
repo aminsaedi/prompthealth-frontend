@@ -608,26 +608,26 @@ const faqs: IFAQItem[] = [
  Hiring a marketing agency or running generic social media ads often costs much more—and typically reaches a broad, non-specific audience. With PromptHealth, your message lands in front of the right people, through trusted, human content that builds real engagement and credibility`,
     opened: false,
   },
-  {
-    q: "Will I be able to receive reviews and recommendations?",
-    a: `You are able to connect any existing Google reviews to your profile to gain credibility right away. Further, new clients can write you a review after they have attended any booked appointments.
-      <br><br>
-      In addition, we are the first online platform that makes it possible for health and wellness providers to easily find and inter-refer each other. You can do this by providing recommendations on another provider’s profile to build further trust within the health and wellness community.
-    `,
-    opened: false,
-  },
-  {
-    q: "Is there a verification process?",
-    a: `Before we approve a listing, we ensure to complete an audit to ensure the accuracy of information provided by a health and wellness provider. This review process consists of a careful qualitative approach by our team.
-      <br><br>
-      We encourage you to upload your certification in order to receive a verified badge beside your profile, indicating you are verified to build more credibility and trust. Although this review process is carefully conducted, we cannot guarantee the qualification information provided and cannot be responsible for false information.
-    `,
+  // {
+  //   q: "Will I be able to receive reviews and recommendations?",
+  //   a: `You are able to connect any existing Google reviews to your profile to gain credibility right away. Further, new clients can write you a review after they have attended any booked appointments.
+  //     <br><br>
+  //     In addition, we are the first online platform that makes it possible for health and wellness providers to easily find and inter-refer each other. You can do this by providing recommendations on another provider’s profile to build further trust within the health and wellness community.
+  //   `,
+  //   opened: false,
+  // },
+  // {
+  //   q: "Is there a verification process?",
+  //   a: `Before we approve a listing, we ensure to complete an audit to ensure the accuracy of information provided by a health and wellness provider. This review process consists of a careful qualitative approach by our team.
+  //     <br><br>
+  //     We encourage you to upload your certification in order to receive a verified badge beside your profile, indicating you are verified to build more credibility and trust. Although this review process is carefully conducted, we cannot guarantee the qualification information provided and cannot be responsible for false information.
+  //   `,
 
-    opened: false,
-  },
-  {
-    q: "How do I deactivate or delete my account?",
-    a: `To deactivate or delete your account, please  contact the admin at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>`,
-    opened: false,
-  },
+  //   opened: false,
+  // },
+  // {
+  //   q: "How do I deactivate or delete my account?",
+  //   a: `To deactivate or delete your account, please  contact the admin at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>`,
+  //   opened: false,
+  // },
 ];
