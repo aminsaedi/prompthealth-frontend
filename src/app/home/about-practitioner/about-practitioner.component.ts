@@ -327,19 +327,19 @@ export class AboutPractitionerComponent implements OnInit {
 const features = [
   {
     icon: "user-check-outline",
-    title: "Get discovered.",
+    title: "Be Featured as a Trusted Health Expert.",
+    content:
+      "We highlight certified health professionals through expert interviews shared across our channels with over 1 million followers on YouTube, TikTok, and Instagram.",
+  },
+  {
+    icon: "video-library",
+    title: "Get Discovered",
     content:
       "Increase your visibility with a professionally produced feature video shared on our wellness platform. Expand your reach and grow your brand within a trusted health network.",
   },
   {
-    icon: "video-library",
-    title: "Share your expertise.",
-    content:
-      "Professional “BRAND STORY”with a multi channel approach on Instagram, TikTok and YouTube to over a million followers.",
-  },
-  {
     icon: "user-check-outline",
-    title: "Connect and engage.",
+    title: "Share Your Expertise.",
     content:
       "Position yourself as a go-to expert by sharing your insights through engaging video content. Build credibility and connect with an audience seeking trusted health guidance.",
   },
