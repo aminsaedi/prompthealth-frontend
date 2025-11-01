@@ -245,11 +245,6 @@ export class AboutPractitionerComponent implements OnInit {
     let link = ["/auth", "registration"];
     switch (type) {
       case "basic":
-        // For basic plan, show modal to select provider type
-        if (!fromModal) {
-          this._modalService.show("select-plan-type");
-          return;
-        }
         link.push("sp");
         break;
       case "provider":
