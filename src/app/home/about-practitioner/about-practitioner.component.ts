@@ -180,7 +180,7 @@ export class AboutPractitionerComponent implements OnInit {
           if (d.userType.includes("P")) {
             // nothing to do
           } else if (d.userType.length == 2) {
-            // this.plans.basic.data = d;
+            this.plans.basic.data = d;
 
             // plan name should not be used to connect providerPlan | centrePlan
             //because it will be changed possibly
@@ -237,31 +237,21 @@ export class AboutPractitionerComponent implements OnInit {
   }
 
   onClickFreePlan(type: "basic") {
-    this._modalService.show("select-plan-type");
-    // let link = ["/auth", "registration"];
-    // if (type === "provider") {
-    //   link.push("sp");
-    // } else if (type === "centre") {
-    //   link.push("c");
-    // }
-    // this._uService.sessionStorage.setItem(
-    //   "selectedPlan",
-    //   JSON.stringify(this.plans.basic.data)
-    // );
-    // this._uService.sessionStorage.setItem(
-    //   "selectedMonthly",
-    //   this.isDurationMonthly.toString()
-    // );
-
-    // this._router.navigate(link);
+    // Redirect to the main signup method which handles the modal
+    this.onClickSignup(type, false);
   }
 
   onClickSignup(type: PlanTypePractitioner, fromModal: boolean = false) {
     let link = ["/auth", "registration"];
     switch (type) {
-      // case "basic":
-      // TODO: Show ask modal
-      // this._modalService.show("select-plan-type");
+      case "basic":
+        // For basic plan, show modal to select provider type
+        if (!fromModal) {
+          this._modalService.show("select-plan-type");
+          return;
+        }
+        link.push("sp");
+        break;
       case "provider":
         link.push("sp");
         break;
@@ -402,15 +392,14 @@ const features = [
 ];
 
 const plans: { [k in PlanTypePractitioner]: IPlanData } = {
-  // basic: {
-  //   id: "basic",
-  //   icon: "note-text-outline",
-  //   title: "Basic",
-  //   // subtitle: 'Get started with PromptHealth for free!',
-  //   subtitle: "",
-  //   label: null,
-  //   data: null,
-  // },
+  basic: {
+    id: "basic",
+    icon: "note-text-outline",
+    title: "Free",
+    subtitle: "Get started with PromptHealth for free!",
+    label: null,
+    data: null,
+  },
   provider: {
     id: "provider",
     icon: "",
@@ -442,8 +431,18 @@ const plans: { [k in PlanTypePractitioner]: IPlanData } = {
 
 const planFeatures: IPlanFeatureData[] = [
   {
+    item: "Get listed with a personalized profile",
+    detail: "Create your professional profile and get discovered by potential clients",
+    targetPlan: ["basic", "provider"],
+  },
+  {
+    item: "Wellness Provider Community Access",
+    detail: "Connect with other wellness providers and be part of the community",
+    targetPlan: ["basic", "provider"],
+  },
+  {
     item: "Monthly Video Feature",
-    detail: " Be seen by a global audience of over 1 million with a professionally produced expert interview. We’ll post the full video on YouTube and share short clips on Instagram and TikTok to amplify your reach.",
+    detail: " Be seen by a global audience of over 1 million with a professionally produced expert interview. We'll post the full video on YouTube and share short clips on Instagram and TikTok to amplify your reach.",
     targetPlan: ["provider"],
   },
   {
