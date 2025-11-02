@@ -245,6 +245,7 @@ export class AboutPractitionerComponent implements OnInit {
     let link = ["/auth", "registration"];
     switch (type) {
       case "basic":
+        // Go directly to wellness provider registration
         link.push("sp");
         break;
       case "provider":
@@ -389,19 +390,18 @@ const features = [
 const plans: { [k in PlanTypePractitioner]: IPlanData } = {
   basic: {
     id: "basic",
-    icon: "note-text-outline",
-    title: "Free",
-    subtitle: "Get started with PromptHealth for free!",
+    icon: "gift-outline",
+    title: "Free Plan",
+    subtitle: "Get started with PromptHealth at no cost",
     label: null,
     data: null,
   },
   provider: {
     id: "provider",
-    icon: "",
-    title: "",
-    subtitle: "",
-    // subtitle: "For solo providers.",
-    label: "",
+    icon: "star-outline",
+    title: "Premium Plan",
+    subtitle: "Get featured and reach 1M+ wellness seekers",
+    label: "Most Popular",
     data: null,
   },
   // centre: {

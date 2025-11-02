@@ -68,22 +68,66 @@
   }
 }
 
-.card.active {
-  border: solid 2px $colorPrimary;
+.card {
+  border: 2px solid #e5e5e5;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: white;
+
+  &:hover {
+    border-color: $colorPrimary;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+  }
+
+  &.active {
+    border: solid 2px $colorPrimary;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  // Plan title styling
+  h3 {
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+
+  // Price display styling
+  h2 {
+    color: $colorPrimary;
+    font-weight: 700;
+
+    .font-weight-normal {
+      font-weight: 400;
+    }
+  }
+
+  // Label/badge styling
+  .label {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: $colorPrimary;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 }
-.card .label {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background:rgba($colorYellow, 0.5);
-  padding: 2px 5px;
-  border-radius: 5px;
-}
+
 .plan-features {
   .icon-pre {
     position: absolute;
     margin-left: -25px;
     margin-top: 0.15em;
+  }
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    line-height: 1.6;
   }
 }
 

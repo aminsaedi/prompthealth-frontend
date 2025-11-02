@@ -139,36 +139,23 @@
           <div *ngIf="plan.value.label" class="label body1">
             {{ plan.value.label }}
           </div>
-          <div *ngIf="plan.key != 'custom'" class="mb-10p">
-            <i [iconPh]="plan.value.icon" style="font-size: 30px" class="text-primary"></i>
+          <div class="mb-20p">
+            <i [iconPh]="plan.value.icon" style="font-size: 42px" class="text-primary"></i>
           </div>
-          <h3 class="h5 h4-md">PromptHealth Member Benefits</h3>
-          <!-- <h4 class="h6 h5-md text-label">
-            No plans or contracts. Enjoy full benefits for a fixed price.
-          </h4> -->
-          <h4 class="mb-0">{{ plan.value.title }}</h4>
-          <p class="mb-0 body2 text-label">{{ plan.value.subtitle }}</p>
-          <h3 *ngIf="plan.value.data && plan.key != 'custom'" class="my-25p">
-            <ng-container *ngIf="!plan.value"> </ng-container>
+          <h3 class="h4 h3-md mb-10p">{{ plan.value.title }}</h3>
+          <h2 *ngIf="plan.value.data && plan.key != 'custom'" class="h3 h2-md mb-10p font-weight-bold">
             <ng-container *ngIf="plan.value?.data.price == 0">Free</ng-container>
-            <ng-container *ngIf="plan.value?.data.price != 0 && isDurationMonthly">{{
-              plan.value.data.price
-              | currency : plan.value.data.currency : "code" : "1.0-0"
-              }}</ng-container>
-            <ng-container *ngIf="plan.value?.data.price != 0 && !isDurationMonthly">{{
-              plan.value.data.yearlyPrice
-              | currency : plan.value.data.currency : "code" : "1.0-0"
-              }}</ng-container>
-            <span *ngIf="plan.value?.data.price != 0" class="h4 text-label">
-              <ng-container *ngIf="isDurationMonthly">/mo</ng-container>
-              <ng-container *ngIf="!isDurationMonthly">/yr</ng-container>
-            </span>
-          </h3>
-          <p *ngIf="plan.key == 'custom'">
-            Increase your visibility and reach by utilizing our custom promotion
-            services. We tailor our services based on your needs.
-          </p>
-          <ul class="list-unstyled pl-25p plan-features flex-grow-1">
+            <ng-container *ngIf="plan.value?.data.price != 0 && isDurationMonthly">
+              {{ plan.value.data.price | currency : plan.value.data.currency : "code" : "1.0-0" }}
+              <span class="h5 text-label font-weight-normal">/month</span>
+            </ng-container>
+            <ng-container *ngIf="plan.value?.data.price != 0 && !isDurationMonthly">
+              {{ plan.value.data.yearlyPrice | currency : plan.value.data.currency : "code" : "1.0-0" }}
+              <span class="h5 text-label font-weight-normal">/year</span>
+            </ng-container>
+          </h2>
+          <p class="text-label mb-25p">{{ plan.value.subtitle }}</p>
+          <ul class="list-unstyled pl-25p plan-features flex-grow-1 text-left">
             <li *ngIf="i > 0" class="position-relative mb-20p subtitle2">
               <span *ngIf="i == 1">All Basic features +</span>
               <!-- <span *ngIf="i == 2">All Provider features +</span> -->
@@ -213,9 +200,13 @@
     </div>
     <div
       class="col-12 col-lg-4 mb-20p mb-lg-0p card text-center p-15p p-md-30p px-lg-15p px-xl-30p d-flex flex-column justify-content-between">
-      <h3 class="h5 h4-md">Custom Solutions</h3>
-      <!-- <p>Host a series of educational health tips and expert interviews across our various channels</p> -->
-      <ul class="list-unstyled pl-25p mt-20p plan-features flex-grow-1">
+      <div class="mb-20p">
+        <i iconPh="settings-outline" style="font-size: 42px" class="text-primary"></i>
+      </div>
+      <h3 class="h4 h3-md mb-10p">Custom Solutions</h3>
+      <h2 class="h3 h2-md mb-10p font-weight-bold">Contact for Quote</h2>
+      <p class="text-label mb-25p">Tailored services to meet your specific needs</p>
+      <ul class="list-unstyled pl-25p plan-features flex-grow-1 text-left">
         <li class="position-relative mb-20p subtitle2">
           <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
           <span>Want more video features per month?</span>
@@ -225,9 +216,8 @@
           <span>Interested in going live on Instagram or TikTok?</span>
         </li>
       </ul>
-      <!-- <div class="h-100"></div> -->
       <button class="btn btn-primary-dark w-100" routerLink="/contact-us">
-        contact us for a quote!
+        Contact Us for a Quote
       </button>
     </div>
     <!-- <div  -->
