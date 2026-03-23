@@ -6,70 +6,32 @@ import {
   HostListener,
 } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
-import { ProfileManagementService } from "src/app/shared/services/profile-management.service";
 import { ICouponData } from "src/app/models/coupon-data";
-import {
-  IPlanData,
-  IPlanFeatureData,
-  PlanTypePractitioner,
-} from "src/app/models/default-plan";
-import { IGetPlansResult } from "src/app/models/response-data";
 import { SharedService } from "src/app/shared/services/shared.service";
 import { UniversalService } from "src/app/shared/services/universal.service";
-import {
-  expandVerticalAnimation,
-  slideHorizontalAnimation,
-} from "src/app/_helpers/animations";
+import { slideHorizontalAnimation } from "src/app/_helpers/animations";
 import { smoothWindowScrollTo } from "src/app/_helpers/smooth-scroll";
 import { IFAQItem } from "../_elements/faq-item/faq-item.component";
 import { first } from "rxjs/operators";
 import { environment } from "src/environments/environment";
-import { RegionService } from "src/app/shared/services/region.service";
-import { Subscription } from "rxjs";
-import { ModalService } from "../../shared/services/modal.service";
 
 declare let fbq: Function;
+
 @Component({
   selector: "app-about-practitioner",
   templateUrl: "./about-practitioner.component.html",
   styleUrls: ["./about-practitioner.component.scss"],
-  animations: [expandVerticalAnimation, slideHorizontalAnimation],
+  animations: [slideHorizontalAnimation],
 })
 export class AboutPractitionerComponent implements OnInit {
   get sizeL() {
     return window && window.innerWidth >= 992;
   }
 
-  get profile() {
-    return this._profileService.user;
-  }
-  get isNotLoggedIn() {
-    return this._profileService.loginStatus == "notLoggedIn";
-  }
-  get isLoggedIn() {
-    return this._profileService.loginStatus == "loggedIn";
-  }
-
-  constructor(
-    private _sharedService: SharedService,
-    private _uService: UniversalService,
-    private _profileService: ProfileManagementService,
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _toastr: ToastrService,
-    private _el: ElementRef,
-    private _regionService: RegionService,
-    private _modalService: ModalService
-  ) {}
-
   public features = features;
-  public plans = plans;
-  public planFeatures = planFeatures;
+  public freePlanFeatures = freePlanFeatures;
+  public aiPlanFeatures = aiPlanFeatures;
   public faqs = faqs;
-
-  public isDurationMonthly = true;
-  public isLoading = false;
 
   public couponData: ICouponData = null;
   public isCouponShown = false;
@@ -80,46 +42,36 @@ export class AboutPractitionerComponent implements OnInit {
   public videoLgMarkedAsLoadStart = false;
   public isVideoLgReady = false;
 
-  private subscriptionRegionStatus: Subscription;
-
   @ViewChild("videoPlayer") private videoPlayer: ElementRef;
   @ViewChild("videoLg") private videoLg: ElementRef;
 
-  @HostListener("window:resize") WindowResize() {
+  @HostListener("window:resize") onWindowResize() {
     this.loadVideoLgIfNeeded();
   }
 
-  keepOriginalOrder = (a: any, b: any) => a.key;
-
-  isFeatureShowable(i: number, planType: PlanTypePractitioner) {
-    return this.planFeatures[i].targetPlan.indexOf(planType) === 0;
-  }
-
-  ngOnDestroy() {
-    this.subscriptionRegionStatus?.unsubscribe();
-  }
+  constructor(
+    private _sharedService: SharedService,
+    private _uService: UniversalService,
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _el: ElementRef,
+  ) {}
 
   ngAfterViewInit() {
     this._route.fragment.pipe(first()).subscribe((fragment) => {
-      const el: HTMLElement = this._el.nativeElement.querySelector(
-        "#" + fragment
-      );
+      const el: HTMLElement = this._el.nativeElement.querySelector("#" + fragment);
       if (el) {
-        setTimeout(() => {
-          const top = el.getBoundingClientRect().top;
-          smoothWindowScrollTo(top);
-        }, 300);
+        setTimeout(() => smoothWindowScrollTo(el.getBoundingClientRect().top), 300);
       }
     });
-
     this.loadVideoLgIfNeeded();
   }
 
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
-      title: "Reach more new patients and grow your practice with PromptHealth",
+      title: "Grow Your Visibility in the Age of AI Search | PromptHealth",
       description:
-        "PromptHealth helps providers reach more new patients for in-person visits, video visits or both.",
+        "PromptHealth helps healthcare providers become discoverable through content, video, and AI search.",
       robots: "index, follow",
       image: `${environment.config.FRONTEND_BASE}/assets/video/about-practitioner-thumbnail.jpg`,
       imageWidth: 992,
@@ -127,104 +79,42 @@ export class AboutPractitionerComponent implements OnInit {
       imageType: "image/jpg",
     });
 
-    this.subscriptionRegionStatus = this._regionService
-      .statusChanged()
-      .subscribe((status) => {
-        if (status == "ready") {
-          this.initPlans();
-        }
-      });
-
     this.initCoupon();
   }
 
   loadVideoLgIfNeeded() {
-    if (
-      this.sizeL &&
-      this.videoLg?.nativeElement &&
-      !this.videoLgMarkedAsLoadStart
-    ) {
+    if (this.sizeL && this.videoLg?.nativeElement && !this.videoLgMarkedAsLoadStart) {
       const videoLg = this.videoLg.nativeElement as HTMLVideoElement;
       videoLg.addEventListener("loadeddata", () => {
         const vp = this.videoPlayer?.nativeElement;
-        const currentTime = vp?.currentTime || 0;
         this.isVideoLgReady = true;
-        videoLg.currentTime = currentTime;
+        videoLg.currentTime = vp?.currentTime || 0;
         videoLg.loop = true;
-        vp.pause();
+        vp?.pause();
         videoLg.play();
       });
-
       videoLg.load();
       this.videoLgMarkedAsLoadStart = true;
     }
   }
 
-  initPlans() {
-    const region = this._uService.localStorage.getItem("region");
-    const path = "user/get-plans?region=" + region;
-    this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
-      if (res.statusCode == 200) {
-        res.data.forEach((d) => {
-          switch (region) {
-            case "CA":
-              d.currency = "CAD";
-              break;
-            case "US":
-              d.currency = "USD";
-              break;
-            default:
-              d.currency = "$";
-          }
-
-          if (d.userType.includes("P")) {
-            // nothing to do
-          } else if (d.userType.length == 2) {
-            this.plans.basic.data = d;
-
-            // plan name should not be used to connect providerPlan | centrePlan
-            //because it will be changed possibly
-            // } else if (d.userType.includes('SP') && d.name === 'Premium') {
-            //   this.plans.provider.data = d;
-          } else if (d.userType.includes("SP")) {
-            this.plans.provider.data = d;
-          }
-          // else if (d.userType.includes("C")) {
-          //   this.plans.centre.data = d;
-          // }
-        });
-      }
-    });
-  }
-
   initCoupon() {
     const coupon = this._uService.sessionStorage.getItem("stripe_coupon_code");
-    if (coupon) {
-      this.couponData = JSON.parse(coupon);
-      let isCouponApplicable = false;
-      for (const role of ["SP", "C"]) {
-        if (this._sharedService.isCouponApplicableTo(this.couponData, role)) {
-          isCouponApplicable = true;
-        }
-      }
+    if (!coupon) return;
 
-      if (isCouponApplicable) {
-        setTimeout(() => {
-          this.isCouponShown = true;
-        }, 1000);
-      }
+    this.couponData = JSON.parse(coupon);
+    const isApplicable = ["SP", "C"].some((role) =>
+      this._sharedService.isCouponApplicableTo(this.couponData, role)
+    );
+    if (isApplicable) {
+      setTimeout(() => (this.isCouponShown = true), 1000);
     }
   }
 
-  onChangeDuration(state: "on" | "off") {
-    this.isDurationMonthly = state == "on" ? true : false;
-  }
-
-  scrollTo(el: HTMLElement) {
-    if (el && window) {
-      const top = window.scrollY + el.getBoundingClientRect().top;
-      smoothWindowScrollTo(top);
-    }
+  onClickCreateFreeProfile() {
+    this._uService.sessionStorage.setItem("selectedPlan", "null");
+    fbq("track", "Lead");
+    this._router.navigate(["/auth", "registration", "sp"]);
   }
 
   expandCoupon() {
@@ -232,81 +122,8 @@ export class AboutPractitionerComponent implements OnInit {
   }
 
   shrinkCoupon(e: Event) {
-    this.isCouponShrink = true;
     e.stopPropagation();
-  }
-
-  onClickFreePlan(type: "basic") {
-    // Redirect to the main signup method which handles the modal
-    this.onClickSignup(type, false);
-  }
-
-  onClickSignup(type: PlanTypePractitioner, fromModal: boolean = false) {
-    let link = ["/auth", "registration"];
-    switch (type) {
-      case "basic":
-        // Go directly to wellness provider registration
-        link.push("sp");
-        break;
-      case "provider":
-        link.push("sp");
-        break;
-
-      // case "custom":
-      //   link = ["/contact-us"];
-      //   break;
-
-      // case "centre":
-      //   link.push("c");
-      //   break;
-    }
-    if (!fromModal) {
-      this._uService.sessionStorage.setItem(
-        "selectedPlan",
-        JSON.stringify(this.plans[type].data)
-      );
-      this._uService.sessionStorage.setItem(
-        "selectedMonthly",
-        this.isDurationMonthly.toString()
-      );
-    } else {
-      this._uService.sessionStorage.setItem("selectedPlan", "null");
-    }
-    fbq("track", "Subscribe");
-    this._router.navigate(link);
-  }
-
-  async onClickCheckout(type: PlanTypePractitioner) {
-    if (this.profile.roles == "U") {
-      this._toastr.error("You don't need to buy this plan");
-    } else {
-      // if (type === "centre") {
-      //   this._router.navigate(["/contact-us"]);
-      //   return;
-      // }
-      this.isLoading = true;
-      try {
-        const result = await this._sharedService.checkoutPlan(
-          this.profile,
-          this.plans[type].data,
-          "default",
-          this.isDurationMonthly
-        );
-        this._toastr.success(result.message);
-        switch (result.nextAction) {
-          case "complete":
-            this._router.navigate(["/dashboard/register-product/complete"]);
-            break;
-          case "stripe":
-            // automatically redirect to stripe. nothing to do.
-            break;
-        }
-      } catch (error) {
-        this._toastr.error(error);
-      } finally {
-        this.isLoading = false;
-      }
-    }
+    this.isCouponShrink = true;
   }
 }
 
@@ -329,231 +146,21 @@ const features = [
     content:
       "Position yourself as a go-to expert by sharing your insights through engaging video content. Build credibility and connect with an audience seeking trusted health guidance.",
   },
-  // {
-  //   icon: 'cast-outline',
-  //   title: 'Fun and simple to use.',
-  //   content: 'Be a part of our wellness community. Engage with new and potential clients, and other providers in your area who align with your values and approach to wellness.',
-  // },
-  // {
-  //   icon: 'verified-outline',
-  //   title: 'voice memos, notes, and images + articles, and events',
-  //   content: 'This is a test This is a test This is a test This is a test This is a test This is a test This is a test This is.',
-  // },
-  // {
-  //   icon: 'thumbs-up-outline',
-  //   title: 'Receive booking requests',
-  //   content: 'This is a test This is a test This is a test This is a test This is a test This is a test This is a test This  This is a test This is a test This is a test This.',
-  // },
-  // {
-  //   icon: 'cast-outline',
-  //   title: 'Inter referrals enabled',
-  //   content: 'This is a test This is a test This is a test This is a test This is a test This is a test This is a test This is.',
-  // },
-  // {
-  //   icon: 'verified-outline',
-  //   title: 'Ratings and reviews',
-  //   content: 'This is a test This is a test This is a test This is a test This is a test This is a test This is a test This is.',
-  // },
-
-  // {
-  //   icon: 'lightning-outline',
-  //   title: 'Simple to use and time-saving.',
-  //   content: 'We are creating a space where health and wellness experts can lead the conversation around the topics they are experts in. Instead of spending time building your credibility online, let them come to you on PromptHealth and focus on what you do best.',
-  // },
-  // {
-  //   icon: 'text-block-outline',
-  //   title: 'Choose a content creation option that works best for you.',
-  //   content: 'Easy to use content creation tools made for busy health practitioners. Share using the medium that suits you best. Whether it’s through voice notes, videos, articles, or online events, we made it easy for health providers to create and share.',
-  // },
-  // {
-  //   icon: 'user-check-outline',
-  //   title: 'Share information on topics you are an expert in.',
-  //   content: 'Health misinformation online is a huge problem today. We are serious about making sure those providing health information can be trusted. We prioritize verifying our providers to remain a credible and helpful health resource for the public.',
-  // },
-  // {
-  //   icon: 'cast-outline',
-  //   title: 'Connect with clients.',
-  //   content: 'Find clients, share details about the services you offer and how you can help, and accept bookings all in one platform. ',
-  // },
-  // {
-  //   icon: 'thumbs-up-outline',
-  //   title: 'Engage with the health and wellness community.',
-  //   content: 'Be part of our community. Stay engaged with new and current clients, and other practitioners in your area. ',
-  // },
-  // {
-  //   icon: 'verified-outline',
-  //   title: 'Recommend other health professionals you trust.',
-  //   content: 'Think your clients will benefit from a different treatment, or do you know another provider you trust? Find and leave recommendations for other practitioners. ',
-  // },
 ];
 
-const plans: { [k in PlanTypePractitioner]: IPlanData } = {
-  basic: {
-    id: "basic",
-    icon: "gift-outline",
-    title: "Free Plan",
-    subtitle: "Get started with PromptHealth at no cost",
-    label: null,
-    data: null,
-  },
-  provider: {
-    id: "provider",
-    icon: "star-outline",
-    title: "Premium Plan",
-    subtitle: "Get featured and reach 1M+ wellness seekers",
-    label: "Most Popular",
-    data: null,
-  },
-  // centre: {
-  //   id: "centre",
-  //   icon: "users-outline",
-  //   title: "Centre",
-  //   subtitle: "For centers with multiple providers.",
-  //   // subtitle: "",
-  //   label: null,
-  //   data: null,
-  // },
-  // custom: {
-  //   id: "custom",
-  //   icon: "users-outline",
-  //   title: "Custom",
-  //   // subtitle: 'For centers with multiple providers.',
-  //   subtitle: "",
-  //   label: null,
-  //   data: null,
-  // },
-};
+const freePlanFeatures: string[] = [
+  "Basic provider profile",
+  "Listed under categories",
+  "Visibility on PromptHealth",
+];
 
-const planFeatures: IPlanFeatureData[] = [
-  {
-    item: "Get listed with a personalized profile",
-    detail: "Create your professional profile and get discovered by potential clients",
-    targetPlan: ["basic", "provider"],
-  },
-  {
-    item: "Wellness Provider Community Access",
-    detail: "Connect with other wellness providers and be part of the community",
-    targetPlan: ["basic", "provider"],
-  },
-  {
-    item: "Monthly Video Feature",
-    detail: " Be seen by a global audience of over 1 million with a professionally produced expert interview. We'll post the full video on YouTube and share short clips on Instagram and TikTok to amplify your reach.",
-    targetPlan: ["provider"],
-  },
-  {
-    item: "Reach 1M+ with Video Content",
-    detail: "Get discovered as a credible voice in wellness. Only certified professionals are featured—building trust with a health-conscious audience.",
-    targetPlan: ["provider"],
-  },
-  {
-    item: "Trusted Professional Exposure",
-    detail: "Become part of a growing network of like-minded health providers committed to education, credibility, and impact.",
-    targetPlan: ["provider"],
-  },
-  {
-    item: "Join a Credible Network",
-    detail: "Become part of a growing network of like-minded health providers committed to education, credibility, and impact.",
-    targetPlan: ["provider"],
-  },
-  {
-    item: "Wellness Provider Community",
-    detail: "Become part of a growing network of like-minded health providers committed to education, credibility, and impact.",
-    targetPlan: ["provider"],
-  },
-  {
-    item: "Grow with Like-Minded Experts",
-    detail: "Become part of a growing network of like-minded health providers committed to education, credibility, and impact.",
-    targetPlan: ["provider"],
-  },
-  // {
-  //   item: "Get listed with a personalized profile",
-  //   targetPlan: [
-  //     // "basic", 
-  //   "provider"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Follow and engage with other users",
-  //   targetPlan: [
-  //     // "basic",
-  //      "provider"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Share your knowledge via voice memos, notes, and images",
-  //   targetPlan: [
-  //     // "basic",
-  //      "provider"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Receive booking requests",
-  //   targetPlan: [
-  //     // "basic",
-  //      "provider"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Recommendations by other providers",
-  //   targetPlan: [
-  //     // "basic",
-  //      "provider"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Access to all basic features",
-  //   targetPlan: ["provider", ],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Get Discovered: Boost SEO with our blogs as well as your articles in our community of verified health experts to rank highly on Google.",
-  //   targetPlan: ["provider"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Share your expertise with over a million of therapy seekers: Yearly video introduction and monthly repost features and shoutouts on our social platforms (Only for annual subscriptions)",
-  //   targetPlan: ["provider"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Connect and engage: Get ideal client matches and introduce your events and courses through our community with comprehensive filters so clients can find what they are looking for easier.",
-  //   targetPlan: ["provider"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Monthly Check-In with a social media manger",
-  //   targetPlan: ["provider"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Performance analytics",
-  //   targetPlan: ["provider", "centre"],
-  //   detail: null,
-  // },
-
-  // {item: 'List different locations, services, and practitioners', targetPlan: ['centre'], detail: null},
-
-  // {
-  //   item: "List all your providers for free",
-  //   targetPlan: [],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Full Social Media Management",
-  //   targetPlan: ["custom"],
-  //   detail: null,
-  // },
-  // {
-  //   item: "Social Media Mentorship",
-  //   targetPlan: ["custom"],
-  //   detail: null,
-  // },
-  // { item: "Social Media Management", targetPlan: ["custom"], detail: null },
-  // {
-  //   item: "PromptHealth personal assistant for onboarding",
-  //   targetPlan: ["centre"],
-  //   detail: null,
-  // },
+const aiPlanFeatures: string[] = [
+  "SEO-optimized content based on patient searches",
+  "Expert video content (YouTube + short-form)",
+  "Keyword and topic strategy",
+  "Placement on high-intent pages",
+  "Internal linking across content",
+  "Ongoing visibility optimization",
 ];
 
 const faqs: IFAQItem[] = [
@@ -561,7 +168,7 @@ const faqs: IFAQItem[] = [
     q: "What are the benefits of joining PromptHealth?",
     a: `As a certified provider, you'll receive:
       <ul>
-        <li>Exposure to <strong>1M+ health-conscious followers</strong> across TikTok, Instagram & YouTube</li>
+        <li>Exposure to <strong>1M+ health-conscious followers</strong> across TikTok, Instagram &amp; YouTube</li>
         <li>A <strong>professionally produced video interview</strong>, edited and posted for maximum impact</li>
         <li>Increased credibility as a featured expert in a <strong>vetted wellness network</strong></li>
         <li>Connection to a global audience of wellness seekers</li>
@@ -592,36 +199,14 @@ const faqs: IFAQItem[] = [
   },
   {
     q: "How do I get started?",
-    a: "Click <strong>Get Featured Now</strong> on our homepage, complete the brief onboarding, and we'll schedule your Zoom interview.",
+    a: "Click <strong>Create Free Profile</strong>, complete the brief onboarding, and start building your visibility on PromptHealth.",
     opened: false,
   },
   {
     q: "What's the cost and value of this service?",
     a: `Think of this as an affordable PR strategy. For $500/month (just $125/week), you receive professionally produced, authentic content distributed to a highly targeted audience of wellness seekers.
     <br><br>
- Hiring a marketing agency or running generic social media ads often costs much more—and typically reaches a broad, non-specific audience. With PromptHealth, your message lands in front of the right people, through trusted, human content that builds real engagement and credibility`,
+    Hiring a marketing agency or running generic social media ads often costs much more—and typically reaches a broad, non-specific audience. With PromptHealth, your message lands in front of the right people, through trusted, human content that builds real engagement and credibility.`,
     opened: false,
   },
-  // {
-  //   q: "Will I be able to receive reviews and recommendations?",
-  //   a: `You are able to connect any existing Google reviews to your profile to gain credibility right away. Further, new clients can write you a review after they have attended any booked appointments.
-  //     <br><br>
-  //     In addition, we are the first online platform that makes it possible for health and wellness providers to easily find and inter-refer each other. You can do this by providing recommendations on another provider’s profile to build further trust within the health and wellness community.
-  //   `,
-  //   opened: false,
-  // },
-  // {
-  //   q: "Is there a verification process?",
-  //   a: `Before we approve a listing, we ensure to complete an audit to ensure the accuracy of information provided by a health and wellness provider. This review process consists of a careful qualitative approach by our team.
-  //     <br><br>
-  //     We encourage you to upload your certification in order to receive a verified badge beside your profile, indicating you are verified to build more credibility and trust. Although this review process is carefully conducted, we cannot guarantee the qualification information provided and cannot be responsible for false information.
-  //   `,
-
-  //   opened: false,
-  // },
-  // {
-  //   q: "How do I deactivate or delete my account?",
-  //   a: `To deactivate or delete your account, please  contact the admin at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>`,
-  //   opened: false,
-  // },
 ];
