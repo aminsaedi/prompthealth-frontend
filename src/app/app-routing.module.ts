@@ -1,27 +1,23 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ThemeModule } from './theme/theme.module';
 import { HttpClientModule } from '@angular/common/http';
 
 //Bootstrap
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { ModalModule } from "ngx-bootstrap/modal";
-import { SocialModule } from './social/social.module';
-import { AuthModule } from './auth/auth.module';
-import { Dashboard2Module } from './dashboard2/dashboard2.module';
 
 
 const routes: Routes = [
-  { path: 'community', loadChildren: () => SocialModule, },
+  { path: 'community', loadChildren: () => import('./social/social.module').then(m => m.SocialModule), },
 
-  { path: 'dashboard', loadChildren: () => Dashboard2Module },
+  { path: 'dashboard', loadChildren: () => import('./dashboard2/dashboard2.module').then(m => m.Dashboard2Module) },
 
-  { path: 'auth', loadChildren: () => AuthModule, },
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule), },
 
   { path: 'reset-password/:token', redirectTo: 'auth/reset-password/:token'},
 
-  { path: '', loadChildren: () => ThemeModule },
+  { path: '', loadChildren: () => import('./theme/theme.module').then(m => m.ThemeModule) },
 ];
 
 @NgModule({
