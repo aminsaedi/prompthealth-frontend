@@ -136,7 +136,19 @@ export class ListComponent implements OnInit {
       case 'academy': desc = `Learn with PromptHealth`; break;
     } 
 
-    this._uService.setMeta(this._router.url, {
+    // Cross-canonical: typed listings point to /community/feed,
+    // topic-filtered pages point to their parent without topicId,
+    // /community/feed keeps self-referencing canonical.
+    let canonicalPath: string;
+    if (this.selectedTaxonomyType !== 'feed') {
+      canonicalPath = '/community/feed';
+    } else if (this.selectedTopicId) {
+      canonicalPath = '/community/feed';
+    } else {
+      canonicalPath = this._router.url;
+    }
+
+    this._uService.setMeta(canonicalPath, {
       title: `PromptHealth Community | ${type == 'feed' ? 'Home' : (type + 's')}${topic ? (': collection of ' + topic) : ''}`,
       description: desc,
     });
