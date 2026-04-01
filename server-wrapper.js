@@ -57,10 +57,61 @@ function injectJsonLd(url, html) {
   // Community content pages: /community/<mongoId>
   // The Angular SSR already renders a JSON-LD block with Article + BreadcrumbList.
   // We enhance it with missing fields rather than injecting a duplicate.
+  // For event-type posts, we convert Article to Event schema.
   const communityMatch = url.match(/^\/community\/content\/([a-f0-9]{24})/);
   if (communityMatch) {
     const baseUrl = 'https://www.prompthealth.ca';
     const pageUrl = baseUrl + url;
+
+    // Detect if this is an event post by looking for event-specific HTML
+    // The event card renders dates like "yyyy/MM/dd hh:mm AM/PM - yyyy/MM/dd hh:mm AM/PM (your local time)"
+    const isEventPost = /class="status-indicator[\s\S]*?\(your local time\)/.test(html);
+
+    // Extract event details from rendered HTML if this is an event
+    let eventStartDate = null;
+    let eventEndDate = null;
+    let eventLocation = null;
+    let isVirtualEvent = false;
+    let eventLink = null;
+
+    if (isEventPost) {
+      // Extract dates: "2024/03/15 02:00 PM - 2024/03/15 04:00 PM (your local time)"
+      const dateMatch = html.match(/(\d{4}\/\d{2}\/\d{2}\s+\d{1,2}:\d{2}\s+[AP]M)\s*-\s*(\d{4}\/\d{2}\/\d{2}\s+\d{1,2}:\d{2}\s+[AP]M)\s*\(your local time\)/);
+      if (dateMatch) {
+        eventStartDate = new Date(dateMatch[1]).toISOString();
+        eventEndDate = new Date(dateMatch[2]).toISOString();
+      }
+
+      // Check if virtual: icon "video-camera" means online
+      isVirtualEvent = /iconPh="video-camera"/.test(html) || /Virtual event/.test(html);
+
+      // Extract venue/location text
+      if (isVirtualEvent) {
+        const venueMatch = html.match(/iconPh="video-camera"[\s\S]*?<span[^>]*>\s*(?:<ng-container[^>]*>)?\s*(?:On\s+)?(\w[\w\s]*?)(?:<\/ng-container>)?\s*<\/span>/);
+        if (venueMatch) {
+          eventLocation = { '@type': 'VirtualLocation', 'url': '' };
+        } else {
+          eventLocation = { '@type': 'VirtualLocation', 'name': 'Online Event' };
+        }
+      } else {
+        const addressMatch = html.match(/iconPh="pin"[\s\S]*?<span[^>]*>([\s\S]*?)<\/span>/);
+        if (addressMatch) {
+          const addr = addressMatch[1].replace(/<[^>]+>/g, '').replace(/At\s+/i, '').trim();
+          if (addr) {
+            eventLocation = { '@type': 'Place', 'name': addr, 'address': addr };
+          }
+        }
+      }
+
+      // Extract registration link
+      const linkMatch = html.match(/href="(https?:\/\/[^"]+)"[^>]*>\s*Register\s*<\/a>/i);
+      if (linkMatch) {
+        eventLink = linkMatch[1];
+        if (isVirtualEvent && eventLocation && eventLocation['@type'] === 'VirtualLocation') {
+          eventLocation.url = linkMatch[1];
+        }
+      }
+    }
 
     // Find and parse the existing Angular-rendered JSON-LD
     const ldRegex = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
@@ -74,42 +125,85 @@ function injectJsonLd(url, html) {
         const breadcrumb = data.find(d => d['@type'] === 'BreadcrumbList');
         if (!article) continue;
 
-        // Enrich Article schema
-        article.url = pageUrl;
-        article.mainEntityOfPage = pageUrl;
-        article.publisher = {
-          "@type": "Organization",
-          "name": "PromptHealth",
-          "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png" }
-        };
+        if (isEventPost) {
+          // Convert Article to Event schema
+          const eventSchema = {
+            '@context': 'https://schema.org',
+            '@type': 'Event',
+            'name': article.headline || '',
+            'description': article.description || '',
+            'url': pageUrl,
+            'image': article.image || '',
+          };
 
-        // dateModified = datePublished if not set
-        if (article.datePublished && !article.dateModified) {
-          article.dateModified = article.datePublished;
-        }
+          if (eventStartDate) eventSchema.startDate = eventStartDate;
+          if (eventEndDate) eventSchema.endDate = eventEndDate;
 
-        // Add author profile URL if author exists
-        if (article.author && article.author.name) {
-          // Extract authorId from the page HTML (Angular renders it in component state)
-          const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
-          if (authorIdMatch) {
-            article.author.url = baseUrl + '/community/profile/' + authorIdMatch[1];
+          if (eventLocation) {
+            eventSchema.location = eventLocation;
           }
-        }
 
-        // Ensure image is absolute URL
-        if (article.image && !article.image.startsWith('http')) {
-          article.image = baseUrl + (article.image.startsWith('/') ? '' : '/') + article.image;
-        }
-        if (!article.image) {
-          article.image = baseUrl + '/assets/img/prompthealth.png';
-        }
+          // Organizer from author
+          if (article.author && article.author.name) {
+            eventSchema.organizer = { '@type': 'Person', 'name': article.author.name };
+            const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
+            if (authorIdMatch) {
+              eventSchema.organizer.url = baseUrl + '/community/profile/' + authorIdMatch[1];
+            }
+          }
 
-        // Fix BreadcrumbList: add URL to last item
-        if (breadcrumb && breadcrumb.itemListElement) {
-          const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
-          if (lastItem && !lastItem.item) {
-            lastItem.item = pageUrl;
+          // Ensure image is absolute
+          if (eventSchema.image && !eventSchema.image.startsWith('http')) {
+            eventSchema.image = baseUrl + (eventSchema.image.startsWith('/') ? '' : '/') + eventSchema.image;
+          }
+          if (!eventSchema.image) {
+            eventSchema.image = baseUrl + '/assets/img/prompthealth.png';
+          }
+
+          // Replace Article with Event in the data array
+          const articleIdx = data.indexOf(article);
+          data[articleIdx] = eventSchema;
+
+          // Fix BreadcrumbList
+          if (breadcrumb && breadcrumb.itemListElement) {
+            const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
+            if (lastItem && !lastItem.item) {
+              lastItem.item = pageUrl;
+            }
+          }
+        } else {
+          // Enrich Article schema (non-event posts)
+          article.url = pageUrl;
+          article.mainEntityOfPage = pageUrl;
+          article.publisher = {
+            "@type": "Organization",
+            "name": "PromptHealth",
+            "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png" }
+          };
+
+          if (article.datePublished && !article.dateModified) {
+            article.dateModified = article.datePublished;
+          }
+
+          if (article.author && article.author.name) {
+            const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
+            if (authorIdMatch) {
+              article.author.url = baseUrl + '/community/profile/' + authorIdMatch[1];
+            }
+          }
+
+          if (article.image && !article.image.startsWith('http')) {
+            article.image = baseUrl + (article.image.startsWith('/') ? '' : '/') + article.image;
+          }
+          if (!article.image) {
+            article.image = baseUrl + '/assets/img/prompthealth.png';
+          }
+
+          if (breadcrumb && breadcrumb.itemListElement) {
+            const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
+            if (lastItem && !lastItem.item) {
+              lastItem.item = pageUrl;
+            }
           }
         }
 
