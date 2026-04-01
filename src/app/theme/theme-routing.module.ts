@@ -48,13 +48,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: LayoutComponent,
-    children: [
-      {
-        path: '',
-        component: HomeComponent
-      },
-    ]
+    redirectTo: '/404'
   }
 ];
 

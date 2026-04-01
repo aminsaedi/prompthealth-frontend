@@ -103,8 +103,17 @@ export class ListComponent implements OnInit {
       this.checkLoginStatusAndInitPost();
     });
 
+    // Support ?page=N for crawlable pagination
+    this._route.queryParams.subscribe((qp: any) => {
+      if (qp.page) {
+        this.initialPage = parseInt(qp.page, 10) || 1;
+      }
+    });
+
     this.observeCacheChange();
   }
+
+  public initialPage: number = 1;
 
   async setMeta() {
     const type = this.selectedTaxonomyType.charAt(0).toUpperCase() + this.selectedTaxonomyType.substr(1).toLowerCase();
@@ -228,6 +237,7 @@ export class ListComponent implements OnInit {
         count: this.countPerPage,
         ... (this.selectedTopicId) && { tags: [this.selectedTopicId] },
         ... (this.posts && this.posts.length > 0) && { timestamp: this.posts[this.posts.length - 1].createdAt },
+        ... (this.initialPage > 1 && (!this.posts || this.posts.length === 0)) && { page: this.initialPage },
       }
 
       switch(this.selectedTaxonomyType) {

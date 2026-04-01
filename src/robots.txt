@@ -8,5 +8,12 @@ Disallow: /dashboard/
 Disallow: /auth/
 Disallow: /invitation/
 Disallow: /thankyou
+Disallow: /community/editor/
+Disallow: /community/drafts
+Disallow: /community/notification
+Disallow: /community/followings
+Disallow: /community/followers
+Disallow: /personal-match
+Disallow: /compare-practitioners
 
-Sitemap: https://prompthealth.ca/sitemap
+Sitemap: https://www.prompthealth.ca/sitemap

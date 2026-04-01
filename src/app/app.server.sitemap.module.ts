@@ -59,7 +59,7 @@ const sitemapRoot = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <url>
       <loc>${baseURL}</loc>
     </url>
@@ -67,7 +67,7 @@ const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
       <loc>${baseURL}/about</loc>
     </url>
     <url>
-      <loc>${baseURL}/about/pertner</loc>
+      <loc>${baseURL}/about/partner</loc>
     </url>
     <url>
       <loc>${baseURL}/plans</loc>
@@ -110,7 +110,7 @@ const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
 
 function getSitemapPractitioners(): Promise<string> {
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <url>
         <loc>${baseURL}/practitioners</loc>
       </url>
@@ -262,7 +262,7 @@ function getSitemapPractitioners(): Promise<string> {
 
 function getSitemapSocial(): Promise<string> {
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     `;
 
   return new Promise((resolve) => {
@@ -314,10 +314,12 @@ function getSitemapSocial(): Promise<string> {
         `;
       });
 
-      contentIds.forEach(id => {
+      contentIds.forEach(item => {
+        const lastmod = item.updatedAt ? new Date(item.updatedAt).toISOString().split('T')[0] : '';
         xml += `
           <url>
-            <loc>${baseURL}/community/content/${id}</loc>
+            <loc>${baseURL}/community/content/${item._id}</loc>
+            ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
           </url>
         `;
       });
@@ -404,19 +406,19 @@ function getAllPractitionerIds(): Promise<String[]> {
   });
 }
 
-function getAllSocialContentIds(): Promise<string[]> {
+function getAllSocialContentIds(): Promise<{_id: string, updatedAt: string}[]> {
   return new Promise((resolve) => {
-    const contentIds = [];
-    axios.get(apiURL + 'note/filter?count=100').then(res => {
+    const contents: {_id: string, updatedAt: string}[] = [];
+    axios.get(apiURL + 'note/filter?count=10000').then(res => {
       if(res.status == 200) {
-        res.data.data.data.forEach((d: {_id: string}) => {
-          contentIds.push(d._id);
+        res.data.data.data.forEach((d: {_id: string, updatedAt: string}) => {
+          contents.push({_id: d._id, updatedAt: d.updatedAt});
         });
       }
-      resolve(contentIds);
+      resolve(contents);
     }).catch(error => {
-      resolve(contentIds);
-    });  
+      resolve(contents);
+    });
   });
 }
 

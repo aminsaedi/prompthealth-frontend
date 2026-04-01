@@ -91,7 +91,7 @@ export function app() {
   server.use('/personal-match',        (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/compare-practitioners', (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/unsubscribe',           (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
-  server.use('/404',                   (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  server.use('/404',                   (req, res) => { res.status(404).sendFile(join(distFolder, 'index.html')); })
   server.use('/thankyou',              (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/join-team',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   
@@ -117,9 +117,14 @@ export function app() {
         }
         if (html) {
           html = injectJsonLd(req.originalUrl, html);
+          html = injectPaginationLinks(req, html);
         }
-        // showMeta(req.originalUrl, html);
-        res.send(html);
+        // Detect 404 pages: if the rendered HTML contains the "Not Found" title, return 404 status
+        if (html && html.includes('<title>Not Found | PromptHealth</title>')) {
+          res.status(404).send(html);
+        } else {
+          res.send(html);
+        }
       }
     );
   });
@@ -210,6 +215,35 @@ function injectJsonLd(url: string, html: string): string {
   if (jsonLd) {
     const script = `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
     html = html.replace('</head>', script + '</head>');
+  }
+
+  return html;
+}
+
+function injectPaginationLinks(req: any, html: string): string {
+  // Only inject pagination links for community feed pages
+  const feedPattern = /^\/community\/(feed|article|media|event|note|voice|promotion)(\/[a-f0-9]{24})?$/;
+  const pathWithoutQuery = req.path;
+  if (!feedPattern.test(pathWithoutQuery)) {
+    return html;
+  }
+
+  const page = parseInt(req.query.page, 10) || 1;
+  const baseUrl = 'https://www.prompthealth.ca' + pathWithoutQuery;
+  let links = '';
+
+  if (page > 1) {
+    const prevPage = page - 1;
+    const prevUrl = prevPage === 1 ? baseUrl : `${baseUrl}?page=${prevPage}`;
+    links += `<link rel="prev" href="${prevUrl}">`;
+  }
+
+  // Always add next link (crawlers will stop when they get empty pages)
+  const nextUrl = `${baseUrl}?page=${page + 1}`;
+  links += `<link rel="next" href="${nextUrl}">`;
+
+  if (links) {
+    html = html.replace('</head>', links + '</head>');
   }
 
   return html;
