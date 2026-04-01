@@ -33,6 +33,7 @@ import { SocialArticle } from "../models/social-article";
 import { ProfileManagementService } from "../shared/services/profile-management.service";
 import { ModalService } from "../shared/services/modal.service";
 import { getListedMenu } from "../_helpers/get-listed-menu";
+import { JsonLdService } from "../shared/services/json-ld.service";
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -72,7 +73,8 @@ export class HomeComponent implements OnInit {
     private _uService: UniversalService,
     private _changeDetector: ChangeDetectorRef,
     private _profileService: ProfileManagementService,
-    private _modalService: ModalService
+    private _modalService: ModalService,
+    private _jsonLdService: JsonLdService
   ) {}
 
   public isPlanMenuShown = false;
@@ -142,6 +144,7 @@ export class HomeComponent implements OnInit {
 
   ngOnDestroy() {
     this._headerStatusService.showHeader(false);
+    this._jsonLdService.removeJsonLd();
   }
 
   ngAfterViewInit() {
@@ -165,6 +168,23 @@ export class HomeComponent implements OnInit {
       title: "PromptHealth | Your Wellness Navigator",
       description: "Take control of your health with options tailored to you",
     });
+
+    this._jsonLdService.setJsonLd([
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "PromptHealth",
+        "url": "https://www.prompthealth.ca",
+        "logo": "https://www.prompthealth.ca/assets/img/prompthealth.png",
+        "description": "Your Wellness Navigator"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "PromptHealth",
+        "url": "https://www.prompthealth.ca"
+      }
+    ]);
 
     this._catService.getCategoryAsync().then((cats) => {
       this.categories = cats;

@@ -8,6 +8,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString } from 'src/app/_helpers/date-formatter';
 import { SocialService } from '../social.service';
+import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 
 @Component({
   selector: 'app-page',
@@ -37,10 +38,12 @@ export class PageComponent implements OnInit {
     private _toastr: ToastrService,
     private _uService: UniversalService,
     private _headerService: HeaderStatusService,
+    private _jsonLdService: JsonLdService,
   ) { }
 
   ngOnDestroy() {
     this.hideReturnToApp();
+    this._jsonLdService.removeJsonLd();
   }
 
   ngOnInit(): void {
@@ -114,6 +117,44 @@ export class PageComponent implements OnInit {
       imageAlt: 'A note from ' + this.post.authorName,
       ...this.pathToApp && {iosLink: this.pathToApp},
     });
+
+    this._jsonLdService.setJsonLd([
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': title,
+        'description': this.post.summary || '',
+        'datePublished': this.post.createdAt || '',
+        'author': {
+          '@type': 'Person',
+          'name': this.post.authorName || ''
+        },
+        ...(this.post.coverImage ? { 'image': this.post.coverImage } : {})
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Home',
+            'item': 'https://www.prompthealth.ca'
+          },
+          {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'Community',
+            'item': 'https://www.prompthealth.ca/community'
+          },
+          {
+            '@type': 'ListItem',
+            'position': 3,
+            'name': title
+          }
+        ]
+      }
+    ]);
   }
  
   showReturnToAppIfNeeded() {
