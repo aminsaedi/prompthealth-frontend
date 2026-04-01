@@ -20,6 +20,15 @@ process.on('uncaughtException', (err) => {
 const originalModule = require('./main.js');
 const expressApp = originalModule.app();
 
+// Extract content from a meta tag by property or name
+function extractMeta(html, attr) {
+  // Try property first (og:*), then name
+  const propRegex = new RegExp('<meta\\s+property="' + attr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"\\s+content="([^"]*)"', 'i');
+  const nameRegex = new RegExp('<meta\\s+name="' + attr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"\\s+content="([^"]*)"', 'i');
+  const match = html.match(propRegex) || html.match(nameRegex);
+  return match ? match[1] : '';
+}
+
 // JSON-LD injection function
 function injectJsonLd(url, html) {
   if (typeof html !== 'string') return html;
@@ -112,8 +121,81 @@ function injectJsonLd(url, html) {
         // Skip unparseable blocks
       }
     }
-    // Don't inject a second block for community pages
+    // Don't inject a second block for community content pages
     return html;
+  }
+
+  // Profile pages: /community/profile/<mongoId>
+  const profileMatch = url.match(/^\/community\/profile\/([a-f0-9]{24})/);
+  if (profileMatch) {
+    const baseUrl = 'https://www.prompthealth.ca';
+    const pageUrl = baseUrl + '/community/profile/' + profileMatch[1];
+
+    // Extract data from SSR-rendered meta tags
+    const ogTitle = extractMeta(html, 'og:title');
+    const ogDesc = extractMeta(html, 'og:description');
+    const ogImage = extractMeta(html, 'og:image');
+
+    // Parse name and location from title: "Name in City, State | PromptHealth Community"
+    let profileName = '';
+    let city = '';
+    let region = '';
+    if (ogTitle) {
+      const titleMatch = ogTitle.match(/^(.+?)\s+in\s+(.*?),\s*(.*?)\s*\|/);
+      if (titleMatch) {
+        profileName = titleMatch[1].trim();
+        city = titleMatch[2].trim();
+        region = titleMatch[3].trim();
+      } else {
+        // Fallback: "Name | PromptHealth Community"
+        const simpleMatch = ogTitle.match(/^(.+?)\s*\|/);
+        if (simpleMatch) profileName = simpleMatch[1].trim();
+      }
+    }
+
+    // Parse jobTitle from description: "Name is Specialty offering ..."
+    let jobTitle = '';
+    if (ogDesc && profileName) {
+      const descMatch = ogDesc.match(new RegExp('^' + profileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s+is\\s+(.+?)\\s+offering'));
+      if (descMatch) jobTitle = descMatch[1].trim();
+    }
+
+    if (profileName) {
+      const personSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        'name': profileName,
+        'url': pageUrl,
+      };
+
+      if (ogDesc) personSchema.description = ogDesc;
+
+      // Use profile image if it's not the default
+      if (ogImage && !ogImage.includes('/assets/img/prompthealth')) {
+        personSchema.image = ogImage;
+      }
+
+      if (jobTitle) personSchema.jobTitle = jobTitle;
+
+      // Add address if city or region available
+      if (city || region) {
+        const address = { '@type': 'PostalAddress' };
+        if (city) address.addressLocality = city;
+        if (region) address.addressRegion = region;
+        personSchema.address = address;
+      }
+
+      // Check for organization in rendered HTML
+      const orgMatch = html.match(/<[^>]*class="[^"]*organization[^"]*"[^>]*>([^<]+)/i);
+      if (orgMatch && orgMatch[1].trim()) {
+        personSchema.worksFor = {
+          '@type': 'Organization',
+          'name': orgMatch[1].trim()
+        };
+      }
+
+      jsonLd = [personSchema];
+    }
   }
 
   if (jsonLd) {
