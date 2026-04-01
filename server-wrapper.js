@@ -46,74 +46,74 @@ function injectJsonLd(url, html) {
   }
 
   // Community content pages: /community/<mongoId>
+  // The Angular SSR already renders a JSON-LD block with Article + BreadcrumbList.
+  // We enhance it with missing fields rather than injecting a duplicate.
   const communityMatch = url.match(/^\/community\/content\/([a-f0-9]{24})/);
   if (communityMatch) {
     const baseUrl = 'https://www.prompthealth.ca';
     const pageUrl = baseUrl + url;
 
-    const titleMatch = html.match(/<meta property="og:title" content="(.*?)">/);
-    const descMatch = html.match(/<meta (?:property|name)="(?:og:)?description" content="(.*?)">/);
-    const imageMatch = html.match(/<meta property="og:image" content="(.*?)">/);
-    const publishedMatch = html.match(/<meta property="article:published_time" content="(.*?)">/);
-    const authorMatch = html.match(/<meta property="article:author" content="(.*?)">/);
-    const authorIdMatch = html.match(/<meta name="author-id" content="(.*?)">/);
+    // Find and parse the existing Angular-rendered JSON-LD
+    const ldRegex = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
+    let ldMatch;
+    while ((ldMatch = ldRegex.exec(html)) !== null) {
+      try {
+        const data = JSON.parse(ldMatch[1]);
+        if (!Array.isArray(data)) continue;
 
-    const title = titleMatch ? titleMatch[1] : '';
-    const description = descMatch ? descMatch[1] : '';
-    const rawImage = imageMatch ? imageMatch[1] : '';
-    const datePublished = publishedMatch ? publishedMatch[1] : '';
-    const authorName = authorMatch ? authorMatch[1] : '';
-    const authorId = authorIdMatch ? authorIdMatch[1] : '';
+        const article = data.find(d => d['@type'] === 'Article');
+        const breadcrumb = data.find(d => d['@type'] === 'BreadcrumbList');
+        if (!article) continue;
 
-    // Ensure image URL is absolute
-    let image = rawImage;
-    if (image && !image.startsWith('http')) {
-      image = baseUrl + (image.startsWith('/') ? '' : '/') + image;
-    }
-    if (!image) {
-      image = baseUrl + '/assets/img/prompthealth.png';
-    }
+        // Enrich Article schema
+        article.url = pageUrl;
+        article.mainEntityOfPage = pageUrl;
+        article.publisher = {
+          "@type": "Organization",
+          "name": "PromptHealth",
+          "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png" }
+        };
 
-    const articleSchema = {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": title,
-      "description": description,
-      "image": image,
-      "url": pageUrl,
-      "mainEntityOfPage": pageUrl,
-      "publisher": {
-        "@type": "Organization",
-        "name": "PromptHealth",
-        "logo": {
-          "@type": "ImageObject",
-          "url": baseUrl + "/assets/img/prompthealth.png"
+        // dateModified = datePublished if not set
+        if (article.datePublished && !article.dateModified) {
+          article.dateModified = article.datePublished;
         }
-      }
-    };
-    if (datePublished) {
-      articleSchema.datePublished = datePublished;
-      articleSchema.dateModified = datePublished;
-    }
-    if (authorName) {
-      articleSchema.author = { "@type": "Person", "name": authorName };
-      if (authorId) {
-        articleSchema.author.url = baseUrl + '/community/profile/' + authorId;
-      }
-    }
 
-    jsonLd = [
-      articleSchema,
-      {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl },
-          { "@type": "ListItem", "position": 2, "name": "Community", "item": baseUrl + "/community" },
-          { "@type": "ListItem", "position": 3, "name": title, "item": pageUrl }
-        ]
+        // Add author profile URL if author exists
+        if (article.author && article.author.name) {
+          // Extract authorId from the page HTML (Angular renders it in component state)
+          const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
+          if (authorIdMatch) {
+            article.author.url = baseUrl + '/community/profile/' + authorIdMatch[1];
+          }
+        }
+
+        // Ensure image is absolute URL
+        if (article.image && !article.image.startsWith('http')) {
+          article.image = baseUrl + (article.image.startsWith('/') ? '' : '/') + article.image;
+        }
+        if (!article.image) {
+          article.image = baseUrl + '/assets/img/prompthealth.png';
+        }
+
+        // Fix BreadcrumbList: add URL to last item
+        if (breadcrumb && breadcrumb.itemListElement) {
+          const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
+          if (lastItem && !lastItem.item) {
+            lastItem.item = pageUrl;
+          }
+        }
+
+        // Replace the original JSON-LD block with enhanced version
+        const enhanced = '<script type="application/ld+json">' + JSON.stringify(data) + '</script>';
+        html = html.replace(ldMatch[0], enhanced);
+        break; // Only enhance the first matching block
+      } catch (e) {
+        // Skip unparseable blocks
       }
-    ];
+    }
+    // Don't inject a second block for community pages
+    return html;
   }
 
   if (jsonLd) {
