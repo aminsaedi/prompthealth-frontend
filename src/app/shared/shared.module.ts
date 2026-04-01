@@ -76,6 +76,7 @@ import { FormItemSelectBoxComponent } from './form-item-select-box/form-item-sel
 import { FormItemProfileImageComponent } from './form-item-profile-image/form-item-profile-image.component';
 import { FormAdminGeneralComponent } from './form-admin-general/form-admin-general.component';
 import { CardNoContentComponent } from './card-no-content/card-no-content.component';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 
 @NgModule({
   imports: [
@@ -159,6 +160,7 @@ import { CardNoContentComponent } from './card-no-content/card-no-content.compon
     FormItemProfileImageComponent,
     FormAdminGeneralComponent,
     CardNoContentComponent,
+    BreadcrumbComponent,
   ],
   exports: [
     UserSidebarComponent,
@@ -222,6 +224,7 @@ import { CardNoContentComponent } from './card-no-content/card-no-content.compon
     FormItemProfileImageComponent,
     FormAdminGeneralComponent,
     CardNoContentComponent,
+    BreadcrumbComponent,
   ]
 })
 export class SharedModule { }

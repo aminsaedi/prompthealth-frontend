@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { IGetSocialContentResult } from 'src/app/models/response-data';
+import { IGetSocialContentResult, IGetSocialContentsResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -9,6 +9,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString } from 'src/app/_helpers/date-formatter';
 import { SocialService } from '../social.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
+import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-page',
@@ -29,6 +30,8 @@ export class PageComponent implements OnInit {
   private postId: string;
 
   public isReturnToAppShown = false;
+  public relatedPosts: ISocialPost[] = [];
+  public breadcrumbs: BreadcrumbItem[] = [];
 
   constructor(
     private _route: ActivatedRoute,
@@ -60,6 +63,7 @@ export class PageComponent implements OnInit {
 
   async initPost() {
     this.post = null;
+    this.relatedPosts = [];
     const post = this._socialService.postOf(this.postId);
     if(post) {
       this.post = post;
@@ -73,7 +77,9 @@ export class PageComponent implements OnInit {
     }
 
     if(this.post) {
-      this.setMeta();  
+      this.setMeta();
+      this.setBreadcrumbs();
+      this.fetchRelatedPosts();
     } else {
       this._toastr.error('Could not find the content. Please try again');
       this._router.navigate(['/404'], {replaceUrl: true});
@@ -96,6 +102,37 @@ export class PageComponent implements OnInit {
         reject(err);
       });
     });
+  }
+
+  fetchRelatedPosts() {
+    const type = this.post.contentType;
+    const path = `note/filter?count=6&contentType=${type}`;
+    this._sharedService.get(path).subscribe((res: IGetSocialContentsResult) => {
+      if (res.statusCode === 200 && res.data?.data) {
+        this.relatedPosts = res.data.data
+          .filter(p => p._id !== this.post._id)
+          .slice(0, 5);
+      }
+    }, err => {
+      console.log('Error fetching related posts:', err);
+    });
+  }
+
+  setBreadcrumbs() {
+    let title: string;
+    if (this.post.isNote) {
+      title = 'Note by ' + this.post.authorName;
+    } else if (this.post.isPromo) {
+      title = 'Offer from ' + this.post.authorName;
+    } else {
+      title = this.post.title || 'Post';
+    }
+
+    this.breadcrumbs = [
+      { label: 'Home', url: '/' },
+      { label: 'Community', url: '/community/feed' },
+      { label: title }
+    ];
   }
 
   setMeta(){
@@ -156,7 +193,7 @@ export class PageComponent implements OnInit {
       }
     ]);
   }
- 
+
   showReturnToAppIfNeeded() {
     const params = this._route.snapshot.queryParams;
     if(params.returnToApp) {

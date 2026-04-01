@@ -1,18 +1,23 @@
 <div class="container">
   <div class="row align-items-start justify-content-center">
-    <section 
+    <section class="col-12 col-md-10 col-xl-8" *ngIf="!isReturnToAppShown">
+      <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+    </section>
+  </div>
+  <div class="row align-items-start justify-content-center">
+    <section
     *ngIf="!isReturnToAppShown"
     class="col-12 col-md-2 col-xl-2"
     >
       <div class="text-md-right">
-        <button-goback 
-        buttonClass="pt-0 pl-0" 
+        <button-goback
+        buttonClass="pt-0 pl-0"
         [link]="['/community', 'feed']"
         ></button-goback>
       </div>
     </section>
     <section class="col-12 col-md-10 col-xl-8">
-      <div 
+      <div
       *ngIf="!post"
       class="mt-80p text-center"
       >
@@ -26,14 +31,30 @@
         [option]="{openCommentsOnInit: true, showLinkToDetail: false}"
         ></card>
       </ng-container>
-    </section>        
+
+      <div *ngIf="relatedPosts.length > 0" class="related-posts">
+        <h2 class="related-posts__title">Related Posts</h2>
+        <div class="related-posts__list">
+          <a
+            *ngFor="let rp of relatedPosts"
+            [routerLink]="['/community', 'content', rp._id]"
+            class="related-posts__item"
+          >
+            <span class="related-posts__item-title">{{ rp.title || ('A ' + rp.contentType.toLowerCase() + ' by ' + (rp.author ? ((rp.author.firstName || '') + ' ' + (rp.author.lastName || '')).trim() : 'Unknown')) }}</span>
+            <span class="related-posts__item-author" *ngIf="rp.author">
+              by {{ (rp.author.firstName || '') + ' ' + (rp.author.lastName || '') }}
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
 
 <a
-*ngIf="isReturnToAppShown" 
+*ngIf="isReturnToAppShown"
 href="prompthealth://goBack"
-class="position-fixed btn btn-primary shadow" 
+class="position-fixed btn btn-primary shadow"
 style="z-index: 100; bottom: 15px; left: 50%; transform: translateX(-50%); width: calc(100vw - 60px); max-width: 400px;"
 >
   Return to app

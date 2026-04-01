@@ -21,6 +21,7 @@ import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
 import { environment } from 'src/environments/environment';
 import { SocialService } from '../social.service';
+import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-profile',
@@ -72,6 +73,7 @@ export class ProfileComponent implements OnInit {
 
   public profileId: string;
   public profile: Professional;
+  public breadcrumbs: BreadcrumbItem[] = [];
 
   public profileMenus: IProfileMenuItem[] = [];
   public isFollowing = false;
@@ -161,6 +163,7 @@ export class ProfileComponent implements OnInit {
       this.setProfileMenu();
       this._socialService.setProfile(this.profile);
       this.setMetaForAbout();
+      this.setBreadcrumbs();
     } else {
       const promiseAll: [Promise<Professional>, Promise<QuestionnaireMapProfilePractitioner>] = [
         this.fetchProfile(this.profileId),
@@ -175,6 +178,7 @@ export class ProfileComponent implements OnInit {
         this._socialService.setProfile(this.profile);
 
         this.setMetaForAbout();
+        this.setBreadcrumbs();
 
         if(this.profile.isSP && !this.profile.triedFetchingTeam) {
           this.fetchTeam();
@@ -619,6 +623,15 @@ export class ProfileComponent implements OnInit {
       this.isBellLoading = false;
       this.isBelling = false;
     });
+  }
+
+  setBreadcrumbs() {
+    const name = this.profile?.name || 'Profile';
+    this.breadcrumbs = [
+      { label: 'Home', url: '/' },
+      { label: 'Community', url: '/community/feed' },
+      { label: name }
+    ];
   }
 }
 

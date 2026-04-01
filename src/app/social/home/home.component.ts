@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationExtras, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
@@ -11,6 +12,7 @@ import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { locations } from 'src/app/_helpers/location-data';
 import { environment } from 'src/environments/environment';
 import { SocialPostTaxonomyType, SocialService } from '../social.service';
+import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +36,7 @@ export class HomeComponent implements OnInit {
   public selectedTaxonomyType: SocialPostTaxonomyType;
   public selectedTopicId: string;
   public idPH = environment.config.idSA;
+  public breadcrumbs: BreadcrumbItem[] = [];
 
   private subscriptionTopicId: Subscription;
 
@@ -44,6 +47,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private _route: ActivatedRoute,
     private _location: Location,
     private _catService: CategoryService,
     private _qService: QuestionnaireService,
@@ -59,8 +63,14 @@ export class HomeComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.updateBreadcrumbs();
+    this._router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateBreadcrumbs();
+    });
 
-    this._qService.getSitemap().then(data => { 
+    this._qService.getSitemap().then(data => {
       this.countTypeOfProviders = data.typeOfProvider.answers.length;
     });
 
@@ -74,12 +84,33 @@ export class HomeComponent implements OnInit {
 
     this.subscriptionTopicId = this._socialService.selectedTopicIdChanged().subscribe(id => {
       this.selectedTopicId = id;
+      this.updateBreadcrumbs();
       this._changeDetector.detectChanges();
     })
   }
 
   navigateTo(route: string[], option: NavigationExtras = {}) {
     this._router.navigate(route, option);
+  }
+
+  updateBreadcrumbs() {
+    const taxonomy = this._socialService.selectedTaxonomyType || 'feed';
+    const labels: { [key: string]: string } = {
+      feed: 'Feed',
+      article: 'Articles',
+      event: 'Events',
+      media: 'Media',
+      note: 'Notes',
+      voice: 'Voice',
+      promotion: 'Promotions',
+      academy: 'Academy',
+    };
+    const label = labels[taxonomy] || 'Feed';
+    this.breadcrumbs = [
+      { label: 'Home', url: '/' },
+      { label: 'Community', url: '/community/feed' },
+      { label: label }
+    ];
   }
 
   onTapTopic(topic: Category) {

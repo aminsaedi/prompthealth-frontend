@@ -19,6 +19,7 @@ import { expandVerticalAnimation, fadeAnimation, slideVerticalAnimation } from '
 import { getDistanceFromLatLng } from 'src/app/_helpers/latlng-to-distance';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { titleCaseOf } from 'src/app/_helpers/titlecase';
+import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-expert-finder',
@@ -90,6 +91,10 @@ export class ExpertFinderComponent implements OnInit {
   }
 
   public controller: ExpertFinderController;
+  public breadcrumbs: BreadcrumbItem[] = [
+    { label: 'Home', url: '/' },
+    { label: 'Practitioners' }
+  ];
   public pageCurrent: number = 1;
 
   public questionnaires: QuestionnaireMapProfilePractitioner;
