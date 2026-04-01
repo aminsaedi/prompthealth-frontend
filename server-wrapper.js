@@ -20,6 +20,71 @@ process.on('uncaughtException', (err) => {
 const originalModule = require('./main.js');
 const expressApp = originalModule.app();
 
+// JSON-LD injection function
+function injectJsonLd(url, html) {
+  if (typeof html !== 'string') return html;
+  let jsonLd = null;
+
+  // Homepage
+  if (url === '/' || url === '') {
+    jsonLd = [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "PromptHealth",
+        "url": "https://www.prompthealth.ca",
+        "logo": "https://www.prompthealth.ca/assets/img/prompthealth.png",
+        "description": "Your Wellness Navigator"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "PromptHealth",
+        "url": "https://www.prompthealth.ca"
+      }
+    ];
+  }
+
+  // Community content pages: /community/<mongoId>
+  const communityMatch = url.match(/^\/community\/content\/([a-f0-9]{24})/);
+  if (communityMatch) {
+    const titleMatch = html.match(/<meta property="og:title" content="(.*?)">/);
+    const descMatch = html.match(/<meta (?:property|name)="(?:og:)?description" content="(.*?)">/);
+    const imageMatch = html.match(/<meta property="og:image" content="(.*?)">/);
+    const title = titleMatch ? titleMatch[1] : '';
+    const description = descMatch ? descMatch[1] : '';
+    const image = imageMatch ? imageMatch[1] : '';
+
+    const articleSchema = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": title,
+      "description": description
+    };
+    if (image) articleSchema.image = image;
+
+    jsonLd = [
+      articleSchema,
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.prompthealth.ca" },
+          { "@type": "ListItem", "position": 2, "name": "Community", "item": "https://www.prompthealth.ca/community" },
+          { "@type": "ListItem", "position": 3, "name": title }
+        ]
+      }
+    ];
+  }
+
+  if (jsonLd) {
+    const script = '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>';
+    html = html.replace('</head>', script + '</head>');
+  }
+
+  return html;
+}
+
 // Simple cache
 const cache = new Map();
 const CACHE_TTL = 5 * 60 * 1000;
@@ -41,10 +106,14 @@ const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCac
   }
   if (entry) cache.delete(key);
 
-  // Patch res.send once to capture SSR output
+  // Patch res.send once to capture SSR output and inject JSON-LD
   const _send = res.send.bind(res);
   res.send = function(body) {
     res.send = _send; // restore
+    // Inject JSON-LD before caching
+    if (typeof body === 'string' && body.length > 500) {
+      body = injectJsonLd(req.originalUrl, body);
+    }
     if (typeof body === 'string' && body.length > 500 && res.statusCode === 200) {
       if (cache.size >= MAX_CACHE) cache.delete(cache.keys().next().value);
       cache.set(key, { html: body, time: Date.now() });
@@ -61,5 +130,5 @@ expressApp._router.stack.splice(3, 0, cacheLayer);
 
 const port = process.env.PORT || 4000;
 expressApp.listen(port, () => {
-  console.log(`SSR server (cached + stubs) listening on http://localhost:${port}`);
+  console.log(`SSR server (cached + stubs + JSON-LD) listening on http://localhost:${port}`);
 });
