@@ -71,9 +71,9 @@ export class AudioRecordService {
     this.recorder = new RecordRTC.StereoAudioRecorder(this.stream, {
       type: 'audio',
       mimeType: 'audio/mp3',
-      desiredSampleRate: 16000,
+      desiredSampRate: 16000,
       numberOfAudioChannels: 1,
-    });
+    } as any);
 
     this.recorder.record();
     this._recordingStarted.next();
