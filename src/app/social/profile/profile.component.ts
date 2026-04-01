@@ -15,6 +15,7 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
@@ -106,6 +107,7 @@ export class ProfileComponent implements OnInit {
     private _toastr: ToastrService,
     private _profileService: ProfileManagementService,
     private _changeDetector: ChangeDetectorRef,
+    private _uService: UniversalService,
   ) { }
 
   ngOnDestroy() {
