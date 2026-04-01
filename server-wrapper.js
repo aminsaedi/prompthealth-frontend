@@ -48,20 +48,59 @@ function injectJsonLd(url, html) {
   // Community content pages: /community/<mongoId>
   const communityMatch = url.match(/^\/community\/content\/([a-f0-9]{24})/);
   if (communityMatch) {
+    const baseUrl = 'https://www.prompthealth.ca';
+    const pageUrl = baseUrl + url;
+
     const titleMatch = html.match(/<meta property="og:title" content="(.*?)">/);
     const descMatch = html.match(/<meta (?:property|name)="(?:og:)?description" content="(.*?)">/);
     const imageMatch = html.match(/<meta property="og:image" content="(.*?)">/);
+    const publishedMatch = html.match(/<meta property="article:published_time" content="(.*?)">/);
+    const authorMatch = html.match(/<meta property="article:author" content="(.*?)">/);
+    const authorIdMatch = html.match(/<meta name="author-id" content="(.*?)">/);
+
     const title = titleMatch ? titleMatch[1] : '';
     const description = descMatch ? descMatch[1] : '';
-    const image = imageMatch ? imageMatch[1] : '';
+    const rawImage = imageMatch ? imageMatch[1] : '';
+    const datePublished = publishedMatch ? publishedMatch[1] : '';
+    const authorName = authorMatch ? authorMatch[1] : '';
+    const authorId = authorIdMatch ? authorIdMatch[1] : '';
+
+    // Ensure image URL is absolute
+    let image = rawImage;
+    if (image && !image.startsWith('http')) {
+      image = baseUrl + (image.startsWith('/') ? '' : '/') + image;
+    }
+    if (!image) {
+      image = baseUrl + '/assets/img/prompthealth.png';
+    }
 
     const articleSchema = {
       "@context": "https://schema.org",
       "@type": "Article",
       "headline": title,
-      "description": description
+      "description": description,
+      "image": image,
+      "url": pageUrl,
+      "mainEntityOfPage": pageUrl,
+      "publisher": {
+        "@type": "Organization",
+        "name": "PromptHealth",
+        "logo": {
+          "@type": "ImageObject",
+          "url": baseUrl + "/assets/img/prompthealth.png"
+        }
+      }
     };
-    if (image) articleSchema.image = image;
+    if (datePublished) {
+      articleSchema.datePublished = datePublished;
+      articleSchema.dateModified = datePublished;
+    }
+    if (authorName) {
+      articleSchema.author = { "@type": "Person", "name": authorName };
+      if (authorId) {
+        articleSchema.author.url = baseUrl + '/community/profile/' + authorId;
+      }
+    }
 
     jsonLd = [
       articleSchema,
@@ -69,9 +108,9 @@ function injectJsonLd(url, html) {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.prompthealth.ca" },
-          { "@type": "ListItem", "position": 2, "name": "Community", "item": "https://www.prompthealth.ca/community" },
-          { "@type": "ListItem", "position": 3, "name": title }
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl },
+          { "@type": "ListItem", "position": 2, "name": "Community", "item": baseUrl + "/community" },
+          { "@type": "ListItem", "position": 3, "name": title, "item": pageUrl }
         ]
       }
     ];

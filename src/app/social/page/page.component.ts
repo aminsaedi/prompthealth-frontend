@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Meta } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { IGetSocialContentResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
@@ -39,6 +40,7 @@ export class PageComponent implements OnInit {
     private _uService: UniversalService,
     private _headerService: HeaderStatusService,
     private _jsonLdService: JsonLdService,
+    private _meta: Meta,
   ) { }
 
   ngOnDestroy() {
@@ -117,6 +119,11 @@ export class PageComponent implements OnInit {
       imageAlt: 'A note from ' + this.post.authorName,
       ...this.pathToApp && {iosLink: this.pathToApp},
     });
+
+    // Add article meta tags for server-side JSON-LD extraction
+    this._meta.updateTag({property: 'article:published_time', content: this.post.createdAt || ''});
+    this._meta.updateTag({property: 'article:author', content: this.post.authorName || ''});
+    this._meta.updateTag({name: 'author-id', content: this.post.authorId || ''});
 
     this._jsonLdService.setJsonLd([
       {
