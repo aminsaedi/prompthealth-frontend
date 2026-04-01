@@ -302,7 +302,7 @@ export class ProfileComponent implements OnInit {
       const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
       const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
       this._uService.setMeta(this._router.url, {
-        title: `${this.profile.name} in ${this.profile.city}, ${this.profile.state} | PromptHealth Community`,
+        title: `${this.profile.name}${this.profile.city || this.profile.state ? ` in ${[this.profile.city, this.profile.state].filter(Boolean).join(', ')}` : ''} | PromptHealth Community`,
         description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
       });
     }
