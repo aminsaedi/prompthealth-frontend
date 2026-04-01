@@ -8,10 +8,10 @@
     [routerLink]="['/community/profile', post?.authorId]"
     (click)="markCurrentPosition()"
     >
-      <profile-image [image]="post?.authorImage"></profile-image>
+      <profile-image [image]="post?.authorImage" [alt]="post?.authorName"></profile-image>
     </a>
     <div class="info-container ml-10p">
-      <a 
+      <a
       [routerLink]="['/community/profile', post?.authorId]"
       (click)="markCurrentPosition()"
       >
@@ -69,7 +69,7 @@ style="max-width: 400px; width: 100%;"
 >
   <h4 class="h6 mb-15p"><u>About the author</u></h4>
   <div class="d-flex mb-10p">
-    <profile-image [image]="post.authorImage" [size]="45"></profile-image>
+    <profile-image [image]="post.authorImage" [size]="45" [alt]="post.authorName"></profile-image>
     <div class="ml-10p">
       <h5 class="subtitle1 mb-0">{{post.authorName}}</h5>
       <h6 class="body2 mb-0">

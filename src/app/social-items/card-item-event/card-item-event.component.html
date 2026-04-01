@@ -18,7 +18,7 @@
   (click)="markCurrentPosition()"
   >
     <h6 class="d-flex align-items-center subtitle2">
-      <profile-image [image]="post.authorImage" size="32"></profile-image>
+      <profile-image [image]="post.authorImage" size="32" [alt]="post.authorName"></profile-image>
       <span class="ml-10p text-body">{{post.authorName}}</span>
       <i 
       *ngIf="post.authorVerified"

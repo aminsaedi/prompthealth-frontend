@@ -22,7 +22,7 @@
             <div class="mb-20p mx-30p position-absolute text-white" style="bottom:0; text-shadow: 1px 1px 3px #747474">
               <div class="subtitle1 mb-10p">
                 <img loading="lazy" style="width: auto; height: 12px; filter: brightness(0.85)" class="mr-5p"
-                  src="assets/img/logo-sm-small.png" alt="">
+                  src="assets/img/logo-sm-small.png" alt="PromptHealth logo">
                 PromptHealth
               </div>
               <h5 class="mb-15p">PROMPT ACADEMY</h5>
@@ -80,7 +80,7 @@
           [routerLink]="['/community/profile', sponsor._id]"
           >
             <div class="image-container-60pc">
-              <img loading="lazy" [src]="imageSponsor" alt="">
+              <img loading="lazy" [src]="imageSponsor" [attr.alt]="sponsor?.name ? sponsor.name + ' sponsor' : 'Featured sponsor'">
             </div>
             <div class="info-container">
               <h5 class="subtitle1 text-white">{{sponsor.name}}</h5>
@@ -97,7 +97,7 @@
         <div class="mb-30p">
           <a class="d-block bg-white overflow-hidden rounded-8p py-20p px-30p" href="https://purepharmacy.com/"
             target="_blank">
-            <img loading="lazy" src="/assets/img/partners/pure-pharmacy.png" alt="" style="max-width: 100%; height: auto;"
+            <img loading="lazy" src="/assets/img/partners/pure-pharmacy.png" alt="Pure Pharmacy partner logo" style="max-width: 100%; height: auto;"
               loading="lazy" />
           </a>
           <div class="body2 text-label text-right mt-5p mr-5p">

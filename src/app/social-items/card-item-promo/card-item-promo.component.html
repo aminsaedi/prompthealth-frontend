@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between mb-20p">
   <div class="d-flex flex-nowrap">
     <a [routerLink]="['/community/profile', post?.authorId]">
-      <profile-image [image]="post?.authorImage"></profile-image>
+      <profile-image [image]="post?.authorImage" [alt]="post?.authorName"></profile-image>
     </a>
     <div class="info-container ml-10p">
       <a [routerLink]="['/community/profile', post?.authorId]">
@@ -47,7 +47,7 @@ class="list-unstyled mb-10p"
   *ngFor="let image of images" 
   [ngClass]="shorten ? 'image-container-40pc rounded-12p overflow-hidden' : 'image-container'"
   >
-    <img [src]="image" alt="" loading="lazy">
+    <img [src]="image" [attr.alt]="'Promotion image by ' + post?.authorName" loading="lazy">
   </li>
 </ul>
 

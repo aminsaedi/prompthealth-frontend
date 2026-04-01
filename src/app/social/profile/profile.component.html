@@ -18,7 +18,7 @@
             <img loading="lazy" 
             *ngIf="profile" 
             [src]="profile?.coverImage" 
-            alt=""
+            [attr.alt]="profile?.name ? profile.name + ' cover photo' : 'Profile cover photo'"
             crossorigin="anonymous"
             loading="lazy"
             >
@@ -32,6 +32,7 @@
               [size]="90"
               [radius]="25"
               [image]="profile?.profileImage"
+              [alt]="profile?.name"
               [option]="{dummyBgClass: 'bg-white'}"
               ></profile-image>
             </div>
@@ -108,7 +109,7 @@
             [routerLink]="[profile.team.linkToProfile]"
             class="d-inline-flex align-items-center btn btn-text-grey small border border-line rounded-8p bg-background"
             >
-              <profile-image size=45 [image]="profile.team.profileImage"></profile-image>
+              <profile-image size=45 [image]="profile.team.profileImage" [alt]="profile.team.name"></profile-image>
               <div class="ml-15p text-left">
                 <span class="body2">Member of </span>
                 <br>
@@ -346,7 +347,7 @@
   class="d-flex text-body"
   [routerLink]="['/community/profile', data.to]"
   >
-    <profile-image [image]="data.toImage"></profile-image>
+    <profile-image [image]="data.toImage" [alt]="data.toName"></profile-image>
     <div class="ml-15p">
       <div class="subtitle1">{{data.toName}}</div>
       <p class="mb-0 body2 clamp-3line-or-less">{{data.body}}</p>  

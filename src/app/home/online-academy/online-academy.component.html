@@ -125,7 +125,7 @@
           data.image
             ? s3 + data.image + '?ver=2.3'
             : '/assets/img/prompthealth-4_3.png?ver=2.3'
-        " alt="" crossorigin="anonymous" loading="lazy" />
+        " [attr.alt]="data.title ? data.title : 'PromptHealth online academy course'" crossorigin="anonymous" loading="lazy" />
       <img loading="lazy" *ngIf="data && !data.isFreeAcademy" src="/assets/img/lock.svg" class="lockImg" />
       <span *ngIf="data && data.online_academy_category" class="category">
         {{ data.online_academy_category }}
