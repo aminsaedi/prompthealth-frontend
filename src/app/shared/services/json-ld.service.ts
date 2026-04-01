@@ -1,4 +1,4 @@
-import { Injectable, Inject, RendererFactory2, ViewEncapsulation } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 @Injectable({
@@ -6,36 +6,32 @@ import { DOCUMENT } from '@angular/common';
 })
 export class JsonLdService {
 
-  constructor(
-    private rendererFactory: RendererFactory2,
-    @Inject(DOCUMENT) private document
-  ) {}
+  constructor(@Inject(DOCUMENT) private doc: any) {}
 
   setJsonLd(data: object | object[]): void {
     this.removeJsonLd();
     try {
-      const renderer = this.rendererFactory.createRenderer(this.document, {
-        id: '-1',
-        encapsulation: ViewEncapsulation.None,
-        styles: [],
-        data: {}
-      });
+      const head = this.doc.head || this.doc.getElementsByTagName('head')[0];
+      if (!head) return;
 
-      const script = renderer.createElement('script');
-      renderer.setAttribute(script, 'type', 'application/ld+json');
-      renderer.setAttribute(script, 'id', 'json-ld-schema');
-      const text = renderer.createText(JSON.stringify(data));
-      renderer.appendChild(script, text);
-      renderer.appendChild(this.document.head, script);
+      const script = this.doc.createElement('script');
+      script.setAttribute('type', 'application/ld+json');
+      script.setAttribute('id', 'json-ld-schema');
+      script.textContent = JSON.stringify(data);
+      head.appendChild(script);
     } catch (e) {
       console.error('Error within JsonLdService:', e);
     }
   }
 
   removeJsonLd(): void {
-    const existing = this.document.getElementById('json-ld-schema');
-    if (existing) {
-      existing.remove();
+    try {
+      const existing = this.doc.getElementById('json-ld-schema');
+      if (existing) {
+        existing.parentNode.removeChild(existing);
+      }
+    } catch (e) {
+      // ignore
     }
   }
 }
