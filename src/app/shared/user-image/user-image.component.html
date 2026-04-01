@@ -1,7 +1,7 @@
 <div *ngIf="imageUrl" 
 class="image-container" 
 >
-  <img 
+  <img loading="lazy" 
   [ngClass]="[shapedCircle ? 'rounded-circle' : 'rounded-rect' ]"
   [ngStyle]="imageStyle"
   [src]="imageUrl" 

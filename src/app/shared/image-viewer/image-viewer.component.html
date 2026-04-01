@@ -14,7 +14,7 @@
     <div class="flex-grow-1 position-relative" (click)="showNavigator()">
       <ul class="d-flex flex-nowrap list-unstyled h-100 w-100 position-absolute images m-0" id="carousel">
         <li *ngFor="let image of itemTarget.images; let i = index">
-          <img 
+          <img loading="lazy" 
           [src]="image.url" [alt]="(image.name) ? image.name : ''"
           crossorigin="anonymous"
           >
@@ -29,7 +29,7 @@
     <div class="flex-grow-0 position-relative">
       <ul class="d-flex flex-wrap list-unstyled justify-content-center thumbnails-small">
         <li *ngFor="let image of itemTarget.images; let i= index" [ngClass]="{selected: (i == targetImage)}" (click)="goto(i)">
-          <img 
+          <img loading="lazy" 
           [src]="image.url" [alt]="image.name ? image.name : ''"
           crossorigin="anonymous"
           >

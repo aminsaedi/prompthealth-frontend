@@ -34,7 +34,7 @@
         >
           <div class="rounded-12p overflow-hidden shadow mb-20p">
             <div class="image-container-50pc">
-              <img 
+              <img loading="lazy" 
               [src]="showcase.defaultImage" 
               crossorigin="anonymous"
               >
@@ -114,7 +114,7 @@ id="showcase-editor"
           <ul class="d-flex list-unstyled showcase-images justify-content-center">
             <ng-container *ngFor="let image of fEditor.images.value; let i = index;">
               <li class="rounded overflow-hidden">
-                <img 
+                <img loading="lazy" 
                 [src]="s3 + image + '?ver=2.3'" 
                 crossorigin="anonymous"
                 >
@@ -131,7 +131,7 @@ id="showcase-editor"
             *ngIf="imageTempInEditor"
             class="rounded overflow-hidden"
             >
-              <img [src]="imageTempInEditor">
+              <img loading="lazy" [src]="imageTempInEditor">
             </li>
 
             <li 

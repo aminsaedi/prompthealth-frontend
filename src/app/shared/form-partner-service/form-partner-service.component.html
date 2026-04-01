@@ -30,7 +30,7 @@
   <ul class="d-flex list-unstyled product-images">
     <ng-container *ngFor="let imageForm of formImages.controls; let i = index;">
       <li class="rounded">
-        <img [src]="baseURLImage + imageForm.value" [alt]="'product image ' + (i + 1)">
+        <img loading="lazy" [src]="baseURLImage + imageForm.value" [alt]="'product image ' + (i + 1)">
         <button 
         *ngIf="!disabled"
         class="btn btn-icon small btn-remove" 

@@ -28,7 +28,7 @@
           </div>
           <div *ngIf="isArticle || isEvent" class="cover-image-container cursor-pointer overflow-hidden">
             <div *ngIf="imagePreview">
-              <img [src]="imagePreview" class="cover-image" />
+              <img loading="lazy" [src]="imagePreview" class="cover-image" />
               <button class="btn btn-icon-body small blur p-5p btn-remove-image"
                 (click)="onClickButtonRemoveCoverImage()">
                 <i iconPh="cross"></i>
@@ -216,7 +216,7 @@
               <ul *ngIf="imagesPreview.length > 0" class="list-unstyled mb-0 d-flex">
                 <li *ngFor="let image of imagesPreview; let i = index"
                   class="position-relative overflow-hidden rounded-4p mr-10p">
-                  <img [src]="image" alt="" height="100" width="auto" />
+                  <img loading="lazy" [src]="image" alt="" height="100" width="auto" />
                   <button type="button" class="btn btn-icon-body small blur p-5p btn-remove-media"
                     (click)="onClickButtonRemoveMediaOf(i)">
                     <i iconPh="cross"></i>

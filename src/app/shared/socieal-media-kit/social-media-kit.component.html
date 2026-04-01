@@ -3,7 +3,7 @@
 >
   <div class="media-kit mb-2" #mediaKit *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12]">
     <a [href]="'assets/img/social-media-kit/media-kit-' + i + '.png'" download>
-      <img [src]="'assets/img/social-media-kit/media-kit-' + i + '.png'">
+      <img loading="lazy" [src]="'assets/img/social-media-kit/media-kit-' + i + '.png'">
     </a>
   </div>  
 </div>

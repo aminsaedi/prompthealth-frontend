@@ -6,7 +6,7 @@ class="list-unstyled d-flex"
   [ngClass]="liClass" 
   *ngFor="let image of images; let i = index;"
   >
-    <img 
+    <img loading="lazy" 
     [src]="image.url" 
     [alt]="image.name ? image.name : 'image'" 
     crossorigin="anonymous"

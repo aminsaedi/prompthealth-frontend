@@ -14,7 +14,7 @@
       <div class="overflow-hidden col-md-8 order-md-1 pt-5 pb-0 px-4 px-md-5">
         <ngx-slick-carousel [config]="slideConfig">
           <!-- <div ngxSlickItem *ngFor="let slide of slides" class="slide">
-          <img src="{{ slide.img }}" alt="" width="100%">
+          <img loading="lazy" src="{{ slide.img }}" alt="" width="100%">
           </div> -->
           <div ngxSlickItem class=" slide d-flex flex-column justify-content-between">
             <div>
@@ -70,7 +70,7 @@
         </ngx-slick-carousel>
         <!-- <div class="carousel">
           <div class="slide" *ngIf="currentSlide == 0" [@carousel]>
-            <img class="user" src="/assets/img/login-client.png" alt="">
+            <img loading="lazy" class="user" src="/assets/img/login-client.png" alt="">
             <h3 class="position-relative">Client</h3>
             <p class="position-relative pb-md-0">
               PromptHealth empowers you with the convenience and accessibility you need to better manage
@@ -79,7 +79,7 @@
             </p>
           </div>
           <div class="slide" *ngIf="currentSlide == 1" [@carousel]>
-            <img class="professional" src="/assets/img/login-professional.png" alt="">
+            <img loading="lazy" class="professional" src="/assets/img/login-professional.png" alt="">
             <h3 class="position-relative">Professional</h3>
             <p class="position-relative pb-md-0">
               Join the growing network of Canadian health and wellness professionals.
@@ -90,7 +90,7 @@
             </p>
           </div>
           <div class="slide" *ngIf="currentSlide == 2" [@carousel]>
-            <img class="partner" src="/assets/img/login-partner.png" alt="">
+            <img loading="lazy" class="partner" src="/assets/img/login-partner.png" alt="">
             <h3 class="position-relative">Partner</h3>
             <p class="position-relative pb-md-0">
               Do you want your current clients to have access to more individualized options for their health? 

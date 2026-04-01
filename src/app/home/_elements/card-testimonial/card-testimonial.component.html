@@ -5,7 +5,7 @@
     [routerLink]="['/community/profile', data.profileId]"
     class="mr-10p image-container-100pc overflow-hidden has-account"
     >
-      <img 
+      <img loading="lazy" 
       *ngIf="data.image"
       [src]="data.image" 
       crossorigin="anonymous"
@@ -13,7 +13,7 @@
     </a>
     <ng-container *ngIf="!data.profileId">
       <div class="mr-10p image-container-100pc overflow-hidden">
-        <img 
+        <img loading="lazy" 
         *ngIf="data.image"
         [src]="data.image" 
         crossorigin="anonymous"

@@ -18,10 +18,10 @@
       <!-- <div class="sticky-top" style="top: 80px">
         <div *ngIf="!user || !user.isU" class="d-block rounded-8p overflow-hidden">
           <div class="image-container">
-            <img src="/assets/img/social/online-academy.png" alt="Learn with PromptHealth">
+            <img loading="lazy" src="/assets/img/social/online-academy.png" alt="Learn with PromptHealth">
             <div class="mb-20p mx-30p position-absolute text-white" style="bottom:0; text-shadow: 1px 1px 3px #747474">
               <div class="subtitle1 mb-10p">
-                <img style="width: auto; height: 12px; filter: brightness(0.85)" class="mr-5p"
+                <img loading="lazy" style="width: auto; height: 12px; filter: brightness(0.85)" class="mr-5p"
                   src="assets/img/logo-sm-small.png" alt="">
                 PromptHealth
               </div>
@@ -79,7 +79,7 @@
           [routerLink]="['/community/profile', sponsor._id]"
           >
             <div class="image-container-60pc">
-              <img [src]="imageSponsor" alt="">
+              <img loading="lazy" [src]="imageSponsor" alt="">
             </div>
             <div class="info-container">
               <h5 class="subtitle1 text-white">{{sponsor.name}}</h5>
@@ -96,7 +96,7 @@
         <div class="mb-30p">
           <a class="d-block bg-white overflow-hidden rounded-8p py-20p px-30p" href="https://purepharmacy.com/"
             target="_blank">
-            <img src="/assets/img/partners/pure-pharmacy.png" alt="" style="max-width: 100%; height: auto;"
+            <img loading="lazy" src="/assets/img/partners/pure-pharmacy.png" alt="" style="max-width: 100%; height: auto;"
               loading="lazy" />
           </a>
           <div class="body2 text-label text-right mt-5p mr-5p">

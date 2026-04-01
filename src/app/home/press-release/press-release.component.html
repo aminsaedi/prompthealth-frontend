@@ -120,7 +120,7 @@
       [ngClass]="{'mb-lg-0': size == 'large'}"
       >
         <div *ngIf="!data" class="eyecatch-dummy color-dummy"></div>
-        <img 
+        <img loading="lazy" 
         *ngIf="data"
         class="eyecatch" 
         [src]="data.image ? s3 + data.image + '?ver=2.3': '/assets/img/prompthealth-4_3.png?ver=2.3'" 

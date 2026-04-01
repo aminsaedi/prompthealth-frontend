@@ -34,7 +34,7 @@ style="border: none;"
       *ngIf="imagePreview" 
       class="position-relative d-inline-block overflow-hidden rounded-4p mr-10p"
       >
-        <img [src]="imagePreview" alt="" height="100" width="auto">
+        <img loading="lazy" [src]="imagePreview" alt="" height="100" width="auto">
         <button
         type="button"
         class="btn btn-icon-body small blur p-5p btn-remove-media"

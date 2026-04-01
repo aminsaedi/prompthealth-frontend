@@ -61,8 +61,8 @@ export class UniversalService {
       'index, follow';
     }
 
-    if(!meta.image) { 
-      meta.image = 'https://prompthealth.ca/assets/img/prompthealth.png?ver=2.3'; 
+    if(!meta.image) {
+      meta.image = 'https://www.prompthealth.ca/assets/img/prompthealth.png'; 
       meta.imageType = 'image/png';
       meta.imageWidth = 800;
       meta.imageHeight = 600;
