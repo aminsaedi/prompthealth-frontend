@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { PLATFORM_ID } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
+import { CanonicalLinkService } from './link.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class UniversalService {
   constructor(
     @Inject(PLATFORM_ID) private p: Object,
     private _meta: Meta,
-    private _title: Title
+    private _title: Title,
+    private _canonicalLink: CanonicalLinkService
   ) {
     if(this.isServer){
       this.localStorage = new LocalStorage();
@@ -67,7 +69,7 @@ export class UniversalService {
       meta.imageAlt = 'PromptHealth';
     }
 
-    const baseUrl = 'https://prompthealth.ca';
+    const baseUrl = 'https://www.prompthealth.ca';
     this._title.setTitle(meta.title);
 
     /* Twitter have to be first otherwise it's not updated. (I don't know why) */
@@ -87,6 +89,8 @@ export class UniversalService {
     // this._meta.updateTag({property: 'og:image:height', content: meta.imageWidth.toString()});
     this._meta.updateTag({property: 'og:image:alt', content: meta.imageAlt});
     this._meta.updateTag({name: 'apple-itunes-app', content: 'app-id=1532951934' + (meta.iosLink ? `, app-argument=prompthealth://${meta.iosLink}` : '')});
+
+    this._canonicalLink.addTag({ rel: 'canonical', href: baseUrl + path });
   }
 }
 

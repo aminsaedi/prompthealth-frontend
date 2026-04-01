@@ -19,11 +19,12 @@
         <loader></loader>
       </div>
       <ng-container *ngIf="post">
-        <card 
-        [post]="post" 
+        <h1 class="sr-only">{{post.title || post.authorName}}</h1>
+        <card
+        [post]="post"
         [shorten]="false"
         [option]="{openCommentsOnInit: true, showLinkToDetail: false}"
-        ></card>  
+        ></card>
       </ng-container>
     </section>        
   </div>

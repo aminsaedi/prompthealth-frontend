@@ -35,8 +35,14 @@ addTag(tag: LinkDefinition, forceCreation?: boolean) {
             return renderer.setAttribute(link, prop, tag[prop]);
         });
 
-        // [TODO]: get them to update the existing one (if it exists) ?
-        renderer.appendChild(head, link);
+        const existing = head.querySelector(`link[${selector}]`);
+        if (existing) {
+            Object.keys(tag).forEach((prop: string) => {
+                renderer.setAttribute(existing, prop, tag[prop]);
+            });
+        } else {
+            renderer.appendChild(head, link);
+        }
 
     } catch (e) {
         console.error('Error within linkService : ', e);

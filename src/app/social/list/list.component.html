@@ -10,7 +10,9 @@
   </ul>  
 </div> -->
 
-<card-new-post 
+<h1 class="sr-only">PromptHealth Community Feed</h1>
+
+<card-new-post
 *ngIf="user?.isEligibleToCreateNote"
 (onPublished)="onPublishNewPost($event)"
 ></card-new-post>

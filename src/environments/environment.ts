@@ -6,7 +6,7 @@ export const environment = {
     BASE_URL: 'https://prompthealth.ca/',
     API_URL: 'https://ocean.prompthealth.ca/api/v1/',
 
-    FRONTEND_BASE: 'https://prompthealth.ca',
+    FRONTEND_BASE: 'https://www.prompthealth.ca',
     BACKEND_BASE: 'http://127.0.0.1:3001', // used only for proxy
 
 
