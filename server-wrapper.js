@@ -383,44 +383,8 @@ function injectJsonLd(url, html) {
   return html;
 }
 
-// Defer Angular scripts until user interaction or timeout
+// No-op: script deferring removed to prevent hydration mismatch
 function deferScripts(html) {
-  if (typeof html !== 'string') return html;
-
-  // Convert Angular bundle scripts: src= -> data-lazy-src=
-  // Match script tags with src containing hashed Angular bundles (runtime, polyfills, main, vendor, etc.)
-  // But skip inline scripts and third-party scripts
-  html = html.replace(
-    /<script\s+src="((?:runtime|polyfills|main|vendor|styles|scripts|common|\d+)-(?:es2015|es5)\.[^"]+\.js)"([^>]*)><\/script>/g,
-    function(match, src, attrs) {
-      return '<script data-lazy-src="' + src + '"' + attrs + '></script>';
-    }
-  );
-
-  // Add the loader script before </body>
-  const loaderScript = `<script>
-(function(){
-  var loaded=false;
-  function loadApp(){
-    if(loaded)return;loaded=true;
-    var scripts=document.querySelectorAll("script[data-lazy-src]");
-    scripts.forEach(function(s){
-      var ns=document.createElement("script");
-      if(s.getAttribute("type"))ns.type=s.getAttribute("type");
-      if(s.hasAttribute("nomodule"))ns.setAttribute("nomodule","");
-      if(s.hasAttribute("defer"))ns.defer=true;
-      ns.src=s.getAttribute("data-lazy-src");
-      s.parentNode.replaceChild(ns,s);
-    });
-  }
-  ["click","scroll","keydown","touchstart","mousemove"].forEach(function(e){
-    document.addEventListener(e,loadApp,{once:true,passive:true});
-  });
-  setTimeout(loadApp,5000);
-})();
-</script>`;
-
-  html = html.replace('</body>', loaderScript + '</body>');
   return html;
 }
 
