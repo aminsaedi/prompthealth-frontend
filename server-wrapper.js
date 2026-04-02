@@ -391,9 +391,9 @@ function deferScripts(html) {
   // Match script tags with src containing hashed Angular bundles (runtime, polyfills, main, vendor, etc.)
   // But skip inline scripts and third-party scripts
   html = html.replace(
-    /<script\s+src="((?:runtime|polyfills|main|vendor|styles|scripts|common|\d+)-(?:es2015|es5)\.[^"]+\.js)"\s*(type="module"|nomodule)?\s*><\/script>/g,
-    function(match, src, attr) {
-      return '<script data-lazy-src="' + src + '"' + (attr ? ' ' + attr : '') + '></script>';
+    /<script\s+src="((?:runtime|polyfills|main|vendor|styles|scripts|common|\d+)-(?:es2015|es5)\.[^"]+\.js)"([^>]*)><\/script>/g,
+    function(match, src, attrs) {
+      return '<script data-lazy-src="' + src + '"' + attrs + '></script>';
     }
   );
 
@@ -408,6 +408,7 @@ function deferScripts(html) {
       var ns=document.createElement("script");
       if(s.getAttribute("type"))ns.type=s.getAttribute("type");
       if(s.hasAttribute("nomodule"))ns.setAttribute("nomodule","");
+      if(s.hasAttribute("defer"))ns.defer=true;
       ns.src=s.getAttribute("data-lazy-src");
       s.parentNode.replaceChild(ns,s);
     });
