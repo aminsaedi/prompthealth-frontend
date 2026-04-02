@@ -135,10 +135,10 @@
           class="h-100 text-left p-15p p-md-30p px-lg-15p px-xl-30p"
           style="display: flex; flex-direction: column; position: relative"
         >
-          <a
+          <span
             [id]="'plan-' + plan.key"
             style="top: -100px; position: absolute"
-          ></a>
+          ></span>
           <div *ngIf="plan.value.label" class="label body1">
             {{ plan.value.label }}
           </div>
@@ -293,7 +293,7 @@
 </section> -->
 
 <section class="container my-100p position-relative">
-  <a id="faq" style="top: -100px; position: absolute"></a>
+  <span id="faq" style="top: -100px; position: absolute"></span>
   <div class="row justify-content-center">
     <div class="col-12 col-xl-10">
       <h2 class="mb-50p text-center">Frequently Asked Questions</h2>
