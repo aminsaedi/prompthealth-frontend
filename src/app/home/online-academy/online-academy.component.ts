@@ -96,7 +96,6 @@ export class OnlineAcademyComponent implements OnInit {
   onChangeSort(item: SortItem) {
     this.selectedSort = item;
     this.fetchLatest();
-    console.log(item.order);
   }
 
   paginatorShown(page: number) {

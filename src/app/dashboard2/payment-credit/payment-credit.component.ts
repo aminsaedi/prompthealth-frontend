@@ -45,14 +45,12 @@ export class PaymentCreditComponent implements OnInit {
       if (res.statusCode === 200) {
         this.credits = res.data.data;
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong.');
         this.credits = [];
       }
     }, error => {
       this.credits = [];
       this.isLoading = false;
-      console.log(error)
       this._toastr.error('Something went wrong.');
     });
   }

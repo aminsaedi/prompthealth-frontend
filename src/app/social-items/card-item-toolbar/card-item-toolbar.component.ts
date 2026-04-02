@@ -68,13 +68,11 @@ export class CardItemToolbarComponent implements OnInit {
       this._sharedService.post({}, 'blog/like/' + this.post._id).subscribe(res => {
         this.isUploading = false;
         if(res.statusCode != 200) {
-          console.log(res.message);
           this.changeLikeStatus(isLikedCurrent, numLikesCurrent);
           this._toastr.error('Something went wrong');          
         }
       }, error => {
         this.isUploading = false;
-        console.log(error);
         this.changeLikeStatus(isLikedCurrent, numLikesCurrent);
         this._toastr.error('Something went wrong');          
       });
@@ -116,7 +114,6 @@ export class CardItemToolbarComponent implements OnInit {
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       });
     })
@@ -131,7 +128,6 @@ export class CardItemToolbarComponent implements OnInit {
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       });
     });
@@ -168,11 +164,9 @@ export class CardItemToolbarComponent implements OnInit {
           res.data.comment.author = this._user;
           this.post.setComment(res.data.comment, res.data.post.numComments);
         } else {
-          console.log(res.message);
           this._toastr.error('Could not post your comment. Please try again');
         }
       }, error => {
-        console.log(error);
         this.isUploading = false;
         this._toastr.error('Could not post your comment. Please try again');
       });

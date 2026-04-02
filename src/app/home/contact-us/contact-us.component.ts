@@ -58,7 +58,6 @@ export class ContactUsComponent implements OnInit {
         this._toastr.error(res.error.message);
       }
     }, error => {
-      console.log(error);
       this._toastr.error('There are some error please try after some time');
     }, () => {
       this.isUploading = false;

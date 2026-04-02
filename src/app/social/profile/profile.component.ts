@@ -189,7 +189,6 @@ export class ProfileComponent implements OnInit {
         }
 
       }, error => {
-        console.log(error);
         this._router.navigate(['404'], {replaceUrl: true});
         this._toastr.error('Something went wrong.');
       });
@@ -210,11 +209,9 @@ export class ProfileComponent implements OnInit {
         if(res.statusCode == 200) {
           this.profile.setRecommendations(res.data);
         } else {
-          console.log(res.message);
           this.profile.setRecommendations([]);
         }
       }, error => {
-        console.log(error);
         this.profile.setRecommendations([]);
       }, () => {
         setTimeout(() => {
@@ -239,11 +236,9 @@ export class ProfileComponent implements OnInit {
         if(res.statusCode == 200) {
           this.profile.setRecommendationsByMeToCompanies(res.data);
         } else {
-          console.log(res.message);
           this.profile.setRecommendationsByMeToCompanies([]);
         }
       }, error => {
-        console.log(error);
         this.profile.setRecommendationsByMeToCompanies([]);
       });
     }
@@ -257,11 +252,9 @@ export class ProfileComponent implements OnInit {
         if(res.statusCode == 200) {
           this.profile.setRecommendationsByMeToProviders(res.data);
         } else {
-          console.log(res.message);
           this.profile.setRecommendationsByMeToProviders([]);
         }
       }, error => {
-        console.log(error);
         this.profile.setRecommendationsByMeToProviders([]);
       });
     }
@@ -321,7 +314,6 @@ export class ProfileComponent implements OnInit {
       this._qService.getProfilePractitioner(type).then((questionnaires) => {
         resolve(questionnaires);
       }, error => {
-        console.log(error);
         reject();
       });  
     });
@@ -342,11 +334,9 @@ export class ProfileComponent implements OnInit {
           this._socialService.saveCacheProfile(professional);
           resolve(professional);
         } else {
-          console.log(res.message);
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       });
     });
@@ -366,7 +356,6 @@ export class ProfileComponent implements OnInit {
           resolve();
         }
       }, error => {
-        console.log(error);
         resolve();
       });
     });
@@ -384,11 +373,9 @@ export class ProfileComponent implements OnInit {
           this._socialService.saveCachePromosOfUser(res.data, this.profileId);
           resolve();
         } else {
-          console.log(res.message);
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       })
     }); 
@@ -408,7 +395,6 @@ export class ProfileComponent implements OnInit {
 
   async onClickBookOutside() {
     this._sharedService.post({ _id: this.user._id }, '/booking/gain-booking-count').subscribe(res => {
-      console.log(res);
     }, err => {
       console.error(err);
     });
@@ -448,7 +434,6 @@ export class ProfileComponent implements OnInit {
           reject(false);
         }
       }, error => {
-        console.log(error);
         this.isFollowing = false;
         this.user.removeFollowing(this.profile.decode(), true);
         this.profile.countdownFollower();
@@ -473,7 +458,6 @@ export class ProfileComponent implements OnInit {
           reject(false);
         }
       }, error => {
-        console.log(error);
         this.isFollowing = true;
         this.user.setFollowing(this.profile.decode(), true);
         this.profile.countupFollower();
@@ -511,7 +495,6 @@ export class ProfileComponent implements OnInit {
           reject(false);
         }
       }, error => {
-        console.log(error);
         this.isBelling = false;
         reject(false);
       });
@@ -530,7 +513,6 @@ export class ProfileComponent implements OnInit {
           reject(false);
         }
       }, error => {
-        console.log(error);
         this.isBelling = true;
         reject(false);
       });
@@ -602,7 +584,6 @@ export class ProfileComponent implements OnInit {
       this.isFollowLoading = false;
       this.isFollowing = !!res.data;
     }, error => {
-      console.log(error);
       this.isFollowLoading = false;
       this.isFollowing = false;
     });
@@ -619,7 +600,6 @@ export class ProfileComponent implements OnInit {
       this.isBellLoading = false;
       this.isBelling = !!res.data;
     }, error => {
-      console.log(error);
       this.isBellLoading = false;
       this.isBelling = false;
     });

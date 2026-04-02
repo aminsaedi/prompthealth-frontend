@@ -291,7 +291,6 @@ const validatorTopicsSelectedLTE = (maxNum: number): ValidatorFn => {
 const validatorExistAtLeast = (minNum: number): ValidatorFn => {
   return function validate(formControl: FormControl) {
     const value = formControl.value || [];
-    console.log(value);
     if (value.length >= minNum) {
       return null;
     } else {

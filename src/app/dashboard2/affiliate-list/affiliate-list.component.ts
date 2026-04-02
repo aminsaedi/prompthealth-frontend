@@ -44,13 +44,11 @@ export class AffiliateListComponent implements OnInit {
       } else {
         this.isLoading = false;
         this.affiliateUsers = [];
-        console.log(res.message);
         this._toastr.error('Something went wrong.');
       }
     }, (error) => {
       this.isLoading = false;
       this.affiliateUsers = [];
-      console.log(error);
       this._toastr.error('Something went wrong.');
     });
   }

@@ -119,11 +119,9 @@ export class ListingCompanyComponent implements OnInit {
           this.products = res.data.data.map(item => new Partner(item));
           resolve();
         } else {
-          console.log(res.message);
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       });
     });

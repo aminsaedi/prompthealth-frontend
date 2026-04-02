@@ -173,7 +173,6 @@ export class QuestionnaireService {
           this.profilePractitioner = data;
           resolve(this.profilePractitioner);
         }).catch(err => {
-          console.log(err);
           reject(err);
         });
       }
@@ -227,7 +226,6 @@ export class QuestionnaireService {
           reject(res.message); 
         }
       }, (err: any) => {
-        console.log(err);
         reject(err);
       });
     });
@@ -243,7 +241,6 @@ export class QuestionnaireService {
           reject(res.message); 
         }
       }, err => {
-        console.log(err);
         reject(err);
       });
     })
@@ -259,7 +256,6 @@ export class QuestionnaireService {
           reject(res.message); 
         }
       }, (err: any) => {
-        console.log(err);
         reject(err);
       });
     });

@@ -105,14 +105,12 @@ export class ProfilePromotionComponent implements OnInit {
           this._socialService.saveCachePromosOfUser(res.data, this.profile._id);
           resolve();
         } else {
-          console.log(res.message);
           this.isMorePromos = false;
           reject();
         }
       }, error => {
         this.isLoading = false;
         this.isMorePromos = false;
-        console.log(error);
         reject();
       });
     });

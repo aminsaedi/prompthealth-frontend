@@ -26,9 +26,10 @@ export class JsonLdService {
 
   removeJsonLd(): void {
     try {
-      const existing = this.doc.getElementById('json-ld-schema');
-      if (existing) {
+      let existing = this.doc.getElementById('json-ld-schema');
+      while (existing) {
         existing.parentNode.removeChild(existing);
+        existing = this.doc.getElementById('json-ld-schema');
       }
     } catch (e) {
       // ignore

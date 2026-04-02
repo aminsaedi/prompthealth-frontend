@@ -64,12 +64,10 @@ export class ShowcaseComponent implements OnInit {
       if (res.statusCode === 200) {
         this.user.setShowcases(res.data.data);
       } else {
-        console.log(res.message);
         this._toastr.error('Something wrong');
       }
     }, error => {
       this.isLoading = false;
-      console.log(error);
       this._toastr.error('Something wrong');
     });
   }
@@ -129,7 +127,6 @@ export class ShowcaseComponent implements OnInit {
     let images = this.fEditor.images.value;
     images.splice(i,1);
     this.fEditor.images.setValue(images);
-    console.log(this.fEditor.images.value);
   }
 
   removeShowcase(data: Showcase) {
@@ -142,18 +139,15 @@ export class ShowcaseComponent implements OnInit {
         this._toastr.success('Removed this member successfully');
         this.user.removeShowcase(data);
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again');
       }
     }, error => {
-      console.log(error);
       this.isUploading = false;
       this._toastr.error('Something went wrong. Please try again');
     });
   }
 
   onSubmitEditor() {
-    console.log(this.fEditor.images.value);
 
     this.isEditorSubmitted = true;
     if(this.formEditor.invalid) {
@@ -184,7 +178,6 @@ export class ShowcaseComponent implements OnInit {
         this._toastr.error('Something wrong. Please try again.');
       }
     }, error => {
-      console.log(error);
       this.isUploading = false;
       this._toastr.error('Something wrong. Please try again.');
     });

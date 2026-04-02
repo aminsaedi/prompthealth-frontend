@@ -106,11 +106,9 @@ export class BadgesComponent implements OnInit {
           this.certificateForVerifiedBadge = data[0];
         }
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again.');
       }
     }, error => {
-      console.log(error);
       this.isLoadingVerifiedBdage = false;
       this._toastr.error('Something went wrong. Please try again.');
     });
@@ -149,7 +147,6 @@ export class BadgesComponent implements OnInit {
     const files = (e.target as HTMLInputElement).files;
     const file = files?.length > 0 ? files[0] : null;
     if(!file) {
-      console.log('file is not selected.');
       return;
     } else if(file.size > 10 * 1000 * 1000) /** 10MB */ {
       this._toastr.error('File size is too big. Please shink less than 10MB');
@@ -169,11 +166,9 @@ export class BadgesComponent implements OnInit {
           this.fEditor.certificateFiles.setValue(res.data.certificateFiles);
           this.fEditor.certificateFiles.updateValueAndValidity();
         } else {
-          console.log(res.message);
           this._toastr.error('Something went wrong. Please try again later');
         }
       }, error => {
-        console.log(error);
         this.isUploadingFile = false;
         this._toastr.error('Something went wrong. Please try again later');
       })
@@ -203,7 +198,6 @@ export class BadgesComponent implements OnInit {
     try { 
       await this._sharedService.downloadFile(this.fEditor.certificateFiles.value[i]); 
     } catch (error) {
-      console.log(error);
       this._toastr.error('Cannot download file. Please try again after some time !');
     }
   }
@@ -251,12 +245,10 @@ export class BadgesComponent implements OnInit {
         this._toastr.success(this.selectedCertificate ? 'Updated successfully.' : 'Uploaded successfully');
         this._modalService.hide();
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again.');
       }
     }, error => {
       this.isUploading = false
-      console.log(error);
       this._toastr.error('Something went wrong. Please try again.');
     });
   }
@@ -269,12 +261,10 @@ export class BadgesComponent implements OnInit {
         this._modalService.hide();
         this.certificateForVerifiedBadge = null;
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again.');
       }
     }, error => {
       this.isUploading = false
-      console.log(error);
       this._toastr.error('Something went wrong. Please try again.');
     });
   }

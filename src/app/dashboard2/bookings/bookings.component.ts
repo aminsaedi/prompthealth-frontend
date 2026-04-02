@@ -118,11 +118,9 @@ export class BookingsComponent implements OnInit {
         this.isMoreBookings = this.bookingsAll.length < res.data.total;
 
       } else {
-        console.log(res.message);
         this._toastr.error('Could not get bookings. Please try again');
       }
     }, (error) => {
-      console.log(error);
       this.isLoading = false;
       this._toastr.error('Could not get bookings. Please try again');
     });
@@ -163,11 +161,9 @@ export class BookingsComponent implements OnInit {
       this._sharedService.get('booking/read/' + data._id).subscribe((res: IUpdateBookingResult) => {
         if(res.statusCode == 200) {
         } else {
-          console.log(res.message);
           data.markAsUnread();
         }
       }, error => {
-        console.log(error);
         data.markAsUnread();
       })
     }
@@ -184,7 +180,6 @@ export class BookingsComponent implements OnInit {
         this.bookings = this.bookings.filter(item => item._id != data._id);
         this.totalBookingCount --;
       }, error => {
-        console.log(error);
         this._toastr.error('Something went wrong. Please try again');
       }, () => {
         this.isDeleting = false;

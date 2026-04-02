@@ -26,7 +26,7 @@ export class ImageViewerComponent implements OnInit {
   constructor(_el: ElementRef) { this.host = _el.nativeElement; }
 
   ngOnInit(): void {
-    if(!this.data.imageGroups && !this.data.images){ console.log('have to set either images or imageGroups'); }
+    if(!this.data.imageGroups && !this.data.images){ console.warn('have to set either images or imageGroups'); }
 
     if(this.data.imageGroups){
       this.data.imageGroups.forEach(imageGroup => {

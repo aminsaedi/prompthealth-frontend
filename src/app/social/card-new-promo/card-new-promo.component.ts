@@ -142,7 +142,6 @@ export class CardNewPromoComponent implements OnInit {
     try {
       await this.uploadImagesIfNeeded();
     } catch(error) {
-      console.log(error);
       this._toastr.error('Could not upload media. Please try again later');
       this.isUploading = false;
       return;
@@ -172,12 +171,10 @@ export class CardNewPromoComponent implements OnInit {
         this._editorService.resetForm();
         this._editorService.unlockEditor();
       } else {
-        console.log(res.message);
         this._toastr.error('Could not upload discount promotion. Please try again later.')
       }
     }, error => {
       this.isUploading = false;
-      console.log(error);
       this._toastr.error('Could not upload note. Please try again later.')
     });
     

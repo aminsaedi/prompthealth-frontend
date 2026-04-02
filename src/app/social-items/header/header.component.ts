@@ -226,7 +226,6 @@ export class HeaderComponent implements OnInit {
         this.searchResult = null;
       }
     }, error => {
-      console.log(error);
       this.searchResult = null;
     }, () => {
       this.isSearchLoading = null;
@@ -253,10 +252,8 @@ export class HeaderComponent implements OnInit {
       if(res.statusCode == 200) {
         this._socialService.saveNotifications(res.data);
       } else {
-        console.log(res.message);
       }
     }, error => {
-      console.log(error);
     });
   }
 }

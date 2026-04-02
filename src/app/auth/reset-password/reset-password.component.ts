@@ -73,11 +73,9 @@ export class ResetPasswordComponent implements OnInit {
         this._authService.storeCredential(res.data);
         this.doneUpdate = true;  
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again');
       }
     }, error => {
-      console.log(error);
       this._toastr.error('Something went wrong. Please try again');
     });
   }

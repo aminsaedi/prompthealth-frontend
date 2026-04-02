@@ -166,7 +166,6 @@ export class ModalVoiceRecorderComponent implements OnInit {
   }
   
   onAudioRecordingFaild(message: string) {
-    console.log('audio recording failed')
     this.isAudioRecording = false;
     this._changeDetector.detectChanges();
     this._toastr.error(message);    

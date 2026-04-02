@@ -113,11 +113,9 @@ export class ProfileEventPastComponent implements OnInit {
           this.isMorePosts = (res.data.length < this.countPerPage) ? false : true;
           resolve(res.data.map(item => new SocialEvent(item)));
         } else {
-          console.log(res.message);
           reject();
         }
       }, (error) => {
-        console.log(error);
         reject();
       }, () => {
         this.isLoading = false;

@@ -62,11 +62,9 @@ export class CardNotificationComponent implements OnInit {
           n.markAsRead();
         });
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again');
       } 
     }, error => {
-      console.log(error);
       this.isUploading = false;
       this._toastr.error('Something went wrong. Please try again');
     });
@@ -74,16 +72,13 @@ export class CardNotificationComponent implements OnInit {
 
   onClickNotificationItem(notification: SocialNotification) {
     if(notification.isRead) {
-      console.log('already marked as read');
     } else {
       notification.markAsRead();
       this._sharedService.post(null, 'notification/' + notification._id).subscribe((res: IResponseData) => {
         if(res.statusCode !== 200) {
-          console.log(res.message);
           notification.markAsUnread();
         }
       }, error => {
-        console.log(error);
         notification.markAsUnread();
       });  
     }

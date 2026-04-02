@@ -163,7 +163,6 @@ export class PressReleaseComponent implements OnInit {
 			if(res.statusCode == 200) {
 				this._toastr.success(res.message);
 			}else {
-				console.log(res);
 				let message = res.message;
 				if(res.message.match(/^E11000/)){
 					message = 'This email is already registered. Please try different email address.';
@@ -173,7 +172,6 @@ export class PressReleaseComponent implements OnInit {
 				this._toastr.error(message);
 			}
 		}, error => {
-			console.log(error);
 			this._toastr.error('Something went wrong. Please try again later');
 		}, () => {
       this.isSending = false;

@@ -114,11 +114,9 @@ export class SocialManagerComponent implements OnInit {
           this.user.update({socialLinks: res.data.socialLinks});
           resolve();
         } else {
-          console.log(res.message);
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       })
     });

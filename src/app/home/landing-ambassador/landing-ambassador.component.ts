@@ -138,11 +138,9 @@ export class LandingAmbassadorComponent implements OnInit {
         }
       } else {
         this.navigate404();
-        console.log(res.message);
       }
     }, err => {
       this.navigate404();
-      console.log(err);
     });
   }
 
@@ -159,11 +157,9 @@ export class LandingAmbassadorComponent implements OnInit {
           localStorage.setItem('ambassadorInvited', 'invited');
         } else {
           this.navigate404();
-          console.log(res.message);
         }
       }, err => {
         this.navigate404();
-        console.log(err);
       });
     }
   }

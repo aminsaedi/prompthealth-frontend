@@ -44,16 +44,13 @@ export class PaymentSubscriptionComponent implements OnInit {
 
       if (res.statusCode === 200) {
         if (res.data.type === 'portal') {
-          console.log(res.data);
           location.href = res.data.url;
         }
       } else {
-        console.log(res.message);
         this.isUploading = false;
         this._toastr.error('Something went wrong. Please try again.');
       }
     }, error => {
-      console.log(error);
       this.isUploading = false;
       this._toastr.error('Something went wrong. Please try again.');      
     });

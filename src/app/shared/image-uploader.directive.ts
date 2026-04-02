@@ -51,7 +51,6 @@ export class ImageUploaderDirective {
       const result = await imageUploadRequest;
       this.doneUpload.emit(result);
     } catch (error) {
-      console.log(error);
       this.failUpload.emit();
     }
   } 
@@ -108,11 +107,9 @@ export class ImageUploaderDirective {
         if(res.statusCode === 200) {
           resolve(res.data);
         } else {
-          console.log(res.message);
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       });
     });
@@ -128,11 +125,9 @@ export class ImageUploaderDirective {
         if(res.statusCode == 200){
           resolve(res.data[imageType]);
         }else{
-          console.log(res.message);
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       });
     });

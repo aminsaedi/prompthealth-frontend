@@ -174,7 +174,6 @@ export class CardNewPostComponent implements OnInit {
     try {
       await this.uploadImagesIfNeeded();
     } catch(error) {
-      console.log(error);
       this._toastr.error('Could not upload media. Please try again later');
       this.isUploading = false;
       return;
@@ -204,7 +203,6 @@ export class CardNewPostComponent implements OnInit {
         this.imagePreview = null;
         this.audioSaved = null;
       } else {
-        console.log(res.message);
         this._toastr.error('Could not upload note. Please try again later.')
       }
     }, error => {
@@ -212,7 +210,6 @@ export class CardNewPostComponent implements OnInit {
       this.isAlertUploadingClosedForcibly = false;
       this._uploadObserver.markAsUploadDone();
 
-      console.log(error);
       this._toastr.error('Could not upload note. Please try again later.')
     });
   }

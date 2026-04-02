@@ -130,7 +130,6 @@ export class AppComponent implements OnInit {
         this._uService.localStorage.setItem('ip', res.data);
         resolve(res.data);
       }, error => {
-        console.log(error);
         this._uService.localStorage.setItem('ip', null);
         resolve(null);
       })

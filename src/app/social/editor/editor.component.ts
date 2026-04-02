@@ -185,7 +185,6 @@ export class EditorComponent implements OnInit {
           this._imagePreview = reader.result;
         }
       } catch(err){
-        console.log(err);
         return;
       }
     }
@@ -319,7 +318,6 @@ export class EditorComponent implements OnInit {
           this.imagesPreview = [reader.result];
         }
       } catch(err){
-        console.log(err);
         return;
       }
     }
@@ -371,7 +369,6 @@ export class EditorComponent implements OnInit {
       this._socialService.updateCacheSingle(data);
       this.goback();
     } catch (error) {
-      console.log(error);
       this._toastr.error(error);
     }
   }
@@ -395,7 +392,6 @@ export class EditorComponent implements OnInit {
         await this.uploadImagesIfNeeded();
         imageUploaded = true;
       } catch(error) {
-        console.log(error);
         this.isUploading = false;
         reject('Could not upload media. Please try later');
       }
@@ -435,7 +431,6 @@ export class EditorComponent implements OnInit {
           reject(res.message);
         }
       }, (err) => {
-        console.log(err);
         this.isUploading = false;
         reject(err);
       });
@@ -501,11 +496,9 @@ export class EditorComponent implements OnInit {
             }
             resolve();
           } else {
-            console.log(res.message);
             reject()
           }
         }, error => {
-          console.log(error);
           reject();
         });
       }
@@ -526,7 +519,6 @@ export class EditorComponent implements OnInit {
       Promise.all(promiseAll).then((results: {file: Blob|File, filename: string}[]) => {
         resolve(results);
       }, error => {
-        console.log(error);
         reject();
       });  
     });

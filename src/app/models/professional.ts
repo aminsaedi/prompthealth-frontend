@@ -482,7 +482,6 @@ export class Professional extends Profile implements IProfessional{
       if (!img.src.match(/assets/)) {
         img.src = '/assets/img/logo-sm.png';
       } else {
-        console.log('default image for custom map icon load error.');
         this._isMapIconReady = true;
       }
     });

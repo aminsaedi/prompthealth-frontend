@@ -40,14 +40,11 @@ export class ServicesManagerComponent implements OnInit {
       if (res.statusCode === 200) {
         this._toastr.success('Updated successfully');
         this.user.update(data);
-        console.log(this.user)
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again');
       }
     }, error => {
       this.isUploading = false;
-      console.log(error)
       this._toastr.error('Something went wrong. Please try again');
     });
   }

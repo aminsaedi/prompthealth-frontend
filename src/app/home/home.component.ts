@@ -315,7 +315,6 @@ export class HomeComponent implements OnInit {
         }
       },
       (error) => {
-        console.log(error);
       }
     );
   }
@@ -435,12 +434,10 @@ export class HomeComponent implements OnInit {
             });
             this.blogs = blogs;
           } else {
-            console.log(res.message);
             this.blogs = [];
           }
         },
         (error) => {
-          console.log(error);
           this.blogs = [];
         }
       );

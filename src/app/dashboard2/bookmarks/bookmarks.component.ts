@@ -56,12 +56,10 @@ export class BookmarksComponent implements OnInit {
         this.user.setBookmarks(res.data);
         this.existsMore = !!(res.data.length == this.countPerPage)
       } else {
-        console.log(res.message);
         this.user.setBookmarks([]);
         this.existsMore = false;
       }
     }, error => {
-      console.log(error);
       this.user.setBookmarks([]);
       this.isLoading = false;
       this.existsMore = false;

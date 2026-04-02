@@ -85,11 +85,9 @@ export class TeamComponent implements OnInit {
         this._toastr.success('Removed this member successfully');
         this.user.removeStaff(staff);
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again');
       }
     }, error => {
-      console.log(error);
       this.isUploading = false;
       this._toastr.error('Something went wrong. Please try again');
     });
@@ -148,11 +146,9 @@ export class TeamComponent implements OnInit {
         this.isEditorSubmitted = false;
 
       } else {
-        console.log(res.message);
         this._toastr.error('Something wrong. Please try again.');
       }
     }, error => {
-      console.log(error);
       this.isUploading = false;
       this._toastr.error('Something wrong. Please try again.');
     });

@@ -152,11 +152,9 @@ export class BaseComponent implements OnInit {
           this._socialService.removeCacheSingle(p);
           this._toastr.success('Deleted content successfully');
         } else {
-          console.log(res);
           this._toastr.error('Could not delete. Please try again later');
         }
       }, (error) => {
-        console.log(error);
         this._toastr.error('Could not delete. Please try again later.');
       }, () => {
         this.isDeletingContent = false;

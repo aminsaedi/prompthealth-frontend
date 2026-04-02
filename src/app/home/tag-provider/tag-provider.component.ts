@@ -116,7 +116,6 @@ export class TagProviderComponent implements OnInit {
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       });
     });
@@ -131,7 +130,6 @@ export class TagProviderComponent implements OnInit {
           reject(res.message);
         }
       }, error => {
-        console.log(error);
         reject('Something went wrong. Please try again later');
       });  
     });

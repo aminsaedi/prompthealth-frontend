@@ -145,7 +145,6 @@ export class RegisterQuestionnaireComponent implements OnInit {
           reject(res.message);
         }
       }, error => {
-        console.log(error);
         reject('There are some errors, please try again after some time.');
       });
     });

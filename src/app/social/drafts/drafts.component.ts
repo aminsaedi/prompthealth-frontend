@@ -62,11 +62,9 @@ export class DraftsComponent implements OnInit {
         });
         this.existsMore = !!(res.data.length == this.countPerPage);
       } else {
-        console.log(res.message);
         this.existsMore = false;
       }
     }, error => {
-      console.log(error);
       this.existsMore = false;
     }, () => {
       this.isLoading = false;

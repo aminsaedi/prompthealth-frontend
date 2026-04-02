@@ -72,7 +72,6 @@ export class PageComponent implements OnInit {
         await this.fetchPost();
         this.post = this._socialService.postOf(this.postId);
       } catch (error) {
-        console.log(error);
       }
     }
 
@@ -94,11 +93,9 @@ export class PageComponent implements OnInit {
           this._socialService.saveCacheSingle(res.data);
           resolve(true);
         } else {
-          console.log(res);
           reject(res.message);
         }
       }, err => {
-        console.log(err);
         reject(err);
       });
     });
@@ -114,7 +111,6 @@ export class PageComponent implements OnInit {
           .slice(0, 5);
       }
     }, err => {
-      console.log('Error fetching related posts:', err);
     });
   }
 

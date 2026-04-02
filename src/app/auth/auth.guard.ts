@@ -40,25 +40,22 @@ export class AuthGuard implements CanActivate {
 
     /** U can access to register page always  */
     /** SP / C / P can access to register page ONLY IF eligible default plan is already selected */
-    console.log({ authType, role });
-    // FIXME: not good idea to always allow them
-    return true;
-    // switch(role) {
-    //   case 'U':
-    //     return true;
-    //   default:
-    //     const eligiblePlanSelected = this.eligiblePlanSelected(role);
-    //     if(eligiblePlanSelected) {
-    //       return true;
-    //     } else {
-    //       const route = ['plans'];
-    //       if(role == 'P') {
-    //         route.push('product');
-    //       }
-    //       this._router.navigate(route);
-    //       return false;
-    //     }
-    // }
+    switch(role) {
+      case 'U':
+        return true;
+      default:
+        const eligiblePlanSelected = this.eligiblePlanSelected(role);
+        if(eligiblePlanSelected) {
+          return true;
+        } else {
+          const route = ['plans'];
+          if(role == 'P') {
+            route.push('product');
+          }
+          this._router.navigate(route);
+          return false;
+        }
+    }
   }
 
   eligiblePlanSelected(role: string) {

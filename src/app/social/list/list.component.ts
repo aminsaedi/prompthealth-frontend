@@ -183,10 +183,8 @@ export class ListComponent implements OnInit {
         if(res.statusCode == 200) {
           this.user.setFollowingTopics(res.data);
         } else {
-          console.log(res.message);
         }
       }, error => {
-        console.log(error);
       });
     }
   }
@@ -221,7 +219,6 @@ export class ListComponent implements OnInit {
         
         this.posts = await this.fetchPosts(); 
       } catch (error) {
-        console.log(error)
         this.posts = [];
       }
     }
@@ -292,7 +289,6 @@ export class ListComponent implements OnInit {
           params.isAcademy = true;
           break;
         default:
-          console.log('oops. this taxonomy type is not implemented yet.: ', this.selectedTaxonomyType);
       }
 
       const query = new SocialPostSearchQuery(params).toQueryParams();
@@ -324,7 +320,6 @@ export class ListComponent implements OnInit {
       }, error => {
         this.isLoading = false;
         this.isMorePosts = false;
-        console.log(error);
         reject('Something went wrong. Please try again later');
       });
     });
@@ -370,11 +365,9 @@ export class ListComponent implements OnInit {
           }, 2000);
 
         } else {
-          console.log(res.message);
           this._toastr.error('Something went wrong. Please try again');
         }
       }, error => {
-        console.log(error);
         this.isSelectTopicsUploading = false;
         this._toastr.error('Something went wrong. Please try again');
       });

@@ -46,7 +46,6 @@ export class GeoLocationService {
           this._locationChanged.next(latlng);
           resolve(latlng);
         }, error => {
-          console.log(error);
           const latlng = {lat: null, lng: null};
           this._locationChanged.next(latlng);
           reject(error);

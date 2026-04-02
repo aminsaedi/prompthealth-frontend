@@ -45,11 +45,9 @@ export class PasswordComponent implements OnInit {
 
         this.isDone = true;  
       } else {
-        console.log(res.message);
         this._toastr.error('Could not send email. Please try again.');
       }
     }, error => {
-      console.log(error);
       this._toastr.error('Could not send email. Please try again.');
     }, () => {
       this.isUploading = false;

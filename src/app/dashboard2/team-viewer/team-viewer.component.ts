@@ -45,7 +45,6 @@ export class TeamViewerComponent implements OnInit {
         this.user.setStaffs([]);
       }
     }, err => {
-      console.log(err);
       this.isLoading = false;
       this.user.setStaffs([]);
     });

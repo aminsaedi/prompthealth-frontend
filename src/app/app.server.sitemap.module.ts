@@ -169,7 +169,6 @@ function getSitemapPractitioners(): Promise<string> {
         });
       });
     }).catch(error => {
-      console.log(error);
     }).finally(() => {
       xml += '</urlset>';
       resolve(xml);
@@ -267,7 +266,6 @@ function getSitemapSocial(): Promise<string> {
 
   return new Promise((resolve) => {
     Promise.all([getAllCategoryIds(true), getAllPractitionerIds(), getAllSocialContentIds()]).then(vals => {
-      console.log('koko');
       const categoryIds = vals[0];
       const practitionerIds = vals[1];
       const contentIds = vals[2];
@@ -353,7 +351,6 @@ function getAllCategoryIds(onlyRoot: boolean = false): Promise<String[]> {
       }
       resolve(categoryIds);
     }).catch(error => {
-      console.log(error);
       resolve(categoryIds);
     });
   });
@@ -365,7 +362,6 @@ function getAllTypeOfProviderIds(): Promise<string[]> {
     axios.get(apiURL + 'questionare/get-questions?type=SP').then(res => {
       if(res.status == 200) {
         const qs = res.data.data;
-        console.log(res.data);
         for(let q of qs) {
           if(q.slug == 'providers-are-you') {
             q.answers.forEach((a: QuestionnaireAnswer) => {
@@ -399,7 +395,6 @@ function getAllPractitionerIds(): Promise<String[]> {
         });
       }
     }).catch(error => {
-      console.log(error);
     }).finally(() => {
       resolve(practitionerIds);
     });

@@ -79,7 +79,6 @@ export class SharedService {
   receiveMessage() {
     this.angularFireMessaging.messages.subscribe(
       (payload: any) => {
-        console.log('new message received. ', payload);
         this.currentMessage.next(payload);
         // const notification: { title: string, body: string, image: string } = payload.notification;
         // const noti = new Notification(notification.title, {
@@ -94,7 +93,6 @@ export class SharedService {
     await this.angularFireMessaging.getToken.toPromise().then(token => {
       if (token) {
         this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {
-          console.log('Cleared fcm token');
         });
       }
     }).catch(error => {
@@ -159,8 +157,6 @@ export class SharedService {
       ).subscribe((res: Blob) => {
         resolve(res);
       }, error => {
-        console.log('error');
-        console.log(error);
         reject();
       });
     });
@@ -622,7 +618,6 @@ export class SharedService {
       this.post(payload, 'user/updateProfile').subscribe((res: any) => {
         if (res.statusCode === 200) { resolve(res.message); } else { reject(res.message); }
       }, err => {
-        console.log(err);
         reject('There are some errors, please try again after some time!');
       });
     });
@@ -669,7 +664,6 @@ export class SharedService {
             this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
               // console.log('success!');
             }, error => {
-              console.log(error);
             });
             resolve('Checking out...');
           } else if (res.data.type === 'portal') {
@@ -678,11 +672,9 @@ export class SharedService {
             resolve('You already have this plan. Redirecting to billing portal.');
           }
         } else {
-          console.log(res);
           reject(res.message);
         }
       }, (error) => {
-        console.log(error);
         if (error.errorCode === 'COUPON_INVALID') {
           ss.removeItem('stripe_coupon_code');
         }

@@ -141,11 +141,9 @@ export class ProfileFeedComponent implements OnInit {
           const posts = this._socialService.saveCachePostsOfUser(res.data, this.profile._id);
           resolve(posts);
         } else {
-          console.log(res.message);
           reject();
         }
       }, (error) => {
-        console.log(error);
         reject();
       }, () => {
         this.isLoading = false;

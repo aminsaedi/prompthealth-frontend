@@ -131,11 +131,9 @@ export class CardItemCommentComponent implements OnInit {
           this.targetCommentIdForReply = null;
           this.form.reset();
         } else {
-          console.log(res.message);
           this._toastr.error('Could not post your comment. Please try again');
         }
       }, error => {
-        console.log(error);
         this.isUploading = false;
         this._toastr.error('Could not post your comment. Please try again');
       });

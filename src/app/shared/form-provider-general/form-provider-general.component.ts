@@ -52,7 +52,6 @@ export class FormProviderGeneralComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    console.log(this.data)
     this.isPremiumAccount = (this.data.isVipAffiliateUser || (this.data.plan && this.data.plan.name.toLowerCase() !== 'basic')) ? true : false;
     try { await this.getQuestions(); }
     catch(error){ this._toastr.error(error); }
@@ -98,7 +97,6 @@ export class FormProviderGeneralComponent implements OnInit {
       product_description: new FormControl( this.data.product_description ? this.data.product_description : '', validators.productDescription),
 
     });
-    console.log("FORM", this.form)
     // , {validators: validators.addressSelectedFromSuggestion}
 
   }
@@ -129,7 +127,6 @@ export class FormProviderGeneralComponent implements OnInit {
           reject(res.message);
         }
       }, err => {
-        console.log(err);
         reject('There are some errors, please try again after some time !');
       });
     })

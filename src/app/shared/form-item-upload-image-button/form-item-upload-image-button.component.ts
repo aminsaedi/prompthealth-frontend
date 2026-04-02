@@ -92,7 +92,6 @@ export class FormItemUploadImageButtonComponent implements OnInit {
           reject('Something went wrong. Please try again.');
         }
       }, error => {
-        console.log(error);
           reject('Something went wrong. Please try again.');
       });
     });
@@ -108,11 +107,9 @@ export class FormItemUploadImageButtonComponent implements OnInit {
         if(res.statusCode === 200) {
           resolve(res.data);
         } else {
-          console.log(res.message);
           reject('Something went wrong. Please try again.');
         }
       }, error => {
-        console.log(error);
         reject('Something went wrong. Please try again.');
       });
     });

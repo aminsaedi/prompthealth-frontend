@@ -133,7 +133,6 @@ export class ProfileAboutComponent implements OnInit {
           reject()
         }
       }, error => {
-        console.log(error);
         reject();
       });  
     })
@@ -147,11 +146,9 @@ export class ProfileAboutComponent implements OnInit {
           this.profile.setStaffs(res.data);
           resolve(true);  
         } else {
-          console.log(res.message);
           reject();
         }
       }, error => {
-        console.log(error);
         reject();
       });
     });

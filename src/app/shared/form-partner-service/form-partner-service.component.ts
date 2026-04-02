@@ -113,7 +113,6 @@ export class FormPartnerServiceComponent implements OnInit {
           reject('Something went wrong. Please try again.');
         }
       }), (error: any) => {
-        console.log(error);
         reject('Something went wrong. Please try again.');
       };
     });

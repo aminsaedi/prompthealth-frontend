@@ -42,12 +42,6 @@ export class AuthComponent implements OnInit {
       this.nextPage = param.next ? param.next : null;
       this.nextPageKeyword = param.nextKeyword ? param.nextKeyword : null;
     });
-    console.log({
-      authType: this.authType,
-      roleType: this.roleType,
-      nextPage: this.nextPage,
-      nextPageKeyword: this.nextPageKeyword,
-    });
   }
 }
 

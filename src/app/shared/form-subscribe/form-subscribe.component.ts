@@ -135,7 +135,6 @@ export class FormSubscribeComponent implements OnInit {
 				}
 				this.onSuccess.emit();
 			}else {
-				console.log(res);
 				let message = res.message;
 				if(res.message.match(/^E11000/)){
 					message = 'This email is already registered. Please try different email address.';
@@ -144,7 +143,6 @@ export class FormSubscribeComponent implements OnInit {
 				this.onError.emit(message);
 			}
 		}, error => {
-			console.log(error);
 			this._toastr.error('Something went wrong. Please try again later');
 			this.onError.emit(error);
 		});

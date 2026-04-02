@@ -121,11 +121,9 @@ export class PopupPostMenuComponent implements OnInit {
         }
         this._toastr.success(markAsNews ? 'Marked as news' : 'Marked as NOT news');
       } else {
-        console.log(res.message);
         this._toastr.error('Something wrong');
       }
     }, error => {
-      console.log(error);
       this._toastr.error('Something wrong');
     }, () => {
       this.isUploading = false;
@@ -201,11 +199,9 @@ export class PopupPostMenuComponent implements OnInit {
 
         this._toastr.success(this.post.authorName + ' has been followed.');
       } else {
-        console.log(res.message);
         this._toastr.error('Something wrong. Could not follow.');
       }
     }, error => {
-      console.log(error);
       this._toastr.error('Something wrong. Could not follow.');
     }, () => {
       this.isUploading = false;
@@ -229,11 +225,9 @@ export class PopupPostMenuComponent implements OnInit {
         this._toastr.success(this.post.authorName + ' has been unfollowed.');
 
       } else {
-        console.log(res.message);
         this._toastr.error('Something wrong. Could not unfollow.');
       }
     }, error => {
-      console.log(error);
       this._toastr.error('Something wrong. Could not unfollow.');
     }, () => {
       this.isUploading = false;
@@ -255,11 +249,9 @@ export class PopupPostMenuComponent implements OnInit {
         this._toastr.success(`You will receive notifications when ${this.post.authorName} create new contents.`);
 
       } else {
-        console.log(res.message);
         this._toastr.error('Something wrong. Could not follow.');
       }
     }, error => {
-      console.log(error);
       this._toastr.error('Something wrong. Could not follow.');
     }, () => {
       this.isUploading = false;
@@ -278,11 +270,9 @@ export class PopupPostMenuComponent implements OnInit {
         this._toastr.success(`The notification from ${this.post.authorName} has been turned off.`);
 
       } else {
-        console.log(res.message);
         this._toastr.error('Something wrong. Could not turn on notification.');
       }
     }, error => {
-      console.log(error);
       this._toastr.error('Something wrong. Could not turn on notification.');
     }, () => {
       this.isUploading = false;

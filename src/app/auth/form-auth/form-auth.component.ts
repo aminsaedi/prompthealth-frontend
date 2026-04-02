@@ -119,7 +119,6 @@ export class FormAuthComponent implements OnInit, OnChanges {
           this._toastr.error(res.message);
         }
       }, error => {
-        console.log(error);
         this._toastr.error(error);
         this._sharedService.loader('hide');
         this.isLoading = false;
@@ -163,7 +162,6 @@ export class FormAuthComponent implements OnInit, OnChanges {
         this.isLoading = false;
       }
     }, error => {
-      console.log(error);
       this._toastr.error(error);
       this._sharedService.loader('hide');
       this.isLoading = false;

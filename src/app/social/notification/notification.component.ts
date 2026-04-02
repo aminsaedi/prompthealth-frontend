@@ -58,12 +58,10 @@ export class NotificationComponent implements OnInit {
       if(res.statusCode == 200) {
         this._socialService.removeNotificationsAll();
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again');
       }
     }, error => {
       this.isUploading = false;
-      console.log(error);
       this._toastr.error('Something went wrong');
     })
   }

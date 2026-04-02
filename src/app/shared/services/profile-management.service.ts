@@ -119,7 +119,6 @@ export class ProfileManagementService {
           }
         },
         err => { 
-          console.log(err);
           checkAccessToken(err);
           this.dispose();
           reject('cannot connect to server'); 

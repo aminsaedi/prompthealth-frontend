@@ -168,12 +168,10 @@ export class Profile implements IProfile {
 
   removeFollowing(user: IUserDetail, countdown: boolean = false) {
     if(this._followings && this._followings.length == 0) {
-      console.log('no one follows. you cannot remove this user from following list');
       return;
     }
 
     if (!this._followings) {
-      console.log('following list is not ready yet. the user will not be added in following list for now');
     } else {
       const idx = this._followings.findIndex(item => item._id == user._id);
       if(idx >= 0) {

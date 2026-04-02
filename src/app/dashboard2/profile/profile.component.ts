@@ -44,7 +44,6 @@ export class ProfileComponent implements OnInit {
         this._toastr.error(res.message);
       }
     }, error => {
-      console.log(error);
       this.isUploading = false;
       this._toastr.error('Something went wrong. Please try again');
     }, () => {

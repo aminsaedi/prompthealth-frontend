@@ -14,7 +14,6 @@ export class AddonSelectCategoryComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(this.categories);
   }
 
 }

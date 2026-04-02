@@ -34,14 +34,12 @@ export class PaymentHistoryComponent implements OnInit {
       if (res.statusCode === 200) {
         this.transactions = res.data;
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong.');
         this.transactions = [];
       }
     }, error => {
       this.transactions = [];
       this.isLoading = false;
-      console.log(error)
       this._toastr.error('Something went wrong.');
     });
   }

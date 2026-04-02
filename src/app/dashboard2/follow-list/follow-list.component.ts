@@ -103,7 +103,6 @@ export class FollowListComponent implements OnInit {
         this._toastr.error('Something went wrong. Please try again later');
       }
     }, error => {
-      console.log(error);
       this._toastr.error('Something went wrong. Please try again later');
     }, () => {
       this.isLoading = false;

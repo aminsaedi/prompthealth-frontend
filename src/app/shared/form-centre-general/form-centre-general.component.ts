@@ -119,7 +119,6 @@ export class FormCentreGeneralComponent implements OnInit {
           reject(res.message);
         }
       }, err => {
-        console.log(err);
         reject('There are some errors, please try again after some time !');
       });
     })

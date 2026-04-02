@@ -51,12 +51,10 @@ export class ForgotPasswordComponent implements OnInit {
       if (res.statusCode === 200) {
         this.isDone = true;
       } else {
-        console.log(res.message);
         this._toastr.error('Could not send email. Please try again.');
       }
     }, (error) => {
       this.isUploading = false;
-      console.log(error);
       this._toastr.error('Could not send email. Please try again.');
     });
   }

@@ -113,11 +113,9 @@ export class VideoManagerComponent implements OnInit {
         this.initIframesForVideo();
         this._modalService.hide();
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again');
       }
     }, error => {
-      console.log(error);
       this.isUploading = false;
       this._toastr.error('Something went wrong. Please try again');
     });
@@ -145,11 +143,9 @@ export class VideoManagerComponent implements OnInit {
         this._toastr.success('Video added successfully');
         this._modalService.hide();
       } else {
-        console.log(res.message);
         this._toastr.error('Something went wrong. Please try again');
       }
     }, error => {
-      console.log(error);
       this.isUploading = false;
       this._toastr.error('Something went wrong. Please try again');
     });
