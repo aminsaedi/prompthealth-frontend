@@ -219,13 +219,13 @@ export class QuestionnaireService {
       if(filter){
         path = path + '&filter=' + filter;
       }
-      this.getNoAuth(path).subscribe((res: any) => {
+      this.getNoAuth(path).subscribe((res: { statusCode: number; message: string; data: any }) => {
         if (res.statusCode === 200) {
           resolve(res.data);
         } else {
           reject(res.message); 
         }
-      }, (err: any) => {
+      }, (err: string) => {
         reject(err);
       });
     });
@@ -234,7 +234,7 @@ export class QuestionnaireService {
   private getProfileQuestionnaires(): Promise<Questionnaire[]> {
     return new Promise((resolve, reject) => {
       const path = `questionare/get-profile-questions`;
-      this.getNoAuth(path).subscribe((res: any) => {
+      this.getNoAuth(path).subscribe((res: { statusCode: number; message: string; data: any }) => {
         if (res.statusCode === 200) {
           resolve(res.data);
         } else { 
@@ -249,13 +249,13 @@ export class QuestionnaireService {
   private getSubAnswers(parentId: string): Promise<QuestionnaireAnswer[]> {
     return new Promise((resolve, reject) => {
       const path = `questionare/get-answer/${parentId}`;
-      this.getNoAuth(path).subscribe((res: any) => {
+      this.getNoAuth(path).subscribe((res: { statusCode: number; message: string; data: any }) => {
         if (res.statusCode === 200) {
           resolve(res.data);
         } else { 
           reject(res.message); 
         }
-      }, (err: any) => {
+      }, (err: string) => {
         reject(err);
       });
     });

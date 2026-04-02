@@ -24,6 +24,7 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { IAddonPlan } from 'src/app/models/addon-plan';
 import { ICouponData } from 'src/app/models/coupon-data';
+import { IResponseData } from 'src/app/models/response-data';
 import { ToastrService } from 'ngx-toastr';
 import { Professional } from 'src/app/models/professional';
 import { SocialService } from 'src/app/social/social.service';
@@ -63,7 +64,7 @@ export class SharedService {
   personalMatch;
   private compareList: Professional[] = [];
 
-  requestPermission(user: any) {
+  requestPermission(user: IUserDetail) {
     this.angularFireMessaging.requestToken.subscribe(
       (token) => {
         // console.log(token);
@@ -78,7 +79,7 @@ export class SharedService {
   }
   receiveMessage() {
     this.angularFireMessaging.messages.subscribe(
-      (payload: any) => {
+      (payload: { notification: { title: string; body: string; image: string } }) => {
         this.currentMessage.next(payload);
         // const notification: { title: string, body: string, image: string } = payload.notification;
         // const noti = new Notification(notification.title, {
@@ -165,7 +166,7 @@ export class SharedService {
   downloadFile(filepath: string, filename: string = null): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const headers = this.getAuthorizationHeader();
-      return this.http.post(this.rootUrl + '/common/file-download', { fileKey: filepath }, { headers, responseType: 'blob' }).subscribe((res: any) => {
+      return this.http.post(this.rootUrl + '/common/file-download', { fileKey: filepath }, { headers, responseType: 'blob' }).subscribe((res: Blob) => {
 
         if (!filename) {
           const array = filepath.split('/');
@@ -173,10 +174,11 @@ export class SharedService {
         }
 
         const a = document.createElement('a');
-        a.href = URL.createObjectURL(res);
+        const url = URL.createObjectURL(res);
+        a.href = url;
         a.download = filename;
         a.click();
-        URL.revokeObjectURL(res);
+        URL.revokeObjectURL(url);
         resolve(true);
       }, error => {
         reject(error);
@@ -184,19 +186,19 @@ export class SharedService {
     });
   }
 
-  post(body, path) {
+  post(body: object, path: string) {
     const headers = this.getAuthorizationHeader();
     return this.http.post(this.rootUrl + path, body, { headers }).pipe(
-      map((response: any) => {
+      map((response: IResponseData) => {
         return response;
       }),
       catchError(this.handleError)
     );
     // return this.http.post(this.rootUrl + path, body, { headers });
   }
-  postNoAuth(body, path) {
+  postNoAuth(body: object, path: string) {
     return this.http.post(this.rootUrl + path, body).pipe(
-      map((response: any) => {
+      map((response: IResponseData) => {
         return response;
       }),
       catchError(this.handleError)
@@ -212,8 +214,8 @@ export class SharedService {
     return new Promise((resolve, reject) => {
       if (file.size > maxFileSize) {
         const img = new Image();
-        img.onload = (e: any) => {
-          const t = e.target;
+        img.onload = () => {
+          const t = img;
           const canvas = document.createElement('canvas');
           canvas.width = Math.round(t.width * ratioSize);
           canvas.height = Math.round(t.height * ratioSize);
@@ -237,7 +239,7 @@ export class SharedService {
   async shrinkImageByFixedWidth(file: File | Blob, width: number = 1500): Promise<{ file: Blob, filename: string }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = (e: any) => {
+      img.onload = (e: Event) => {
         const t = e.target;
         const canvas = document.createElement('canvas');
         canvas.width = width;
@@ -258,7 +260,7 @@ export class SharedService {
   async shrinkImageByFixedHeight(file: File, height: number = 100): Promise<{ file: Blob, filename: string }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = (e: any) => {
+      img.onload = (e: Event) => {
         const t = e.target;
         const canvas = document.createElement('canvas');
         canvas.width = img.width * height / img.height;
@@ -275,7 +277,7 @@ export class SharedService {
     });
   }
 
-  imgUpload(body, path) {
+  imgUpload(body: FormData, path: string) {
     let headers = this.getAuthorizationHeader();
     headers = headers.delete('Content-Type');
     return this.http.post(this.rootUrl + path, body, { headers });
@@ -293,53 +295,53 @@ export class SharedService {
     return this.imgUpload(data, path);
   }
 
-  imgUploadPut(body, path) {
+  imgUploadPut(body: FormData, path: string) {
     let headers = this.getAuthorizationHeader();
     headers = headers.delete('Content-Type');
     return this.http.put(this.rootUrl + path, body, { headers });
   }
 
-  put(body, path) {
+  put(body: object, path: string) {
     const headers = this.getAuthorizationHeader();
     return this.http.put(this.rootUrl + path, body, { headers });
   }
-  login(body) {
+  login(body: object) {
     const headers = this.getDefaultHeader();
     // return this.http.post(this.rootUrl + 'user/signinUser', body, { headers });
     return this.http.post(this.rootUrl + 'oauth/withpassword', body, { headers }).pipe(
-      map((response: any) => {
+      map((response: IResponseData) => {
         return response;
       }),
       catchError(this.handleError)
     );
   }
-  register(body) {
+  register(body: object) {
     const headers = this.getDefaultHeader();
     // return this.http.post(this.rootUrl + 'user/register', body, { headers });
     return this.http.post(this.rootUrl + 'user/register', body, { headers }).pipe(
-      map((response: any) => {
+      map((response: IResponseData) => {
         return response;
       }),
       catchError(this.handleError)
     );
   }
 
-  unsubscribe(email) {
+  unsubscribe(email: string) {
     // let headers = this.getDefaultHeader();
     return this.http.delete(this.rootUrl + 'user/unsubscribe/' + email).pipe(
-      map((response: any) => {
+      map((response: IResponseData) => {
         return response;
       }),
       catchError(this.handleError)
     );
   }
 
-  socialRegister(body) {
+  socialRegister(body: object) {
 
     const headers = this.getDefaultHeader();
     return this.http.post(this.rootUrl + 'user/social-login-2', body, { headers });
   }
-  socialSignin(body, type) {
+  socialSignin(body: { authToken: string; roles: string }, type: string) {
     const headers = this.getDefaultHeader();
     // console.log(headers);
 
@@ -376,44 +378,44 @@ export class SharedService {
     const headers = this.getAuthorizationHeader();
     return this.http.get(url, { headers });
   }
-  token(body) {
+  token(body: object) {
     const headers = this.getAuthorizationHeader();
     return this.http.post(this.rootUrl + 'createcustomer', body, { headers });
   }
-  deleteContent(path) {
+  deleteContent(path: string) {
     const headers = this.getAuthorizationHeader();
     return this.http.delete(this.rootUrl + path, { headers });
 
   }
 
-  removeProfile(formData) {
+  removeProfile(formData: object) {
     const headers = this.getAuthorizationHeader();
     return this.http.put(this.rootUrl + 'user/updateStatus', formData, { headers });
   }
 
-  sendEmailSubscribers(data) {
+  sendEmailSubscribers(data: string | object) {
     return this.http.post(this.rootUrl + 'user/subscribe', data);
   }
 
-  delete(id, model) {
+  delete(id: string, model: string) {
 
     const headers = this.getAuthorizationHeader();
     const url = this.rootUrl + 'delete?id=' + id + '&model=' + model;
     return this.http.delete(url, { headers });
   }
-  removeFav(id) {
+  removeFav(id: string) {
     const headers = this.getAuthorizationHeader();
     const url = this.rootUrl + `user/remove-favorite/${id}`;
     return this.http.delete(url, { headers });
   }
-  contactus(body) {
+  contactus(body: string | object) {
     return this.http.post(this.rootUrl + 'user/contactus', body);
   }
-  uploadImage(object) {
+  uploadImage(object: FormData) {
     const headers = this.getAuthorizationHeader();
     return this.http.post(this.rootUrl + 'upload', object, { headers });
   }
-  uploadImage1(object) {
+  uploadImage1(object: FormData) {
     const headers = this.getAuthorizationHeader();
     return this.http.post(this.rootUrl + 'upload', object, { headers });
   }
@@ -421,7 +423,7 @@ export class SharedService {
     window.scrollTo(500, 0);
   }
   /*This function is use to remove user session if Access token expired. */
-  checkAccessToken(err): void {
+  checkAccessToken(err: { code: number; message: string }): void {
     const code = err.code;
     const message = err.message;
 
@@ -434,7 +436,7 @@ export class SharedService {
     }
   }
 
-  setPersonalMatch(personalMatch) {
+  setPersonalMatch(personalMatch: object) {
     this.personalMatch = personalMatch;
   }
   getPersonalMatch() {
@@ -474,19 +476,19 @@ export class SharedService {
       .set('Content-Type', 'application/json');
     return headers;
   }
-  addCookie(key, value) {
+  addCookie(key: string, value: string) {
     this._uService.localStorage.setItem(key, value);
   }
 
-  getCookie(key) {
+  getCookie(key: string) {
     const item = this._uService.localStorage.getItem(key);
     return item;
   }
-  addCookieObject(key, obj) {
+  addCookieObject(key: string, obj: object) {
     this._uService.localStorage.setItem(key, JSON.stringify(obj));
   }
 
-  getCookieObject(key) {
+  getCookieObject(key: string) {
     return JSON.parse(this._uService.localStorage.getItem(key));
   }
 
@@ -494,12 +496,12 @@ export class SharedService {
     return this._uService.localStorage.getItem('loginID');
   }
 
-  loader(key) {
+  loader(key: string) {
     if (key == 'show') { this.spinner.show(); }
     if (key == 'hide') { this.spinner.hide(); }
   }
 
-  showAlert(message, alertClass) {
+  showAlert(message: string, alertClass: string) {
     // window.scrollTo(0, 0);
     const obj = {
       classes: ['alert', alertClass],
@@ -509,7 +511,7 @@ export class SharedService {
   }
 
 
-  loginUser(res, type) {
+  loginUser(res: IResponseData, type: string) {
     let route;
     if (res.data.roles === 'U') {
       // this._router.navigate(['/']);
@@ -543,7 +545,7 @@ export class SharedService {
     this._router.navigate([route]);
   }
 
-  removeDuplicates(originalArray, prop) {
+  removeDuplicates(originalArray: object[], prop: string) {
     const newArray = [];
     const lookupObject = {};
 
@@ -615,7 +617,7 @@ export class SharedService {
   private checkoutFreePlan(user: IUserDetail, plan: IDefaultPlan): Promise<string> {
     return new Promise((resolve, reject) => {
       const payload: IUserDetail = { _id: user._id, plan };
-      this.post(payload, 'user/updateProfile').subscribe((res: any) => {
+      this.post(payload, 'user/updateProfile').subscribe((res: IResponseData) => {
         if (res.statusCode === 200) { resolve(res.message); } else { reject(res.message); }
       }, err => {
         reject('There are some errors, please try again after some time!');
@@ -655,7 +657,7 @@ export class SharedService {
         // payload.success_url += '?action=couponused';
       }
 
-      this.post(payload, 'user/checkoutSession').subscribe((res: any) => {
+      this.post(payload, 'user/checkoutSession').subscribe((res: IResponseData) => {
         if (res.statusCode === 200) {
           // console.log(res.data);
           this._stripeService.changeKey(environment.config.stripeKey);
