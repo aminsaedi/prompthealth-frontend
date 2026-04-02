@@ -5,9 +5,9 @@ import '@angular/localize/init';
 import 'zone.js/dist/zone-node';
 
 /** If third party module is not compatible with universal, try to add global variable here */
-global['MouseEvent'] = {};  
-global['HTMLElement'] = {};
-global['HTMLAnchorElement'] = {prototype: {}}; // for datebook
+(global as any)['MouseEvent'] = {};
+(global as any)['HTMLElement'] = {};
+(global as any)['HTMLAnchorElement'] = {prototype: {}}; // for datebook
 
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
@@ -43,11 +43,11 @@ export function app() {
   /** If third party module is not compatible with universal, try to add global variable above instead of here */
   /** following variables are working only for this project. */
   const template = join(distFolder, 'index.html');
-  const win = domino.createWindow(template)
-  global['window'] = win;
-  global['document'] = win.document;
-  global['navigator'] = win.navigator;
-  global['location'] = win.location;
+  const win = domino.createWindow(template);
+  (global as any)['window'] = win;
+  (global as any)['document'] = win.document;
+  (global as any)['navigator'] = win.navigator;
+  (global as any)['location'] = win.location;
 
 
   // if(server.get('env') == 'production'){
