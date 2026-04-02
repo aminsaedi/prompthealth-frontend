@@ -116,7 +116,6 @@ export function app() {
           console.log(err)
         }
         if (html) {
-          html = injectJsonLd(req.originalUrl, html);
           html = injectPaginationLinks(req, html);
         }
         // Detect 404 pages: if the rendered HTML contains the "Not Found" title, return 404 status
@@ -153,72 +152,6 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
 }
 
 export * from './src/main.server';
-
-function injectJsonLd(url: string, html: string): string {
-  let jsonLd: object[] = null;
-
-  // Homepage
-  if (url === '/' || url === '') {
-    jsonLd = [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'Organization',
-        'name': 'PromptHealth',
-        'url': 'https://www.prompthealth.ca',
-        'logo': 'https://www.prompthealth.ca/assets/img/prompthealth.png',
-        'description': 'Your Wellness Navigator'
-      },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'WebSite',
-        'name': 'PromptHealth',
-        'url': 'https://www.prompthealth.ca'
-      }
-    ];
-  }
-
-  // Community content pages: /community/<id>
-  const communityMatch = url.match(/^\/community\/([a-f0-9]{24})/);
-  if (communityMatch) {
-    // Extract metadata from the rendered HTML
-    const titleMatch = html.match(/<meta property="og:title" content="(.*?)">/);
-    const descMatch = html.match(/<meta (?:property|name)="(?:og:)?description" content="(.*?)">/);
-    const imageMatch = html.match(/<meta property="og:image" content="(.*?)">/);
-    const title = titleMatch ? titleMatch[1] : '';
-    const description = descMatch ? descMatch[1] : '';
-    const image = imageMatch ? imageMatch[1] : '';
-
-    const articleSchema: any = {
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      'headline': title,
-      'description': description
-    };
-    if (image) {
-      articleSchema.image = image;
-    }
-
-    jsonLd = [
-      articleSchema,
-      {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        'itemListElement': [
-          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.prompthealth.ca' },
-          { '@type': 'ListItem', 'position': 2, 'name': 'Community', 'item': 'https://www.prompthealth.ca/community' },
-          { '@type': 'ListItem', 'position': 3, 'name': title }
-        ]
-      }
-    ];
-  }
-
-  if (jsonLd) {
-    const script = `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
-    html = html.replace('</head>', script + '</head>');
-  }
-
-  return html;
-}
 
 function injectPaginationLinks(req: any, html: string): string {
   // Only inject pagination links for community feed pages

@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CanActivate, Routes, RouterModule, CanActivateChild } from '@angular/router';
-import { HomeModule } from '../home/home.module';
 import { LayoutComponent } from './layout/layout.component';
 import { HomeComponent } from './../home/home.component';
-import { DashboardModule } from '../dashboard/dashboard.module';
 
 import { ThankuPageComponent } from './thanku-page/thanku-page.component';
 
@@ -20,7 +18,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        loadChildren: () => HomeModule
+        loadChildren: () => import('../home/home.module').then(m => m.HomeModule)
       },
 
       // { path: 'community', loadChildren: () => SocialModule },
@@ -30,7 +28,7 @@ const routes: Routes = [
       // },
       {
         path: 'dashboard-old',
-        loadChildren: () => DashboardModule,
+        loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardModule),
         // CanActivate: [AuthGuard]
       },
 
