@@ -1,20 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { RegisterQuestionnaireService } from 'src/app/dashboard/register-questionnaire.service';
 import { CheckboxSelectionItem } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
 import { FormItemSelectBoxComponent } from 'src/app/shared/form-item-select-box/form-item-select-box.component';
 import { QuestionnaireService, Questionnaire } from 'src/app/shared/services/questionnaire.service';
 import { validators } from 'src/app/_helpers/form-settings';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-personal-match-gender',
   templateUrl: './personal-match-gender.component.html',
   styleUrls: ['./personal-match-gender.component.scss']
 })
-export class PersonalMatchGenderComponent implements OnInit {
+export class PersonalMatchGenderComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public form: FormGroup;
   public isSubmitted = false;
@@ -40,6 +43,8 @@ export class PersonalMatchGenderComponent implements OnInit {
   ) { }
 
   ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionSubmit.unsubscribe();
   }
 
@@ -52,7 +57,7 @@ export class PersonalMatchGenderComponent implements OnInit {
     const data = this._route.snapshot.data;
     this._qService.canActivate(this._route, data.index);
 
-    this.subscriptionSubmit = this._qService.observeNavigation().subscribe((type) => {
+    this.subscriptionSubmit = this._qService.observeNavigation().pipe(takeUntil(this.destroy$)).subscribe((type) => {
       if(type == 'next'){ this.update(); }
       else if(type == 'back'){ this._qService.goBack(this._route); }
     });

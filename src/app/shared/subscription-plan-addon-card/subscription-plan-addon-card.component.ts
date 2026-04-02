@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostBinding } from '@angular/core';
+import { Component, Input, OnInit, HostBinding , OnDestroy } from '@angular/core';
 import { IAddonPlan } from '../../models/addon-plan';
 import { ProfileManagementService } from '../services/profile-management.service';
 import { CategoryService } from '../services/category.service';
@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from '../services/universal.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -14,7 +16,9 @@ import { Router } from '@angular/router';
   templateUrl: './subscription-plan-addon-card.component.html',
   styleUrls: ['./subscription-plan-addon-card.component.scss']
 })
-export class SubscriptionPlanAddonCardComponent implements OnInit {
+export class SubscriptionPlanAddonCardComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() data: IAddonPlan;
   @Input() monthly = true;
@@ -199,7 +203,7 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
   // stripeCheckout(payload: IStripeCheckoutData) {
   //   const path = `user/checkoutSession`;
   //   this._sharedService.loader('show');
-  //   this._sharedService.post(payload, path).subscribe((res: any) => {
+  //   this._sharedService.post(payload, path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
   //     console.log('there we go');
   //     if (res.statusCode === 200) {
   //       console.log(res);
@@ -208,7 +212,7 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
   //       if (res.data.type === 'checkout') {
   //         this._toastr.success('Checking out...');
 
-  //         this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
+  //         this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).pipe(takeUntil(this.destroy$)).subscribe(stripeResult => {
   //           console.log('success!');
   //         }, error => {
   //           this._toastr.error(error);
@@ -236,4 +240,9 @@ export class SubscriptionPlanAddonCardComponent implements OnInit {
   //     this._sharedService.loader('hide');
   //   });
   // }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

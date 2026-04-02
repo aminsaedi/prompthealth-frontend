@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-payment-subscription',
   templateUrl: './payment-subscription.component.html',
   styleUrls: ['./payment-subscription.component.scss']
 })
-export class PaymentSubscriptionComponent implements OnInit {
+export class PaymentSubscriptionComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get linkToPlan() {
@@ -40,7 +44,7 @@ export class PaymentSubscriptionComponent implements OnInit {
     };
     const path = `user/customer-portal`;
     this.isUploading = true;
-    this._sharedService.post(data, path).subscribe((res: IResponseData) => {
+    this._sharedService.post(data, path).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
 
       if (res.statusCode === 200) {
         if (res.data.type === 'portal') {
@@ -54,5 +58,10 @@ export class PaymentSubscriptionComponent implements OnInit {
       this.isUploading = false;
       this._toastr.error('Something went wrong. Please try again.');      
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

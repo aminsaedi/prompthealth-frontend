@@ -1,16 +1,20 @@
 import { Location } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'card-item-event',
   templateUrl: './card-item-event.component.html',
   styleUrls: ['./card-item-event.component.scss'],
 })
-export class CardItemEventComponent implements OnInit {
+export class CardItemEventComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() post: ISocialPost;
   @Input() shorten: boolean = true;
@@ -50,5 +54,10 @@ export class CardItemEventComponent implements OnInit {
 
   onClickLinkToEvent(e: Event) {
     e.stopPropagation();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

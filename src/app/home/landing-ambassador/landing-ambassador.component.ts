@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { ButtonGuidelineComponent } from 'src/app/shared/button-guideline/button-guideline.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { environment } from 'src/environments/environment';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 declare let gtag: Function;
 
@@ -13,7 +15,9 @@ declare let gtag: Function;
   templateUrl: './landing-ambassador.component.html',
   styleUrls: ['./landing-ambassador.component.scss']
 })
-export class LandingAmbassadorComponent implements OnInit {
+export class LandingAmbassadorComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   // public ambassadorCode = 'fyCfz2Hm';
   public faceType: FaceType = null;
@@ -112,7 +116,7 @@ export class LandingAmbassadorComponent implements OnInit {
   }
 
   // setCouponDetail(code: string) {
-  //   this._sharedService.get('user/get-coupon/' + code).subscribe((res: any) => {
+  //   this._sharedService.get('user/get-coupon/' + code).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
   //     if(res.statusCode === 200){
   //       sessionStorage.setItem('stripe_coupon_code', JSON.stringify(res.data));
   //     }else {
@@ -126,7 +130,7 @@ export class LandingAmbassadorComponent implements OnInit {
   getUserDetail() {
     const path = `user/get-ambassador/${this.practitionerId}`;
 
-    this._sharedService.getNoAuth(path).subscribe((res: any) => {
+    this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res.statusCode === 200) {
         if (res.data.length > 0) {
           const provider: IUserDetail = res.data[0];
@@ -152,7 +156,7 @@ export class LandingAmbassadorComponent implements OnInit {
     const ambassadorKey = localStorage.getItem('ambassadorInvited');
     if (!ambassadorKey) {
       const path = `/user/gain-unique-invite`;
-      this._sharedService.postNoAuth({ _id: this.practitionerId }, path).subscribe((res: any) => {
+      this._sharedService.postNoAuth({ _id: this.practitionerId }, path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         if (res.statusCode === 200) {
           localStorage.setItem('ambassadorInvited', 'invited');
         } else {
@@ -162,6 +166,11 @@ export class LandingAmbassadorComponent implements OnInit {
         this.navigate404();
       });
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

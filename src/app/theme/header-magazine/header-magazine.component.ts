@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { IBlogCategory } from 'src/app/models/blog-category';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header-magazine',
@@ -9,7 +11,9 @@ import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animati
   styleUrls: ['./header-magazine.component.scss'],
   animations: [fadeAnimation, expandVerticalAnimation],
 })
-export class HeaderMagazineComponent implements OnInit {
+export class HeaderMagazineComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public categories: any[];
   public tags: any[];
@@ -44,7 +48,7 @@ export class HeaderMagazineComponent implements OnInit {
   }
 
   getCategories() {
-    this._sharedService.getNoAuth('category/get-categories').subscribe((res: any) => {
+    this._sharedService.getNoAuth('category/get-categories').pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res.statusCode === 200) {
         this.categories = res.data;
       }
@@ -52,10 +56,15 @@ export class HeaderMagazineComponent implements OnInit {
   }
 
   getTags() {
-    this._sharedService.getNoAuth('tag/get-all').subscribe((res: any) => {
+    this._sharedService.getNoAuth('tag/get-all').pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if(res.statusCode === 200) {
         this.tags = res.data.data;
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

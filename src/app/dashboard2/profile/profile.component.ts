@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit , OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { ISaveProfileResult } from 'src/app/models/response-data';
@@ -6,13 +6,17 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
 
@@ -35,7 +39,7 @@ export class ProfileComponent implements OnInit {
 
   onSubmit(data: IUserDetail) {
     this.isUploading = true;
-    this._sharedService.post(data, 'user/updateProfile').subscribe((res: ISaveProfileResult) => {
+    this._sharedService.post(data, 'user/updateProfile').pipe(takeUntil(this.destroy$)).subscribe((res: ISaveProfileResult) => {
       this.isUploading = false;
       if (res.statusCode === 200) {
         this._toastr.success('Updated successfully');
@@ -51,4 +55,9 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

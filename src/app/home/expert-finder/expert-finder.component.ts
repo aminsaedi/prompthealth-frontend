@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
-import { skip } from 'rxjs/operators';
+import { Subscription , Subject } from 'rxjs';
+import { skip , takeUntil } from 'rxjs/operators';
 import { ExpertFinderController, FilterFieldName, IExpertFinderFilterParams, IExpertFinderFilterQueryParams, IFilterData } from 'src/app/models/expert-finder-controller';
 import { Professional } from 'src/app/models/professional';
 import { IGetPractitionersResult } from 'src/app/models/response-data';
@@ -27,7 +27,9 @@ import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
   styleUrls: ['./expert-finder.component.scss'],
   animations: [slideVerticalAnimation, fadeAnimation, expandVerticalAnimation],
 })
-export class ExpertFinderComponent implements OnInit {
+export class ExpertFinderComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get sizeS() { return !window || window.innerWidth < 768; }
   get f() { return this.formFilter?.controls; }
@@ -134,6 +136,8 @@ export class ExpertFinderComponent implements OnInit {
   private subscriptionGeoLocation: Subscription;
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionGeoLocation) {
       this.subscriptionGeoLocation.unsubscribe();
     }
@@ -156,7 +160,7 @@ export class ExpertFinderComponent implements OnInit {
   async ngOnInit() {
     this.initController();
 
-    this._route.params.pipe(skip(1)).subscribe(() => {
+    this._route.params.pipe(skip(1)).pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.initController();
     });
 
@@ -406,7 +410,7 @@ export class ExpertFinderComponent implements OnInit {
   search() {
     const payload = this.controller.toPayload();
     this.controller.disposeProfesionnals();
-    this._sharedService.postNoAuth(payload, 'user/filter').subscribe((res: IGetPractitionersResult) => {
+    this._sharedService.postNoAuth(payload, 'user/filter').pipe(takeUntil(this.destroy$)).subscribe((res: IGetPractitionersResult) => {
       this.controller.setProfessionals(res.data.dataArr, this._uService.isBrowser);
       const professionals = this.controller.professionalsAll;
       this.formCompare = new FormGroup({});

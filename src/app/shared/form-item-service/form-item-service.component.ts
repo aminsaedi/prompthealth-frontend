@@ -1,15 +1,19 @@
-import { Component, Input, Output, EventEmitter, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, SimpleChanges , OnDestroy } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { validatorCheckboxSelectedAtLeast, validatorCheckboxSelectedAtMost, validators } from 'src/app/_helpers/form-settings';
 import { IOptionCheckboxGroup, OptionCheckboxGroup } from '../form-item-checkbox-group/form-item-checkbox-group.component';
 import { Category, CategoryService } from '../services/category.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'form-item-service',
   templateUrl: './form-item-service.component.html',
   styleUrls: ['./form-item-service.component.scss']
 })
-export class FormItemServiceComponent implements OnInit {
+export class FormItemServiceComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() id: string = null;
   @Input() data: string[] = null; /** serviceId[] */
@@ -112,6 +116,12 @@ export class FormItemServiceComponent implements OnInit {
         this.getFormArray(cat._id).controls.forEach(c => { c.setValue(false); });
       })
     });
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

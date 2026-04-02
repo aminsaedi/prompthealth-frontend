@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd, ActivationStart } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
@@ -9,6 +9,7 @@ import { SearchBarService } from 'src/app/shared/services/search-bar.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, slideVerticalReverse100pcAnimation } from 'src/app/_helpers/animations';
 import { getListedMenu } from 'src/app/_helpers/get-listed-menu';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -18,6 +19,8 @@ import { getListedMenu } from 'src/app/_helpers/get-listed-menu';
   animations: [slideVerticalReverse100pcAnimation, expandVerticalAnimation]
 })
 export class LayoutComponent implements OnDestroy, OnInit {
+  private destroy$ = new Subject<void>();
+
 
   get isLoggedIn(): boolean { return !!this.user; }
   get user() { return this._profileService.profile; }
@@ -47,6 +50,8 @@ export class LayoutComponent implements OnDestroy, OnInit {
   ) {  }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.routerEventSubscription.unsubscribe();
   }
 
@@ -56,7 +61,7 @@ export class LayoutComponent implements OnDestroy, OnInit {
     if(!this._uService.isServer) {
       this.scrollToTop();
 
-      this._headerService.observeHeaderStatus().subscribe(([key, val, animate]: [string, any, boolean]) => {
+      this._headerService.observeHeaderStatus().pipe(takeUntil(this.destroy$)).subscribe(([key, val, animate]: [string, any, boolean]) => {
         this.disableHeaderAnimation = !animate;
 
         if(!animate) {

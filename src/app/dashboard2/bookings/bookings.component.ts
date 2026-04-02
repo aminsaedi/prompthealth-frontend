@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -9,13 +9,17 @@ import { IGetBookingsResult, IUpdateBookingResult } from 'src/app/models/respons
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-bookings',
   templateUrl: './bookings.component.html',
   styleUrls: ['./bookings.component.scss']
 })
-export class BookingsComponent implements OnInit {
+export class BookingsComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get userId() { return this.user?._id; }     //it always has value
@@ -99,7 +103,7 @@ export class BookingsComponent implements OnInit {
     const path = (this.viewType == 'provider' ? 'booking/get-by-doctor/' : 'booking/get-by-client/') + this.userId + query.toQueryParamsString();
 
     this.isLoading = true;
-    this._sharedService.get(path).subscribe((res: IGetBookingsResult) => {
+    this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetBookingsResult) => {
       this.isLoading = false;
 
       if(res.statusCode == 200) {
@@ -158,7 +162,7 @@ export class BookingsComponent implements OnInit {
   markAsRead(data: Booking) {
     if(data.provider._id == this.userId) {
       data.markAsRead();
-      this._sharedService.get('booking/read/' + data._id).subscribe((res: IUpdateBookingResult) => {
+      this._sharedService.get('booking/read/' + data._id).pipe(takeUntil(this.destroy$)).subscribe((res: IUpdateBookingResult) => {
         if(res.statusCode == 200) {
         } else {
           data.markAsUnread();
@@ -172,7 +176,7 @@ export class BookingsComponent implements OnInit {
   delete(data: Booking) {
     if(data.client._id == this.userId) {
       this.isDeleting = true;
-      this._sharedService.deleteContent('booking/' + data._id).subscribe(() => {
+      this._sharedService.deleteContent('booking/' + data._id).pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.isDetailDeleteMode = false;
         this._toastr.success('The booking has been cancelled.');
         this._modalService.hide();
@@ -234,4 +238,9 @@ export class BookingsComponent implements OnInit {
 
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

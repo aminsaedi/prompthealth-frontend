@@ -1,15 +1,18 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { first } from 'rxjs/operators';
+import { first , takeUntil } from 'rxjs/operators';
 import { QuestionnaireAnswer, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-sitemap',
   templateUrl: './sitemap.component.html',
   styleUrls: ['./sitemap.component.scss']
 })
-export class SitemapComponent implements OnInit {
+export class SitemapComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   constructor(
     private _qService: QuestionnaireService,
@@ -21,7 +24,7 @@ export class SitemapComponent implements OnInit {
   @ViewChild('typeOfProvider') private typeOfProvider: ElementRef;
 
   ngAfterViewInit() {
-    this._route.fragment.pipe( first() ).subscribe(fragment => {
+    this._route.fragment.pipe( first() ).pipe(takeUntil(this.destroy$)).subscribe(fragment => {
       setTimeout(() => {
         if(fragment == 'type-of-provider' && this.typeOfProvider && this.typeOfProvider.nativeElement) {
           const el: HTMLAnchorElement = this.typeOfProvider.nativeElement;
@@ -38,5 +41,10 @@ export class SitemapComponent implements OnInit {
     this._qService.getSitemap().then(data => { 
       this.typeOfProviderList =data.typeOfProvider.answers;
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

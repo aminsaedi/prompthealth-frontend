@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { NgForm } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { SharedService } from '../../shared/services/shared.service';
 import { environment } from '../../../environments/environment';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-enterprise-contact',
   templateUrl: './enterprise-contact.component.html',
   styleUrls: ['./enterprise-contact.component.scss']
 })
-export class EnterpriseContactComponent implements OnInit {
+export class EnterpriseContactComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   homeForm: FormGroup;
   submitted = false;
@@ -66,7 +70,7 @@ export class EnterpriseContactComponent implements OnInit {
       let data = this.homeForm.value;
       this._sharedService.loader('show');
       let path = 'user/planRequest'
-      this._sharedService.postNoAuth(data, path).subscribe((res: any) => {
+      this._sharedService.postNoAuth(data, path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         this._sharedService.loader('hide');
         if (res.statusCode === 200) {
           this.toastr.success('Quotation submitted successfully!');
@@ -88,4 +92,9 @@ export class EnterpriseContactComponent implements OnInit {
     }
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

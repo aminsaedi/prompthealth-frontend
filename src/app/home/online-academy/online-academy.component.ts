@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit , OnDestroy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -13,12 +13,16 @@ import { environment } from "src/environments/environment";
 import { ProfileManagementService } from "../../shared/services/profile-management.service";
 import { ModalService } from "../../shared/services/modal.service";
 import { SortItem } from "src/app/buttons/button-sort/button-sort.component";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: "app-online-academy",
   templateUrl: "./online-academy.component.html",
   styleUrls: ["./online-academy.component.scss"],
 })
-export class OnlineAcademyComponent implements OnInit {
+export class OnlineAcademyComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   public latest: ISocialPost[] = null;
   public archives: ISocialPost[];
   public pageCurrent: number = 1;
@@ -162,7 +166,7 @@ export class OnlineAcademyComponent implements OnInit {
     });
     this._sharedService
       .getNoAuth("note/get-academy" + query.toQueryParamsString())
-      .subscribe((res: IGetPressReleasesResult) => {
+      .pipe(takeUntil(this.destroy$)).subscribe((res: IGetPressReleasesResult) => {
         if (res.statusCode == 200) {
           this.latest = res.data.data.map((item) => new SocialArticle(item));
           this.postTotal = res.data.total;
@@ -206,5 +210,10 @@ export class OnlineAcademyComponent implements OnInit {
         }
       });
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

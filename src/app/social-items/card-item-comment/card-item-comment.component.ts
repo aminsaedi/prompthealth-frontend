@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
@@ -9,13 +9,17 @@ import { ISocialComment, ISocialPost } from 'src/app/models/social-post';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'card-item-comment',
   templateUrl: './card-item-comment.component.html',
   styleUrls: ['./card-item-comment.component.scss']
 })
-export class CardItemCommentComponent implements OnInit {
+export class CardItemCommentComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() post: ISocialPost;
 
@@ -100,7 +104,7 @@ export class CardItemCommentComponent implements OnInit {
   }
 
   fetchComments() {
-    this._sharedService.getNoAuth('blog/comment/' + this.post._id).subscribe((res: any) => {
+    this._sharedService.getNoAuth('blog/comment/' + this.post._id).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       this.post.setComments(res.data as any);
     });
   }
@@ -122,7 +126,7 @@ export class CardItemCommentComponent implements OnInit {
       this.f.body.setValue((this.f.body.value || '').replace(/(<p><br><\/p>)+$/, '').trim());
 
       this.isUploading = true;
-      this._sharedService.post(this.form.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
+      this._sharedService.post(this.form.value, 'blog/comment/' + this.post._id).pipe(takeUntil(this.destroy$)).subscribe((res: ICommentCreateResult) => {
         this.isUploading = false;
         if(res.statusCode == 200) {
           res.data.comment.author = this._user;
@@ -157,4 +161,9 @@ export class CardItemCommentComponent implements OnInit {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

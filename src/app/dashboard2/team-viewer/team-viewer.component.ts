@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
@@ -7,13 +7,17 @@ import { Staff } from 'src/app/models/staff';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-team-viewer',
   templateUrl: './team-viewer.component.html',
   styleUrls: ['./team-viewer.component.scss']
 })
-export class TeamViewerComponent implements OnInit {
+export class TeamViewerComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
 
@@ -37,7 +41,7 @@ export class TeamViewerComponent implements OnInit {
   fetchStaffList() {
     const path = `staff/get-by-center/${this.user._id}`;
     this.isLoading = true;
-    this._sharedService.getNoAuth(path).subscribe((res: IGetStaffsResult) => {
+    this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetStaffsResult) => {
       this.isLoading = false;
       if (res.statusCode === 200) {
         res.data.forEach(item => { this.user.setStaff(item); });
@@ -56,5 +60,10 @@ export class TeamViewerComponent implements OnInit {
 
   showMenu(staff: Staff) {
     this._modalService.show('staff-menu', staff);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
@@ -9,6 +9,8 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'card-item-toolbar',
@@ -16,7 +18,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./card-item-toolbar.component.scss'],
   animations: [expandVerticalAnimation],
 })
-export class CardItemToolbarComponent implements OnInit {
+export class CardItemToolbarComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() post: ISocialPost;
 
@@ -65,7 +69,7 @@ export class CardItemToolbarComponent implements OnInit {
 
     if(this.post) {
       this.isUploading = true;
-      this._sharedService.post({}, 'blog/like/' + this.post._id).subscribe(res => {
+      this._sharedService.post({}, 'blog/like/' + this.post._id).pipe(takeUntil(this.destroy$)).subscribe(res => {
         this.isUploading = false;
         if(res.statusCode != 200) {
           this.changeLikeStatus(isLikedCurrent, numLikesCurrent);
@@ -107,7 +111,7 @@ export class CardItemToolbarComponent implements OnInit {
 
   bookmark(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._sharedService.post({}, 'social/bookmark/' + this.post._id).subscribe((res: IResponseData) => {
+      this._sharedService.post({}, 'social/bookmark/' + this.post._id).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
         if(res.statusCode == 200) {
           resolve();
         } else {
@@ -121,7 +125,7 @@ export class CardItemToolbarComponent implements OnInit {
 
   unbookmark(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._sharedService.deleteContent('social/bookmark/' + this.post._id).subscribe((res: IResponseData) => {
+      this._sharedService.deleteContent('social/bookmark/' + this.post._id).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
         if (res.statusCode == 200) {
           resolve();
         } else {
@@ -157,7 +161,7 @@ export class CardItemToolbarComponent implements OnInit {
       this.f.body.setValue((this.f.body.value || '').replace(/(<p><br><\/p>)+$/, '').trim());
 
       this.isUploading = true;
-      this._sharedService.post(this.formComment.value, 'blog/comment/' + this.post._id).subscribe((res: ICommentCreateResult) => {
+      this._sharedService.post(this.formComment.value, 'blog/comment/' + this.post._id).pipe(takeUntil(this.destroy$)).subscribe((res: ICommentCreateResult) => {
         this.isUploading = false;
         if(res.statusCode == 200) {
           this.formComment.reset();
@@ -186,4 +190,9 @@ export class CardItemToolbarComponent implements OnInit {
     e.stopPropagation();
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

@@ -1,20 +1,23 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { Professional } from 'src/app/models/professional';
 import { IGetProfileResult, IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tag-provider',
   templateUrl: './tag-provider.component.html',
   styleUrls: ['./tag-provider.component.scss']
 })
-export class TagProviderComponent implements OnInit {
+export class TagProviderComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get centreId() { return this._route.snapshot.params.id; }
@@ -39,6 +42,8 @@ export class TagProviderComponent implements OnInit {
   private subscriptionLoginStatus: Subscription;
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionLoginStatus) {
       this.subscriptionLoginStatus.unsubscribe();
     }
@@ -54,7 +59,7 @@ export class TagProviderComponent implements OnInit {
     if(status == 'notLoggedIn' || status == 'loggedIn') {
       this.onChangeLoginStatus();
     } else {
-      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe((status) => {
+      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe((status) => {
         this.onChangeLoginStatus();
       });  
     }
@@ -103,7 +108,7 @@ export class TagProviderComponent implements OnInit {
 
   fetchCentre(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._sharedService.get('user/get-profile/' + this.centreId).subscribe((res: IGetProfileResult) => {
+      this._sharedService.get('user/get-profile/' + this.centreId).pipe(takeUntil(this.destroy$)).subscribe((res: IGetProfileResult) => {
         if(res.statusCode == 200) {
           const profile = new Professional(res.data._id, res.data);
           if (profile.isC) {
@@ -123,7 +128,7 @@ export class TagProviderComponent implements OnInit {
 
   connectStaff(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._sharedService.post({},'staff/create/' + this.centreId).subscribe((res: IResponseData) => {
+      this._sharedService.post({},'staff/create/' + this.centreId).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
         if(res.statusCode == 200) { 
           resolve();
         } else{

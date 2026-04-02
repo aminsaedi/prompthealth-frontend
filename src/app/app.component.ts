@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit , OnDestroy } from '@angular/core';
 import { ActivationStart, NavigationEnd, Router, ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
@@ -9,8 +9,9 @@ import { slideVerticalAnimation } from './_helpers/animations';
 import { SharedService } from './shared/services/shared.service';
 import { IResponseData } from './models/response-data';
 import { RegionService, RegionType } from './shared/services/region.service';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { } from 'googlemaps';
+import { takeUntil } from 'rxjs/operators';
 
 declare let gtag: Function;
 declare let fbq: Function;
@@ -20,7 +21,9 @@ declare let fbq: Function;
   styleUrls: ['./app.component.scss'],
   animations: [slideVerticalAnimation],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get isAlertUploadingInBackgroundShown() { return this.isUploadingInBackground || this.isUploadingDoneInBackground; }
   get isStaging() { return !environment.production; }
@@ -55,12 +58,14 @@ export class AppComponent implements OnInit {
   private disableAnalytics: boolean = environment.config.disableAnalytics;
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionModalRegionVisibility?.unsubscribe();
   }
 
   async ngOnInit() {
     if (!this._uService.isServer) {
-      this._uploadObserver.uploadingStatusChanged().subscribe(status => {
+      this._uploadObserver.uploadingStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(status => {
         this.onUploadingStatusChanged(status);
       });
 
@@ -86,7 +91,7 @@ export class AppComponent implements OnInit {
     }
 
     //check ipaddress and show select region modal if needed.
-    this.subscriptionModalRegionVisibility = this._regionService.modalVisibilityChanged().subscribe(isShown => {
+    this.subscriptionModalRegionVisibility = this._regionService.modalVisibilityChanged().pipe(takeUntil(this.destroy$)).subscribe(isShown => {
       if(isShown) {
         this.selectedRegion = this._uService.localStorage.getItem('region') as RegionType || 'CA';
         this.isModalRegionMenuShown = true;    
@@ -126,7 +131,7 @@ export class AppComponent implements OnInit {
   refreshIpInLocalstorage(): Promise<string> {
     return new Promise((resolve, reject) => {
       this._regionService.changeStatus('checking');
-      this._sharedService.getNoAuth('common/get-ipaddress').subscribe((res: IResponseData)   => {
+      this._sharedService.getNoAuth('common/get-ipaddress').pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData)   => {
         this._uService.localStorage.setItem('ip', res.data);
         resolve(res.data);
       }, error => {

@@ -1,14 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit , OnDestroy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { validators } from '../../_helpers/form-settings';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'form-item-pricing',
   templateUrl: './form-item-pricing.component.html',
   styleUrls: ['./form-item-pricing.component.scss']
 })
-export class FormItemPricingComponent implements OnInit {
+export class FormItemPricingComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() data: IUserDetail;
   @Input() formGroup: FormGroup;
@@ -55,6 +59,11 @@ export class FormItemPricingComponent implements OnInit {
       this.f.exactPricing.setValue('');
     }
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
 
 export const priceRange = [
@@ -64,5 +73,6 @@ export const priceRange = [
   { id: 'price4', label: '$100-200', value: '$100-200', minmax: [100, 200] },
   { id: 'price5', label: '$200-500', value: '$200-500', minmax: [200, 500] },
   { id: 'price6', label: '$500-1000', value: '$500-1000', minmax: [500, 1000] },
-  { id: 'price7', label: '> $1000', value: '$1000', minmax: [1000, 1000000] },
+  { id: 'price7', label: '> $1000', value: '$1000', minmax: [1000, 1000000] 
+},
 ];

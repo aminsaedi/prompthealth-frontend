@@ -1,9 +1,9 @@
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { EditorService } from '../../social/editor.service';
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit , OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IBellResult, IContentCreateResult, IFollowResult, IUnfollowResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
@@ -12,13 +12,16 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment';
 import { SocialService } from '../../social/social.service';
 import { Profile } from 'src/app/models/profile';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'popup-post-menu',
   templateUrl: './popup-post-menu.component.html',
   styleUrls: ['./popup-post-menu.component.scss']
 })
-export class PopupPostMenuComponent implements OnInit {
+export class PopupPostMenuComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() post: ISocialPost;
 
@@ -85,11 +88,13 @@ export class PopupPostMenuComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscription?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.subscription = this.post.changed().subscribe(() => {
+    this.subscription = this.post.changed().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this._changeDetector.detectChanges();
     })
   }
@@ -112,7 +117,7 @@ export class PopupPostMenuComponent implements OnInit {
     this.hidePopup(e);
 
     this.isUploading = true;
-    this._sharedService.put({isNews: markAsNews}, 'blog/update-status-news/' + this.post._id).subscribe((res: IContentCreateResult) => {
+    this._sharedService.put({isNews: markAsNews}, 'blog/update-status-news/' + this.post._id).pipe(takeUntil(this.destroy$)).subscribe((res: IContentCreateResult) => {
       if(res.statusCode == 200) {
         if(markAsNews) {
           this.post.markAsNews();
@@ -185,7 +190,7 @@ export class PopupPostMenuComponent implements OnInit {
     }
 
     this.isUploading = true;
-    this._sharedService.post(data, 'social/follow').subscribe((res: IFollowResult) => {
+    this._sharedService.post(data, 'social/follow').pipe(takeUntil(this.destroy$)).subscribe((res: IFollowResult) => {
       if(res.statusCode == 200) {
         this.user.setFollowing(this.post.author, true);
 
@@ -210,7 +215,7 @@ export class PopupPostMenuComponent implements OnInit {
 
   unfollow() {
     this.isUploading = true;
-    this._sharedService.deleteContent('social/follow/' + this.post.authorId).subscribe((res: IUnfollowResult) => {
+    this._sharedService.deleteContent('social/follow/' + this.post.authorId).pipe(takeUntil(this.destroy$)).subscribe((res: IUnfollowResult) => {
       if (res.statusCode == 200) {
         this.user.removeFollowing(this.post.author, true);
 
@@ -240,7 +245,7 @@ export class PopupPostMenuComponent implements OnInit {
     }
 
     this.isUploading = true;
-    this._sharedService.post(data, 'social/bell').subscribe((res: IBellResult) => {
+    this._sharedService.post(data, 'social/bell').pipe(takeUntil(this.destroy$)).subscribe((res: IBellResult) => {
       if(res.statusCode == 200) {
         const posts = this._socialService.findPostsByUserId(this.post.authorId);
         posts.forEach(post => {
@@ -260,7 +265,7 @@ export class PopupPostMenuComponent implements OnInit {
 
   unbell() {
     this.isUploading = true;
-    this._sharedService.deleteContent('social/bell/' + this.post.authorId).subscribe((res: IUnfollowResult) => {
+    this._sharedService.deleteContent('social/bell/' + this.post.authorId).pipe(takeUntil(this.destroy$)).subscribe((res: IUnfollowResult) => {
       if (res.statusCode == 200) {
         const posts = this._socialService.findPostsByUserId(this.post.authorId);
         posts.forEach(post => {

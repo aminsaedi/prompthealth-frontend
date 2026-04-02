@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax } from 'src/app/_helpers/form-settings';
@@ -13,6 +13,8 @@ import { UploadObserverService } from 'src/app/shared/services/upload-observer.s
 import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { MyProfile } from 'src/app/models/my-profile';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'card-new-post',
@@ -20,7 +22,9 @@ import { MyProfile } from 'src/app/models/my-profile';
   styleUrls: ['./card-new-post.component.scss'],
   animations: [expandVerticalAnimation],
 })
-export class CardNewPostComponent implements OnInit {
+export class CardNewPostComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Output() onPublished = new EventEmitter<any>();
 
@@ -189,7 +193,7 @@ export class CardNewPostComponent implements OnInit {
     const payload: ISaveQuery = new SaveQuery(data).toJson();
 
 
-    this._sharedService.put(payload, 'note/create').subscribe((res: IContentCreateResult) => {
+    this._sharedService.put(payload, 'note/create').pipe(takeUntil(this.destroy$)).subscribe((res: IContentCreateResult) => {
       this.isUploading = false;
       this.isAlertUploadingClosedForcibly = false;
       this._uploadObserver.markAsUploadDone();
@@ -238,7 +242,7 @@ export class CardNewPostComponent implements OnInit {
       if (files.length == 0) {
         resolve();
       } else {
-        this._sharedService.uploadMultipleImages(files, this.user._id, 'notes').subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {
+        this._sharedService.uploadMultipleImages(files, this.user._id, 'notes').pipe(takeUntil(this.destroy$)).subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {
           if(res.statusCode == 200) {
             const files = typeof res.data == 'string' ? [res.data] : res.data;
             if(image) {
@@ -259,5 +263,10 @@ export class CardNewPostComponent implements OnInit {
         });
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

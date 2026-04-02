@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { SocialArticle } from 'src/app/models/social-article';
@@ -9,13 +9,17 @@ import { ISocialPost, SocialPostBase } from 'src/app/models/social-post';
 import { SocialPostGetAllQuery } from 'src/app/models/social-post-get-all-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-draft',
   templateUrl: './drafts.component.html',
   styleUrls: ['./drafts.component.scss']
 })
-export class DraftsComponent implements OnInit {
+export class DraftsComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public drafts: ISocialPost[];
   public isLoading: boolean = false;
@@ -47,7 +51,7 @@ export class DraftsComponent implements OnInit {
       sortBy: 'createdAt',
       order: 'asc',
     });
-    this._sharedService.get('note/get-by-author' + query.toQueryParamsString()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+    this._sharedService.get('note/get-by-author' + query.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentsByAuthorResult) => {
       if(res.statusCode == 200) {
         if(!this.drafts) {
           this.drafts = [];
@@ -69,5 +73,10 @@ export class DraftsComponent implements OnInit {
     }, () => {
       this.isLoading = false;
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

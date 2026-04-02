@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { GetQuery } from 'src/app/models/get-query';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
@@ -6,13 +6,17 @@ import { ISocialPost } from 'src/app/models/social-post';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-bookmarks',
   templateUrl: './bookmarks.component.html',
   styleUrls: ['./bookmarks.component.scss']
 })
-export class BookmarksComponent implements OnInit {
+export class BookmarksComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get bookmarks(): ISocialPost[] { return this.user.bookmarks; }
@@ -50,7 +54,7 @@ export class BookmarksComponent implements OnInit {
     const query = new GetQuery({ page: this.currentPage, count: this.countPerPage });
 
     this.isLoading = true;
-    this._sharedService.get('social/get-bookmarks' + query.toQueryParamsString()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+    this._sharedService.get('social/get-bookmarks' + query.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentsByAuthorResult) => {
       this.isLoading = false;
       if(res.statusCode == 200) {
         this.user.setBookmarks(res.data);
@@ -64,5 +68,10 @@ export class BookmarksComponent implements OnInit {
       this.isLoading = false;
       this.existsMore = false;
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

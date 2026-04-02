@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationExtras, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { filter , takeUntil } from 'rxjs/operators';
+import { Subscription , Subject } from 'rxjs';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
@@ -20,7 +20,9 @@ import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
   styleUrls: ['./home.component.scss'],
   animations: [expandVerticalAnimation],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get topics() { return this._catService.categoryList; }
   get user() { return this._profileService.profile; }
@@ -59,6 +61,8 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionTopicId?.unsubscribe();
   }
   
@@ -66,7 +70,7 @@ export class HomeComponent implements OnInit {
     this.updateBreadcrumbs();
     this._router.events.pipe(
       filter(e => e instanceof NavigationEnd)
-    ).subscribe(() => {
+    ).pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.updateBreadcrumbs();
     });
 
@@ -76,13 +80,13 @@ export class HomeComponent implements OnInit {
 
     this.countCities = Object.keys(locations).length;
 
-    // this._sharedService.getNoAuth('company/get-random').subscribe((res: IGetCompaniesResult) => {
+    // this._sharedService.getNoAuth('company/get-random').pipe(takeUntil(this.destroy$)).subscribe((res: IGetCompaniesResult) => {
     //   if(res.statusCode == 200) {
     //     this.sponsor = new Partner(res.data[0]);
     //   }
     // });
 
-    this.subscriptionTopicId = this._socialService.selectedTopicIdChanged().subscribe(id => {
+    this.subscriptionTopicId = this._socialService.selectedTopicIdChanged().pipe(takeUntil(this.destroy$)).subscribe(id => {
       this.selectedTopicId = id;
       this.updateBreadcrumbs();
       this._changeDetector.detectChanges();

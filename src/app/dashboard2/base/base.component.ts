@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-base',
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.scss']
 })
-export class BaseComponent implements OnInit {
+export class BaseComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get userId() { return this.user ? this.user._id : ''; }
   get userRole() { return this.user ? this.user.role : 'U'; }
@@ -28,6 +31,8 @@ export class BaseComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionLoginStatus?.unsubscribe();
   }
   ngOnInit(): void {
@@ -35,7 +40,7 @@ export class BaseComponent implements OnInit {
       this._router.navigate(['./profile'], {replaceUrl: true, relativeTo: this._route});
     }
 
-    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(status => {
+    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(status => {
       if(status == 'notLoggedIn') {
         this._router.navigate(['/community']);
       }

@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegisterQuestionnaireService, QuestionnaireItemData } from '../register-questionnaire.service';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
@@ -11,13 +11,16 @@ import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { ProfileManagementService } from '../../shared/services/profile-management.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register-questionnaire',
   templateUrl: './register-questionnaire.component.html',
   styleUrls: ['./register-questionnaire.component.scss']
 })
-export class RegisterQuestionnaireComponent implements OnInit {
+export class RegisterQuestionnaireComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public data: QuestionnaireItemData[] = [];
   public userRole: string = null;
@@ -43,6 +46,8 @@ export class RegisterQuestionnaireComponent implements OnInit {
   }
 
   ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionIndex){ this.subscriptionIndex.unsubscribe(); }
     if(this.subscriptionFinish){ this.subscriptionFinish.unsubscribe(); }
   }
@@ -77,12 +82,12 @@ export class RegisterQuestionnaireComponent implements OnInit {
       this.registerType = data.type;
     });
 
-    this.subscriptionIndex = this._qService.observeIndex().subscribe((i: number) => {
+    this.subscriptionIndex = this._qService.observeIndex().pipe(takeUntil(this.destroy$)).subscribe((i: number) => {
       this.currentIdx = i;
       this._changeDetector.detectChanges();
     });
 
-    this.subscriptionFinish = this._qService.observeFinish().subscribe((isCompleteAll: boolean) => {
+    this.subscriptionFinish = this._qService.observeFinish().pipe(takeUntil(this.destroy$)).subscribe((isCompleteAll: boolean) => {
       this.onQuestionnaireDone(isCompleteAll);
     });
   }
@@ -135,7 +140,7 @@ export class RegisterQuestionnaireComponent implements OnInit {
       // profileImage will be updated at uploading image. so profileImage should not be updated here.
       delete data.profileImage;
 
-      this._sharedService.post(data, 'user/updateProfile').subscribe((res: any) => {
+      this._sharedService.post(data, 'user/updateProfile').pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         this._sharedService.loader('hide');
         if(res.statusCode == 200){
           this._bsService.setUserData(res.data);

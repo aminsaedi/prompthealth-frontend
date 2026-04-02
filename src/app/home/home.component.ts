@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   HostListener,
   ChangeDetectorRef,
   ViewChild,
@@ -34,6 +35,8 @@ import { ProfileManagementService } from "../shared/services/profile-management.
 import { ModalService } from "../shared/services/modal.service";
 import { getListedMenu } from "../_helpers/get-listed-menu";
 import { JsonLdService } from "../shared/services/json-ld.service";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -50,7 +53,9 @@ declare let fbq: Function;
     fadeAnimation,
   ],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   get sizeL() {
     return window && window.innerWidth >= 992;
   }
@@ -143,6 +148,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this._headerStatusService.showHeader(false);
     this._jsonLdService.removeJsonLd();
   }
@@ -304,7 +311,7 @@ export class HomeComponent implements OnInit {
 
   /** temporary solution to fill featured practitioners */
   getPractitionersFeatured() {
-    this._sharedService.getNoAuth("user/get-paid-spc").subscribe(
+    this._sharedService.getNoAuth("user/get-paid-spc").pipe(takeUntil(this.destroy$)).subscribe(
       (res: any) => {
         if (res.statusCode === 200) {
           const users: Professional[] = [];
@@ -425,7 +432,7 @@ export class HomeComponent implements OnInit {
       .getNoAuth(
         "note/get-by-author/" + environment.config.idSA + query.toQueryParams()
       )
-      .subscribe(
+      .pipe(takeUntil(this.destroy$)).subscribe(
         (res: IGetSocialContentsByAuthorResult) => {
           if (res.statusCode === 200) {
             const blogs = [];

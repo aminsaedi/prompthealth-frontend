@@ -1,16 +1,20 @@
 import { Location } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ISocialPost } from 'src/app/models/social-post';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { EditorService } from '../../social/editor.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'card-post-draft',
   templateUrl: './card-post-draft.component.html',
   styleUrls: ['./card-post-draft.component.scss']
 })
-export class CardPostDraftComponent implements OnInit {
+export class CardPostDraftComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() post: ISocialPost;
   
@@ -57,4 +61,9 @@ export class CardPostDraftComponent implements OnInit {
     this._location.replaceState(this._location.path() + '#' + this.post._id);
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

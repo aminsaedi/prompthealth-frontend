@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { SharedService } from '../../shared/services/shared.service';
 import { environment } from '../../../environments/environment';
 import { NgForm } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contact-uspage',
   templateUrl: './contact-uspage.component.html',
   styleUrls: ['./contact-uspage.component.scss']
 })
-export class ContactUspageComponent implements OnInit {
+export class ContactUspageComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   homeForm: FormGroup;
   submitted = false;
 
@@ -78,7 +82,7 @@ export class ContactUspageComponent implements OnInit {
       let data = JSON.stringify(this.homeForm.value);
 
       this._sharedService.loader('show');
-      this._sharedService.contactus(data).subscribe((res: any) => {
+      this._sharedService.contactus(data).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         this._sharedService.loader('hide');
         if (res.success) {
           this.toastr.success(res.message);

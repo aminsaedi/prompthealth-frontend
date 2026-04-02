@@ -1,12 +1,12 @@
 import { Location } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
 import Quill from 'quill';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IContentCreateResult, IUploadImageResult, IUploadMultipleImagesResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
@@ -22,13 +22,16 @@ import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
 import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.component';
 import { SocialService } from '../social.service';
 import { CheckboxSelectionItem } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss']
 })
-export class EditorComponent implements OnInit {
+export class EditorComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get form() { return this._editorService.form; }
   get f() {return this._editorService.form.controls; }
@@ -105,6 +108,8 @@ export class EditorComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this._editorService.dispose();
     this._headerService.showHeader();
 
@@ -152,7 +157,7 @@ export class EditorComponent implements OnInit {
   }
 
   observeLoginStatus() {
-    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(res => {
+    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(res => {
       if(res == 'notLoggedIn') {
         this._editorService.dispose();
         this._router.navigate(['/community/feed'], {replaceUrl: true});
@@ -469,7 +474,7 @@ export class EditorComponent implements OnInit {
       if(images.length == 0) {
         resolve();
       } else {
-        this._sharedService.uploadMultipleImages(images, this.user._id, 'blogs').subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {
+        this._sharedService.uploadMultipleImages(images, this.user._id, 'blogs').pipe(takeUntil(this.destroy$)).subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {
           if(res.statusCode === 200) {
             const images = (typeof res.data == 'string') ? [res.data] : res.data;
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -10,13 +10,17 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-press-release',
   templateUrl: './press-release.component.html',
   styleUrls: ['./press-release.component.scss']
 })
-export class PressReleaseComponent implements OnInit {
+export class PressReleaseComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public latest: ISocialPost[] = null;
   public archives: ISocialPost[];
@@ -89,7 +93,7 @@ export class PressReleaseComponent implements OnInit {
       count: 4,
       skip: 0,
     });
-    this._sharedService.getNoAuth('note/get-news' + query.toQueryParamsString()).subscribe((res: IGetPressReleasesResult) => {
+    this._sharedService.getNoAuth('note/get-news' + query.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetPressReleasesResult) => {
 
       if(res.statusCode == 200) {
         this.latest = res.data.data.map(item => new SocialArticle(item));
@@ -103,7 +107,7 @@ export class PressReleaseComponent implements OnInit {
   //     count: 8,
   //     skip: 4,
   //   });
-  //   this._sharedService.getNoAuth('note/get-news' + query.toQueryParamsString()).subscribe((res: IGetPressReleasesResult) => {
+  //   this._sharedService.getNoAuth('note/get-news' + query.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetPressReleasesResult) => {
   //     if(res.statusCode == 200) {
 
   //     }
@@ -159,7 +163,7 @@ export class PressReleaseComponent implements OnInit {
     this.isSending = true;
 
     const path = 'clubhouse/create';
-		this._sharedService.postNoAuth(this.form.value, path).subscribe((res: any) => {
+		this._sharedService.postNoAuth(this.form.value, path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
 			if(res.statusCode == 200) {
 				this._toastr.success(res.message);
 			}else {
@@ -177,4 +181,9 @@ export class PressReleaseComponent implements OnInit {
       this.isSending = false;
     });
   } 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
@@ -9,13 +9,17 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { validators } from 'src/app/_helpers/form-settings';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-social-manager',
   templateUrl: './social-manager.component.html',
   styleUrls: ['./social-manager.component.scss']
 })
-export class SocialManagerComponent implements OnInit {
+export class SocialManagerComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get selectedSocial() { return this._modalService.data; }
   get user() { return this._profileService.profile; }
@@ -108,7 +112,7 @@ export class SocialManagerComponent implements OnInit {
       }
   
       this.isUploading = true;
-      this._sharedService.post(payload, 'user/updateProfile').subscribe((res: ISaveProfileResult) => {
+      this._sharedService.post(payload, 'user/updateProfile').pipe(takeUntil(this.destroy$)).subscribe((res: ISaveProfileResult) => {
         this.isUploading = false;
         if(res.statusCode == 200) {
           this.user.update({socialLinks: res.data.socialLinks});
@@ -120,5 +124,10 @@ export class SocialManagerComponent implements OnInit {
         reject();
       })
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

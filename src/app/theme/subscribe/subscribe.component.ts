@@ -1,10 +1,12 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef , OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { SharedService } from '../../shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 
 
@@ -13,7 +15,9 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
   templateUrl: './subscribe.component.html',
   styleUrls: ['./subscribe.component.scss']
 })
-export class SubscribeComponent implements OnInit {
+export class SubscribeComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   days: any;
   hours: any;
   minutes: any;
@@ -69,7 +73,7 @@ export class SubscribeComponent implements OnInit {
     let data = JSON.stringify(this.homeForm.value);
 
     // this._sharedService.loader('show');
-    this._sharedService.contactus(data).subscribe((res: any) => {
+    this._sharedService.contactus(data).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       // this._sharedService.loader('hide');
       if (res.success) {
         this.toastr.success(res.message);
@@ -101,6 +105,11 @@ export class SubscribeComponent implements OnInit {
     this.seconds = seconds;
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
 
 

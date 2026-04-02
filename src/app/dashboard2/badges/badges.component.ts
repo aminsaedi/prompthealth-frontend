@@ -1,7 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { Observable , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IResponseData } from 'src/app/models/response-data';
 import { ModalStateType } from 'src/app/shared/modal/modal.component';
@@ -11,13 +11,16 @@ import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-badges',
   templateUrl: './badges.component.html',
   styleUrls: ['./badges.component.scss']
 })
-export class BadgesComponent implements OnInit {
+export class BadgesComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get selectedCertificate() { return this._modalService.data; }
@@ -98,7 +101,7 @@ export class BadgesComponent implements OnInit {
 
   fetchCertificateForVerifiedBadge() {
     this.isLoadingVerifiedBdage = true;
-    this._sharedService.get('certificate/get-by-userid/' + this.user._id).subscribe((res: IResponseData) => {
+    this._sharedService.get('certificate/get-by-userid/' + this.user._id).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isLoadingVerifiedBdage = false;
       if (res.statusCode === 200) {
         const data = res.data as ICertificate[];
@@ -160,7 +163,7 @@ export class BadgesComponent implements OnInit {
       data.append('certificates', file);
   
       this.isUploadingFile = true;
-      this._sharedService.imgUploadPut(data, 'certificate/add-file/' + this.selectedCertificate._id).subscribe((res: IResponseData) => {
+      this._sharedService.imgUploadPut(data, 'certificate/add-file/' + this.selectedCertificate._id).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
         this.isUploadingFile = false;
         if(res.statusCode == 200) {
           this.fEditor.certificateFiles.setValue(res.data.certificateFiles);
@@ -255,7 +258,7 @@ export class BadgesComponent implements OnInit {
 
   removeCertificate(certificate: ICertificate) {
     this.isUploading = true;
-    this._sharedService.deleteContent('certificate/delete/' + certificate._id).subscribe((res: IResponseData) => {
+    this._sharedService.deleteContent('certificate/delete/' + certificate._id).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isUploading = false
       if (res.statusCode === 200) {
         this._modalService.hide();
@@ -270,6 +273,12 @@ export class BadgesComponent implements OnInit {
   }
 
 
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
 
 interface ICertificate {

@@ -1,20 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { LoginStatusType, ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { GetQuery } from 'src/app/models/get-query';
 import { Profile } from 'src/app/models/profile';
 import { IGetFollowingsResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-follow-list',
   templateUrl: './follow-list.component.html',
   styleUrls: ['./follow-list.component.scss']
 })
-export class FollowListComponent implements OnInit {
+export class FollowListComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get followTypeFormatted() { return this.followType == 'following' ? 'Followings' : 'Followers'; }
@@ -39,6 +42,8 @@ export class FollowListComponent implements OnInit {
 
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionLoginStatus){
       this.subscriptionLoginStatus.unsubscribe();
     }
@@ -61,7 +66,7 @@ export class FollowListComponent implements OnInit {
     const status = this._profileService.loginStatus;
     this.onChangeLoginStatus(status);
 
-    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe((status) => {
+    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe((status) => {
       this.onChangeLoginStatus(status);
     });
   }
@@ -89,7 +94,7 @@ export class FollowListComponent implements OnInit {
     const query = new GetQuery({count: this.countPerPage, page: page});
     const path = this.followType == 'following' ? 'social/get-followings' : 'social/get-followeds';
     this.isLoading = true;
-    this._sharedService.get(path + query.toQueryParamsString()).subscribe((res: IGetFollowingsResult) => {
+    this._sharedService.get(path + query.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetFollowingsResult) => {
       if(res.statusCode == 200) {
         if(this.followType == 'following') {
           this.user.setFollowings(res.data);

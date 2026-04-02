@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, ViewChildren, QueryList, ViewChild , OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { IUserDetail } from 'src/app/models/user-detail';
@@ -6,13 +6,17 @@ import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { FormItemCheckboxGroupComponent, CheckboxSelectionItem } from '../form-item-checkbox-group/form-item-checkbox-group.component';
 import { FormItemPricingComponent } from '../form-item-pricing/form-item-pricing.component';
 import { SharedService } from '../services/shared.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'form-centre-general',
   templateUrl: './form-centre-general.component.html',
   styleUrls: ['./form-centre-general.component.scss']
 })
-export class FormCentreGeneralComponent implements OnInit {
+export class FormCentreGeneralComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() data: IUserDetail = {};
   @Input() disabled = false;
@@ -96,7 +100,7 @@ export class FormCentreGeneralComponent implements OnInit {
   async getQuestions(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const path = `questionare/get-profile-questions`;
-      this._sharedService.getNoAuth(path).subscribe((res: any) => {
+      this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         if (res.statusCode === 200) {
           res.data.forEach((element: any) => {
             const selectionList: CheckboxSelectionItem[] = [];
@@ -168,5 +172,10 @@ export class FormCentreGeneralComponent implements OnInit {
     }
 
     this.submitForm.emit(data);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

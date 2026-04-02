@@ -1,13 +1,17 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FormItemTextfieldOption, IFormItemTextfieldOption } from 'src/app/models/form-item-textfield-option';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'form-item-input',
   templateUrl: './form-item-input.component.html',
   styleUrls: ['./form-item-input.component.scss']
 })
-export class FormItemInputComponent implements OnInit {
+export class FormItemInputComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() name: string = '';
   @Input() label: string = '';
@@ -63,6 +67,11 @@ export class FormItemInputComponent implements OnInit {
 
   onClickReset() {
     this.controller.setValue('');
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

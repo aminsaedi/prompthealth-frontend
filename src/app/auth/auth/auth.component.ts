@@ -1,13 +1,17 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit , OnDestroy } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { getListedMenu } from "src/app/_helpers/get-listed-menu";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: "app-auth",
   templateUrl: "./auth.component.html",
   styleUrls: ["./auth.component.scss"],
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   get getListedProvider() {
     return getListedMenu[0];
   }
@@ -42,6 +46,11 @@ export class AuthComponent implements OnInit {
       this.nextPage = param.next ? param.next : null;
       this.nextPageKeyword = param.nextKeyword ? param.nextKeyword : null;
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { RegisterQuestionnaireService } from '../register-questionnaire.service'; 
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register-partner-term',
   templateUrl: './register-partner-term.component.html',
   styleUrls: ['./register-partner-term.component.scss']
 })
-export class RegisterPartnerTermComponent implements OnInit {
+export class RegisterPartnerTermComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   private subscriptionNavigation: Subscription;
 
@@ -20,11 +23,13 @@ export class RegisterPartnerTermComponent implements OnInit {
   }
   
   ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionNavigation){ this.subscriptionNavigation.unsubscribe(); }
   }
 
   ngOnInit(): void {
-    this.subscriptionNavigation = this._qService.observeNavigation().subscribe(type => {
+    this.subscriptionNavigation = this._qService.observeNavigation().pipe(takeUntil(this.destroy$)).subscribe(type => {
       if(type == 'next'){ this.onSubmit(); }
       else if(type == 'back'){ this._qService.goBack(this._route); }
     });

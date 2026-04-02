@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetQuery } from 'src/app/models/get-query';
@@ -10,13 +10,17 @@ import { IGetFollowingsResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-follow-list',
   templateUrl: './profile-follow-list.component.html',
   styleUrls: ['./profile-follow-list.component.scss']
 })
-export class ProfileFollowListComponent implements OnInit {
+export class ProfileFollowListComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get linkToBack() {
     const profileId = this._route.snapshot.params.userid;
@@ -82,7 +86,7 @@ export class ProfileFollowListComponent implements OnInit {
     const path = 'social/get-followings/' + this.profile._id;
 
     this.isLoading = true;
-    this._sharedService.get(path + query.toQueryParamsString()).subscribe((res: IGetFollowingsResult) => {
+    this._sharedService.get(path + query.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetFollowingsResult) => {
       if(res.statusCode == 200) {
         this.profile.setFollowings(res.data);
         this.follows = this.profile.followings;
@@ -114,5 +118,10 @@ export class ProfileFollowListComponent implements OnInit {
     } else {
       this._location.back();
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

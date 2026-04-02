@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { RegisterQuestionnaireService } from 'src/app/dashboard/register-questionnaire.service';
 import { FormItemCustomerHealthComponent } from 'src/app/shared/form-item-customer-health/form-item-customer-health.component';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -12,7 +13,9 @@ import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-
   templateUrl: './personal-match-category.component.html',
   styleUrls: ['./personal-match-category.component.scss']
 })
-export class PersonalMatchCategoryComponent implements OnInit {
+export class PersonalMatchCategoryComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public data: string[];
   public type: string;
@@ -29,10 +32,12 @@ export class PersonalMatchCategoryComponent implements OnInit {
     private _route: ActivatedRoute,
   ) {}
 
-  ngOnDestroy(){ this.subscriptionSubmit.unsubscribe(); }
+  ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete(); this.subscriptionSubmit.unsubscribe(); }
 
   ngOnInit(): void {
-    this.subscriptionSubmit = this._qService.observeNavigation().subscribe((type) => {
+    this.subscriptionSubmit = this._qService.observeNavigation().pipe(takeUntil(this.destroy$)).subscribe((type) => {
       if(type == 'next'){ this.update(); }
       else if(type == 'back'){ this._qService.goBack(this._route); }
     });

@@ -3,6 +3,7 @@ import {
   ElementRef,
   HostListener,
   OnInit,
+  OnDestroy,
   ViewChild,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -24,6 +25,8 @@ import { environment } from "src/environments/environment";
 import { IFAQItem } from "../_elements/faq-item/faq-item.component";
 import { RegionService } from "src/app/shared/services/region.service";
 import { Subscription } from "rxjs";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 declare let fbq: Function;
 @Component({
@@ -32,7 +35,9 @@ declare let fbq: Function;
   styleUrls: ["./about-company.component.scss"],
   animations: [slideHorizontalAnimation],
 })
-export class AboutCompanyComponent implements OnInit {
+export class AboutCompanyComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   get sizeL() {
     return window && window.innerWidth >= 992;
   }
@@ -85,7 +90,7 @@ export class AboutCompanyComponent implements OnInit {
   ) { }
 
   ngAfterViewInit() {
-    this._route.fragment.pipe(first()).subscribe((fragment) => {
+    this._route.fragment.pipe(first()).pipe(takeUntil(this.destroy$)).subscribe((fragment) => {
       const el: HTMLElement = this._el.nativeElement.querySelector(
         "#" + fragment
       );
@@ -101,6 +106,8 @@ export class AboutCompanyComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionRegionStatus?.unsubscribe();
   }
 
@@ -119,7 +126,7 @@ export class AboutCompanyComponent implements OnInit {
 
     this.subscriptionRegionStatus = this._regionService
       .statusChanged()
-      .subscribe((status) => {
+      .pipe(takeUntil(this.destroy$)).subscribe((status) => {
         if (status == "ready") {
           this.initPlans();
         }
@@ -153,7 +160,7 @@ export class AboutCompanyComponent implements OnInit {
   initPlans() {
     const region = this._uService.localStorage.getItem("region");
     const path = "user/get-plans?region=" + region;
-    this._sharedService.getNoAuth(path).subscribe((res: IGetPlansResult) => {
+    this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetPlansResult) => {
       if (res.statusCode == 200) {
         res.data.forEach((d) => {
           switch (region) {

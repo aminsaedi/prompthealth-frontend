@@ -1,5 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, HostListener, OnInit , OnDestroy } from '@angular/core';
+import { Subscription , Subject } from 'rxjs';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -8,6 +8,7 @@ import { fadeAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../social.service';
 import { ISocialPost } from 'src/app/models/social-post';
 import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-feed',
@@ -15,7 +16,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./profile-feed.component.scss'],
   animations: [fadeAnimation],
 })
-export class ProfileFeedComponent implements OnInit {
+export class ProfileFeedComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get profile() { return this._socialService.selectedProfile; }
 
@@ -51,6 +54,8 @@ export class ProfileFeedComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscription.unsubscribe();
 
     if(this.subscriptionCacheChange) {
@@ -60,7 +65,7 @@ export class ProfileFeedComponent implements OnInit {
 
   ngOnInit(): void {
     this.onProfileChanged();
-    this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
+    this.subscription = this._socialService.selectedProfileChanged().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.onProfileChanged();
     });
 
@@ -68,7 +73,7 @@ export class ProfileFeedComponent implements OnInit {
   }
 
   observeCacheChange() {
-    this.subscriptionCacheChange = this._socialService.postCacheChanged().subscribe(() => {
+    this.subscriptionCacheChange = this._socialService.postCacheChanged().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.initPosts();
     });
   }
@@ -135,7 +140,7 @@ export class ProfileFeedComponent implements OnInit {
 
       this.isLoading = true;
       const path = 'note/get-by-author/' + this.profile._id + query.toQueryParams();
-      this._sharedService.get(path).subscribe((res: IGetSocialContentsByAuthorResult) => {
+      this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentsByAuthorResult) => {
         if(res.statusCode == 200) {
           this.isMorePosts = (res.data.length < this.countPerPage) ? false : true;
           const posts = this._socialService.saveCachePostsOfUser(res.data, this.profile._id);

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmbedVideoService } from 'ngx-embed-video';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
 import { IGetStaffsResult } from 'src/app/models/response-data';
@@ -11,13 +11,16 @@ import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/a
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-about',
   templateUrl: './profile-about.component.html',
   styleUrls: ['./profile-about.component.scss'],
 })
-export class ProfileAboutComponent implements OnInit {
+export class ProfileAboutComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
   get profileAsPartner() { return this.profile as Partner; }
@@ -45,6 +48,8 @@ export class ProfileAboutComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscription.unsubscribe();
   }
 
@@ -52,7 +57,7 @@ export class ProfileAboutComponent implements OnInit {
     const profile = this._socialService.selectedProfile;
     this.onProfileChanged(profile);
 
-    this.subscription = this._socialService.selectedProfileChanged().subscribe(p => {
+    this.subscription = this._socialService.selectedProfileChanged().pipe(takeUntil(this.destroy$)).subscribe(p => {
       this.onProfileChanged(p);
     });
   }
@@ -108,7 +113,7 @@ export class ProfileAboutComponent implements OnInit {
   // fetchAmenity() {
   //   return new Promise((resolve, reject) => {
   //     const path = `amenity/get-all/?userId=${this.profile._id}&count=20&page=1&frontend=0`;
-  //     this._sharedService.getNoAuth(path).subscribe((res: any) => {
+  //     this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
   //       if (res.statusCode === 200) {
   //         this.profile.setAmenities(res.data.data);
   //         resolve(true);
@@ -125,7 +130,7 @@ export class ProfileAboutComponent implements OnInit {
   fetchProduct() {
     return new Promise((resolve, reject) => {
       const path = `product/get-all?userId=${this.profile.id}&count=20&page=1&frontend=0/`;
-      this._sharedService.getNoAuth(path).subscribe((res: any) => {
+      this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         if (res.statusCode === 200) {
           this.profile.setProducts(res.data.data);
           resolve(true);
@@ -141,7 +146,7 @@ export class ProfileAboutComponent implements OnInit {
   fetchStaffs() {
     return new Promise((resolve, reject) => {
       const path = `staff/get-by-center/${this.profile._id}`;
-      this._sharedService.getNoAuth(path).subscribe((res: IGetStaffsResult) => {
+      this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetStaffsResult) => {
         if(res.statusCode == 200) {
           this.profile.setStaffs(res.data);
           resolve(true);  
@@ -158,7 +163,7 @@ export class ProfileAboutComponent implements OnInit {
     this._sharedService.postNoAuth({
       _id: this.profile._id,
       type,
-    }, 'user/update-social-count').subscribe((res) => {
+    }, 'user/update-social-count').pipe(takeUntil(this.destroy$)).subscribe((res) => {
     });
   }
 

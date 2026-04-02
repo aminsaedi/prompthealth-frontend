@@ -1,17 +1,20 @@
 import { MapsAPILoader } from '@agm/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { Professional } from 'src/app/models/professional';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-review',
   templateUrl: './profile-review.component.html',
   styleUrls: ['./profile-review.component.scss']
 })
-export class ProfileReviewComponent implements OnInit {
+export class ProfileReviewComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get profile() { return this._socialService.selectedProfile; }
   get googleReviews() { return this.profile && this.profile.detailByGoogle ? this.profile.detailByGoogle : null };
@@ -27,12 +30,14 @@ export class ProfileReviewComponent implements OnInit {
 
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscription.unsubscribe();
   }
 
   ngOnInit(): void {
     this.onProfileChanged();
-    this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
+    this.subscription = this._socialService.selectedProfileChanged().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.onProfileChanged();
     });
   }

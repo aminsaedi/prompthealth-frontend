@@ -1,16 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RegisterQuestionnaireService } from '../register-questionnaire.service'; 
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { BehaviorService } from '../../shared/services/behavior.service'; 
 import { FormPartnerServiceComponent } from 'src/app/shared/form-partner-service/form-partner-service.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register-partner-service',
   templateUrl: './register-partner-service.component.html',
   styleUrls: ['./register-partner-service.component.scss']
 })
-export class RegisterPartnerServiceComponent implements OnInit {
+export class RegisterPartnerServiceComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public user: any;
 
@@ -27,13 +30,15 @@ export class RegisterPartnerServiceComponent implements OnInit {
   }
   
   ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionNavigation){ this.subscriptionNavigation.unsubscribe(); }
   }
 
   ngOnInit(): void {
     this.user = this._qService.getUser();
 
-    this.subscriptionNavigation = this._qService.observeNavigation().subscribe(type => {
+    this.subscriptionNavigation = this._qService.observeNavigation().pipe(takeUntil(this.destroy$)).subscribe(type => {
       if(type == 'next'){ this.formServiceCompoennt.onSubmit(); }
       else if(type == 'back'){ this._qService.goBack(this._route); }
     });

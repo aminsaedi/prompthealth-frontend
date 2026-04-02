@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { SocialNotification } from 'src/app/models/notification';
 import { Professional } from 'src/app/models/professional';
@@ -20,6 +20,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation, fadeAnimation, slideHorizontalReverseAnimation, slideVerticalReverseAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../../social/social.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'header-social',
@@ -27,7 +28,9 @@ import { SocialService } from '../../social/social.service';
   styleUrls: ['./header.component.scss'],
   animations: [slideHorizontalReverseAnimation, slideVerticalReverseAnimation, fadeAnimation, expandVerticalAnimation],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public isHeaderShown: boolean = true;
   public isMenuMobileShown: boolean = false; 
@@ -92,6 +95,8 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionTopicId?.unsubscribe();
 
     if(this.subscriptionLoginStatus) {
@@ -107,7 +112,7 @@ export class HeaderComponent implements OnInit {
       this.onSearchValueChanged(val);
     });
     
-    this._headerService.observeHeaderStatus().subscribe(([key, val]: [string, any]) => {
+    this._headerService.observeHeaderStatus().pipe(takeUntil(this.destroy$)).subscribe(([key, val]: [string, any]) => {
       this[key] = val;
       this._changeDetector.detectChanges();
     });
@@ -117,7 +122,7 @@ export class HeaderComponent implements OnInit {
       this.isMenuSearchShown = (param.menu == 'search') ? true : false;
     });
 
-    this.subscriptionTopicId = this._socialService.selectedTopicIdChanged().subscribe(id => {
+    this.subscriptionTopicId = this._socialService.selectedTopicIdChanged().pipe(takeUntil(this.destroy$)).subscribe(id => {
       this.selectedTopicId = id;
       this._changeDetector.detectChanges();
     })
@@ -208,7 +213,7 @@ export class HeaderComponent implements OnInit {
     this.isSearchLoading = true;
     this._sharedService.getNoAuth(
       'common/search/' + keyword + query.toQueryParamsString()
-    ).subscribe((res: ISearchResult) => {
+    ).pipe(takeUntil(this.destroy$)).subscribe((res: ISearchResult) => {
       if(res.statusCode == 200) {
         this.searchResult = {users: [], blogs: []};
         if(res.data.users && res.data.users.length > 0) {
@@ -239,7 +244,7 @@ export class HeaderComponent implements OnInit {
     }
 
     if(status != 'loggedIn') {
-      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(status => {
+      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(status => {
         if(status == 'loggedIn' && !this._socialService.doneInitNotification) {
           this.fetchNotification();
         }
@@ -248,7 +253,7 @@ export class HeaderComponent implements OnInit {
   }
 
   fetchNotification() {
-    this._sharedService.get('notification/get-all').subscribe((res: IGetNotificationsResult) => {
+    this._sharedService.get('notification/get-all').pipe(takeUntil(this.destroy$)).subscribe((res: IGetNotificationsResult) => {
       if(res.statusCode == 200) {
         this._socialService.saveNotifications(res.data);
       } else {

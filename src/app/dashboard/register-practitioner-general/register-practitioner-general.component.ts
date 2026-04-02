@@ -1,21 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { FormCentreGeneralComponent } from 'src/app/shared/form-centre-general/form-centre-general.component';
 import { FormProviderGeneralComponent } from 'src/app/shared/form-provider-general/form-provider-general.component';
 import { BehaviorService } from 'src/app/shared/services/behavior.service';
 import { validators } from 'src/app/_helpers/form-settings';
 import { RegisterQuestionnaireService } from '../register-questionnaire.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register-practitioner-general',
   templateUrl: './register-practitioner-general.component.html',
   styleUrls: ['./register-practitioner-general.component.scss']
 })
-export class RegisterPractitionerGeneralComponent implements OnInit {
+export class RegisterPractitionerGeneralComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public user: IUserDetail;
   public fAccredit: FormControl;
@@ -35,6 +38,8 @@ export class RegisterPractitionerGeneralComponent implements OnInit {
   }
   
   ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionNavigation){ this.subscriptionNavigation.unsubscribe(); }
   }
 
@@ -42,7 +47,7 @@ export class RegisterPractitionerGeneralComponent implements OnInit {
     this.user = this._qService.getUser();
     this.fAccredit = new FormControl((this.user.accredited_provide_canada) ? true : false, validators.accredit);
 
-    this.subscriptionNavigation = this._qService.observeNavigation().subscribe(type => {
+    this.subscriptionNavigation = this._qService.observeNavigation().pipe(takeUntil(this.destroy$)).subscribe(type => {
       if(type == 'next'){
         switch(this.user.roles) {
           case 'C' : this.formCentreComponent.onSubmit(); break;

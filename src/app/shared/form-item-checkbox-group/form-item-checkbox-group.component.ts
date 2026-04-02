@@ -1,14 +1,18 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter , OnDestroy } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
 import { priceRange } from '../form-item-pricing/form-item-pricing.component';
 import { Questionnaire, QuestionnaireAnswer } from '../services/questionnaire.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'form-item-checkbox-group',
   templateUrl: './form-item-checkbox-group.component.html',
   styleUrls: ['./form-item-checkbox-group.component.scss']
 })
-export class FormItemCheckboxGroupComponent implements OnInit {
+export class FormItemCheckboxGroupComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() id: string = null;
   @Input() type: 'checkbox' | 'radio' | 'selectbox' = 'checkbox';
@@ -148,6 +152,12 @@ export class FormItemCheckboxGroupComponent implements OnInit {
   }
   /** select box control end */
 
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
 
 const age_range: CheckboxSelectionItem[] = [

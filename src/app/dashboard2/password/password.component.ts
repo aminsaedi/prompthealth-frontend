@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -6,13 +6,17 @@ import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { validators } from 'src/app/_helpers/form-settings';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent implements OnInit {
+export class PasswordComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public form: FormControl = new FormControl('', validators.email);
   public isSubmitted: boolean = false;
@@ -40,7 +44,7 @@ export class PasswordComponent implements OnInit {
     }
 
     this.isUploading = true;
-    this._sharedService.post({email: this.form.value}, 'user/resetPassword/generateToken').subscribe((res: IResponseData) => {
+    this._sharedService.post({email: this.form.value}, 'user/resetPassword/generateToken').pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       if(res.statusCode == 200) {
 
         this.isDone = true;  
@@ -55,4 +59,9 @@ export class PasswordComponent implements OnInit {
     
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

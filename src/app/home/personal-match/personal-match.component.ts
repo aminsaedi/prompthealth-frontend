@@ -1,19 +1,22 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef , OnDestroy } from '@angular/core';
 import { SharedService } from '../../shared/services/shared.service';
 import { Router, Params } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { QuestionnaireItemData, RegisterQuestionnaireService } from 'src/app/dashboard/register-questionnaire.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { findAbbrByFullnameOf } from 'src/app/_helpers/questionnaire-answer-map';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-personal-match',
   templateUrl: './personal-match.component.html',
   styleUrls: ['./personal-match.component.scss']
 })
-export class PersonalMatchComponent implements OnInit {
+export class PersonalMatchComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public data: QuestionnaireItemData[] = [
     {route: 'gender', label: 'Gender', isComplete: false},
@@ -37,6 +40,8 @@ export class PersonalMatchComponent implements OnInit {
   ) {}
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionIndex) { this.subscriptionIndex.unsubscribe(); }
     if(this.subscriptionFinish) { this.subscriptionFinish.unsubscribe(); }
   }
@@ -51,12 +56,12 @@ export class PersonalMatchComponent implements OnInit {
     /** get service list in advance so that goal tab in personal match can be rendered immediately */
     this._catService.getCategoryAsync(); 
 
-    this.subscriptionIndex = this._qService.observeIndex().subscribe((i: number) => {
+    this.subscriptionIndex = this._qService.observeIndex().pipe(takeUntil(this.destroy$)).subscribe((i: number) => {
       this.currentIdx = i;
       this._changeDetector.detectChanges();
     });
 
-    this.subscriptionFinish = this._qService.observeFinish().subscribe((isCompleteAll: boolean) => {
+    this.subscriptionFinish = this._qService.observeFinish().pipe(takeUntil(this.destroy$)).subscribe((isCompleteAll: boolean) => {
       if(!isCompleteAll){
         this._toastr.error('You haven\'t enter some sections. Please review from beginning.');
       }

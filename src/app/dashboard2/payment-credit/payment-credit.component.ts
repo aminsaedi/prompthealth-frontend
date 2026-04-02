@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-payment-credit',
   templateUrl: './payment-credit.component.html',
   styleUrls: ['./payment-credit.component.scss']
 })
-export class PaymentCreditComponent implements OnInit {
+export class PaymentCreditComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   
   get user() { return this._profileService.profile; }
   get endingBalance() { return this.credits ? this.credits[0].ending_balance : 0}
@@ -40,7 +44,7 @@ export class PaymentCreditComponent implements OnInit {
   getMyBalance() {
     const path = `user/get-balance/${this.user._id}`;
     this.isLoading = true;
-    this._sharedService.get(path).subscribe((res: IResponseData) => {
+    this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isLoading = false;
       if (res.statusCode === 200) {
         this.credits = res.data.data;
@@ -53,5 +57,10 @@ export class PaymentCreditComponent implements OnInit {
       this.isLoading = false;
       this._toastr.error('Something went wrong.');
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

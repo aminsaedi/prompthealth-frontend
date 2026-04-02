@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild , OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { IFormItemSearchData } from 'src/app/models/form-item-search-data';
 import { locations, locationsNested } from 'src/app/_helpers/location-data';
 import { findAbbrByFullnameOf } from 'src/app/_helpers/questionnaire-answer-map';
@@ -10,13 +10,16 @@ import { CategoryService } from '../services/category.service';
 import { ModalService } from '../services/modal.service';
 import { QuestionnaireService, Questionnaire } from '../services/questionnaire.service';
 import { SearchBarService } from '../services/search-bar.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'search-bar',
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss']
 })
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   
   @Input() option: IOptionSearchBar = {};
 
@@ -44,6 +47,8 @@ export class SearchBarComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionCategory?.unsubscribe();
   }
 
@@ -105,7 +110,7 @@ export class SearchBarComponent implements OnInit {
 
   waitForFetchingCategory(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.subscriptionCategory = this._catService.observeCategoryService().subscribe(() => {
+      this.subscriptionCategory = this._catService.observeCategoryService().pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.subscriptionCategory.unsubscribe();
         resolve();
       })  

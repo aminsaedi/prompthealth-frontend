@@ -1,21 +1,24 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { SocialNotification } from 'src/app/models/notification';
 import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-notification',
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss']
 })
-export class NotificationComponent implements OnInit {
+export class NotificationComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get doneInitNotification() { return this._socialService.doneInitNotification; }
   get notifications(): SocialNotification[] { return this._socialService.doneInitNotification ? this._socialService.notifications : []; }
@@ -34,6 +37,8 @@ export class NotificationComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionLoginStatus) {
       this.subscriptionLoginStatus.unsubscribe();
     }
@@ -44,7 +49,7 @@ export class NotificationComponent implements OnInit {
       title: 'Notifications | PromptHealth Community'
     });
 
-    this._profileService.loginStatusChanged().subscribe(status => {
+    this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(status => {
       if(status == 'notLoggedIn') {
         this._router.navigate(['/community/feed'], {replaceUrl: true});
       }
@@ -53,7 +58,7 @@ export class NotificationComponent implements OnInit {
 
   archiveAllNotifications() {
     this.isUploading = true;
-    this._sharedService.post(null, 'notification/clear-all').subscribe((res: IResponseData) => {
+    this._sharedService.post(null, 'notification/clear-all').pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isUploading = false;
       if(res.statusCode == 200) {
         this._socialService.removeNotificationsAll();

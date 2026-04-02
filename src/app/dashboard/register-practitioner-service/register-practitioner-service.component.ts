@@ -1,17 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { FormPractitionerServiceComponent } from 'src/app/shared/form-practitioner-service/form-practitioner-service.component';
 import { BehaviorService } from 'src/app/shared/services/behavior.service';
 import { RegisterQuestionnaireService } from '../register-questionnaire.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register-practitioner-service',
   templateUrl: './register-practitioner-service.component.html',
   styleUrls: ['./register-practitioner-service.component.scss']
 })
-export class RegisterPractitionerServiceComponent implements OnInit {
+export class RegisterPractitionerServiceComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public user: IUserDetail;
   private subscriptionNavigation: Subscription;
@@ -25,13 +28,15 @@ export class RegisterPractitionerServiceComponent implements OnInit {
   }
   
   ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionNavigation){ this.subscriptionNavigation.unsubscribe(); }
   }
 
   ngOnInit(): void {
     this.user = this._qService.getUser();
 
-    this.subscriptionNavigation = this._qService.observeNavigation().subscribe(type => {
+    this.subscriptionNavigation = this._qService.observeNavigation().pipe(takeUntil(this.destroy$)).subscribe(type => {
       if(type == 'next'){
           this.formServiceComponent.onSubmit();
       }

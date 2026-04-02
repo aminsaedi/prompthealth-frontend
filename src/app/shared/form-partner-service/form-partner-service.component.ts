@@ -1,17 +1,21 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl, FormArray, FormGroup} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
 import { FormItemServiceComponent } from '../form-item-service/form-item-service.component';
 import { IUserDetail } from 'src/app/models/user-detail';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'form-partner-service',
   templateUrl: './form-partner-service.component.html',
   styleUrls: ['./form-partner-service.component.scss']
 })
-export class FormPartnerServiceComponent implements OnInit {
+export class FormPartnerServiceComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() data: IUserDetail = {};
   @Input() disabled = false;
@@ -105,7 +109,7 @@ export class FormPartnerServiceComponent implements OnInit {
       });
 
       const path = (images.length == 1) ? 'common/imgUpload' : 'common/imgMultipleUpload';
-      this._sharedService.imgUpload(uploadImage, path).subscribe((res: any) => {
+      this._sharedService.imgUpload(uploadImage, path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         if(res.statusCode == 200){
           const result = (images.length == 1) ? [res.data] : res.data;
           resolve(result);
@@ -142,5 +146,10 @@ export class FormPartnerServiceComponent implements OnInit {
     }
 
     this.submitForm.emit(data);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

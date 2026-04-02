@@ -1,21 +1,24 @@
 import { Location } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { ICreateReferralResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { SocialService } from '../social.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-referral',
   templateUrl: './new-referral.component.html',
   styleUrls: ['./new-referral.component.scss']
 })
-export class NewReferralComponent implements OnInit {
+export class NewReferralComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get profile() { return this._socialService.selectedProfileForReferral; }
@@ -51,6 +54,8 @@ export class NewReferralComponent implements OnInit {
   private subscriptionLoginStatus: Subscription;
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this._socialService.disposeProfileForReferral();
     this.subscriptionLoginStatus?.unsubscribe();
   }
@@ -76,7 +81,7 @@ export class NewReferralComponent implements OnInit {
   }
 
   observeLoginStatus() {
-    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(res => {
+    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(res => {
       if(res == 'notLoggedIn') {
         this.isLocked = false;
         this._router.navigate(['../'], {replaceUrl: true, relativeTo: this._route});
@@ -98,7 +103,7 @@ export class NewReferralComponent implements OnInit {
     }
 
     this.isUploading = true;
-    this._sharedService.post(payload, 'referral/create').subscribe((res: ICreateReferralResult) => {
+    this._sharedService.post(payload, 'referral/create').pipe(takeUntil(this.destroy$)).subscribe((res: ICreateReferralResult) => {
       this.isUploading = false;
       if(res.statusCode == 200) {
         this.user.setRecommendationByMe(res.data)

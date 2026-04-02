@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -11,13 +11,17 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-team',
   templateUrl: './team.component.html',
   styleUrls: ['./team.component.scss']
 })
-export class TeamComponent implements OnInit {
+export class TeamComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get selectedStaff(): Staff { return this._modalService.data; }
@@ -79,7 +83,7 @@ export class TeamComponent implements OnInit {
 
     this.isUploading = true;
     const path = staff.isStatic ? 'staff/' + staff._id : 'staff/delete/' + staff.staffId;
-    this._sharedService.deleteContent(path).subscribe((res: IResponseData) => {
+    this._sharedService.deleteContent(path).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isUploading = false;
       if(res.statusCode == 200) {
         this._toastr.success('Removed this member successfully');
@@ -132,7 +136,7 @@ export class TeamComponent implements OnInit {
 
     this.isUploading = true;
     const path = this.selectedStaff ? `staff/update-static/${this.selectedStaff._id}` : 'staff/create-static';
-    this._sharedService.post(this.formEditor.value, path).subscribe((res: ICreateStaffResult) => {
+    this._sharedService.post(this.formEditor.value, path).pipe(takeUntil(this.destroy$)).subscribe((res: ICreateStaffResult) => {
       this.isUploading = false;
       if(res.statusCode == 200) {
         if(this.selectedStaff) {
@@ -154,4 +158,9 @@ export class TeamComponent implements OnInit {
     });
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-affiliate-add',
   templateUrl: './affiliate-add.component.html',
   styleUrls: ['./affiliate-add.component.scss']
 })
-export class AffiliateAddComponent implements OnInit {
+export class AffiliateAddComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get f() { return this.formEditor.controls; }
@@ -51,7 +55,7 @@ export class AffiliateAddComponent implements OnInit {
 
       const path = 'user/request';
       this.isUploading = true;
-      this._sharedService.postNoAuth(data, path).subscribe((res: IResponseData) => {
+      this._sharedService.postNoAuth(data, path).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
         this.isUploading = false;
 
         if (res.statusCode === 200) {
@@ -68,4 +72,9 @@ export class AffiliateAddComponent implements OnInit {
     }
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

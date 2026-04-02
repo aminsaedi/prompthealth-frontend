@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { IOptionCheckboxGroup } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-service',
   templateUrl: './profile-service.component.html',
   styleUrls: ['./profile-service.component.scss']
 })
-export class ProfileServiceComponent implements OnInit {
+export class ProfileServiceComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get profile() { return this._socialService.selectedProfile; }
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
@@ -39,6 +42,8 @@ export class ProfileServiceComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscription.unsubscribe();
   }
 
@@ -46,7 +51,7 @@ export class ProfileServiceComponent implements OnInit {
   ngOnInit(): void {
     this.setMeta();
 
-    this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
+    this.subscription = this._socialService.selectedProfileChanged().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.setMeta();
     });  
   }

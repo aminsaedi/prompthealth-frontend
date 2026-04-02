@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';;
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { GetReferralsQuery } from 'src/app/models/get-referrals-query';
 import { Partner } from 'src/app/models/partner';
@@ -22,6 +22,7 @@ import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
 import { environment } from 'src/environments/environment';
 import { SocialService } from '../social.service';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -29,7 +30,9 @@ import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
   styleUrls: ['./profile.component.scss'],
   animations: [slideInSocialProfileChildRouteAnimation, expandVerticalAnimation],
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get sizeS() { return (!window || window.innerWidth < 768) ? true : false; }
   get sizeM() { return !this.sizeS && (window.innerWidth < 992) ? true : false; }
@@ -113,6 +116,8 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionLoginStatus.unsubscribe();
     if(this.timerRecommendationCarousel) {
       clearInterval(this.timerRecommendationCarousel);
@@ -205,7 +210,7 @@ export class ProfileComponent implements OnInit {
         order: 'desc',
         sortBy: 'createdAt',
       });
-      this._sharedService.getNoAuth('referral/get/' + this.profile._id + query.toQueryParamsString()).subscribe((res: IGetReferralsResult) => {
+      this._sharedService.getNoAuth('referral/get/' + this.profile._id + query.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetReferralsResult) => {
         if(res.statusCode == 200) {
           this.profile.setRecommendations(res.data);
         } else {
@@ -232,7 +237,7 @@ export class ProfileComponent implements OnInit {
         roles: ['P'],
         count: 3,
       });
-      this._sharedService.getNoAuth('referral/get-by/' + this.profile._id + queryCompany.toQueryParamsString()).subscribe((res: IGetReferralsResult) => {
+      this._sharedService.getNoAuth('referral/get-by/' + this.profile._id + queryCompany.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetReferralsResult) => {
         if(res.statusCode == 200) {
           this.profile.setRecommendationsByMeToCompanies(res.data);
         } else {
@@ -248,7 +253,7 @@ export class ProfileComponent implements OnInit {
         roles: ['SP', 'C', 'SA'],
         count: 3,
       });
-      this._sharedService.getNoAuth('referral/get-by/' + this.profile._id + queryProvider.toQueryParamsString()).subscribe((res: IGetReferralsResult) => {
+      this._sharedService.getNoAuth('referral/get-by/' + this.profile._id + queryProvider.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetReferralsResult) => {
         if(res.statusCode == 200) {
           this.profile.setRecommendationsByMeToProviders(res.data);
         } else {
@@ -290,7 +295,7 @@ export class ProfileComponent implements OnInit {
   }
 
   countupProfileView() {
-    this._sharedService.postNoAuth({_id: this.profileId}, 'user/update-view-count').subscribe(() => {});
+    this._sharedService.postNoAuth({_id: this.profileId}, 'user/update-view-count').pipe(takeUntil(this.destroy$)).subscribe(() => {});
   }
 
   setMetaForAbout() {
@@ -322,7 +327,7 @@ export class ProfileComponent implements OnInit {
   fetchProfile(id: string): Promise<Professional> {
     return new Promise((resolve, reject) => {
       const path = `user/get-profile/${id}`;
-      this._sharedService.getNoAuth(path).subscribe((res: IGetProfileResult) => {
+      this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetProfileResult) => {
         if(res.statusCode === 200) {
           const p = res.data;
           let professional: Professional | Partner;
@@ -346,7 +351,7 @@ export class ProfileComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.profile.markAsTriedFetchingTeam();
       const path = `staff/get-by-user/${this.profile._id}`;
-      this._sharedService.getNoAuth(path).subscribe((res: IGetStaffResult) => {
+      this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetStaffResult) => {
         if(res.statusCode == 200) {
 
           this.profile.setTeam(res.data.center as IUserDetail);
@@ -368,7 +373,7 @@ export class ProfileComponent implements OnInit {
         count: this.countPromoPerPage,
         contentType: 'PROMO',        
       });
-      this._sharedService.get('note/get-by-author/' + this.profileId + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+      this._sharedService.get('note/get-by-author/' + this.profileId + query.toQueryParams()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentsByAuthorResult) => {
         if(res.statusCode === 200) {
           this._socialService.saveCachePromosOfUser(res.data, this.profileId);
           resolve();
@@ -394,7 +399,7 @@ export class ProfileComponent implements OnInit {
   }
 
   async onClickBookOutside() {
-    this._sharedService.post({ _id: this.user._id }, '/booking/gain-booking-count').subscribe(res => {
+    this._sharedService.post({ _id: this.user._id }, '/booking/gain-booking-count').pipe(takeUntil(this.destroy$)).subscribe(res => {
     }, err => {
       console.error(err);
     });
@@ -424,7 +429,7 @@ export class ProfileComponent implements OnInit {
       this.user.setFollowing(this.profile.decode(), true);
       this.profile.countupFollower();
 
-      this._sharedService.post(data, 'social/follow').subscribe((res: IFollowResult) => {
+      this._sharedService.post(data, 'social/follow').pipe(takeUntil(this.destroy$)).subscribe((res: IFollowResult) => {
         if(res.statusCode == 200) {
           resolve(true);
         } else {
@@ -448,7 +453,7 @@ export class ProfileComponent implements OnInit {
       this.user.removeFollowing(this.profile.decode(), true);
       this.profile.countdownFollower();
 
-      this._sharedService.deleteContent('social/follow/' + this.profileId).subscribe((res: IUnfollowResult) => {
+      this._sharedService.deleteContent('social/follow/' + this.profileId).pipe(takeUntil(this.destroy$)).subscribe((res: IUnfollowResult) => {
         if (res.statusCode == 200) {
           resolve(true);
         } else {
@@ -487,7 +492,7 @@ export class ProfileComponent implements OnInit {
 
       this.isBelling = true;
       
-      this._sharedService.post(data, 'social/bell').subscribe((res: IBellResult) => {
+      this._sharedService.post(data, 'social/bell').pipe(takeUntil(this.destroy$)).subscribe((res: IBellResult) => {
         if(res.statusCode == 200) {
           resolve(true);
         } else {
@@ -505,7 +510,7 @@ export class ProfileComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.isBelling = false;
 
-      this._sharedService.deleteContent('social/bell/' + this.profileId).subscribe((res: IUnbellResult) => {
+      this._sharedService.deleteContent('social/bell/' + this.profileId).pipe(takeUntil(this.destroy$)).subscribe((res: IUnbellResult) => {
         if (res.statusCode == 200) {
           resolve(true);
         } else {
@@ -542,7 +547,7 @@ export class ProfileComponent implements OnInit {
       // data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
       this.isBookingLoading = true;
       const path = `booking/create`;
-      this._sharedService.post(data, path).subscribe((res: any) => {
+      this._sharedService.post(data, path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         this.isBookingLoading = false;
         if (res.statusCode === 200) {
           this.submittedFormBooking = false;
@@ -563,7 +568,7 @@ export class ProfileComponent implements OnInit {
   }
 
   observeLoginStatus() {
-    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe((res) => {
+    this.subscriptionLoginStatus = this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe((res) => {
       this.checkFollowStatus();
       this.checkBellStatus();
 
@@ -580,7 +585,7 @@ export class ProfileComponent implements OnInit {
 
     this.isFollowLoading = true;
     const path = 'social/get-follow-status/' + this.profileId;
-    this._sharedService.get(path).subscribe((res: IGetFollowStatusResult) => {
+    this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetFollowStatusResult) => {
       this.isFollowLoading = false;
       this.isFollowing = !!res.data;
     }, error => {
@@ -596,7 +601,7 @@ export class ProfileComponent implements OnInit {
 
     this.isBellLoading = true;
     const path = 'social/get-bell-status/' + this.profileId;
-    this._sharedService.get(path).subscribe((res: IGetBellStatusResult) => {
+    this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetBellStatusResult) => {
       this.isBellLoading = false;
       this.isBelling = !!res.data;
     }, error => {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef , OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { environment } from '../../../environments/environment';
@@ -7,10 +7,11 @@ import { CategoryService } from 'src/app/shared/services/category.service';
 import { ProfileManagementService } from '../../shared/services/profile-management.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { IUserDetail } from 'src/app/models/user-detail';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { getListedMenu } from 'src/app/_helpers/get-listed-menu';
 import { SearchBarService } from 'src/app/shared/services/search-bar.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -18,7 +19,9 @@ import { SearchBarService } from 'src/app/shared/services/search-bar.service';
   styleUrls: ['./header.component.scss'],
   animations: [fadeAnimation, fadeFastAnimation, slideVerticalAnimation, slideHorizontalAnimation, expandVerticalAnimation]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get onProductPage(){ return !!this._router.url.match('product'); }
   get isLoggedIn(): boolean { return !!this.user; }
@@ -50,6 +53,8 @@ export class HeaderComponent implements OnInit {
   private subscriptionLoginStatus: Subscription;
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionLoginStatus) {
       this.subscriptionLoginStatus.unsubscribe();
     }
@@ -59,12 +64,12 @@ export class HeaderComponent implements OnInit {
     const ls = this._uService.localStorage;
 
     if (!this._uService.isServer) {
-      this._headerStatusService.observeHeaderStatus().subscribe(([key, val]: [string, any]) => {
+      this._headerStatusService.observeHeaderStatus().pipe(takeUntil(this.destroy$)).subscribe(([key, val]: [string, any]) => {
         this[key] = val;
         this._changeDetector.detectChanges();
       });
 
-      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(() => {
+      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.setPriceType(this.user ? this.user.role : null);
       });
     }

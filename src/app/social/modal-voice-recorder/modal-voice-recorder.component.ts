@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild , OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { AudioRecordService, RecordedAudioOutput } from '../audio-record.service';
@@ -7,14 +7,17 @@ import { Profile } from 'src/app/models/profile';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ModalService } from 'src/app/shared/services/modal.service';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'modal-voice-recorder',
   templateUrl: './modal-voice-recorder.component.html',
   styleUrls: ['./modal-voice-recorder.component.scss']
 })
-export class ModalVoiceRecorderComponent implements OnInit {
+export class ModalVoiceRecorderComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() audioData: AudioData = null;
   @Output() onSave = new EventEmitter<AudioData>();
@@ -57,6 +60,8 @@ export class ModalVoiceRecorderComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionRecordeingFailed?.unsubscribe();
     this.subscriptionRecordingStarted?.unsubscribe();
     this.subscriptionTimerRecording?.unsubscribe();
@@ -66,27 +71,27 @@ export class ModalVoiceRecorderComponent implements OnInit {
 
   ngOnInit(): void {
     this._audioData = this.audioData ? this.audioData.copy() : null;
-    this.subscriptionRecordeingFailed = this._audioRecorder.recordingFailed().subscribe((message) => {
+    this.subscriptionRecordeingFailed = this._audioRecorder.recordingFailed().pipe(takeUntil(this.destroy$)).subscribe((message) => {
       this.onAudioRecordingFaild(message);
     });
 
-    this.subscriptionRecordingStarted = this._audioRecorder.recordingStarted().subscribe(() => {
+    this.subscriptionRecordingStarted = this._audioRecorder.recordingStarted().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.onAudioRecordingStarted();
     });
 
-    this.subscriptionTimerRecording =  this._audioRecorder.timerRecording().subscribe((seconds) => {
+    this.subscriptionTimerRecording =  this._audioRecorder.timerRecording().pipe(takeUntil(this.destroy$)).subscribe((seconds) => {
       this.onTimerAudioRecordingChanged(seconds);
     })
 
-    this.subscriptionRecordingDone = this._audioRecorder.recordingDone().subscribe((data) => {
+    this.subscriptionRecordingDone = this._audioRecorder.recordingDone().pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.onAudioRecordingDone(data);
     });
 
-    this.subscriptionRecordingStarted = this._audioRecorder.processingStarted().subscribe(() => {
+    this.subscriptionRecordingStarted = this._audioRecorder.processingStarted().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.isAudioRecorderBusy = true;
     });
 
-    this.subscriptionProcessingDone = this._audioRecorder.processingDone().subscribe(() => {
+    this.subscriptionProcessingDone = this._audioRecorder.processingDone().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.isAudioRecorderBusy = false;
     });
   }

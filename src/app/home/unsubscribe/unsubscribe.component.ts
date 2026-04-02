@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 // import { Router } from 'express';
 
 @Component({
@@ -11,7 +13,9 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
   templateUrl: './unsubscribe.component.html',
   styleUrls: ['./unsubscribe.component.scss']
 })
-export class UnsubscribeComponent implements OnInit {
+export class UnsubscribeComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   url: any;
 
   constructor(
@@ -29,9 +33,9 @@ export class UnsubscribeComponent implements OnInit {
     });
     this.spinner.show();
     this.route.paramMap
-      .subscribe(params => {
+      .pipe(takeUntil(this.destroy$)).subscribe(params => {
         const routeParams = params.get('email');
-        this.sharedService.unsubscribe(routeParams).subscribe((res) => {
+        this.sharedService.unsubscribe(routeParams).pipe(takeUntil(this.destroy$)).subscribe((res) => {
           this.spinner.hide();
           if (res.statusCode === 200) {
             this.toastr.success('Unsubscribe successfully!');
@@ -52,4 +56,9 @@ export class UnsubscribeComponent implements OnInit {
 
 
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

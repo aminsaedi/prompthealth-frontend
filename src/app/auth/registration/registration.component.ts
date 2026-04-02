@@ -1,14 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   public professionalSignup = false;
   public partnerSignup = false;
 
@@ -46,4 +50,9 @@ export class RegistrationComponent implements OnInit {
       this._headerStatusService.hideShadow();
     }
   }  
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

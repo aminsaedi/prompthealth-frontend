@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-payment-history',
   templateUrl: './payment-history.component.html',
   styleUrls: ['./payment-history.component.scss']
 })
-export class PaymentHistoryComponent implements OnInit {
+export class PaymentHistoryComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
 
@@ -29,7 +33,7 @@ export class PaymentHistoryComponent implements OnInit {
   fetchTransactions(){
     const path = `user/get-payment-details/${this.user._id}`;
     this.isLoading = true;
-    this._sharedService.get(path).subscribe((res: IResponseData) => {
+    this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isLoading = false;
       if (res.statusCode === 200) {
         this.transactions = res.data;
@@ -44,4 +48,9 @@ export class PaymentHistoryComponent implements OnInit {
     });
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

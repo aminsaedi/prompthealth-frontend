@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild , OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -12,6 +12,8 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { minmax } from 'src/app/_helpers/form-settings';
 import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'card-new-promo',
@@ -19,7 +21,9 @@ import { EditorService, ISaveQuery, SaveQuery } from '../editor.service';
   styleUrls: ['./card-new-promo.component.scss'],
   animations: [expandVerticalAnimation],
 })
-export class CardNewPromoComponent implements OnInit {
+export class CardNewPromoComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Output() onPublished = new EventEmitter<ISocialPost>();
 
@@ -51,6 +55,8 @@ export class CardNewPromoComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this._editorService.dispose();
   }
 
@@ -159,7 +165,7 @@ export class CardNewPromoComponent implements OnInit {
 
     const payload: ISaveQuery = new SaveQuery(data).toJson();
 
-    this._sharedService.put(payload, 'note/create').subscribe((res: IContentCreateResult) => {
+    this._sharedService.put(payload, 'note/create').pipe(takeUntil(this.destroy$)).subscribe((res: IContentCreateResult) => {
       this.isUploading = false;
       if(res.statusCode === 200) {
         this.isSubmitted = false;
@@ -193,7 +199,7 @@ export class CardNewPromoComponent implements OnInit {
       if (files.length == 0) {
         resolve();
       } else {
-        this._sharedService.uploadMultipleImages(files, this.user._id, 'notes').subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {
+        this._sharedService.uploadMultipleImages(files, this.user._id, 'notes').pipe(takeUntil(this.destroy$)).subscribe((res: IUploadImageResult|IUploadMultipleImagesResult) => {
           if(res.statusCode == 200) {
             const files = typeof res.data == 'string' ? [res.data] : res.data;
             if(image) {

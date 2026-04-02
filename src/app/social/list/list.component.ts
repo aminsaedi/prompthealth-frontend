@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IFollowMultipleResult, IGetFollowingTopicsResult, IGetSocialContentsResult } from 'src/app/models/response-data';
 import { ISocialPostSearchQuery, SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
@@ -14,6 +14,7 @@ import { CategoryService } from 'src/app/shared/services/category.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormItemServiceComponent } from 'src/app/shared/form-item-service/form-item-service.component';
 import { ToastrService } from 'ngx-toastr';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list',
@@ -21,7 +22,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./list.component.scss'],
   animations: [expandVerticalAnimation, fadeAnimation],
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
   get selectedTopicId() { return this._socialService.selectedTopicId; }
@@ -87,6 +90,8 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if(this.subscriptionLoginStatus) {
       this.subscriptionLoginStatus.unsubscribe();
     }
@@ -162,7 +167,7 @@ export class ListComponent implements OnInit {
     }
     
     if(!this.subscriptionLoginStatus) {
-      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().subscribe(res => {
+      this.subscriptionLoginStatus = this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(res => {
       this.fetchFollowTopicsIfNotExist()
         if(res == 'loggedIn' || res == 'notLoggedIn') {
           this.initPosts();
@@ -172,14 +177,14 @@ export class ListComponent implements OnInit {
   }
 
   observeCacheChange() {
-    this.subscriptionCacheChange = this._socialService.postCacheChanged().subscribe(() => {
+    this.subscriptionCacheChange = this._socialService.postCacheChanged().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.initPosts();
     });
   }
 
   fetchFollowTopicsIfNotExist() {
     if(this.user && !this.user.followingTopics) {
-      this._sharedService.get('/social/get-followed-topics').subscribe((res: IGetFollowingTopicsResult) => {
+      this._sharedService.get('/social/get-followed-topics').pipe(takeUntil(this.destroy$)).subscribe((res: IGetFollowingTopicsResult) => {
         if(res.statusCode == 200) {
           this.user.setFollowingTopics(res.data);
         } else {
@@ -297,7 +302,7 @@ export class ListComponent implements OnInit {
       // console.log(path, query)
 
       this.isLoading = true;
-      this._sharedService.get(path + query).subscribe((res: IGetSocialContentsResult) => {
+      this._sharedService.get(path + query).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentsResult) => {
         this.isLoading = false;
         if(res.statusCode === 200) {
           this.isMorePosts = (res.data.data.length < this.countPerPage) ? false : true;
@@ -350,7 +355,7 @@ export class ListComponent implements OnInit {
       }
 
       this.isSelectTopicsUploading = true;
-      this._sharedService.post(data, 'social/follow-multiple').subscribe((res: IFollowMultipleResult) => {
+      this._sharedService.post(data, 'social/follow-multiple').pipe(takeUntil(this.destroy$)).subscribe((res: IFollowMultipleResult) => {
         this.isSelectTopicsUploading = false;
 
         if(res.statusCode == 200) {

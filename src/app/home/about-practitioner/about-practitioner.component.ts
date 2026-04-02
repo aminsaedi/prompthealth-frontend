@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ElementRef,
   ViewChild,
   HostListener,
@@ -14,6 +15,8 @@ import { smoothWindowScrollTo } from "src/app/_helpers/smooth-scroll";
 import { IFAQItem } from "../_elements/faq-item/faq-item.component";
 import { first } from "rxjs/operators";
 import { environment } from "src/environments/environment";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 declare let fbq: Function;
 
@@ -23,7 +26,9 @@ declare let fbq: Function;
   styleUrls: ["./about-practitioner.component.scss"],
   animations: [slideHorizontalAnimation],
 })
-export class AboutPractitionerComponent implements OnInit {
+export class AboutPractitionerComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   get sizeL() {
     return window && window.innerWidth >= 992;
   }
@@ -58,7 +63,7 @@ export class AboutPractitionerComponent implements OnInit {
   ) {}
 
   ngAfterViewInit() {
-    this._route.fragment.pipe(first()).subscribe((fragment) => {
+    this._route.fragment.pipe(first()).pipe(takeUntil(this.destroy$)).subscribe((fragment) => {
       const el: HTMLElement = this._el.nativeElement.querySelector("#" + fragment);
       if (el) {
         setTimeout(() => smoothWindowScrollTo(el.getBoundingClientRect().top), 300);
@@ -124,6 +129,12 @@ export class AboutPractitionerComponent implements OnInit {
   shrinkCoupon(e: Event) {
     e.stopPropagation();
     this.isCouponShrink = true;
+  }
+
+  
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 
@@ -208,5 +219,5 @@ const faqs: IFAQItem[] = [
     <br><br>
     Hiring a marketing agency or running generic social media ads often costs much more—and typically reaches a broad, non-specific audience. With PromptHealth, your message lands in front of the right people, through trusted, human content that builds real engagement and credibility.`,
     opened: false,
-  },
+},
 ];

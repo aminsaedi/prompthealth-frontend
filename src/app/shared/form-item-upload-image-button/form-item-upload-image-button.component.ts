@@ -1,16 +1,20 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { environment } from 'src/environments/environment';
 import { SharedService } from '../services/shared.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'form-item-upload-image-button',
   templateUrl: './form-item-upload-image-button.component.html',
   styleUrls: ['./form-item-upload-image-button.component.scss']
 })
-export class FormItemUploadImageButtonComponent implements OnInit {
+export class FormItemUploadImageButtonComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() userid: string;
   @Input() label: string = 'Profile image';
@@ -85,7 +89,7 @@ export class FormItemUploadImageButtonComponent implements OnInit {
       uploadImage.append('_id', userid);
       uploadImage.append('profileImage', file, name);
 
-      this._sharedService.imgUpload(uploadImage, 'user/imgUpload').subscribe((res: any) => {
+      this._sharedService.imgUpload(uploadImage, 'user/imgUpload').pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         if(res.statusCode == 200){
           resolve(res.data.profileImage);
         }else{
@@ -103,7 +107,7 @@ export class FormItemUploadImageButtonComponent implements OnInit {
       uploadImage.append('imgLocation', 'blogs');
       uploadImage.append('images', file, name);
 
-      this._sharedService.imgUpload(uploadImage, 'common/imgUpload').subscribe((res: any) => {
+      this._sharedService.imgUpload(uploadImage, 'common/imgUpload').pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         if(res.statusCode === 200) {
           resolve(res.data);
         } else {
@@ -113,6 +117,12 @@ export class FormItemUploadImageButtonComponent implements OnInit {
         reject('Something went wrong. Please try again.');
       });
     });
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

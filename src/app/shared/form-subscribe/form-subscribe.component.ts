@@ -1,16 +1,20 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { validators } from 'src/app/_helpers/form-settings';
 import { SharedService } from '../services/shared.service';
 import { UniversalService } from '../services/universal.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'form-subscribe',
   templateUrl: './form-subscribe.component.html',
   styleUrls: ['./form-subscribe.component.scss']
 })
-export class FormSubscribeComponent implements OnInit {
+export class FormSubscribeComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() referrer: string = null;
 	@Input() option: IFormSubscribeOption = {};
@@ -127,7 +131,7 @@ export class FormSubscribeComponent implements OnInit {
   	this.f.referrer.setValue(this.referrer);
 
 		const path = 'clubhouse/create';
-		this._sharedService.postNoAuth(this.form.value, path).subscribe((res: any) => {
+		this._sharedService.postNoAuth(this.form.value, path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
 			if(res.statusCode == 200) {
 				this._uService.localStorage.setItem('subscribed', 'true');
 				if(showSuccessMessage) {
@@ -146,6 +150,12 @@ export class FormSubscribeComponent implements OnInit {
 			this._toastr.error('Something went wrong. Please try again later');
 			this.onError.emit(error);
 		});
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

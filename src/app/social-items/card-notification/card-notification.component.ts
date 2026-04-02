@@ -1,17 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SocialNotification } from 'src/app/models/notification';
 import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { SocialService } from '../../social/social.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'card-notification',
   templateUrl: './card-notification.component.html',
   styleUrls: ['./card-notification.component.scss']
 })
-export class CardNotificationComponent implements OnInit {
+export class CardNotificationComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() option: INotificationsOption = {};
 
@@ -55,7 +59,7 @@ export class CardNotificationComponent implements OnInit {
 
   markAllAsRead() {
     this.isUploading = true;
-    this._sharedService.post(null, 'notification/read-all').subscribe((res: IResponseData) => {
+    this._sharedService.post(null, 'notification/read-all').pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isUploading = false;
       if(res.statusCode == 200) {
         this._socialService.notifications.forEach(n => {
@@ -74,7 +78,7 @@ export class CardNotificationComponent implements OnInit {
     if(notification.isRead) {
     } else {
       notification.markAsRead();
-      this._sharedService.post(null, 'notification/' + notification._id).subscribe((res: IResponseData) => {
+      this._sharedService.post(null, 'notification/' + notification._id).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
         if(res.statusCode !== 200) {
           notification.markAsUnread();
         }
@@ -85,6 +89,12 @@ export class CardNotificationComponent implements OnInit {
     if(notification.linkToTarget) {
       this._router.navigate([notification.linkToTarget]);
     }
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

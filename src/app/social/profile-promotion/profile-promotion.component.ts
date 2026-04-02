@@ -1,7 +1,7 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit , OnDestroy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
@@ -11,6 +11,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, fadeAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../social.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-promotion',
@@ -18,7 +19,9 @@ import { SocialService } from '../social.service';
   styleUrls: ['./profile-promotion.component.scss'],
   animations: [fadeAnimation, expandVerticalAnimation],
 })
-export class ProfilePromotionComponent implements OnInit {
+export class ProfilePromotionComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get profile() { return this._socialService.selectedProfile; }
   get user() { return this._profileService.profile; }
@@ -53,6 +56,8 @@ export class ProfilePromotionComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscription.unsubscribe();  
 
     if(this.newPromos?.length > 0) {
@@ -65,7 +70,7 @@ export class ProfilePromotionComponent implements OnInit {
 
   ngOnInit(): void {
     this.onProfileChanged();
-    this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
+    this.subscription = this._socialService.selectedProfileChanged().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.onProfileChanged();
     });
   }
@@ -98,7 +103,7 @@ export class ProfilePromotionComponent implements OnInit {
       })
 
       this.isLoading = true;
-      this._sharedService.get('note/get-by-author/' + this.profile._id + query.toQueryParams()).subscribe((res: IGetSocialContentsByAuthorResult) => {
+      this._sharedService.get('note/get-by-author/' + this.profile._id + query.toQueryParams()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentsByAuthorResult) => {
         this.isLoading = false;
         if(res.statusCode === 200) {
           this.isMorePromos = (res.data.length < this.countPerPage) ? false : true;

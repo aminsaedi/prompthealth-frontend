@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { SharedService } from '../../shared/services/shared.service';
@@ -7,13 +7,17 @@ import { FormControl } from '@angular/forms';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { validators } from 'src/app/_helpers/form-settings';
 import { IResponseData } from 'src/app/models/response-data';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss']
 })
-export class ForgotPasswordComponent implements OnInit {
+export class ForgotPasswordComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public isSubmitted = false;
   public isUploading = false;
@@ -46,7 +50,7 @@ export class ForgotPasswordComponent implements OnInit {
     }
 
     this.isUploading = true;
-    this._sharedService.postNoAuth({email: this.form.value}, 'user/resetPassword/generateToken').subscribe((res: IResponseData) => {
+    this._sharedService.postNoAuth({email: this.form.value}, 'user/resetPassword/generateToken').pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isUploading = false;
       if (res.statusCode === 200) {
         this.isDone = true;
@@ -57,5 +61,10 @@ export class ForgotPasswordComponent implements OnInit {
       this.isUploading = false;
       this._toastr.error('Could not send email. Please try again.');
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

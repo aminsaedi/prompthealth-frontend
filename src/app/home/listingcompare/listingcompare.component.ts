@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit , OnDestroy } from "@angular/core";
 import { BehaviorService } from '../../shared/services/behavior.service';
 import { SharedService } from '../../shared/services/shared.service';
 import { environment } from 'src/environments/environment';
@@ -8,6 +8,8 @@ import { Professional } from "src/app/models/professional";
 import { ProfileManagementService } from "src/app/shared/services/profile-management.service";
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from "src/app/shared/services/questionnaire.service";
 import { IOptionCheckboxGroup } from "src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: "app-listingcompare",
@@ -15,7 +17,9 @@ import { IOptionCheckboxGroup } from "src/app/shared/form-item-checkbox-group/fo
   styleUrls: ["./listingcompare.scss"]
 })
 
-export class ListingcompareComponent implements OnInit {
+export class ListingcompareComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
   get user() { return this._profileService.profile; }
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
 
@@ -65,7 +69,7 @@ export class ListingcompareComponent implements OnInit {
 
   getProfileQuestion() {
     let path = `questionare/get-profile-questions`;
-    this.sharedService.getNoAuth(path).subscribe((res: any) => {
+    this.sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res.statusCode === 200) {
         this.compareIds = this.behaviorService.getCopmareIds().value;
 
@@ -88,5 +92,10 @@ export class ListingcompareComponent implements OnInit {
     }, err => {
       this.sharedService.loader('hide');
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

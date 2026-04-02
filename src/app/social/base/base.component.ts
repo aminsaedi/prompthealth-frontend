@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit , OnDestroy } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IResponseData } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
@@ -11,6 +11,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../social.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-base',
@@ -18,7 +19,9 @@ import { HeaderStatusService } from 'src/app/shared/services/header-status.servi
   styleUrls: ['./base.component.scss'],
   animations: [expandVerticalAnimation],
 })
-export class BaseComponent implements OnInit {
+export class BaseComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get userId() { return this.user._id; }
   get userRole() { return this.user.role || 'U'; }
@@ -62,6 +65,8 @@ export class BaseComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionRouterEvent?.unsubscribe();
     this.subscriptionHeaderStatus?.unsubscribe();
   }
@@ -71,7 +76,7 @@ export class BaseComponent implements OnInit {
       this.scrollToTop();
     }
     
-    this.subscriptionHeaderStatus = this._headerService.observeHeaderStatus().subscribe(([key, val, animate]) => {
+    this.subscriptionHeaderStatus = this._headerService.observeHeaderStatus().pipe(takeUntil(this.destroy$)).subscribe(([key, val, animate]) => {
       if(key == 'isHeaderShown') {
         this.isHeaderShown = val;
         this._changeDetector.detectChanges();
@@ -146,7 +151,7 @@ export class BaseComponent implements OnInit {
     if(this.user && this.user._id == p.authorId) {
       this.isDeletingContent = true;
 
-      this._sharedService.deleteContent('note/delete/' + p._id).subscribe((res: IResponseData) => {
+      this._sharedService.deleteContent('note/delete/' + p._id).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
         if(res.statusCode == 200) {
           this._modalService.hide();
           this._socialService.removeCacheSingle(p);

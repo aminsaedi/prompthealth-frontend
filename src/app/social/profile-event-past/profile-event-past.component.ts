@@ -1,6 +1,6 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { SocialEvent } from 'src/app/models/social-event';
 import { ISocialPost } from 'src/app/models/social-post';
@@ -9,6 +9,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { fadeAnimation } from 'src/app/_helpers/animations';
 import { SocialService } from '../social.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-event-past',
@@ -16,7 +17,9 @@ import { SocialService } from '../social.service';
   styleUrls: ['./profile-event-past.component.scss'],
   animations: [fadeAnimation],
 })
-export class ProfileEventPastComponent implements OnInit {
+export class ProfileEventPastComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get profile() { return this._socialService.selectedProfile; }
 
@@ -49,12 +52,14 @@ export class ProfileEventPastComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.onProfileChanged();
-    this.subscription = this._socialService.selectedProfileChanged().subscribe(() => {
+    this.subscription = this._socialService.selectedProfileChanged().pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.onProfileChanged();
     });
   }
@@ -108,7 +113,7 @@ export class ProfileEventPastComponent implements OnInit {
 
       this.isLoading = true;
       const path = 'note/get-by-author/' + this.profile._id + query.toQueryParams();
-      this._sharedService.get(path).subscribe((res: IGetSocialContentsByAuthorResult) => {
+      this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentsByAuthorResult) => {
         if(res.statusCode == 200) {
           this.isMorePosts = (res.data.length < this.countPerPage) ? false : true;
           resolve(res.data.map(item => new SocialEvent(item)));

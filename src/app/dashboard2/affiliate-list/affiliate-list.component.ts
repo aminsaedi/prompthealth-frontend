@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IResponseData } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-affiliate-list',
   templateUrl: './affiliate-list.component.html',
   styleUrls: ['./affiliate-list.component.scss']
 })
-export class AffiliateListComponent implements OnInit {
+export class AffiliateListComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get user() { return this._profileService.profile; }
 
@@ -37,7 +41,7 @@ export class AffiliateListComponent implements OnInit {
   fetchAffiliateUsers() {
     const path = 'user/get-affiliate-request?count=10&page=1&search=';
     this.isLoading = true;
-    this._sharedService.get(path).subscribe((res: IResponseData) => {
+    this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isLoading = false;
       if (res.statusCode === 200) {
         this.affiliateUsers = (res.data.data as IAffilateUser[]);
@@ -51,6 +55,12 @@ export class AffiliateListComponent implements OnInit {
       this.affiliateUsers = [];
       this._toastr.error('Something went wrong.');
     });
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

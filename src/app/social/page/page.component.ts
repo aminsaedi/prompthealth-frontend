@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IGetSocialContentResult, IGetSocialContentsResult } from 'src/app/models/response-data';
@@ -10,13 +10,17 @@ import { formatDateToString } from 'src/app/_helpers/date-formatter';
 import { SocialService } from '../social.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.scss']
 })
-export class PageComponent implements OnInit {
+export class PageComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get pathToApp() {
     let path = '';
@@ -45,6 +49,8 @@ export class PageComponent implements OnInit {
   ) { }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.hideReturnToApp();
     this._jsonLdService.removeJsonLd();
   }
@@ -88,7 +94,7 @@ export class PageComponent implements OnInit {
   fetchPost() {
     return new Promise((resolve, reject) => {
       const path = `note/${this.postId}`;
-      this._sharedService.get(path).subscribe((res: IGetSocialContentResult) => {
+      this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentResult) => {
         if(res.statusCode === 200) {
           this._socialService.saveCacheSingle(res.data);
           resolve(true);
@@ -104,7 +110,7 @@ export class PageComponent implements OnInit {
   fetchRelatedPosts() {
     const type = this.post.contentType;
     const path = `note/filter?count=6&contentType=${type}`;
-    this._sharedService.get(path).subscribe((res: IGetSocialContentsResult) => {
+    this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentsResult) => {
       if (res.statusCode === 200 && res.data?.data) {
         this.relatedPosts = res.data.data
           .filter(p => p._id !== this.post._id)

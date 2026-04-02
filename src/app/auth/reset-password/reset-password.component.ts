@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -8,6 +8,8 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { slideVerticalAnimation } from 'src/app/_helpers/animations';
 import { validators } from '../../_helpers/form-settings';
 import { Auth2Service } from '../auth2.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reset-password',
@@ -15,7 +17,9 @@ import { Auth2Service } from '../auth2.service';
   styleUrls: ['./reset-password.component.scss'],
   animations: [slideVerticalAnimation],
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get token() { return this._route.snapshot.params.token; }
 
@@ -68,7 +72,7 @@ export class ResetPasswordComponent implements OnInit {
       password: this.form.value,
     }
 
-    this._sharedService.postNoAuth(data, 'user/resetPassword').subscribe((res: IAuthResult) => {
+    this._sharedService.postNoAuth(data, 'user/resetPassword').pipe(takeUntil(this.destroy$)).subscribe((res: IAuthResult) => {
       if(res.statusCode == 200) {
         this._authService.storeCredential(res.data);
         this.doneUpdate = true;  
@@ -78,5 +82,10 @@ export class ResetPasswordComponent implements OnInit {
     }, error => {
       this._toastr.error('Something went wrong. Please try again');
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

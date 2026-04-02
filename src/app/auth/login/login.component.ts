@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { animate, transition, style, trigger } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 // const animation = trigger('carousel', [
 //   transition(':enter', [
@@ -19,7 +21,9 @@ import { HeaderStatusService } from 'src/app/shared/services/header-status.servi
   styleUrls: ['./login.component.scss'],
   // animations: [animation],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   slideConfig = {
     slidesToShow: 1,
@@ -59,6 +63,12 @@ export class LoginComponent implements OnInit {
       this._headerStatusService.hideShadow();
     }
   }  
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
 
 interface QueryParams {

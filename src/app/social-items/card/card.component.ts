@@ -1,20 +1,23 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild , OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { first } from 'rxjs/operators';
+import { first , takeUntil } from 'rxjs/operators';
 import { ISocialPost } from 'src/app/models/social-post';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { CardItemToolbarComponent } from '../card-item-toolbar/card-item-toolbar.component';
 import { SocialService } from '../../social/social.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss']
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() post: ISocialPost;
   @Input() shorten: boolean = true;
@@ -53,7 +56,7 @@ export class CardComponent implements OnInit {
 
     this._changeDetector.detectChanges();
 
-    this._route.fragment.pipe( first() ).subscribe(fragment => {
+    this._route.fragment.pipe( first() ).pipe(takeUntil(this.destroy$)).subscribe(fragment => {
       if(fragment && fragment == this.post._id && this.anchor && this.anchor.nativeElement) {
 
         setTimeout(() => {
@@ -87,6 +90,12 @@ export class CardComponent implements OnInit {
 
   stopPropergation(e: Event) {
     e.stopPropagation();
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

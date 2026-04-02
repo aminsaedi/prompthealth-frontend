@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
@@ -12,13 +12,17 @@ import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { environment } from 'src/environments/environment';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-showcase',
   templateUrl: './showcase.component.html',
   styleUrls: ['./showcase.component.scss']
 })
-export class ShowcaseComponent implements OnInit {
+export class ShowcaseComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get selectedShowcase(): Showcase { return this._modalService.data; }
   get user() { return this._profileService.profile; }
@@ -59,7 +63,7 @@ export class ShowcaseComponent implements OnInit {
 
     const query = new GetShowcaseQuery({userId: this.user._id});
     this.isLoading = true;
-    this._sharedService.get('product/get-all' + query.toQueryParamsString()).subscribe((res: IGetShowcaseResult) => {
+    this._sharedService.get('product/get-all' + query.toQueryParamsString()).pipe(takeUntil(this.destroy$)).subscribe((res: IGetShowcaseResult) => {
       this.isLoading = false;
       if (res.statusCode === 200) {
         this.user.setShowcases(res.data.data);
@@ -133,7 +137,7 @@ export class ShowcaseComponent implements OnInit {
     this._modalService.hide();
 
     this.isUploading = true;
-    this._sharedService.deleteContent('product/delete/' + data._id).subscribe((res: IResponseData) => {
+    this._sharedService.deleteContent('product/delete/' + data._id).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isUploading = false;
       if(res.statusCode == 200) {
         this._toastr.success('Removed this member successfully');
@@ -181,5 +185,10 @@ export class ShowcaseComponent implements OnInit {
       this.isUploading = false;
       this._toastr.error('Something wrong. Please try again.');
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

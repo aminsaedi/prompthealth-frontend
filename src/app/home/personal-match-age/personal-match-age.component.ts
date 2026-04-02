@@ -1,19 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { RegisterQuestionnaireService } from 'src/app/dashboard/register-questionnaire.service';
 import { age_range_detail, CheckboxSelectionItem } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
 import { FormItemSelectBoxComponent } from 'src/app/shared/form-item-select-box/form-item-select-box.component';
 import { validators } from 'src/app/_helpers/form-settings';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-personal-match-age',
   templateUrl: './personal-match-age.component.html',
   styleUrls: ['./personal-match-age.component.scss']
 })
-export class PersonalMatchAgeComponent implements OnInit {
+export class PersonalMatchAgeComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public form: FormControl;
   public type: string;
@@ -33,13 +36,15 @@ export class PersonalMatchAgeComponent implements OnInit {
   ) { }
 
   ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionSubmit.unsubscribe();
   }
 
   ngOnInit(): void {
     this.dataAgeTracking = this.dataAge.map(item => {return {id: item.id, label: item.label, value: item.id}});
 
-    this.subscriptionSubmit = this._qService.observeNavigation().subscribe((type) => {
+    this.subscriptionSubmit = this._qService.observeNavigation().pipe(takeUntil(this.destroy$)).subscribe((type) => {
       if(type == 'next'){ this.update(); }
       else if(type == 'back'){ this._qService.goBack(this._route); }
     });

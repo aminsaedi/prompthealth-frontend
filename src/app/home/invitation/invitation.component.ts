@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ICouponData } from 'src/app/models/coupon-data';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-invitation',
   templateUrl: './invitation.component.html',
   styleUrls: ['./invitation.component.scss']
 })
-export class InvitationComponent implements OnInit {
+export class InvitationComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public user: IUserDetail;
   public couponCode: string;
@@ -40,7 +44,7 @@ export class InvitationComponent implements OnInit {
       if (data.code) {
         this.couponCode = data.code;
 
-        this._sharedService.get('user/get-coupon/' + this.couponCode).subscribe((res: any) => {
+        this._sharedService.get('user/get-coupon/' + this.couponCode).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
           sessionStorage.setItem('stripe_coupon_code', JSON.stringify(res.data));
           this.couponData = res.data;
         }, error => {
@@ -62,6 +66,11 @@ export class InvitationComponent implements OnInit {
       route.push('product');
     }
     this._router.navigate(route);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

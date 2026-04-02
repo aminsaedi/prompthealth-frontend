@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -15,13 +15,17 @@ import { SocialService } from 'src/app/social/social.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { IAuthResult } from 'src/app/models/response-data';
 import { Auth2Service } from '../auth2.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'form-auth',
   templateUrl: './form-auth.component.html',
   styleUrls: ['./form-auth.component.scss']
 })
-export class FormAuthComponent implements OnInit, OnChanges {
+export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   @Input() userRole: IUserDetail['roles'] = 'U'; /** U | SP | C | P */
   @Input() authType = 'signin'; /** signin | signup */
@@ -109,7 +113,7 @@ export class FormAuthComponent implements OnInit, OnChanges {
       this.isLoading = true;
       this.changeState.emit('start');
 
-      this._sharedService.socialSignin(data, type).subscribe((res: any) => {
+      this._sharedService.socialSignin(data, type).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         this._sharedService.loader('hide');
 
         if (res.statusCode === 200) {
@@ -231,6 +235,12 @@ export class FormAuthComponent implements OnInit, OnChanges {
     if(toastrMessage) {
       this._toastr.success(toastrMessage);
     }
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

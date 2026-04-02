@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Partner } from '../../models/partner';
 import { SharedService } from '../../shared/services/shared.service';
@@ -8,16 +8,19 @@ import { Router } from '@angular/router';
 import { SortItem } from 'src/app/buttons/button-sort/button-sort.component';
 import { CheckboxSelectionItem, FormItemCheckboxGroupComponent } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
 import { CategoryService } from 'src/app/shared/services/category.service';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { GetCompaniesQuery } from 'src/app/models/get-companies-query';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-listing-product',
   templateUrl: './listing-company.component.html',
   styleUrls: ['./listing-company.component.scss']
 })
-export class ListingCompanyComponent implements OnInit {
+export class ListingCompanyComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   constructor(
     private _router: Router,
@@ -60,6 +63,8 @@ export class ListingCompanyComponent implements OnInit {
   @ViewChild('formTypes') private formTypes: FormItemCheckboxGroupComponent;
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subscriptionTopics?.unsubscribe();
   }
 
@@ -73,7 +78,7 @@ export class ListingCompanyComponent implements OnInit {
     if(this._catService.categoryList) {
       this.initSelectBoxTopics();
     } else {
-      this.subscriptionTopics = this._catService.observeCategoryService().subscribe(() => {
+      this.subscriptionTopics = this._catService.observeCategoryService().pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.subscriptionTopics.unsubscribe();
         this.initSelectBoxTopics();
       });
@@ -114,7 +119,7 @@ export class ListingCompanyComponent implements OnInit {
         keyword: this.currentKeyword,
       });
 
-      this._sharedService.postNoAuth(query.toJson(), 'partner/get-all').subscribe(res => {
+      this._sharedService.postNoAuth(query.toJson(), 'partner/get-all').pipe(takeUntil(this.destroy$)).subscribe(res => {
         if(res.statusCode == 200) {
           this.products = res.data.data.map(item => new Partner(item));
           resolve();

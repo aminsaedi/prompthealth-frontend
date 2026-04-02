@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { EmbedVideoService } from 'ngx-embed-video';
 import { ToastrService } from 'ngx-toastr';
@@ -12,13 +12,17 @@ import { validators } from 'src/app/_helpers/form-settings';
 import { pattern } from 'src/app/_helpers/pattern';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-video-manager',
   templateUrl: './video-manager.component.html',
   styleUrls: ['./video-manager.component.scss']
 })
-export class VideoManagerComponent implements OnInit {
+export class VideoManagerComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   get selectedVideo(): IVideo { return this._modalService.data; }
   get user() { return this._profileService.profile; }
@@ -104,7 +108,7 @@ export class VideoManagerComponent implements OnInit {
 
   removeVideo(video: IVideo) {    
     this.isUploading = true;
-    this._sharedService.deleteContent(`user/removeVideo/${this.user._id}/${video._id}`).subscribe((res: IResponseData) => {
+    this._sharedService.deleteContent(`user/removeVideo/${this.user._id}/${video._id}`).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
       this.isUploading = false;
       if (res.statusCode === 200) {
         this._toastr.success('Removed successfully');
@@ -135,7 +139,7 @@ export class VideoManagerComponent implements OnInit {
 
     this.isUploading = true;
     const path = this.selectedVideo ? ('user/updateVideo/' + this.selectedVideo._id) : 'user/addVideoSingle';
-    this._sharedService.post(this.formEditor.value, path).subscribe((res: ISaveProfileResult) => {
+    this._sharedService.post(this.formEditor.value, path).pipe(takeUntil(this.destroy$)).subscribe((res: ISaveProfileResult) => {
       this.isUploading = false;
       if(res.statusCode == 200) {
         this.user.update({videos: res.data.videos});
@@ -149,5 +153,10 @@ export class VideoManagerComponent implements OnInit {
       this.isUploading = false;
       this._toastr.error('Something went wrong. Please try again');
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

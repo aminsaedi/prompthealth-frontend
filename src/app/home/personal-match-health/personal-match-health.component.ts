@@ -1,17 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription , Subject } from 'rxjs';
 import { RegisterQuestionnaireService } from 'src/app/dashboard/register-questionnaire.service';
 import { FormItemCustomerHealthComponent } from 'src/app/shared/form-item-customer-health/form-item-customer-health.component';
 import { Questionnaire, QuestionnaireAnswer, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-personal-match-health',
   templateUrl: './personal-match-health.component.html',
   styleUrls: ['./personal-match-health.component.scss']
 })
-export class PersonalMatchHealthComponent implements OnInit {
+export class PersonalMatchHealthComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
 
   public qBackground: Questionnaire;
   public selected: string[];
@@ -29,12 +32,14 @@ export class PersonalMatchHealthComponent implements OnInit {
     private _fb: FormBuilder,
   ) { }
 
-  ngOnDestroy(){ this.subscriptionSubmit.unsubscribe(); }
+  ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete(); this.subscriptionSubmit.unsubscribe(); }
 
   async ngOnInit() {
     this.form = this._fb.group({});
     
-    this.subscriptionSubmit = this._qService.observeNavigation().subscribe((type) => {
+    this.subscriptionSubmit = this._qService.observeNavigation().pipe(takeUntil(this.destroy$)).subscribe((type) => {
       if(type == 'next'){ this.update(); }
       else if(type == 'back'){ this._qService.goBack(this._route); }
     });
