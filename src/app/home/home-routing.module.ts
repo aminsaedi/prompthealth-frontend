@@ -27,8 +27,14 @@ import { AboutPartnerComponent } from "./about-partner/about-partner.component";
 import { PressReleaseComponent } from "./press-release/press-release.component";
 import { OnlineAcademyComponent } from "./online-academy/online-academy.component";
 import { TestimonialComponent } from "./testimonial/testimonial.component";
+import { HomeComponent } from "./home.component";
 
 const routes: Routes = [
+  {
+    path: '',
+    component: HomeComponent,
+    pathMatch: 'full',
+  },
   {
     path: "faq",
     component: FAQComponent
