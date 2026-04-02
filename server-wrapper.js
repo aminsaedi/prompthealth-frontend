@@ -383,6 +383,46 @@ function injectJsonLd(url, html) {
   return html;
 }
 
+// Defer Angular scripts until user interaction or timeout
+function deferScripts(html) {
+  if (typeof html !== 'string') return html;
+
+  // Convert Angular bundle scripts: src= -> data-lazy-src=
+  // Match script tags with src containing hashed Angular bundles (runtime, polyfills, main, vendor, etc.)
+  // But skip inline scripts and third-party scripts
+  html = html.replace(
+    /<script\s+src="((?:runtime|polyfills|main|vendor|styles|scripts|common|\d+)-(?:es2015|es5)\.[^"]+\.js)"\s*(type="module"|nomodule)?\s*><\/script>/g,
+    function(match, src, attr) {
+      return '<script data-lazy-src="' + src + '"' + (attr ? ' ' + attr : '') + '></script>';
+    }
+  );
+
+  // Add the loader script before </body>
+  const loaderScript = `<script>
+(function(){
+  var loaded=false;
+  function loadApp(){
+    if(loaded)return;loaded=true;
+    var scripts=document.querySelectorAll("script[data-lazy-src]");
+    scripts.forEach(function(s){
+      var ns=document.createElement("script");
+      if(s.getAttribute("type"))ns.type=s.getAttribute("type");
+      if(s.hasAttribute("nomodule"))ns.setAttribute("nomodule","");
+      ns.src=s.getAttribute("data-lazy-src");
+      s.parentNode.replaceChild(ns,s);
+    });
+  }
+  ["click","scroll","keydown","touchstart","mousemove"].forEach(function(e){
+    document.addEventListener(e,loadApp,{once:true,passive:true});
+  });
+  setTimeout(loadApp,5000);
+})();
+</script>`;
+
+  html = html.replace('</body>', loaderScript + '</body>');
+  return html;
+}
+
 // Simple cache
 const cache = new Map();
 const CACHE_TTL = 5 * 60 * 1000;
@@ -411,6 +451,7 @@ const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCac
     // Inject JSON-LD before caching
     if (typeof body === 'string' && body.length > 500) {
       body = injectJsonLd(req.originalUrl, body);
+      body = deferScripts(body);
     }
     if (typeof body === 'string' && body.length > 500 && res.statusCode === 200) {
       if (cache.size >= MAX_CACHE) cache.delete(cache.keys().next().value);

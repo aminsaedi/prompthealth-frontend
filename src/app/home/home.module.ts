@@ -24,7 +24,6 @@ import { PersonalMatchHealthComponent } from "./personal-match-health/personal-m
 import { PersonalMatchAgeComponent } from "./personal-match-age/personal-match-age.component";
 import { PersonalMatchComponent } from "./personal-match/personal-match.component";
 import { PersonalMatchGenderComponent } from "./personal-match-gender/personal-match-gender.component";
-import { AuthModule } from "../auth/auth.module";
 import { SitemapComponent } from './sitemap/sitemap.component';
 import { CardTestimonialComponent } from './_elements/card-testimonial/card-testimonial.component';
 import { ExpertFinderComponent } from './expert-finder/expert-finder.component';
@@ -89,7 +88,6 @@ import { OnlineAcademyComponent } from './online-academy/online-academy.componen
     ReactiveFormsModule,
     SharedModule,
     ButtonsModule,
-    AuthModule,
     ModalModule.forRoot(),
   ],
 
