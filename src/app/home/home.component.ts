@@ -86,21 +86,21 @@ export class HomeComponent implements OnInit , OnDestroy {
   public isSlideshowReady = false;
 
   public slideshow = [
-    "slideshow-1.png",
-    "slideshow-2.png",
-    "slideshow-3.png",
-    "slideshow-4.png",
-    "slideshow-5.png",
-    "slideshow-6.png",
+    "slideshow-1.webp",
+    "slideshow-2.webp",
+    "slideshow-3.webp",
+    "slideshow-4.webp",
+    "slideshow-5.webp",
+    "slideshow-6.webp",
   ];
 
   public slideshowReverse = [
-    "slideshow-6.png",
-    "slideshow-5.png",
-    "slideshow-4.png",
-    "slideshow-3.png",
-    "slideshow-2.png",
-    "slideshow-1.png",
+    "slideshow-6.webp",
+    "slideshow-5.webp",
+    "slideshow-4.webp",
+    "slideshow-3.webp",
+    "slideshow-2.webp",
+    "slideshow-1.webp",
   ];
 
   private timerResize: any = null;
