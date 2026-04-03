@@ -16,10 +16,19 @@ export class ProfileImageComponent implements OnInit {
 
   public _option: ProfileImageOption;
   
+  private readonly defaultAvatar = '/assets/img/default_user.jpg';
+
   constructor() { }
 
   ngOnInit(): void {
     this._option = new ProfileImageOption(this.option);
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img.src !== this.defaultAvatar) {
+      img.src = this.defaultAvatar;
+    }
   }
 }
 
