@@ -15,8 +15,9 @@ export class CategoryViewerController {
 
   getIconOf(cat: Category): string {
     const img = cat.image;
+    if (!img) return 'preventative-health';
     const img2 = img.toLowerCase().replace(/_/g, '-').replace('.png', '');
-    return img2
+    return img2;
   }
 
   subCategoriesString(parent: Category) {

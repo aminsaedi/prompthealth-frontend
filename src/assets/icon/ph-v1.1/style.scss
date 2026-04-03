@@ -8067,7 +8067,13 @@ i {
 }
 .icon-preventative-health {
   &:before {
-    content: $icon-preventative-health;     
+    content: $icon-preventative-health;
+    color: #0055c7;
+  }
+}
+.icon-oral-care {
+  &:before {
+    content: $icon-oral-care;
     color: #0055c7;
   }
 }
