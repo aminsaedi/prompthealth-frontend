@@ -462,5 +462,6 @@ export type IconName =
 'file-shredder'|
 'wifi-slash'|
 'nutritutan'|
+'oral-care'|
 'clipboard'|
 'star'
