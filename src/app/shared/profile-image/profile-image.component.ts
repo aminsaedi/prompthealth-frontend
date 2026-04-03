@@ -8,6 +8,8 @@ import { IconName } from 'src/app/models/icon-ph';
 })
 export class ProfileImageComponent implements OnInit {
 
+  private static readonly DEFAULT_AVATAR = '/assets/img/default_user.jpg';
+
   @Input() image: string;
   @Input() alt: string = '';
   @Input() size: number = 40; // unit: px
@@ -15,11 +17,18 @@ export class ProfileImageComponent implements OnInit {
   @Input() option: IProfileImageOption = {}
 
   public _option: ProfileImageOption;
-  
+
   constructor() { }
 
   ngOnInit(): void {
     this._option = new ProfileImageOption(this.option);
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img.src !== ProfileImageComponent.DEFAULT_AVATAR) {
+      img.src = ProfileImageComponent.DEFAULT_AVATAR;
+    }
   }
 }
 

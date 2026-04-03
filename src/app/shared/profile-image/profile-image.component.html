@@ -11,6 +11,7 @@ class="profile-image-container"
   loading="lazy"
   [attr.width]="size"
   [attr.height]="size"
+  (error)="onImageError($event)"
   >
   <i *ngIf="!image" 
   [iconPh]="_option.dummyIcon"
