@@ -4730,3 +4730,7 @@ i {
 .icon-preventative-health:before {
   content: "\eb9b";
 }
+.icon-oral-care:before {
+  content: "\eb9b";
+  color: #0055c7;
+}
