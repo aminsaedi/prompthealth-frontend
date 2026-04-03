@@ -26,9 +26,8 @@ export class ProfileImageComponent implements OnInit {
 
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
-    if (img.src !== ProfileImageComponent.DEFAULT_AVATAR) {
-      img.src = ProfileImageComponent.DEFAULT_AVATAR;
-    }
+    img.onerror = null;
+    img.src = ProfileImageComponent.DEFAULT_AVATAR;
   }
 }
 
