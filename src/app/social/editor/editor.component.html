@@ -261,28 +261,12 @@
 
           <div class="mt-30p">
             <label class="subtitle2 text-label">Select topics</label>
-            <form-item-service #formItemService [data]="f.tags.value" [option]="{ showInlineWhenEnabled: true }"
+            <form-item-service #formItemService [data]="f.tags.value" [option]="{}"
               (changeValue)="onChangeTags($event)"></form-item-service>
             <form-item-errors [submitted]="isSubmitted" [controller]="f.tags"></form-item-errors>
           </div>
 
           <ng-container *ngIf="isArticle">
-            <div class="mt-15p">
-              <label class="subtitle2 text-label">Category</label>
-              <select class="form-control" [formControl]="f.categoryId" (change)="onChangeCategory($event.target.value)">
-                <option value="">— Select category —</option>
-                <option *ngFor="let cat of categories" [value]="cat._id">{{ cat.item_text }}</option>
-              </select>
-            </div>
-
-            <div *ngIf="subcategories.length > 0" class="mt-15p">
-              <label class="subtitle2 text-label">Subcategory</label>
-              <select class="form-control" [formControl]="f.subcategoryId">
-                <option value="">— Select subcategory —</option>
-                <option *ngFor="let sub of subcategories" [value]="sub._id">{{ sub.item_text }}</option>
-              </select>
-            </div>
-
             <div class="mt-15p">
               <label class="subtitle2 text-label">Location <span class="text-placeholder body2">(optional — e.g. "Toronto, ON")</span></label>
               <input type="text" class="form-control" placeholder="City or region..." [formControl]="f.location" />

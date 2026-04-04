@@ -23,7 +23,6 @@ import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.componen
 import { SocialService } from '../social.service';
 import { CheckboxSelectionItem } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
 import { takeUntil } from 'rxjs/operators';
-import { CategoryService, Category, SubCategory } from 'src/app/shared/services/category.service';
 
 @Component({
   selector: 'app-editor',
@@ -88,9 +87,6 @@ export class EditorComponent implements OnInit , OnDestroy {
     // {id: 'company', label: 'Company', value: 'P'},
   ];
 
-  public categories: Category[] = [];
-  public subcategories: SubCategory[] = [];
-
   private _s3 = environment.config.AWS_S3;
   private subscriptionLoginStatus: Subscription;
 
@@ -109,7 +105,6 @@ export class EditorComponent implements OnInit , OnDestroy {
     private _uService: UniversalService,
     private _socialService: SocialService,
     private _modalService: ModalService,
-    private _categoryService: CategoryService,
   ) { }
 
   ngOnDestroy() {
@@ -140,10 +135,6 @@ export class EditorComponent implements OnInit , OnDestroy {
         this.user,
       );
 
-      if (this.editorType === 'ARTICLE') {
-        this.loadCategories();
-      }
-
       const isOnline = this.f.eventType ? this.f.eventType.value == 'ONLINE' : false;
       this.formCheckboxOnlineEvent = new FormControl(isOnline);
   
@@ -163,22 +154,6 @@ export class EditorComponent implements OnInit , OnDestroy {
         minute: 0
       }  
     });
-  }
-
-  async loadCategories() {
-    this.categories = await this._categoryService.getCategoryAsync();
-    const selectedCategoryId = this.f.categoryId?.value;
-    if (selectedCategoryId) {
-      const cat = this.categories.find(c => c._id === selectedCategoryId);
-      this.subcategories = cat ? cat.subCategory : [];
-    }
-  }
-
-  onChangeCategory(categoryId: string) {
-    this.f.categoryId.setValue(categoryId || null);
-    this.f.subcategoryId.setValue(null);
-    const cat = this.categories.find(c => c._id === categoryId);
-    this.subcategories = cat ? cat.subCategory : [];
   }
 
   observeLoginStatus() {
