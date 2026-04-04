@@ -155,7 +155,11 @@ export class PageComponent implements OnInit , OnDestroy {
     const seoTitle = (this.post.isArticle && this.post.metaTitle) ? this.post.metaTitle : title;
     const seoDescription = (this.post.isArticle && this.post.metaDescription) ? this.post.metaDescription : this.post.summary;
 
-    this._uService.setMeta(this._router.url, {
+    const canonicalPath = (this.post.isArticle && this.post.slug && !this._isSlugRoute)
+      ? '/community/article/' + this.post.slug
+      : this._router.url;
+
+    this._uService.setMeta(canonicalPath, {
       title: seoTitle + ' | PromptHealth Community',
       description: seoDescription,
       pageType: 'article',

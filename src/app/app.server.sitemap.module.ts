@@ -314,9 +314,12 @@ function getSitemapSocial(): Promise<string> {
 
       contentIds.forEach(item => {
         const lastmod = item.updatedAt ? new Date(item.updatedAt).toISOString().split('T')[0] : '';
+        const loc = (item.contentType === 'ARTICLE' && item.slug)
+          ? `${baseURL}/community/article/${item.slug}`
+          : `${baseURL}/community/content/${item._id}`;
         xml += `
           <url>
-            <loc>${baseURL}/community/content/${item._id}</loc>
+            <loc>${loc}</loc>
             ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
           </url>
         `;
@@ -401,13 +404,13 @@ function getAllPractitionerIds(): Promise<String[]> {
   });
 }
 
-function getAllSocialContentIds(): Promise<{_id: string, updatedAt: string}[]> {
+function getAllSocialContentIds(): Promise<{_id: string, updatedAt: string, contentType: string, slug?: string}[]> {
   return new Promise((resolve) => {
-    const contents: {_id: string, updatedAt: string}[] = [];
+    const contents: {_id: string, updatedAt: string, contentType: string, slug?: string}[] = [];
     axios.get(apiURL + 'note/filter?count=10000').then(res => {
       if(res.status == 200) {
-        res.data.data.data.forEach((d: {_id: string, updatedAt: string}) => {
-          contents.push({_id: d._id, updatedAt: d.updatedAt});
+        res.data.data.data.forEach((d: {_id: string, updatedAt: string, contentType: string, slug?: string}) => {
+          contents.push({_id: d._id, updatedAt: d.updatedAt, contentType: d.contentType, slug: d.slug});
         });
       }
       resolve(contents);
