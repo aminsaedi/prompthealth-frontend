@@ -32,4 +32,5 @@ export interface IFAQItem {
   q: string;
   a: string;
   opened: boolean;
+  category?: string;
 }

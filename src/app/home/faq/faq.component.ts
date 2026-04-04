@@ -1,20 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
+
+export interface IFAQCategory {
+  category: string;
+  items: IFAQItem[];
+}
 
 @Component({
   selector: 'app-faq',
   templateUrl: './faq.component.html',
   styleUrls: ['./faq.component.scss']
 })
-export class FAQComponent implements OnInit {
+export class FAQComponent implements OnInit, OnDestroy {
 
-  public faqs = faqs;
+  public faqCategories = faqCategories;
 
   constructor(
     private _router: Router,
-    private _uService: UniversalService,  
+    private _uService: UniversalService,
+    private _jsonLdService: JsonLdService,
   ) { }
 
   ngOnInit(): void {
@@ -22,58 +29,151 @@ export class FAQComponent implements OnInit {
       title: 'Frequently Asked Questions (FAQ) | PromptHealth',
       description: 'Here are some of the most frequently asked questions we get about PromptHealth.'
     });
+
+    const allItems = faqCategories.flatMap(cat => cat.items);
+    this._jsonLdService.setJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      'mainEntity': allItems.map(item => ({
+        '@type': 'Question',
+        'name': item.q,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': item.a,
+        }
+      }))
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._jsonLdService.removeJsonLd();
   }
 }
 
-const faqs: IFAQItem[] = [
+const faqCategories: IFAQCategory[] = [
   {
-    q: 'What is PromptHealth?', 
-    a: `PromptHealth is a network of holistic care practitioners. It empowers providers to showcase their knowledge in different formats for better online exposure and to educate the wellness community. They can also collaborate with other practitioners and with PromptHealth, itself. Wellness seekers can learn directly from the trusted sources and connect when the need arises.`,
-    opened: false,
+    category: 'General Questions',
+    items: [
+      {
+        q: 'What is PromptHealth?',
+        a: 'PromptHealth is an AI-powered healthcare discovery platform that helps patients find trusted healthcare professionals and helps providers become more discoverable online. Unlike traditional directories, PromptHealth allows healthcare professionals to publish educational content such as articles and videos, helping them build authority and improve visibility in modern search environments — including AI-powered tools. Patients can search for services, watch educational videos, read expert content, and connect with healthcare providers who share helpful information about treatments and care options.',
+        opened: false,
+      },
+      {
+        q: 'How is PromptHealth different from traditional directories?',
+        a: 'Traditional directories list providers. PromptHealth helps providers build authority and visibility. Instead of only showing names and contact details, PromptHealth allows healthcare professionals to publish educational articles, share expert videos, build searchable authority profiles, increase visibility in AI-powered searches, and reach patients before they book care. This makes PromptHealth both a discovery platform and a visibility engine.',
+        opened: false,
+      },
+    ]
   },
   {
-    q: 'How does PromptHealth work?', 
-    a: `You can navigate PromptHealth based on your need or goal. You can search, compare options, learn from different options provided based on preferences, and ultimately connect and book with a provider fully informed.
-    <br><br>
-    Navigating the site and learning from different practitioners is easy to do with no login required. The only time you need to sign up is at the time of booking on the site or when using the app.
-    `,
-    opened: false,
+    category: 'For Patients',
+    items: [
+      {
+        q: 'How do I find a healthcare provider?',
+        a: 'You can search on PromptHealth by service (example: dental implants, physiotherapy, nutrition), location, specialty, or symptoms/treatment needs. You can also watch educational videos, read expert articles, learn about treatment options, and connect directly with providers. PromptHealth helps patients make informed decisions before booking care.',
+        opened: false,
+      },
+      {
+        q: 'Can I book appointments through PromptHealth?',
+        a: 'Some providers offer direct booking options. Others provide contact details so patients can connect with the clinic directly. Booking options vary depending on the provider.',
+        opened: false,
+      },
+      {
+        q: 'Is the information on PromptHealth trustworthy?',
+        a: 'Yes. Healthcare professionals on PromptHealth are responsible for providing accurate, professional information based on their training and clinical experience. Educational content is designed to help patients better understand their options and make informed healthcare decisions.',
+        opened: false,
+      },
+    ]
   },
   {
-    q: 'How do I find a practitioner?', 
-    a: `PromptHealth has a number of ways for you to find the right wellness provider.
-      <ul>
-        <li>You can simply scroll through and browse the providers listed on the marketplace based on location or virtual options.There are additional filters that help you narrow down your search.</li>
-        <li>You can start with the search bar and type in a practitioner type (e.g.. chiropractor), condition (e.g. back pain), or search a specific practitioner (e.g. John Smith). You can also type in your zip code to refine searches to your general area.</li>
-        <li>If you need a little more assistance, you can use the personal match to help you filter options based on your specific needs.</li>
-      </ul>
-    `,
-    opened: false,
+    category: 'For Healthcare Professionals',
+    items: [
+      {
+        q: 'Why should I join PromptHealth?',
+        a: 'PromptHealth helps healthcare professionals become discoverable where patients are searching today — including search engines, video platforms, and AI-powered search tools. By publishing educational content, professionals can increase online visibility, build authority in their field, educate patients, attract new patients, and stay competitive in digital healthcare discovery.',
+        opened: false,
+      },
+      {
+        q: 'Is it free to join PromptHealth?',
+        a: 'Yes. Healthcare professionals can create a free listing, which includes basic profile, services offered, location details, and contact information. This allows patients to discover your practice and learn about your services.',
+        opened: false,
+      },
+      {
+        q: 'What is the Authority Visibility Tier?',
+        a: 'The Authority Visibility Tier is designed for professionals who want to significantly increase their online visibility and authority. This premium option may include educational article publishing, video integration, SEO optimization, AI discovery optimization, priority profile placement, and authority-building content support.',
+        opened: false,
+      },
+      {
+        q: 'How does PromptHealth help with AI visibility?',
+        a: 'PromptHealth creates structured, searchable content that modern search engines and AI tools can understand. This includes educational articles, embedded expert videos, optimized provider profiles, and organized healthcare topics. These elements improve visibility in AI-generated search results, conversational search tools, voice search platforms, and modern search engines.',
+        opened: false,
+      },
+      {
+        q: 'Do I need to create my own content?',
+        a: 'Not necessarily. PromptHealth can support content creation by helping providers publish educational articles, treatment explanations, frequently asked question content, and video-based educational material. Many providers begin with simple educational topics and expand their content over time.',
+        opened: false,
+      },
+    ]
   },
   {
-    q: 'How can I learn more about each service?', 
-    a: 'We are the first social platform in health and wellness that enables providers to create educational content in different formats so you can keep coming back to learn from them. You can follow different providers based on the category that you are most interested in (e.g. mental health) and receive notification every time a new health information is shared in that category. This allows you to learn about the topics of your interest in whatever format you prefer such as voice, text, picture or video. You can learn more about the providers and eventually connect with them when needed.',
-    opened: false,
+    category: 'AI Video & Content Creation',
+    items: [
+      {
+        q: 'Can I create videos without filming every time?',
+        a: 'Yes. PromptHealth offers AI Clone Video options, allowing healthcare professionals to create educational videos efficiently without repeated filming. AI Clone videos use your voice and likeness to generate professional educational content based on common patient questions and treatment topics.',
+        opened: false,
+      },
+      {
+        q: 'Do AI Clone videos replace traditional filming?',
+        a: 'No. AI Clone videos are designed to complement traditional filming, not replace it. Many professionals use a hybrid approach that includes professional video shoots, AI-generated educational videos, short-form educational content, and article-based education.',
+        opened: false,
+      },
+      {
+        q: 'What types of videos work best?',
+        a: 'Educational videos that answer patient questions perform best. Examples include treatment explanations, procedure overviews, recovery expectations, preventive care tips, and common patient concerns.',
+        opened: false,
+      },
+    ]
   },
   {
-    q: 'How do I book a practitioner?', 
-    a: 'Once you’ve found your provider out of the options you are provided, you can either directly book with them if they already have a direct booking system, or use our request booking form if they do not have a booking system. The payment process is handled by each provider directly as per their policy.',
-    opened: false,
+    category: 'Content & Visibility',
+    items: [
+      {
+        q: 'Why are articles important on PromptHealth?',
+        a: 'Articles help answer patient questions and improve discoverability online. They also improve search visibility, help AI tools understand provider expertise, build authority in specific treatment areas, and support long-term discoverability.',
+        opened: false,
+      },
+      {
+        q: 'Why are videos important?',
+        a: 'Videos help patients visually understand treatments and build trust with healthcare providers. They also increase engagement, improve discoverability, support AI search visibility, and enhance patient education.',
+        opened: false,
+      },
+      {
+        q: 'Can my content appear in AI search results?',
+        a: 'Yes. PromptHealth content is structured to improve visibility in modern search environments, including AI-driven platforms. Publishing educational content increases the chances of appearing in AI-generated answers, topic-based searches, conversational search platforms, and knowledge-based discovery results.',
+        opened: false,
+      },
+    ]
   },
   {
-    q: 'Do I need to enter any personal health information in?',
-    a: 'No. We do not require users to enter in any personal health information. Our personal match option that helps users filter care options asks for some basic demographic information but it is not mandatory.',
-    opened: false,
+    category: 'Platform & Account Questions',
+    items: [
+      {
+        q: 'How do I update my profile?',
+        a: 'You can log into your account and update services, bio, contact details, credentials, and educational content. Keeping your profile current improves visibility and helps patients find accurate information.',
+        opened: false,
+      },
+      {
+        q: 'Who can join PromptHealth?',
+        a: 'PromptHealth is designed for licensed and certified healthcare professionals, including dentists, physicians, physiotherapists, chiropractors, mental health professionals, nutrition specialists, wellness providers, and preventive healthcare professionals. Additional specialties are continuously added.',
+        opened: false,
+      },
+      {
+        q: 'How do I get started?',
+        a: 'You can begin by creating a free profile on PromptHealth. From there, you can add your services, publish educational content, explore advanced visibility options, and start building your digital presence.',
+        opened: false,
+      },
+    ]
   },
-
-  {
-    q: 'How does PromptHealth verify its practitioners?',
-    a: `We have done our due diligence by doing a qualitative review on each provider upon sign up to ensure credibility of information provided. The providers with a verified badge in the form of a blue check mark beside their names have provided proof of their certification.`,    
-    opened: false,
-  },
-  {
-    q: 'I want my search to be even more personalized, but don’t see a filter that applies. What can I do?',
-    a: `If you have suggestions for new filters to help improve your search further, or you have a wish list, please contact us at <a href="mailto:info@prompthealth.ca">info@prompthealth.ca</a>. We would love your feedback and always strive to improve our platform to offer what you need.`,
-    opened: false,
-  },
-]
+];
