@@ -106,8 +106,6 @@ export class EditorService {
         isAcademy: new FormControl(d?.isAcademy ? d.isAcademy : false),
         isFreeAcademy: new FormControl(d?.isFreeAcademy ? d.isFreeAcademy : false),
         rolesRestrictedTo: new FormControl(rolesRestrictedTo),
-        categoryId: new FormControl(d?.categoryId || null),
-        subcategoryId: new FormControl(d?.subcategoryId || null),
         location: new FormControl(d?.location || ''),
         metaTitle: new FormControl(d?.metaTitle || ''),
         metaDescription: new FormControl(d?.metaDescription || ''),
@@ -228,8 +226,6 @@ export interface ISaveQuery {
   isFreeAcademy?: boolean;
   rolesRestrictedTo?: string[];
 
-  categoryId?: string;
-  subcategoryId?: string;
   location?: string;
   metaTitle?: string;
   metaDescription?: string;
@@ -263,8 +259,6 @@ export class SaveQuery implements ISaveQuery {
   get isAcademy() { return this.data.isAcademy || false; }
   get isFreeAcademy() { return this.data.isFreeAcademy || false; }
   get rolesRestrictedTo() { return this.data.rolesRestrictedTo || null; }
-  get categoryId() { return this.data.categoryId || null; }
-  get subcategoryId() { return this.data.subcategoryId || null; }
   get location() { return this.data.location || null; }
   get metaTitle() { return this.data.metaTitle || null; }
   get metaDescription() { return this.data.metaDescription || null; }
@@ -288,8 +282,6 @@ export class SaveQuery implements ISaveQuery {
         online_academy_category: this.online_academy_category,
         isAcademy: this.isAcademy,
         isFreeAcademy: this.isFreeAcademy,
-        ... (this.categoryId) && {categoryId: this.categoryId},
-        ... (this.subcategoryId) && {subcategoryId: this.subcategoryId},
         ... (this.location) && {location: this.location},
         ... (this.metaTitle) && {metaTitle: this.metaTitle},
         ... (this.metaDescription) && {metaDescription: this.metaDescription},
