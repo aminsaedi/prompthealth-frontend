@@ -30,7 +30,7 @@ export class FAQComponent implements OnInit, OnDestroy {
       description: 'Here are some of the most frequently asked questions we get about PromptHealth.'
     });
 
-    const allItems = faqCategories.flatMap(cat => cat.items);
+    const allItems = ([] as IFAQItem[]).concat(...faqCategories.map(cat => cat.items));
     this._jsonLdService.setJsonLd({
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
