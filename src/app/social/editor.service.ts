@@ -106,6 +106,11 @@ export class EditorService {
         isAcademy: new FormControl(d?.isAcademy ? d.isAcademy : false),
         isFreeAcademy: new FormControl(d?.isFreeAcademy ? d.isFreeAcademy : false),
         rolesRestrictedTo: new FormControl(rolesRestrictedTo),
+        categoryId: new FormControl(d?.categoryId || null),
+        subcategoryId: new FormControl(d?.subcategoryId || null),
+        location: new FormControl(d?.location || ''),
+        metaTitle: new FormControl(d?.metaTitle || ''),
+        metaDescription: new FormControl(d?.metaDescription || ''),
       });
     } else if (type == 'NOTE') {
       this._form = new FormGroup({
@@ -222,6 +227,12 @@ export interface ISaveQuery {
   isAcademy?: boolean;
   isFreeAcademy?: boolean;
   rolesRestrictedTo?: string[];
+
+  categoryId?: string;
+  subcategoryId?: string;
+  location?: string;
+  metaTitle?: string;
+  metaDescription?: string;
 }
 
 export class SaveQuery implements ISaveQuery {
@@ -252,8 +263,13 @@ export class SaveQuery implements ISaveQuery {
   get isAcademy() { return this.data.isAcademy || false; }
   get isFreeAcademy() { return this.data.isFreeAcademy || false; }
   get rolesRestrictedTo() { return this.data.rolesRestrictedTo || null; }
+  get categoryId() { return this.data.categoryId || null; }
+  get subcategoryId() { return this.data.subcategoryId || null; }
+  get location() { return this.data.location || null; }
+  get metaTitle() { return this.data.metaTitle || null; }
+  get metaDescription() { return this.data.metaDescription || null; }
 
-  toJson() { 
+  toJson() {
     const data: ISaveQuery = {
       contentType: this.contentType,
       authorId: this.authorId,
@@ -265,19 +281,24 @@ export class SaveQuery implements ISaveQuery {
       ... (this.images.length > 0) && {images: this.images},
       ... (this.voice) && {voice: this.voice},
       ... (this.tags.length > 0) && {tags: this.tags},
-     
+
       ... (this.contentType == 'ARTICLE') && {
         rolesRestrictedTo: this.rolesRestrictedTo,
         isNews: this.isNews,
         online_academy_category: this.online_academy_category,
         isAcademy: this.isAcademy,
         isFreeAcademy: this.isFreeAcademy,
+        ... (this.categoryId) && {categoryId: this.categoryId},
+        ... (this.subcategoryId) && {subcategoryId: this.subcategoryId},
+        ... (this.location) && {location: this.location},
+        ... (this.metaTitle) && {metaTitle: this.metaTitle},
+        ... (this.metaDescription) && {metaDescription: this.metaDescription},
       },
       ... (this.contentType == 'ARTICLE' || this.contentType == 'EVENT') && {
         status: this.status,
         image: this.image,
         title: this.title,
-      }, 
+      },
 
       ... (this.contentType == 'EVENT') && {
         eventType: this.eventType,

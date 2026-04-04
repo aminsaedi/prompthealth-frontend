@@ -12,7 +12,13 @@ export interface ISocialPost {
   status?: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'HIDDEN';
   description?: string;
 
+  slug?: string;
   title?: string;
+  categoryId?: string;
+  subcategoryId?: string;
+  location?: string;
+  metaTitle?: string;
+  metaDescription?: string;
   voice?: string;
   image?: string;  /** cover photo for article | event */
   images?: string[]; /** content photo for note | promo */
@@ -190,11 +196,12 @@ export class SocialPostBase implements ISocialPost {
 
   get comments() { return this._comments; };
 
-  get linkToPost() { return '/community/content/' + this._id; }
-  // get linkToPost() { 
-  //   const type = this.isNote ? 'note' : this.isArticle ? 'article' : this.isEvent ? 'event' : 'content';
-  //   return `/community/${type}/${this._id}`; 
-  // }
+  get linkToPost() {
+    if (this.isArticle && this.data.slug) {
+      return '/community/article/' + this.data.slug;
+    }
+    return '/community/content/' + this._id;
+  }
 
   protected _s3 = environment.config.AWS_S3; 
   protected _summary: string;

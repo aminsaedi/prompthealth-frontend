@@ -70,9 +70,9 @@ const routes: Routes = [
     },
 
     { path: 'content/:postid', component: PageComponent },
+    { path: 'article/:slug', component: PageComponent, data: {routeType: 'slug'} },
     // { path: 'note/:postid', component: PageComponent, data: {contentType: 'note'} },
     // { path: 'event/:postid', component: PageComponent, data: {contentType: 'event'} },
-    // { path: 'article/:postid', component: PageComponent, data: {contentType: 'article'} },
     { path: 'content', pathMatch: 'full', redirectTo: 'feed' },
 
     { path: 'drafts', component: DraftsComponent, canActivate: [GuardIfNotEligibleToAcessEditorGuard] },

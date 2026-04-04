@@ -32,6 +32,7 @@ export class PageComponent implements OnInit , OnDestroy {
 
   public post: ISocialPost;
   private postId: string;
+  private _isSlugRoute: boolean = false;
 
   public isReturnToAppShown = false;
   public relatedPosts: ISocialPost[] = [];
@@ -56,8 +57,10 @@ export class PageComponent implements OnInit , OnDestroy {
   }
 
   ngOnInit(): void {
-    this._route.params.subscribe((param: {postid: string}) => {
-      this.postId = param.postid;
+    this._route.params.subscribe((param: {postid?: string, slug?: string}) => {
+      const routeType = this._route.snapshot.data?.routeType;
+      this.postId = routeType === 'slug' ? param.slug : param.postid;
+      this._isSlugRoute = routeType === 'slug';
       this.initPost();
 
       //when url is changed within this component after second time, then returnToApp should be false;
@@ -93,7 +96,9 @@ export class PageComponent implements OnInit , OnDestroy {
 
   fetchPost() {
     return new Promise((resolve, reject) => {
-      const path = `note/${this.postId}`;
+      const path = this._isSlugRoute
+        ? `blog/get-by-slug/${this.postId}`
+        : `note/${this.postId}`;
       this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentResult) => {
         if(res.statusCode === 200) {
           this._socialService.saveCacheSingle(res.data);
@@ -147,29 +152,43 @@ export class PageComponent implements OnInit , OnDestroy {
       title = this.post.title;
     }
 
+    const seoTitle = (this.post.isArticle && this.post.metaTitle) ? this.post.metaTitle : title;
+    const seoDescription = (this.post.isArticle && this.post.metaDescription) ? this.post.metaDescription : this.post.summary;
+
     this._uService.setMeta(this._router.url, {
-      title: title + ' | PromptHealth Community',
-      description: this.post.summary,
+      title: seoTitle + ' | PromptHealth Community',
+      description: seoDescription,
       pageType: 'article',
       image: this.post.coverImage,
       imageType: this.post.coverImageType,
-      imageAlt: 'A note from ' + this.post.authorName,
+      imageAlt: title,
       ...this.pathToApp && {iosLink: this.pathToApp},
     });
 
-    this._jsonLdService.setJsonLd([
-      {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        'headline': title,
-        'description': this.post.summary || '',
-        'datePublished': this.post.createdAt || '',
-        'author': {
-          '@type': 'Person',
-          'name': this.post.authorName || ''
-        },
-        ...(this.post.coverImage ? { 'image': this.post.coverImage } : {})
+    const articleJsonLd: any = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      'headline': title,
+      'description': seoDescription || '',
+      'datePublished': this.post.createdAt || '',
+      'author': {
+        '@type': 'Person',
+        'name': this.post.authorName || ''
       },
+      ...(this.post.coverImage ? { 'image': this.post.coverImage } : {}),
+      ...(this.post.isArticle && this.post.location ? { 'contentLocation': { '@type': 'Place', 'name': this.post.location } } : {}),
+      'publisher': {
+        '@type': 'Organization',
+        'name': 'PromptHealth',
+        'logo': {
+          '@type': 'ImageObject',
+          'url': 'https://www.prompthealth.ca/assets/img/prompthealth.png'
+        }
+      }
+    };
+
+    this._jsonLdService.setJsonLd([
+      articleJsonLd,
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
