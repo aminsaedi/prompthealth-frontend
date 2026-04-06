@@ -6,10 +6,10 @@ import { default as axios } from 'axios';
 const apiURL = environment.config.API_URL;
 const rMagazine = Router();
 
-rMagazine.use('/podcast', (req, res) => { res.redirect('/community/voice'); });
-rMagazine.use('/event', (req, res) => { res.redirect('/community/event'); });
-rMagazine.use('/category/knowledge', (req, res) => { res.redirect('/community/article'); });
-rMagazine.use('/category/news', (req, res) => { res.redirect('/community/feed'); });
+rMagazine.use('/podcast', (req, res) => { res.redirect(301, '/community/voice'); });
+rMagazine.use('/event', (req, res) => { res.redirect(301, '/community/event'); });
+rMagazine.use('/category/knowledge', (req, res) => { res.redirect(301, '/community/article'); });
+rMagazine.use('/category/news', (req, res) => { res.redirect(301, '/community/feed'); });
 rMagazine.use('/tag', (req, res) => {
   const pathArray = req.path.split('/');
   const tag = pathArray[1];
@@ -26,7 +26,7 @@ rMagazine.use('/tag', (req, res) => {
     case 'nutrition': id = '5eb1a4e199957471610e6ce2'; break;
     default: id = null; break;
   }
-  res.redirect('/community/feed' + (id ? '/' + id : ''));
+  res.redirect(301, '/community/feed');
 });
 
 rMagazine.use('/', (req, res) => {
@@ -34,15 +34,15 @@ rMagazine.use('/', (req, res) => {
   if(slug) {
     axios.get(apiURL + 'blog/get-by-slug/' + slug).then(result => {
       if(result.data.statusCode == 200 && result.data.data.status == 'APPROVED') {
-        res.redirect('/community/content/' + result.data.data._id);
+        res.redirect(301, '/community/content/' + result.data.data._id);
       } else {
-        res.redirect('/404');
+        res.redirect(301, '/404');
       }
     }).catch(error => {
-      res.redirect('/404');
+      res.redirect(301, '/404');
     });
   } else {
-    res.redirect('/community/feed');
+    res.redirect(301, '/community/feed');
   }
 });
 

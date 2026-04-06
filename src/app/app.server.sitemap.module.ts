@@ -277,13 +277,6 @@ function getSitemapSocial(): Promise<string> {
             <loc>${baseURL}/community/${type}</loc>
           </url>
         `;
-        categoryIds.forEach(id => {
-          xml += `
-            <url>
-              <loc>${baseURL}/community/${type}/${id}</loc>
-            </url>
-          `;
-        });
       });
 
       xml += `
