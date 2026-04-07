@@ -101,17 +101,11 @@ export class AppComponent implements OnInit , OnDestroy {
     });
 
     if(this._uService.isBrowser) {
-      // Default to ready immediately, defer IP check out of critical path
+      // Default to Canada, skip IP check and currency modal entirely
+      if (!this._uService.localStorage.getItem('region')) {
+        this._uService.localStorage.setItem('region', 'CA');
+      }
       this._regionService.changeStatus('ready');
-      setTimeout(async () => {
-        if(!this._uService.localStorage.getItem('region')) {
-          this._uService.localStorage.removeItem('ip');
-        }
-        const isIpChanged = await this.checkIpChanged();
-        if(isIpChanged) {
-          this._regionService.changeModalVisibility(true);
-        }
-      }, 3000);
     } else {
       this._uService.localStorage.setItem('region', 'CA');
       this._regionService.changeStatus('ready');
