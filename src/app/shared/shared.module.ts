@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { SharedService } from './services/shared.service';
@@ -44,12 +43,10 @@ import { FormPractitionerServiceComponent } from './form-practitioner-service/fo
 import { FormItemDatetimeComponent } from './form-item-datetime/form-item-datetime.component';
 import { FormItemUploadImageButtonComponent } from './form-item-upload-image-button/form-item-upload-image-button.component';
 import { ButtonShareComponent } from './button-share/button-share.component';
-import { SearchBarComponent } from './search-bar/search-bar.component';
 import { FormItemSearchComponent } from './form-item-search/form-item-search.component';
 import { ButtonGuidelineComponent } from './button-guideline/button-guideline.component';
 import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.component';
 import { FormSubscribeComponent } from './form-subscribe/form-subscribe.component';
-import { ModalComponent } from './modal/modal.component';
 import { ContenteditableValueAccessor } from './contenteditable.directive';
 import { DurationPipe } from './pipes/duration.pipe';
 import { DistancePipe } from './pipes/distance.pipe';
@@ -94,12 +91,10 @@ const LAZY_DECLARATIONS = [
   FormItemDatetimeComponent,
   FormItemUploadImageButtonComponent,
   ButtonShareComponent,
-  SearchBarComponent,
   FormItemSearchComponent,
   ButtonGuidelineComponent,
   SocialMediaKitComponent,
   FormSubscribeComponent,
-  ModalComponent,
   ContenteditableValueAccessor,
   DurationPipe,
   DistancePipe,
@@ -114,7 +109,6 @@ const LAZY_DECLARATIONS = [
 @NgModule({
   imports: [
     SharedCoreModule,
-    ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
     TimepickerModule.forRoot(),
   ],

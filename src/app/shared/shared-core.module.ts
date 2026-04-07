@@ -21,6 +21,9 @@ import { AlertUploadingComponent } from './alert-uploading/alert-uploading.compo
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import { UserImageComponent } from './user-image/user-image.component';
+import { ModalComponent } from './modal/modal.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 
 const CORE_DECLARATIONS = [
   IconDirective,
@@ -40,6 +43,8 @@ const CORE_DECLARATIONS = [
   BreadcrumbComponent,
   TimeAgoPipe,
   UserImageComponent,
+  ModalComponent,
+  SearchBarComponent,
 ];
 
 @NgModule({
@@ -48,6 +53,7 @@ const CORE_DECLARATIONS = [
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    ModalModule.forRoot(),
   ],
   declarations: CORE_DECLARATIONS,
   exports: [
