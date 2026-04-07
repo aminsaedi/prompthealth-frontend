@@ -237,7 +237,7 @@ export class AboutCompanyComponent implements OnInit , OnDestroy {
     }
 
     const link = ["/auth", "registration", "p"];
-    fbq("track", "Subscribe");
+    if (typeof fbq === "function") { fbq("track", "Subscribe"); }
     this._router.navigate(link);
   }
 
