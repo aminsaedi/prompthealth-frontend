@@ -65,7 +65,7 @@ export class AuthGuard implements CanActivate {
       return false;
     } else {
       const plan: IDefaultPlan = JSON.parse(planStr);
-      if (plan.userType.includes(role)) {
+      if (!plan || plan.userType.includes(role)) {
         return true;
       } else {
         ss.removeItem("selectedPlan");
