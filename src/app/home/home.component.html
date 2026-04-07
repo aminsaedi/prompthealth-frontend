@@ -117,7 +117,7 @@
           <div class="slideshow slideshow-animate mb-15p mb-lg-0p mr-lg-20p">
             <ng-container *ngFor="let ii of [0, 1]">
               <div *ngFor="let item of slideshow; let i = index" class="item overflow-hidden rounded-8p">
-                <img [src]="'assets/img/home/' + item" alt="PromptHealth wellness community" style="object-fit: cover; width: 100%; height: 100%"
+                <img [src]="'assets/img/home/' + item" alt="PromptHealth wellness community" width="377" height="470" style="object-fit: cover; width: 100%; height: 100%"
                   [attr.loading]="(ii === 0 && i === 0) ? null : 'lazy'" />
               </div>
             </ng-container>
@@ -125,7 +125,7 @@
           <div class="slideshow slideshow-animate-reverse mb-15p mb-lg-0p">
             <ng-container *ngFor="let jj of [0, 1]">
               <div *ngFor="let item of slideshowReverse; let i = index" class="item-reverse overflow-hidden rounded-8p">
-                <img [src]="'assets/img/home/' + item" alt="PromptHealth wellness community" style="object-fit: cover; width: 100%; height: 100%"
+                <img [src]="'assets/img/home/' + item" alt="PromptHealth wellness community" width="377" height="470" style="object-fit: cover; width: 100%; height: 100%"
                   [attr.loading]="(jj === 0 && i === 0) ? null : 'lazy'" />
               </div>
             </ng-container>
