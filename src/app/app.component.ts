@@ -101,15 +101,17 @@ export class AppComponent implements OnInit , OnDestroy {
     });
 
     if(this._uService.isBrowser) {
-      if(!this._uService.localStorage.getItem('region')) {
-        this._uService.localStorage.removeItem('ip');
-      }
-      const isIpChanged = await this.checkIpChanged();
-      if(isIpChanged) {
-        this._regionService.changeModalVisibility(true);
-      } else {
-        this._regionService.changeStatus('ready');
-      }
+      // Default to ready immediately, defer IP check out of critical path
+      this._regionService.changeStatus('ready');
+      setTimeout(async () => {
+        if(!this._uService.localStorage.getItem('region')) {
+          this._uService.localStorage.removeItem('ip');
+        }
+        const isIpChanged = await this.checkIpChanged();
+        if(isIpChanged) {
+          this._regionService.changeModalVisibility(true);
+        }
+      }, 3000);
     } else {
       this._uService.localStorage.setItem('region', 'CA');
       this._regionService.changeStatus('ready');
@@ -183,7 +185,7 @@ export class AppComponent implements OnInit , OnDestroy {
           page_path: event.urlAfterRedirects
         });
 
-        if (!window.location.href.match(/keyword/)) {
+        if (!window.location.href.match(/keyword/) && typeof fbq === 'function') {
           fbq('track', 'PageView');
         }
       }

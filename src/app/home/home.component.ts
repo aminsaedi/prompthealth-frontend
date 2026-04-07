@@ -220,7 +220,7 @@ export class HomeComponent implements OnInit , OnDestroy {
       // await this.getHomePageFeatures(); /** need to reinstate after many practitioners buy addonPlan */
       this.getPractitionersFeatured(); /** temporary solition */
     }
-    fbq("track", "ViewContent");
+    if (typeof fbq === 'function') { fbq("track", "ViewContent"); }
   }
 
   /** need to reinstate after many practitioners buy addonPlan */
