@@ -9,21 +9,55 @@ import { default as axios } from 'axios';
 import { QuestionnaireAnswer } from './shared/services/questionnaire.service';
 const rSitemap = Router();
 
+// Simple cache for expensive sitemaps (PH-022)
+const sitemapCache: { [key: string]: { xml: string, time: number } } = {};
+const SITEMAP_CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
+function getCachedSitemap(key: string): string | null {
+  const entry = sitemapCache[key];
+  if (entry && (Date.now() - entry.time < SITEMAP_CACHE_TTL)) {
+    return entry.xml;
+  }
+  return null;
+}
+
 rSitemap.get('/main', (req, res) => {
   res.set('Content-Type', 'text/xml');
   res.send(sitemapMain);
 });
 
 rSitemap.get('/practitioners', async (req, res) => {
-  let xml = await getSitemapPractitioners(); 
-  res.set('Content-Type', 'text/xml');
-  res.send(xml);
+  const cached = getCachedSitemap('practitioners');
+  if (cached) {
+    res.set('Content-Type', 'text/xml');
+    return res.send(cached);
+  }
+  try {
+    const xml = await getSitemapPractitioners();
+    sitemapCache['practitioners'] = { xml, time: Date.now() };
+    res.set('Content-Type', 'text/xml');
+    res.send(xml);
+  } catch (err) {
+    console.error('Practitioners sitemap error:', err.message || err);
+    res.status(500).send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>');
+  }
 });
 
 rSitemap.get('/community', async (req, res) => {
-  let xml = await getSitemapSocial();
-  res.set('Content-Type', 'text/xml');
-  res.send(xml);
+  const cached = getCachedSitemap('community');
+  if (cached) {
+    res.set('Content-Type', 'text/xml');
+    return res.send(cached);
+  }
+  try {
+    const xml = await getSitemapSocial();
+    sitemapCache['community'] = { xml, time: Date.now() };
+    res.set('Content-Type', 'text/xml');
+    res.send(xml);
+  } catch (err) {
+    console.error('Community sitemap error:', err.message || err);
+    res.status(500).send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>');
+  }
 })
 
 
@@ -58,54 +92,87 @@ const sitemapRoot = `<?xml version="1.0" encoding="UTF-8"?>
   </sitemapindex>
 `;
 
+// PH-021: Added lastmod and changefreq to static sitemap entries
+const lastDeploy = new Date().toISOString().split('T')[0];
 const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <url>
       <loc>${baseURL}</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
     </url>
     <url>
       <loc>${baseURL}/about</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/about/partner</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/plans</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/plans/product</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/companies</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/ambassador-program</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/press-release</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/online-academy</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/testimonial</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/faq</loc>
-    </url>       
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
+    </url>
     <url>
       <loc>${baseURL}/subscribe/newsletter</loc>
-    </url>   
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
+    </url>
     <url>
       <loc>${baseURL}/contact-us</loc>
-    </url>          
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>monthly</changefreq>
+    </url>
     <url>
       <loc>${baseURL}/policy</loc>
-    </url>              
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>yearly</changefreq>
+    </url>
     <url>
       <loc>${baseURL}/terms</loc>
+      <lastmod>${lastDeploy}</lastmod>
+      <changefreq>yearly</changefreq>
     </url>
-  </urlset>   
+  </urlset>
 `;
 
 function getSitemapPractitioners(): Promise<string> {
@@ -328,7 +395,7 @@ function getAllCategoryIds(onlyRoot: boolean = false): Promise<String[]> {
   return new Promise((resolve) => {
     const categoryIds: string[] = [];
 
-    axios.get(apiURL + 'questionare/get-service').then(res => {
+    axios.get(apiURL + 'questionare/get-service', { timeout: 10000 }).then(res => {
       if(res.status == 200) {
         for(let data of res.data.data) {
           if(data.category_type.toLowerCase() == 'goal') {
@@ -355,7 +422,7 @@ function getAllCategoryIds(onlyRoot: boolean = false): Promise<String[]> {
 function getAllTypeOfProviderIds(): Promise<string[]> {
   return new Promise((resolve) => {
     const typeOfProviderIds: string[] = [];
-    axios.get(apiURL + 'questionare/get-questions?type=SP').then(res => {
+    axios.get(apiURL + 'questionare/get-questions?type=SP', { timeout: 10000 }).then(res => {
       if(res.status == 200) {
         const qs = res.data.data;
         for(let q of qs) {
@@ -384,7 +451,7 @@ function getAllPractitionerIds(): Promise<String[]> {
   return new Promise((resolve) => {
     const practitionerIds: string[] = [];
 
-    axios.post(apiURL + 'user/filter', {}).then(res => {
+    axios.post(apiURL + 'user/filter', {}, { timeout: 15000 }).then(res => {
       if(res.status == 200) {
         res.data.data.dataArr.forEach((d: {userId: string}) => {
           practitionerIds.push(d.userId);
@@ -400,7 +467,7 @@ function getAllPractitionerIds(): Promise<String[]> {
 function getAllSocialContentIds(): Promise<{_id: string, updatedAt: string, contentType: string, slug?: string}[]> {
   return new Promise((resolve) => {
     const contents: {_id: string, updatedAt: string, contentType: string, slug?: string}[] = [];
-    axios.get(apiURL + 'note/filter?count=10000').then(res => {
+    axios.get(apiURL + 'note/filter?count=10000', { timeout: 15000 }).then(res => {
       if(res.status == 200) {
         res.data.data.data.forEach((d: {_id: string, updatedAt: string, contentType: string, slug?: string}) => {
           contents.push({_id: d._id, updatedAt: d.updatedAt, contentType: d.contentType, slug: d.slug});
