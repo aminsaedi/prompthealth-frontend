@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ThemeRoutingModule } from './theme-routing.module';
 import { SubscribeComponent } from './subscribe/subscribe.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedCoreModule } from '../shared/shared-core.module';
+import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { LayoutComponent } from './layout/layout.component';
@@ -36,7 +36,7 @@ import { BannerTopComponent } from './banner-top/banner-top.component';
     CommonModule,
     ThemeRoutingModule,
     ReactiveFormsModule,
-    SharedCoreModule,
+    SharedModule,
     FormsModule,
     ModalModule.forRoot()
   ]
