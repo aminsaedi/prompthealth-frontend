@@ -16,6 +16,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ErrorInterceptor } from './shared/services/error.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +30,7 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     SharedModule,
+    AngularFireModule.initializeApp(environment.config.firebase),
   ],
   providers: [
     BehaviorService,
