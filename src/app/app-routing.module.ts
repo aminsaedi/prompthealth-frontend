@@ -2,12 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
-//Bootstrap
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { TooltipModule } from "ngx-bootstrap/tooltip";
-import { ModalModule } from "ngx-bootstrap/modal";
-
-
 const routes: Routes = [
   { path: 'community', loadChildren: () => import('./social/social.module').then(m => m.SocialModule), },
 
@@ -22,18 +16,12 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    BsDropdownModule.forRoot(),
     HttpClientModule,
-    ModalModule.forRoot(),
     RouterModule.forRoot(routes, { initialNavigation: 'enabled' }),
-    TooltipModule.forRoot(),
   ],
   exports: [
-    BsDropdownModule,
     HttpClientModule,
-    ModalModule,
     RouterModule,
-    TooltipModule,
   ]
 })
 export class AppRoutingModule { }

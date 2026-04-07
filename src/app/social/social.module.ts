@@ -13,6 +13,7 @@ import { NgxStripeModule, StripeService } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
 import { CardNewPostComponent } from './card-new-post/card-new-post.component';
 import { QuillModule } from 'ngx-quill';
+import { EmbedVideo } from 'ngx-embed-video';
 import { EditorComponent } from './editor/editor.component';
 import { BaseComponent } from './base/base.component';
 import { GuardIfEditorLockedGuard } from './guard-if-editor-locked.guard';
@@ -147,6 +148,7 @@ const routes: Routes = [
     NgxStripeModule.forRoot(environment.config.stripeKey),
     RouterModule.forChild(routes),
     QuillModule.forRoot( {formats: ['bold', 'italic', 'underline', 'header', 'list', 'link', 'image', 'video', 'code-block']}),
+    EmbedVideo.forRoot(),
   ]
 })
 export class SocialModule { }

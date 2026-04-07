@@ -8,6 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 import { GuardIfNotLoggedInGuard } from '../auth/guard-if-not-logged-in.guard';
 import { ProfileComponent } from './profile/profile.component';
 import { AgmCoreModule } from '@agm/core';
+import { EmbedVideo } from 'ngx-embed-video';
 import { BookingsComponent } from './bookings/bookings.component';
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
 import { PasswordComponent } from './password/password.component';
@@ -134,6 +135,7 @@ const routes: Routes = [
       language: 'en',
       libraries: ['places']
     }),
+    EmbedVideo.forRoot(),
   ]
 })
 export class Dashboard2Module { }
