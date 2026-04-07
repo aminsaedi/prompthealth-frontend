@@ -68,8 +68,6 @@ import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import { ModalUserMenuComponent } from './modal-user-menu/modal-user-menu.component';
 import { ImageUploaderDirective } from './image-uploader.directive';
 import { LoaderComponent } from './loader/loader.component';
-import { AngularFireMessagingModule } from '@angular/fire/messaging';
-import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AlertUploadingComponent } from './alert-uploading/alert-uploading.component';
 import { FormItemSelectBoxComponent } from './form-item-select-box/form-item-select-box.component';
@@ -85,8 +83,6 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     FormsModule,
     ReactiveFormsModule,
     ModalModule.forRoot(),
-    AngularFireMessagingModule,
-    AngularFireModule.initializeApp(environment.config.firebase),
     BsDatepickerModule.forRoot(),
     TimepickerModule.forRoot(),
   ],

@@ -44,15 +44,15 @@ export class SharedService {
     private previousRouteService: PreviousRouteService,
     private _bs: BehaviorService,
     private _uService: UniversalService,
-    private _stripeService: StripeService,
+    @Optional() private _stripeService: StripeService,
     private _profileManager: ProfileManagementService,
     private _socialManager: SocialService,
     private _toastr: ToastrService,
-    private angularFireMessaging: AngularFireMessaging,
+    @Optional() private angularFireMessaging: AngularFireMessaging,
 
     @Inject(DOCUMENT) private document,
     private http: HttpClient) {
-    this.receiveMessage();
+    if (this.angularFireMessaging) { this.receiveMessage(); }
     // console.log('fcm loaded');
     // this.type = this._uService.localStorage.getItem('roles');
   }
@@ -65,6 +65,7 @@ export class SharedService {
   private compareList: Professional[] = [];
 
   requestPermission(user: IUserDetail) {
+    if (!this.angularFireMessaging) { return; }
     this.angularFireMessaging.requestToken.subscribe(
       (token) => {
         // console.log(token);
@@ -78,6 +79,7 @@ export class SharedService {
     );
   }
   receiveMessage() {
+    if (!this.angularFireMessaging) { return; }
     this.angularFireMessaging.messages.subscribe(
       (payload: { notification: { title: string; body: string; image: string } }) => {
         this.currentMessage.next(payload);
@@ -90,7 +92,13 @@ export class SharedService {
   }
 
   async logout(navigate: boolean = true) {
-    // console.log(token);
+    if (!this.angularFireMessaging) {
+      this._socialManager.dispose();
+      this._profileManager.dispose();
+      this._uService.localStorage.clear();
+      if (navigate) { this._router.navigate(['/']); }
+      return;
+    }
     await this.angularFireMessaging.getToken.toPromise().then(token => {
       if (token) {
         this.post({ token, deviceType: 'web' }, 'notification/remove-token').toPromise().then(res => {

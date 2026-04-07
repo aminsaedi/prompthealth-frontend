@@ -16,8 +16,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ErrorInterceptor } from './shared/services/error.interceptor';
 import { SharedModule } from './shared/shared.module';
-import { NgxStripeModule } from 'ngx-stripe';
-import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,7 +28,6 @@ import { environment } from 'src/environments/environment';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     SharedModule,
-    NgxStripeModule.forRoot(environment.config.stripeKey),
   ],
   providers: [
     BehaviorService,

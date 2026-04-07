@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding } from '@angular/core';
+import { Component, OnInit, Input, HostBinding, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from '../services/shared.service';
 import { ProfileManagementService } from '../services/profile-management.service';
@@ -45,7 +45,7 @@ export class SubscriptionPlanItemCardComponent implements OnInit {
     private _profileService: ProfileManagementService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
-    private _stripeService: StripeService,
+    @Optional() private _stripeService: StripeService,
     private _uService: UniversalService,
   ) { }
 

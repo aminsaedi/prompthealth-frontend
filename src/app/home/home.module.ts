@@ -9,7 +9,6 @@ import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.componen
 import { TermsConditionsComponent } from "./terms-conditions/terms-conditions.component";
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ContactUsComponent } from "./contact-us/contact-us.component";
-import { AgmCoreModule } from '@agm/core';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 import { SharedModule } from '../shared/shared.module';
 import { ListingCompanyComponent } from './listing-company/listing-company.component';
@@ -79,10 +78,6 @@ import { OnlineAcademyComponent } from './online-academy/online-academy.componen
   imports: [
     FormsModule,
     NgxSpinnerModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCEn-p_qT9RNRn2qwRvIyUwfaWD09xDhkI',
-      libraries: ['places']
-    }),
     CommonModule,
     HomeRoutingModule,
     ReactiveFormsModule,

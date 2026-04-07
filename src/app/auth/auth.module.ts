@@ -11,6 +11,8 @@ import {
 
 
 import { SharedModule } from '../shared/shared.module';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ContactUspageComponent } from './contact-uspage/contact-uspage.component';
@@ -50,6 +52,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     SocialLoginModule,
     NgxStripeModule.forRoot(environment.config.stripeKey),
+    AngularFireModule.initializeApp(environment.config.firebase),
+    AngularFireMessagingModule,
   ],
   declarations: [
     ContactUspageComponent,

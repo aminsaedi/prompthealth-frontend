@@ -9,6 +9,9 @@ import { GuardIfNotLoggedInGuard } from '../auth/guard-if-not-logged-in.guard';
 import { ProfileComponent } from './profile/profile.component';
 import { AgmCoreModule } from '@agm/core';
 import { EmbedVideo } from 'ngx-embed-video';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { environment } from 'src/environments/environment';
 import { BookingsComponent } from './bookings/bookings.component';
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
 import { PasswordComponent } from './password/password.component';
@@ -136,6 +139,8 @@ const routes: Routes = [
       libraries: ['places']
     }),
     EmbedVideo.forRoot(),
+    AngularFireModule.initializeApp(environment.config.firebase),
+    AngularFireMessagingModule,
   ]
 })
 export class Dashboard2Module { }
