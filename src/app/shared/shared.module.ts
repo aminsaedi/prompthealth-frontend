@@ -2,23 +2,21 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ModalModule,  } from 'ngx-bootstrap/modal';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { SharedService } from './services/shared.service';
 import { PreviousRouteService } from './services/previousUrl.service';
+import { CategoryService } from './services/category.service';
+import { SharedCoreModule } from './shared-core.module';
+
+// Components NOT in SharedCoreModule (only needed by lazy-loaded modules)
 import { SearchPipe } from '../shared/pipes/search-pipe';
 import { UserSidebarComponent } from './user-sidebar/user-sidebar.component';
-
 import { SubscriptionPlanItemCardComponent } from './subscription-plan-item-card/subscription-plan-item-card.component';
 import { SubscriptionPlanAddonCardComponent } from './subscription-plan-addon-card/subscription-plan-addon-card.component';
 import { PriceRangeSwitcherComponent } from './price-range-switcher/price-range-switcher.component';
-import { StarRateComponent } from './star-rate/star-rate.component';
-import { CardDummyComponent } from './card-dummy/card-dummy.component';
 import { FocusDirective } from './focus.directive';
-import { CategoryService } from './services/category.service';
-import { ClickOutsideDirective } from './click-outside.directive';
-import { ScrollDetectorDirective } from './scroll-detector.directive';
 import { SocialButtonsComponent } from './social-buttons/social-buttons.component';
 import { ImageRowComponent } from './image-row/image-row.component';
 import { StepperComponent } from './stepper/stepper.component';
@@ -27,12 +25,9 @@ import { FormItemTextareaComponent } from './form-item-textarea/form-item-textar
 import { FormItemAddressComponent } from './form-item-address/form-item-address.component';
 import { FormItemCheckboxComponent } from './form-item-checkbox/form-item-checkbox.component';
 import { FormItemErrorsComponent } from './form-item-errors/form-item-errors.component';
-import { BadgeVerifiedComponent } from './badge-verified/badge-verified.component';
-import { UserImageComponent } from './user-image/user-image.component';
-import { IntersectionObserverDirective } from './intersection-observer.directive';
+import { FormItemServiceComponent } from './form-item-service/form-item-service.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 import { ShareMenuComponent } from './share-menu/share-menu.component';
-import { FormItemServiceComponent } from './form-item-service/form-item-service.component';
 import { FormPartnerServiceComponent } from './form-partner-service/form-partner-service.component';
 import { FormPartnerGeneralComponent } from './form-partner-general/form-partner-general.component';
 import { FormPartnerOfferComponent } from './form-partner-offer/form-partner-offer.component';
@@ -49,39 +44,76 @@ import { FormPractitionerServiceComponent } from './form-practitioner-service/fo
 import { FormItemDatetimeComponent } from './form-item-datetime/form-item-datetime.component';
 import { FormItemUploadImageButtonComponent } from './form-item-upload-image-button/form-item-upload-image-button.component';
 import { ButtonShareComponent } from './button-share/button-share.component';
-import { ListItemComponent } from './list-item/list-item.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
-import { IconDirective } from './icon.directive';
 import { FormItemSearchComponent } from './form-item-search/form-item-search.component';
 import { ButtonGuidelineComponent } from './button-guideline/button-guideline.component';
-import { CardPractitionerComponent } from './card-practitioner/card-practitioner.component';
 import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.component';
 import { FormSubscribeComponent } from './form-subscribe/form-subscribe.component';
-import { ProfileImageComponent } from './profile-image/profile-image.component';
 import { ModalComponent } from './modal/modal.component';
 import { ContenteditableValueAccessor } from './contenteditable.directive';
 import { DurationPipe } from './pipes/duration.pipe';
 import { DistancePipe } from './pipes/distance.pipe';
-import { ParallaxDirective } from './parallax.directive';
 import { SwitchComponent } from './switch/switch.component';
-import { TimeAgoPipe } from './pipes/time-ago.pipe';
-import { ModalUserMenuComponent } from './modal-user-menu/modal-user-menu.component';
 import { ImageUploaderDirective } from './image-uploader.directive';
-import { LoaderComponent } from './loader/loader.component';
-import { environment } from 'src/environments/environment';
-import { AlertUploadingComponent } from './alert-uploading/alert-uploading.component';
 import { FormItemSelectBoxComponent } from './form-item-select-box/form-item-select-box.component';
 import { FormItemProfileImageComponent } from './form-item-profile-image/form-item-profile-image.component';
 import { FormAdminGeneralComponent } from './form-admin-general/form-admin-general.component';
 import { CardNoContentComponent } from './card-no-content/card-no-content.component';
-import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+
+const LAZY_DECLARATIONS = [
+  UserSidebarComponent,
+  SearchPipe,
+  SubscriptionPlanItemCardComponent,
+  SubscriptionPlanAddonCardComponent,
+  PriceRangeSwitcherComponent,
+  FocusDirective,
+  SocialButtonsComponent,
+  ImageRowComponent,
+  StepperComponent,
+  FormItemInputComponent,
+  FormItemTextareaComponent,
+  FormItemAddressComponent,
+  FormItemCheckboxComponent,
+  FormItemErrorsComponent,
+  FormItemServiceComponent,
+  ImageViewerComponent,
+  ShareMenuComponent,
+  FormPartnerServiceComponent,
+  FormPartnerGeneralComponent,
+  FormPartnerOfferComponent,
+  FormItemPlaceComponent,
+  FormCentreGeneralComponent,
+  CardCouponComponent,
+  ButtonTutorialComponent,
+  FormProviderGeneralComponent,
+  FormItemCheckboxGroupComponent,
+  FormItemPricingComponent,
+  FormClientGeneralComponent,
+  FormItemCustomerHealthComponent,
+  FormPractitionerServiceComponent,
+  FormItemDatetimeComponent,
+  FormItemUploadImageButtonComponent,
+  ButtonShareComponent,
+  SearchBarComponent,
+  FormItemSearchComponent,
+  ButtonGuidelineComponent,
+  SocialMediaKitComponent,
+  FormSubscribeComponent,
+  ModalComponent,
+  ContenteditableValueAccessor,
+  DurationPipe,
+  DistancePipe,
+  SwitchComponent,
+  ImageUploaderDirective,
+  FormItemSelectBoxComponent,
+  FormItemProfileImageComponent,
+  FormAdminGeneralComponent,
+  CardNoContentComponent,
+];
 
 @NgModule({
   imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
+    SharedCoreModule,
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
     TimepickerModule.forRoot(),
@@ -89,138 +121,12 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
   providers: [
     PreviousRouteService,
     SharedService,
-    CategoryService
+    CategoryService,
   ],
-  declarations: [
-    UserSidebarComponent,
-    SearchPipe,
-    SubscriptionPlanItemCardComponent,
-    SubscriptionPlanAddonCardComponent,
-    PriceRangeSwitcherComponent,
-    StarRateComponent,
-    CardDummyComponent,
-    FocusDirective,
-    ClickOutsideDirective,
-    ScrollDetectorDirective,
-    SocialButtonsComponent,
-    ImageRowComponent,
-    StepperComponent,
-    FormItemInputComponent,
-    FormItemTextareaComponent,
-    FormItemAddressComponent,
-    FormItemCheckboxComponent,
-    FormItemErrorsComponent,
-    FormItemServiceComponent,
-    BadgeVerifiedComponent,
-    UserImageComponent,
-    IntersectionObserverDirective,
-    ImageViewerComponent,
-    ShareMenuComponent,
-    FormPartnerServiceComponent,
-    FormPartnerGeneralComponent,
-    FormPartnerOfferComponent,
-    FormItemPlaceComponent,
-    FormCentreGeneralComponent,
-    CardCouponComponent,
-    ButtonTutorialComponent,
-    FormProviderGeneralComponent,
-    FormItemCheckboxGroupComponent,
-    FormItemPricingComponent,
-    FormClientGeneralComponent,
-    FormItemCustomerHealthComponent,
-    FormPractitionerServiceComponent,
-    FormItemDatetimeComponent,
-    FormItemUploadImageButtonComponent,
-    ButtonShareComponent,
-    ListItemComponent,
-    SearchBarComponent,
-    IconDirective,
-    FormItemSearchComponent,
-    ButtonGuidelineComponent,
-    CardPractitionerComponent,
-    SocialMediaKitComponent,
-    FormSubscribeComponent,
-    ProfileImageComponent,
-    ModalComponent,
-    ContenteditableValueAccessor,
-    DurationPipe,
-    DistancePipe,
-    ParallaxDirective,
-    SwitchComponent,
-    TimeAgoPipe,
-    ModalUserMenuComponent,
-    ImageUploaderDirective,
-    LoaderComponent,
-    AlertUploadingComponent,
-    FormItemSelectBoxComponent,
-    FormItemProfileImageComponent,
-    FormAdminGeneralComponent,
-    CardNoContentComponent,
-    BreadcrumbComponent,
-  ],
+  declarations: LAZY_DECLARATIONS,
   exports: [
-    UserSidebarComponent,
-    SearchPipe,
-    SubscriptionPlanItemCardComponent,
-    SubscriptionPlanAddonCardComponent,
-    PriceRangeSwitcherComponent,
-    StarRateComponent,
-    CardDummyComponent,
-    FocusDirective,
-    ClickOutsideDirective,
-    ScrollDetectorDirective,
-    SocialButtonsComponent,
-    ImageRowComponent,
-    StepperComponent,
-    FormItemInputComponent,
-    FormItemTextareaComponent,
-    FormItemAddressComponent,
-    FormItemCheckboxComponent,
-    FormItemErrorsComponent,
-    FormItemServiceComponent,
-    BadgeVerifiedComponent,
-    UserImageComponent,
-    IntersectionObserverDirective,
-    ImageViewerComponent,
-    ShareMenuComponent,
-    FormPartnerServiceComponent,
-    FormPartnerGeneralComponent,
-    FormPartnerOfferComponent,
-    FormItemPlaceComponent,
-    FormCentreGeneralComponent,
-    FormProviderGeneralComponent,
-    FormClientGeneralComponent,
-    CardCouponComponent,
-    ButtonTutorialComponent,
-    FormItemCheckboxGroupComponent,
-    FormItemCustomerHealthComponent,
-    FormPractitionerServiceComponent,
-    FormItemDatetimeComponent,
-    FormItemUploadImageButtonComponent,
-    ButtonShareComponent,
-    ListItemComponent,
-    SearchBarComponent,
-    IconDirective,
-    ButtonGuidelineComponent,
-    CardPractitionerComponent,
-    FormSubscribeComponent,
-    ProfileImageComponent,
-    ModalComponent,
-    ContenteditableValueAccessor,
-    DurationPipe,
-    DistancePipe,
-    ParallaxDirective,
-    SwitchComponent,
-    TimeAgoPipe,
-    ModalUserMenuComponent,
-    ImageUploaderDirective,
-    LoaderComponent,
-    AlertUploadingComponent,
-    FormItemSelectBoxComponent,
-    FormItemProfileImageComponent,
-    FormAdminGeneralComponent,
-    CardNoContentComponent,
-    BreadcrumbComponent,
+    SharedCoreModule,
+    ...LAZY_DECLARATIONS,
   ]
 })
 export class SharedModule { }

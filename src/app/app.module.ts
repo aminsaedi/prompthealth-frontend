@@ -15,7 +15,10 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ErrorInterceptor } from './shared/services/error.interceptor';
-import { SharedModule } from './shared/shared.module';
+import { SharedCoreModule } from './shared/shared-core.module';
+import { SharedService } from './shared/services/shared.service';
+import { PreviousRouteService } from './shared/services/previousUrl.service';
+import { CategoryService } from './shared/services/category.service';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 
@@ -29,15 +32,16 @@ import { environment } from 'src/environments/environment';
     AppRoutingModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    SharedModule,
+    SharedCoreModule,
     AngularFireModule.initializeApp(environment.config.firebase),
   ],
   providers: [
     BehaviorService,
     CookieService,
-    // SharedService,
+    SharedService,
+    PreviousRouteService,
+    CategoryService,
     CanonicalLinkService,
-    
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
