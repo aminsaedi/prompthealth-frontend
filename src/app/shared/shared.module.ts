@@ -43,6 +43,7 @@ import { FormPractitionerServiceComponent } from './form-practitioner-service/fo
 import { FormItemDatetimeComponent } from './form-item-datetime/form-item-datetime.component';
 import { FormItemUploadImageButtonComponent } from './form-item-upload-image-button/form-item-upload-image-button.component';
 import { ButtonShareComponent } from './button-share/button-share.component';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 import { FormItemSearchComponent } from './form-item-search/form-item-search.component';
 import { ButtonGuidelineComponent } from './button-guideline/button-guideline.component';
 import { SocialMediaKitComponent } from './socieal-media-kit/social-media-kit.component';
@@ -91,6 +92,7 @@ const LAZY_DECLARATIONS = [
   FormItemDatetimeComponent,
   FormItemUploadImageButtonComponent,
   ButtonShareComponent,
+  SearchBarComponent,
   FormItemSearchComponent,
   ButtonGuidelineComponent,
   SocialMediaKitComponent,

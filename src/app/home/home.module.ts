@@ -10,7 +10,7 @@ import { TermsConditionsComponent } from "./terms-conditions/terms-conditions.co
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ContactUsComponent } from "./contact-us/contact-us.component";
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
-import { SharedCoreModule } from '../shared/shared-core.module';
+import { SharedModule } from '../shared/shared.module';
 import { ListingCompanyComponent } from './listing-company/listing-company.component';
 import { CardProductComponent } from './_elements/card-product/card-product.component';
 import { InvitationComponent } from './invitation/invitation.component';
@@ -81,7 +81,7 @@ import { OnlineAcademyComponent } from './online-academy/online-academy.componen
     CommonModule,
     HomeRoutingModule,
     ReactiveFormsModule,
-    SharedCoreModule,
+    SharedModule,
     ButtonsModule,
     ModalModule.forRoot(),
   ],

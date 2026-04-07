@@ -23,7 +23,6 @@ import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import { UserImageComponent } from './user-image/user-image.component';
 import { ModalComponent } from './modal/modal.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { SearchBarComponent } from './search-bar/search-bar.component';
 
 const CORE_DECLARATIONS = [
   IconDirective,
@@ -44,7 +43,6 @@ const CORE_DECLARATIONS = [
   TimeAgoPipe,
   UserImageComponent,
   ModalComponent,
-  SearchBarComponent,
 ];
 
 @NgModule({
