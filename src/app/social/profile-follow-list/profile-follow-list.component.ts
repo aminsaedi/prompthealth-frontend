@@ -1,5 +1,5 @@
-import { Location } from '@angular/common';
-import { Component, OnInit , OnDestroy } from '@angular/core';
+import { isPlatformBrowser, Location } from '@angular/common';
+import { Component, Inject, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GetQuery } from 'src/app/models/get-query';
@@ -50,6 +50,7 @@ export class ProfileFollowListComponent implements OnInit , OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _uService: UniversalService,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) { }
 
   ngOnInit(): void {
@@ -107,6 +108,7 @@ export class ProfileFollowListComponent implements OnInit , OnDestroy {
   }
 
   goback() {
+    if (!isPlatformBrowser(this.platformId)) { return; }
     const state = this._location.getState() as any;
     if(state && state.navigationId == 1) {
       const profileId = this._route.snapshot.params.userid;

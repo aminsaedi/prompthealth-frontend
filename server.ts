@@ -112,16 +112,19 @@ export function app() {
       { req, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ]},
       (err, html) => {
         if(err){
-          console.log('SSR error. something went wrong: ');
-          console.log(err)
+          console.log('SSR error for ' + req.url + ':');
+          console.log(err.message || err);
+          // Fall back to client-side rendering on SSR error
+          return res.sendFile(join(distFolder, 'index.html'));
         }
-        // Detect 404 pages: if the rendered HTML contains the "Not Found" title, return 404 status
+        if (html) {
+          html = injectPaginationLinks(req, html);
+        }
+        // Only return 404 if the page explicitly rendered as Not Found
+        // (not due to transient API failures like 429)
         if (html && html.includes('<title>Not Found | PromptHealth</title>')) {
           res.status(404).send(html);
         } else {
-          if (html) {
-            html = injectPaginationLinks(req, html);
-          }
           res.send(html);
         }
       }
