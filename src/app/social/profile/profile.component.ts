@@ -188,15 +188,17 @@ export class ProfileComponent implements OnInit , OnDestroy {
         }
         this._socialService.saveCacheProfile(professional);
 
-        this.getQuestionnaire().then(() => {
-          this.profile = professional;
-          this.initRecommendation();
-          this.initRecommendationByMe();
-          this.setProfileMenu();
-          this._socialService.setProfile(this.profile);
-          this.setMetaForAbout();
-          this.setBreadcrumbs();
+        // Set profile synchronously BEFORE async calls to prevent CLS
+        // This ensures *ngIf="profile" elements render on first paint, matching SSR output
+        this.profile = professional;
+        this.initRecommendation();
+        this.initRecommendationByMe();
+        this.setProfileMenu();
+        this._socialService.setProfile(this.profile);
+        this.setMetaForAbout();
+        this.setBreadcrumbs();
 
+        this.getQuestionnaire().then(() => {
           if (this.profile.isSP && !this.profile.triedFetchingTeam) {
             this.fetchTeam();
           }
