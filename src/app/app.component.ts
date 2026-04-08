@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, HostListener, OnInit , OnDestroy } from '@angular/core';
-import { ActivationStart, NavigationEnd, Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from './shared/services/universal.service';
@@ -38,7 +38,6 @@ export class AppComponent implements OnInit , OnDestroy {
 
   constructor(
     private _uService: UniversalService,
-    private _router: Router,
     private _route: ActivatedRoute,
     private _toastr: ToastrService,
     private _location: Location,
@@ -53,8 +52,6 @@ export class AppComponent implements OnInit , OnDestroy {
     }
   }
 
-  private disableAnalytics: boolean = environment.config.disableAnalytics;
-
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -65,10 +62,6 @@ export class AppComponent implements OnInit , OnDestroy {
     if (!this._uService.isServer) {
       this._uploadObserver.uploadingStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(status => {
         this.onUploadingStatusChanged(status);
-      });
-
-      this._router.events.subscribe((event: NavigationEnd) => {
-        this.onRouteChanged(event);
       });
 
       this._route.queryParams.subscribe((params: IAppQueryParams) => {
@@ -166,11 +159,6 @@ export class AppComponent implements OnInit , OnDestroy {
       }
 
       this._location.replaceState(location.pathname, (paramList.length > 0) ? '?' + paramList.join('&') : '');
-    }
-  }
-
-  onRouteChanged(event: NavigationEnd | ActivationStart) {
-    if (event instanceof NavigationEnd) {
     }
   }
 
