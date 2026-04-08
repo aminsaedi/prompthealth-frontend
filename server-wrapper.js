@@ -386,8 +386,8 @@ function deferScripts(html) {
 
 // Simple cache
 const cache = new Map();
-const CACHE_TTL = 5 * 60 * 1000;
-const MAX_CACHE = 200;
+const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+const MAX_CACHE = 500;
 
 // Inject cache layer AFTER expressInit+compression (position 3) but before routes
 const Layer = Object.getPrototypeOf(expressApp._router.stack[0]).constructor;
