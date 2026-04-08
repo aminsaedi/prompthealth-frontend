@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -29,6 +29,7 @@ import { environment } from 'src/environments/environment';
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserTransferStateModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),

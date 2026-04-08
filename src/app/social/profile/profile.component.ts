@@ -23,6 +23,8 @@ import { environment } from 'src/environments/environment';
 import { SocialService } from '../social.service';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { takeUntil } from 'rxjs/operators';
+import { TransferState, makeStateKey } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-profile',
@@ -113,6 +115,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
     private _profileService: ProfileManagementService,
     private _changeDetector: ChangeDetectorRef,
     private _uService: UniversalService,
+    private _transferState: TransferState,
   ) { }
 
   ngOnDestroy() {
@@ -170,33 +173,66 @@ export class ProfileComponent implements OnInit , OnDestroy {
       this.setMetaForAbout();
       this.setBreadcrumbs();
     } else {
-      const promiseAll: [Promise<Professional>, Promise<QuestionnaireMapProfilePractitioner>] = [
-        this.fetchProfile(this.profileId),
-        this.getQuestionnaire(),
-      ];
+      // Check TransferState for SSR-fetched profile data (prevents hydration CLS)
+      const stateKey = makeStateKey<any>('profile-' + this.profileId);
+      const savedProfile = this._transferState.get(stateKey, null);
 
-      Promise.all(promiseAll).then(async (vals) => {
-        this.profile = vals[0];
-        this.initRecommendation();
-        this.initRecommendationByMe();
-        this.setProfileMenu();
-        this._socialService.setProfile(this.profile);
-
-        this.setMetaForAbout();
-        this.setBreadcrumbs();
-
-        if(this.profile.isSP && !this.profile.triedFetchingTeam) {
-          this.fetchTeam();
+      if (savedProfile) {
+        this._transferState.remove(stateKey);
+        const p = savedProfile;
+        let professional: Professional | Partner;
+        if (p.roles == 'P') {
+          professional = new Partner(p);
+        } else {
+          professional = new Professional(p._id, p);
         }
+        this._socialService.saveCacheProfile(professional);
 
-        if(this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
-          this.fetchPromos();
-        }
+        this.getQuestionnaire().then(() => {
+          this.profile = professional;
+          this.initRecommendation();
+          this.initRecommendationByMe();
+          this.setProfileMenu();
+          this._socialService.setProfile(this.profile);
+          this.setMetaForAbout();
+          this.setBreadcrumbs();
 
-      }, error => {
-        this._router.navigate(['404'], {replaceUrl: true});
-        this._toastr.error('Something went wrong.');
-      });
+          if (this.profile.isSP && !this.profile.triedFetchingTeam) {
+            this.fetchTeam();
+          }
+          if (this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
+            this.fetchPromos();
+          }
+        });
+      } else {
+        const promiseAll: [Promise<Professional>, Promise<QuestionnaireMapProfilePractitioner>] = [
+          this.fetchProfile(this.profileId),
+          this.getQuestionnaire(),
+        ];
+
+        Promise.all(promiseAll).then(async (vals) => {
+          this.profile = vals[0];
+          this.initRecommendation();
+          this.initRecommendationByMe();
+          this.setProfileMenu();
+          this._socialService.setProfile(this.profile);
+
+          this.setMetaForAbout();
+          this.setBreadcrumbs();
+
+          if(this.profile.isSP && !this.profile.triedFetchingTeam) {
+            this.fetchTeam();
+          }
+
+          if(this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
+            this.fetchPromos();
+          }
+
+        }, error => {
+          this._router.navigate(['404'], {replaceUrl: true});
+          this._toastr.error('Something went wrong.');
+        });
+      }
     }
 
   }
@@ -330,6 +366,11 @@ export class ProfileComponent implements OnInit , OnDestroy {
       this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetProfileResult) => {
         if(res.statusCode === 200) {
           const p = res.data;
+          // Save raw profile data to TransferState during SSR
+          if (this._uService.isServer) {
+            const stateKey = makeStateKey<any>('profile-' + id);
+            this._transferState.set(stateKey, p);
+          }
           let professional: Professional | Partner;
           if(p.roles == 'P') {
             professional = new Partner(p);
