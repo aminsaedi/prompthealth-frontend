@@ -40,7 +40,6 @@ import { takeUntil } from 'rxjs/operators';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
-declare let fbq: Function;
 
 @Component({
   selector: "app-home",
@@ -220,7 +219,6 @@ export class HomeComponent implements OnInit , OnDestroy {
       // await this.getHomePageFeatures(); /** need to reinstate after many practitioners buy addonPlan */
       this.getPractitionersFeatured(); /** temporary solition */
     }
-    if (typeof fbq === 'function') { fbq("track", "ViewContent"); }
   }
 
   /** need to reinstate after many practitioners buy addonPlan */

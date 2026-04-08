@@ -18,7 +18,6 @@ import { environment } from "src/environments/environment";
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-declare let fbq: Function;
 
 @Component({
   selector: "app-about-practitioner",
@@ -118,7 +117,6 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
 
   onClickCreateFreeProfile() {
     this._uService.sessionStorage.setItem("selectedPlan", "null");
-    if (typeof fbq === "function") { fbq("track", "Lead"); }
     this._router.navigate(["/auth", "registration", "sp"]);
   }
 

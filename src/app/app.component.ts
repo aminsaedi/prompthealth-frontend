@@ -14,7 +14,6 @@ import { } from 'googlemaps';
 import { takeUntil } from 'rxjs/operators';
 
 declare let gtag: Function;
-declare let fbq: Function;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -179,9 +178,6 @@ export class AppComponent implements OnInit , OnDestroy {
           page_path: event.urlAfterRedirects
         });
 
-        if (!window.location.href.match(/keyword/) && typeof fbq === 'function') {
-          fbq('track', 'PageView');
-        }
       }
     }
   }
