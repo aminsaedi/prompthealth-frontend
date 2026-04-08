@@ -96,7 +96,7 @@ export interface IProfessional extends IProfile {
 export class Professional extends Profile implements IProfessional{
 
   protected _defaultAvator = '/assets/img/no-image.jpg';
-  protected _defaultBanner = '/assets/img/general/banner.png';
+  protected _defaultBanner = '/assets/img/general/banner.webp';
 
   get id() { return this._id; }
 
