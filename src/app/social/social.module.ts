@@ -144,7 +144,7 @@ const routes: Routes = [
     SocialItemsModule,
     ReactiveFormsModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCbRhC6h9Pp43-5t_Knyrd_ewAdLMIJtCg',
+      apiKey: 'AIzaSyCEn-p_qT9RNRn2qwRvIyUwfaWD09xDhkI',
       libraries: ['places']
     }),
     NgxStripeModule.forRoot(environment.config.stripeKey),
