@@ -3,9 +3,6 @@ const noop = function() { return noop; };
 noop.call = noop;
 noop.apply = noop;
 noop.bind = function() { return noop; };
-global.ga = noop;
-global.gtag = noop;
-global.dataLayer = [];
 global.FB = { init: noop, ui: noop, api: noop };
 global.Stripe = noop;
 

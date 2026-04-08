@@ -28,8 +28,6 @@ export class LandingAmbassadorComponent implements OnInit , OnDestroy {
   public AWS_S3 = environment.config.AWS_S3;
 
   private canvas: HTMLElement;
-  private disableAnalytics: boolean = environment.config.disableAnalytics;
-
   @ViewChild('referralLink') private elLink: ElementRef;
   @ViewChild(ButtonGuidelineComponent) private buttonGuideLine: ButtonGuidelineComponent;
 
