@@ -8,8 +8,6 @@ import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-declare let gtag: Function;
-
 @Component({
   selector: 'app-landing-ambassador',
   templateUrl: './landing-ambassador.component.html',

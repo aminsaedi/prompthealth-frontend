@@ -13,7 +13,6 @@ import { Subscription , Subject } from 'rxjs';
 import { } from 'googlemaps';
 import { takeUntil } from 'rxjs/operators';
 
-declare let gtag: Function;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -172,13 +171,6 @@ export class AppComponent implements OnInit , OnDestroy {
 
   onRouteChanged(event: NavigationEnd | ActivationStart) {
     if (event instanceof NavigationEnd) {
-      /** google analytics */
-      if (!this.disableAnalytics) {
-        gtag('config', 'UA-192757039-1', {
-          page_path: event.urlAfterRedirects
-        });
-
-      }
     }
   }
 
