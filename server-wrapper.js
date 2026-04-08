@@ -381,14 +381,6 @@ function injectJsonLd(url, html) {
 
 // No-op: script deferring removed to prevent hydration mismatch
 function deferScripts(html) {
-  // Convert Angular's render-blocking styles.css to async loading
-  // This dramatically improves mobile FCP by eliminating the render-blocking CSS chain.
-  // The inline component styles from SSR handle initial layout, so CLS stays at 0.
-  html = html.replace(
-    /<link rel="stylesheet" href="(styles\.[a-f0-9]+\.css)">/,
-    '<link rel="preload" href="$1" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">' +
-    '<noscript><link rel="stylesheet" href="$1"></noscript>'
-  );
   return html;
 }
 
