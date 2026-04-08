@@ -28,7 +28,6 @@ import { Subscription } from "rxjs";
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-declare let fbq: Function;
 @Component({
   selector: "app-about-company",
   templateUrl: "./about-company.component.html",
@@ -237,7 +236,6 @@ export class AboutCompanyComponent implements OnInit , OnDestroy {
     }
 
     const link = ["/auth", "registration", "p"];
-    if (typeof fbq === "function") { fbq("track", "Subscribe"); }
     this._router.navigate(link);
   }
 

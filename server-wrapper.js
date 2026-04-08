@@ -3,7 +3,6 @@ const noop = function() { return noop; };
 noop.call = noop;
 noop.apply = noop;
 noop.bind = function() { return noop; };
-global.fbq = noop;
 global.ga = noop;
 global.gtag = noop;
 global.dataLayer = [];
