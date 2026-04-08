@@ -9,7 +9,6 @@ import { ModalEventComponent } from './modal-event/modal-event.component';
 import { HomeComponent } from './home/home.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CategoryService } from '../shared/services/category.service';
-import { NgxStripeModule, StripeService } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
 import { CardNewPostComponent } from './card-new-post/card-new-post.component';
 import { QuillModule } from 'ngx-quill';
@@ -133,7 +132,6 @@ const routes: Routes = [
   ],
   providers: [
     CategoryService,
-    StripeService,
   ],
   imports: [
     CommonModule,
@@ -147,7 +145,6 @@ const routes: Routes = [
       apiKey: 'AIzaSyCEn-p_qT9RNRn2qwRvIyUwfaWD09xDhkI',
       libraries: ['places']
     }),
-    NgxStripeModule.forRoot(environment.config.stripeKey),
     RouterModule.forChild(routes),
     QuillModule.forRoot( {formats: ['bold', 'italic', 'underline', 'header', 'list', 'link', 'image', 'video', 'code-block']}),
     EmbedVideo.forRoot(),
