@@ -21,7 +21,6 @@ import { EnterpriseContactComponent } from './enterprise-contact/enterprise-cont
 import { FormAuthComponent } from './form-auth/form-auth.component';
 import { AuthComponent } from './auth/auth.component';
 import { environment } from 'src/environments/environment';
-import { NgxStripeModule, StripeService } from 'ngx-stripe';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
@@ -51,7 +50,6 @@ const routes: Routes = [
     NgxSpinnerModule,
     ReactiveFormsModule,
     SocialLoginModule,
-    NgxStripeModule.forRoot(environment.config.stripeKey),
     AngularFireModule.initializeApp(environment.config.firebase),
     AngularFireMessagingModule,
   ],
@@ -66,7 +64,7 @@ const routes: Routes = [
   ],
   exports: [FormAuthComponent],
   providers: [
-    StripeService, {
+    {
       provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: false,
