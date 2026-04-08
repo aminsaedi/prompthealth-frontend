@@ -11,6 +11,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { ContactUsComponent } from "./contact-us/contact-us.component";
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 import { SharedModule } from '../shared/shared.module';
+import { AgmCoreModule } from '@agm/core';
 import { ListingCompanyComponent } from './listing-company/listing-company.component';
 import { CardProductComponent } from './_elements/card-product/card-product.component';
 import { InvitationComponent } from './invitation/invitation.component';
@@ -84,6 +85,10 @@ import { OnlineAcademyComponent } from './online-academy/online-academy.componen
     SharedModule,
     ButtonsModule,
     ModalModule.forRoot(),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCEn-p_qT9RNRn2qwRvIyUwfaWD09xDhkI',
+      libraries: ['places']
+    }),
   ],
 
   schemas: [
