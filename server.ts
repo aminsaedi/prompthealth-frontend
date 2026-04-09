@@ -81,6 +81,11 @@ export function app() {
   server.use('/stripe', stripeProxy);
 
 
+  /** Serve llms.txt for AI crawlers at well-known path */
+  server.get('/.well-known/llms.txt', (req, res) => {
+    res.sendFile(join(distFolder, 'llms.txt'));
+  });
+
   /** redirect for SEO */
   server.use('/magazines', routerRedirectForMagazine);
   

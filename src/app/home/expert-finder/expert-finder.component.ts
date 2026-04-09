@@ -20,6 +20,7 @@ import { getDistanceFromLatLng } from 'src/app/_helpers/latlng-to-distance';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { titleCaseOf } from 'src/app/_helpers/titlecase';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
+import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 
 @Component({
   selector: 'app-expert-finder',
@@ -131,6 +132,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     private _qService: QuestionnaireService,
     private _toastr: ToastrService,
     private _catService: CategoryService,
+    private _jsonLdService: JsonLdService,
   ) { }
 
   private subscriptionGeoLocation: Subscription;
@@ -138,6 +140,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    this._jsonLdService.removeJsonLd();
     if(this.subscriptionGeoLocation) {
       this.subscriptionGeoLocation.unsubscribe();
     }
@@ -214,6 +217,49 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       description: `Use our Expart Finder to find a top-rated ${specialist} in ${area} or offering virtual appointment.`,
     });  
 
+  }
+
+  setListingJsonLd(professionals: Professional[]) {
+    const items = professionals.slice(0, 10).map((p, i) => {
+      const item: any = {
+        '@type': 'ListItem',
+        'position': i + 1,
+        'item': {
+          '@type': 'ProfessionalService',
+          'name': p.name,
+          'url': `https://www.prompthealth.ca/community/profile/${p._id}`,
+          ...(p.profileImageFull ? { 'image': p.profileImageFull } : {}),
+          ...(p.city || p.state ? {
+            'address': {
+              '@type': 'PostalAddress',
+              ...(p.city ? { 'addressLocality': p.city } : {}),
+              ...(p.state ? { 'addressRegion': p.state } : {}),
+              'addressCountry': 'CA',
+            }
+          } : {}),
+          ...(p.rating > 0 && p.reviewCount > 0 ? {
+            'aggregateRating': {
+              '@type': 'AggregateRating',
+              'ratingValue': p.rating,
+              'reviewCount': p.reviewCount,
+              'bestRating': 5,
+            }
+          } : {}),
+          ...(p.priceFull && p.priceFull !== 'N/A' ? { 'priceRange': p.priceFull + ' / hr' } : {}),
+        },
+      };
+      return item;
+    });
+
+    if (items.length > 0) {
+      this._jsonLdService.setJsonLd([{
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        'name': 'Healthcare Practitioners',
+        'numberOfItems': professionals.length,
+        'itemListElement': items,
+      }]);
+    }
   }
 
   initController() {
@@ -417,11 +463,11 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       if(professionals){
         professionals.forEach(p => {
           this.formCompare.addControl(p._id, new FormControl());
-        });  
+        });
         if(this.queryParamsCurrent.keyloc) {
           this.controller.updateFilterByProfessionalsLocation();
-
         }
+        this.setListingJsonLd(professionals);
       }
       this.changePage(1);
     })

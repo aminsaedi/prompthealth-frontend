@@ -1,0 +1,66 @@
+# PromptHealth
+
+> PromptHealth is Canada's wellness navigator — a directory and community platform connecting users with trusted healthcare and wellness practitioners. Browse verified practitioner profiles, read expert health content, discover promotions, and book appointments.
+
+## About
+
+PromptHealth helps Canadians find and connect with healthcare providers including naturopaths, chiropractors, physiotherapists, psychologists, nutritionists, dentists, massage therapists, acupuncturists, and many other wellness professionals. Practitioners are listed with their qualifications, services, pricing, availability, location, and patient reviews.
+
+## Key Pages
+
+- [Homepage](https://www.prompthealth.ca/): Main entry point with featured practitioners and health content
+- [Find Practitioners](https://www.prompthealth.ca/practitioners): Search and filter practitioners by specialty, location, service type, and delivery method (in-person, virtual, both)
+- [Community Feed](https://www.prompthealth.ca/community/feed): Health and wellness articles, tips, and expert content from practitioners
+- [About](https://www.prompthealth.ca/about): Company information and mission
+- [FAQ](https://www.prompthealth.ca/faq): Frequently asked questions about using PromptHealth
+- [Plans](https://www.prompthealth.ca/plans): Practitioner listing plans and pricing
+
+## Practitioner Profiles
+
+Each practitioner has a dedicated profile page at `https://www.prompthealth.ca/community/profile/{id}` containing:
+
+- Full name, professional title, and credentials
+- Services offered and specialty areas
+- Service delivery methods (in-person, virtual, or both)
+- Pricing information
+- Office address and location (city, province)
+- Contact information (phone, email, website)
+- Patient reviews and ratings
+- Professional recommendations from other practitioners
+- Booking capability
+- Years of experience and certifications
+- Languages spoken
+- Age groups served
+- Insurance acceptance status
+
+## Content
+
+Health and wellness articles are published at `https://www.prompthealth.ca/community/content/{slug}` covering topics like:
+
+- Mental health and therapy
+- Nutrition and diet
+- Fitness and exercise
+- Chronic pain management
+- Holistic and alternative medicine
+- Preventive care
+- Women's health
+- Children's health
+
+## Coverage
+
+PromptHealth currently serves practitioners across Canada, with concentrations in:
+
+- British Columbia (Vancouver, Victoria, Kelowna)
+- Alberta (Calgary, Edmonton)
+- Ontario (Toronto, Ottawa, Hamilton)
+- Quebec (Montreal)
+- And other provinces
+
+## Sitemap
+
+The full sitemap is available at: https://www.prompthealth.ca/sitemap
+
+## Contact
+
+- Website: https://www.prompthealth.ca
+- Email: support@prompthealth.ca

@@ -24,6 +24,7 @@ import { SocialService } from '../social.service';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { takeUntil } from 'rxjs/operators';
 import { TransferState, makeStateKey } from '@angular/platform-browser';
+import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 
 
 @Component({
@@ -116,12 +117,14 @@ export class ProfileComponent implements OnInit , OnDestroy {
     private _changeDetector: ChangeDetectorRef,
     private _uService: UniversalService,
     private _transferState: TransferState,
+    private _jsonLdService: JsonLdService,
   ) { }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
     this.subscriptionLoginStatus.unsubscribe();
+    this._jsonLdService.removeJsonLd();
     if(this.timerRecommendationCarousel) {
       clearInterval(this.timerRecommendationCarousel);
     }
@@ -345,7 +348,122 @@ export class ProfileComponent implements OnInit , OnDestroy {
         title: `${this.profile.name}${this.profile.city || this.profile.state ? ` in ${[this.profile.city, this.profile.state].filter(Boolean).join(', ')}` : ''} | PromptHealth Community`,
         description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
       });
+
+      // Set structured data for AI and search engine discoverability
+      const jsonLd = this.buildProfileJsonLd(typeOfProvider, serviceDelivery);
+      if (jsonLd) {
+        this._jsonLdService.setJsonLd(jsonLd);
+      }
     }
+  }
+
+  buildProfileJsonLd(typeOfProvider: string[], serviceDelivery: string[]): object[] | null {
+    if (!this.profile) { return null; }
+
+    const p = this.profile;
+    const canonicalUrl = `https://www.prompthealth.ca/community/profile/${p._id}`;
+
+    // Build the main business/practitioner schema
+    const mainSchema: any = {
+      '@context': 'https://schema.org',
+      '@type': p.isC ? 'MedicalBusiness' : 'ProfessionalService',
+      'name': p.name,
+      'url': canonicalUrl,
+      'description': `${p.name}${typeOfProvider.length ? ' is ' + typeOfProvider.join(', ') : ''}${serviceDelivery.length ? ' offering ' + serviceDelivery.join(', ') + ' services' : ''}.`,
+    };
+
+    if (p.profileImageFull) {
+      mainSchema.image = p.profileImageFull;
+    }
+
+    if (p.phone) {
+      mainSchema.telephone = p.phone;
+    }
+
+    if (p.website) {
+      mainSchema.sameAs = p.website;
+    }
+
+    if (p.priceFull && p.priceFull !== 'N/A') {
+      mainSchema.priceRange = p.priceFull + ' / hr';
+    }
+
+    // Address
+    if (p.address || p.city || p.state) {
+      mainSchema.address = {
+        '@type': 'PostalAddress',
+        ...(p.address ? { 'streetAddress': p.address } : {}),
+        ...(p.city ? { 'addressLocality': p.city } : {}),
+        ...(p.state ? { 'addressRegion': p.state } : {}),
+        'addressCountry': 'CA',
+      };
+    }
+
+    // Geo coordinates
+    if (p.location && p.location[0] && p.location[1]) {
+      mainSchema.geo = {
+        '@type': 'GeoCoordinates',
+        'latitude': p.location[1],
+        'longitude': p.location[0],
+      };
+    }
+
+    // Aggregate rating
+    if (p.rating > 0 && p.reviewCount > 0) {
+      mainSchema.aggregateRating = {
+        '@type': 'AggregateRating',
+        'ratingValue': p.rating,
+        'reviewCount': p.reviewCount,
+        'bestRating': 5,
+        'worstRating': 1,
+      };
+    }
+
+    // Additional structured properties
+    if (typeOfProvider.length > 0) {
+      mainSchema.additionalType = typeOfProvider.map(t => t).join(', ');
+    }
+
+    if (p.isVirtualAvailable) {
+      mainSchema.hasOfferCatalog = {
+        '@type': 'OfferCatalog',
+        'name': 'Service Delivery',
+        'itemListElement': serviceDelivery.map(sd => ({
+          '@type': 'Offer',
+          'itemOffered': {
+            '@type': 'Service',
+            'name': sd,
+          }
+        })),
+      };
+    }
+
+    if (p.bookingUrl) {
+      mainSchema.potentialAction = {
+        '@type': 'ReserveAction',
+        'target': {
+          '@type': 'EntryPoint',
+          'urlTemplate': p.bookingUrl,
+        },
+        'result': {
+          '@type': 'Reservation',
+          'name': `Booking with ${p.name}`,
+        },
+      };
+    }
+
+    // Breadcrumb schema
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.prompthealth.ca' },
+        { '@type': 'ListItem', 'position': 2, 'name': 'Community', 'item': 'https://www.prompthealth.ca/community/feed' },
+        { '@type': 'ListItem', 'position': 3, 'name': p.name, 'item': canonicalUrl },
+      ],
+    };
+
+    return [mainSchema, breadcrumbSchema];
   }
 
   setProfileMenu() {

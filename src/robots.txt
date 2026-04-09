@@ -16,4 +16,37 @@ Disallow: /community/followers
 Disallow: /personal-match
 Disallow: /compare-practitioners
 
+# AI Crawlers - allowed to index public content
+User-agent: GPTBot
+Allow: /
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /community/editor/
+Disallow: /community/drafts
+Disallow: /community/notification
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /community/editor/
+Disallow: /community/drafts
+Disallow: /community/notification
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /community/editor/
+Disallow: /community/drafts
+Disallow: /community/notification
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /community/editor/
+Disallow: /community/drafts
+Disallow: /community/notification
+
 Sitemap: https://www.prompthealth.ca/sitemap

@@ -25,6 +25,7 @@
             "aot": true,
             "assets": [
               "src/robots.txt",
+              "src/llms.txt",
               "src/assets",
               "src/manifest.webmanifest",
               "src/firebase-messaging-sw.js",
