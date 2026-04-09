@@ -176,61 +176,73 @@ const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 function getSitemapPractitioners(): Promise<string> {
+  const today = new Date().toISOString().split('T')[0];
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <url>
         <loc>${baseURL}/practitioners</loc>
+        <lastmod>${today}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
       </url>
   `;
 
   return new Promise( async (resolve) => {
 
     const areas = getAllAreas();
-    
+
     Promise.all([getAllCategoryIds(), getAllTypeOfProviderIds()]).then(vals => {
       const categoryIds = vals[0];
       const typeOfProviderIds = vals[1];
 
       areas.forEach(area => {
-        /** listing by area */
         xml += `
           <url>
             <loc>${baseURL}/practitioners/area/${area}</loc>
+            <lastmod>${today}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.8</priority>
           </url>
         `;
       });
 
       categoryIds.forEach(category => {
-        /** listing by category */
         xml += `
           <url>
             <loc>${baseURL}/practitioners/category/${category}</loc>
+            <lastmod>${today}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.7</priority>
           </url>
         `;
 
         areas.forEach(area => {
-          /** listing by category + area */
           xml += `
             <url>
               <loc>${baseURL}/practitioners/category/${category}/${area}</loc>
+              <changefreq>weekly</changefreq>
+              <priority>0.6</priority>
             </url>
           `;
         });
       });
 
       typeOfProviderIds.forEach(id => {
-        /** listing by type of provider */
         xml += `
           <url>
             <loc>${baseURL}/practitioners/type/${id}</loc>
+            <lastmod>${today}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.7</priority>
           </url>
         `;
 
         areas.forEach(area => {
-          /** listing by type of provider + area */
           xml += `
             <url>
               <loc>${baseURL}/practitioners/type/${id}/${area}</loc>
+              <changefreq>weekly</changefreq>
+              <priority>0.6</priority>
             </url>
           `;
         });
@@ -327,6 +339,7 @@ function getSitemapPractitioners(): Promise<string> {
 // }
 
 function getSitemapSocial(): Promise<string> {
+  const today = new Date().toISOString().split('T')[0];
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     `;
@@ -342,6 +355,9 @@ function getSitemapSocial(): Promise<string> {
         xml += `
           <url>
             <loc>${baseURL}/community/${type}</loc>
+            <lastmod>${today}</lastmod>
+            <changefreq>daily</changefreq>
+            <priority>0.7</priority>
           </url>
         `;
       });
@@ -349,9 +365,13 @@ function getSitemapSocial(): Promise<string> {
       xml += `
         <url>
           <loc>${baseURL}/community/profile/${environment.config.idSA}</loc>
+          <changefreq>weekly</changefreq>
+          <priority>0.6</priority>
         </url>
         <url>
           <loc>${baseURL}/community/profile/${environment.config.idSA}/feed</loc>
+          <changefreq>weekly</changefreq>
+          <priority>0.5</priority>
         </url>
       `;
 
@@ -359,15 +379,23 @@ function getSitemapSocial(): Promise<string> {
         xml += `
           <url>
             <loc>${baseURL}/community/profile/${id}</loc>
+            <changefreq>monthly</changefreq>
+            <priority>0.8</priority>
           </url>
           <url>
             <loc>${baseURL}/community/profile/${id}/service</loc>
+            <changefreq>monthly</changefreq>
+            <priority>0.6</priority>
           </url>
           <url>
             <loc>${baseURL}/community/profile/${id}/feed</loc>
+            <changefreq>weekly</changefreq>
+            <priority>0.5</priority>
           </url>
           <url>
             <loc>${baseURL}/community/profile/${id}/review</loc>
+            <changefreq>monthly</changefreq>
+            <priority>0.6</priority>
           </url>
         `;
       });
@@ -381,11 +409,13 @@ function getSitemapSocial(): Promise<string> {
           <url>
             <loc>${loc}</loc>
             ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
+            <changefreq>monthly</changefreq>
+            <priority>0.7</priority>
           </url>
         `;
       });
       xml += '</urlset>';
-      resolve(xml);  
+      resolve(xml);
     });
   });
 }
