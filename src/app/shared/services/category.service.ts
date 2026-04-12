@@ -55,14 +55,13 @@ export class CategoryService {
   }
 
   titleOfBySlug(slug: string): string {
-    let title = '';
     if(this.categoryList) {
       const match = this.categoryListFlatten.find(c => slugify(c.item_text) === slug);
       if(match) {
-        title = match.item_text;
+        return match.item_text;
       }
     }
-    return title;
+    return '';
   }
 
   getCategoryAsync(): Promise<Category[]>{

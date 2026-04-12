@@ -192,7 +192,7 @@ function getSitemapPractitioners(): Promise<string> {
 
     const areas = getAllAreas();
 
-    Promise.all([getAllCategoryIds(), getAllTypeOfProviderSlugs()]).then(vals => {
+    Promise.all([getAllCategorySlugs(), getAllTypeOfProviderSlugs()]).then(vals => {
       const categoryIds = vals[0];
       const typeOfProviderSlugs = vals[1];
 
@@ -346,7 +346,7 @@ function getSitemapSocial(): Promise<string> {
     `;
 
   return new Promise((resolve) => {
-    Promise.all([getAllCategoryIds(true), getAllPractitionerIds(), getAllSocialContentIds()]).then(vals => {
+    Promise.all([getAllCategorySlugs(true), getAllPractitionerIds(), getAllSocialContentIds()]).then(vals => {
       const categoryIds = vals[0];
       const practitionerIds = vals[1];
       const contentIds = vals[2];
@@ -429,7 +429,7 @@ function getSitemapSocial(): Promise<string> {
 }
 
 
-function getAllCategoryIds(onlyRoot: boolean = false): Promise<String[]> {
+function getAllCategorySlugs(onlyRoot: boolean = false): Promise<String[]> {
   return new Promise((resolve) => {
     const categorySlugs: string[] = [];
 
@@ -440,11 +440,11 @@ function getAllCategoryIds(onlyRoot: boolean = false): Promise<String[]> {
             const cats = data.category;
             cats.forEach((c: any) => {
               const s = slugify(c.item_text);
-              if (s) categorySlugs.push(s);
+              if(s) categorySlugs.push(s);
               if(!onlyRoot) {
                 c.subCategory.forEach((cSub: any) => {
-                  const sSub = slugify(cSub.item_text);
-                  if (sSub) categorySlugs.push(sSub);
+                  const ss = slugify(cSub.item_text);
+                  if(ss) categorySlugs.push(ss);
                 });
               }
             });

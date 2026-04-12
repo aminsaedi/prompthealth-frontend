@@ -18,14 +18,13 @@ async function getIdToSlugMap(): Promise<{ [id: string]: string }> {
     if (res.status === 200) {
       for (const data of res.data.data) {
         if (data.category_type.toLowerCase() === 'goal') {
-          const cats = data.category;
-          for (const c of cats) {
-            const s = slugify(c.item_text);
-            if (s) map[c._id] = s;
-            if (c.subCategory) {
-              for (const cSub of c.subCategory) {
-                const sSub = slugify(cSub.item_text);
-                if (sSub) map[cSub._id] = sSub;
+          for (const cat of data.category) {
+            const s = slugify(cat.item_text);
+            if (s) map[cat._id] = s;
+            if (cat.subCategory) {
+              for (const sub of cat.subCategory) {
+                const ss = slugify(sub.item_text);
+                if (ss) map[sub._id] = ss;
               }
             }
           }

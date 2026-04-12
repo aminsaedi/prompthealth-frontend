@@ -165,7 +165,9 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   async ngOnInit() {
     this.questionnaires = await this._qService.getProfilePractitioner('SP');
 
-    // Client-side fallback: redirect old ObjectId URLs to slug URLs
+    await this._catService.getCategoryAsync();
+
+    // Client-side fallback: redirect old ObjectId URLs to slug URLs (type)
     const params = this._route.snapshot.params as IExpertFinderFilterParams;
     if (params.typeOfProviderSlug && /^[0-9a-f]{24}$/i.test(params.typeOfProviderSlug)) {
       const answer = this.questionnaires.typeOfProvider.answers.find(
@@ -181,9 +183,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       }
     }
 
-    // Client-side fallback: redirect old ObjectId category URLs to slug URLs
+    // Client-side fallback: redirect old ObjectId URLs to slug URLs (category)
     if (params.categorySlug && /^[0-9a-f]{24}$/i.test(params.categorySlug)) {
-      await this._catService.getCategoryAsync();
       const cat = this._catService.categoryListFlatten.find(
         c => c._id === params.categorySlug
       );
@@ -322,7 +323,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     return cat ? cat._id : null;
   }
 
-  async initController() {
+  initController() {
     const filterData: IFilterData = {
       ...this._route.snapshot.queryParams as IExpertFinderFilterQueryParams,
       ...this._route.snapshot.params as IExpertFinderFilterParams,
@@ -338,7 +339,6 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
     // Resolve categorySlug to categoryId for the controller
     if (filterData.categorySlug && !filterData.categoryId) {
-      await this._catService.getCategoryAsync();
       const resolvedId = this.resolveCategorySlug(filterData.categorySlug);
       if (resolvedId) {
         filterData.categoryId = resolvedId;

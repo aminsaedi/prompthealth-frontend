@@ -55,7 +55,6 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit , OnDestroy {
   private destroy$ = new Subject<void>();
-
   slugify = slugify;
 
   get sizeL() {
