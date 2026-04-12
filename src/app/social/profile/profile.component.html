@@ -92,7 +92,7 @@
           >
             <a
             class="text-body"
-            [routerLink]="['/community/profile', profile._id,  'followings']"
+            [routerLink]="profile.slug ? ['/practitioners', profile.slug, 'followings'] : ['/community/profile', profile._id, 'followings']"
             >
               <div class="subtitle2">Following</div>
               <div class="h5">{{profile.numFollowing}}</div>
@@ -347,7 +347,7 @@
 <ng-template #recommendationByMe let-data>
   <a 
   class="d-flex text-body"
-  [routerLink]="['/community/profile', data.to]"
+  [routerLink]="data.toSlug ? ['/practitioners', data.toSlug] : ['/community/profile', data.to]"
   >
     <profile-image [image]="data.toImage" [alt]="data.toName"></profile-image>
     <div class="ml-15p">

@@ -179,7 +179,7 @@
       <h6 class="mb-20p">Users</h6>
       <ul class="list-unstyled">
         <li *ngFor="let u of searchResult.users" class="mb-15p">
-          <a [routerLink]="['/community/profile', u._id]" [replaceUrl]="true" class="d-flex align-items-start text-body"
+          <a [routerLink]="u.slug ? ['/practitioners', u.slug] : ['/community/profile', u._id]" [replaceUrl]="true" class="d-flex align-items-start text-body"
             (click)="resetSearch()">
             <profile-image [image]="u.profileImage"></profile-image>
             <div class="ml-10p">

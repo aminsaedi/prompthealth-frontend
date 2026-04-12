@@ -6,7 +6,7 @@ import { GetQuery } from 'src/app/models/get-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
 import { Profile } from 'src/app/models/profile';
-import { IGetFollowingsResult } from 'src/app/models/response-data';
+import { IGetFollowingsResult, IGetProfileResult } from 'src/app/models/response-data';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SocialService } from '../social.service';
@@ -24,8 +24,11 @@ export class ProfileFollowListComponent implements OnInit , OnDestroy {
 
   get linkToBack() {
     const profileId = this._route.snapshot.params.userid;
+    const slug = this._route.snapshot.params.slug;
     let link: string[];
-    if(profileId) {
+    if(slug) {
+      link = ['/practitioners', slug];
+    } else if(profileId) {
       link = ['/community/profile', profileId];
     } else {
       link = ['/community/feed'];
@@ -54,9 +57,36 @@ export class ProfileFollowListComponent implements OnInit , OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this._route.params.subscribe((params: {userid: string}) => {
-      this.profile = this._socialService.profileOf(params.userid);
-      this.onProfileChanged(this.profile);
+    this._route.params.subscribe((params: {userid?: string, slug?: string}) => {
+      if (params.slug) {
+        // Slug-based route: lookup profile by slug from cache, fallback to API
+        const cached = this._socialService.getProfileBySlug(params.slug);
+        if (cached) {
+          this.onProfileChanged(cached);
+        } else {
+          // Direct navigation — cache is empty, fetch from API
+          this._sharedService.getNoAuth(`user/get-profile-by-slug/${params.slug}`).pipe(takeUntil(this.destroy$)).subscribe((res: IGetProfileResult) => {
+            if (res.statusCode === 200) {
+              const p = res.data;
+              let professional: Professional | Partner;
+              if (p.roles === 'P') {
+                professional = new Partner(p);
+              } else {
+                professional = new Professional(p._id, p);
+              }
+              this._socialService.saveCacheProfile(professional);
+              this.onProfileChanged(professional);
+            } else {
+              this.goback();
+            }
+          }, () => {
+            this.goback();
+          });
+        }
+      } else {
+        this.profile = this._socialService.profileOf(params.userid);
+        this.onProfileChanged(this.profile);
+      }
     });
   }
 
@@ -112,7 +142,10 @@ export class ProfileFollowListComponent implements OnInit , OnDestroy {
     const state = this._location.getState() as any;
     if(state && state.navigationId == 1) {
       const profileId = this._route.snapshot.params.userid;
-      if(profileId) {
+      const slug = this._route.snapshot.params.slug;
+      if(slug) {
+        this._router.navigate(['/practitioners', slug]);
+      } else if(profileId) {
         this._router.navigate(['/community/profile', profileId]);
       } else {
         this._router.navigate(['/community/feed']);

@@ -14,7 +14,7 @@
 
 <div class="d-flex align-items-center justify-content-between my-20p">
   <a 
-  [routerLink]="['/community/profile', post?.authorId]"
+  [routerLink]="post?.authorSlug ? ['/practitioners', post.authorSlug] : ['/community/profile', post?.authorId]"
   (click)="markCurrentPosition()"
   >
     <h6 class="d-flex align-items-center subtitle2">

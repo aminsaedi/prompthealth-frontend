@@ -7,6 +7,7 @@ export interface IUserDetail {
   _id?: string;
   userId?: string;
   roles?: 'U' | 'SP' | 'C' | 'P' | 'SA';
+  slug?: string;
 
   firstName?: string;
   lastName?: string;

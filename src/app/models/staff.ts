@@ -57,7 +57,9 @@ export class Staff implements IStaff {
     }
 
     if(!this.isStatic) {
-      this._linkToProfile = ['/community/profile', typeof data.userId == 'string' ? data.userId : data.userId._id] ;
+      const userId = typeof data.userId == 'string' ? data.userId : data.userId._id;
+      const userSlug = typeof data.userId != 'string' ? data.userId?.slug : null;
+      this._linkToProfile = userSlug ? ['/practitioners', userSlug] : ['/community/profile', userId];
     }
   }
 

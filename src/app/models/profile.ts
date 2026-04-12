@@ -101,7 +101,12 @@ export class Profile implements IProfile {
   get doneInitStaffs() { return !!this._staffs; }
   get doneInitShowcases() { return !!this._showcases; }
 
-  get linkToProfile() { return !this.isU ? '/community/profile/' + this._id : null; }
+  get slug() { return this.data.slug || null; }
+
+  get linkToProfile() {
+    if (this.isU) return null;
+    return this.data.slug ? '/practitioners/' + this.data.slug : '/community/profile/' + this._id;
+  }
 
   get gender() { return this.data.gender || ''; }
 

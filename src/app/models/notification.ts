@@ -5,6 +5,7 @@ export interface ISocialNotification {
   title?: string;
   body?: string;
   userId?: string;
+  slug?: string;
   isDeleted?: boolean;
   isRead?: boolean;
   image?: string;
@@ -37,7 +38,9 @@ export class SocialNotification implements ISocialNotification{
       case 'password-change': link = '/dashboard/profilemanagement/my-password'; break;
 
       case 'new-review':
-      case 'new-recommend': link = '/community/profile/' + this.userId + '/review'; break;
+      case 'new-recommend': link = this.data.slug
+        ? '/practitioners/' + this.data.slug + '/review'
+        : '/community/profile/' + this.userId + '/review'; break;
       default: link = this.data.link; break;
     }
     return link;

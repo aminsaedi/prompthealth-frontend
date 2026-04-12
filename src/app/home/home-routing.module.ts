@@ -75,7 +75,7 @@ const routes: Routes = [
   { path: 'practitioners/type', redirectTo: 'practitioners' },
   { path: 'practitioners/area', redirectTo: 'practitioners' },
   
-  {path: 'practitioners/:id', redirectTo: '/community/profile/:id'},
+  {path: 'practitioners/:practitionerSlug', redirectTo: '/community/profile/s/:practitionerSlug'},
   { path: 'compare-practitioners', component: ListingcompareComponent},
 
   {
