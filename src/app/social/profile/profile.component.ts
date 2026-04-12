@@ -156,13 +156,39 @@ export class ProfileComponent implements OnInit , OnDestroy {
 
     this._route.params.subscribe((param: {userid?: string, slug?: string}) => {
       if (param.slug) {
-        // Slug-based route: fetch profile by slug first
+        // Slug-based route: fetch profile by slug and use the data directly
         this._sharedService.getNoAuth(`user/get-profile-by-slug/${param.slug}`).pipe(takeUntil(this.destroy$)).subscribe((res: IGetProfileResult) => {
           if (res.statusCode === 200) {
-            this.profileId = res.data._id;
+            const p = res.data;
+            this.profileId = p._id;
             this.checkFollowStatus();
             this.checkBellStatus();
-            this.initProfile();
+
+            // Build Professional/Partner from the fetched data directly (no second API call)
+            let professional: Professional | Partner;
+            if (p.roles === 'P') {
+              professional = new Partner(p);
+            } else {
+              professional = new Professional(p._id, p);
+            }
+            this._socialService.saveCacheProfile(professional);
+
+            this.profile = professional;
+            this.initRecommendation();
+            this.initRecommendationByMe();
+            this.setProfileMenu();
+            this._socialService.setProfile(this.profile);
+            this.setMetaForAbout();
+            this.setBreadcrumbs();
+
+            this.getQuestionnaire().then(() => {
+              if (this.profile.isSP && !this.profile.triedFetchingTeam) {
+                this.fetchTeam();
+              }
+              if (this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
+                this.fetchPromos();
+              }
+            });
           } else {
             this._router.navigate(['404'], {replaceUrl: true});
           }

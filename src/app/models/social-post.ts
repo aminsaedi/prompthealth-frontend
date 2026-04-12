@@ -63,6 +63,7 @@ export interface ISocialPost {
     professional_organization?: IUserDetail['professional_organization'];
     certification?: IUserDetail['certification'],
     website?: IUserDetail['website'];
+    slug?: string;
     followed?: boolean;
     belled?: boolean;
   };
