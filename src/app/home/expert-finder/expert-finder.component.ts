@@ -1,9 +1,11 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren , OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, OnInit, PLATFORM_ID, QueryList, ViewChild, ViewChildren , OnDestroy } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { TransferState, makeStateKey } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription , Subject } from 'rxjs';
-import { skip , takeUntil } from 'rxjs/operators';
+import { skip , take, takeUntil } from 'rxjs/operators';
 import { ExpertFinderController, FilterFieldName, IExpertFinderFilterParams, IExpertFinderFilterQueryParams, IFilterData } from 'src/app/models/expert-finder-controller';
 import { Professional } from 'src/app/models/professional';
 import { IGetPractitionersResult } from 'src/app/models/response-data';
@@ -135,6 +137,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     private _toastr: ToastrService,
     private _catService: CategoryService,
     private _jsonLdService: JsonLdService,
+    private _transferState: TransferState,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) { }
 
   private subscriptionGeoLocation: Subscription;
@@ -220,6 +224,10 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
       this.queryParamsCurrent = p;
     });
+
+    if (isPlatformServer(this.platformId)) {
+      await this.prefetchListingForSSR();
+    }
 
     this.setMeta();
   }
@@ -351,6 +359,12 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       this.f.distance.valueChanges.subscribe(() => {
         this.showFilterDistanceLabel();
       });
+    }
+
+    // During SSR, skip search() — prefetchListingForSSR() handles data fetching
+    // so zone.js properly tracks the HTTP call and Angular Universal waits for it.
+    if (isPlatformServer(this.platformId)) {
+      return;
     }
 
     if (!this.controller.locationInitializedByFilter) {
@@ -531,7 +545,47 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     e.stopPropagation();    
   }
 
+  private prefetchListingForSSR(): Promise<void> {
+    const LISTING_KEY = makeStateKey<any>('listing-ssr-data');
+    const payload = this.controller.toPayload();
+    return new Promise<void>((resolve) => {
+      this._sharedService.postNoAuth(payload, 'user/filter').pipe(take(1)).subscribe(
+        (res: IGetPractitionersResult) => {
+          this._transferState.set(LISTING_KEY, res);
+          this.controller.setProfessionals(res.data.dataArr, false);
+          const professionals = this.controller.professionalsAll;
+          if (professionals) {
+            this.setListingJsonLd(professionals);
+          }
+          resolve();
+        },
+        () => { resolve(); }
+      );
+    });
+  }
+
   search() {
+    const LISTING_KEY = makeStateKey<any>('listing-ssr-data');
+    const cached = this._transferState.get(LISTING_KEY, null);
+    if (cached) {
+      this._transferState.remove(LISTING_KEY);
+      const res = cached as IGetPractitionersResult;
+      this.controller.setProfessionals(res.data.dataArr, this._uService.isBrowser);
+      const professionals = this.controller.professionalsAll;
+      this.formCompare = new FormGroup({});
+      if (professionals) {
+        professionals.forEach(p => {
+          this.formCompare.addControl(p._id, new FormControl());
+        });
+        if (this.queryParamsCurrent && this.queryParamsCurrent.keyloc) {
+          this.controller.updateFilterByProfessionalsLocation();
+        }
+        this.setListingJsonLd(professionals);
+      }
+      this.changePage(1);
+      return;
+    }
+
     const payload = this.controller.toPayload();
     this.controller.disposeProfesionnals();
     this._sharedService.postNoAuth(payload, 'user/filter').pipe(takeUntil(this.destroy$)).subscribe((res: IGetPractitionersResult) => {
