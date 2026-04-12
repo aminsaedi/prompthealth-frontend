@@ -19,6 +19,7 @@ import { expandVerticalAnimation, fadeAnimation, slideVerticalAnimation } from '
 import { getDistanceFromLatLng } from 'src/app/_helpers/latlng-to-distance';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { titleCaseOf } from 'src/app/_helpers/titlecase';
+import { slugify } from 'src/app/_helpers/slugify';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 
@@ -162,6 +163,24 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   }
 
   async ngOnInit() {
+    this.questionnaires = await this._qService.getProfilePractitioner('SP');
+
+    // Client-side fallback: redirect old ObjectId URLs to slug URLs
+    const params = this._route.snapshot.params as IExpertFinderFilterParams;
+    if (params.typeOfProviderSlug && /^[0-9a-f]{24}$/i.test(params.typeOfProviderSlug)) {
+      const answer = this.questionnaires.typeOfProvider.answers.find(
+        a => a._id === params.typeOfProviderSlug
+      );
+      if (answer) {
+        const slug = slugify(answer.item_text);
+        const segments = params.city
+          ? ['/practitioners/type', slug, params.city]
+          : ['/practitioners/type', slug];
+        this._router.navigate(segments, { replaceUrl: true });
+        return;
+      }
+    }
+
     this.initController();
 
     this._route.params.pipe(skip(1)).pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -185,7 +204,6 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       this.queryParamsCurrent = p;
     });
 
-    this.questionnaires = await this._qService.getProfilePractitioner('SP');
     this.setMeta();
   }
 
@@ -199,7 +217,12 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     }
 
     let typeOfProvider: string = null;
-    if(param.typeOfProviderId) {
+    if(param.typeOfProviderSlug) {
+      const answer = this.questionnaires.typeOfProvider.answers.find(
+        item => slugify(item.item_text) === param.typeOfProviderSlug
+      );
+      typeOfProvider = answer ? answer.item_text.toLowerCase() : null;
+    } else if(param.typeOfProviderId) {
       const answer = this.questionnaires.typeOfProvider.answers.find(item => item._id == param.typeOfProviderId);
       typeOfProvider = answer ? answer.item_text.toLowerCase() : null;
     }
@@ -264,11 +287,28 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     }
   }
 
+  private resolveTypeOfProviderSlug(slug: string): string | null {
+    if (!this.questionnaires?.typeOfProvider?.answers) return null;
+    const answer = this.questionnaires.typeOfProvider.answers.find(
+      a => slugify(a.item_text) === slug
+    );
+    return answer ? answer._id : null;
+  }
+
   initController() {
     const filterData: IFilterData = {
       ...this._route.snapshot.queryParams as IExpertFinderFilterQueryParams,
       ...this._route.snapshot.params as IExpertFinderFilterParams,
     }
+
+    // Resolve typeOfProviderSlug to typeOfProviderId for the controller
+    if (filterData.typeOfProviderSlug && !filterData.typeOfProviderId) {
+      const resolvedId = this.resolveTypeOfProviderSlug(filterData.typeOfProviderSlug);
+      if (resolvedId) {
+        filterData.typeOfProviderId = resolvedId;
+      }
+    }
+
     this.controller = new ExpertFinderController(filterData, {countPerPage: 10});
     if (!this.formFilter) {
       this.formFilter = this.controller.createForm();

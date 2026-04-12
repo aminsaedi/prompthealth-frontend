@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { environment } from 'src/environments/environment';
 import { locations } from 'src/app/_helpers/location-data';
+import { slugify } from 'src/app/_helpers/slugify';
 
 const apiURL = environment.config.API_URL;
 const baseURL = environment.config.FRONTEND_BASE;
@@ -191,9 +192,9 @@ function getSitemapPractitioners(): Promise<string> {
 
     const areas = getAllAreas();
 
-    Promise.all([getAllCategoryIds(), getAllTypeOfProviderIds()]).then(vals => {
+    Promise.all([getAllCategoryIds(), getAllTypeOfProviderSlugs()]).then(vals => {
       const categoryIds = vals[0];
-      const typeOfProviderIds = vals[1];
+      const typeOfProviderSlugs = vals[1];
 
       areas.forEach(area => {
         xml += `
@@ -227,10 +228,10 @@ function getSitemapPractitioners(): Promise<string> {
         });
       });
 
-      typeOfProviderIds.forEach(id => {
+      typeOfProviderSlugs.forEach(slug => {
         xml += `
           <url>
-            <loc>${baseURL}/practitioners/type/${id}</loc>
+            <loc>${baseURL}/practitioners/type/${slug}</loc>
             <lastmod>${today}</lastmod>
             <changefreq>weekly</changefreq>
             <priority>0.7</priority>
@@ -240,7 +241,7 @@ function getSitemapPractitioners(): Promise<string> {
         areas.forEach(area => {
           xml += `
             <url>
-              <loc>${baseURL}/practitioners/type/${id}/${area}</loc>
+              <loc>${baseURL}/practitioners/type/${slug}/${area}</loc>
               <changefreq>weekly</changefreq>
               <priority>0.6</priority>
             </url>
@@ -453,22 +454,23 @@ function getAllCategoryIds(onlyRoot: boolean = false): Promise<String[]> {
   });
 }
 
-function getAllTypeOfProviderIds(): Promise<string[]> {
+function getAllTypeOfProviderSlugs(): Promise<string[]> {
   return new Promise((resolve) => {
-    const typeOfProviderIds: string[] = [];
+    const typeOfProviderSlugs: string[] = [];
     axios.get(apiURL + 'questionare/get-questions?type=SP', { timeout: 10000 }).then(res => {
       if(res.status == 200) {
         const qs = res.data.data;
         for(let q of qs) {
           if(q.slug == 'providers-are-you') {
             q.answers.forEach((a: QuestionnaireAnswer) => {
-              typeOfProviderIds.push(a._id);
+              const s = slugify(a.item_text);
+              if (s) typeOfProviderSlugs.push(s);
             });
-            break;  
+            break;
           }
         }
       }
-      resolve(typeOfProviderIds);
+      resolve(typeOfProviderSlugs);
     });
   })
 }
