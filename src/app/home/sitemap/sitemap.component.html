@@ -56,7 +56,7 @@
     <h3 class="mb-3">Search By Provider Type</h3>
     <ul class="list-unstyled row" *ngIf="typeOfProviderList">
       <li *ngFor="let a of typeOfProviderList;" class="mb-2 col-12 colsm-6 col-md-4">
-        <a class="text-dark py-2 d-inline-block" [routerLink]="['/practitioners/type', a._id]">{{a.item_text}}</a>
+        <a class="text-dark py-2 d-inline-block" [routerLink]="['/practitioners/type', a.slug]">{{a.item_text}}</a>
       </li>
     </ul>
   </section>

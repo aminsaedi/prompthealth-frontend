@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { IUserDetail } from 'src/app/models/user-detail';
+import { slugify } from 'src/app/_helpers/slugify';
 
 @Injectable({
   providedIn: 'root'
@@ -221,9 +222,16 @@ export class QuestionnaireService {
       }
       this.getNoAuth(path).subscribe((res: { statusCode: number; message: string; data: any }) => {
         if (res.statusCode === 200) {
-          resolve(res.data);
+          const questionnaires: Questionnaire[] = res.data;
+          // Populate slug on typeOfProvider answers for SEO-friendly URLs
+          for (const q of questionnaires) {
+            if (q.slug === 'providers-are-you' && q.answers) {
+              q.answers.forEach(a => { a.slug = slugify(a.item_text); });
+            }
+          }
+          resolve(questionnaires);
         } else {
-          reject(res.message); 
+          reject(res.message);
         }
       }, (err: string) => {
         reject(err);
@@ -275,6 +283,7 @@ export interface QuestionnaireAnswer {
   active?: boolean;
   subans?: boolean;
   subansData?: QuestionnaireAnswer[];
+  slug?: string;
 }
 
 export interface Questionnaire {

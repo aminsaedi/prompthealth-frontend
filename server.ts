@@ -25,6 +25,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { routerSitemap } from './src/app/app.server.sitemap.module';
 import { environment } from 'src/environments/environment';
 import { routerRedirectForMagazine } from 'src/app/app.server.redirect.module';
+import { routerRedirectForTypeOfProvider } from 'src/app/app.server.redirect-type.module';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
@@ -88,6 +89,7 @@ export function app() {
 
   /** redirect for SEO */
   server.use('/magazines', routerRedirectForMagazine);
+  server.use('/practitioners/type', routerRedirectForTypeOfProvider);
   
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })

@@ -11,7 +11,9 @@ import { IGetPractitionersResult } from "./response-data";
 export interface IExpertFinderFilterParams extends Params {
   categoryId: string,
   city: string,
-  typeOfProviderId: string
+  typeOfProviderSlug: string,
+  /** @deprecated kept for backward compat — new routes use typeOfProviderSlug */
+  typeOfProviderId?: string,
 }
 
 export interface IExpertFinderFilterQueryParams extends Params {
@@ -117,6 +119,7 @@ export class ExpertFinderController {
 
     if(data.categoryId) { this._category.push(data.categoryId); }
     if(data.typeOfProviderId) { this._typeOfProvider.push(data.typeOfProviderId); }
+    // typeOfProviderSlug is resolved to an ID in expert-finder.component before controller init
 
     this._lat = Number(data.lt) || null;
     this._lng = Number(data.lg) || null;
