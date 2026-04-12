@@ -99,6 +99,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     { label: 'Practitioners' }
   ];
   public pageCurrent: number = 1;
+  public pageHeading: string = 'Find Health Care Providers in Canada';
 
   public questionnaires: QuestionnaireMapProfilePractitioner;
 
@@ -208,9 +209,10 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     let specialist = category ? `${category} specialists` : typeOfProvider ? `${typeOfProvider}` : 'health care providers';
     let area = city ? city : 'Canada';
 
+    this.pageHeading = `Find Best ${titleCaseOf(specialist)} in ${area}`;
 
     let desc = 'Use our Expert Finder to find a top-rated ';
-    desc += 
+    desc +=
 
     this._uService.setMeta(this._router.url, {
       title: `Find best ${specialist} in ${area} | PromptHealth`,
