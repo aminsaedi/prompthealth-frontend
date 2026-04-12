@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 // import { ToastrService } from 'ngx-toastr';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { SharedService } from './shared.service';
+import { slugify } from 'src/app/_helpers/slugify';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,16 @@ export class CategoryService {
       }
     }
     return title;
+  }
+
+  titleOfBySlug(slug: string): string {
+    if(this.categoryList) {
+      const match = this.categoryListFlatten.find(c => slugify(c.item_text) === slug);
+      if(match) {
+        return match.item_text;
+      }
+    }
+    return '';
   }
 
   getCategoryAsync(): Promise<Category[]>{

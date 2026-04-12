@@ -28,6 +28,7 @@ import { Blog } from "../models/blog";
 import { FeaturedExpertController } from "../models/featured-expert-controller";
 import { smoothHorizontalScrolling } from "../_helpers/smooth-scroll";
 import { environment } from "src/environments/environment";
+import { slugify } from "../_helpers/slugify";
 import { SocialPostSearchQuery } from "../models/social-post-search-query";
 import { IGetSocialContentsByAuthorResult } from "../models/response-data";
 import { SocialArticle } from "../models/social-article";
@@ -54,6 +55,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit , OnDestroy {
   private destroy$ = new Subject<void>();
+  slugify = slugify;
 
   get sizeL() {
     return window && window.innerWidth >= 992;

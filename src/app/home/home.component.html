@@ -201,7 +201,7 @@
             <a [routerLink]="[
                 '/practitioners',
                 'category',
-                dataPerRow.categoryInjected._id
+                slugify(dataPerRow.categoryInjected.item_text)
               ]">
               <list-item [leading]="
                   categoryController.getIconOf(dataPerRow.categoryInjected)
@@ -217,7 +217,7 @@
               let sub of dataPerRow.categoryInjected.subCategory;
               let j = index
             ">
-            <a [routerLink]="['/practitioners', 'category', sub._id]">
+            <a [routerLink]="['/practitioners', 'category', slugify(sub.item_text)]">
               <list-item [leading]="
                   categoryController.getIconOf(dataPerRow.categoryInjected)
                 " leadingClass="text-placeholder" [leadingStyle]="{ fontSize: '30px' }" action="arrow-right"

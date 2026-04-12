@@ -65,8 +65,8 @@ const routes: Routes = [
   { path: 'testimonial', component: TestimonialComponent, },
 
   { path: 'practitioners', component: ExpertFinderComponent },
-  { path: 'practitioners/category/:categoryId', component: ExpertFinderComponent },
-  { path: 'practitioners/category/:categoryId/:city', component: ExpertFinderComponent },
+  { path: 'practitioners/category/:categorySlug', component: ExpertFinderComponent },
+  { path: 'practitioners/category/:categorySlug/:city', component: ExpertFinderComponent },
   { path: 'practitioners/type/:typeOfProviderSlug', component: ExpertFinderComponent },
   { path: 'practitioners/type/:typeOfProviderSlug/:city', component: ExpertFinderComponent },
   { path: 'practitioners/area/:city', component: ExpertFinderComponent },
