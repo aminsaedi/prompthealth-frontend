@@ -431,7 +431,7 @@ function getSitemapSocial(): Promise<string> {
 
 function getAllCategoryIds(onlyRoot: boolean = false): Promise<String[]> {
   return new Promise((resolve) => {
-    const categoryIds: string[] = [];
+    const categorySlugs: string[] = [];
 
     axios.get(apiURL + 'questionare/get-service', { timeout: 10000 }).then(res => {
       if(res.status == 200) {
@@ -439,20 +439,22 @@ function getAllCategoryIds(onlyRoot: boolean = false): Promise<String[]> {
           if(data.category_type.toLowerCase() == 'goal') {
             const cats = data.category;
             cats.forEach((c: any) => {
-              categoryIds.push(c._id);
+              const s = slugify(c.item_text);
+              if (s) categorySlugs.push(s);
               if(!onlyRoot) {
                 c.subCategory.forEach((cSub: any) => {
-                  categoryIds.push(cSub._id);
-                });  
+                  const sSub = slugify(cSub.item_text);
+                  if (sSub) categorySlugs.push(sSub);
+                });
               }
             });
             break;
           }
         }
       }
-      resolve(categoryIds);
+      resolve(categorySlugs);
     }).catch(error => {
-      resolve(categoryIds);
+      resolve(categorySlugs);
     });
   });
 }

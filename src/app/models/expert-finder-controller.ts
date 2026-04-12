@@ -9,7 +9,9 @@ import { Professional } from "./professional";
 import { IGetPractitionersResult } from "./response-data";
 
 export interface IExpertFinderFilterParams extends Params {
-  categoryId: string,
+  categorySlug: string,
+  /** @deprecated kept for backward compat — new routes use categorySlug */
+  categoryId?: string,
   city: string,
   typeOfProviderSlug: string,
   /** @deprecated kept for backward compat — new routes use typeOfProviderSlug */

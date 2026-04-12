@@ -181,6 +181,22 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       }
     }
 
+    // Client-side fallback: redirect old ObjectId category URLs to slug URLs
+    if (params.categorySlug && /^[0-9a-f]{24}$/i.test(params.categorySlug)) {
+      await this._catService.getCategoryAsync();
+      const cat = this._catService.categoryListFlatten.find(
+        c => c._id === params.categorySlug
+      );
+      if (cat) {
+        const slug = slugify(cat.item_text);
+        const segments = params.city
+          ? ['/practitioners/category', slug, params.city]
+          : ['/practitioners/category', slug];
+        this._router.navigate(segments, { replaceUrl: true });
+        return;
+      }
+    }
+
     this.initController();
 
     this._route.params.pipe(skip(1)).pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -211,8 +227,11 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     const param = this._route.snapshot.params as IExpertFinderFilterParams;
 
     let category = null;
-    if(param.categoryId) {
-      await this._catService.getCategoryAsync(); 
+    if(param.categorySlug) {
+      await this._catService.getCategoryAsync();
+      category = this._catService.titleOfBySlug(param.categorySlug).toLowerCase();
+    } else if(param.categoryId) {
+      await this._catService.getCategoryAsync();
       category = this._catService.titleOf(param.categoryId).toLowerCase();
     }
 
@@ -295,7 +314,15 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     return answer ? answer._id : null;
   }
 
-  initController() {
+  private resolveCategorySlug(slug: string): string | null {
+    if (!this._catService.categoryList) return null;
+    const cat = this._catService.categoryListFlatten.find(
+      c => slugify(c.item_text) === slug
+    );
+    return cat ? cat._id : null;
+  }
+
+  async initController() {
     const filterData: IFilterData = {
       ...this._route.snapshot.queryParams as IExpertFinderFilterQueryParams,
       ...this._route.snapshot.params as IExpertFinderFilterParams,
@@ -306,6 +333,15 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       const resolvedId = this.resolveTypeOfProviderSlug(filterData.typeOfProviderSlug);
       if (resolvedId) {
         filterData.typeOfProviderId = resolvedId;
+      }
+    }
+
+    // Resolve categorySlug to categoryId for the controller
+    if (filterData.categorySlug && !filterData.categoryId) {
+      await this._catService.getCategoryAsync();
+      const resolvedId = this.resolveCategorySlug(filterData.categorySlug);
+      if (resolvedId) {
+        filterData.categoryId = resolvedId;
       }
     }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 // import { ToastrService } from 'ngx-toastr';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { SharedService } from './shared.service';
+import { slugify } from 'src/app/_helpers/slugify';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,17 @@ export class CategoryService {
       const cat: Category = this.categoryList.find(_cat => id == _cat._id);
       if(cat) {
         title = cat.item_text;
+      }
+    }
+    return title;
+  }
+
+  titleOfBySlug(slug: string): string {
+    let title = '';
+    if(this.categoryList) {
+      const match = this.categoryListFlatten.find(c => slugify(c.item_text) === slug);
+      if(match) {
+        title = match.item_text;
       }
     }
     return title;
