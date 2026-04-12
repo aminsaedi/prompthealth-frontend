@@ -21,7 +21,8 @@ async function getIdToSlugMap(): Promise<{ [id: string]: string }> {
       for (const q of qs) {
         if (q.slug === 'providers-are-you') {
           q.answers.forEach((a: QuestionnaireAnswer) => {
-            map[a._id] = slugify(a.item_text);
+            const s = slugify(a.item_text);
+            if (s) map[a._id] = s;
           });
           break;
         }

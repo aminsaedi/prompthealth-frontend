@@ -463,7 +463,8 @@ function getAllTypeOfProviderSlugs(): Promise<string[]> {
         for(let q of qs) {
           if(q.slug == 'providers-are-you') {
             q.answers.forEach((a: QuestionnaireAnswer) => {
-              typeOfProviderSlugs.push(slugify(a.item_text));
+              const s = slugify(a.item_text);
+              if (s) typeOfProviderSlugs.push(s);
             });
             break;
           }

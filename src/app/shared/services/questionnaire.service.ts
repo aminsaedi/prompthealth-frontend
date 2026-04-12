@@ -226,7 +226,7 @@ export class QuestionnaireService {
           // Populate slug on typeOfProvider answers for SEO-friendly URLs
           for (const q of questionnaires) {
             if (q.slug === 'providers-are-you' && q.answers) {
-              q.answers.forEach(a => { a.slug = slugify(a.item_text); });
+              q.answers.forEach(a => { a.slug = slugify(a.item_text) || a._id; });
             }
           }
           resolve(questionnaires);
@@ -283,6 +283,7 @@ export interface QuestionnaireAnswer {
   active?: boolean;
   subans?: boolean;
   subansData?: QuestionnaireAnswer[];
+  /** Computed: derived from item_text via slugify(). Not stored in DB. */
   slug?: string;
 }
 

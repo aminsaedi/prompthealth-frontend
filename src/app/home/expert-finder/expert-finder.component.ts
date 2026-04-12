@@ -164,6 +164,23 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
   async ngOnInit() {
     this.questionnaires = await this._qService.getProfilePractitioner('SP');
+
+    // Client-side fallback: redirect old ObjectId URLs to slug URLs
+    const params = this._route.snapshot.params as IExpertFinderFilterParams;
+    if (params.typeOfProviderSlug && /^[0-9a-f]{24}$/i.test(params.typeOfProviderSlug)) {
+      const answer = this.questionnaires.typeOfProvider.answers.find(
+        a => a._id === params.typeOfProviderSlug
+      );
+      if (answer) {
+        const slug = slugify(answer.item_text);
+        const segments = params.city
+          ? ['/practitioners/type', slug, params.city]
+          : ['/practitioners/type', slug];
+        this._router.navigate(segments, { replaceUrl: true });
+        return;
+      }
+    }
+
     this.initController();
 
     this._route.params.pipe(skip(1)).pipe(takeUntil(this.destroy$)).subscribe(() => {
