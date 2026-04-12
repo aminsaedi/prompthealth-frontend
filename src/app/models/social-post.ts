@@ -8,6 +8,7 @@ export interface ISocialPost {
   _id: string;
   contentType: 'NOTE' | 'PROMO' | 'ARTICLE' | 'EVENT';
   authorId?: string;
+  authorSlug?: string;
 
   status?: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'HIDDEN';
   description?: string;
@@ -161,6 +162,7 @@ export class SocialPostBase implements ISocialPost {
   get authorOrganization(): string { return this.author?.professional_organization?.trim() || ''; }
   get authorImage() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.profileImage) ? this._s3 + '350x220/' + this.data.author.profileImage : 'assets/img/logo-sm-square.png'}
   get authorWebsite() { return this.author?.website || ''; }
+  get authorSlug(): string { return (this.data.author && typeof this.data.author != 'string' && this.data.author.slug) ? this.data.author.slug : null; }
   get authorVerified() {return (this.data.author && typeof this.data.author != 'string' && this.data.author.verifiedBadge) ? true : false; }
   get authorBelled() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.belled) ? true : false; } 
   get authorFollowed() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.followed) ? true : false; } 

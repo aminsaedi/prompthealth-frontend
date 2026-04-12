@@ -18,7 +18,7 @@
             <th class="table-active">Feature</th>
             <th *ngFor="let p of professionals">
               <a 
-                [routerLink]="['/community/profile/', p._id]"
+                [routerLink]="p.slug ? ['/practitioners', p.slug] : ['/community/profile/', p._id]"
               >{{p.name}}</a></th>
           </tr>
         </thead>

@@ -148,6 +148,16 @@ export class SocialService {
     return profile ? profile.userdata : null;
   }
 
+  getProfileBySlug(slug: string): Professional {
+    const users = this.postCache.dataPerTaxonomy.users;
+    for (const id in users) {
+      if (users[id]?.userdata?.slug === slug) {
+        return users[id].userdata;
+      }
+    }
+    return null;
+  }
+
   dispose() {
     this.postCache = new PostCache();
     this.notificationCache = null;

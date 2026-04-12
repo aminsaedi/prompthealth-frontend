@@ -252,7 +252,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
         'item': {
           '@type': 'ProfessionalService',
           'name': p.name,
-          'url': `https://www.prompthealth.ca/community/profile/${p._id}`,
+          'url': p.slug ? `https://www.prompthealth.ca/practitioners/${p.slug}` : `https://www.prompthealth.ca/community/profile/${p._id}`,
           ...(p.profileImageFull ? { 'image': p.profileImageFull } : {}),
           ...(p.city || p.state ? {
             'address': {

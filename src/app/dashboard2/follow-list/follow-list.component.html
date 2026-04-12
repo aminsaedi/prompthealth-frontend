@@ -42,7 +42,7 @@
           class="mt-10p mt-md-0p ml-md-30p"
           >
             <a
-            [routerLink]="['/community/profile', follow._id]"
+            [routerLink]="follow.linkToProfile ? [follow.linkToProfile] : ['/community/profile', follow._id]"
             class="btn btn-outline small text-nowrap"
             >See profile</a>
           </div>

@@ -70,7 +70,10 @@ export class ProfileComponent implements OnInit , OnDestroy {
   }
 
   linkToChildRoute(link: string) {
-    const route = ['/community/profile', this.profileId];
+    const slug = this.profile?.slug;
+    const route = slug
+      ? ['/practitioners', slug]
+      : ['/community/profile', this.profileId];
     if(link) {
       route.push(link);
     }
@@ -151,11 +154,27 @@ export class ProfileComponent implements OnInit , OnDestroy {
       isUrgent: new FormControl(false),
     });
 
-    this._route.params.subscribe((param: {userid: string}) => {
-      this.profileId = param.userid;
-      this.checkFollowStatus();
-      this.checkBellStatus();
-      this.initProfile();
+    this._route.params.subscribe((param: {userid?: string, slug?: string}) => {
+      if (param.slug) {
+        // Slug-based route: fetch profile by slug first
+        this._sharedService.getNoAuth(`user/get-profile-by-slug/${param.slug}`).pipe(takeUntil(this.destroy$)).subscribe((res: IGetProfileResult) => {
+          if (res.statusCode === 200) {
+            this.profileId = res.data._id;
+            this.checkFollowStatus();
+            this.checkBellStatus();
+            this.initProfile();
+          } else {
+            this._router.navigate(['404'], {replaceUrl: true});
+          }
+        }, () => {
+          this._router.navigate(['404'], {replaceUrl: true});
+        });
+      } else {
+        this.profileId = param.userid;
+        this.checkFollowStatus();
+        this.checkBellStatus();
+        this.initProfile();
+      }
 
       if(this.timerRecommendationCarousel) {
         clearInterval(this.timerRecommendationCarousel);
@@ -361,7 +380,9 @@ export class ProfileComponent implements OnInit , OnDestroy {
     if (!this.profile) { return null; }
 
     const p = this.profile;
-    const canonicalUrl = `https://www.prompthealth.ca/community/profile/${p._id}`;
+    const canonicalUrl = p.slug
+      ? `https://www.prompthealth.ca/practitioners/${p.slug}`
+      : `https://www.prompthealth.ca/community/profile/${p._id}`;
 
     // Build the main business/practitioner schema
     const mainSchema: any = {
@@ -687,7 +708,10 @@ export class ProfileComponent implements OnInit , OnDestroy {
 
   onClickWriteRecommendation() {
     this._socialService.setProfileForReferral(this.profile);
-    this._router.navigate(['/community/profile/', this.profile._id, 'new-recommend']);
+    const route = this.profile.slug
+      ? ['/practitioners', this.profile.slug, 'new-recommend']
+      : ['/community/profile/', this.profile._id, 'new-recommend'];
+    this._router.navigate(route);
   }
 
 

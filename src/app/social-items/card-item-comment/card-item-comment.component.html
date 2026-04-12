@@ -15,7 +15,7 @@
   <div class="d-flex mt-20p" [ngClass]="{indent: indent}">
     <a 
     *ngIf="!data.author.isU"
-    [routerLink]="['/community/profile', data.author._id]"
+    [routerLink]="data.author.slug ? ['/practitioners', data.author.slug] : ['/community/profile', data.author._id]"
     (click)="markCurrentPosition()"
     >
       <profile-image size="42" [image]="data.author.profileImage"></profile-image>
@@ -27,7 +27,7 @@
       <div class="rounded-8p px-15p pt-15p pb-5p d-inline-block bg-background">    
         <a 
         *ngIf="!data.author.isU"
-        [routerLink]="['/community/profile', data.author._id]"
+        [routerLink]="data.author.slug ? ['/practitioners', data.author.slug] : ['/community/profile', data.author._id]"
         class="text-body"
         (click)="markCurrentPosition()"
         >

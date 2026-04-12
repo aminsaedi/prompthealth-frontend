@@ -2,7 +2,7 @@
   <section class="d-flex align-items-start">
     <a
     *ngIf="data.profileId" 
-    [routerLink]="['/community/profile', data.profileId]"
+    [routerLink]="data.slug ? ['/practitioners', data.slug] : ['/community/profile', data.profileId]"
     class="mr-10p image-container-100pc overflow-hidden has-account"
     >
       <img loading="lazy" 
@@ -24,7 +24,7 @@
     <div class="mt-5p">
       <a 
       *ngIf="data.profileId" 
-      [routerLink]="['/community/profile', data.profileId]">
+      [routerLink]="data.slug ? ['/practitioners', data.slug] : ['/community/profile', data.profileId]">
         <div class="subtitle1 text-white">{{data.name}}</div>
       </a>
       <ng-container *ngIf="!data.profileId">

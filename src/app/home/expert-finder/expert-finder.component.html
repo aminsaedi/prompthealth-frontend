@@ -119,7 +119,7 @@
         <ul class="list-unstyled">
           <a 
           *ngFor="let p of controller.professionals; let i = index;"
-          [routerLink]="['/community/profile', p._id]"
+          [routerLink]="p.slug ? ['/practitioners', p.slug] : ['/community/profile', p._id]"
           class="text-body"
           >
             <li
@@ -303,7 +303,7 @@
       *ngIf="selectedProfessionalInMap"
       [@slideVertical]
       >
-        <a [routerLink]="['/community/profile', selectedProfessionalInMap?._id]">
+        <a [routerLink]="selectedProfessionalInMap?.slug ? ['/practitioners', selectedProfessionalInMap.slug] : ['/community/profile', selectedProfessionalInMap?._id]">
           <div class="p-20p d-flex align-items-center">
             <profile-image size="70" [image]="selectedProfessionalInMap.image"></profile-image>
             <div class="text-white ml-15p">

@@ -60,6 +60,29 @@ const routes: Routes = [
       { path: 'review', component: ProfileReviewComponent, data: {order: 5} },
     ] },
 
+    { path: 'profile/s/:slug', component: ProfileComponent, children: [
+      { path: '', component: ProfileAboutComponent, data: {order: 1} } ,
+      { path: 'service', component: ProfileServiceComponent, data: {order:2} } ,
+      { path: 'feed', component: ProfileFeedComponent, data: {order: 3} },
+      { path: 'promotion', component: ProfilePromotionComponent, data: {order: 3}, canDeactivate: [GuardIfEditorLockedGuard] },
+      { path: 'event', component: ProfileEventComponent, data: {order: 4}, children: [
+        { path: '', component: ProfileEventUpcomingComponent },
+        { path: 'past', component: ProfileEventPastComponent },
+      ] },
+      { path: 'review', component: ProfileReviewComponent, data: {order: 5} },
+    ] },
+
+    { path: 'profile/s/:slug/followings', component: ProfileFollowListComponent, data: {type: 'following'}},
+
+    { path: 'profile/s/:slug/new-review', component: NewReferralComponent, data: {type: 'review'},
+      canActivate: [GuardIfNotEligibleToAcessEditorGuard, GuardIfNotProfileSelectedGuard],
+      canDeactivate: [GuardIfNewReferralIncompletedGuard]
+    },
+    { path: 'profile/s/:slug/new-recommend', component: NewReferralComponent, data: {type: 'recommend'},
+      canActivate: [GuardIfNotEligibleToAcessEditorGuard, GuardIfNotProfileSelectedGuard],
+      canDeactivate: [GuardIfNewReferralIncompletedGuard]
+    },
+
     { path: 'profile/:userid/followings', component: ProfileFollowListComponent, data: {type: 'following'}},
 
     { path: 'profile/:userid/new-review', component: NewReferralComponent, data: {type: 'review'}, 

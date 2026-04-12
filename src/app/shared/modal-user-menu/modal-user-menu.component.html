@@ -127,7 +127,7 @@ id="user-menu"
         <a
         *ngIf="user.hasProfile"
         class="btn btn-text-body small px-0"
-        (click)="onClickUserMenuItem(['/community/profile', userId])"
+        (click)="onClickUserMenuItem(user.slug ? ['/practitioners', user.slug] : ['/community/profile', userId])"
         >
           <i iconPh="user" class="mr-5p"></i>
           <span>See my profile</span>

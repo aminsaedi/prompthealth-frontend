@@ -110,7 +110,10 @@ export class PopupPostMenuComponent implements OnInit , OnDestroy {
     e.stopPropagation();
     e.preventDefault();
     this._socialService.setProfileForReferral(new Profile(this.post.author));
-    this._router.navigate(['/community/profile', this.post.authorId, 'new-recommend']);
+    const route = this.post.authorSlug
+      ? ['/practitioners', this.post.authorSlug, 'new-recommend']
+      : ['/community/profile', this.post.authorId, 'new-recommend'];
+    this._router.navigate(route);
   }
 
   toggleMarkAsNews(e: Event, markAsNews: boolean) {

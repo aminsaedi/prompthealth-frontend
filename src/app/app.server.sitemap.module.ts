@@ -378,26 +378,29 @@ function getSitemapSocial(): Promise<string> {
 
       practitionerIds.forEach(p => {
         const lastmod = p.updatedAt ? new Date(p.updatedAt).toISOString().split('T')[0] : '';
+        const profileBase = p.slug
+          ? `${baseURL}/practitioners/${p.slug}`
+          : `${baseURL}/community/profile/${p.id}`;
         xml += `
           <url>
-            <loc>${baseURL}/community/profile/${p.id}</loc>
+            <loc>${profileBase}</loc>
             ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
             <changefreq>monthly</changefreq>
             <priority>0.8</priority>
           </url>
           <url>
-            <loc>${baseURL}/community/profile/${p.id}/service</loc>
+            <loc>${profileBase}/service</loc>
             ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
             <changefreq>monthly</changefreq>
             <priority>0.6</priority>
           </url>
           <url>
-            <loc>${baseURL}/community/profile/${p.id}/feed</loc>
+            <loc>${profileBase}/feed</loc>
             <changefreq>weekly</changefreq>
             <priority>0.5</priority>
           </url>
           <url>
-            <loc>${baseURL}/community/profile/${p.id}/review</loc>
+            <loc>${profileBase}/review</loc>
             ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
             <changefreq>monthly</changefreq>
             <priority>0.6</priority>
@@ -483,14 +486,14 @@ function getAllAreas(): string[] {
   return areas;
 }
 
-function getAllPractitionerIds(): Promise<{id: string, updatedAt?: string}[]> {
+function getAllPractitionerIds(): Promise<{id: string, updatedAt?: string, slug?: string}[]> {
   return new Promise((resolve) => {
-    const practitioners: {id: string, updatedAt?: string}[] = [];
+    const practitioners: {id: string, updatedAt?: string, slug?: string}[] = [];
 
     axios.post(apiURL + 'user/filter', {}, { timeout: 15000 }).then(res => {
       if(res.status == 200) {
-        res.data.data.dataArr.forEach((d: {userId: string, userData?: {updatedAt?: string}}) => {
-          practitioners.push({id: d.userId, updatedAt: d.userData?.updatedAt});
+        res.data.data.dataArr.forEach((d: {userId: string, userData?: {updatedAt?: string, slug?: string}}) => {
+          practitioners.push({id: d.userId, updatedAt: d.userData?.updatedAt, slug: d.userData?.slug});
         });
       }
     }).catch(error => {
