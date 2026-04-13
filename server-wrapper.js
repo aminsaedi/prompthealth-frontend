@@ -52,7 +52,15 @@ function injectJsonLd(url, html) {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "PromptHealth",
-        "url": "https://www.prompthealth.ca"
+        "url": "https://www.prompthealth.ca",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.prompthealth.ca/practitioners?keyword={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
       }
     ];
   }
@@ -372,7 +380,7 @@ function injectJsonLd(url, html) {
   }
 
   if (jsonLd) {
-    const script = '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>';
+    const script = '<script type="application/ld+json" id="json-ld-schema">' + JSON.stringify(jsonLd) + '</script>';
     html = html.replace('</head>', script + '</head>');
   }
 
