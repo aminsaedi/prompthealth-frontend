@@ -528,13 +528,31 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   }
 
   changePage(i: number) {
-    //change route by location (not router)
-
     this.pageCurrent = i;
-    this.controller.setProfesionnalsPerPage(i);
-    this.controller.initPaginator(i);
-    if(this._uService.isBrowser) {
-      smoothWindowScrollTo(0);
+
+    if (this.controller.totalPractitioners > 0) {
+      // Server-side pagination: fetch page from backend
+      const payload = this.controller.toPayload({ count: 20, page: i });
+      this._sharedService.postNoAuth(payload, 'user/filter').pipe(takeUntil(this.destroy$)).subscribe((res: IGetPractitionersResult) => {
+        if (res.data.total != null) {
+          this.controller.setTotalPractitioners(res.data.total);
+        }
+        this.controller.setPage(i);
+        this.controller.setProfessionals(res.data.dataArr, this._uService.isBrowser);
+        this.controller.setProfesionnalsPerPage(i);
+        this.controller.initPaginator(i);
+        this._changeDetector.detectChanges();
+        if (this._uService.isBrowser) {
+          smoothWindowScrollTo(0);
+        }
+      });
+    } else {
+      // Client-side pagination fallback (e.g. non-paginated responses)
+      this.controller.setProfesionnalsPerPage(i);
+      this.controller.initPaginator(i);
+      if (this._uService.isBrowser) {
+        smoothWindowScrollTo(0);
+      }
     }
   }
 
@@ -635,7 +653,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
   private prefetchListingForSSR(): Promise<void> {
     const LISTING_KEY = makeStateKey<any>('listing-ssr-data');
-    const payload = this.controller.toPayload();
+    const payload = this.controller.toPayload({ count: 20, page: 1 });
     const params = this._route.snapshot.params as IExpertFinderFilterParams;
     return new Promise<void>((resolve) => {
       this._sharedService.postNoAuth(payload, 'user/filter').pipe(take(1)).subscribe(
@@ -643,6 +661,10 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
           try {
             this._transferState.set(LISTING_KEY, res);
             if (res?.data?.dataArr) {
+              if (res.data.total != null) {
+                this.controller.setTotalPractitioners(res.data.total);
+              }
+              this.controller.setPage(1);
               this.controller.setProfessionals(res.data.dataArr, false);
               const professionals = this.controller.professionalsAll;
               if (professionals && professionals.length > 0) {
@@ -657,6 +679,9 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
                     (fallbackRes: IGetPractitionersResult) => {
                       try {
                         if (fallbackRes?.data?.dataArr) {
+                          if (fallbackRes.data.total != null) {
+                            this.controller.setTotalPractitioners(fallbackRes.data.total);
+                          }
                           const fallbackPros = fallbackRes.data.dataArr.map(
                             d => new Professional(d.userId, d.userData)
                           );
@@ -690,6 +715,10 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     if (cached) {
       this._transferState.remove(LISTING_KEY);
       const res = cached as IGetPractitionersResult;
+      if (res.data.total != null) {
+        this.controller.setTotalPractitioners(res.data.total);
+      }
+      this.controller.setPage(1);
       this.controller.setProfessionals(res.data.dataArr, this._uService.isBrowser);
       const professionals = this.controller.professionalsAll;
       this.formCompare = new FormGroup({});
@@ -702,13 +731,19 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
         }
         this.setListingJsonLd(professionals);
       }
-      this.changePage(1);
+      this.pageCurrent = 1;
+      this.controller.setProfesionnalsPerPage(1);
+      this.controller.initPaginator(1);
       return;
     }
 
-    const payload = this.controller.toPayload();
+    const payload = this.controller.toPayload({ count: 20, page: 1 });
     this.controller.disposeProfesionnals();
     this._sharedService.postNoAuth(payload, 'user/filter').pipe(takeUntil(this.destroy$)).subscribe((res: IGetPractitionersResult) => {
+      if (res.data.total != null) {
+        this.controller.setTotalPractitioners(res.data.total);
+      }
+      this.controller.setPage(1);
       this.controller.setProfessionals(res.data.dataArr, this._uService.isBrowser);
       const professionals = this.controller.professionalsAll;
       this.formCompare = new FormGroup({});
@@ -721,7 +756,9 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
         }
         this.setListingJsonLd(professionals);
       }
-      this.changePage(1);
+      this.pageCurrent = 1;
+      this.controller.setProfesionnalsPerPage(1);
+      this.controller.initPaginator(1);
     })
   }
 

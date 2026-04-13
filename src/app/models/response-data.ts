@@ -48,9 +48,10 @@ export interface IGetPractitionersResult extends IResponseData {
         _id: string,
         item_text: string,
         subans: boolean,
-      }[],  
+      }[],
     }[],
     filter_name: any[],
+    total?: number,
   }
 }
 
