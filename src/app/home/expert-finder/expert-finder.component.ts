@@ -302,11 +302,11 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
               'addressCountry': 'CA',
             }
           } : {}),
-          ...(p.rating > 0 && p.reviewCount > 0 ? {
+          ...(p.rating > 0 && p.ratingCount > 0 ? {
             'aggregateRating': {
               '@type': 'AggregateRating',
               'ratingValue': p.rating,
-              'reviewCount': p.reviewCount,
+              'reviewCount': p.ratingCount,
               'bestRating': 5,
             }
           } : {}),
