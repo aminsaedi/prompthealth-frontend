@@ -312,14 +312,69 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     });
 
     if (items.length > 0) {
-      this._jsonLdService.setJsonLd([{
+      const itemListSchema = {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
         'name': 'Healthcare Practitioners',
         'numberOfItems': professionals.length,
         'itemListElement': items,
-      }]);
+      };
+
+      const breadcrumbSchema = this.buildBreadcrumbSchema();
+
+      this._jsonLdService.setJsonLd(
+        breadcrumbSchema ? [itemListSchema, breadcrumbSchema] : [itemListSchema]
+      );
     }
+  }
+
+  private buildBreadcrumbSchema(): object | null {
+    const param = this._route.snapshot.params as IExpertFinderFilterParams;
+
+    let specialtyLabel: string = null;
+    if (param.categorySlug) {
+      specialtyLabel = this._catService.titleOfBySlug(param.categorySlug);
+    } else if (param.typeOfProviderSlug && this.questionnaires?.typeOfProvider?.answers) {
+      const answer = this.questionnaires.typeOfProvider.answers.find(
+        a => slugify(a.item_text) === param.typeOfProviderSlug
+      );
+      specialtyLabel = answer ? answer.item_text : null;
+    }
+
+    const cityLabel = param.city ? titleCaseOf(param.city) : null;
+
+    const breadcrumbItems: object[] = [
+      { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.prompthealth.ca' },
+      { '@type': 'ListItem', 'position': 2, 'name': 'Find Practitioners', 'item': 'https://www.prompthealth.ca/practitioners' },
+    ];
+
+    let position = 3;
+
+    if (specialtyLabel) {
+      const pathSegment = param.categorySlug
+        ? `category/${param.categorySlug}`
+        : `type/${param.typeOfProviderSlug}`;
+      breadcrumbItems.push({
+        '@type': 'ListItem',
+        'position': position++,
+        'name': specialtyLabel,
+        'item': `https://www.prompthealth.ca/practitioners/${pathSegment}`,
+      });
+    }
+
+    if (cityLabel) {
+      breadcrumbItems.push({
+        '@type': 'ListItem',
+        'position': position,
+        'name': cityLabel,
+      });
+    }
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': breadcrumbItems,
+    };
   }
 
   private resolveTypeOfProviderSlug(slug: string): string | null {
