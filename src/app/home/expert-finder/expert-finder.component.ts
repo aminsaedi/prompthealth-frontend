@@ -111,6 +111,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   private formCompare: FormGroup;
 
   private queryParamsCurrent: Params;
+  private _jsonLdSet = false;
   public selectedProfessionalInMap: Professional;
   public compareList: Professional[] = [];
 
@@ -147,6 +148,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this._jsonLdService.removeJsonLd();
+    this._jsonLdSet = false;
     if(this.subscriptionGeoLocation) {
       this.subscriptionGeoLocation.unsubscribe();
     }
@@ -178,6 +180,9 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       // Kept minimal to avoid zone.js timing issues with stability detection.
       this.initController();
       await this.prefetchListingForSSR();
+      // Always set BreadcrumbList JSON-LD during SSR — this only depends on
+      // route params, not API results, so it works even if the listing API fails.
+      this.ensureBreadcrumbJsonLd();
       this.setMeta();
       return;
     }
@@ -185,7 +190,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     // Client-side fallback: redirect old ObjectId URLs to slug URLs (type)
     const params = this._route.snapshot.params as IExpertFinderFilterParams;
     if (params.typeOfProviderSlug && /^[0-9a-f]{24}$/i.test(params.typeOfProviderSlug)) {
-      const answer = this.questionnaires.typeOfProvider.answers.find(
+      const answer = this.questionnaires?.typeOfProvider?.answers?.find(
         a => a._id === params.typeOfProviderSlug
       );
       if (answer) {
@@ -253,12 +258,12 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
     let typeOfProvider: string = null;
     if(param.typeOfProviderSlug) {
-      const answer = this.questionnaires.typeOfProvider.answers.find(
+      const answer = this.questionnaires?.typeOfProvider?.answers?.find(
         item => slugify(item.item_text) === param.typeOfProviderSlug
       );
       typeOfProvider = answer ? answer.item_text.toLowerCase() : null;
     } else if(param.typeOfProviderId) {
-      const answer = this.questionnaires.typeOfProvider.answers.find(item => item._id == param.typeOfProviderId);
+      const answer = this.questionnaires?.typeOfProvider?.answers?.find(item => item._id == param.typeOfProviderId);
       typeOfProvider = answer ? answer.item_text.toLowerCase() : null;
     }
 
@@ -325,6 +330,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       this._jsonLdService.setJsonLd(
         breadcrumbSchema ? [itemListSchema, breadcrumbSchema] : [itemListSchema]
       );
+      this._jsonLdSet = true;
     }
   }
 
@@ -375,6 +381,24 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       '@type': 'BreadcrumbList',
       'itemListElement': breadcrumbItems,
     };
+  }
+
+  /**
+   * Ensures BreadcrumbList JSON-LD is present in the SSR output even when the
+   * listing API call fails or returns no results.  If setListingJsonLd() already
+   * injected JSON-LD (which includes both ItemList + BreadcrumbList), this is a
+   * no-op because the flag is set.
+   */
+  private ensureBreadcrumbJsonLd(): void {
+    if (this._jsonLdSet) return;
+    try {
+      const breadcrumbSchema = this.buildBreadcrumbSchema();
+      if (breadcrumbSchema) {
+        this._jsonLdService.setJsonLd([breadcrumbSchema]);
+      }
+    } catch (e) {
+      // Non-critical — don't let breadcrumb injection crash SSR
+    }
   }
 
   private resolveTypeOfProviderSlug(slug: string): string | null {
