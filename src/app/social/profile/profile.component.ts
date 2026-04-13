@@ -156,45 +156,88 @@ export class ProfileComponent implements OnInit , OnDestroy {
 
     this._route.params.subscribe((param: {userid?: string, slug?: string}) => {
       if (param.slug) {
-        // Slug-based route: fetch profile by slug and use the data directly
-        this._sharedService.getNoAuth(`user/get-profile-by-slug/${param.slug}`).pipe(takeUntil(this.destroy$)).subscribe((res: IGetProfileResult) => {
-          if (res.statusCode === 200) {
-            const p = res.data;
-            this.profileId = p._id;
-            this.checkFollowStatus();
-            this.checkBellStatus();
+        // Slug-based route: check TransferState first (SSR-cached data)
+        const slugStateKey = makeStateKey<any>('profile-slug-' + param.slug);
+        const savedSlugProfile = this._transferState.get(slugStateKey, null);
 
-            // Build Professional/Partner from the fetched data directly (no second API call)
-            let professional: Professional | Partner;
-            if (p.roles === 'P') {
-              professional = new Partner(p);
-            } else {
-              professional = new Professional(p._id, p);
-            }
-            this._socialService.saveCacheProfile(professional);
+        if (savedSlugProfile) {
+          // Client-side hydration: reuse SSR-cached profile data
+          this._transferState.remove(slugStateKey);
+          const p = savedSlugProfile;
+          this.profileId = p._id;
+          this.checkFollowStatus();
+          this.checkBellStatus();
 
-            this.profile = professional;
-            this.initRecommendation();
-            this.initRecommendationByMe();
-            this.setProfileMenu();
-            this._socialService.setProfile(this.profile);
-            this.setMetaForAbout();
-            this.setBreadcrumbs();
-
-            this.getQuestionnaire().then(() => {
-              if (this.profile.isSP && !this.profile.triedFetchingTeam) {
-                this.fetchTeam();
-              }
-              if (this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
-                this.fetchPromos();
-              }
-            });
+          let professional: Professional | Partner;
+          if (p.roles === 'P') {
+            professional = new Partner(p);
           } else {
-            this._router.navigate(['404'], {replaceUrl: true});
+            professional = new Professional(p._id, p);
           }
-        }, () => {
-          this._router.navigate(['404'], {replaceUrl: true});
-        });
+          this._socialService.saveCacheProfile(professional);
+
+          this.profile = professional;
+          this.initRecommendation();
+          this.initRecommendationByMe();
+          this.setProfileMenu();
+          this._socialService.setProfile(this.profile);
+          this.setBreadcrumbs();
+
+          this.getQuestionnaire().then(() => {
+            this.setMetaForAbout();
+            if (this.profile.isSP && !this.profile.triedFetchingTeam) {
+              this.fetchTeam();
+            }
+            if (this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
+              this.fetchPromos();
+            }
+          });
+        } else {
+          // SSR or first load: fetch profile by slug
+          this._sharedService.getNoAuth(`user/get-profile-by-slug/${param.slug}`).pipe(takeUntil(this.destroy$)).subscribe((res: IGetProfileResult) => {
+            if (res.statusCode === 200) {
+              const p = res.data;
+              this.profileId = p._id;
+              this.checkFollowStatus();
+              this.checkBellStatus();
+
+              // Save raw profile data to TransferState during SSR
+              if (this._uService.isServer) {
+                this._transferState.set(slugStateKey, p);
+              }
+
+              // Build Professional/Partner from the fetched data directly (no second API call)
+              let professional: Professional | Partner;
+              if (p.roles === 'P') {
+                professional = new Partner(p);
+              } else {
+                professional = new Professional(p._id, p);
+              }
+              this._socialService.saveCacheProfile(professional);
+
+              this.profile = professional;
+              this.initRecommendation();
+              this.initRecommendationByMe();
+              this.setProfileMenu();
+              this._socialService.setProfile(this.profile);
+              this.setBreadcrumbs();
+
+              this.getQuestionnaire().then(() => {
+                this.setMetaForAbout();
+                if (this.profile.isSP && !this.profile.triedFetchingTeam) {
+                  this.fetchTeam();
+                }
+                if (this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
+                  this.fetchPromos();
+                }
+              });
+            } else {
+              this._router.navigate(['404'], {replaceUrl: true});
+            }
+          }, () => {
+            this._router.navigate(['404'], {replaceUrl: true});
+          });
+        }
       } else {
         this.profileId = param.userid;
         this.checkFollowStatus();
@@ -387,6 +430,9 @@ export class ProfileComponent implements OnInit , OnDestroy {
   setMetaForAbout() {
     const url = this._router.url;
     if(!url.match('service|feed|review')) {
+      if (!this.profile || !this.questionnaires?.typeOfProvider || !this.questionnaires?.serviceDelivery) {
+        return;
+      }
       const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
       const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
       this._uService.setMeta(this._router.url, {
