@@ -78,8 +78,9 @@ export class PageComponent implements OnInit , OnDestroy {
       this.post = post;
     } else {
       try {
-        await this.fetchPost();
-        this.post = this._socialService.postOf(this.postId);
+        const fetchedData: any = await this.fetchPost();
+        const lookupId = this._isSlugRoute && fetchedData?._id ? fetchedData._id : this.postId;
+        this.post = this._socialService.postOf(lookupId);
       } catch (error) {
       }
     }
@@ -102,7 +103,7 @@ export class PageComponent implements OnInit , OnDestroy {
       this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentResult) => {
         if(res.statusCode === 200) {
           this._socialService.saveCacheSingle(res.data);
-          resolve(true);
+          resolve(res.data);
         } else {
           reject(res.message);
         }
