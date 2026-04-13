@@ -153,6 +153,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   }
 
   ngAfterViewChecked() {
+    if (isPlatformServer(this.platformId)) return;
     const mapRect = this.getMapBoundingRect();
     if(mapRect.top != this.mapRect.top || mapRect.height != this.mapRect.height) {
       this.mapRect = mapRect;
@@ -161,6 +162,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   }
 
   ngAfterViewInit() {
+    if (isPlatformServer(this.platformId)) return;
     this.searchBar.retrieveData();
     const el = this.blurSearchBar.nativeElement as HTMLDivElement;
     el?.click();
@@ -170,6 +172,15 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     this.questionnaires = await this._qService.getProfilePractitioner('SP');
 
     await this._catService.getCategoryAsync();
+
+    if (isPlatformServer(this.platformId)) {
+      // SSR path: initialize controller and fetch listing data.
+      // Kept minimal to avoid zone.js timing issues with stability detection.
+      this.initController();
+      await this.prefetchListingForSSR();
+      this.setMeta();
+      return;
+    }
 
     // Client-side fallback: redirect old ObjectId URLs to slug URLs (type)
     const params = this._route.snapshot.params as IExpertFinderFilterParams;
@@ -224,10 +235,6 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
       this.queryParamsCurrent = p;
     });
-
-    if (isPlatformServer(this.platformId)) {
-      await this.prefetchListingForSSR();
-    }
 
     this.setMeta();
   }
@@ -551,11 +558,17 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     return new Promise<void>((resolve) => {
       this._sharedService.postNoAuth(payload, 'user/filter').pipe(take(1)).subscribe(
         (res: IGetPractitionersResult) => {
-          this._transferState.set(LISTING_KEY, res);
-          this.controller.setProfessionals(res.data.dataArr, false);
-          const professionals = this.controller.professionalsAll;
-          if (professionals) {
-            this.setListingJsonLd(professionals);
+          try {
+            this._transferState.set(LISTING_KEY, res);
+            if (res?.data?.dataArr) {
+              this.controller.setProfessionals(res.data.dataArr, false);
+              const professionals = this.controller.professionalsAll;
+              if (professionals && professionals.length > 0) {
+                this.setListingJsonLd(professionals);
+              }
+            }
+          } catch (e) {
+            // Gracefully handle data processing errors during SSR
           }
           resolve();
         },

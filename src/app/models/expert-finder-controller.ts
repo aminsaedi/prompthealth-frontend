@@ -130,11 +130,13 @@ export class ExpertFinderController {
 
     if ((!this._lat || !this._lng) && data.city) {
       const city = locations[data.city];
-      this._lat = city.lat;
-      this._lng = city.lng;
-      this._zoom = city.zoom;
-      this._dist = city.distance;
-    } 
+      if (city) {
+        this._lat = city.lat;
+        this._lng = city.lng;
+        this._zoom = city.zoom;
+        this._dist = city.distance;
+      }
+    }
 
     this._locationInitializedByFilter = !!(this._virtual || (this._lat && this._lng));
 
