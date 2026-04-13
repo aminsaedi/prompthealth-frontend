@@ -96,7 +96,7 @@ export function app() {
   server.use('/practitioners/category', routerRedirectForCategory);
   server.use('/community/profile', routerRedirectForProfile);
   server.use('/community/content', routerRedirectForContent);
-  
+
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/dashboard',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
