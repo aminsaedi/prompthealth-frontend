@@ -552,7 +552,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
       '@type': 'BreadcrumbList',
       'itemListElement': [
         { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.prompthealth.ca' },
-        { '@type': 'ListItem', 'position': 2, 'name': 'Community', 'item': 'https://www.prompthealth.ca/community/feed' },
+        { '@type': 'ListItem', 'position': 2, 'name': 'Practitioners', 'item': 'https://www.prompthealth.ca/practitioners' },
         { '@type': 'ListItem', 'position': 3, 'name': p.name, 'item': canonicalUrl },
       ],
     };
@@ -872,7 +872,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
     const name = this.profile?.name || 'Profile';
     this.breadcrumbs = [
       { label: 'Home', url: '/' },
-      { label: 'Community', url: '/community/feed' },
+      { label: 'Practitioners', url: '/practitioners' },
       { label: name }
     ];
   }
