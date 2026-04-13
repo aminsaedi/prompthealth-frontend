@@ -456,11 +456,11 @@ export class ProfileComponent implements OnInit , OnDestroy {
     }
 
     // Aggregate rating
-    if (p.rating > 0 && p.reviewCount > 0) {
+    if (p.rating > 0 && p.ratingCount > 0) {
       mainSchema.aggregateRating = {
         '@type': 'AggregateRating',
         'ratingValue': p.rating,
-        'reviewCount': p.reviewCount,
+        'reviewCount': p.ratingCount,
         'bestRating': 5,
         'worstRating': 1,
       };
