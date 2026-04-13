@@ -190,7 +190,15 @@ export class HomeComponent implements OnInit , OnDestroy {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "PromptHealth",
-        "url": "https://www.prompthealth.ca"
+        "url": "https://www.prompthealth.ca",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.prompthealth.ca/practitioners?keyword={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
       }
     ]);
 
