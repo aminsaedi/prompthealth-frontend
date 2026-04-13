@@ -634,6 +634,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   private prefetchListingForSSR(): Promise<void> {
     const LISTING_KEY = makeStateKey<any>('listing-ssr-data');
     const payload = this.controller.toPayload();
+    const params = this._route.snapshot.params as IExpertFinderFilterParams;
     return new Promise<void>((resolve) => {
       this._sharedService.postNoAuth(payload, 'user/filter').pipe(take(1)).subscribe(
         (res: IGetPractitionersResult) => {
@@ -644,6 +645,31 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
               const professionals = this.controller.professionalsAll;
               if (professionals && professionals.length > 0) {
                 this.setListingJsonLd(professionals);
+              } else if (params.city && payload.latLong) {
+                // Geo-filtered query returned 0 results for a combined
+                // specialty+city page. Retry without geo filter so we can
+                // still emit ItemList JSON-LD for SEO purposes.
+                const fallbackPayload = { ...payload, latLong: '', miles: null };
+                this._sharedService.postNoAuth(fallbackPayload, 'user/filter')
+                  .pipe(take(1)).subscribe(
+                    (fallbackRes: IGetPractitionersResult) => {
+                      try {
+                        if (fallbackRes?.data?.dataArr) {
+                          const fallbackPros = fallbackRes.data.dataArr.map(
+                            d => new Professional(d.userId, d.userData)
+                          );
+                          if (fallbackPros.length > 0) {
+                            this.setListingJsonLd(fallbackPros);
+                          }
+                        }
+                      } catch (e) {
+                        // Non-critical — don't let fallback crash SSR
+                      }
+                      resolve();
+                    },
+                    () => { resolve(); }
+                  );
+                return; // resolve() is handled by the fallback subscription
               }
             }
           } catch (e) {
