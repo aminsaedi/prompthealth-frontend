@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
 import { routerRedirectForMagazine } from 'src/app/app.server.redirect.module';
 import { routerRedirectForTypeOfProvider } from 'src/app/app.server.redirect-type.module';
 import { routerRedirectForProfile } from 'src/app/app.server.redirect-profile.module';
+import { routerRedirectForContent } from 'src/app/app.server.redirect-content.module';
 import { routerRedirectForCategory } from 'src/app/app.server.redirect-category.module';
 
 // The Express app is exported so that it can be used by serverless Functions.
@@ -94,6 +95,7 @@ export function app() {
   server.use('/practitioners/type', routerRedirectForTypeOfProvider);
   server.use('/practitioners/category', routerRedirectForCategory);
   server.use('/community/profile', routerRedirectForProfile);
+  server.use('/community/content', routerRedirectForContent);
   
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })

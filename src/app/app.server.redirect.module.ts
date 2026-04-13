@@ -34,7 +34,12 @@ rMagazine.use('/', (req, res) => {
   if(slug) {
     axios.get(apiURL + 'blog/get-by-slug/' + slug).then(result => {
       if(result.data.statusCode == 200 && result.data.data.status == 'APPROVED') {
-        res.redirect(301, '/community/content/' + result.data.data._id);
+        const article = result.data.data;
+        if (article.slug) {
+          res.redirect(301, '/community/article/' + article.slug);
+        } else {
+          res.redirect(301, '/community/content/' + article._id);
+        }
       } else {
         res.redirect(301, '/404');
       }
