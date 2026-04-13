@@ -18,6 +18,7 @@ export const locationsNested: IFormItemSearchData[] = [
     {id: 'hamilton', label: 'Hamilton'},
     {id: 'kitchener', label: 'Ketchener'},
     {id: 'mississauga', label: 'Mississauga'},
+    {id: 'north-york', label: 'North York'},
     {id: 'ottawa', label: 'Ottawa'},
     {id: 'toronto', label: 'Toronto'},
     {id: 'vaughan', label: 'Vaughan'},
@@ -59,6 +60,7 @@ export const locations: {[k:string]: LocationData} = {
   duncan: new LocationData(48.778602,-123.708088, 50, 11),
 
   toronto: new LocationData(43.652488,-79.382732, 20, 13),
+  'north-york': new LocationData(43.7615,-79.4111, 15, 13),
   mississauga: new LocationData(43.587179,-79.650758, 24, 11),
   hamilton: new LocationData(43.255516,-79.870922, 32, 11),
   kitchener: new LocationData(43.452039,-80.496900, 41, 12),
@@ -98,6 +100,7 @@ export type CityId =
 'hamilton' |
 'kitchener' |
 'mississauga' |
+'north-york' |
 'ottawa' |
 'toronto' |
 'vanghan' |
