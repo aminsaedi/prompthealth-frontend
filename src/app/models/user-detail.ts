@@ -59,6 +59,7 @@ export interface IUserDetail {
   professional_title?: string;
   ratingAvg?: number;
   ratingBy?: string[];
+  ratingCount?: number;
   serviceOfferIds?: string[];
   verifiedBadge?: boolean;
   typical_hours?: string[];
