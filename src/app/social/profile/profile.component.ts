@@ -435,7 +435,8 @@ export class ProfileComponent implements OnInit , OnDestroy {
       }
       const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
       const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
-      this._uService.setMeta(this._router.url, {
+      const canonicalPath = this.profile?.slug ? `/practitioners/${this.profile.slug}` : this._router.url;
+      this._uService.setMeta(canonicalPath, {
         title: `${this.profile.name}${this.profile.city || this.profile.state ? ` in ${[this.profile.city, this.profile.state].filter(Boolean).join(', ')}` : ''} | PromptHealth Community`,
         description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
       });
