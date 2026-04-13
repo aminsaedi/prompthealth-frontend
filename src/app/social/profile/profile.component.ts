@@ -457,10 +457,64 @@ export class ProfileComponent implements OnInit , OnDestroy {
       ? `https://www.prompthealth.ca/practitioners/${p.slug}`
       : `https://www.prompthealth.ca/community/profile/${p._id}`;
 
+    // Map specialties to schema.org types
+    const SPECIALTY_SCHEMA_MAP: Record<string, string> = {
+      // Direct schema.org types
+      'Dentist':                          'https://schema.org/Dentist',
+      'Dental Hygienist':                 'https://schema.org/Dentist',
+      'Medical Doctor':                   'https://schema.org/Physician',
+      'Neuropsychologist':                'https://schema.org/Physician',
+      'Nurse Practitioner':               'https://schema.org/Physician',
+      'Chiropractor':                     'https://schema.org/Chiropractor',
+      'Physiotherapist':                  'https://schema.org/Physiotherapist',
+      'Pharmacist':                       'https://schema.org/Pharmacy',
+      'Optometrist':                      'https://schema.org/Optician',
+      // MedicalBusiness
+      'Acupuncturist':                    'https://schema.org/MedicalBusiness',
+      'Athletic Therapist':               'https://schema.org/MedicalBusiness',
+      'Audiologist':                      'https://schema.org/MedicalBusiness',
+      'Certified Exercise Physiologist':  'https://schema.org/MedicalBusiness',
+      'Counsellor':                       'https://schema.org/MedicalBusiness',
+      'Doula':                            'https://schema.org/MedicalBusiness',
+      'Homeopath':                        'https://schema.org/MedicalBusiness',
+      'Kinesiologist':                    'https://schema.org/MedicalBusiness',
+      'Midwife':                          'https://schema.org/MedicalBusiness',
+      'Naturopath':                       'https://schema.org/MedicalBusiness',
+      'Nurse':                            'https://schema.org/MedicalBusiness',
+      'Nutritionist':                     'https://schema.org/MedicalBusiness',
+      'Occupational Therapist':           'https://schema.org/MedicalBusiness',
+      'Osteopath':                        'https://schema.org/MedicalBusiness',
+      'Pedortist':                        'https://schema.org/MedicalBusiness',
+      'Psychologist':                     'https://schema.org/MedicalBusiness',
+      'Registered Dietician':             'https://schema.org/MedicalBusiness',
+      'Registered Massage Therapist':     'https://schema.org/MedicalBusiness',
+      'Social Worker':                    'https://schema.org/MedicalBusiness',
+      'Traditional Chinese Medicine':     'https://schema.org/MedicalBusiness',
+      'Speech therapist':                 'https://schema.org/MedicalBusiness',
+      // HealthAndBeautyBusiness
+      'Body Worker':                      'https://schema.org/HealthAndBeautyBusiness',
+      'Energy Healer':                    'https://schema.org/HealthAndBeautyBusiness',
+      'Life/Wellness Coach':              'https://schema.org/HealthAndBeautyBusiness',
+      'Meditation /Yoga Instructor':      'https://schema.org/HealthAndBeautyBusiness',
+      'Personal Trainer':                 'https://schema.org/HealthAndBeautyBusiness',
+      'Pilates Instructor':               'https://schema.org/HealthAndBeautyBusiness',
+      'Sleep consultant':                 'https://schema.org/HealthAndBeautyBusiness',
+      'Sports Coach':                     'https://schema.org/HealthAndBeautyBusiness',
+    };
+    const TYPE_PRIORITY = [
+      'https://schema.org/Physician', 'https://schema.org/Dentist',
+      'https://schema.org/Chiropractor', 'https://schema.org/Physiotherapist',
+      'https://schema.org/Pharmacy', 'https://schema.org/Optician',
+      'https://schema.org/MedicalBusiness', 'https://schema.org/HealthAndBeautyBusiness',
+    ];
+    const schemaTypeUrls = [...new Set(typeOfProvider.map(t => SPECIALTY_SCHEMA_MAP[t]).filter(Boolean))];
+    const primaryTypeUrl = TYPE_PRIORITY.find(t => schemaTypeUrls.includes(t)) || 'https://schema.org/ProfessionalService';
+    const primaryTypeShort = primaryTypeUrl.replace('https://schema.org/', '');
+
     // Build the main business/practitioner schema
     const mainSchema: any = {
       '@context': 'https://schema.org',
-      '@type': p.isC ? 'MedicalBusiness' : 'ProfessionalService',
+      '@type': p.isC ? 'MedicalBusiness' : primaryTypeShort,
       'name': p.name,
       'url': canonicalUrl,
       'description': `${p.name}${typeOfProvider.length ? ' is ' + typeOfProvider.join(', ') : ''}${serviceDelivery.length ? ' offering ' + serviceDelivery.join(', ') + ' services' : ''}.`,
@@ -514,8 +568,8 @@ export class ProfileComponent implements OnInit , OnDestroy {
     }
 
     // Additional structured properties
-    if (typeOfProvider.length > 0) {
-      mainSchema.additionalType = typeOfProvider.map(t => t).join(', ');
+    if (schemaTypeUrls.length > 0) {
+      mainSchema.additionalType = schemaTypeUrls;
     }
 
     if (p.isVirtualAvailable) {
