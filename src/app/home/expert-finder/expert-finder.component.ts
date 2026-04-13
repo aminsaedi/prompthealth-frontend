@@ -183,7 +183,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       // Always set BreadcrumbList JSON-LD during SSR — this only depends on
       // route params, not API results, so it works even if the listing API fails.
       this.ensureBreadcrumbJsonLd();
-      this.setMeta();
+      await this.setMeta();
       return;
     }
 
@@ -241,7 +241,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       this.queryParamsCurrent = p;
     });
 
-    this.setMeta();
+    await this.setMeta();
   }
 
   async setMeta() {
@@ -250,7 +250,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     let category = null;
     if(param.categorySlug) {
       await this._catService.getCategoryAsync();
-      category = this._catService.titleOfBySlug(param.categorySlug).toLowerCase();
+      category = this._catService.titleOfBySlug(param.categorySlug).toLowerCase()
+        || param.categorySlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').toLowerCase();
     } else if(param.categoryId) {
       await this._catService.getCategoryAsync();
       category = this._catService.titleOf(param.categoryId).toLowerCase();
@@ -339,7 +340,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
     let specialtyLabel: string = null;
     if (param.categorySlug) {
-      specialtyLabel = this._catService.titleOfBySlug(param.categorySlug);
+      specialtyLabel = this._catService.titleOfBySlug(param.categorySlug)
+        || param.categorySlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     } else if (param.typeOfProviderSlug && this.questionnaires?.typeOfProvider?.answers) {
       const answer = this.questionnaires.typeOfProvider.answers.find(
         a => slugify(a.item_text) === param.typeOfProviderSlug
