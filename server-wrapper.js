@@ -70,36 +70,54 @@ let categorySlugMap = new Map();
 
 async function fetchCategories(retries) {
   retries = retries || 5;
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      const resp = await httpsGetJson('https://ocean.prompthealth.ca/api/v1/questionare/get-service');
-      if (resp && resp.data) {
-        const map = new Map();
-        for (const group of resp.data) {
-          if (!group.category) continue;
-          for (const cat of group.category) {
-            if (cat._id && cat.item_text) {
-              map.set(slugify(cat.item_text), { id: cat._id, name: cat.item_text });
+
+  // Step 1: Fetch health goal categories from get-service
+  try {
+    var resp = await httpsGetJson('https://ocean.prompthealth.ca/api/v1/questionare/get-service');
+    var items = (resp && resp.data) ? resp.data : [];
+    items.forEach(function(cat) {
+      if (cat.item_text) {
+        var slug = slugify(cat.item_text);
+        categorySlugMap.set(slug, { id: cat._id, name: cat.item_text });
+        if (cat.subCategories) {
+          cat.subCategories.forEach(function(sub) {
+            if (sub.item_text) {
+              var subSlug = slugify(sub.item_text);
+              categorySlugMap.set(subSlug, { id: sub._id, name: sub.item_text });
             }
-            if (cat.subCategory) {
-              for (const sub of cat.subCategory) {
-                if (sub._id && sub.item_text) {
-                  map.set(slugify(sub.item_text), { id: sub._id, name: sub.item_text });
-                }
-              }
+          });
+        }
+      }
+    });
+    console.log('[SEO-021] Loaded', categorySlugMap.size, 'category slugs from get-service');
+  } catch (e) {
+    console.error('[SEO-021] fetchCategories get-service error:', e.message);
+    if (retries > 0) {
+      setTimeout(function() { fetchCategories(retries - 1); }, 2000);
+      return;
+    }
+  }
+
+  // Step 2: Fetch provider types from get-questions?type=SP
+  try {
+    var resp2 = await httpsGetJson('https://ocean.prompthealth.ca/api/v1/questionare/get-questions?type=SP');
+    var questions = (resp2 && resp2.data) ? resp2.data : [];
+    questions.forEach(function(q) {
+      if (q.slug === 'providers-are-you' && q.answers) {
+        q.answers.forEach(function(ans) {
+          if (ans.item_text && ans._id) {
+            var slug = slugify(ans.item_text);
+            if (!categorySlugMap.has(slug)) {
+              categorySlugMap.set(slug, { id: ans._id, name: ans.item_text });
             }
           }
-        }
-        categorySlugMap = map;
-        console.log('[SEO-021] Loaded ' + map.size + ' category slugs');
-        return;
+        });
       }
-    } catch (e) {
-      console.error('[SEO-021] Category fetch attempt ' + attempt + '/' + retries + ' failed:', e.message);
-    }
-    if (attempt < retries) await new Promise(r => setTimeout(r, 2000));
+    });
+    console.log('[SEO-021] Total slugs after provider types:', categorySlugMap.size);
+  } catch (e) {
+    console.error('[SEO-021] fetchCategories get-questions error:', e.message);
   }
-  console.error('[SEO-021] Could not load categories after ' + retries + ' retries');
 }
 
 function fetchFilteredPractitioners(categoryId) {
@@ -485,8 +503,8 @@ function injectJsonLd(url, html, categoryPractitioners) {
     }
   }
 
-  // Category listing pages: /practitioners/category/:slug (SEO-021)
-  const categoryMatch = url.match(/^\/practitioners\/category\/([^?/]+)/);
+  // Category listing pages: /practitioners/category/:slug or /practitioners/type/:slug (SEO-021)
+  const categoryMatch = url.match(/^\/practitioners\/(?:category|type)\/([^?/]+)/);
   if (categoryMatch && categoryPractitioners && categoryPractitioners.length > 0) {
     const baseUrl = 'https://www.prompthealth.ca';
     const itemList = {
@@ -597,7 +615,7 @@ expressApp._router.stack.splice(3, 0, cacheLayer);
 
 // SEO-021: Pre-fetch filtered practitioners for category pages before caching
 const categoryLayer = new Layer('/', { strict: false, end: false }, function categoryPreFetch(req, res, next) {
-  var catMatch = req.url.match(/^\/practitioners\/category\/([^?/]+)/);
+  var catMatch = req.url.match(/^\/practitioners\/(?:category|type)\/([^?/]+)/);
   if (!catMatch) return next();
 
   var slug = catMatch[1];
