@@ -651,7 +651,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     e.stopPropagation();    
   }
 
-  private prefetchListingForSSR(): Promise<void> {
+  private async prefetchListingForSSR(): Promise<void> {
     const LISTING_KEY = makeStateKey<any>('listing-ssr-data');
     const payload = this.controller.toPayload({ count: 20, page: 1 });
     const params = this._route.snapshot.params as IExpertFinderFilterParams;
@@ -666,6 +666,39 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       );
       if (cat) {
         payload.services = [cat._id];
+      } else {
+        // Category list not loaded yet during SSR — fetch directly from API
+        try {
+          const res: any = await this._sharedService
+            .getNoAuth('questionare/get-service')
+            .pipe(take(1))
+            .toPromise();
+          if (res?.statusCode === 200 && res?.data) {
+            let matched = false;
+            for (const group of res.data) {
+              if (group.category_type?.toLowerCase() === 'goal') {
+                for (const rootCat of (group.category || [])) {
+                  if (slugify(rootCat.item_text) === params.categorySlug) {
+                    payload.services = [rootCat._id];
+                    matched = true;
+                    break;
+                  }
+                  for (const sub of (rootCat.subCategory || [])) {
+                    if (slugify(sub.item_text) === params.categorySlug) {
+                      payload.services = [sub._id];
+                      matched = true;
+                      break;
+                    }
+                  }
+                  if (matched) break;
+                }
+                break;
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('prefetchListingForSSR: failed to fetch categories for slug resolution', e);
+        }
       }
     }
     return new Promise<void>((resolve) => {
