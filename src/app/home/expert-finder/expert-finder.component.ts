@@ -270,7 +270,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
     let city = param.city ? titleCaseOf(param.city) : null;
     
-    let specialist = category ? `${category} specialists` : typeOfProvider ? `${typeOfProvider}` : 'health care providers';
+    let specialist = category ? `${category}` : typeOfProvider ? `${typeOfProvider}` : 'health care providers';
     let area = city ? city : 'Canada';
 
     this.pageHeading = `Find Best ${titleCaseOf(specialist)} in ${area}`;
