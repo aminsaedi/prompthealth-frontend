@@ -280,7 +280,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
     this._uService.setMeta(this._router.url, {
       title: `Find best ${specialist} in ${area} | PromptHealth`,
-      description: `Use our Expart Finder to find a top-rated ${specialist} in ${area} or offering virtual appointment.`,
+      description: `Use our Expert Finder to find a top-rated ${specialist} in ${area} or offering virtual appointment.`,
     });  
 
   }
