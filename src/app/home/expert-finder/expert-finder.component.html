@@ -4,7 +4,7 @@
     <div class="d-md-flex justify-content-between align-items-center">
       <div class="d-md-flex justify-content-between align-items-center">
         <h1 class="mb-md-0 h3">{{ pageHeading }}</h1>
-        <div 
+        <div
         *ngIf="controller?.countAll"
         class="subtitle2 text-placeholder ml-md-20p"
         >{{controller?.countAll}} providers found</div>
@@ -12,9 +12,10 @@
       <div class="text-right mb-10p mb-md-0p">
         <a class="body1" routerLink="/personal-match">
           <u>Start personal match</u>
-        </a>  
+        </a>
       </div>
     </div>
+    <p *ngIf="introText" class="intro-text">{{introText}}</p>
 
     <div class="mt-30p bg-primary-light rounded-8p border border-background">      
       <search-bar #searchBar></search-bar>
@@ -224,6 +225,11 @@
         </div>
       </ng-container>
     </div>
+
+    <section *ngIf="faqItems?.length" class="faq-section">
+      <h2 class="h4 mb-20p">{{ faqHeading }}</h2>
+      <faq-item *ngFor="let item of faqItems" [data]="item"></faq-item>
+    </section>
   </div>
 
   <div 
