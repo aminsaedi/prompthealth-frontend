@@ -215,6 +215,11 @@ export class SocialPostBase implements ISocialPost {
 
   constructor(protected data: ISocialPost) {
     this.setSummary(data.description || '');
+
+    // Normalize populated authorId → author (blog/get-by-slug populates under authorId key)
+    if (!this.data.author && this.data.authorId && typeof this.data.authorId === 'object') {
+      this.data.author = this.data.authorId;
+    }
   }
 
   setSummary(desc: string) {
