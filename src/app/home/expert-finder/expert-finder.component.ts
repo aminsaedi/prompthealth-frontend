@@ -24,6 +24,86 @@ import { titleCaseOf } from 'src/app/_helpers/titlecase';
 import { slugify } from 'src/app/_helpers/slugify';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
+import { IFAQItem } from '../_elements/faq-item/faq-item.component';
+
+@Component({
+  selector: 'app-expert-finder',
+  templateUrl: './expert-finder.component.html',
+  styleUrls: ['./expert-finder.component.scss'],
+  animations: [slideVerticalAnimation, fadeAnimation, expandVerticalAnimation],
+})
+export class ExpertFinderComponent implements OnInit , OnDestroy {
+  private destroy$ = new Subject<void>();
+
+
+  get sizeS() { return !window || window.innerWidth < 768; }
+  get f() { return this.formFilter?.controls; }
+  get fCompare() { return this.formCompare.controls; }
+  get isFilterApplied() { return this.controller.isFilterApplied; }
+  get isVirtual() { return this.controller.isVirtual; }
+
+  // list of selected category & typeOfProvider
+  // used for showing which field are selected. 
+  get selectedTypesLabel() {
+    return this.selectedTypes.length == 0 ? 
+        'all different fields' :
+        this.selectedTypes.length == 1 ? 
+          this.selectedTypes[0].item_text : 
+          'several fields that you select';
+  }
+  get selectedTypes() {
+    const result = [];
+    if(this._catService.categoryList && this.questionnaires) {
+      this.controller.category.forEach(id => {
+        const cat = this._catService.categoryListFlatten.find(item => item._id == id);
+        if(cat) {
+          result.push(cat);
+        }
+      });
+      
+      this.controller.typeOfProvider.forEach(id => {
+        const type = this.questionnaires.typeOfProvider.answers.find(item => item._id == id);
+        if(type) {
+          result.push(type);
+        }
+      })
+    }
+    return result;
+  }
+
+
+
+  professionalOf(id: string) {
+    const professionals = this.controller.professionalsAll
+    let res: Professional = null;
+    if(professionals) {
+      for(let p of professionals) {
+        if(p._id == id) {
+          res = p;
+          break;  
+        }
+      }
+    }
+    return res;
+  }
+
+  public viewState: IViewState = {
+    style: 'list',
+    isGettingUserLocation: false,
+  }
+
+  public mapRect = {
+    top: 0,
+    height: 0,
+  }
+
+  public controller: ExpertFinderController;
+  public breadcrumbs: BreadcrumbItem[] = [
+    { label: 'Home', url: '/' },
+    { label: 'Practitioners' }
+  ];
+  public pageCurrent: number = 1;
+  public pageHeading: string = 'Find Health Care Providers in Canada';
   public introText: string = '';
   public faqItems: IFAQItem[] = [];
   public faqHeading: string = '';
@@ -683,7 +763,7 @@ import { JsonLdService } from 'src/app/shared/services/json-ld.service';
     e.stopPropagation();    
   }
 
-  private prefetchListingForSSR(): Promise<void> {
+  private async prefetchListingForSSR(): Promise<void> {
     const LISTING_KEY = makeStateKey<any>('listing-ssr-data');
     const payload = this.controller.toPayload({ count: 20, page: 1 });
     const params = this._route.snapshot.params as IExpertFinderFilterParams;
@@ -698,6 +778,39 @@ import { JsonLdService } from 'src/app/shared/services/json-ld.service';
       );
       if (cat) {
         payload.services = [cat._id];
+      } else {
+        // Category list not loaded yet during SSR — fetch directly from API
+        try {
+          const res: any = await this._sharedService
+            .getNoAuth('questionare/get-service')
+            .pipe(take(1))
+            .toPromise();
+          if (res?.statusCode === 200 && res?.data) {
+            let matched = false;
+            for (const group of res.data) {
+              if (group.category_type?.toLowerCase() === 'goal') {
+                for (const rootCat of (group.category || [])) {
+                  if (slugify(rootCat.item_text) === params.categorySlug) {
+                    payload.services = [rootCat._id];
+                    matched = true;
+                    break;
+                  }
+                  for (const sub of (rootCat.subCategory || [])) {
+                    if (slugify(sub.item_text) === params.categorySlug) {
+                      payload.services = [sub._id];
+                      matched = true;
+                      break;
+                    }
+                  }
+                  if (matched) break;
+                }
+                break;
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('prefetchListingForSSR: failed to fetch categories for slug resolution', e);
+        }
       }
     }
     return new Promise<void>((resolve) => {
