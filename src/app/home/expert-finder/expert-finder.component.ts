@@ -183,10 +183,13 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       // SSR path: initialize controller and fetch listing data.
       // Kept minimal to avoid zone.js timing issues with stability detection.
       this.initController();
-      await this.prefetchListingForSSR();
-      // Populate intro text & FAQ items before JSON-LD injection so
-      // ensureBreadcrumbJsonLd() can include FAQPage schema.
+      // Populate intro text & FAQ items BEFORE fetching listings so that
+      // setListingJsonLd() → buildFaqSchema() can include FAQPage in the
+      // same JSON-LD script tag as ItemList + BreadcrumbList.
       await this.setMeta();
+      await this.prefetchListingForSSR();
+      // Fallback: inject BreadcrumbList + FAQPage if listing API returned
+      // no results and setListingJsonLd() never fired.
       this.ensureBreadcrumbJsonLd();
       return;
     }
