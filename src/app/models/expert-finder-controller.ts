@@ -65,8 +65,10 @@ export class ExpertFinderController {
   get professionalsInitialized() { return this._professionalsInitialized; }
   get professionals() { return this._professionalsPerPage; }
   get professionalsAll() { return this._professionals; }
-  get countAll() { return this._professionals.length; }
+  get countAll() { return this._totalPractitioners || this._professionals.length; }
   get countPerPage() { return this._countPerPage; }
+  get page() { return this._page; }
+  get totalPractitioners() { return this._totalPractitioners; }
 
   get paginator() { return this._paginator; }
 
@@ -114,6 +116,8 @@ export class ExpertFinderController {
 
   private _countPerPage: number;
   private _isFilterApplied: boolean = false;
+  private _totalPractitioners: number = 0;
+  private _page: number = 1;
 
   constructor(data: IFilterData, option: IOptionExpertFinderController = {}) {
     const o = new OptionExpertFinderController(option);
@@ -317,7 +321,7 @@ export class ExpertFinderController {
   //   return res.slice(0,-1);
   // }
 
-  toPayload() {
+  toPayload(options?: { count?: number, page?: number }) {
     const res: {[k: string]: any} = {
       // ids: [],
       rating: this._rating,
@@ -326,7 +330,7 @@ export class ExpertFinderController {
       typical_hours: this.typical_hours,
       price_per_hours: this.price_per_hours,
       age_range: this.age_range,
-      serviceOfferIds: this.serviceOfferIds,    
+      serviceOfferIds: this.serviceOfferIds,
       services: this.services,
       ...this._keyword && {keyword: this._keyword},
       ...this._keyloc && {keyloc: this._keyloc},
@@ -334,11 +338,11 @@ export class ExpertFinderController {
 
     if (this._virtual) {
       res.virtual = true;
-    } 
+    }
     // else if(this._keyword || this._keyloc){
     //   res.latLong = '';
     //   res.miles = null;
-    // } 
+    // }
     else if(this._lat && this._lng) {
       res.latLong = this._lng + ', ' + this._lat;
       res.miles = this._dist;
@@ -346,6 +350,12 @@ export class ExpertFinderController {
       res.latLong = '';
       res.miles = null;
     }
+
+    if (options?.count) {
+      res.count = options.count;
+      res.page = options.page || 1;
+    }
+
     return res;
   }
 
@@ -354,6 +364,14 @@ export class ExpertFinderController {
     this._professionals = [];
     this._paginator = [[]];
     this._professionalsInitialized = false;
+  }
+
+  setPage(page: number) {
+    this._page = page;
+  }
+
+  setTotalPractitioners(total: number) {
+    this._totalPractitioners = total;
   }
 
   setProfessionals(data: IGetPractitionersResult['data']['dataArr'], createCanvas: boolean = true) {
@@ -371,13 +389,19 @@ export class ExpertFinderController {
   }
 
   setProfesionnalsPerPage(pageCurrent: number = 1) {
-    const from = (pageCurrent - 1) * this._countPerPage;
-    const to = from + this._countPerPage;
-    this._professionalsPerPage = this._professionals.slice(from, to);
+    if (this._totalPractitioners > 0) {
+      // Server-side pagination: the full _professionals array IS the current page
+      this._professionalsPerPage = this._professionals;
+    } else {
+      const from = (pageCurrent - 1) * this._countPerPage;
+      const to = from + this._countPerPage;
+      this._professionalsPerPage = this._professionals.slice(from, to);
+    }
   }
 
   initPaginator(pageCurrent: number) {
-    const pageTotal = Math.ceil(this._professionals.length / this._countPerPage);
+    const total = this._totalPractitioners > 0 ? this._totalPractitioners : this._professionals.length;
+    const pageTotal = Math.ceil(total / this._countPerPage);
     const paginator: {page: number; shown : boolean}[] = [];
     
     for(let i=1; i<=pageTotal; i++) {
