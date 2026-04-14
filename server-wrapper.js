@@ -13,8 +13,114 @@ process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception (caught):', err.message);
 });
 
+const https = require('https');
+
 const originalModule = require('./main.js');
 const expressApp = originalModule.app();
+
+// --- SEO-021: Category page filtered ItemList JSON-LD ---
+
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+// Simple HTTPS GET returning parsed JSON
+function httpsGetJson(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch (e) { reject(new Error('JSON parse error')); }
+      });
+    }).on('error', reject);
+  });
+}
+
+// Simple HTTPS POST returning parsed JSON
+function httpsPostJson(url, body) {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const postData = JSON.stringify(body);
+    const req = https.request({
+      hostname: parsed.hostname,
+      path: parsed.pathname + parsed.search,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(postData),
+      },
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch (e) { reject(new Error('JSON parse error')); }
+      });
+    });
+    req.on('error', reject);
+    req.write(postData);
+    req.end();
+  });
+}
+
+// slug -> { id, name }
+let categorySlugMap = new Map();
+
+async function fetchCategories(retries) {
+  retries = retries || 5;
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const resp = await httpsGetJson('https://ocean.prompthealth.ca/api/v1/questionare/get-service');
+      if (resp && resp.data) {
+        const map = new Map();
+        for (const group of resp.data) {
+          if (!group.category) continue;
+          for (const cat of group.category) {
+            if (cat._id && cat.item_text) {
+              map.set(slugify(cat.item_text), { id: cat._id, name: cat.item_text });
+            }
+            if (cat.subCategory) {
+              for (const sub of cat.subCategory) {
+                if (sub._id && sub.item_text) {
+                  map.set(slugify(sub.item_text), { id: sub._id, name: sub.item_text });
+                }
+              }
+            }
+          }
+        }
+        categorySlugMap = map;
+        console.log('[SEO-021] Loaded ' + map.size + ' category slugs');
+        return;
+      }
+    } catch (e) {
+      console.error('[SEO-021] Category fetch attempt ' + attempt + '/' + retries + ' failed:', e.message);
+    }
+    if (attempt < retries) await new Promise(r => setTimeout(r, 2000));
+  }
+  console.error('[SEO-021] Could not load categories after ' + retries + ' retries');
+}
+
+function fetchFilteredPractitioners(categoryId) {
+  return httpsPostJson('https://ocean.prompthealth.ca/api/v1/user/filter', {
+    services: [categoryId],
+    count: 20,
+    page: 1,
+    rating: 0,
+    gender: [],
+    languageId: [],
+    typical_hours: [],
+    price_per_hours: [],
+    age_range: [],
+    serviceOfferIds: [],
+    latLong: '',
+    miles: null,
+  });
+}
+
+// Fetch categories at startup (non-blocking)
+fetchCategories();
 
 // Extract content from a meta tag by property or name
 function extractMeta(html, attr) {
@@ -26,7 +132,7 @@ function extractMeta(html, attr) {
 }
 
 // JSON-LD injection function
-function injectJsonLd(url, html) {
+function injectJsonLd(url, html, categoryPractitioners) {
   if (typeof html !== 'string') return html;
   let jsonLd = null;
 
@@ -379,6 +485,59 @@ function injectJsonLd(url, html) {
     }
   }
 
+  // Category listing pages: /practitioners/category/:slug (SEO-021)
+  const categoryMatch = url.match(/^\/practitioners\/category\/([^?/]+)/);
+  if (categoryMatch && categoryPractitioners && categoryPractitioners.length > 0) {
+    const baseUrl = 'https://www.prompthealth.ca';
+    const itemList = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      'name': 'Healthcare Practitioners',
+      'numberOfItems': categoryPractitioners.length,
+      'itemListElement': categoryPractitioners.map(function(p, i) {
+        const item = {
+          '@type': 'ProfessionalService',
+          'name': [p.firstName, p.lastName].filter(Boolean).join(' ') || 'Practitioner',
+          'url': baseUrl + '/practitioners/' + (p.profileSlug || p._id),
+        };
+        if (p.userData && p.userData.profileImage) {
+          var img = p.userData.profileImage;
+          if (img && !img.startsWith('http')) {
+            img = baseUrl + (img.startsWith('/') ? '' : '/') + img;
+          }
+          item.image = img;
+        }
+        if (p.address && (p.address.city || p.address.state_province)) {
+          item.address = { '@type': 'PostalAddress', 'addressCountry': 'CA' };
+          if (p.address.city) item.address.addressLocality = p.address.city;
+          if (p.address.state_province) item.address.addressRegion = p.address.state_province;
+        }
+        return { '@type': 'ListItem', 'position': i + 1, 'item': item };
+      }),
+    };
+
+    // Replace existing Angular-rendered ItemList JSON-LD if present
+    var ldRegex = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
+    var ldMatch;
+    var replaced = false;
+    while ((ldMatch = ldRegex.exec(html)) !== null) {
+      try {
+        var parsed = JSON.parse(ldMatch[1]);
+        var isItemList = (parsed && parsed['@type'] === 'ItemList') ||
+          (Array.isArray(parsed) && parsed.some(function(d) { return d['@type'] === 'ItemList'; }));
+        if (isItemList) {
+          html = html.replace(ldMatch[0], '<script type="application/ld+json">' + JSON.stringify(itemList) + '</script>');
+          replaced = true;
+          break;
+        }
+      } catch (e) { /* skip unparseable */ }
+    }
+    if (!replaced) {
+      html = html.replace('</head>', '<script type="application/ld+json">' + JSON.stringify(itemList) + '</script></head>');
+    }
+    return html;
+  }
+
   if (jsonLd) {
     const script = '<script type="application/ld+json" id="json-ld-schema">' + JSON.stringify(jsonLd) + '</script>';
     html = html.replace('</head>', script + '</head>');
@@ -419,7 +578,7 @@ const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCac
     res.send = _send; // restore
     // Inject JSON-LD before caching
     if (typeof body === 'string' && body.length > 500) {
-      body = injectJsonLd(req.originalUrl, body);
+      body = injectJsonLd(req.originalUrl, body, req._categoryPractitioners);
       body = deferScripts(body);
     }
     if (typeof body === 'string' && body.length > 500 && res.statusCode === 200) {
@@ -435,6 +594,32 @@ cacheLayer.route = undefined;
 
 // Insert after query(0), expressInit(1), compression(2) = at index 3
 expressApp._router.stack.splice(3, 0, cacheLayer);
+
+// SEO-021: Pre-fetch filtered practitioners for category pages before caching
+const categoryLayer = new Layer('/', { strict: false, end: false }, function categoryPreFetch(req, res, next) {
+  var catMatch = req.url.match(/^\/practitioners\/category\/([^?/]+)/);
+  if (!catMatch) return next();
+
+  var slug = catMatch[1];
+  var catInfo = categorySlugMap.get(slug);
+  if (!catInfo) return next();
+
+  // Clear SSR cache for this category page to prevent stale data
+  cache.delete(req.url);
+
+  fetchFilteredPractitioners(catInfo.id)
+    .then(function(resp) {
+      req._categoryPractitioners = (resp && resp.data) ? resp.data : [];
+      next();
+    })
+    .catch(function() {
+      // Graceful degradation — leave HTML unchanged
+      next();
+    });
+});
+categoryLayer.route = undefined;
+// Insert at index 3 (pushes cacheLayer to index 4) so categories are pre-fetched before cache check
+expressApp._router.stack.splice(3, 0, categoryLayer);
 
 const port = process.env.PORT || 4000;
 expressApp.listen(port, () => {
