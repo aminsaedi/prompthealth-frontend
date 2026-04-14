@@ -513,22 +513,24 @@ function injectJsonLd(url, html, categoryPractitioners) {
       'name': 'Healthcare Practitioners',
       'numberOfItems': categoryPractitioners.length,
       'itemListElement': categoryPractitioners.map(function(p, i) {
+        // Each element is { userId, userData: IUserDetail, ans: [...] }
+        var ud = p.userData || {};
         const item = {
           '@type': 'ProfessionalService',
-          'name': [p.firstName, p.lastName].filter(Boolean).join(' ') || 'Practitioner',
-          'url': baseUrl + '/practitioners/' + (p.profileSlug || p._id),
+          'name': [ud.firstName, ud.lastName].filter(Boolean).join(' ') || 'Practitioner',
+          'url': baseUrl + '/practitioners/' + (ud.slug || p.userId),
         };
-        if (p.userData && p.userData.profileImage) {
-          var img = p.userData.profileImage;
+        if (ud.profileImage) {
+          var img = ud.profileImage;
           if (img && !img.startsWith('http')) {
             img = baseUrl + (img.startsWith('/') ? '' : '/') + img;
           }
           item.image = img;
         }
-        if (p.address && (p.address.city || p.address.state_province)) {
+        if (ud.city || ud.state) {
           item.address = { '@type': 'PostalAddress', 'addressCountry': 'CA' };
-          if (p.address.city) item.address.addressLocality = p.address.city;
-          if (p.address.state_province) item.address.addressRegion = p.address.state_province;
+          if (ud.city) item.address.addressLocality = ud.city;
+          if (ud.state) item.address.addressRegion = ud.state;
         }
         return { '@type': 'ListItem', 'position': i + 1, 'item': item };
       }),
@@ -627,7 +629,8 @@ const categoryLayer = new Layer('/', { strict: false, end: false }, function cat
 
   fetchFilteredPractitioners(catInfo.id)
     .then(function(resp) {
-      req._categoryPractitioners = (resp && resp.data) ? resp.data : [];
+      // API returns { data: { dataArr: [...], total: N } } — extract the array
+      req._categoryPractitioners = (resp && resp.data && resp.data.dataArr) ? resp.data.dataArr : [];
       next();
     })
     .catch(function() {
