@@ -178,7 +178,8 @@ export class PageComponent implements OnInit , OnDestroy {
       'datePublished': this.post.createdAt || '',
       'author': {
         '@type': 'Person',
-        'name': this.post.authorName || ''
+        'name': this.post.authorName || '',
+        ...(this.post.authorSlug ? { 'url': 'https://www.prompthealth.ca/practitioners/' + this.post.authorSlug } : {})
       },
       ...(this.post.coverImage ? { 'image': this.post.coverImage } : {}),
       ...(this.post.isArticle && this.post.location ? { 'contentLocation': { '@type': 'Place', 'name': this.post.location } } : {}),
