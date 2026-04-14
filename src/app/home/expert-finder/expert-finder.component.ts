@@ -637,6 +637,19 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     const LISTING_KEY = makeStateKey<any>('listing-ssr-data');
     const payload = this.controller.toPayload();
     const params = this._route.snapshot.params as IExpertFinderFilterParams;
+
+    // Guard: if the route has a categorySlug but the payload has no services
+    // (resolveCategorySlug() returned null during initController because
+    // categoryList wasn't ready), resolve it now and inject into the payload
+    // so the backend applies the correct $in filter.
+    if ((!payload.services || payload.services.length === 0) && params.categorySlug) {
+      const cat = this._catService.categoryListFlatten.find(
+        c => slugify(c.item_text) === params.categorySlug
+      );
+      if (cat) {
+        payload.services = [cat._id];
+      }
+    }
     return new Promise<void>((resolve) => {
       this._sharedService.postNoAuth(payload, 'user/filter').pipe(take(1)).subscribe(
         (res: IGetPractitionersResult) => {

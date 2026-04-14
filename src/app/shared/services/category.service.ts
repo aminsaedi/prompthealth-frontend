@@ -21,6 +21,7 @@ export class CategoryService {
   }
 
   public categoryList: Category[];
+  private _categoryLoaded = false;
 
 
   constructor(
@@ -66,13 +67,12 @@ export class CategoryService {
 
   getCategoryAsync(): Promise<Category[]>{
     return new Promise((resolve, reject) => {
-      if(!this.categoryList){
+      if(!this._categoryLoaded){
         this.subscriptionCat = this.observeCategoryService().subscribe(() => {
-          // this.subscriptionCat.unsubscribe();
           resolve(this.categoryList)
         });
-      }else{ 
-        resolve(this.categoryList); 
+      }else{
+        resolve(this.categoryList);
       }
     });
   }
@@ -87,11 +87,13 @@ export class CategoryService {
             break;
           }
         }
+        this._categoryLoaded = true;
         this.emitCategoryService();
       }
     }, (error) => {
       console.error(error);
-      // this.toastr.error('There are some error please try after some time.');
+      this._categoryLoaded = true;
+      this.emitCategoryService();
     });
   }
 }
