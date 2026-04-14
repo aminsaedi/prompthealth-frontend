@@ -24,85 +24,9 @@ import { titleCaseOf } from 'src/app/_helpers/titlecase';
 import { slugify } from 'src/app/_helpers/slugify';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
-
-@Component({
-  selector: 'app-expert-finder',
-  templateUrl: './expert-finder.component.html',
-  styleUrls: ['./expert-finder.component.scss'],
-  animations: [slideVerticalAnimation, fadeAnimation, expandVerticalAnimation],
-})
-export class ExpertFinderComponent implements OnInit , OnDestroy {
-  private destroy$ = new Subject<void>();
-
-
-  get sizeS() { return !window || window.innerWidth < 768; }
-  get f() { return this.formFilter?.controls; }
-  get fCompare() { return this.formCompare.controls; }
-  get isFilterApplied() { return this.controller.isFilterApplied; }
-  get isVirtual() { return this.controller.isVirtual; }
-
-  // list of selected category & typeOfProvider
-  // used for showing which field are selected. 
-  get selectedTypesLabel() {
-    return this.selectedTypes.length == 0 ? 
-        'all different fields' :
-        this.selectedTypes.length == 1 ? 
-          this.selectedTypes[0].item_text : 
-          'several fields that you select';
-  }
-  get selectedTypes() {
-    const result = [];
-    if(this._catService.categoryList && this.questionnaires) {
-      this.controller.category.forEach(id => {
-        const cat = this._catService.categoryListFlatten.find(item => item._id == id);
-        if(cat) {
-          result.push(cat);
-        }
-      });
-      
-      this.controller.typeOfProvider.forEach(id => {
-        const type = this.questionnaires.typeOfProvider.answers.find(item => item._id == id);
-        if(type) {
-          result.push(type);
-        }
-      })
-    }
-    return result;
-  }
-
-
-
-  professionalOf(id: string) {
-    const professionals = this.controller.professionalsAll
-    let res: Professional = null;
-    if(professionals) {
-      for(let p of professionals) {
-        if(p._id == id) {
-          res = p;
-          break;  
-        }
-      }
-    }
-    return res;
-  }
-
-  public viewState: IViewState = {
-    style: 'list',
-    isGettingUserLocation: false,
-  }
-
-  public mapRect = {
-    top: 0,
-    height: 0,
-  }
-
-  public controller: ExpertFinderController;
-  public breadcrumbs: BreadcrumbItem[] = [
-    { label: 'Home', url: '/' },
-    { label: 'Practitioners' }
-  ];
-  public pageCurrent: number = 1;
-  public pageHeading: string = 'Find Health Care Providers in Canada';
+  public introText: string = '';
+  public faqItems: IFAQItem[] = [];
+  public faqHeading: string = '';
 
   public questionnaires: QuestionnaireMapProfilePractitioner;
 
@@ -180,10 +104,10 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       // Kept minimal to avoid zone.js timing issues with stability detection.
       this.initController();
       await this.prefetchListingForSSR();
-      // Always set BreadcrumbList JSON-LD during SSR — this only depends on
-      // route params, not API results, so it works even if the listing API fails.
-      this.ensureBreadcrumbJsonLd();
+      // Populate intro text & FAQ items before JSON-LD injection so
+      // ensureBreadcrumbJsonLd() can include FAQPage schema.
       await this.setMeta();
+      this.ensureBreadcrumbJsonLd();
       return;
     }
 
@@ -275,14 +199,114 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
     this.pageHeading = `Find Best ${titleCaseOf(specialist)} in ${area}`;
 
-    let desc = 'Use our Expert Finder to find a top-rated ';
-    desc +=
+    this.introText = this.generateIntroText(specialist, area);
+    this.faqItems = this.generateFaqItems(specialist, area);
+    this.faqHeading = `Frequently Asked Questions about ${titleCaseOf(specialist)} in ${area}`;
 
     this._uService.setMeta(this._router.url, {
       title: `Find best ${specialist} in ${area} | PromptHealth`,
       description: `Use our Expert Finder to find a top-rated ${specialist} in ${area} or offering virtual appointment.`,
-    });  
+    });
 
+  }
+
+  private generateIntroText(specialist: string, area: string): string {
+    if (specialist === 'health care providers' && area === 'Canada') {
+      return '';
+    }
+    if (area !== 'Canada') {
+      return `Looking for a trusted ${specialist} in ${area}? Browse our directory of top-rated ${specialist} professionals in ${area} and find the right provider for your health needs. Whether you need an in-person visit or a virtual consultation, PromptHealth makes it easy to compare providers and book your appointment.`;
+    }
+    return `Find top-rated ${specialist} professionals across Canada on PromptHealth. Compare providers by ratings, specialties, and availability to find the right ${specialist} for your health and wellness goals.`;
+  }
+
+  private generateFaqItems(specialist: string, area: string): IFAQItem[] {
+    if (specialist === 'health care providers' && area === 'Canada') {
+      return [];
+    }
+
+    const faqLookup: { [key: string]: IFAQItem[] } = {
+      'dentist': [
+        { q: `What does a dentist do?`, a: `A dentist diagnoses and treats conditions affecting the teeth, gums, and mouth. Services include routine cleanings, fillings, crowns, root canals, and preventive care to maintain your oral health.`, opened: false },
+        { q: `How do I find a dentist in ${area}?`, a: `You can use PromptHealth's Expert Finder to browse dentists in ${area}. Filter by ratings, availability, and whether they offer virtual consultations to find the right fit.`, opened: false },
+        { q: `What should I expect at my first dentist appointment?`, a: `Your first visit typically includes a comprehensive oral exam, dental X-rays, a professional cleaning, and a discussion about your dental health history and any concerns you may have.`, opened: false },
+        { q: `How much does a dentist visit cost in ${area}?`, a: `Costs vary depending on the type of service. A routine check-up and cleaning may range from $150 to $350. Many dental offices in ${area} accept insurance plans and offer payment options.`, opened: false },
+        { q: `Do I need a referral to see a dentist?`, a: `No, you do not need a referral to see a dentist. You can book an appointment directly with any dental practice in ${area}.`, opened: false },
+      ],
+      'psychologist': [
+        { q: `What does a psychologist do?`, a: `A psychologist provides assessment, diagnosis, and therapy for mental health conditions. They use evidence-based approaches like cognitive-behavioural therapy (CBT) to help with anxiety, depression, trauma, and other concerns.`, opened: false },
+        { q: `How do I find a psychologist in ${area}?`, a: `Use PromptHealth to search for psychologists in ${area}. You can filter by specialty areas, ratings, availability, and virtual appointment options to find the right match.`, opened: false },
+        { q: `What should I expect at my first psychologist appointment?`, a: `Your first session is usually an intake assessment where the psychologist learns about your background, concerns, and goals. Together, you will develop a plan for therapy going forward.`, opened: false },
+        { q: `How much does a psychologist cost in ${area}?`, a: `Psychologist fees in ${area} typically range from $150 to $250 per session. Many extended health insurance plans cover psychological services, so check with your provider.`, opened: false },
+        { q: `Do I need a referral to see a psychologist?`, a: `In most provinces, you do not need a referral to see a psychologist. You can book directly, though a referral from your family doctor may help with insurance coverage.`, opened: false },
+      ],
+      'physiotherapist': [
+        { q: `What does a physiotherapist do?`, a: `A physiotherapist helps you recover from injuries, manage chronic pain, and improve mobility through exercise programs, manual therapy, and education about movement and prevention.`, opened: false },
+        { q: `How do I find a physiotherapist in ${area}?`, a: `Search for physiotherapists in ${area} on PromptHealth. Compare providers by ratings, specialties, and whether they offer virtual or in-person sessions.`, opened: false },
+        { q: `What should I expect at my first physiotherapy appointment?`, a: `Your first visit will include a physical assessment, a review of your medical history, and discussion of your goals. Your physiotherapist will then create a personalized treatment plan.`, opened: false },
+        { q: `How much does physiotherapy cost in ${area}?`, a: `Physiotherapy sessions in ${area} typically cost between $80 and $150. Many extended health plans and workplace benefits cover physiotherapy treatments.`, opened: false },
+        { q: `Do I need a referral to see a physiotherapist?`, a: `No referral is needed to see a physiotherapist in most provinces. You can book an appointment directly, though some insurance plans may require a doctor's note for coverage.`, opened: false },
+      ],
+      'chiropractor': [
+        { q: `What does a chiropractor do?`, a: `A chiropractor specializes in diagnosing and treating musculoskeletal disorders, particularly those affecting the spine. Treatment often includes spinal adjustments, soft tissue therapy, and exercise recommendations.`, opened: false },
+        { q: `How do I find a chiropractor in ${area}?`, a: `Browse chiropractors in ${area} on PromptHealth. Filter by patient ratings, availability, and services offered to find the right provider for your needs.`, opened: false },
+        { q: `What should I expect at my first chiropractic appointment?`, a: `Your first visit typically includes a health history review, physical examination, and possibly X-rays. The chiropractor will discuss findings with you and recommend a treatment plan.`, opened: false },
+        { q: `How much does a chiropractor cost in ${area}?`, a: `Chiropractic visits in ${area} generally range from $60 to $120 per session. Many workplace health benefits and insurance plans include chiropractic coverage.`, opened: false },
+        { q: `Do I need a referral to see a chiropractor?`, a: `No, you can see a chiropractor without a referral. Simply book an appointment directly with a chiropractic clinic in ${area}.`, opened: false },
+      ],
+      'naturopath': [
+        { q: `What does a naturopath do?`, a: `A naturopathic doctor uses natural therapies including herbal medicine, nutrition, acupuncture, and lifestyle counselling to support the body's ability to heal and maintain health.`, opened: false },
+        { q: `How do I find a naturopath in ${area}?`, a: `Search for naturopaths in ${area} on PromptHealth. Compare practitioners by their specialties, patient reviews, and availability.`, opened: false },
+        { q: `What should I expect at my first naturopath appointment?`, a: `A first visit usually lasts 60 to 90 minutes and involves a detailed review of your health history, lifestyle, diet, and current concerns. The naturopath will then suggest a personalized treatment plan.`, opened: false },
+        { q: `How much does a naturopath cost in ${area}?`, a: `Initial naturopathic consultations in ${area} typically range from $150 to $300, with follow-up visits costing $80 to $150. Some extended health plans cover naturopathic services.`, opened: false },
+        { q: `Do I need a referral to see a naturopath?`, a: `No referral is required. You can book directly with a naturopathic doctor in ${area}.`, opened: false },
+      ],
+      'massage therapist': [
+        { q: `What does a massage therapist do?`, a: `A registered massage therapist provides hands-on treatment to relieve pain, reduce stress, and improve mobility. Techniques may include deep tissue massage, Swedish massage, and myofascial release.`, opened: false },
+        { q: `How do I find a massage therapist in ${area}?`, a: `Use PromptHealth to find massage therapists in ${area}. Filter results by ratings, specialties, and appointment availability.`, opened: false },
+        { q: `What should I expect at my first massage therapy appointment?`, a: `Your therapist will ask about your health history, areas of concern, and treatment goals before beginning a hands-on session tailored to your needs.`, opened: false },
+        { q: `How much does massage therapy cost in ${area}?`, a: `Massage therapy in ${area} typically costs between $80 and $140 per session, depending on the duration. Many health benefit plans cover registered massage therapy.`, opened: false },
+        { q: `Do I need a referral to see a massage therapist?`, a: `No referral is needed. You can book directly with a registered massage therapist in ${area}.`, opened: false },
+      ],
+      'nutritionist': [
+        { q: `What does a nutritionist do?`, a: `A nutritionist or registered dietitian provides personalized dietary advice to help manage health conditions, improve eating habits, and support overall wellness through evidence-based nutrition plans.`, opened: false },
+        { q: `How do I find a nutritionist in ${area}?`, a: `Search for nutritionists and dietitians in ${area} on PromptHealth. Compare providers by their specialties, ratings, and consultation options.`, opened: false },
+        { q: `What should I expect at my first nutritionist appointment?`, a: `Your first session will typically involve a review of your dietary habits, health goals, medical history, and lifestyle. The nutritionist will then create a personalized eating plan.`, opened: false },
+        { q: `How much does a nutritionist cost in ${area}?`, a: `Nutrition consultations in ${area} typically range from $80 to $175 per session. Some insurance and employee benefit plans cover visits with registered dietitians.`, opened: false },
+        { q: `Do I need a referral to see a nutritionist?`, a: `In most cases, no referral is required. You can book directly with a nutritionist or dietitian in ${area}.`, opened: false },
+      ],
+    };
+
+    const specialistLower = specialist.toLowerCase();
+    const matched = faqLookup[specialistLower];
+    if (matched) {
+      return matched;
+    }
+
+    // Generic FAQ items for specialties not in the lookup
+    return [
+      { q: `What does a ${specialist} do?`, a: `A ${specialist} is a health care professional who provides specialized assessment, treatment, and ongoing support for conditions within their area of expertise. They work with patients to develop personalized care plans.`, opened: false },
+      { q: `How do I find a ${specialist} in ${area}?`, a: `You can use PromptHealth's Expert Finder to browse ${specialist} providers in ${area}. Filter by ratings, availability, and virtual consultation options to find the right match for your needs.`, opened: false },
+      { q: `What should I expect at my first ${specialist} appointment?`, a: `Your first visit typically includes a review of your health history, an assessment of your current concerns, and a discussion of treatment options. The provider will work with you to develop a care plan.`, opened: false },
+      { q: `How much does a ${specialist} cost in ${area}?`, a: `Fees vary depending on the type of service and provider. Many ${specialist} practitioners in ${area} accept insurance or offer flexible payment options. Check with the provider directly for pricing details.`, opened: false },
+      { q: `Do I need a referral to see a ${specialist}?`, a: `Referral requirements depend on the profession and your province. Many ${specialist} providers accept direct bookings without a referral. Check with the specific provider or your insurance plan for details.`, opened: false },
+    ];
+  }
+
+  private buildFaqSchema(): object | null {
+    if (!this.faqItems || this.faqItems.length === 0) return null;
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      'mainEntity': this.faqItems.map(item => ({
+        '@type': 'Question',
+        'name': item.q,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': item.a,
+        }
+      }))
+    };
   }
 
   setListingJsonLd(professionals: Professional[]) {
@@ -327,10 +351,13 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       };
 
       const breadcrumbSchema = this.buildBreadcrumbSchema();
+      const faqSchema = this.buildFaqSchema();
 
-      this._jsonLdService.setJsonLd(
-        breadcrumbSchema ? [itemListSchema, breadcrumbSchema] : [itemListSchema]
-      );
+      const schemas: object[] = [itemListSchema];
+      if (breadcrumbSchema) schemas.push(breadcrumbSchema);
+      if (faqSchema) schemas.push(faqSchema);
+
+      this._jsonLdService.setJsonLd(schemas);
       this._jsonLdSet = true;
     }
   }
@@ -394,12 +421,17 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   private ensureBreadcrumbJsonLd(): void {
     if (this._jsonLdSet) return;
     try {
+      const schemas: object[] = [];
       const breadcrumbSchema = this.buildBreadcrumbSchema();
-      if (breadcrumbSchema) {
-        this._jsonLdService.setJsonLd([breadcrumbSchema]);
+      if (breadcrumbSchema) schemas.push(breadcrumbSchema);
+      const faqSchema = this.buildFaqSchema();
+      if (faqSchema) schemas.push(faqSchema);
+      if (schemas.length > 0) {
+        this._jsonLdService.setJsonLd(schemas);
+        this._jsonLdSet = true;
       }
     } catch (e) {
-      // Non-critical — don't let breadcrumb injection crash SSR
+      // Non-critical — don't let breadcrumb/FAQ injection crash SSR
     }
   }
 
@@ -651,7 +683,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     e.stopPropagation();    
   }
 
-  private async prefetchListingForSSR(): Promise<void> {
+  private prefetchListingForSSR(): Promise<void> {
     const LISTING_KEY = makeStateKey<any>('listing-ssr-data');
     const payload = this.controller.toPayload({ count: 20, page: 1 });
     const params = this._route.snapshot.params as IExpertFinderFilterParams;
@@ -666,39 +698,6 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       );
       if (cat) {
         payload.services = [cat._id];
-      } else {
-        // Category list not loaded yet during SSR — fetch directly from API
-        try {
-          const res: any = await this._sharedService
-            .getNoAuth('questionare/get-service')
-            .pipe(take(1))
-            .toPromise();
-          if (res?.statusCode === 200 && res?.data) {
-            let matched = false;
-            for (const group of res.data) {
-              if (group.category_type?.toLowerCase() === 'goal') {
-                for (const rootCat of (group.category || [])) {
-                  if (slugify(rootCat.item_text) === params.categorySlug) {
-                    payload.services = [rootCat._id];
-                    matched = true;
-                    break;
-                  }
-                  for (const sub of (rootCat.subCategory || [])) {
-                    if (slugify(sub.item_text) === params.categorySlug) {
-                      payload.services = [sub._id];
-                      matched = true;
-                      break;
-                    }
-                  }
-                  if (matched) break;
-                }
-                break;
-              }
-            }
-          }
-        } catch (e) {
-          console.warn('prefetchListingForSSR: failed to fetch categories for slug resolution', e);
-        }
       }
     }
     return new Promise<void>((resolve) => {

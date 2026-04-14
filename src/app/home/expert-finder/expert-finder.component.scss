@@ -1,5 +1,20 @@
 @import "../../../assets/scss/variables";
 
+.intro-text {
+  margin-top: 12px;
+  margin-bottom: 0;
+  color: $colorGsLabel;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.faq-section {
+  margin-top: 40px;
+  margin-bottom: 60px;
+  padding-top: 20px;
+  border-top: 1px solid $colorGsLine;
+}
+
 .filter-indicator {
   position: absolute;
   width: 7px;
