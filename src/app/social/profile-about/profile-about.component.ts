@@ -32,7 +32,7 @@ export class ProfileAboutComponent implements OnInit , OnDestroy {
   public isProductViewerShown = false;
   public isPartnerViewerShown = false;
 
-  public videos: HTMLIFrameElement[];
+  public videos: HTMLIFrameElement[] = [];
 
   private subscription: Subscription;
   private selectedStaffIds = [];
@@ -84,7 +84,7 @@ export class ProfileAboutComponent implements OnInit , OnDestroy {
   }
 
   setMeta() {
-    if(this.profile) {
+    if(this.profile && this.questionnaires?.typeOfProvider && this.questionnaires?.serviceDelivery) {
       const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
       const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);
       this._uService.setMeta(this._router.url, {
@@ -95,7 +95,7 @@ export class ProfileAboutComponent implements OnInit , OnDestroy {
         image: this.profile.imageFull,
         imageType: this.profile.imageType,
         imageAlt: this.profile.name,
-      });  
+      });
     }
   }
 
