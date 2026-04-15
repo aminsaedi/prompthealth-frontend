@@ -43,6 +43,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
   get isProfileMyself() { return this.user && this.user._id == this.profileId; }
   get isProfilePH() { return this.profileId == environment.config.idSA; }
   get user() { return this._profileService.profile; }
+  get loginStatus() { return this._profileService.loginStatus; }
   get questionnaires() { return this._qService.questionnaireOf('profilePractitioner') as QuestionnaireMapProfilePractitioner; }
   get countAvailablePromos(): number {
     const promos = this._socialService.promosOfUser(this.profileId);
