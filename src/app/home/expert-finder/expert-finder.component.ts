@@ -359,6 +359,13 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
         { q: `How much does a nutritionist cost in ${area}?`, a: `Nutrition consultations in ${area} typically range from $80 to $175 per session. Some insurance and employee benefit plans cover visits with registered dietitians.`, opened: false },
         { q: `Do I need a referral to see a nutritionist?`, a: `In most cases, no referral is required. You can book directly with a nutritionist or dietitian in ${area}.`, opened: false },
       ],
+      'health care providers': [
+        { q: `What types of healthcare providers are available in ${area}?`, a: `${area} offers a wide range of healthcare providers including family doctors, specialists, physiotherapists, psychologists, chiropractors, naturopaths, massage therapists, and more. You can use PromptHealth to explore all available provider types in your area and filter by specialty, ratings, and availability.`, opened: false },
+        { q: `How do I book a same-day appointment in ${area}?`, a: `Many healthcare providers in ${area} offer same-day or next-day appointments, especially for urgent concerns. Use PromptHealth to filter providers by availability and look for those offering online booking or virtual consultations for faster access to care.`, opened: false },
+        { q: `What is the difference between in-person and virtual care in ${area}?`, a: `In-person appointments in ${area} allow for hands-on examinations and procedures, while virtual care lets you consult with a provider from home via video or phone. Both are effective for many conditions, and many providers in ${area} offer both options so you can choose what works best for your needs.`, opened: false },
+        { q: `How do I find the best healthcare provider in ${area}?`, a: `Start by identifying the type of provider you need, then use PromptHealth to compare practitioners in ${area} by patient ratings, years of experience, areas of specialty, and appointment availability. Reading patient reviews and checking credentials can also help you make an informed choice.`, opened: false },
+        { q: `What should I look for when choosing a healthcare provider in ${area}?`, a: `Consider factors such as the provider's qualifications, patient reviews, location convenience, availability of virtual appointments, accepted insurance plans, and areas of specialization. PromptHealth lets you filter healthcare providers in ${area} by all of these criteria to find the right fit.`, opened: false },
+      ],
     };
 
     const specialistLower = specialist.toLowerCase();
