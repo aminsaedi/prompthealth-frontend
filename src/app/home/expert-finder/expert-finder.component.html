@@ -15,6 +15,12 @@
         </a>
       </div>
     </div>
+
+    <div class="mt-30p bg-primary-light rounded-8p border border-background">
+      <search-bar #searchBar></search-bar>
+      <div #blurSearchbar></div>
+    </div>
+
     <p *ngIf="introText" class="intro-text">{{introText}}</p>
 
     <section *ngIf="faqItems?.length" class="faq-section mt-30p">
@@ -23,11 +29,6 @@
         <faq-item *ngFor="let item of faqItems" [data]="item"></faq-item>
       </div>
     </section>
-
-    <div class="mt-30p bg-primary-light rounded-8p border border-background">      
-      <search-bar #searchBar></search-bar>
-      <div #blurSearchbar></div>
-    </div>
 
     <div class="mt-15p d-flex justify-content-between">
       <div>
