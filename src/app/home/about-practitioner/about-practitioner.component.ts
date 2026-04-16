@@ -17,6 +17,7 @@ import { first } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 
 
 @Component({
@@ -59,6 +60,7 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _el: ElementRef,
+    private _jsonLdService: JsonLdService,
   ) {}
 
   ngAfterViewInit() {
@@ -82,6 +84,125 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
       imageHeight: 558,
       imageType: "image/jpg",
     });
+
+    this._jsonLdService.setJsonLd([
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'Grow Your Visibility in the Age of AI Search | PromptHealth Plans',
+        description:
+          'PromptHealth helps healthcare providers become discoverable through content, video, and AI search.',
+        url: 'https://www.prompthealth.ca/plans',
+        isPartOf: {
+          '@type': 'WebSite',
+          name: 'PromptHealth',
+          url: 'https://www.prompthealth.ca',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'PromptHealth',
+          url: 'https://www.prompthealth.ca',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://www.prompthealth.ca/assets/img/prompthealth.png',
+            width: 800,
+            height: 600,
+          },
+        },
+        breadcrumb: {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: 'https://www.prompthealth.ca',
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Plans',
+              item: 'https://www.prompthealth.ca/plans',
+            },
+          ],
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        serviceType: 'Healthcare Provider Visibility & Marketing',
+        name: 'AI Visibility Program',
+        description:
+          'SEO-optimized content, expert video production, keyword strategy, and ongoing visibility optimization for healthcare providers.',
+        provider: {
+          '@type': 'Organization',
+          name: 'PromptHealth',
+          url: 'https://www.prompthealth.ca',
+        },
+        areaServed: {
+          '@type': 'Country',
+          name: 'Canada',
+        },
+        offers: {
+          '@type': 'Offer',
+          price: '500',
+          priceCurrency: 'CAD',
+          priceSpecification: {
+            '@type': 'UnitPriceSpecification',
+            price: '500',
+            priceCurrency: 'CAD',
+            unitText: 'month',
+          },
+          availability: 'https://schema.org/LimitedAvailability',
+        },
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: 'PromptHealth Plans',
+          itemListElement: [
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: 'Free Profile',
+                description:
+                  'Basic provider listing with category placement and platform visibility.',
+              },
+              price: '0',
+              priceCurrency: 'CAD',
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: 'AI Visibility Program',
+                description:
+                  'SEO-optimized content, expert video production, keyword strategy, placement on high-intent pages, and ongoing visibility optimization.',
+              },
+              price: '500',
+              priceCurrency: 'CAD',
+              priceSpecification: {
+                '@type': 'UnitPriceSpecification',
+                price: '500',
+                priceCurrency: 'CAD',
+                unitText: 'month',
+              },
+            },
+          ],
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map((faq) => ({
+          '@type': 'Question',
+          name: faq.q,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: faq.a.replace(/<[^>]*>/g, ''),
+          },
+        })),
+      },
+    ]);
 
     this.initCoupon();
   }
@@ -131,6 +252,7 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
 
   
   ngOnDestroy() {
+    this._jsonLdService.removeJsonLd();
     this.destroy$.next();
     this.destroy$.complete();
   }
