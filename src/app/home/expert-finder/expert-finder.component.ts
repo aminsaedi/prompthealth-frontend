@@ -225,6 +225,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       }
     }
 
+    await this.setMeta();
+
     this.initController();
 
     this._route.params.pipe(skip(1)).pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -247,8 +249,6 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
       this.queryParamsCurrent = p;
     });
-
-    await this.setMeta();
   }
 
   async setMeta() {
@@ -269,7 +269,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       const answer = this.questionnaires?.typeOfProvider?.answers?.find(
         item => slugify(item.item_text) === param.typeOfProviderSlug
       );
-      typeOfProvider = answer ? answer.item_text.toLowerCase() : null;
+      typeOfProvider = answer ? answer.item_text.toLowerCase()
+        : param.typeOfProviderSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').toLowerCase();
     } else if(param.typeOfProviderId) {
       const answer = this.questionnaires?.typeOfProvider?.answers?.find(item => item._id == param.typeOfProviderId);
       typeOfProvider = answer ? answer.item_text.toLowerCase() : null;
