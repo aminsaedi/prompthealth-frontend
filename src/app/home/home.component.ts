@@ -183,7 +183,7 @@ export class HomeComponent implements OnInit , OnDestroy {
         "@type": "Organization",
         "name": "PromptHealth",
         "url": "https://www.prompthealth.ca",
-        "logo": "https://www.prompthealth.ca/assets/img/prompthealth.png",
+        "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 600 },
         "description": "Your Wellness Navigator"
       },
       {
