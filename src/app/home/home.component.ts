@@ -184,11 +184,22 @@ export class HomeComponent implements OnInit , OnDestroy {
         "name": "PromptHealth",
         "url": "https://www.prompthealth.ca",
         "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 600 },
-        "description": "Find trusted wellness practitioners near you. Search by specialty, watch expert videos, and connect with healthcare providers.",
+        "description": "PromptHealth is Canada's wellness navigator — a digital health platform connecting patients with verified healthcare and wellness practitioners across Canada. Search by specialty, location, and delivery method to discover naturopaths, physiotherapists, dentists, psychologists, and 50+ other practitioner types, read expert health content, and book appointments online.",
+        "foundingDate": "2020",
+        "areaServed": { "@type": "Country", "name": "Canada" },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "support@prompthealth.ca",
+          "areaServed": "CA",
+          "availableLanguage": "English"
+        },
         "sameAs": [
           "https://www.youtube.com/@prompthealth",
           "https://www.instagram.com/prompthealth",
-          "https://www.tiktok.com/@prompthealth"
+          "https://www.tiktok.com/@prompthealth",
+          "https://www.linkedin.com/company/prompthealth/",
+          "https://www.facebook.com/PromptHealth/"
         ]
       },
       {
