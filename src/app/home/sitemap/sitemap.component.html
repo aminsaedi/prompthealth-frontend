@@ -60,4 +60,41 @@
       </li>
     </ul>
   </section>
+
+  <section class="mb-3 mt-4">
+    <h3 class="mb-3">Browse by City + Specialty</h3>
+
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let city of [
+        {slug: 'toronto', label: 'Toronto'},
+        {slug: 'vancouver', label: 'Vancouver'},
+        {slug: 'calgary', label: 'Calgary'},
+        {slug: 'edmonton', label: 'Edmonton'},
+        {slug: 'ottawa', label: 'Ottawa'},
+        {slug: 'montreal', label: 'Montreal'},
+        {slug: 'winnipeg', label: 'Winnipeg'},
+        {slug: 'halifax', label: 'Halifax'},
+        {slug: 'victoria', label: 'Victoria'},
+        {slug: 'mississauga', label: 'Mississauga'}
+      ]">
+        <h4>{{city.label}}</h4>
+        <ul class="list-unstyled">
+          <li class="mb-2" *ngFor="let spec of [
+            {slug: 'acupuncturist', label: 'Acupuncturist'},
+            {slug: 'physiotherapist', label: 'Physiotherapist'},
+            {slug: 'dentist', label: 'Dentist'},
+            {slug: 'naturopath', label: 'Naturopath'},
+            {slug: 'chiropractor', label: 'Chiropractor'},
+            {slug: 'massage-therapist', label: 'Massage Therapist'},
+            {slug: 'psychologist', label: 'Psychologist'},
+            {slug: 'nutritionist', label: 'Nutritionist'},
+            {slug: 'optometrist', label: 'Optometrist'},
+            {slug: 'dermatologist', label: 'Dermatologist'}
+          ]">
+            <a class="text-dark py-1 d-inline-block" [routerLink]="['/practitioners/area', city.slug, 'type', spec.slug]">{{spec.label}} in {{city.label}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
 </div>

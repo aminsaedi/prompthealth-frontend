@@ -287,17 +287,20 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     this.faqItems = this.generateFaqItems(specialist, area);
     this.faqHeading = `Frequently Asked Questions about ${titleCaseOf(specialist)} in ${area}`;
 
+    const routeType = this._route.snapshot.data?.routeType;
     let canonicalPath = '/practitioners';
-    if (param.categorySlug) {
+    if (routeType === 'area-type' && param.city && param.typeOfProviderSlug) {
+      canonicalPath = `/practitioners/area/${param.city}/type/${param.typeOfProviderSlug}`;
+    } else if (routeType === 'area-category' && param.city && param.categorySlug) {
+      canonicalPath = `/practitioners/area/${param.city}/category/${param.categorySlug}`;
+    } else if (param.categorySlug) {
       canonicalPath += `/category/${param.categorySlug}`;
+      if (param.city) canonicalPath += `/${param.city}`;
     } else if (param.typeOfProviderSlug) {
       canonicalPath += `/type/${param.typeOfProviderSlug}`;
-    }
-    if (param.city) {
-      if (!param.categorySlug && !param.typeOfProviderSlug) {
-        canonicalPath += '/area';
-      }
-      canonicalPath += `/${param.city}`;
+      if (param.city) canonicalPath += `/${param.city}`;
+    } else if (param.city) {
+      canonicalPath += `/area/${param.city}`;
     }
 
     this._uService.setMeta(canonicalPath, {
@@ -470,6 +473,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
   private buildBreadcrumbSchema(): object | null {
     const param = this._route.snapshot.params as IExpertFinderFilterParams;
+    const routeType = this._route.snapshot.data?.routeType;
 
     let specialtyLabel: string = null;
     if (param.categorySlug) {
@@ -491,24 +495,56 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
     let position = 3;
 
-    if (specialtyLabel) {
-      const pathSegment = param.categorySlug
-        ? `category/${param.categorySlug}`
-        : `type/${param.typeOfProviderSlug}`;
+    if (routeType === 'area-type' && cityLabel && param.typeOfProviderSlug) {
       breadcrumbItems.push({
         '@type': 'ListItem',
         'position': position++,
-        'name': specialtyLabel,
-        'item': `https://www.prompthealth.ca/practitioners/${pathSegment}`,
+        'name': cityLabel,
+        'item': `https://www.prompthealth.ca/practitioners/area/${param.city}`,
       });
-    }
-
-    if (cityLabel) {
+      if (specialtyLabel) {
+        breadcrumbItems.push({
+          '@type': 'ListItem',
+          'position': position,
+          'name': specialtyLabel,
+          'item': `https://www.prompthealth.ca/practitioners/area/${param.city}/type/${param.typeOfProviderSlug}`,
+        });
+      }
+    } else if (routeType === 'area-category' && cityLabel && param.categorySlug) {
       breadcrumbItems.push({
         '@type': 'ListItem',
-        'position': position,
+        'position': position++,
         'name': cityLabel,
+        'item': `https://www.prompthealth.ca/practitioners/area/${param.city}`,
       });
+      if (specialtyLabel) {
+        breadcrumbItems.push({
+          '@type': 'ListItem',
+          'position': position,
+          'name': specialtyLabel,
+          'item': `https://www.prompthealth.ca/practitioners/area/${param.city}/category/${param.categorySlug}`,
+        });
+      }
+    } else {
+      if (specialtyLabel) {
+        const pathSegment = param.categorySlug
+          ? `category/${param.categorySlug}`
+          : `type/${param.typeOfProviderSlug}`;
+        breadcrumbItems.push({
+          '@type': 'ListItem',
+          'position': position++,
+          'name': specialtyLabel,
+          'item': `https://www.prompthealth.ca/practitioners/${pathSegment}`,
+        });
+      }
+
+      if (cityLabel) {
+        breadcrumbItems.push({
+          '@type': 'ListItem',
+          'position': position,
+          'name': cityLabel,
+        });
+      }
     }
 
     return {

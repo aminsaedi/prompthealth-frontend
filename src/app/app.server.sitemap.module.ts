@@ -250,6 +250,19 @@ function getSitemapPractitioners(): Promise<string> {
         });
       });
 
+      // SEO-043: City × Specialty intersection pages (area-first canonical URLs)
+      typeOfProviderSlugs.forEach(slug => {
+        areas.forEach(area => {
+          xml += `
+            <url>
+              <loc>${baseURL}/practitioners/area/${area}/type/${slug}</loc>
+              <changefreq>weekly</changefreq>
+              <priority>0.7</priority>
+            </url>
+          `;
+        });
+      });
+
       practitioners.forEach(p => {
         if (p.slug) {
           const lastmod = p.updatedAt ? new Date(p.updatedAt).toISOString().split('T')[0] : '';
