@@ -162,7 +162,7 @@ function injectJsonLd(url, html, categoryPractitioners) {
         "@type": "Organization",
         "name": "PromptHealth",
         "url": "https://www.prompthealth.ca",
-        "logo": "https://www.prompthealth.ca/assets/img/prompthealth.png",
+        "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 600 },
         "description": "Your Wellness Navigator",
         "sameAs": [
           "https://www.facebook.com/PromptHealth/",
@@ -389,7 +389,7 @@ function injectJsonLd(url, html, categoryPractitioners) {
           article.publisher = {
             "@type": "Organization",
             "name": "PromptHealth",
-            "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png" }
+            "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png", "width": 800, "height": 600 }
           };
 
           if (article.datePublished && !article.dateModified) {
