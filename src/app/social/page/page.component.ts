@@ -175,7 +175,17 @@ export class PageComponent implements OnInit , OnDestroy {
       '@type': 'Article',
       'headline': title,
       'description': seoDescription || '',
-      'datePublished': this.post.createdAt || '',
+      'datePublished': new Date(this.post.createdAt).toISOString(),
+      'dateModified': new Date(this.post.updatedAt || this.post.createdAt).toISOString(),
+      'mainEntityOfPage': {
+        '@type': 'WebPage',
+        '@id': 'https://www.prompthealth.ca' + canonicalPath
+      },
+      'isPartOf': {
+        '@type': 'WebSite',
+        'name': 'PromptHealth',
+        'url': 'https://www.prompthealth.ca'
+      },
       'author': {
         '@type': 'Person',
         'name': this.post.authorName || '',

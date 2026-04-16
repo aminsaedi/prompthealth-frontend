@@ -47,6 +47,7 @@ export interface ISocialPost {
   tags?: string[];
 
   createdAt: string;
+  updatedAt?: string;
 
   comments: ISocialComment[];
 
