@@ -223,6 +223,12 @@ function getSitemapPractitioners(): Promise<string> {
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
       </url>
+      <url>
+        <loc>${baseURL}/practitioners/cities</loc>
+        ${globalLastmod ? `<lastmod>${globalLastmod}</lastmod>` : ''}
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+      </url>
       `;
 
       areas.forEach(area => {

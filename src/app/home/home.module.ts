@@ -40,6 +40,7 @@ import { PressReleaseComponent } from "./press-release/press-release.component";
 import { TestimonialComponent } from './testimonial/testimonial.component';
 import { OnlineAcademyComponent } from './online-academy/online-academy.component';
 import { ForPractitionersComponent } from './for-practitioners/for-practitioners.component';
+import { CitiesHubComponent } from './cities-hub/cities-hub.component';
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import { ForPractitionersComponent } from './for-practitioners/for-practitioners
     TestimonialComponent,
     OnlineAcademyComponent,
     ForPractitionersComponent,
+    CitiesHubComponent,
   ],
   imports: [
     FormsModule,

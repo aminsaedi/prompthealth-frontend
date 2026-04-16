@@ -22,6 +22,7 @@ import { getDistanceFromLatLng } from 'src/app/_helpers/latlng-to-distance';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { titleCaseOf } from 'src/app/_helpers/titlecase';
 import { slugify } from 'src/app/_helpers/slugify';
+import { locationsNested } from 'src/app/_helpers/location-data';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
@@ -109,6 +110,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   public faqHeading: string = '';
 
   public questionnaires: QuestionnaireMapProfilePractitioner;
+  public currentCity: string = null;
+  public otherCities: { id: string, label: string }[] = [];
 
   private mapDataCurrent: {lat: number, lng: number, zoom: number, dist: number} = {lat: null, lng: null, zoom: null, dist: null};
   private formFilter: FormGroup;
@@ -277,7 +280,24 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     }
 
     let city = param.city ? titleCaseOf(param.city) : null;
-    
+
+    this.currentCity = param.city || null;
+    if (param.city) {
+      const allCities: { id: string, label: string }[] = [];
+      for (const province of locationsNested) {
+        if (province.subitems) {
+          for (const c of province.subitems) {
+            if (c.id !== param.city) {
+              allCities.push({ id: c.id, label: c.label });
+            }
+          }
+        }
+      }
+      this.otherCities = allCities.slice(0, 8);
+    } else {
+      this.otherCities = [];
+    }
+
     let specialist = category ? `${category}` : typeOfProvider ? `${typeOfProvider}` : 'healthcare providers';
     let area = city ? city : 'Canada';
 

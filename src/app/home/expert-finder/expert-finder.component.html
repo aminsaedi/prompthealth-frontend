@@ -223,8 +223,25 @@
             ></i>
           </ng-container>
         </div>
+
+        <section *ngIf="currentCity && otherCities.length > 0" class="mt-30p" style="padding-bottom: 40px;">
+          <h2 class="h4 mb-15p">Browse Healthcare Providers in Other Cities</h2>
+          <div class="d-flex flex-wrap" style="gap: 8px;">
+            <a
+              *ngFor="let c of otherCities"
+              [routerLink]="['/practitioners/area', c.id]"
+              class="btn btn-outline small"
+              style="font-size: 14px;"
+            >{{ c.label }}</a>
+          </div>
+          <div style="margin-top: 12px;">
+            <a routerLink="/practitioners/cities" class="body1 text-primary">
+              <u>View all cities</u>
+            </a>
+          </div>
+        </section>
       </ng-container>
-  
+
       <ng-container *ngIf="!controller.professionalsInitialized">
         <div class="card-container" *ngFor="let i of [0,1,2,3,4,5]">
           <div class="border-top border-line">

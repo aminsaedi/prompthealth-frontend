@@ -29,6 +29,7 @@ import { OnlineAcademyComponent } from "./online-academy/online-academy.componen
 import { TestimonialComponent } from "./testimonial/testimonial.component";
 import { HomeComponent } from "./home.component";
 import { ForPractitionersComponent } from "./for-practitioners/for-practitioners.component";
+import { CitiesHubComponent } from "./cities-hub/cities-hub.component";
 
 const routes: Routes = [
   {
@@ -70,6 +71,7 @@ const routes: Routes = [
   { path: 'testimonial', component: TestimonialComponent, },
 
   { path: 'practitioners', component: ExpertFinderComponent },
+  { path: 'practitioners/cities', component: CitiesHubComponent },
   { path: 'practitioners/category/:categorySlug', component: ExpertFinderComponent },
   { path: 'practitioners/category/:categorySlug/:city', component: ExpertFinderComponent },
   { path: 'practitioners/type/:typeOfProviderSlug', component: ExpertFinderComponent },
