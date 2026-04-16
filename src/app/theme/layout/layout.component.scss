@@ -2,6 +2,12 @@
 	z-index: 90;
 }
 
+:host ::ng-deep nav ul li a {
+	display: flex;
+	align-items: center;
+	min-height: 48px;
+}
+
 .menu-sm {
 	position: fixed;
 	z-index: 100;
