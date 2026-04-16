@@ -1,0 +1,34 @@
+<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+  <h1 class="h3 mb-15p">Find Healthcare Providers by City</h1>
+  <p class="text-label" style="font-size: 15px; line-height: 1.6; margin-bottom: 30px;">
+    Browse our directory of top-rated healthcare providers across Canada. Select a city below to find practitioners near you.
+  </p>
+
+  <div class="row">
+    <div
+      *ngFor="let province of provinces"
+      class="col-12 col-sm-6 col-md-4"
+      style="margin-bottom: 30px;"
+    >
+      <h2 class="h5" style="margin-bottom: 12px;">{{ province.label }}</h2>
+      <ul class="list-unstyled">
+        <li
+          *ngFor="let city of province.subitems"
+          style="margin-bottom: 8px;"
+        >
+          <a
+            class="text-dark d-inline-block"
+            style="padding: 4px 0;"
+            [routerLink]="['/practitioners/area', city.id]"
+          >{{ city.label }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <a routerLink="/practitioners" class="body1 text-primary">
+      <u>Back to all practitioners</u>
+    </a>
+  </div>
+</div>
