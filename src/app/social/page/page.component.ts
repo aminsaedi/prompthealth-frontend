@@ -7,6 +7,7 @@ import { HeaderStatusService } from 'src/app/shared/services/header-status.servi
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { formatDateToString } from 'src/app/_helpers/date-formatter';
+import { slugify } from 'src/app/_helpers/slugify';
 import { SocialService } from '../social.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
@@ -36,6 +37,7 @@ export class PageComponent implements OnInit , OnDestroy {
 
   public isReturnToAppShown = false;
   public relatedPosts: ISocialPost[] = [];
+  public relatedDirectoryLinks: {url: string, label: string}[] = [];
   public breadcrumbs: BreadcrumbItem[] = [];
 
   constructor(
@@ -88,6 +90,7 @@ export class PageComponent implements OnInit , OnDestroy {
     if(this.post) {
       this.setMeta();
       this.setBreadcrumbs();
+      this.buildDirectoryLinks();
       this.fetchRelatedPosts();
     } else {
       this._toastr.error('Could not find the content. Please try again');
@@ -141,6 +144,35 @@ export class PageComponent implements OnInit , OnDestroy {
       { label: 'Community', url: '/community/feed' },
       { label: title }
     ];
+  }
+
+  buildDirectoryLinks() {
+    this.relatedDirectoryLinks = [];
+    const cat = this.post.categoryId as any;
+    const catSlug = cat?.slug;
+    const catTitle = cat?.title;
+    const location = this.post.location;
+
+    if (catSlug) {
+      this.relatedDirectoryLinks.push({
+        url: `/practitioners/category/${catSlug}`,
+        label: `Browse ${catTitle} Practitioners`
+      });
+    }
+
+    if (location) {
+      this.relatedDirectoryLinks.push({
+        url: `/practitioners/area/${slugify(location)}`,
+        label: `Find Practitioners in ${location}`
+      });
+    }
+
+    if (catSlug && location) {
+      this.relatedDirectoryLinks.push({
+        url: `/practitioners/area/${slugify(location)}/category/${catSlug}`,
+        label: `Find ${catTitle} Practitioners in ${location}`
+      });
+    }
   }
 
   setMeta(){

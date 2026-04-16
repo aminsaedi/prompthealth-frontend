@@ -47,6 +47,20 @@
           </a>
         </div>
       </div>
+
+      <section *ngIf="relatedDirectoryLinks.length > 0" class="related-practitioners">
+        <h2 class="related-practitioners__title">Find Related Practitioners</h2>
+        <nav class="related-practitioners__list" aria-label="Related practitioner directories">
+          <a
+            *ngFor="let link of relatedDirectoryLinks"
+            [routerLink]="link.url"
+            class="related-practitioners__item"
+          >
+            <span class="related-practitioners__item-label">{{ link.label }}</span>
+            <span class="related-practitioners__item-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </nav>
+      </section>
     </section>
   </div>
 </div>
