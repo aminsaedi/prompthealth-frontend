@@ -42,22 +42,61 @@ export class ForPractitionersComponent implements OnInit, OnDestroy {
           name: 'PromptHealth',
           url: 'https://www.prompthealth.ca',
         },
+        publisher: {
+          '@type': 'Organization',
+          name: 'PromptHealth',
+          url: 'https://www.prompthealth.ca',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://www.prompthealth.ca/assets/img/prompthealth.png',
+            width: 800,
+            height: 600,
+          },
+        },
         about: {
           '@type': 'MedicalBusiness',
           name: 'PromptHealth',
           description:
             'A wellness discovery platform connecting patients with trusted healthcare providers through content, video, and AI search.',
           url: 'https://www.prompthealth.ca',
-          areaServed: {
-            '@type': 'Country',
-            name: 'Canada',
-          },
+          priceRange: '$$',
+          areaServed: [
+            { '@type': 'City', name: 'Toronto' },
+            { '@type': 'City', name: 'Vancouver' },
+            { '@type': 'City', name: 'Calgary' },
+            { '@type': 'City', name: 'Victoria' },
+            { '@type': 'City', name: 'Winnipeg' },
+          ],
           serviceType: [
             'Health Provider Directory',
             'Medical Practice Marketing',
             'Healthcare SEO',
             'AI Search Optimization',
           ],
+          hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: 'Practitioner Plans',
+            itemListElement: [
+              {
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Service',
+                  name: 'Free Provider Profile',
+                  description:
+                    'Basic provider listing with category placement and platform visibility.',
+                },
+              },
+              {
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Service',
+                  name: 'AI Visibility Plan',
+                  description:
+                    'SEO-optimized content, expert video production, keyword strategy, and ongoing visibility optimization.',
+                },
+              },
+            ],
+          },
         },
       },
       {
@@ -82,7 +121,7 @@ export class ForPractitionersComponent implements OnInit, OnDestroy {
 
 const features = [
   {
-    icon: 'search-outline',
+    icon: 'search',
     title: 'Get Found on Google & AI Search',
     description:
       'Patients are searching Google and asking ChatGPT for provider recommendations. PromptHealth optimizes your profile and content so you appear in both.',
@@ -100,7 +139,7 @@ const features = [
       'Our team creates keyword-targeted articles and content based on what patients are actually searching for in your specialty.',
   },
   {
-    icon: 'bar-chart-outline',
+    icon: 'chart-bar',
     title: 'Data-Driven Visibility',
     description:
       'Track your performance with insights on profile views, content engagement, and patient inquiries — so you know what\'s working.',
@@ -112,7 +151,7 @@ const features = [
       'Join a curated network of vetted wellness professionals. Being part of PromptHealth signals credibility to patients and AI systems alike.',
   },
   {
-    icon: 'link',
+    icon: 'link-1',
     title: 'Internal Linking & Cross-Promotion',
     description:
       'Benefit from strategic internal linking across high-intent pages, boosting your domain authority and search rankings.',
@@ -120,10 +159,10 @@ const features = [
 ];
 
 const stats = [
-  { value: '1M+', label: 'Social media followers across platforms' },
-  { value: '10K+', label: 'Monthly patient searches on PromptHealth' },
-  { value: '500+', label: 'Healthcare providers listed' },
-  { value: '50+', label: 'Wellness categories covered' },
+  { value: '1M+', label: 'Social Followers' },
+  { value: '500+', label: 'Verified Providers' },
+  { value: '8', label: 'Cities Covered' },
+  { value: '50+', label: 'Health Categories' },
 ];
 
 const testimonials = [
