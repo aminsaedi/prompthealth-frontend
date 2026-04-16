@@ -504,13 +504,20 @@ function injectJsonLd(url, html, categoryPractitioners) {
   }
 
   // Category listing pages: /practitioners/category/:slug or /practitioners/type/:slug (SEO-021)
-  const categoryMatch = url.match(/^\/practitioners\/(?:category|type)\/([^?/]+)/);
+  const categoryMatch = url.match(/^\/practitioners\/(?:category|type)\/([^?/]+)(?:\/([^?/]+))?/);
   if (categoryMatch && categoryPractitioners && categoryPractitioners.length > 0) {
     const baseUrl = 'https://www.prompthealth.ca';
+    // Build dynamic ItemList name from slug + optional city (SEO-029)
+    var catSlug = categoryMatch[1];
+    var citySlug = categoryMatch[2];
+    var catInfo = categorySlugMap.get(catSlug);
+    var specialist = catInfo ? catInfo.name : catSlug.split('-').map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ');
+    var cityName = citySlug ? citySlug.split('-').map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ') : 'Canada';
+    var listName = 'Find Best ' + specialist + ' in ' + cityName;
     const itemList = {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
-      'name': 'Healthcare Practitioners',
+      'name': listName,
       'numberOfItems': categoryPractitioners.length,
       'itemListElement': categoryPractitioners.map(function(p, i) {
         // Each element is { userId, userData: IUserDetail, ans: [...] }
