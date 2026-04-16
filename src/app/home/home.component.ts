@@ -173,8 +173,8 @@ export class HomeComponent implements OnInit , OnDestroy {
     this._headerStatusService.hideHeader();
 
     this._uService.setMeta(this._router.url, {
-      title: "PromptHealth | Your Wellness Navigator",
-      description: "Take control of your health with options tailored to you",
+      title: "Find a Wellness Practitioner Near You | PromptHealth",
+      description: "Search trusted healthcare providers by specialty, watch expert videos, and connect with wellness professionals. Browse practitioners in your area on PromptHealth.",
     });
 
     this._jsonLdService.setJsonLd([
@@ -184,13 +184,19 @@ export class HomeComponent implements OnInit , OnDestroy {
         "name": "PromptHealth",
         "url": "https://www.prompthealth.ca",
         "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 600 },
-        "description": "Your Wellness Navigator"
+        "description": "Find trusted wellness practitioners near you. Search by specialty, watch expert videos, and connect with healthcare providers.",
+        "sameAs": [
+          "https://www.youtube.com/@prompthealth",
+          "https://www.instagram.com/prompthealth",
+          "https://www.tiktok.com/@prompthealth"
+        ]
       },
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "PromptHealth",
         "url": "https://www.prompthealth.ca",
+        "description": "Find a wellness practitioner near you. Search by specialty, location, or topic.",
         "potentialAction": {
           "@type": "SearchAction",
           "target": {
@@ -198,6 +204,20 @@ export class HomeComponent implements OnInit , OnDestroy {
             "urlTemplate": "https://www.prompthealth.ca/practitioners?keyword={search_term_string}"
           },
           "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Find a Wellness Practitioner Near You",
+        "description": "Search trusted healthcare providers by specialty, watch expert videos, and connect with wellness professionals.",
+        "url": "https://www.prompthealth.ca",
+        "isPartOf": { "@type": "WebSite", "name": "PromptHealth", "url": "https://www.prompthealth.ca" },
+        "about": {
+          "@type": "MedicalBusiness",
+          "name": "PromptHealth",
+          "description": "A wellness discovery platform connecting patients with trusted healthcare providers through content, video, and AI search.",
+          "url": "https://www.prompthealth.ca"
         }
       }
     ]);

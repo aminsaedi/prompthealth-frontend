@@ -1,0 +1,231 @@
+<!-- Hero Section -->
+<section class="bg-lightyellow py-100p position-relative overflow-hidden">
+  <div class="circle-for-dim-1"></div>
+  <div class="circle-for-dim-2"></div>
+  <div class="container position-relative" style="z-index: 2">
+    <div class="row align-items-center">
+      <div class="col-12 col-lg-7">
+        <h6 class="h6 text-primary-dark mb-20p" style="font-weight: 400">
+          For Healthcare Providers
+        </h6>
+        <h1 class="h3 h2-md mb-30p text-primary-dark">
+          Get Discovered by Patients — on Google &amp; AI Search
+        </h1>
+        <p class="subtitle1 text-primary-dark mb-40p" style="font-weight: 400">
+          Patients are searching Google, asking ChatGPT, and browsing AI-powered tools for healthcare recommendations.
+          PromptHealth ensures your practice shows up where it matters most.
+        </p>
+        <div class="d-flex flex-column flex-md-row">
+          <a routerLink="/plans" class="btn btn-primary mr-md-15p mb-15p mb-md-0p">
+            View Plans &amp; Pricing
+          </a>
+          <a routerLink="/auth/registration/sp" class="btn btn-outline">
+            Create Free Profile
+          </a>
+        </div>
+      </div>
+      <div class="col-12 col-lg-5 mt-40p mt-lg-0p text-center">
+        <img src="assets/img/home/slideshow-1.webp" alt="Healthcare provider on PromptHealth"
+          class="rounded-12p shadow" style="max-width: 100%; height: auto" loading="eager" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats / Social Proof Bar -->
+<section class="bg-primary-dark py-50p">
+  <div class="container">
+    <div class="row text-center text-white">
+      <div *ngFor="let stat of stats" class="col-6 col-md-3 mb-20p mb-md-0p">
+        <div class="h2 mb-5p" style="font-weight: 700">{{ stat.value }}</div>
+        <p class="body2 mb-0 opacity-70pc">{{ stat.label }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="container my-100p">
+  <h2 class="h3 h2-md text-center mb-20p">How PromptHealth Grows Your Practice</h2>
+  <p class="text-center text-label mb-60p">Three steps to becoming the provider patients find first</p>
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-4 text-center mb-30p mb-md-0p">
+      <div class="mb-20p">
+        <span class="display-4 text-primary font-weight-bold">1</span>
+      </div>
+      <h5 class="mb-15p">List Your Practice</h5>
+      <p class="text-label">Create your free profile with your specialties, services, location, and credentials. Be visible to patients searching on PromptHealth.</p>
+    </div>
+    <div class="col-12 col-md-4 text-center mb-30p mb-md-0p">
+      <div class="mb-20p">
+        <span class="display-4 text-primary font-weight-bold">2</span>
+      </div>
+      <h5 class="mb-15p">We Create Expert Content</h5>
+      <p class="text-label">Our team produces SEO-optimized articles and professional video interviews — designed to rank on Google and get cited by AI tools.</p>
+    </div>
+    <div class="col-12 col-md-4 text-center">
+      <div class="mb-20p">
+        <span class="display-4 text-primary font-weight-bold">3</span>
+      </div>
+      <h5 class="mb-15p">Patients Find You</h5>
+      <p class="text-label">Your content ranks in search results and AI recommendations. New patients discover your practice, view your expertise, and book appointments.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Feature Grid -->
+<section class="bg-primary-light py-100p">
+  <div class="container">
+    <h2 class="h3 h2-md text-center mb-20p">Everything You Need to Grow Your Online Presence</h2>
+    <p class="text-center text-label mb-60p">Built specifically for healthcare and wellness providers</p>
+    <div class="row">
+      <div *ngFor="let feature of features" class="col-12 col-md-6 col-xl-4 mb-30p">
+        <div class="bg-white rounded-12p p-30p h-100">
+          <div class="mb-20p">
+            <i [iconPh]="feature.icon" class="text-primary-dark" style="font-size: 30px"></i>
+          </div>
+          <h5 class="mb-15p">{{ feature.title }}</h5>
+          <p class="text-label mb-0">{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials / Social Proof -->
+<section class="container my-100p">
+  <h2 class="h3 h2-md text-center mb-20p">Trusted by Healthcare Providers Across Canada</h2>
+  <p class="text-center text-label mb-60p">See what practitioners are saying about PromptHealth</p>
+  <div class="row justify-content-center">
+    <div *ngFor="let t of testimonials" class="col-12 col-md-4 mb-30p mb-md-0p">
+      <div class="card rounded-12p p-30p h-100 border-0 shadow-sm">
+        <div class="mb-20p">
+          <i iconPh="quote" class="text-primary" style="font-size: 30px"></i>
+        </div>
+        <p class="mb-20p text-body" style="font-style: italic">{{ t.quote }}</p>
+        <div class="mt-auto">
+          <h6 class="mb-0 subtitle1">{{ t.name }}</h6>
+          <p class="body2 text-label mb-0">{{ t.location }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison: Free vs AI Visibility -->
+<section class="bg-lightgreen py-100p">
+  <div class="container">
+    <h2 class="h3 h2-md text-center mb-20p">Choose the Right Plan for Your Practice</h2>
+    <p class="text-center text-label mb-60p">Start free, upgrade when you're ready to grow</p>
+    <div class="row justify-content-center">
+
+      <!-- Free Profile -->
+      <div class="col-12 col-lg-5 mb-20p mb-lg-0p mr-lg-20p">
+        <div class="card h-100 p-30p d-flex flex-column bg-white border-0">
+          <h3 class="h4 h3-md mb-10p">Free Profile</h3>
+          <p class="h3 text-primary mb-20p">$0<span class="body2 text-label">/month</span></p>
+          <p class="text-label mb-25p">Get listed and start building your online presence.</p>
+          <ul class="list-unstyled pl-25p flex-grow-1">
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Basic provider profile</span>
+            </li>
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Listed under wellness categories</span>
+            </li>
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Visible on PromptHealth platform</span>
+            </li>
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Community access</span>
+            </li>
+          </ul>
+          <a routerLink="/auth/registration/sp" class="btn btn-primary-dark mt-30p w-100">
+            Create Free Profile
+          </a>
+        </div>
+      </div>
+
+      <!-- AI Visibility Program -->
+      <div class="col-12 col-lg-5 mb-20p mb-lg-0p">
+        <div class="card h-100 p-30p d-flex flex-column bg-white border-0 position-relative overflow-hidden">
+          <div class="position-absolute bg-primary text-white body2 text-center"
+            style="top: 20px; right: -35px; transform: rotate(45deg); width: 150px; padding: 4px 0">
+            Popular
+          </div>
+          <h3 class="h4 h3-md mb-10p">AI Visibility Program</h3>
+          <p class="h3 text-primary mb-20p">$500<span class="body2 text-label">/month</span></p>
+          <p class="text-label mb-25p">Become a top result on Google and AI search tools.</p>
+          <ul class="list-unstyled pl-25p flex-grow-1">
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Everything in Free, plus:</span>
+            </li>
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>SEO-optimized content for patient searches</span>
+            </li>
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Expert video content (YouTube + short-form)</span>
+            </li>
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Keyword and topic strategy</span>
+            </li>
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Placement on high-intent pages</span>
+            </li>
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Internal linking and cross-promotion</span>
+            </li>
+            <li class="position-relative mb-15p subtitle2">
+              <i class="icon-pre text-primary" iconPh="checkbox-square-outline"></i>
+              <span>Ongoing visibility optimization</span>
+            </li>
+          </ul>
+          <a routerLink="/plans" class="btn btn-primary mt-30p w-100">
+            View Full Details
+          </a>
+          <p class="text-center body2 text-label mt-15p mb-0">Limited availability by location and specialty</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="container my-100p">
+  <h2 class="h3 h2-md text-center mb-60p">Frequently Asked Questions</h2>
+  <div class="row justify-content-center">
+    <div class="col-12 col-xl-10">
+      <ul class="list-unstyled mb-0">
+        <li *ngFor="let faq of faqs" class="mb-20p">
+          <faq-item [data]="faq"></faq-item>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="bg-primary-dark py-100p">
+  <div class="container text-center text-white">
+    <h2 class="h3 h2-md mb-20p">Ready to Get Discovered by More Patients?</h2>
+    <p class="mb-40p opacity-70pc">Join hundreds of healthcare providers who trust PromptHealth to grow their online presence.</p>
+    <div class="d-flex flex-column flex-md-row justify-content-center">
+      <a routerLink="/plans" class="btn btn-primary mr-md-15p mb-15p mb-md-0p">
+        View Plans &amp; Pricing
+      </a>
+      <a routerLink="/auth/registration/sp" class="btn btn-outline-light">
+        Create Free Profile
+      </a>
+    </div>
+  </div>
+</section>

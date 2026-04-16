@@ -28,12 +28,17 @@ import { PressReleaseComponent } from "./press-release/press-release.component";
 import { OnlineAcademyComponent } from "./online-academy/online-academy.component";
 import { TestimonialComponent } from "./testimonial/testimonial.component";
 import { HomeComponent } from "./home.component";
+import { ForPractitionersComponent } from "./for-practitioners/for-practitioners.component";
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
     pathMatch: 'full',
+  },
+  {
+    path: 'for-practitioners',
+    component: ForPractitionersComponent,
   },
   {
     path: "faq",
