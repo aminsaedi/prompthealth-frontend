@@ -16,8 +16,8 @@ class="p-20p rounded-12p border border-line faq-item overflow-hidden"
     </button>
   </h6>
   <div
-  *ngIf="data.opened" 
-  [@expandVertical]
+  class="faq-answer"
+  [class.faq-answer--open]="data.opened"
   >
     <p class="mb-0 pt-10p" [innerHTML]="data.a"></p>
   </div>
