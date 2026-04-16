@@ -208,6 +208,12 @@ export class ExpertFinderController {
     // this.checkIfFilterApplied();
   }
 
+  clearGeoFilter() {
+    this._lat = null;
+    this._lng = null;
+    this._dist = 100;
+  }
+
   updateFilterByProfessionalsLocation() {
     this._keyloc = null;
 

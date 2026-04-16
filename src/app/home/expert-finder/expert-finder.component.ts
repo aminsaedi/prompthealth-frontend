@@ -875,52 +875,48 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     const cached = this._transferState.get(LISTING_KEY, null);
     if (cached) {
       this._transferState.remove(LISTING_KEY);
-      const res = cached as IGetPractitionersResult;
-      if (res.data.total != null) {
-        this.controller.setTotalPractitioners(res.data.total);
-      }
-      this.controller.setPage(1);
-      this.controller.setProfessionals(res.data.dataArr, this._uService.isBrowser);
-      const professionals = this.controller.professionalsAll;
-      this.formCompare = new FormGroup({});
-      if (professionals) {
-        professionals.forEach(p => {
-          this.formCompare.addControl(p._id, new FormControl());
-        });
-        if (this.queryParamsCurrent && this.queryParamsCurrent.keyloc) {
-          this.controller.updateFilterByProfessionalsLocation();
-        }
-        this.setListingJsonLd(professionals);
-      }
-      this.pageCurrent = 1;
-      this.controller.setProfesionnalsPerPage(1);
-      this.controller.initPaginator(1);
+      this.applySearchResults(cached as IGetPractitionersResult);
       return;
     }
 
     const payload = this.controller.toPayload({ count: 20, page: 1 });
+    const geoWasApplied = !!(payload.latLong && payload.miles);
     this.controller.disposeProfesionnals();
     this._sharedService.postNoAuth(payload, 'user/filter').pipe(takeUntil(this.destroy$)).subscribe((res: IGetPractitionersResult) => {
-      if (res.data.total != null) {
-        this.controller.setTotalPractitioners(res.data.total);
-      }
-      this.controller.setPage(1);
-      this.controller.setProfessionals(res.data.dataArr, this._uService.isBrowser);
-      const professionals = this.controller.professionalsAll;
-      this.formCompare = new FormGroup({});
-      if(professionals){
-        professionals.forEach(p => {
-          this.formCompare.addControl(p._id, new FormControl());
+      // Geo-fallback: if geo-filtering returned no results but providers exist,
+      // retry without geo params so directory pages are never empty (SEO-027).
+      if (geoWasApplied && (!res.data.dataArr || res.data.dataArr.length === 0) && res.data.total > 0) {
+        this.controller.clearGeoFilter();
+        const fallbackPayload = this.controller.toPayload({ count: 20, page: 1 });
+        this._sharedService.postNoAuth(fallbackPayload, 'user/filter').pipe(takeUntil(this.destroy$)).subscribe((fallbackRes: IGetPractitionersResult) => {
+          this.applySearchResults(fallbackRes);
         });
-        if(this.queryParamsCurrent.keyloc) {
-          this.controller.updateFilterByProfessionalsLocation();
-        }
-        this.setListingJsonLd(professionals);
+        return;
       }
-      this.pageCurrent = 1;
-      this.controller.setProfesionnalsPerPage(1);
-      this.controller.initPaginator(1);
+      this.applySearchResults(res);
     })
+  }
+
+  private applySearchResults(res: IGetPractitionersResult) {
+    if (res.data.total != null) {
+      this.controller.setTotalPractitioners(res.data.total);
+    }
+    this.controller.setPage(1);
+    this.controller.setProfessionals(res.data.dataArr, this._uService.isBrowser);
+    const professionals = this.controller.professionalsAll;
+    this.formCompare = new FormGroup({});
+    if (professionals) {
+      professionals.forEach(p => {
+        this.formCompare.addControl(p._id, new FormControl());
+      });
+      if (this.queryParamsCurrent && this.queryParamsCurrent.keyloc) {
+        this.controller.updateFilterByProfessionalsLocation();
+      }
+      this.setListingJsonLd(professionals);
+    }
+    this.pageCurrent = 1;
+    this.controller.setProfesionnalsPerPage(1);
+    this.controller.initPaginator(1);
   }
 
   onChangeCompareValue(id: string) {
