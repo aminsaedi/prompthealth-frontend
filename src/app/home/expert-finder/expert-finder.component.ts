@@ -368,12 +368,14 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     }
 
     // Generic FAQ items for specialties not in the lookup
+    // Singularize 'health care providers' for grammatically correct questions (e.g. "What does a health care provider do?")
+    const singularSpecialist = specialist === 'health care providers' ? 'health care provider' : specialist;
     return [
-      { q: `What does a ${specialist} do?`, a: `A ${specialist} is a health care professional who provides specialized assessment, treatment, and ongoing support for conditions within their area of expertise. They work with patients to develop personalized care plans.`, opened: false },
-      { q: `How do I find a ${specialist} in ${area}?`, a: `You can use PromptHealth's Expert Finder to browse ${specialist} providers in ${area}. Filter by ratings, availability, and virtual consultation options to find the right match for your needs.`, opened: false },
-      { q: `What should I expect at my first ${specialist} appointment?`, a: `Your first visit typically includes a review of your health history, an assessment of your current concerns, and a discussion of treatment options. The provider will work with you to develop a care plan.`, opened: false },
-      { q: `How much does a ${specialist} cost in ${area}?`, a: `Fees vary depending on the type of service and provider. Many ${specialist} practitioners in ${area} accept insurance or offer flexible payment options. Check with the provider directly for pricing details.`, opened: false },
-      { q: `Do I need a referral to see a ${specialist}?`, a: `Referral requirements depend on the profession and your province. Many ${specialist} providers accept direct bookings without a referral. Check with the specific provider or your insurance plan for details.`, opened: false },
+      { q: `What does a ${singularSpecialist} do?`, a: `A ${singularSpecialist} is a health care professional who provides specialized assessment, treatment, and ongoing support for conditions within their area of expertise. They work with patients to develop personalized care plans.`, opened: false },
+      { q: `How do I find a ${singularSpecialist} in ${area}?`, a: `You can use PromptHealth's Expert Finder to browse ${singularSpecialist} providers in ${area}. Filter by ratings, availability, and virtual consultation options to find the right match for your needs.`, opened: false },
+      { q: `What should I expect at my first ${singularSpecialist} appointment?`, a: `Your first visit typically includes a review of your health history, an assessment of your current concerns, and a discussion of treatment options. The provider will work with you to develop a care plan.`, opened: false },
+      { q: `How much does a ${singularSpecialist} cost in ${area}?`, a: `Fees vary depending on the type of service and provider. Many ${singularSpecialist} practitioners in ${area} accept insurance or offer flexible payment options. Check with the provider directly for pricing details.`, opened: false },
+      { q: `Do I need a referral to see a ${singularSpecialist}?`, a: `Referral requirements depend on the profession and your province. Many ${singularSpecialist} providers accept direct bookings without a referral. Check with the specific provider or your insurance plan for details.`, opened: false },
     ];
   }
 

@@ -16,4 +16,20 @@
       transform: rotateX(180deg)
     }
   }
+
+  .faq-answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 300ms ease, opacity 300ms ease;
+
+    > p {
+      overflow: hidden;
+    }
+
+    &--open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+  }
 }
