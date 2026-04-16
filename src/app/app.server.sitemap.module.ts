@@ -192,9 +192,10 @@ function getSitemapPractitioners(): Promise<string> {
 
     const areas = getAllAreas();
 
-    Promise.all([getAllCategorySlugs(), getAllTypeOfProviderSlugs()]).then(vals => {
+    Promise.all([getAllCategorySlugs(), getAllTypeOfProviderSlugs(), getAllPractitionerIds()]).then(vals => {
       const categoryIds = vals[0];
       const typeOfProviderSlugs = vals[1];
+      const practitioners = vals[2];
 
       areas.forEach(area => {
         xml += `
@@ -247,6 +248,20 @@ function getSitemapPractitioners(): Promise<string> {
             </url>
           `;
         });
+      });
+
+      practitioners.forEach(p => {
+        if (p.slug) {
+          const lastmod = p.updatedAt ? new Date(p.updatedAt).toISOString().split('T')[0] : '';
+          xml += `
+          <url>
+            <loc>${baseURL}/practitioners/${p.slug}</loc>
+            ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
+            <changefreq>monthly</changefreq>
+            <priority>0.8</priority>
+          </url>
+          `;
+        }
       });
     }).catch(error => {
     }).finally(() => {
@@ -346,10 +361,9 @@ function getSitemapSocial(): Promise<string> {
     `;
 
   return new Promise((resolve) => {
-    Promise.all([getAllCategorySlugs(true), getAllPractitionerIds(), getAllSocialContentIds()]).then(vals => {
+    Promise.all([getAllCategorySlugs(true), getAllSocialContentIds()]).then(vals => {
       const categoryIds = vals[0];
-      const practitionerIds = vals[1];
-      const contentIds = vals[2];
+      const contentIds = vals[1];
       const taxonomies = ['feed', 'article', 'media', 'event', 'note', 'voice', 'promotion'];
 
       taxonomies.forEach(type => {
@@ -375,38 +389,6 @@ function getSitemapSocial(): Promise<string> {
           <priority>0.5</priority>
         </url>
       `;
-
-      practitionerIds.forEach(p => {
-        const lastmod = p.updatedAt ? new Date(p.updatedAt).toISOString().split('T')[0] : '';
-        const profileBase = p.slug
-          ? `${baseURL}/practitioners/${p.slug}`
-          : `${baseURL}/community/profile/${p.id}`;
-        xml += `
-          <url>
-            <loc>${profileBase}</loc>
-            ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
-            <changefreq>monthly</changefreq>
-            <priority>0.8</priority>
-          </url>
-          <url>
-            <loc>${profileBase}/service</loc>
-            ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
-            <changefreq>monthly</changefreq>
-            <priority>0.6</priority>
-          </url>
-          <url>
-            <loc>${profileBase}/feed</loc>
-            <changefreq>weekly</changefreq>
-            <priority>0.5</priority>
-          </url>
-          <url>
-            <loc>${profileBase}/review</loc>
-            ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
-            <changefreq>monthly</changefreq>
-            <priority>0.6</priority>
-          </url>
-        `;
-      });
 
       contentIds.forEach(item => {
         const lastmod = item.updatedAt ? new Date(item.updatedAt).toISOString().split('T')[0] : '';
