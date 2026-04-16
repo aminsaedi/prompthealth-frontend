@@ -103,7 +103,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     { label: 'Practitioners' }
   ];
   public pageCurrent: number = 1;
-  public pageHeading: string = 'Find Health Care Providers in Canada';
+  public pageHeading: string = 'Find Best Healthcare Providers in Canada';
   public introText: string = '';
   public faqItems: IFAQItem[] = [];
   public faqHeading: string = '';
@@ -278,7 +278,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
     let city = param.city ? titleCaseOf(param.city) : null;
     
-    let specialist = category ? `${category}` : typeOfProvider ? `${typeOfProvider}` : 'health care providers';
+    let specialist = category ? `${category}` : typeOfProvider ? `${typeOfProvider}` : 'healthcare providers';
     let area = city ? city : 'Canada';
 
     this.pageHeading = `Find Best ${titleCaseOf(specialist)} in ${area}`;
@@ -304,14 +304,14 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     }
 
     this._uService.setMeta(canonicalPath, {
-      title: `Find best ${specialist} in ${area} | PromptHealth`,
+      title: `Find Best ${titleCaseOf(specialist)} in ${area} | PromptHealth`,
       description: `Use our Expert Finder to find a top-rated ${specialist} in ${area} or offering virtual appointment.`,
     });
 
   }
 
   private generateIntroText(specialist: string, area: string): string {
-    if (specialist === 'health care providers' && area === 'Canada') {
+    if (specialist === 'healthcare providers' && area === 'Canada') {
       return '';
     }
     if (area !== 'Canada') {
@@ -321,7 +321,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   }
 
   private generateFaqItems(specialist: string, area: string): IFAQItem[] {
-    if (specialist === 'health care providers' && area === 'Canada') {
+    if (specialist === 'healthcare providers' && area === 'Canada') {
       return [];
     }
 
@@ -375,7 +375,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
         { q: `How much does a nutritionist cost in ${area}?`, a: `Nutrition consultations in ${area} typically range from $80 to $175 per session. Some insurance and employee benefit plans cover visits with registered dietitians.`, opened: false },
         { q: `Do I need a referral to see a nutritionist?`, a: `In most cases, no referral is required. You can book directly with a nutritionist or dietitian in ${area}.`, opened: false },
       ],
-      'health care providers': [
+      'healthcare providers': [
         { q: `What types of healthcare providers are available in ${area}?`, a: `${area} offers a wide range of healthcare providers including family doctors, specialists, physiotherapists, psychologists, chiropractors, naturopaths, massage therapists, and more. You can use PromptHealth to explore all available provider types in your area and filter by specialty, ratings, and availability.`, opened: false },
         { q: `How do I book a same-day appointment in ${area}?`, a: `Many healthcare providers in ${area} offer same-day or next-day appointments, especially for urgent concerns. Use PromptHealth to filter providers by availability and look for those offering online booking or virtual consultations for faster access to care.`, opened: false },
         { q: `What is the difference between in-person and virtual care in ${area}?`, a: `In-person appointments in ${area} allow for hands-on examinations and procedures, while virtual care lets you consult with a provider from home via video or phone. Both are effective for many conditions, and many providers in ${area} offer both options so you can choose what works best for your needs.`, opened: false },
@@ -391,8 +391,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     }
 
     // Generic FAQ items for specialties not in the lookup
-    // Singularize 'health care providers' for grammatically correct questions (e.g. "What does a health care provider do?")
-    const singularSpecialist = specialist === 'health care providers' ? 'health care provider' : specialist;
+    // Singularize 'healthcare providers' for grammatically correct questions (e.g. "What does a healthcare provider do?")
+    const singularSpecialist = specialist === 'healthcare providers' ? 'healthcare provider' : specialist;
     return [
       { q: `What does a ${singularSpecialist} do?`, a: `A ${singularSpecialist} is a health care professional who provides specialized assessment, treatment, and ongoing support for conditions within their area of expertise. They work with patients to develop personalized care plans.`, opened: false },
       { q: `How do I find a ${singularSpecialist} in ${area}?`, a: `You can use PromptHealth's Expert Finder to browse ${singularSpecialist} providers in ${area}. Filter by ratings, availability, and virtual consultation options to find the right match for your needs.`, opened: false },
