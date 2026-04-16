@@ -75,6 +75,8 @@ const routes: Routes = [
   { path: 'practitioners/type/:typeOfProviderSlug', component: ExpertFinderComponent },
   { path: 'practitioners/type/:typeOfProviderSlug/:city', component: ExpertFinderComponent },
   { path: 'practitioners/area/:city', component: ExpertFinderComponent },
+  { path: 'practitioners/area/:city/type/:typeOfProviderSlug', component: ExpertFinderComponent, data: { routeType: 'area-type' } },
+  { path: 'practitioners/area/:city/category/:categorySlug', component: ExpertFinderComponent, data: { routeType: 'area-category' } },
 
   { path: 'practitioners/category', redirectTo: 'practitioners'},
   { path: 'practitioners/type', redirectTo: 'practitioners' },
