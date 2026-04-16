@@ -1,7 +1,8 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { fadeAnimation, slideVerticalStaggerAnimation } from 'src/app/_helpers/animations';
 import { environment } from 'src/environments/environment';
 
@@ -11,7 +12,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./about.component.scss'],
   animations: [slideVerticalStaggerAnimation, fadeAnimation],
 })
-export class AboutComponent implements OnInit {
+export class AboutComponent implements OnInit, OnDestroy {
 
   get sizeL() { return window && window.innerWidth >= 992; }
 
@@ -43,6 +44,7 @@ export class AboutComponent implements OnInit {
     private _headerStatusService: HeaderStatusService,
     private _uService: UniversalService,
     private _router: Router,
+    private _jsonLdService: JsonLdService,
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +58,53 @@ export class AboutComponent implements OnInit {
       imageHeight: 558,
       imageType: 'image/jpg',
     });
+
+    this._jsonLdService.setJsonLd([
+      {
+        '@context': 'https://schema.org',
+        '@type': 'AboutPage',
+        'name': 'About PromptHealth',
+        'description': 'Learn about PromptHealth, the platform connecting patients with health and wellness practitioners across Canada. Founded by Hedieh Safiyari.',
+        'url': 'https://www.prompthealth.ca/about',
+        'breadcrumb': {
+          '@type': 'BreadcrumbList',
+          'itemListElement': [
+            { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.prompthealth.ca' },
+            { '@type': 'ListItem', 'position': 2, 'name': 'About', 'item': 'https://www.prompthealth.ca/about' }
+          ]
+        }
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        'name': 'PromptHealth',
+        'url': 'https://www.prompthealth.ca',
+        'foundingDate': '2020',
+        'sameAs': ['https://www.linkedin.com/company/prompthealth/'],
+        'founder': {
+          '@type': 'Person',
+          'name': 'Hedieh Safiyari',
+          'jobTitle': 'CEO & Founder',
+          'alumniOf': [
+            { '@type': 'CollegeOrUniversity', 'name': 'University of British Columbia' },
+            { '@type': 'CollegeOrUniversity', 'name': 'Simon Fraser University' }
+          ],
+          'description': 'Hedieh Safiyari has 15+ years of clinical experience in cardiac rehabilitation and holds an executive MBA from SFU (2015). She founded PromptHealth in 2020.'
+        },
+        'member': [
+          { '@type': 'Person', 'name': 'Bob Mehr', 'jobTitle': 'Advisor' },
+          { '@type': 'Person', 'name': 'Jan Simon', 'jobTitle': 'Advisor' },
+          { '@type': 'Person', 'name': 'Peter Valadkhan', 'jobTitle': 'Technical Lead' },
+          { '@type': 'Person', 'name': 'Renee Bigelow', 'jobTitle': 'Marketing Consultant & Fractional CMO' },
+          { '@type': 'Person', 'name': 'Amin Saedi', 'jobTitle': 'Full Stack Developer' },
+          { '@type': 'Person', 'name': 'Reza Ghenaat', 'jobTitle': 'Product Designer' }
+        ]
+      }
+    ]);
+  }
+
+  ngOnDestroy(): void {
+    this._jsonLdService.removeJsonLd();
   }
 
   ngAfterViewInit() {
