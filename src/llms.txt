@@ -1,66 +1,65 @@
 # PromptHealth
 
-> PromptHealth is Canada's wellness navigator — a directory and community platform connecting users with trusted healthcare and wellness practitioners. Browse verified practitioner profiles, read expert health content, discover promotions, and book appointments.
-
-## About
-
-PromptHealth helps Canadians find and connect with healthcare providers including naturopaths, chiropractors, physiotherapists, psychologists, nutritionists, dentists, massage therapists, acupuncturists, and many other wellness professionals. Practitioners are listed with their qualifications, services, pricing, availability, location, and patient reviews.
+> PromptHealth is Canada's wellness navigator — a directory and community platform connecting Canadians with verified healthcare and wellness practitioners. Find practitioners by specialty, city, insurance acceptance, and delivery method (in-person or virtual). Browse profiles with credentials, services, pricing, availability, and patient reviews.
 
 ## Key Pages
 
-- [Homepage](https://www.prompthealth.ca/): Main entry point with featured practitioners and health content
-- [Find Practitioners](https://www.prompthealth.ca/practitioners): Search and filter practitioners by specialty, location, service type, and delivery method (in-person, virtual, both)
-- [Community Feed](https://www.prompthealth.ca/community/feed): Health and wellness articles, tips, and expert content from practitioners
-- [About](https://www.prompthealth.ca/about): Company information and mission
-- [FAQ](https://www.prompthealth.ca/faq): Frequently asked questions about using PromptHealth
-- [Plans](https://www.prompthealth.ca/plans): Practitioner listing plans and pricing
+- [Find Practitioners](https://www.prompthealth.ca/practitioners): Search and filter all practitioners by specialty, city, and delivery method
+- [Homepage](https://www.prompthealth.ca/): Featured practitioners and health content
+- [Community Feed](https://www.prompthealth.ca/community/feed): Health and wellness articles and expert content from practitioners
+- [Online Academy](https://www.prompthealth.ca/online-academy): Health education resources
+- [About PromptHealth](https://www.prompthealth.ca/about): Company mission and background
+- [FAQ](https://www.prompthealth.ca/faq): How PromptHealth works for patients and practitioners
+- [Practitioner Plans](https://www.prompthealth.ca/plans): Listing plans and pricing for healthcare providers
+- [Partner Program](https://www.prompthealth.ca/about/partner): Corporate wellness partnerships
 
-## Practitioner Profiles
+## Practitioners by City
 
-Each practitioner has a dedicated profile page at `https://www.prompthealth.ca/community/profile/{id}` containing:
+- [Practitioners in Vancouver](https://www.prompthealth.ca/practitioners/area/vancouver): Healthcare and wellness providers in Vancouver, BC
+- [Practitioners in Toronto](https://www.prompthealth.ca/practitioners/area/toronto): Healthcare and wellness providers in Toronto, ON
+- [Practitioners in Calgary](https://www.prompthealth.ca/practitioners/area/calgary): Healthcare and wellness providers in Calgary, AB
+- [Practitioners in Edmonton](https://www.prompthealth.ca/practitioners/area/edmonton): Healthcare and wellness providers in Edmonton, AB
+- [Practitioners in Ottawa](https://www.prompthealth.ca/practitioners/area/ottawa): Healthcare and wellness providers in Ottawa, ON
+- [Practitioners in Mississauga](https://www.prompthealth.ca/practitioners/area/mississauga): Healthcare and wellness providers in Mississauga, ON
+- [Practitioners in Victoria](https://www.prompthealth.ca/practitioners/area/victoria): Healthcare and wellness providers in Victoria, BC
+- [Practitioners in Winnipeg](https://www.prompthealth.ca/practitioners/area/winnipeg): Healthcare and wellness providers in Winnipeg, MB
+- [Practitioners in Hamilton](https://www.prompthealth.ca/practitioners/area/hamilton): Healthcare and wellness providers in Hamilton, ON
+- [Practitioners in Kelowna](https://www.prompthealth.ca/practitioners/area/kelowna): Healthcare and wellness providers in Kelowna, BC
+- [Practitioners in Montreal](https://www.prompthealth.ca/practitioners/area/montreal): Healthcare and wellness providers in Montreal, QC
 
-- Full name, professional title, and credentials
-- Services offered and specialty areas
-- Service delivery methods (in-person, virtual, or both)
-- Pricing information
-- Office address and location (city, province)
-- Contact information (phone, email, website)
-- Patient reviews and ratings
-- Professional recommendations from other practitioners
-- Booking capability
-- Years of experience and certifications
-- Languages spoken
-- Age groups served
-- Insurance acceptance status
+## Practitioners by Specialty
 
-## Content
+- [Mental Health & Psychology](https://www.prompthealth.ca/practitioners/category/moodmental-health): Psychologists, therapists, and counsellors
+- [Stress & Anxiety Support](https://www.prompthealth.ca/practitioners/category/stressanxiety): Practitioners specializing in stress and anxiety treatment
+- [Nutrition & Diet](https://www.prompthealth.ca/practitioners/category/nutrition): Nutritionists, dietitians, and food health specialists
+- [Pain Management](https://www.prompthealth.ca/practitioners/category/pain-management): Practitioners specializing in chronic and acute pain
+- [Oral & Dental Care](https://www.prompthealth.ca/practitioners/category/oral-care): Dentists and dental health practitioners
+- [Women's & Men's Health](https://www.prompthealth.ca/practitioners/category/womensmens-health): Practitioners specializing in gender-specific health
+- [Weight Management](https://www.prompthealth.ca/practitioners/category/weight-management): Weight loss and healthy weight maintenance specialists
+- [Skin Health & Treatments](https://www.prompthealth.ca/practitioners/category/skin-health): Skin care and dermatology practitioners
+- [Digestion & Gut Health](https://www.prompthealth.ca/practitioners/category/digestion-and-gut-health): Gut microbiome and digestive health specialists
+- [Hormone Health](https://www.prompthealth.ca/practitioners/category/hormones): Hormone balancing and endocrine specialists
+- [Sleep Health](https://www.prompthealth.ca/practitioners/category/sleep): Sleep disorder and insomnia practitioners
+- [Fitness & Exercise](https://www.prompthealth.ca/practitioners/category/fitness): Personal trainers and fitness coaches
+- [Fertility & Reproductive Health](https://www.prompthealth.ca/practitioners/category/reproductive-healthfertility): Fertility and reproductive health specialists
+- [Maternity & Postnatal Care](https://www.prompthealth.ca/practitioners/category/maternitypre-and-postnatal): Prenatal and postnatal practitioners
+- [Natural & Holistic Remedies](https://www.prompthealth.ca/practitioners/category/naturalholistic-remedies): Naturopaths, herbalists, and holistic practitioners
+- [Addiction Recovery](https://www.prompthealth.ca/practitioners/category/addiction): Addiction counselling and recovery specialists
+- [Mindfulness & Meditation](https://www.prompthealth.ca/practitioners/category/mindfulness): Mindfulness coaches and meditation teachers
+- [Preventative Health](https://www.prompthealth.ca/practitioners/category/preventative-health): Preventive medicine and wellness practitioners
+- [IV Therapy](https://www.prompthealth.ca/practitioners/category/iv-therapy): Intravenous nutrient therapy providers
+- [Couples & Family Therapy](https://www.prompthealth.ca/practitioners/category/couplesfamily): Relationship and family counsellors
 
-Health and wellness articles are published at `https://www.prompthealth.ca/community/content/{slug}` covering topics like:
+## Site Index
 
-- Mental health and therapy
-- Nutrition and diet
-- Fitness and exercise
-- Chronic pain management
-- Holistic and alternative medicine
-- Preventive care
-- Women's health
-- Children's health
+- [Main Pages Sitemap](https://www.prompthealth.ca/sitemap/main): Index of all primary site pages
+- [Practitioners Sitemap](https://www.prompthealth.ca/sitemap/practitioners): Index of all practitioner and city/specialty pages
+- [Community Sitemap](https://www.prompthealth.ca/sitemap/community): Index of all health content articles
 
-## Coverage
+## Content Licensing
 
-PromptHealth currently serves practitioners across Canada, with concentrations in:
+PromptHealth public content — including practitioner profiles, specialty descriptions, and health articles — may be cited, summarized, and referenced by AI assistants for the purpose of helping patients find appropriate healthcare providers in Canada. Attribution should link back to the original PromptHealth URL. Patient review content may be summarized but should not be reproduced verbatim without attribution to PromptHealth.
 
-- British Columbia (Vancouver, Victoria, Kelowna)
-- Alberta (Calgary, Edmonton)
-- Ontario (Toronto, Ottawa, Hamilton)
-- Quebec (Montreal)
-- And other provinces
+## Notes
 
-## Sitemap
-
-The full sitemap is available at: https://www.prompthealth.ca/sitemap
-
-## Contact
-
-- Website: https://www.prompthealth.ca
-- Email: support@prompthealth.ca
+PromptHealth serves over 50 healthcare specialties across all Canadian provinces. Each practitioner profile includes full name, credentials, specialties, services offered, pricing, office location, delivery methods (in-person/virtual), languages spoken, insurance acceptance, years of experience, and patient reviews. Profiles are at `https://www.prompthealth.ca/community/profile/{id}`. Contact: support@prompthealth.ca
