@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { environment } from 'src/environments/environment';
 import { locations } from 'src/app/_helpers/location-data';
 import { slugify } from 'src/app/_helpers/slugify';
+import { staticPageDates } from 'src/app/static-page-dates';
 
 const apiURL = environment.config.API_URL;
 const baseURL = environment.config.FRONTEND_BASE;
@@ -93,99 +94,94 @@ const sitemapRoot = `<?xml version="1.0" encoding="UTF-8"?>
   </sitemapindex>
 `;
 
-// PH-021: Added lastmod and changefreq to static sitemap entries
-const lastDeploy = new Date().toISOString().split('T')[0];
-const sitemapMain = `<?xml version="1.0" encoding="UTF-8"?>
+// PH-021 + SEO-044: Static page lastmod from git commit dates (generated at build time)
+function buildSitemapMain(): string {
+  const d = (route: string) => staticPageDates[route] || new Date().toISOString().split('T')[0];
+  return `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <url>
       <loc>${baseURL}</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/')}</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
     <url>
       <loc>${baseURL}/about</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/about')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/about/partner</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/about/partner')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/plans</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/plans')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/plans/product</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/plans/product')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/companies</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/companies')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/ambassador-program</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/ambassador-program')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/press-release</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/press-release')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/online-academy</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/online-academy')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/testimonial</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/testimonial')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/faq</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/faq')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/subscribe/newsletter</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/subscribe/newsletter')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/contact-us</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/contact-us')}</lastmod>
       <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/policy</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/policy')}</lastmod>
       <changefreq>yearly</changefreq>
     </url>
     <url>
       <loc>${baseURL}/terms</loc>
-      <lastmod>${lastDeploy}</lastmod>
+      <lastmod>${d('/terms')}</lastmod>
       <changefreq>yearly</changefreq>
     </url>
-  </urlset>
-`;
+  </urlset>`;
+}
+const sitemapMain = buildSitemapMain();
 
 function getSitemapPractitioners(): Promise<string> {
-  const today = new Date().toISOString().split('T')[0];
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <url>
-        <loc>${baseURL}/practitioners</loc>
-        <lastmod>${today}</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-      </url>
   `;
 
   return new Promise( async (resolve) => {
@@ -197,11 +193,46 @@ function getSitemapPractitioners(): Promise<string> {
       const typeOfProviderSlugs = vals[1];
       const practitioners = vals[2];
 
+      // SEO-044: Compute real lastmod dates from practitioner data
+      const maxUpdatedByArea: { [area: string]: string } = {};
+      let globalMaxUpdated = '';
+
+      practitioners.forEach(p => {
+        if (p.updatedAt) {
+          if (!globalMaxUpdated || p.updatedAt > globalMaxUpdated) {
+            globalMaxUpdated = p.updatedAt;
+          }
+          if (p.city) {
+            const area = p.city.toLowerCase().replace(/\s+/g, '-');
+            if (!maxUpdatedByArea[area] || p.updatedAt > maxUpdatedByArea[area]) {
+              maxUpdatedByArea[area] = p.updatedAt;
+            }
+          }
+        }
+      });
+
+      const globalLastmod = globalMaxUpdated
+        ? new Date(globalMaxUpdated).toISOString().split('T')[0]
+        : '';
+
+      // Main practitioners listing page
+      xml += `
+      <url>
+        <loc>${baseURL}/practitioners</loc>
+        ${globalLastmod ? `<lastmod>${globalLastmod}</lastmod>` : ''}
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+      </url>
+      `;
+
       areas.forEach(area => {
+        const areaLastmod = maxUpdatedByArea[area]
+          ? new Date(maxUpdatedByArea[area]).toISOString().split('T')[0]
+          : globalLastmod;
         xml += `
           <url>
             <loc>${baseURL}/practitioners/area/${area}</loc>
-            <lastmod>${today}</lastmod>
+            ${areaLastmod ? `<lastmod>${areaLastmod}</lastmod>` : ''}
             <changefreq>weekly</changefreq>
             <priority>0.8</priority>
           </url>
@@ -212,16 +243,20 @@ function getSitemapPractitioners(): Promise<string> {
         xml += `
           <url>
             <loc>${baseURL}/practitioners/category/${category}</loc>
-            <lastmod>${today}</lastmod>
+            ${globalLastmod ? `<lastmod>${globalLastmod}</lastmod>` : ''}
             <changefreq>weekly</changefreq>
             <priority>0.7</priority>
           </url>
         `;
 
         areas.forEach(area => {
+          const areaLastmod = maxUpdatedByArea[area]
+            ? new Date(maxUpdatedByArea[area]).toISOString().split('T')[0]
+            : globalLastmod;
           xml += `
             <url>
               <loc>${baseURL}/practitioners/category/${category}/${area}</loc>
+              ${areaLastmod ? `<lastmod>${areaLastmod}</lastmod>` : ''}
               <changefreq>weekly</changefreq>
               <priority>0.6</priority>
             </url>
@@ -233,16 +268,20 @@ function getSitemapPractitioners(): Promise<string> {
         xml += `
           <url>
             <loc>${baseURL}/practitioners/type/${slug}</loc>
-            <lastmod>${today}</lastmod>
+            ${globalLastmod ? `<lastmod>${globalLastmod}</lastmod>` : ''}
             <changefreq>weekly</changefreq>
             <priority>0.7</priority>
           </url>
         `;
 
         areas.forEach(area => {
+          const areaLastmod = maxUpdatedByArea[area]
+            ? new Date(maxUpdatedByArea[area]).toISOString().split('T')[0]
+            : globalLastmod;
           xml += `
             <url>
               <loc>${baseURL}/practitioners/type/${slug}/${area}</loc>
+              ${areaLastmod ? `<lastmod>${areaLastmod}</lastmod>` : ''}
               <changefreq>weekly</changefreq>
               <priority>0.6</priority>
             </url>
@@ -253,9 +292,13 @@ function getSitemapPractitioners(): Promise<string> {
       // SEO-043: City × Specialty intersection pages (area-first canonical URLs)
       typeOfProviderSlugs.forEach(slug => {
         areas.forEach(area => {
+          const areaLastmod = maxUpdatedByArea[area]
+            ? new Date(maxUpdatedByArea[area]).toISOString().split('T')[0]
+            : globalLastmod;
           xml += `
             <url>
               <loc>${baseURL}/practitioners/area/${area}/type/${slug}</loc>
+              ${areaLastmod ? `<lastmod>${areaLastmod}</lastmod>` : ''}
               <changefreq>weekly</changefreq>
               <priority>0.7</priority>
             </url>
@@ -368,7 +411,6 @@ function getSitemapPractitioners(): Promise<string> {
 // }
 
 function getSitemapSocial(): Promise<string> {
-  const today = new Date().toISOString().split('T')[0];
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     `;
@@ -379,11 +421,30 @@ function getSitemapSocial(): Promise<string> {
       const contentIds = vals[1];
       const taxonomies = ['feed', 'article', 'media', 'event', 'note', 'voice', 'promotion'];
 
+      // SEO-044: Compute max updatedAt per content type for taxonomy pages
+      const contentTypeMap: { [key: string]: string } = {
+        'FEED': 'feed', 'ARTICLE': 'article', 'MEDIA': 'media',
+        'EVENT': 'event', 'NOTE': 'note', 'VOICE': 'voice', 'PROMOTION': 'promotion',
+      };
+      const maxUpdatedByType: { [type: string]: string } = {};
+
+      contentIds.forEach(item => {
+        if (item.updatedAt && item.contentType) {
+          const mapped = contentTypeMap[item.contentType] || item.contentType.toLowerCase();
+          if (!maxUpdatedByType[mapped] || item.updatedAt > maxUpdatedByType[mapped]) {
+            maxUpdatedByType[mapped] = item.updatedAt;
+          }
+        }
+      });
+
       taxonomies.forEach(type => {
+        const typeLastmod = maxUpdatedByType[type]
+          ? new Date(maxUpdatedByType[type]).toISOString().split('T')[0]
+          : '';
         xml += `
           <url>
             <loc>${baseURL}/community/${type}</loc>
-            <lastmod>${today}</lastmod>
+            ${typeLastmod ? `<lastmod>${typeLastmod}</lastmod>` : ''}
             <changefreq>daily</changefreq>
             <priority>0.7</priority>
           </url>
@@ -483,14 +544,14 @@ function getAllAreas(): string[] {
   return areas;
 }
 
-function getAllPractitionerIds(): Promise<{id: string, updatedAt?: string, slug?: string}[]> {
+function getAllPractitionerIds(): Promise<{id: string, updatedAt?: string, slug?: string, city?: string}[]> {
   return new Promise((resolve) => {
-    const practitioners: {id: string, updatedAt?: string, slug?: string}[] = [];
+    const practitioners: {id: string, updatedAt?: string, slug?: string, city?: string}[] = [];
 
     axios.post(apiURL + 'user/filter', {}, { timeout: 15000 }).then(res => {
       if(res.status == 200) {
-        res.data.data.dataArr.forEach((d: {userId: string, userData?: {updatedAt?: string, slug?: string}}) => {
-          practitioners.push({id: d.userId, updatedAt: d.userData?.updatedAt, slug: d.userData?.slug});
+        res.data.data.dataArr.forEach((d: {userId: string, city?: string, userData?: {updatedAt?: string, slug?: string}}) => {
+          practitioners.push({id: d.userId, updatedAt: d.userData?.updatedAt, slug: d.userData?.slug, city: d.city});
         });
       }
     }).catch(error => {
