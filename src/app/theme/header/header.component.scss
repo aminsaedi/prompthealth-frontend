@@ -20,3 +20,13 @@
     border-color: transparent transparent white transparent;
   }
 }
+
+nav ul li a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+}
+
+a.btn.btn-primary.small {
+  min-height: 48px;
+}
