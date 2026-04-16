@@ -287,7 +287,20 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     this.faqItems = this.generateFaqItems(specialist, area);
     this.faqHeading = `Frequently Asked Questions about ${titleCaseOf(specialist)} in ${area}`;
 
-    this._uService.setMeta(this._router.url, {
+    let canonicalPath = '/practitioners';
+    if (param.categorySlug) {
+      canonicalPath += `/category/${param.categorySlug}`;
+    } else if (param.typeOfProviderSlug) {
+      canonicalPath += `/type/${param.typeOfProviderSlug}`;
+    }
+    if (param.city) {
+      if (!param.categorySlug && !param.typeOfProviderSlug) {
+        canonicalPath += '/area';
+      }
+      canonicalPath += `/${param.city}`;
+    }
+
+    this._uService.setMeta(canonicalPath, {
       title: `Find best ${specialist} in ${area} | PromptHealth`,
       description: `Use our Expert Finder to find a top-rated ${specialist} in ${area} or offering virtual appointment.`,
     });
