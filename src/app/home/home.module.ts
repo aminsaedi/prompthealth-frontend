@@ -39,6 +39,7 @@ import { ButtonsModule } from "../buttons/buttons.module";
 import { PressReleaseComponent } from "./press-release/press-release.component";
 import { TestimonialComponent } from './testimonial/testimonial.component';
 import { OnlineAcademyComponent } from './online-academy/online-academy.component';
+import { ForPractitionersComponent } from './for-practitioners/for-practitioners.component';
 
 
 @NgModule({
@@ -75,6 +76,7 @@ import { OnlineAcademyComponent } from './online-academy/online-academy.componen
     PressReleaseComponent,
     TestimonialComponent,
     OnlineAcademyComponent,
+    ForPractitionersComponent,
   ],
   imports: [
     FormsModule,
