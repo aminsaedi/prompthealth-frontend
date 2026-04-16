@@ -49,4 +49,28 @@ Disallow: /community/editor/
 Disallow: /community/drafts
 Disallow: /community/notification
 
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /community/editor/
+Disallow: /community/drafts
+Disallow: /community/notification
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /community/editor/
+Disallow: /community/drafts
+Disallow: /community/notification
+
+User-agent: CCBot
+Allow: /
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /community/editor/
+Disallow: /community/drafts
+Disallow: /community/notification
+
 Sitemap: https://www.prompthealth.ca/sitemap
