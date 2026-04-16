@@ -573,17 +573,31 @@ export class ProfileComponent implements OnInit , OnDestroy {
       mainSchema.additionalType = schemaTypeUrls;
     }
 
-    if (p.isVirtualAvailable) {
+    if (typeOfProvider.length > 0) {
+      mainSchema['medicalSpecialty'] = typeOfProvider;
+    }
+
+    if (serviceDelivery.length > 0 || typeOfProvider.length > 0) {
       mainSchema.hasOfferCatalog = {
         '@type': 'OfferCatalog',
-        'name': 'Service Delivery',
-        'itemListElement': serviceDelivery.map(sd => ({
-          '@type': 'Offer',
-          'itemOffered': {
-            '@type': 'Service',
-            'name': sd,
-          }
-        })),
+        'name': 'Services Offered',
+        'itemListElement': [
+          ...serviceDelivery.map(sd => ({
+            '@type': 'Offer',
+            'itemOffered': {
+              '@type': 'Service',
+              'name': sd,
+            }
+          })),
+          ...typeOfProvider.map(specialty => ({
+            '@type': 'Offer',
+            'itemOffered': {
+              '@type': 'MedicalTherapy',
+              'name': specialty,
+              'description': `${specialty} services offered by ${p.firstName} ${p.lastName}`,
+            }
+          })),
+        ],
       };
     }
 
