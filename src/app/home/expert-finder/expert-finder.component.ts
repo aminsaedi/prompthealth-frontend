@@ -428,7 +428,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       const itemListSchema = {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
-        'name': 'Healthcare Practitioners',
+        'name': this.pageHeading,
         'numberOfItems': professionals.length,
         'itemListElement': items,
       };
