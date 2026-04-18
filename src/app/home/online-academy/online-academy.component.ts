@@ -136,7 +136,7 @@ export class OnlineAcademyComponent implements OnInit , OnDestroy {
 
     this._uService.setMeta(this._router.url, {
       title: "News and press | PromptHealth",
-      description: "Find latest news from PromptHealth",
+      description: "Browse expert health and wellness videos, courses, and educational content from top practitioners on PromptHealth.",
       robots: "index, follow",
     });
 

@@ -17,6 +17,8 @@ export class NotFoundComponent implements OnInit {
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
       title: 'Not Found | PromptHealth',
+      description: 'Page not found on PromptHealth.',
+      robots: 'noindex',
     })
   }
 

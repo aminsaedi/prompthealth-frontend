@@ -60,7 +60,7 @@ export class ProfileServiceComponent implements OnInit , OnDestroy {
     if(this.profile) {
       this._uService.setMeta(this._router.url, {
         title: `Service by ${this.profile.name} | PromptHealth Community`,
-        description: `Check out what services ${this.profile.name} offers.`,
+        description: `${this.profile.name} offers healthcare services${this.profile.city ? ' in ' + this.profile.city : ''}. Browse available treatments and book an appointment on PromptHealth.`,
         image: this.profile.imageFull,
         imageType: this.profile.imageType,
         imageAlt: this.profile.name,

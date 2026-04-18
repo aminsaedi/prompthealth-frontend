@@ -82,7 +82,7 @@ export class ProfileEventUpcomingComponent implements OnInit , OnDestroy {
     if(this.profile) {
       this._uService.setMeta(this._router.url, {
         title: 'Upcoming events' + ` from ${this.profile.name} | PromptHealth Community`,
-        description: `Check out healthcare contents provided by ${this.profile.name}`,
+        description: `Browse upcoming healthcare events and workshops by ${this.profile.name} on PromptHealth.`,
         image: this.profile.imageFull,
         imageType: this.profile.imageType,
         imageAlt: this.profile.name,

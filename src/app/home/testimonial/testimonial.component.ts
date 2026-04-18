@@ -17,6 +17,7 @@ export class TestimonialComponent implements OnInit {
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
       title: "Testimonials about PromptHealth",
+      description: "Read what healthcare providers and patients say about PromptHealth.",
       robots: "index, follow",
     });
   }

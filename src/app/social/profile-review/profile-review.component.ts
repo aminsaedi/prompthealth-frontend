@@ -55,7 +55,7 @@ export class ProfileReviewComponent implements OnInit , OnDestroy {
     if(this.profile) {
       this._uService.setMeta(this._router.url, {
         title: `${this.profile.name} review | PromptHealth Community`,
-        description: `Check out how people evaluate ${this.profile.name}`,
+        description: `Read patient reviews for ${this.profile.name} on PromptHealth.` + (this.profile.rating && this.profile.ratingCount ? ` Rated ${this.profile.rating}/5 based on ${this.profile.ratingCount} reviews.` : ''),
         image: this.profile.imageFull,
         imageType: this.profile.imageType,
         imageAlt: this.profile.name,

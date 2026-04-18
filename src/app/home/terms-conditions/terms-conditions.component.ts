@@ -18,6 +18,7 @@ export class TermsConditionsComponent implements OnInit {
   ngOnInit() {
     this._uService.setMeta(this._router.url, {
       title: 'Terms and Conditions',
+      description: 'Read PromptHealth\'s terms and conditions of use.',
     });
   }
 
