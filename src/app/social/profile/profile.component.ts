@@ -193,6 +193,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
           this.setProfileMenu();
           this._socialService.setProfile(this.profile);
           this.setBreadcrumbs();
+          this.setMetaForActiveTab();
 
           this.getQuestionnaire().then(() => {
             this.setMetaForActiveTab();
@@ -232,6 +233,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
               this.setProfileMenu();
               this._socialService.setProfile(this.profile);
               this.setBreadcrumbs();
+              this.setMetaForActiveTab();
 
               this.getQuestionnaire().then(() => {
                 this.setMetaForActiveTab();
@@ -443,8 +445,9 @@ export class ProfileComponent implements OnInit , OnDestroy {
       return;
     }
 
-    const url = this._router.url;
+    const url = this._router.url.split('?')[0];
     const p = this.profile;
+    const canonicalPath = this.getCanonicalPath(url);
     const imageMeta = {
       image: p.imageFull,
       imageType: p.imageType,
@@ -452,37 +455,37 @@ export class ProfileComponent implements OnInit , OnDestroy {
     };
 
     if (url.match(/\/event\/past/)) {
-      this._uService.setMeta(url, {
+      this._uService.setMeta(canonicalPath, {
         title: `Past events from ${p.name} | PromptHealth Community`,
         description: `View past events and workshops hosted by ${p.name} on PromptHealth.`,
         ...imageMeta,
       });
     } else if (url.match(/\/event/)) {
-      this._uService.setMeta(url, {
+      this._uService.setMeta(canonicalPath, {
         title: `Upcoming events from ${p.name} | PromptHealth Community`,
         description: `Browse upcoming healthcare events and workshops by ${p.name} on PromptHealth.`,
         ...imageMeta,
       });
     } else if (url.match(/\/service/)) {
-      this._uService.setMeta(url, {
+      this._uService.setMeta(canonicalPath, {
         title: `Service by ${p.name} | PromptHealth Community`,
         description: `${p.name} offers healthcare services${p.city ? ' in ' + p.city : ''}. Browse available treatments and book an appointment on PromptHealth.`,
         ...imageMeta,
       });
     } else if (url.match(/\/feed/)) {
-      this._uService.setMeta(url, {
+      this._uService.setMeta(canonicalPath, {
         title: `Contents from ${p.name} | PromptHealth Community`,
         description: `Read health articles, tips, and posts shared by ${p.name} on PromptHealth.`,
         ...imageMeta,
       });
     } else if (url.match(/\/review/)) {
-      this._uService.setMeta(url, {
+      this._uService.setMeta(canonicalPath, {
         title: `${p.name} review | PromptHealth Community`,
         description: `Read patient reviews for ${p.name} on PromptHealth.` + (p.rating && p.ratingCount ? ` Rated ${p.rating}/5 based on ${p.ratingCount} reviews.` : ''),
         ...imageMeta,
       });
     } else if (url.match(/\/promotion/)) {
-      this._uService.setMeta(url, {
+      this._uService.setMeta(canonicalPath, {
         title: `Special offers from ${p.name} | PromptHealth Community`,
         description: `View special offers and promotions from ${p.name} on PromptHealth.`,
         ...imageMeta,
@@ -490,6 +493,18 @@ export class ProfileComponent implements OnInit , OnDestroy {
     } else {
       this.setMetaForAbout();
     }
+  }
+
+  private getCanonicalPath(url: string): string {
+    const p = this.profile;
+    if (p?.slug) {
+      const slugIdx = url.indexOf(p.slug);
+      if (slugIdx >= 0) {
+        const subPath = url.substring(slugIdx + p.slug.length);
+        return `/practitioners/${p.slug}${subPath}`;
+      }
+    }
+    return url;
   }
 
   setMetaForAbout() {

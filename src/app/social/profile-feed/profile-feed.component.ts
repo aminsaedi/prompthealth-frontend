@@ -79,7 +79,6 @@ export class ProfileFeedComponent implements OnInit , OnDestroy {
   }
 
   onProfileChanged() {
-    this.setMeta();
     if(this.profile) {
       const posts = this._socialService.postsOfUser(this.profile._id);
       if (posts) {
@@ -87,20 +86,6 @@ export class ProfileFeedComponent implements OnInit , OnDestroy {
       } else {
         this.initPosts();
       }
-    }
-  }
-
-  setMeta() {
-    if(this.profile) {
-      const contentType = this._route.snapshot.data.contentType;
-
-      this._uService.setMeta(this._router.url, {
-        title: (contentType == 'event' ? `Events` : `Contents`) + ` from ${this.profile.name} | PromptHealth Community`,
-        description: `Read health articles, tips, and posts shared by ${this.profile.name} on PromptHealth.`,
-        image: this.profile.imageFull,
-        imageType: this.profile.imageType,
-        imageAlt: this.profile.name,
-      });  
     }
   }
 
