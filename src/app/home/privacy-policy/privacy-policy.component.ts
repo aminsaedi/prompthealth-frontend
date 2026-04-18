@@ -17,6 +17,7 @@ export class PrivacyPolicyComponent implements OnInit {
   ngOnInit() {
     this._uService.setMeta(this._router.url, {
       title: 'Privacy policy | PromptHealth',
+      description: 'Read PromptHealth\'s privacy policy and how we protect your data.',
     });
   }
 }

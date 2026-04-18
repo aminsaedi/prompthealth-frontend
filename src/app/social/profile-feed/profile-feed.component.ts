@@ -96,7 +96,7 @@ export class ProfileFeedComponent implements OnInit , OnDestroy {
 
       this._uService.setMeta(this._router.url, {
         title: (contentType == 'event' ? `Events` : `Contents`) + ` from ${this.profile.name} | PromptHealth Community`,
-        description: `Check out healthcare contents provided by ${this.profile.name}`,
+        description: `Read health articles, tips, and posts shared by ${this.profile.name} on PromptHealth.`,
         image: this.profile.imageFull,
         imageType: this.profile.imageType,
         imageAlt: this.profile.name,

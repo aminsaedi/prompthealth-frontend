@@ -49,6 +49,7 @@ export class PersonalMatchComponent implements OnInit , OnDestroy {
   ngOnInit(): void {
     this._uService.setMeta(this._router.url, {
       title: 'Personal Match | PromptHealth',
+      description: 'Answer a few questions and get personalized healthcare provider recommendations on PromptHealth.',
     });
     
     this._qService.init(this.data, {});
