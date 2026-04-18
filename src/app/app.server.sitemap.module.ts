@@ -188,10 +188,13 @@ function getSitemapPractitioners(): Promise<string> {
 
     const areas = getAllAreas();
 
-    Promise.all([getAllCategorySlugs(), getAllTypeOfProviderSlugs(), getAllPractitionerIds()]).then(vals => {
+    Promise.all([getAllCategorySlugs(), getAllTypeOfProviderSlugs(), getAllPractitionerIds()]).then(async vals => {
       const categoryIds = vals[0];
       const typeOfProviderSlugs = vals[1];
       const practitioners = vals[2];
+
+      // SEO-060: Generate slugs for practitioners that don't have one yet
+      await generateMissingSlugs(practitioners);
 
       // SEO-044: Compute real lastmod dates from practitioner data
       const maxUpdatedByArea: { [area: string]: string } = {};
@@ -313,6 +316,7 @@ function getSitemapPractitioners(): Promise<string> {
       });
 
       practitioners.forEach(p => {
+        // SEO-060: Include all practitioners with a slug (original or generated via get-slug endpoint)
         if (p.slug) {
           const lastmod = p.updatedAt ? new Date(p.updatedAt).toISOString().split('T')[0] : '';
           xml += `
@@ -565,6 +569,35 @@ function getAllPractitionerIds(): Promise<{id: string, updatedAt?: string, slug?
       resolve(practitioners);
     });
   });
+}
+
+// SEO-060: Generate missing slugs for practitioners that don't have one.
+// Calls the existing user/get-slug/:id endpoint which generates and saves the slug on-demand.
+// Processes in batches to avoid overwhelming the backend.
+async function generateMissingSlugs(practitioners: {id: string, updatedAt?: string, slug?: string, city?: string}[]): Promise<void> {
+  const withoutSlug = practitioners.filter(p => !p.slug);
+  if (withoutSlug.length === 0) return;
+
+  const BATCH_SIZE = 5;
+  for (let i = 0; i < withoutSlug.length; i += BATCH_SIZE) {
+    const batch = withoutSlug.slice(i, i + BATCH_SIZE);
+    const results = await Promise.allSettled(
+      batch.map(p =>
+        axios.get(apiURL + 'user/get-slug/' + p.id, { timeout: 10000 })
+          .then(res => {
+            if (res.status === 200 && res.data?.data?.slug) {
+              p.slug = res.data.data.slug;
+            }
+          })
+      )
+    );
+    // Log failures but continue — don't break the sitemap for individual errors
+    results.forEach((result, idx) => {
+      if (result.status === 'rejected') {
+        console.warn(`SEO-060: Failed to generate slug for practitioner ${batch[idx].id}:`, result.reason?.message || result.reason);
+      }
+    });
+  }
 }
 
 function getAllSocialContentIds(): Promise<{_id: string, updatedAt: string, contentType: string, slug?: string}[]> {
