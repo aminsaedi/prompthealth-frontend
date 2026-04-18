@@ -430,7 +430,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
 
   setMetaForAbout() {
     const url = this._router.url;
-    if(!url.match('service|feed|review')) {
+    if(!url.match('service|feed|review|promotion|event')) {
       if (!this.profile || !this.questionnaires?.typeOfProvider || !this.questionnaires?.serviceDelivery) {
         return;
       }
