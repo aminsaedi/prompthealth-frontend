@@ -77,19 +77,6 @@ export class ProfilePromotionComponent implements OnInit , OnDestroy {
 
 
   onProfileChanged() {
-    this.setMeta();
-  }
-
-  setMeta() {
-    if(this.profile) {
-      this._uService.setMeta(this._router.url, {
-        title: `Special offers from ${this.profile.name} | PromptHealth Community`,
-        description: `View special offers and promotions from ${this.profile.name} on PromptHealth.`,
-        image: this.profile.imageFull,
-        imageType: this.profile.imageType,
-        imageAlt: this.profile.name,
-      });  
-    }
   }
 
 

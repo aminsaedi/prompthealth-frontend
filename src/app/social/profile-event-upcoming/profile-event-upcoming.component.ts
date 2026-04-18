@@ -74,20 +74,7 @@ export class ProfileEventUpcomingComponent implements OnInit , OnDestroy {
   }
 
   onProfileChanged() {
-    this.setMeta();
     this.initPosts();
-  }
-
-  setMeta() {
-    if(this.profile) {
-      this._uService.setMeta(this._router.url, {
-        title: 'Upcoming events' + ` from ${this.profile.name} | PromptHealth Community`,
-        description: `Browse upcoming healthcare events and workshops by ${this.profile.name} on PromptHealth.`,
-        image: this.profile.imageFull,
-        imageType: this.profile.imageType,
-        imageAlt: this.profile.name,
-      });  
-    }
   }
 
   async initPosts() {

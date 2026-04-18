@@ -66,19 +66,8 @@ export class ProfileEventPastComponent implements OnInit , OnDestroy {
 
   onProfileChanged() {
     if(this.profile) {
-      this.setMeta();
       this.initPosts();
     }
-  }
-
-  setMeta() {
-    this._uService.setMeta(this._router.url, {
-      title: 'Past events' + ` from ${this.profile.name} | PromptHealth Community`,
-      description: `View past events and workshops hosted by ${this.profile.name} on PromptHealth.`,
-      image: this.profile.imageFull,
-      imageType: this.profile.imageType,
-      imageAlt: this.profile.name,
-    });  
   }
 
   async initPosts() {

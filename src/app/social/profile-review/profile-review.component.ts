@@ -43,23 +43,10 @@ export class ProfileReviewComponent implements OnInit , OnDestroy {
   }
 
   onProfileChanged() {
-    this.setMeta();
     if(this.profile && this.profile.isConnectedToGoogle && !this.profile.detailByGoogle && !this.profile.triedFetchingGoogleReviews)  {
       this._map.load().then(() => {
         this.profile.setGoogleReviews();
       });
-    }
-  }
-
-  setMeta() {
-    if(this.profile) {
-      this._uService.setMeta(this._router.url, {
-        title: `${this.profile.name} review | PromptHealth Community`,
-        description: `Read patient reviews for ${this.profile.name} on PromptHealth.` + (this.profile.rating && this.profile.ratingCount ? ` Rated ${this.profile.rating}/5 based on ${this.profile.ratingCount} reviews.` : ''),
-        image: this.profile.imageFull,
-        imageType: this.profile.imageType,
-        imageAlt: this.profile.name,
-      });  
     }
   }
 
