@@ -23,13 +23,6 @@
 
     <p *ngIf="introText" class="intro-text">{{introText}}</p>
 
-    <section *ngIf="faqItems?.length" class="faq-section mt-30p">
-      <h2 class="h4 mb-15p">{{faqHeading}}</h2>
-      <div class="d-grid" style="gap: 10px;">
-        <faq-item *ngFor="let item of faqItems" [data]="item"></faq-item>
-      </div>
-    </section>
-
     <div class="mt-15p d-flex justify-content-between">
       <div>
         <button 
@@ -238,6 +231,13 @@
             <a routerLink="/practitioners/cities" class="body1 text-primary">
               <u>View all cities</u>
             </a>
+          </div>
+        </section>
+
+        <section *ngIf="faqItems?.length" class="faq-section mt-30p">
+          <h2 class="h4 mb-15p">{{faqHeading}}</h2>
+          <div class="d-grid" style="gap: 10px;">
+            <faq-item *ngFor="let item of faqItems" [data]="item"></faq-item>
           </div>
         </section>
       </ng-container>
