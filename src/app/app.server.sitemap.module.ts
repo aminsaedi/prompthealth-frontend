@@ -581,14 +581,19 @@ async function generateMissingSlugs(practitioners: {id: string, updatedAt?: stri
   const BATCH_SIZE = 5;
   for (let i = 0; i < withoutSlug.length; i += BATCH_SIZE) {
     const batch = withoutSlug.slice(i, i + BATCH_SIZE);
-    const results = await Promise.allSettled(
+    const results = await Promise.all(
       batch.map(p =>
-        axios.get(apiURL + 'user/get-slug/' + p.id, { timeout: 10000 })
-          .then(res => {
-            if (res.status === 200 && res.data?.data?.slug) {
-              p.slug = res.data.data.slug;
-            }
-          })
+        Promise.resolve(
+          axios.get(apiURL + 'user/get-slug/' + p.id, { timeout: 10000 })
+            .then(res => {
+              if (res.status === 200 && res.data?.data?.slug) {
+                p.slug = res.data.data.slug;
+              }
+            })
+        ).then(
+          value => ({ status: 'fulfilled' as const, value }),
+          reason => ({ status: 'rejected' as const, reason })
+        )
       )
     );
     // Log failures but continue — don't break the sitemap for individual errors
