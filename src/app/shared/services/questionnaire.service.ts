@@ -33,6 +33,46 @@ export class QuestionnaireService {
     return selectedLabels;
   }
 
+  /** Get schema_medical_specialty enum URLs for selected answers, with client-side fallback. */
+  public getSelectedMedicalSpecialties(q: Questionnaire, ids: string[]): string[] {
+    const FALLBACK_MAP: Record<string, string> = {
+      'Dentist':              'https://schema.org/Dentistry',
+      'Dental Hygienist':     'https://schema.org/Dentistry',
+      'Medical Doctor':       'https://schema.org/GeneralPractice',
+      'Nurse Practitioner':   'https://schema.org/GeneralPractice',
+      'General Practitioner': 'https://schema.org/GeneralPractice',
+      'Chiropractor':         'https://schema.org/Chiropractic',
+      'Physiotherapist':      'https://schema.org/PhysicalTherapy',
+      'Physical Therapist':   'https://schema.org/PhysicalTherapy',
+      'Pharmacist':           'https://schema.org/Pharmacy',
+      'Optometrist':          'https://schema.org/Optometry',
+      'Nurse':                'https://schema.org/Nursing',
+      'Registered Nurse':     'https://schema.org/Nursing',
+      'Psychologist':         'https://schema.org/Psychology',
+      'Neuropsychologist':    'https://schema.org/Psychology',
+      'Counsellor':           'https://schema.org/Psychology',
+      'Therapist':            'https://schema.org/Psychology',
+      'Nutritionist':         'https://schema.org/Nutrition',
+      'Registered Dietician': 'https://schema.org/Nutrition',
+      'Midwife':              'https://schema.org/Midwifery',
+      'Osteopath':            'https://schema.org/Osteopathic',
+      'Speech therapist':     'https://schema.org/SpeechPathology',
+      'Speech Pathologist':   'https://schema.org/SpeechPathology',
+      'Audiologist':          'https://schema.org/Otolaryngologic',
+      'Neurologist':          'https://schema.org/Neurologic',
+    };
+
+    const selected = this.getSelectedAnswers(q, ids, false);
+    const urls: string[] = [];
+    for (const a of selected) {
+      const url = a.schema_medical_specialty || FALLBACK_MAP[a.item_text];
+      if (url && !urls.includes(url)) {
+        urls.push(url);
+      }
+    }
+    return urls;
+  }
+
   /** get selected answers (subanswers are NOT nested) */
   private getSelectedAnswers(q: Questionnaire, ids: string[], includeSub: boolean = true) {
     const selected: QuestionnaireAnswer[] = []
@@ -285,6 +325,8 @@ export interface QuestionnaireAnswer {
   subansData?: QuestionnaireAnswer[];
   /** Computed: derived from item_text via slugify(). Not stored in DB. */
   slug?: string;
+  /** schema.org MedicalSpecialty enum URL, set via backfill or DB. */
+  schema_medical_specialty?: string;
 }
 
 export interface Questionnaire {

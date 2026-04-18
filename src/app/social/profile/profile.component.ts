@@ -443,14 +443,15 @@ export class ProfileComponent implements OnInit , OnDestroy {
       });
 
       // Set structured data for AI and search engine discoverability
-      const jsonLd = this.buildProfileJsonLd(typeOfProvider, serviceDelivery);
+      const medicalSpecialties = this._qService.getSelectedMedicalSpecialties(this.questionnaires.typeOfProvider, this.profile.allServiceId);
+      const jsonLd = this.buildProfileJsonLd(typeOfProvider, serviceDelivery, medicalSpecialties);
       if (jsonLd) {
         this._jsonLdService.setJsonLd(jsonLd);
       }
     }
   }
 
-  buildProfileJsonLd(typeOfProvider: string[], serviceDelivery: string[]): object[] | null {
+  buildProfileJsonLd(typeOfProvider: string[], serviceDelivery: string[], medicalSpecialties: string[] = []): object[] | null {
     if (!this.profile) { return null; }
 
     const p = this.profile;
@@ -573,8 +574,8 @@ export class ProfileComponent implements OnInit , OnDestroy {
       mainSchema.additionalType = schemaTypeUrls;
     }
 
-    if (typeOfProvider.length > 0) {
-      mainSchema['medicalSpecialty'] = typeOfProvider;
+    if (medicalSpecialties.length > 0) {
+      mainSchema['medicalSpecialty'] = medicalSpecialties;
     }
 
     if (serviceDelivery.length > 0 || typeOfProvider.length > 0) {
