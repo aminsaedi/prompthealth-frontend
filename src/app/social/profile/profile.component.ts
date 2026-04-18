@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';;
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription , Subject } from 'rxjs';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
@@ -22,7 +22,7 @@ import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
 import { environment } from 'src/environments/environment';
 import { SocialService } from '../social.service';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { TransferState, makeStateKey } from '@angular/platform-browser';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 
@@ -137,6 +137,16 @@ export class ProfileComponent implements OnInit , OnDestroy {
   ngOnInit(): void {
     this.observeLoginStatus();
 
+    // Update meta descriptions when navigating between profile sub-tabs.
+    // Child route components may not re-initialize on tab switches, so the
+    // parent must react to NavigationEnd to keep meta in sync.
+    this._router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.setMetaForActiveTab();
+    });
+
     // const now = new Date();
     // this.minDateTime = {
     //   year: now.getFullYear(), 
@@ -185,7 +195,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
           this.setBreadcrumbs();
 
           this.getQuestionnaire().then(() => {
-            this.setMetaForAbout();
+            this.setMetaForActiveTab();
             if (this.profile.isSP && !this.profile.triedFetchingTeam) {
               this.fetchTeam();
             }
@@ -224,7 +234,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
               this.setBreadcrumbs();
 
               this.getQuestionnaire().then(() => {
-                this.setMetaForAbout();
+                this.setMetaForActiveTab();
                 if (this.profile.isSP && !this.profile.triedFetchingTeam) {
                   this.fetchTeam();
                 }
@@ -262,7 +272,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
       this.initRecommendationByMe();
       this.setProfileMenu();
       this._socialService.setProfile(this.profile);
-      this.setMetaForAbout();
+      this.setMetaForActiveTab();
       this.setBreadcrumbs();
     } else {
       // Check TransferState for SSR-fetched profile data (prevents hydration CLS)
@@ -287,7 +297,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
         this.initRecommendationByMe();
         this.setProfileMenu();
         this._socialService.setProfile(this.profile);
-        this.setMetaForAbout();
+        this.setMetaForActiveTab();
         this.setBreadcrumbs();
 
         this.getQuestionnaire().then(() => {
@@ -311,7 +321,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
           this.setProfileMenu();
           this._socialService.setProfile(this.profile);
 
-          this.setMetaForAbout();
+          this.setMetaForActiveTab();
           this.setBreadcrumbs();
 
           if(this.profile.isSP && !this.profile.triedFetchingTeam) {
@@ -426,6 +436,60 @@ export class ProfileComponent implements OnInit , OnDestroy {
 
   countupProfileView() {
     this._sharedService.postNoAuth({_id: this.profileId}, 'user/update-view-count').pipe(takeUntil(this.destroy$)).subscribe(() => {});
+  }
+
+  setMetaForActiveTab() {
+    if (!this.profile) {
+      return;
+    }
+
+    const url = this._router.url;
+    const p = this.profile;
+    const imageMeta = {
+      image: p.imageFull,
+      imageType: p.imageType,
+      imageAlt: p.name,
+    };
+
+    if (url.match(/\/event\/past/)) {
+      this._uService.setMeta(url, {
+        title: `Past events from ${p.name} | PromptHealth Community`,
+        description: `View past events and workshops hosted by ${p.name} on PromptHealth.`,
+        ...imageMeta,
+      });
+    } else if (url.match(/\/event/)) {
+      this._uService.setMeta(url, {
+        title: `Upcoming events from ${p.name} | PromptHealth Community`,
+        description: `Browse upcoming healthcare events and workshops by ${p.name} on PromptHealth.`,
+        ...imageMeta,
+      });
+    } else if (url.match(/\/service/)) {
+      this._uService.setMeta(url, {
+        title: `Service by ${p.name} | PromptHealth Community`,
+        description: `${p.name} offers healthcare services${p.city ? ' in ' + p.city : ''}. Browse available treatments and book an appointment on PromptHealth.`,
+        ...imageMeta,
+      });
+    } else if (url.match(/\/feed/)) {
+      this._uService.setMeta(url, {
+        title: `Contents from ${p.name} | PromptHealth Community`,
+        description: `Read health articles, tips, and posts shared by ${p.name} on PromptHealth.`,
+        ...imageMeta,
+      });
+    } else if (url.match(/\/review/)) {
+      this._uService.setMeta(url, {
+        title: `${p.name} review | PromptHealth Community`,
+        description: `Read patient reviews for ${p.name} on PromptHealth.` + (p.rating && p.ratingCount ? ` Rated ${p.rating}/5 based on ${p.ratingCount} reviews.` : ''),
+        ...imageMeta,
+      });
+    } else if (url.match(/\/promotion/)) {
+      this._uService.setMeta(url, {
+        title: `Special offers from ${p.name} | PromptHealth Community`,
+        description: `View special offers and promotions from ${p.name} on PromptHealth.`,
+        ...imageMeta,
+      });
+    } else {
+      this.setMetaForAbout();
+    }
   }
 
   setMetaForAbout() {
