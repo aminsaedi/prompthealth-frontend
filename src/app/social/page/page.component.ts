@@ -256,7 +256,8 @@ export class PageComponent implements OnInit , OnDestroy {
           {
             '@type': 'ListItem',
             'position': 3,
-            'name': title
+            'name': title,
+            'item': 'https://www.prompthealth.ca' + canonicalPath
           }
         ]
       }
