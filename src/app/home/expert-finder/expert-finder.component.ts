@@ -922,6 +922,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
                           if (fallbackRes.data.total != null) {
                             this.controller.setTotalPractitioners(fallbackRes.data.total);
                           }
+                          this.controller.setProfessionals(fallbackRes.data.dataArr, false);
+                          this.controller.setProfesionnalsPerPage(1);
                           const fallbackPros = fallbackRes.data.dataArr.map(
                             d => new Professional(d.userId, d.userData)
                           );
