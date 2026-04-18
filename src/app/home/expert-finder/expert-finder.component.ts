@@ -331,20 +331,17 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   }
 
   private generateIntroText(specialist: string, area: string): string {
+    const specialistProf = specialist === 'healthcare providers' ? 'healthcare professionals' : `${specialist} professionals`;
     if (specialist === 'healthcare providers' && area === 'Canada') {
-      return '';
+      return 'Looking for a healthcare professional in Canada? Browse our directory of trusted practitioners across specialties. Whether you need an in-person visit or a virtual consultation, PromptHealth makes it easy to compare providers and book your appointment.';
     }
     if (area !== 'Canada') {
-      return `Looking for a trusted ${specialist} in ${area}? Browse our directory of top-rated ${specialist} professionals in ${area} and find the right provider for your health needs. Whether you need an in-person visit or a virtual consultation, PromptHealth makes it easy to compare providers and book your appointment.`;
+      return `Looking for a trusted ${specialist} in ${area}? Browse our directory of top-rated ${specialistProf} in ${area} and find the right provider for your health needs. Whether you need an in-person visit or a virtual consultation, PromptHealth makes it easy to compare providers and book your appointment.`;
     }
-    return `Find top-rated ${specialist} professionals across Canada on PromptHealth. Compare providers by ratings, specialties, and availability to find the right ${specialist} for your health and wellness goals.`;
+    return `Find top-rated ${specialistProf} across Canada on PromptHealth. Compare providers by ratings, specialties, and availability to find the right ${specialist} for your health and wellness goals.`;
   }
 
   private generateFaqItems(specialist: string, area: string): IFAQItem[] {
-    if (specialist === 'healthcare providers' && area === 'Canada') {
-      return [];
-    }
-
     const faqLookup: { [key: string]: IFAQItem[] } = {
       'dentist': [
         { q: `What does a dentist do?`, a: `A dentist diagnoses and treats conditions affecting the teeth, gums, and mouth. Services include routine cleanings, fillings, crowns, root canals, and preventive care to maintain your oral health.`, opened: false },
