@@ -1,14 +1,30 @@
-import { Injectable, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JsonLdService {
 
-  constructor(@Inject(DOCUMENT) private doc: any) {}
+  private isFirstBrowserLoad = true;
+
+  constructor(
+    @Inject(DOCUMENT) private doc: any,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {}
 
   setJsonLd(data: object | object[]): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const existing = this.doc.getElementById('json-ld-schema');
+      if (existing && this.isFirstBrowserLoad) {
+        // SSR already injected the schema — skip to avoid duplicates
+        this.isFirstBrowserLoad = false;
+        return;
+      }
+      this.isFirstBrowserLoad = false;
+    }
+
+    // Server-side OR client-side SPA navigation: remove old and inject new
     this.removeJsonLd();
     try {
       const head = this.doc.head || this.doc.getElementsByTagName('head')[0];
