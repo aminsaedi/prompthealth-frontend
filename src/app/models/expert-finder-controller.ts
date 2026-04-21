@@ -381,13 +381,14 @@ export class ExpertFinderController {
   }
 
   setProfessionals(data: IGetPractitionersResult['data']['dataArr'], createCanvas: boolean = true) {
+    // Flip the initialised flag up-front so that even if Professional
+    // construction blows up on an unexpected field shape during SSR the
+    // template does not stay stuck on the card-dummy skeleton. The
+    // populated cards are rendered via controller.professionals which is
+    // always at least an empty array.
+    this._professionalsInitialized = true;
     const professionals = [];
-    data.forEach(d => {
-      // Skip records without a userData payload — the Professional
-      // constructor dereferences fields on it and would throw, which on
-      // SSR propagated out of prefetchListingForSSR's try/catch and left
-      // professionalsInitialized=false (empty provider grid under a
-      // populated "N providers found" label).
+    (data || []).forEach(d => {
       if (!d || !d.userData) {
         return;
       }
@@ -401,9 +402,7 @@ export class ExpertFinderController {
         // One malformed record should not break the whole listing
       }
     });
-
     this._professionals = professionals;
-    this._professionalsInitialized = true;
   }
 
   setProfesionnalsPerPage(pageCurrent: number = 1) {
