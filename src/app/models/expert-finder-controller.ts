@@ -383,11 +383,23 @@ export class ExpertFinderController {
   setProfessionals(data: IGetPractitionersResult['data']['dataArr'], createCanvas: boolean = true) {
     const professionals = [];
     data.forEach(d => {
-      const p = new Professional(d.userId, d.userData);
-      if(createCanvas) {
-        p.setMapIcon();
+      // Skip records without a userData payload — the Professional
+      // constructor dereferences fields on it and would throw, which on
+      // SSR propagated out of prefetchListingForSSR's try/catch and left
+      // professionalsInitialized=false (empty provider grid under a
+      // populated "N providers found" label).
+      if (!d || !d.userData) {
+        return;
       }
-      professionals.push(p);
+      try {
+        const p = new Professional(d.userId, d.userData);
+        if(createCanvas) {
+          p.setMapIcon();
+        }
+        professionals.push(p);
+      } catch (e) {
+        // One malformed record should not break the whole listing
+      }
     });
 
     this._professionals = professionals;
