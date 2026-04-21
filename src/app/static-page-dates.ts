@@ -15,4 +15,5 @@ export const staticPageDates: { [route: string]: string } = {
   '/contact-us': '2026-04-16',
   '/policy': '2026-04-16',
   '/terms': '2026-04-16',
+  '/medical-disclaimer': '2026-04-20',
 };

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { environment } from 'src/environments/environment';
 import { locations } from 'src/app/_helpers/location-data';
 import { slugify } from 'src/app/_helpers/slugify';
+import { isIndexableCityCategory, isIndexableCityType } from 'src/app/_helpers/indexable-combos';
 import { staticPageDates } from 'src/app/static-page-dates';
 
 const apiURL = environment.config.API_URL;
@@ -175,6 +176,11 @@ function buildSitemapMain(): string {
       <lastmod>${d('/terms')}</lastmod>
       <changefreq>yearly</changefreq>
     </url>
+    <url>
+      <loc>${baseURL}/medical-disclaimer</loc>
+      <lastmod>${d('/medical-disclaimer')}</lastmod>
+      <changefreq>yearly</changefreq>
+    </url>
   </urlset>`;
 }
 const sitemapMain = buildSitemapMain();
@@ -248,6 +254,11 @@ function getSitemapPractitioners(): Promise<string> {
         `;
       });
 
+      // SEO-064: City × category/type intersection pages are excluded from
+      // the sitemap unless they appear in the indexable-combos allowlist.
+      // Single-dimension category/type/area pages stay in the sitemap.
+      // The intersection routes still render (e.g. via internal links) but
+      // serve a noindex meta tag when not allowlisted.
       categoryIds.forEach(category => {
         xml += `
           <url>
@@ -259,6 +270,7 @@ function getSitemapPractitioners(): Promise<string> {
         `;
 
         areas.forEach(area => {
+          if (!isIndexableCityCategory(area, category as string)) return;
           const areaLastmod = maxUpdatedByArea[area]
             ? new Date(maxUpdatedByArea[area]).toISOString().split('T')[0]
             : globalLastmod;
@@ -284,6 +296,7 @@ function getSitemapPractitioners(): Promise<string> {
         `;
 
         areas.forEach(area => {
+          if (!isIndexableCityType(area, slug as string)) return;
           const areaLastmod = maxUpdatedByArea[area]
             ? new Date(maxUpdatedByArea[area]).toISOString().split('T')[0]
             : globalLastmod;
@@ -298,9 +311,11 @@ function getSitemapPractitioners(): Promise<string> {
         });
       });
 
-      // SEO-043: City × Specialty intersection pages (area-first canonical URLs)
+      // SEO-043 + SEO-064: City × Specialty intersection pages (area-first
+      // canonical URLs). Only emitted for allowlisted combos.
       typeOfProviderSlugs.forEach(slug => {
         areas.forEach(area => {
+          if (!isIndexableCityType(area, slug as string)) return;
           const areaLastmod = maxUpdatedByArea[area]
             ? new Date(maxUpdatedByArea[area]).toISOString().split('T')[0]
             : globalLastmod;
@@ -476,8 +491,13 @@ function getSitemapSocial(): Promise<string> {
 
       contentIds.forEach(item => {
         const lastmod = item.updatedAt ? new Date(item.updatedAt).toISOString().split('T')[0] : '';
+        // SEO-064: article slugs may contain non-ASCII characters like
+        // em-dash (—, U+2014). RFC 3986 requires sitemap <loc> URLs to be
+        // ASCII, so encode the slug segment. Without this, any article
+        // whose slug contains an em-dash 404s when crawlers normalise the
+        // URL to percent-encoded form.
         const loc = (item.contentType === 'ARTICLE' && item.slug)
-          ? `${baseURL}/community/article/${item.slug}`
+          ? `${baseURL}/community/article/${encodeURIComponent(item.slug)}`
           : `${baseURL}/community/content/${item._id}`;
         xml += `
           <url>

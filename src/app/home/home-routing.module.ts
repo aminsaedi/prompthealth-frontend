@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { FAQComponent } from "./faq/faq.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { TermsConditionsComponent } from "./terms-conditions/terms-conditions.component";
+import { MedicalDisclaimerComponent } from "./medical-disclaimer/medical-disclaimer.component";
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 import { ListingCompanyComponent } from './listing-company/listing-company.component';
@@ -47,9 +48,15 @@ const routes: Routes = [
   },
   { path: "policy", component: PrivacyPolicyComponent },
   { path: "privacy", redirectTo: '/policy' },
+  { path: "privacy-policy", redirectTo: '/policy' },
 
   { path: "terms",  component: TermsConditionsComponent },
   { path: 'termConditions', redirectTo: '/terms'},
+  { path: 'terms-of-service', redirectTo: '/terms' },
+  { path: 'terms-and-conditions', redirectTo: '/terms' },
+
+  { path: 'medical-disclaimer', component: MedicalDisclaimerComponent },
+  { path: 'disclaimer', redirectTo: '/medical-disclaimer' },
 
   {
     path: "contact-us",

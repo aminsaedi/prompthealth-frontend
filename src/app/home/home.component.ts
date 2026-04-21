@@ -177,61 +177,68 @@ export class HomeComponent implements OnInit , OnDestroy {
       description: "Search trusted healthcare providers by specialty, watch expert videos, and connect with wellness professionals. Browse practitioners in your area on PromptHealth.",
     });
 
-    this._jsonLdService.setJsonLd([
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "PromptHealth",
-        "url": "https://www.prompthealth.ca",
-        "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 600 },
-        "description": "PromptHealth is Canada's leading integrative health platform connecting patients with 500+ verified wellness practitioners across 21 cities in 4 provinces (BC, ON, AB, MB). Search by specialty, location, and delivery method to discover naturopaths, physiotherapists, dentists, psychologists, and 50+ other practitioner types, read expert health content, and book appointments online.",
-        "foundingDate": "2020",
-        "areaServed": { "@type": "Country", "name": "Canada" },
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "contactType": "customer support",
-          "email": "support@prompthealth.ca",
-          "areaServed": "CA",
-          "availableLanguage": "English"
-        },
-        "sameAs": [
-          "https://www.youtube.com/@prompthealth",
-          "https://www.instagram.com/prompthealth",
-          "https://www.tiktok.com/@prompthealth",
-          "https://www.linkedin.com/company/prompthealth/",
-          "https://www.facebook.com/PromptHealth/"
-        ]
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "PromptHealth",
-        "url": "https://www.prompthealth.ca",
-        "description": "Find a wellness practitioner near you. Search by specialty, location, or topic.",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://www.prompthealth.ca/practitioners?keyword={search_term_string}"
-          },
-          "query-input": "required name=search_term_string"
-        }
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Find a Wellness Practitioner Near You",
-        "description": "Search trusted healthcare providers by specialty, watch expert videos, and connect with wellness professionals.",
-        "url": "https://www.prompthealth.ca",
-        "isPartOf": { "@type": "WebSite", "name": "PromptHealth", "url": "https://www.prompthealth.ca" },
-        "about": {
-          "@type": "MedicalBusiness",
+    // SEO-064: emit homepage schemas as a single @graph so crawlers see one
+    // linked graph instead of three loose top-level nodes that some SEO
+    // tools report as "duplicate" Organization / WebSite blocks.
+    this._jsonLdService.setJsonLd({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.prompthealth.ca/#organization",
           "name": "PromptHealth",
-          "description": "A wellness discovery platform connecting patients with trusted healthcare providers through content, video, and AI search.",
-          "url": "https://www.prompthealth.ca"
+          "url": "https://www.prompthealth.ca",
+          "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 600 },
+          "description": "PromptHealth is Canada's leading integrative health platform connecting patients with 500+ verified wellness practitioners across 21 cities in 4 provinces (BC, ON, AB, MB). Search by specialty, location, and delivery method to discover naturopaths, physiotherapists, dentists, psychologists, and 50+ other practitioner types, read expert health content, and book appointments online.",
+          "foundingDate": "2020",
+          "areaServed": { "@type": "Country", "name": "Canada" },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "email": "support@prompthealth.ca",
+            "areaServed": "CA",
+            "availableLanguage": "English"
+          },
+          "sameAs": [
+            "https://www.youtube.com/@prompthealth",
+            "https://www.instagram.com/prompthealth",
+            "https://www.tiktok.com/@prompthealth",
+            "https://www.linkedin.com/company/prompthealth/",
+            "https://www.facebook.com/PromptHealth/"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.prompthealth.ca/#website",
+          "name": "PromptHealth",
+          "url": "https://www.prompthealth.ca",
+          "description": "Find a wellness practitioner near you. Search by specialty, location, or topic.",
+          "publisher": { "@id": "https://www.prompthealth.ca/#organization" },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.prompthealth.ca/practitioners?keyword={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.prompthealth.ca/#webpage",
+          "name": "Find a Wellness Practitioner Near You",
+          "description": "Search trusted healthcare providers by specialty, watch expert videos, and connect with wellness professionals.",
+          "url": "https://www.prompthealth.ca",
+          "isPartOf": { "@id": "https://www.prompthealth.ca/#website" },
+          "about": {
+            "@type": "MedicalBusiness",
+            "name": "PromptHealth",
+            "description": "A wellness discovery platform connecting patients with trusted healthcare providers through content, video, and AI search.",
+            "url": "https://www.prompthealth.ca"
+          }
         }
-      }
-    ]);
+      ]
+    });
 
     this._catService.getCategoryAsync().then((cats) => {
       this.categories = cats;
