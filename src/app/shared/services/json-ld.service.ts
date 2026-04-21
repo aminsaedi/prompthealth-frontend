@@ -15,10 +15,21 @@ export class JsonLdService {
 
   setJsonLd(data: object | object[]): void {
     if (isPlatformBrowser(this.platformId)) {
-      const existing = this.doc.getElementById('json-ld-schema');
-      if (existing && this.isFirstBrowserLoad) {
-        // SSR already injected the schema — skip to avoid duplicates
+      const existing = this.doc.querySelectorAll('script[type="application/ld+json"]');
+      if (existing && existing.length > 0 && this.isFirstBrowserLoad) {
+        // SSR already injected the schema — skip to avoid duplicates.
+        // Also collapse any accidental duplicate scripts down to one so
+        // the hydrated page only presents a single JSON-LD block to
+        // crawlers.
         this.isFirstBrowserLoad = false;
+        if (existing.length > 1) {
+          for (let i = 1; i < existing.length; i++) {
+            const el = existing[i];
+            if (el && el.parentNode) {
+              el.parentNode.removeChild(el);
+            }
+          }
+        }
         return;
       }
       this.isFirstBrowserLoad = false;

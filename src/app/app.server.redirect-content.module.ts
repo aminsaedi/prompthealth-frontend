@@ -23,7 +23,9 @@ rContentRedirect.use('/', async (req, res, next) => {
     const result = await axios.get(apiURL + 'blog/get-slug/' + id, { timeout: 10000 });
     if (result.data.statusCode === 200 && result.data.data.slug) {
       const slug = result.data.data.slug;
-      const target = `/community/article/${slug}${subpath}`;
+      // SEO-064: encode the slug so em-dash and other non-ASCII characters
+      // produce an RFC 3986-compliant Location header.
+      const target = `/community/article/${encodeURIComponent(slug)}${subpath}`;
       return res.redirect(301, target);
     }
   } catch (err) {

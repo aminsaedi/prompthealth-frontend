@@ -97,6 +97,16 @@ export function app() {
   server.use('/community/profile', routerRedirectForProfile);
   server.use('/community/content', routerRedirectForContent);
 
+  // SEO-064: 301 redirects for legacy / SEO-friendly aliases so Google
+  // consolidates signals to the canonical /policy, /terms, and
+  // /medical-disclaimer URLs instead of treating the alias paths as 404.
+  server.get('/privacy-policy',     (req, res) => { res.redirect(301, '/policy'); });
+  server.get('/privacy-policy/',    (req, res) => { res.redirect(301, '/policy'); });
+  server.get('/terms-of-service',   (req, res) => { res.redirect(301, '/terms'); });
+  server.get('/terms-of-service/',  (req, res) => { res.redirect(301, '/terms'); });
+  server.get('/terms-and-conditions', (req, res) => { res.redirect(301, '/terms'); });
+  server.get('/disclaimer',         (req, res) => { res.redirect(301, '/medical-disclaimer'); });
+
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/dashboard',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })

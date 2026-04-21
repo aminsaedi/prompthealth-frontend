@@ -100,8 +100,11 @@ export class PageComponent implements OnInit , OnDestroy {
 
   fetchPost() {
     return new Promise((resolve, reject) => {
+      // SEO-064: slugs may contain em-dash or other non-ASCII characters.
+      // Encode so HttpClient emits an RFC 3986-compliant request path and
+      // the backend lookup does not 404 on encoded segments.
       const path = this._isSlugRoute
-        ? `blog/get-by-slug/${this.postId}`
+        ? `blog/get-by-slug/${encodeURIComponent(this.postId)}`
         : `note/${this.postId}`;
       this._sharedService.get(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetSocialContentResult) => {
         if(res.statusCode === 200) {

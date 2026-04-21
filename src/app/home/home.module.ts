@@ -7,6 +7,7 @@ import { HomeComponent } from "../home/home.component";
 import { FAQComponent } from "./faq/faq.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { TermsConditionsComponent } from "./terms-conditions/terms-conditions.component";
+import { MedicalDisclaimerComponent } from "./medical-disclaimer/medical-disclaimer.component";
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ContactUsComponent } from "./contact-us/contact-us.component";
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
@@ -49,6 +50,7 @@ import { CitiesHubComponent } from './cities-hub/cities-hub.component';
     FAQComponent,
     PrivacyPolicyComponent,
     TermsConditionsComponent,
+    MedicalDisclaimerComponent,
     ContactUsComponent,
     UnsubscribeComponent,
     ListingCompanyComponent,

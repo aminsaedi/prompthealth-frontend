@@ -23,6 +23,7 @@ import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { titleCaseOf } from 'src/app/_helpers/titlecase';
 import { slugify } from 'src/app/_helpers/slugify';
 import { locationsNested } from 'src/app/_helpers/location-data';
+import { isIndexableCityCategory, isIndexableCityType } from 'src/app/_helpers/indexable-combos';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
@@ -323,9 +324,21 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       canonicalPath += `/area/${param.city}`;
     }
 
+    // SEO-064: noindex city × category / city × type intersection pages
+    // that are not explicitly allowlisted. Prevents the ~2,600 programmatic
+    // combos from tripping Google's doorway-pattern heuristic. Single-dimension
+    // pages (area-only, category-only, type-only) stay indexable.
+    let robots: string | undefined;
+    if (param.city && param.categorySlug && !isIndexableCityCategory(param.city, param.categorySlug)) {
+      robots = 'noindex, follow';
+    } else if (param.city && param.typeOfProviderSlug && !isIndexableCityType(param.city, param.typeOfProviderSlug)) {
+      robots = 'noindex, follow';
+    }
+
     this._uService.setMeta(canonicalPath, {
       title: `Find Best ${titleCaseOf(specialist)} in ${area} | PromptHealth`,
       description: `Use our Expert Finder to find a top-rated ${specialist} in ${area} or offering virtual appointment.`,
+      ...(robots ? { robots } : {}),
     });
 
   }
@@ -987,6 +1000,13 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
               }
               this.controller.setPage(1);
               this.controller.setProfessionals(res.data.dataArr, false);
+              // Populate the per-page slice so the template iterates over
+              // controller.professionals during SSR. Without this the grid
+              // is empty even though professionalsInitialized is true,
+              // producing the "N providers found / zero cards" mismatch
+              // that AI crawlers and Googlebot observe.
+              this.controller.setProfesionnalsPerPage(1);
+              this.controller.initPaginator(1);
               const professionals = this.controller.professionalsAll;
               if (professionals && professionals.length > 0) {
                 this.setListingJsonLd(professionals);
@@ -1005,6 +1025,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
                           }
                           this.controller.setProfessionals(fallbackRes.data.dataArr, false);
                           this.controller.setProfesionnalsPerPage(1);
+                          this.controller.initPaginator(1);
                           const fallbackPros = fallbackRes.data.dataArr.map(
                             d => new Professional(d.userId, d.userData)
                           );
