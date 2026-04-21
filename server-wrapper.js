@@ -154,116 +154,12 @@ function injectJsonLd(url, html, categoryPractitioners) {
   if (typeof html !== 'string') return html;
   let jsonLd = null;
 
-  // Homepage
-  if (url === '/' || url === '') {
-    jsonLd = [
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "PromptHealth",
-        "url": "https://www.prompthealth.ca",
-        "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 600 },
-        "description": "Your Wellness Navigator",
-        "sameAs": [
-          "https://www.facebook.com/PromptHealth/",
-          "https://www.instagram.com/prompthealth/",
-          "https://www.linkedin.com/company/prompthealth/",
-          "https://www.youtube.com/channel/UCnMigPMOdit9i6koo3-VSMg",
-          "https://twitter.com/PromptHealth"
-        ]
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "PromptHealth",
-        "url": "https://www.prompthealth.ca",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://www.prompthealth.ca/practitioners?keyword={search_term_string}"
-          },
-          "query-input": "required name=search_term_string"
-        }
-      }
-    ];
-  }
-
-  // FAQ page
-  if (url === '/faq' || url.startsWith('/faq?')) {
-    jsonLd = [
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is PromptHealth?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "PromptHealth is a network of holistic care practitioners. It empowers providers to showcase their knowledge in different formats for better online exposure and to educate the wellness community. They can also collaborate with other practitioners and with PromptHealth, itself. Wellness seekers can learn directly from the trusted sources and connect when the need arises."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How does PromptHealth work?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "You can navigate PromptHealth based on your need or goal. You can search, compare options, learn from different options provided based on preferences, and ultimately connect and book with a provider fully informed. Navigating the site and learning from different practitioners is easy to do with no login required. The only time you need to sign up is at the time of booking on the site or when using the app."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I find a practitioner?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "PromptHealth has a number of ways for you to find the right wellness provider. You can simply scroll through and browse the providers listed on the marketplace based on location or virtual options. You can start with the search bar and type in a practitioner type, condition, or search a specific practitioner. You can also use the personal match to help you filter options based on your specific needs."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How can I learn more about each service?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "We are the first social platform in health and wellness that enables providers to create educational content in different formats so you can keep coming back to learn from them. You can follow different providers based on the category that you are most interested in and receive notification every time a new health information is shared in that category."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I book a practitioner?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Once you've found your provider out of the options you are provided, you can either directly book with them if they already have a direct booking system, or use our request booking form if they do not have a booking system. The payment process is handled by each provider directly as per their policy."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Do I need to enter any personal health information in?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No. We do not require users to enter in any personal health information. Our personal match option that helps users filter care options asks for some basic demographic information but it is not mandatory."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How does PromptHealth verify its practitioners?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "We have done our due diligence by doing a qualitative review on each provider upon sign up to ensure credibility of information provided. The providers with a verified badge in the form of a blue check mark beside their names have provided proof of their certification."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "I want my search to be even more personalized, but don't see a filter that applies. What can I do?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "If you have suggestions for new filters to help improve your search further, or you have a wish list, please contact us at info@prompthealth.ca. We would love your feedback and always strive to improve our platform to offer what you need."
-            }
-          }
-        ]
-      }
-    ];
-  }
+  // SEO-064: Angular-rendered JSON-LD is now the source of truth for the
+  // homepage (home.component.ts emits a @graph) and the FAQ page
+  // (faq.component.ts emits FAQPage). This wrapper previously appended a
+  // second <script id="json-ld-schema"> before </head> for both, which
+  // produced two JSON-LD blocks (and duplicate DOM IDs) in SSR output.
+  // Those static blocks are deliberately removed here.
 
   // Community content pages: /community/<mongoId>
   // The Angular SSR already renders a JSON-LD block with Article + BreadcrumbList.
