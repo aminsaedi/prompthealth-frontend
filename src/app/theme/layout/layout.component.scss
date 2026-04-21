@@ -3,7 +3,10 @@
 }
 
 :host ::ng-deep nav ul li a {
-	display: flex;
+	// inline-flex keeps each anchor a single inline box, so sibling
+	// anchors inside the same <li> (e.g. Login / Register in the hero
+	// header) flow on one line instead of each taking its own row.
+	display: inline-flex;
 	align-items: center;
 	min-height: 48px;
 }
