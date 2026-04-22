@@ -117,7 +117,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
   private mapDataCurrent: {lat: number, lng: number, zoom: number, dist: number} = {lat: null, lng: null, zoom: null, dist: null};
   private formFilter: FormGroup;
-  private formCompare: FormGroup;
+  private formCompare: FormGroup = new FormGroup({});
 
   private queryParamsCurrent: Params;
   private _jsonLdSet = false;
@@ -1043,6 +1043,16 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
               }
               this.controller.setPage(1);
               this.controller.setProfessionals(res.data.dataArr, false);
+              // Populate formCompare so the template's fCompare[p._id] binding
+              // resolves to a valid FormControl during SSR. Without this,
+              // formCompare is undefined (only set in applySearchResults which
+              // runs browser-side) and the fCompare getter throws a TypeError
+              // that crashes template rendering before Angular can serialize
+              // the JSON-LD injected into <head> by setListingJsonLd().
+              this.formCompare = new FormGroup({});
+              this.controller.professionalsAll.forEach(p => {
+                this.formCompare.addControl(p._id, new FormControl());
+              });
               // Populate the per-page slice so the template iterates over
               // controller.professionals during SSR. Without this the grid
               // is empty even though professionalsInitialized is true,
