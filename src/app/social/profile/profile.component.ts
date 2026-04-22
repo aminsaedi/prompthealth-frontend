@@ -789,8 +789,9 @@ export class ProfileComponent implements OnInit , OnDestroy {
         },
       ];
     }
-    if (customerHealth.length > 0) {
-      mainSchema.knowsAbout = customerHealth;
+    const cleanedHealth = [...new Set(customerHealth.filter(v => v.toLowerCase() !== 'not critical'))];
+    if (cleanedHealth.length > 0) {
+      mainSchema.knowsAbout = cleanedHealth;
     }
 
     // Breadcrumb schema
