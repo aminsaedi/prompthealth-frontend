@@ -43,6 +43,17 @@ export const SPECIALTY_SCHEMA_MAP: Record<string, string> = {
   'Sports Coach':                     'https://schema.org/HealthAndBeautyBusiness',
 };
 
+/**
+ * Case-insensitive lookup against SPECIALTY_SCHEMA_MAP.
+ * Tries exact match first, then falls back to case-insensitive comparison.
+ */
+export function lookupSpecialtySchema(name: string): string | undefined {
+  if (SPECIALTY_SCHEMA_MAP[name]) return SPECIALTY_SCHEMA_MAP[name];
+  const lower = name.toLowerCase();
+  const key = Object.keys(SPECIALTY_SCHEMA_MAP).find(k => k.toLowerCase() === lower);
+  return key ? SPECIALTY_SCHEMA_MAP[key] : undefined;
+}
+
 /** Priority order for choosing a primary schema.org type when multiple match. */
 export const TYPE_PRIORITY = [
   'https://schema.org/Physician', 'https://schema.org/Dentist',

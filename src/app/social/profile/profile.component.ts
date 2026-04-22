@@ -19,7 +19,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
-import { SPECIALTY_SCHEMA_MAP, TYPE_PRIORITY } from 'src/app/_helpers/specialty-schema-map';
+import { TYPE_PRIORITY, lookupSpecialtySchema } from 'src/app/_helpers/specialty-schema-map';
 import { environment } from 'src/environments/environment';
 import { SocialService } from '../social.service';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
@@ -545,7 +545,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
       ? `https://www.prompthealth.ca/practitioners/${p.slug}`
       : `https://www.prompthealth.ca/community/profile/${p._id}`;
 
-    const schemaTypeUrls = [...new Set(typeOfProvider.map(t => SPECIALTY_SCHEMA_MAP[t]).filter(Boolean))];
+    const schemaTypeUrls = [...new Set(typeOfProvider.map(t => lookupSpecialtySchema(t)).filter(Boolean))];
     const primaryTypeUrl = TYPE_PRIORITY.find(t => schemaTypeUrls.includes(t)) || 'https://schema.org/ProfessionalService';
     const primaryTypeShort = primaryTypeUrl.replace('https://schema.org/', '');
 
