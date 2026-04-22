@@ -140,6 +140,7 @@ export class Professional extends Profile implements IProfessional{
   get reviewData() { return this._reviewData; }
   get reviewCount() { return this.reviews.length; }
   get ratingCount() { return this.p.ratingCount || (Array.isArray(this.p.ratingBy) ? this.p.ratingBy.length : 0); }
+  get rawRatingByData(): any[] { return Array.isArray(this.p.ratingBy) ? (this.p.ratingBy as any[]) : []; }
 
   get doneInitRecommendations() { return !!this._recommendations; }
   get recommendations() { return this._recommendations || []; }
