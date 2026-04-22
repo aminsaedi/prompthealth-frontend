@@ -549,13 +549,15 @@ export class ProfileComponent implements OnInit , OnDestroy {
     const primaryTypeUrl = TYPE_PRIORITY.find(t => schemaTypeUrls.includes(t)) || 'https://schema.org/ProfessionalService';
     const primaryTypeShort = primaryTypeUrl.replace('https://schema.org/', '');
 
+    const cleanedHealth = [...new Set(customerHealth.filter(v => v.toLowerCase() !== 'not critical'))];
+
     // Build the main business/practitioner schema
     const mainSchema: any = {
       '@context': 'https://schema.org',
       '@type': p.isC ? 'MedicalBusiness' : primaryTypeShort,
       'name': p.name,
       'url': canonicalUrl,
-      'description': `${p.name}${typeOfProvider.length ? ' is ' + typeOfProvider.join(', ') : ''}${serviceDelivery.length ? ' offering ' + serviceDelivery.join(', ') + ' services' : ''}.`,
+      'description': `${p.name}${typeOfProvider.length ? ' is ' + typeOfProvider.join(', ') : ''}${p.city || p.state ? ' in ' + [p.city, p.state].filter(Boolean).join(', ') + ', Canada' : ''}.${treatmentModality.length ? ' Specializes in ' + treatmentModality.join(', ') + '.' : ''}${cleanedHealth.length ? ' Treats: ' + cleanedHealth.join(', ') + '.' : ''}${serviceDelivery.length ? ' Available ' + serviceDelivery.join(', ') + '.' : ''}`,
     };
 
     if (p.profileImageFull) {
@@ -780,7 +782,6 @@ export class ProfileComponent implements OnInit , OnDestroy {
         },
       ];
     }
-    const cleanedHealth = [...new Set(customerHealth.filter(v => v.toLowerCase() !== 'not critical'))];
     if (cleanedHealth.length > 0) {
       mainSchema.knowsAbout = cleanedHealth;
     }
