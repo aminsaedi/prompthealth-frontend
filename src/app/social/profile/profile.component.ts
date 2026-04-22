@@ -622,6 +622,29 @@ export class ProfileComponent implements OnInit , OnDestroy {
       };
     }
 
+    // Individual reviews from ratingBy data
+    const ratingByData = p.rawRatingByData || [];
+    const reviewEntries = ratingByData
+      .filter((r: any) => r.review && r.review.trim().length > 0)
+      .slice(0, 5)
+      .map((r: any) => ({
+        '@type': 'Review',
+        'reviewBody': r.review.trim(),
+        'reviewRating': {
+          '@type': 'Rating',
+          'ratingValue': r.rating,
+          'bestRating': 5,
+        },
+        ...(r.createdAt ? { 'datePublished': new Date(r.createdAt).toISOString().split('T')[0] } : {}),
+        'author': {
+          '@type': 'Person',
+          'name': 'PromptHealth Patient',
+        },
+      }));
+    if (reviewEntries.length > 0) {
+      mainSchema.review = reviewEntries;
+    }
+
     // Additional structured properties
     if (schemaTypeUrls.length > 0) {
       mainSchema.additionalType = schemaTypeUrls;
