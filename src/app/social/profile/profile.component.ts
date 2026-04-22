@@ -523,14 +523,20 @@ export class ProfileComponent implements OnInit , OnDestroy {
 
       // Set structured data for AI and search engine discoverability
       const medicalSpecialties = this._qService.getSelectedMedicalSpecialties(this.questionnaires.typeOfProvider, this.profile.allServiceId);
-      const jsonLd = this.buildProfileJsonLd(typeOfProvider, serviceDelivery, medicalSpecialties);
+      const treatmentModality = this.questionnaires?.treatmentModality
+        ? this._qService.getSelectedLabel(this.questionnaires.treatmentModality, this.profile.allServiceId)
+        : [];
+      const customerHealth = this.questionnaires?.customerHealth
+        ? this._qService.getSelectedLabel(this.questionnaires.customerHealth, this.profile.allServiceId)
+        : [];
+      const jsonLd = this.buildProfileJsonLd(typeOfProvider, serviceDelivery, medicalSpecialties, treatmentModality, customerHealth);
       if (jsonLd) {
         this._jsonLdService.setJsonLd(jsonLd);
       }
     }
   }
 
-  buildProfileJsonLd(typeOfProvider: string[], serviceDelivery: string[], medicalSpecialties: string[] = []): object[] | null {
+  buildProfileJsonLd(typeOfProvider: string[], serviceDelivery: string[], medicalSpecialties: string[] = [], treatmentModality: string[] = [], customerHealth: string[] = []): object[] | null {
     if (!this.profile) { return null; }
 
     const p = this.profile;
@@ -747,6 +753,20 @@ export class ProfileComponent implements OnInit , OnDestroy {
         '@type': 'PeopleAudience',
         'audienceType': label,
       }));
+    }
+
+    if (treatmentModality.length > 0) {
+      mainSchema.additionalProperty = [
+        ...(mainSchema.additionalProperty || []),
+        {
+          '@type': 'PropertyValue',
+          'name': 'treatmentModality',
+          'value': treatmentModality.join(', '),
+        },
+      ];
+    }
+    if (customerHealth.length > 0) {
+      mainSchema.knowsAbout = customerHealth;
     }
 
     // Breadcrumb schema
