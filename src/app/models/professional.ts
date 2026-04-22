@@ -108,7 +108,7 @@ export class Professional extends Profile implements IProfessional{
   get emailToDisplay() { return null; }
 
   get title() { return this.p.professional_title || null; }
-  get phone() { return null; }
+  get phone() { return this.p.phone || null; }
   get address() { return (!this.p.hideAddress && this.p.address && this.p.address.length > 0) ? this.p.address : null; }
   get state() { return this.p.state; }
   get city() { return this.p.city; }
