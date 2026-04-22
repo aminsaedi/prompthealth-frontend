@@ -27,6 +27,7 @@ import { isIndexableCityCategory, isIndexableCityType } from 'src/app/_helpers/i
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
+import { SPECIALTY_SCHEMA_MAP, TYPE_PRIORITY } from 'src/app/_helpers/specialty-schema-map';
 
 @Component({
   selector: 'app-expert-finder',
@@ -534,11 +535,18 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
   setListingJsonLd(professionals: Professional[]) {
     const items = professionals.slice(0, 10).map((p, i) => {
+      const typeNames = this.questionnaires?.typeOfProvider
+        ? this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, p.serviceIds)
+        : [];
+      const schemaTypeUrls = [...new Set(typeNames.map(t => SPECIALTY_SCHEMA_MAP[t]).filter(Boolean))];
+      const primaryTypeUrl = TYPE_PRIORITY.find(t => schemaTypeUrls.includes(t)) || 'https://schema.org/ProfessionalService';
+      const schemaType = p.isC ? 'MedicalBusiness' : primaryTypeUrl.replace('https://schema.org/', '');
+
       const item: any = {
         '@type': 'ListItem',
         'position': i + 1,
         'item': {
-          '@type': 'ProfessionalService',
+          '@type': schemaType,
           'name': p.name,
           'url': p.slug ? `https://www.prompthealth.ca/practitioners/${p.slug}` : `https://www.prompthealth.ca/community/profile/${p._id}`,
           ...(p.profileImageFull ? { 'image': p.profileImageFull } : {}),
