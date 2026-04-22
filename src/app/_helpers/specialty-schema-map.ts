@@ -48,6 +48,7 @@ export const SPECIALTY_SCHEMA_MAP: Record<string, string> = {
  * Tries exact match first, then falls back to case-insensitive comparison.
  */
 export function lookupSpecialtySchema(name: string): string | undefined {
+  if (!name) return undefined;
   if (SPECIALTY_SCHEMA_MAP[name]) return SPECIALTY_SCHEMA_MAP[name];
   const lower = name.toLowerCase();
   const key = Object.keys(SPECIALTY_SCHEMA_MAP).find(k => k.toLowerCase() === lower);
