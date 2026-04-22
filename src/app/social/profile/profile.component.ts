@@ -695,6 +695,60 @@ export class ProfileComponent implements OnInit , OnDestroy {
       };
     }
 
+    // Languages spoken
+    if (p.languagesId?.length > 0 && this.questionnaires?.language) {
+      const languages = this._qService.getSelectedLabel(this.questionnaires.language, p.languagesId);
+      if (languages.length > 0) {
+        mainSchema.knowsLanguage = languages;
+      }
+    }
+
+    // Credentials / certifications
+    if (p.certification) {
+      const credentials = p.certification.split(',').map(c => c.trim()).filter(c => c.length > 0);
+      if (credentials.length > 0) {
+        mainSchema.hasCredential = credentials.map(name => ({
+          '@type': 'EducationalOccupationalCredential',
+          'credentialCategory': 'board certification',
+          'name': name,
+        }));
+      }
+    }
+
+    // Professional organizations
+    if (p.organization) {
+      const orgs = p.organization.split(',').map(o => o.trim()).filter(o => o.length > 0);
+      if (orgs.length > 0) {
+        mainSchema.memberOf = orgs.map(name => ({
+          '@type': 'Organization',
+          'name': name,
+        }));
+      }
+    }
+
+    // Typical availability
+    if (p.availabilityIds?.length > 0 && this.questionnaires?.availability) {
+      const availLabels = this._qService.getSelectedLabel(this.questionnaires.availability, p.availabilityIds);
+      if (availLabels.length > 0) {
+        mainSchema.additionalProperty = [
+          ...(mainSchema.additionalProperty || []),
+          {
+            '@type': 'PropertyValue',
+            'name': 'typicalAvailability',
+            'value': availLabels.join(', '),
+          },
+        ];
+      }
+    }
+
+    // Audience / age groups served
+    if (p.age_range?.length > 0) {
+      mainSchema.audience = p.age_range.map(label => ({
+        '@type': 'PeopleAudience',
+        'audienceType': label,
+      }));
+    }
+
     // Breadcrumb schema
     const breadcrumbSchema = {
       '@context': 'https://schema.org',
