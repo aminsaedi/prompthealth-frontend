@@ -537,13 +537,17 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     // Resolve page-level type filter once for fallback use
     const params = this._route.snapshot.params as IExpertFinderFilterParams;
     let pageTypeSchemaUrl: string | null = null;
-    if (params.typeOfProviderSlug && this.questionnaires?.typeOfProvider?.answers) {
-      const answer = this.questionnaires.typeOfProvider.answers.find(
-        a => slugify(a.item_text) === params.typeOfProviderSlug
-      );
-      if (answer) {
-        pageTypeSchemaUrl = lookupSpecialtySchema(answer.item_text) || null;
+    try {
+      if (params.typeOfProviderSlug && this.questionnaires?.typeOfProvider?.answers) {
+        const answer = this.questionnaires.typeOfProvider.answers.find(
+          a => slugify(a.item_text) === params.typeOfProviderSlug
+        );
+        if (answer) {
+          pageTypeSchemaUrl = lookupSpecialtySchema(answer.item_text) || null;
+        }
       }
+    } catch (e) {
+      // Defensive: don't let type resolution break schema injection
     }
 
     const items = professionals.slice(0, 10).map((p, i) => {
@@ -1016,6 +1020,18 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
         }
       }
     }
+
+    // Guard: if the route has a typeOfProviderSlug but the payload has no services
+    // (resolveTypeOfProviderSlug() returned null during initController because
+    // questionnaire data wasn't ready), resolve it now so the backend filters
+    // correctly and schema injection receives the right practitioners.
+    if ((!payload.services || payload.services.length === 0) && params.typeOfProviderSlug && !params.categorySlug) {
+      const resolvedId = this.resolveTypeOfProviderSlug(params.typeOfProviderSlug);
+      if (resolvedId && !payload.services?.includes(resolvedId)) {
+        payload.services = [...(payload.services || []), resolvedId];
+      }
+    }
+
     return new Promise<void>((resolve) => {
       this._sharedService.postNoAuth(payload, 'user/filter').pipe(take(1)).subscribe(
         (res: IGetPractitionersResult) => {
