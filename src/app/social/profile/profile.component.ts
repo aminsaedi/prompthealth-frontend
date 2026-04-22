@@ -622,27 +622,36 @@ export class ProfileComponent implements OnInit , OnDestroy {
       };
     }
 
-    // Individual reviews from ratingBy data
-    const ratingByData = p.rawRatingByData || [];
-    const reviewEntries = ratingByData
-      .filter((r: any) => r.review && r.review.trim().length > 0)
-      .slice(0, 5)
-      .map((r: any) => ({
-        '@type': 'Review',
-        'reviewBody': r.review.trim(),
-        'reviewRating': {
-          '@type': 'Rating',
-          'ratingValue': r.rating,
-          'bestRating': 5,
-        },
-        ...(r.createdAt ? { 'datePublished': new Date(r.createdAt).toISOString().split('T')[0] } : {}),
-        'author': {
-          '@type': 'Person',
-          'name': 'PromptHealth Patient',
-        },
-      }));
-    if (reviewEntries.length > 0) {
-      mainSchema.review = reviewEntries;
+    // Individual review entities
+    if (p.rawRatingByData && p.rawRatingByData.length > 0) {
+      const ratingByData = p.rawRatingByData;
+      const reviewEntries = ratingByData
+        .filter((r: any) => r.review && r.review.trim().length > 0)
+        .slice(0, 5)
+        .map((r: any) => {
+          const entry: any = {
+            '@type': 'Review',
+            'reviewBody': r.review.trim(),
+            'author': {
+              '@type': 'Person',
+              'name': 'PromptHealth Patient',
+            },
+          };
+          if (r.rating != null) {
+            entry.reviewRating = {
+              '@type': 'Rating',
+              'ratingValue': r.rating,
+              'bestRating': 5,
+            };
+          }
+          if (r.createdAt) {
+            entry.datePublished = new Date(r.createdAt).toISOString().split('T')[0];
+          }
+          return entry;
+        });
+      if (reviewEntries.length > 0) {
+        mainSchema.review = reviewEntries;
+      }
     }
 
     // Additional structured properties
