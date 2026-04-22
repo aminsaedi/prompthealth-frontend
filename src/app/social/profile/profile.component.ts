@@ -762,6 +762,46 @@ export class ProfileComponent implements OnInit , OnDestroy {
       }
     }
 
+    // Opening hours (structured schema.org OpeningHoursSpecification)
+    const AVAILABILITY_HOURS_MAP: Record<string, { dayOfWeek: string[]; opens: string; closes: string }> = {
+      '5eb1a4e199957471610e6d23': { // Between 9-5
+        dayOfWeek: ['https://schema.org/Monday', 'https://schema.org/Tuesday', 'https://schema.org/Wednesday', 'https://schema.org/Thursday', 'https://schema.org/Friday'],
+        opens: '09:00', closes: '17:00',
+      },
+      '5eb1a4e199957471610e6d22': { // Early morning
+        dayOfWeek: ['https://schema.org/Monday', 'https://schema.org/Tuesday', 'https://schema.org/Wednesday', 'https://schema.org/Thursday', 'https://schema.org/Friday'],
+        opens: '06:00', closes: '09:00',
+      },
+      '5eb1a4e199957471610e6d24': { // Evenings
+        dayOfWeek: ['https://schema.org/Monday', 'https://schema.org/Tuesday', 'https://schema.org/Wednesday', 'https://schema.org/Thursday', 'https://schema.org/Friday'],
+        opens: '17:00', closes: '21:00',
+      },
+      '5eb1a4e199957471610e6d25': { // Saturday
+        dayOfWeek: ['https://schema.org/Saturday'],
+        opens: '09:00', closes: '17:00',
+      },
+      '5eb1a4e199957471610e6d26': { // Sunday
+        dayOfWeek: ['https://schema.org/Sunday'],
+        opens: '09:00', closes: '17:00',
+      },
+    };
+    if (p.availabilityIds?.length > 0) {
+      const hoursSpecs = p.availabilityIds
+        .filter(id => AVAILABILITY_HOURS_MAP[id])
+        .map(id => {
+          const h = AVAILABILITY_HOURS_MAP[id];
+          return {
+            '@type': 'OpeningHoursSpecification',
+            'dayOfWeek': h.dayOfWeek,
+            'opens': h.opens,
+            'closes': h.closes,
+          };
+        });
+      if (hoursSpecs.length > 0) {
+        mainSchema.openingHoursSpecification = hoursSpecs;
+      }
+    }
+
     // Audience / age groups served
     const AGE_RANGE_LABEL_MAP: Record<string, string> = {
       '5eb1a4e199957471610e6cd8': 'Child (<12)',
