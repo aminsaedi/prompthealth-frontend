@@ -797,7 +797,71 @@ export class ProfileComponent implements OnInit , OnDestroy {
       ],
     };
 
-    return [mainSchema, breadcrumbSchema];
+    // FAQPage schema — practitioner-specific Q&A for AI discoverability
+    const locationStr = [p.city, p.state].filter(Boolean).join(', ') || 'Canada';
+    const primarySpecialty = typeOfProvider.length > 0 ? typeOfProvider[0] : null;
+    const faqEntries: Array<{ q: string; a: string }> = [];
+
+    if (primarySpecialty) {
+      faqEntries.push({
+        q: `What does ${p.name} specialize in?`,
+        a: `${p.name} is ${typeOfProvider.join(', ')} based in ${locationStr}.${cleanedHealth.length ? ' They treat conditions including: ' + cleanedHealth.slice(0, 5).join(', ') + '.' : ''}${treatmentModality.length ? ' Treatment approaches include ' + treatmentModality.slice(0, 3).join(', ') + '.' : ''}`,
+      });
+    }
+
+    if (serviceDelivery.length > 0) {
+      faqEntries.push({
+        q: `Does ${p.name} offer virtual or online appointments?`,
+        a: serviceDelivery.some(s => /virtual|online/i.test(s))
+          ? `Yes, ${p.name} offers virtual appointments${serviceDelivery.some(s => /in.person/i.test(s)) ? ' as well as in-person visits' : ''}.`
+          : `${p.name} currently offers ${serviceDelivery.join(', ')} appointments.`,
+      });
+    }
+
+    if (p.acceptInsurance) {
+      const insMap: Record<string, string> = {
+        'both': `${p.name} accepts both insurance and private pay.`,
+        'insurance': `${p.name} accepts insurance.`,
+        'private': `${p.name} operates on a private-pay basis.`,
+      };
+      const insAnswer = insMap[p.acceptInsurance];
+      if (insAnswer) {
+        faqEntries.push({ q: `Does ${p.name} accept insurance?`, a: insAnswer });
+      }
+    }
+
+    if (p.priceFull && p.priceFull !== 'N/A') {
+      faqEntries.push({
+        q: `How much does ${p.name} charge?`,
+        a: `${p.name}'s rate is ${p.priceFull}.`,
+      });
+    }
+
+    if (p.bookingUrl) {
+      faqEntries.push({
+        q: `How do I book an appointment with ${p.name}?`,
+        a: `You can book an appointment with ${p.name} online through their booking page on PromptHealth.`,
+      });
+    }
+
+    if (faqEntries.length < 2) {
+      faqEntries.push({
+        q: `Where is ${p.name} located?`,
+        a: `${p.name} practices in ${locationStr}${primarySpecialty ? ' as ' + primarySpecialty : ''}.`,
+      });
+    }
+
+    const faqSchema = faqEntries.length > 0 ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      'mainEntity': faqEntries.map(entry => ({
+        '@type': 'Question',
+        'name': entry.q,
+        'acceptedAnswer': { '@type': 'Answer', 'text': entry.a },
+      })),
+    } : null;
+
+    return faqSchema ? [mainSchema, breadcrumbSchema, faqSchema] : [mainSchema, breadcrumbSchema];
   }
 
   setProfileMenu() {
