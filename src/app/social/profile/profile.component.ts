@@ -763,11 +763,20 @@ export class ProfileComponent implements OnInit , OnDestroy {
     }
 
     // Audience / age groups served
+    const AGE_RANGE_LABEL_MAP: Record<string, string> = {
+      '5eb1a4e199957471610e6cd8': 'Child (<12)',
+      '5eb1a4e199957471610e6cd9': 'Adolescent (12-18)',
+      '5eb1a4e199957471610e6cda': 'Adult (18+)',
+      '5eb1a4e199957471610e6cdb': 'Senior (>64)',
+    };
     if (p.age_range?.length > 0) {
-      mainSchema.audience = p.age_range.map(label => ({
-        '@type': 'PeopleAudience',
-        'audienceType': label,
-      }));
+      const audienceEntries = p.age_range
+        .map(id => AGE_RANGE_LABEL_MAP[id])
+        .filter(label => !!label)
+        .map(label => ({ '@type': 'PeopleAudience', 'audienceType': label }));
+      if (audienceEntries.length > 0) {
+        mainSchema.audience = audienceEntries;
+      }
     }
 
     if (treatmentModality.length > 0) {
