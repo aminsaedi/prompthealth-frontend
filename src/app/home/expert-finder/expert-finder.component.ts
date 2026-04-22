@@ -24,7 +24,7 @@ import { titleCaseOf } from 'src/app/_helpers/titlecase';
 import { slugify } from 'src/app/_helpers/slugify';
 import { locationsNested } from 'src/app/_helpers/location-data';
 import { isIndexableCityCategory, isIndexableCityType } from 'src/app/_helpers/indexable-combos';
-import { SPECIALTY_SCHEMA_MAP, TYPE_PRIORITY } from 'src/app/_helpers/specialty-schema-map';
+import { SPECIALTY_SCHEMA_MAP, TYPE_PRIORITY, lookupSpecialtySchema } from 'src/app/_helpers/specialty-schema-map';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
@@ -534,12 +534,31 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   }
 
   setListingJsonLd(professionals: Professional[]) {
+    // Resolve page-level type filter once for fallback use
+    const params = this._route.snapshot.params as IExpertFinderFilterParams;
+    let pageTypeSchemaUrl: string | null = null;
+    if (params.typeOfProviderSlug && this.questionnaires?.typeOfProvider?.answers) {
+      const answer = this.questionnaires.typeOfProvider.answers.find(
+        a => slugify(a.item_text) === params.typeOfProviderSlug
+      );
+      if (answer) {
+        pageTypeSchemaUrl = lookupSpecialtySchema(answer.item_text) || null;
+      }
+    }
+
     const items = professionals.slice(0, 10).map((p, i) => {
       const typeNames = this.questionnaires?.typeOfProvider
         ? this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, p.serviceIds)
         : [];
-      const schemaTypeUrls = [...new Set(typeNames.map(t => SPECIALTY_SCHEMA_MAP[t]).filter(Boolean))];
-      const primaryTypeUrl = TYPE_PRIORITY.find(t => schemaTypeUrls.includes(t)) || 'https://schema.org/ProfessionalService';
+      const schemaTypeUrls = [...new Set(typeNames.map(t => lookupSpecialtySchema(t)).filter(Boolean))];
+      let primaryTypeUrl = TYPE_PRIORITY.find(t => schemaTypeUrls.includes(t)) || 'https://schema.org/ProfessionalService';
+
+      // Fallback: when serviceIds resolution yields generic ProfessionalService
+      // and a page-level type filter is active, use the filter's schema type
+      if (primaryTypeUrl === 'https://schema.org/ProfessionalService' && pageTypeSchemaUrl) {
+        primaryTypeUrl = pageTypeSchemaUrl;
+      }
+
       const schemaType = p.isC ? 'MedicalBusiness' : primaryTypeUrl.replace('https://schema.org/', '');
 
       const item: any = {
