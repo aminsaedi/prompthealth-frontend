@@ -615,6 +615,21 @@ export class ProfileComponent implements OnInit , OnDestroy {
       mainSchema.telephone = p.phone;
     }
 
+    if (p.acceptInsurance) {
+      const insVal = p.acceptInsurance;
+      if (insVal === 'insurance' || insVal === 'both') {
+        mainSchema.isAcceptingNewPatients = true;
+      }
+      const paymentMap: Record<string, string> = {
+        'private': 'Private Pay',
+        'insurance': 'Insurance',
+        'both': 'Insurance, Private Pay',
+      };
+      if (paymentMap[insVal]) {
+        mainSchema.paymentAccepted = paymentMap[insVal];
+      }
+    }
+
     if (p.website) {
       mainSchema.sameAs = p.website;
     }
