@@ -309,18 +309,22 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     this.faqItems = this.generateFaqItems(specialist, area);
     this.faqHeading = `Frequently Asked Questions about ${titleCaseOf(specialist)} in ${area}`;
 
-    const routeType = this._route.snapshot.data?.routeType;
+    // SEO-077: there are two URL shapes for every city × specialty combo —
+    // the legacy specialty-first form (/practitioners/(category|type)/:slug/:city)
+    // and the area-first form (/practitioners/area/:city/(category|type)/:slug).
+    // The area-first form is the one we emit in the sitemap, so it's the
+    // canonical for indexable combos. Both shapes point at the area-first
+    // canonical when both city and specialty are set, so opening up the
+    // allowlist doesn't accidentally index two URLs per page.
     let canonicalPath = '/practitioners';
-    if (routeType === 'area-type' && param.city && param.typeOfProviderSlug) {
+    if (param.city && param.typeOfProviderSlug) {
       canonicalPath = `/practitioners/area/${param.city}/type/${param.typeOfProviderSlug}`;
-    } else if (routeType === 'area-category' && param.city && param.categorySlug) {
+    } else if (param.city && param.categorySlug) {
       canonicalPath = `/practitioners/area/${param.city}/category/${param.categorySlug}`;
     } else if (param.categorySlug) {
       canonicalPath += `/category/${param.categorySlug}`;
-      if (param.city) canonicalPath += `/${param.city}`;
     } else if (param.typeOfProviderSlug) {
       canonicalPath += `/type/${param.typeOfProviderSlug}`;
-      if (param.city) canonicalPath += `/${param.city}`;
     } else if (param.city) {
       canonicalPath += `/area/${param.city}`;
     }
@@ -618,7 +622,6 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
   private buildBreadcrumbSchema(): object | null {
     const param = this._route.snapshot.params as IExpertFinderFilterParams;
-    const routeType = this._route.snapshot.data?.routeType;
 
     let specialtyLabel: string = null;
     if (param.categorySlug) {
@@ -640,7 +643,10 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
     let position = 3;
 
-    if (routeType === 'area-type' && cityLabel && param.typeOfProviderSlug) {
+    // SEO-077: city × specialty pages use the area-first canonical URL
+    // regardless of which route shape served the request, so breadcrumb
+    // hierarchy (Practitioners > City > Specialty) must match.
+    if (cityLabel && param.typeOfProviderSlug) {
       breadcrumbItems.push({
         '@type': 'ListItem',
         'position': position++,
@@ -655,7 +661,7 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
           'item': `https://www.prompthealth.ca/practitioners/area/${param.city}/type/${param.typeOfProviderSlug}`,
         });
       }
-    } else if (routeType === 'area-category' && cityLabel && param.categorySlug) {
+    } else if (cityLabel && param.categorySlug) {
       breadcrumbItems.push({
         '@type': 'ListItem',
         'position': position++,
