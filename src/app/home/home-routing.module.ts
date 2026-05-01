@@ -31,6 +31,7 @@ import { TestimonialComponent } from "./testimonial/testimonial.component";
 import { HomeComponent } from "./home.component";
 import { ForPractitionersComponent } from "./for-practitioners/for-practitioners.component";
 import { CitiesHubComponent } from "./cities-hub/cities-hub.component";
+import { EditorialStandardsComponent } from "./editorial-standards/editorial-standards.component";
 
 const routes: Routes = [
   {
@@ -69,6 +70,7 @@ const routes: Routes = [
   { path: 'unsubscribe', redirectTo: '/'},
 
   { path: 'about', component: AboutComponent },
+  { path: 'about/editorial-standards', component: EditorialStandardsComponent },
   { path: 'about/partner', component: AboutPartnerComponent, },
 
   { path: 'plans', component: AboutPractitionerComponent },

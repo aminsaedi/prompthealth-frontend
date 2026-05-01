@@ -117,6 +117,11 @@ function buildSitemapMain(): string {
       <changefreq>monthly</changefreq>
     </url>
     <url>
+      <loc>${baseURL}/about/editorial-standards</loc>
+      <lastmod>${d('/about/editorial-standards')}</lastmod>
+      <changefreq>monthly</changefreq>
+    </url>
+    <url>
       <loc>${baseURL}/plans</loc>
       <lastmod>${d('/plans')}</lastmod>
       <changefreq>monthly</changefreq>

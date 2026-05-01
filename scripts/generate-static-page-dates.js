@@ -16,6 +16,7 @@ const STATIC_PAGES = [
   { route: '/',                     dir: 'src/app/home' },
   { route: '/about',                dir: 'src/app/home/about' },
   { route: '/about/partner',        dir: 'src/app/home/about-partner' },
+  { route: '/about/editorial-standards', dir: 'src/app/home/editorial-standards' },
   { route: '/plans',                dir: 'src/app/home/about-practitioner' },
   { route: '/plans/product',        dir: 'src/app/home/about-company' },
   { route: '/companies',            dir: 'src/app/home/listing-company' },
