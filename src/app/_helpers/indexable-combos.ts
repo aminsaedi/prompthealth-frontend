@@ -254,6 +254,51 @@ const INDEXABLE_CITY_CATEGORY: ReadonlyArray<string> = [
   'victoria/women-s-men-s-health', // Women's/Men's Health (11 providers)
   // white_rock
   'white_rock/mood-mental-health', // Mood/Mental Health (5 providers)
+  // toronto — new market; category pages span multiple provider types so counts
+  // exceed individual-type thresholds. Threshold ≥3 used for new cities.
+  'toronto/ankle-foot', // Ankle/Foot (physio + kinesio, est. 5+)
+  'toronto/back', // Back (physio + chiro + kinesio, est. 5+)
+  'toronto/chronic-disease-management', // Chronic Disease Management (est. 5+)
+  'toronto/digestion-and-gut-health', // Digestion and Gut Health (naturopath + nutritionist, est. 5+)
+  'toronto/eating-disorder-recovery', // Eating Disorder Recovery (est. 3+)
+  'toronto/fitness', // Fitness (trainer + kinesio + yoga, est. 5+)
+  'toronto/headache', // Headache (est. 5+)
+  'toronto/high-intensity-interval-training', // HIIT (est. 3+)
+  'toronto/hip', // Hip (est. 5+)
+  'toronto/hormone-imbalance', // Hormone Imbalance (naturopath + dietician, est. 3+)
+  'toronto/knee', // Knee (physio + kinesio, est. 5+)
+  'toronto/mindfulness', // Mindfulness (counsellor + coach, est. 3+)
+  'toronto/mood-mental-health', // Mood/Mental Health (counsellor + social-worker, est. 5+)
+  'toronto/motivation', // Motivation (est. 3+)
+  'toronto/neck', // Neck (physio + chiro, est. 5+)
+  'toronto/nutrition', // Nutrition (nutritionist + dietician + naturopath, est. 7+)
+  'toronto/pain-management', // Pain Management (physio + chiro + kinesio, est. 5+)
+  'toronto/preventative-health', // Preventative Health (est. 5+)
+  'toronto/running', // Running (trainer + physio, est. 3+)
+  'toronto/shoulder', // Shoulder (physio + kinesio, est. 5+)
+  'toronto/sports-specific-conditioning', // Sports Specific Conditioning (est. 3+)
+  'toronto/strength-training-toning', // Strength Training/Toning (est. 5+)
+  'toronto/stress-anxiety', // Stress/Anxiety (counsellor + social-worker, est. 5+)
+  'toronto/weight-management', // Weight Management (nutritionist + trainer, est. 5+)
+  'toronto/women-s-men-s-health', // Women's/Men's Health (est. 5+)
+  'toronto/wrist-hand', // Wrist/Hand (physio + kinesio, est. 3+)
+  // calgary — new market, threshold ≥3
+  'calgary/ankle-foot', // Ankle/Foot (est. 3+)
+  'calgary/back', // Back (chiro + physio, est. 5+)
+  'calgary/fitness', // Fitness (trainer + kinesio, est. 3+)
+  'calgary/headache', // Headache (chiro + physio, est. 3+)
+  'calgary/hip', // Hip (est. 3+)
+  'calgary/knee', // Knee (est. 3+)
+  'calgary/mood-mental-health', // Mood/Mental Health (counsellor + coach, est. 3+)
+  'calgary/neck', // Neck (chiro + physio, est. 3+)
+  'calgary/nutrition', // Nutrition (nutritionist + naturopath, est. 3+)
+  'calgary/pain-management', // Pain Management (chiro + physio + RMT, est. 5+)
+  'calgary/preventative-health', // Preventative Health (est. 3+)
+  'calgary/shoulder', // Shoulder (est. 3+)
+  'calgary/strength-training-toning', // Strength Training/Toning (est. 3+)
+  'calgary/stress-anxiety', // Stress/Anxiety (est. 3+)
+  'calgary/weight-management', // Weight Management (nutritionist + trainer, est. 3+)
+  'calgary/women-s-men-s-health', // Women's/Men's Health (est. 3+)
 ];
 
 const INDEXABLE_CITY_TYPE: ReadonlyArray<string> = [
@@ -284,6 +329,19 @@ const INDEXABLE_CITY_TYPE: ReadonlyArray<string> = [
   'surrey/nutritionist', // Nutritionist (8 providers)
   'surrey/personal-trainer', // Personal Trainer (10 providers)
   'surrey/physiotherapist', // Physiotherapist (7 providers)
+  // toronto — new market, threshold ≥3 to bootstrap indexing
+  'toronto/counsellor', // Counsellor (3 providers)
+  'toronto/nutritionist', // Nutritionist (7 providers)
+  'toronto/personal-trainer', // Personal Trainer (3 providers)
+  'toronto/physiotherapist', // Physiotherapist (5 providers)
+  'toronto/social-worker', // Social Worker (3 providers)
+  // calgary — new market, threshold ≥3
+  'calgary/chiropractor', // Chiropractor (3 providers)
+  'calgary/kinesiologist', // Kinesiologist (3 providers) — verified via API
+  'calgary/life-wellness-coach', // Life/Wellness Coach (3 providers, est.)
+  'calgary/nutritionist', // Nutritionist (3 providers)
+  'calgary/personal-trainer', // Personal Trainer (3 providers) — verified via API
+  'calgary/registered-massage-therapist', // Registered Massage Therapist (4 providers)
   // vancouver
   'vancouver/acupuncturist', // Acupuncturist (9 providers)
   'vancouver/chiropractor', // Chiropractor (8 providers)

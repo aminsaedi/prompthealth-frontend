@@ -628,13 +628,18 @@ export class ProfileComponent implements OnInit , OnDestroy {
       const reviewEntries = ratingByData
         .filter((r: any) => r.review && r.review.trim().length > 0)
         .slice(0, 5)
-        .map((r: any) => {
+        .map((r: any, idx: number) => {
+          // Use reviewer's first name if available; fall back to a
+          // per-review label so each author is distinct in schema.
+          const reviewerName = (r.firstName && r.firstName.trim())
+            ? r.firstName.trim()
+            : `Patient ${idx + 1}`;
           const entry: any = {
             '@type': 'Review',
             'reviewBody': r.review.trim(),
             'author': {
               '@type': 'Person',
-              'name': 'PromptHealth Patient',
+              'name': reviewerName,
             },
           };
           if (r.rating != null) {

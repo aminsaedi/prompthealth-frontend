@@ -594,6 +594,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
             }
           } : {}),
           ...(p.priceFull && p.priceFull !== 'N/A' ? { 'priceRange': p.priceFull + ' / hr' } : {}),
+          ...(p.phone ? { 'telephone': p.phone } : {}),
+          'isAcceptingNewPatients': true,
         },
       };
       return item;
@@ -1080,6 +1082,12 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
                           );
                           if (fallbackPros.length > 0) {
                             this.setListingJsonLd(fallbackPros);
+                          } else {
+                            // Both geo and geo-less queries returned 0 results.
+                            // Override to noindex so we don't serve an empty
+                            // allowlisted page to Google — even though setMeta()
+                            // already ran, the Meta service can be updated again.
+                            this._uService.setRobots('noindex, follow');
                           }
                         }
                       } catch (e) {
@@ -1090,6 +1098,9 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
                     () => { resolve(); }
                   );
                 return; // resolve() is handled by the fallback subscription
+              } else if (params.city && (params.typeOfProviderSlug || params.categorySlug)) {
+                // No geo filter applied but still 0 results on a city+specialty page.
+                this._uService.setRobots('noindex, follow');
               }
             }
           } catch (e) {

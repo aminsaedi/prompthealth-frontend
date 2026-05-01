@@ -92,6 +92,11 @@ export class UniversalService {
 
     this._canonicalLink.addTag({ rel: 'canonical', href: baseUrl + path });
   }
+
+  /** Update only the robots meta tag without touching any other meta. */
+  setRobots(content: string): void {
+    this._meta.updateTag({ name: 'robots', content });
+  }
 }
 
 class LocalStorage implements Storage {
