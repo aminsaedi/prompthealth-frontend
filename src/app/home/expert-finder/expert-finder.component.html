@@ -184,6 +184,7 @@
                   (click)="preventDefaultClickAction($event)"
                   >
                     <form-item-checkbox
+                    *ngIf="fCompare && fCompare[p._id]"
                     (click)="stopPropagation($event)"
                     [name]="p._id"
                     type="checkbox"

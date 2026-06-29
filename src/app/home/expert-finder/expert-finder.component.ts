@@ -41,9 +41,9 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
 
   get sizeS() { return !window || window.innerWidth < 768; }
   get f() { return this.formFilter?.controls; }
-  get fCompare() { return this.formCompare.controls; }
-  get isFilterApplied() { return this.controller.isFilterApplied; }
-  get isVirtual() { return this.controller.isVirtual; }
+  get fCompare() { return this.formCompare?.controls; }
+  get isFilterApplied() { return this.controller?.isFilterApplied; }
+  get isVirtual() { return this.controller?.isVirtual; }
 
   // list of selected category & typeOfProvider
   // used for showing which field are selected. 
