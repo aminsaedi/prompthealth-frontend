@@ -111,16 +111,16 @@
     class="mt-15p" 
     [ngClass]="{'hidden': (viewState.style == 'map')}"
     >
-      <ng-container *ngIf="controller.professionalsInitialized">
+      <ng-container *ngIf="controller?.professionalsInitialized">
         <div>
-          <p class="font-italic no-one-found" *ngIf="controller.professionals.length == 0">
+          <p class="font-italic no-one-found" *ngIf="controller?.professionals.length == 0">
             There is no one available in your geographical area with your search criteria right now. <br>
             Be sure to check back as our network is growing everyday!
           </p>
         </div>
         <ul class="list-unstyled">
           <a 
-          *ngFor="let p of controller.professionals; let i = index;"
+          *ngFor="let p of controller?.professionals; let i = index;"
           [routerLink]="p.slug ? ['/practitioners', p.slug] : ['/community/profile', p._id]"
           class="text-body"
           >
@@ -201,7 +201,7 @@
         </ul>
   
         <div class="d-flex align-items-center justify-content-center paginator mb-100p">
-          <ng-container *ngFor="let group of controller.paginator; let i = index;">
+          <ng-container *ngFor="let group of controller?.paginator; let i = index;">
             <ng-container *ngFor="let page of group; let j = index">
               <button
               class="btn bg-primary-light mx-2"
@@ -212,7 +212,7 @@
               </button>  
             </ng-container>
             <i iconPh="more-horiz"
-            *ngIf="controller.paginator.length - 1 > i"
+            *ngIf="controller?.paginator.length - 1 > i"
             class="text-primary-dark"
             ></i>
           </ng-container>
@@ -243,7 +243,7 @@
         </section>
       </ng-container>
 
-      <ng-container *ngIf="!controller.professionalsInitialized">
+      <ng-container *ngIf="!controller?.professionalsInitialized">
         <div class="card-container" *ngFor="let i of [0,1,2,3,4,5]">
           <div class="border-top border-line">
             <card-dummy [showImage]="false"></card-dummy>
@@ -262,9 +262,9 @@
     [ngClass]="{full: viewState.style == 'map'}"
     >
       <agm-map
-      [latitude]="controller.mapData.lat" 
-      [longitude]="controller.mapData.lng" 
-      [zoom]="controller.mapData.zoom" 
+      [latitude]="controller?.mapData?.lat" 
+      [longitude]="controller?.mapData?.lng" 
+      [zoom]="controller?.mapData?.zoom" 
       [disableDefaultUI]="false"
       [zoomControl]="false" 
       [gestureHandling]="'greedy'"
@@ -272,7 +272,7 @@
       (boundsChange)="onMapMoved($event)"
       >
 
-      <ng-container *ngFor="let p of controller.professionalsAll; let i = index;">
+      <ng-container *ngFor="let p of controller?.professionalsAll; let i = index;">
         <agm-marker
         *ngIf="p.address"
         [longitude]="p.location[0]"
@@ -419,7 +419,7 @@ id="expert-finder-filter"
             #filter
             id="gender"
             label="Gender"
-            [data]="controller.gender"
+            [data]="controller?.gender"
             [controller]="f.gender"
             [option]="{showInlineWhenEnabled: true}"
             ></form-item-checkbox-group>
@@ -433,7 +433,7 @@ id="expert-finder-filter"
               #filter
               id="languageId"
               label="Language"
-              [data]="controller.languageId"
+              [data]="controller?.languageId"
               [controller]="f.languageId"
               [option]="{showInlineWhenEnabled: true}"
               [selectionsByQuestionnaire]="questionnaires.language"
@@ -448,7 +448,7 @@ id="expert-finder-filter"
               #filter
               id="serviceOfferIds"
               label="Service type"
-              [data]="controller.serviceOfferIds"
+              [data]="controller?.serviceOfferIds"
               [controller]="f.serviceOfferIds"
               [option]="{showInlineWhenEnabled: true}"
               [selectionsByQuestionnaire]="questionnaires.serviceDelivery"
@@ -463,7 +463,7 @@ id="expert-finder-filter"
               #filter
               id="typical_hours"
               label="Availability"
-              [data]="controller.typical_hours"
+              [data]="controller?.typical_hours"
               [controller]="f.typical_hours"
               [option]="{showInlineWhenEnabled: true}"
               [selectionsByQuestionnaire]="questionnaires.availability"
@@ -478,7 +478,7 @@ id="expert-finder-filter"
               #filter
               id="price_per_hours"
               label="Pricing"
-              [data]="controller.price_per_hours"
+              [data]="controller?.price_per_hours"
               [controller]="f.price_per_hours"
               [option]="{showInlineWhenEnabled: true}"
               ></form-item-checkbox-group>
@@ -492,7 +492,7 @@ id="expert-finder-filter"
               #filter
               id="age_range"
               label="Age Group"
-              [data]="controller.age_range"
+              [data]="controller?.age_range"
               [controller]="f.age_range"
               [option]="{showInlineWhenEnabled: true}"
               ></form-item-checkbox-group>
@@ -505,7 +505,7 @@ id="expert-finder-filter"
             #filter
             id="typeOfProvider"
             label="Provider type"
-            [data]="controller.typeOfProvider"
+            [data]="controller?.typeOfProvider"
             [selectionsByQuestionnaire]="questionnaires.typeOfProvider"
             [controller]="f.typeOfProvider"
             [option]="{showInlineWhenEnabled: true}"
@@ -518,7 +518,7 @@ id="expert-finder-filter"
             #filter
             id="category"
             label="Speciality"
-            [data]="controller.category"
+            [data]="controller?.category"
             [controller]="f.category"
             ></form-item-service>
           </div>
@@ -529,7 +529,7 @@ id="expert-finder-filter"
             #filter
             id="customerHealth"
             label="Health condition"
-            [data]="controller.customerHealth"
+            [data]="controller?.customerHealth"
             [selections]="questionnaires.customerHealth.answers"
             [controller]="f.customerHealth"
             ></form-item-customer-health>
