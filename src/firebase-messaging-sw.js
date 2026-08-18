@@ -9,7 +9,6 @@ firebase.initializeApp({
   projectId: "prompthealth-22680",
   storageBucket: "prompthealth-22680.appspot.com",
   messagingSenderId: "740878106701",
-  appId: "1:740878106701:web:a596945bf68f452e37dc04",
-  measurementId: "G-3GTRM03FCL"
+  appId: "1:740878106701:web:a596945bf68f452e37dc04"
 });
 const messaging = firebase.messaging();

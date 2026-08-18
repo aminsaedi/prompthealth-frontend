@@ -19,8 +19,6 @@ export const environment = {
     GOOGLE_CLIENT_ID: '911768983583-lqklmh43d4mjclrkgbtbof9th5251po1.apps.googleusercontent.com',
     FACEBOOK_APP_ID: '373355990729755',
 
-    disableAnalytics: true,
-
     idSA: '610b23f28d24b31170b67c60',
     firebase: {
       apiKey: 'AIzaSyC6JqGOHfsZShTHqy1cq-nWOKhlIULtRmI',
@@ -28,8 +26,7 @@ export const environment = {
       projectId: 'prompthealth-22680',
       storageBucket: 'prompthealth-22680.appspot.com',
       messagingSenderId: '740878106701',
-      appId: '1:740878106701:web:a596945bf68f452e37dc04',
-      measurementId: 'G-3GTRM03FCL'
+      appId: '1:740878106701:web:a596945bf68f452e37dc04'
     }
 
   },

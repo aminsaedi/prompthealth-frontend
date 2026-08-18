@@ -18,7 +18,6 @@ export const environment = {
     APPLE_CLIENT_ID: 'com.prompthealth',
     GOOGLE_CLIENT_ID: '911768983583-hrth6fagg8em1oc6v6mkcv21bsoac0ar.apps.googleusercontent.com',
     FACEBOOK_APP_ID: '2053494228293760',
-    disableAnalytics: false,
 
     idSA: '5edb61483cd45aa28f6413c0',
 
@@ -28,8 +27,7 @@ export const environment = {
       projectId: 'prompthealth-22680',
       storageBucket: 'prompthealth-22680.appspot.com',
       messagingSenderId: '740878106701',
-      appId: '1:740878106701:web:a596945bf68f452e37dc04',
-      measurementId: 'G-3GTRM03FCL'
+      appId: '1:740878106701:web:a596945bf68f452e37dc04'
     }
 
   },
