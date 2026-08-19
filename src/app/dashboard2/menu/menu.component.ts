@@ -37,16 +37,16 @@ export class MenuComponent implements OnInit {
         this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, /*menuNotification, */ menuPassword ];
         break;
       case 'SP':
-        this.menus = [ menuGeneral, menuBookInterview,menuRquestAdditionalVideo, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
+        this.menus = [ menuGeneral, menuBookInterview,menuRquestAdditionalVideo, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuLinks, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
         break;
       case 'C':
-        this.menus = [ menuGeneral, menuServices, menuPerformance, menuBookProvider, menuBadge, menuTeam, menuShowcase, menuVideo, menuSocial, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
+        this.menus = [ menuGeneral, menuServices, menuPerformance, menuBookProvider, menuBadge, menuTeam, menuShowcase, menuVideo, menuSocial, menuLinks, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
         break;
       case 'P':
         this.menus = [ menuGeneral, menuServices, menuFollow, /*menuNotification, */ menuPassword, menuPayment, menuAffiliate ];
         break;
       case 'SA':
-        this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, menuPassword];
+        this.menus = [ menuGeneral, menuLinks, menuFollow, menuBook, menuBookmark, menuPassword];
         break;
     }
   }
@@ -171,6 +171,12 @@ const menuAffiliate: MenuItem = {
   id: 'affiliate',
   title: 'Affiliate',
   icon: 'gift',
+}
+
+const menuLinks: MenuItem = {
+  id: 'links',
+  title: 'Tracked Links',
+  icon: 'external-link',
 }
 
 

@@ -84,6 +84,11 @@ export function app() {
   const stripeProxy = proxy('/stripe', {target: environment.config.BACKEND_BASE, changeOrigin: false});
   server.use('/stripe', stripeProxy);
 
+  /** out proxy — built-in link tracker redirects (/out/<code>) must reach the
+   *  backend instead of being SSR-rendered by the Universal catch-all below. */
+  const outProxy = proxy('/out', {target: environment.config.BACKEND_BASE, changeOrigin: false});
+  server.use('/out', outProxy);
+
 
   /** Serve llms.txt for AI crawlers at well-known path */
   server.get('/.well-known/llms.txt', (req, res) => {

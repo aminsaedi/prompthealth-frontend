@@ -123,11 +123,13 @@ export class Professional extends Profile implements IProfessional{
     //some legacy users have link without http prefix. if so, add it.
     return (this.p.website && !this.p.website.match(/^http/)) ? 'http://' + this.p.website : this.p.website || null;
   }
+  get websiteHref() { return this.p.trackedWebsite || this.website; }
   get websiteLabel() { return this.getURLLabel(this.p.website); }
   get bookingUrl() { 
     //some legacy users have bookingURL without http prefix. if so, add it.
     return (this.p.bookingURL && !this.p.bookingURL.match(/^http/)) ? 'http://' + this.p.bookingURL : this.p.bookingURL || null;
   }
+  get bookingUrlHref() { return this.p.trackedBookingUrl || this.bookingUrl; }
   get organization() { return this.p.professional_organization || null; }
   get certification() { return this.p.certification; }
   get yearsOfExperience() { return this.p.years_of_experience || null; }

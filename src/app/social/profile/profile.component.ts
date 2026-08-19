@@ -999,7 +999,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
     }, err => {
       console.error(err);
     });
-    window.open(this.profile.bookingUrl, '_blank');
+    window.open(this.profile.bookingUrlHref, '_blank');
   }
 
   async onClickFollow() {

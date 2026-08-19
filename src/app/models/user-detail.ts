@@ -64,6 +64,9 @@ export interface IUserDetail {
   verifiedBadge?: boolean;
   typical_hours?: string[];
   bookingURL?: string;
+  /** built-in link tracker: backend sets these to a /out/<code> for external website/booking links */
+  trackedWebsite?: string;
+  trackedBookingUrl?: string;
   calcDistance?: number;
   provideVirtual?: boolean;
   years_of_experience?: string;

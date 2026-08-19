@@ -38,6 +38,7 @@ import { PaymentSubscriptionComponent } from './payment-subscription/payment-sub
 import { PaymentHistoryComponent } from './payment-history/payment-history.component';
 import { PaymentCreditComponent } from './payment-credit/payment-credit.component';
 import { RequestVideoComponent } from './request-video/request-video.component';
+import { LinkManagerComponent } from './link-manager/link-manager.component';
 import { ButtonsModule } from '../buttons/buttons.module';
 
 
@@ -63,6 +64,7 @@ const routes: Routes = [
       { path: 'showcase', component: ShowcaseComponent, },
       { path: 'video', component: VideoManagerComponent, },
       { path: 'social', component: SocialManagerComponent, },
+      { path: 'links', component: LinkManagerComponent, },
 
       { path: 'bookmark', component: BookmarksComponent, },
       { path: 'password', component: PasswordComponent, },
@@ -116,6 +118,7 @@ const routes: Routes = [
     BadgesComponent,
     VideoManagerComponent,
     SocialManagerComponent,
+    LinkManagerComponent,
     AffiliateComponent,
     AffiliateAddComponent,
     AffiliateListComponent,
