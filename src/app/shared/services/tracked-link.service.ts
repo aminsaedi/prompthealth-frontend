@@ -7,11 +7,6 @@ import { environment } from '../../../environments/environment';
 const API_URL = environment.config.API_URL;
 const PH_HOSTS = ['prompthealth.ca', 'www.prompthealth.ca'];
 
-export interface ITrackedResolve {
-  code: string;
-  url: string;
-}
-
 /* Built-in link tracker helper: resolve an external URL to a /out/<code> short link.
  * Profile website/booking already arrive server-embedded (trackedWebsite/trackedBookingUrl);
  * this service is used for content-card / arbitrary external links. Browser-only (SSR-safe).
@@ -19,7 +14,7 @@ export interface ITrackedResolve {
 @Injectable({ providedIn: 'root' })
 export class TrackedLinkService {
 
-  private cache = new Map<string, Observable<ITrackedResolve>>();
+  private cache = new Map<string, Observable<string>>();
 
   constructor(private http: HttpClient) {}
 
@@ -37,20 +32,22 @@ export class TrackedLinkService {
 
   /* Get a /out/<code> for an external URL (cached). Falls back to raw URL on error (fix M4). */
   trackedHref(url: string | null | undefined, slugType?: string): Observable<string> {
-    const fallback = of(url || '');
-    if (!this.isExternal(url)) {
+    const fallback: Observable<string> = of(url || '');
+    if (!url || !this.isExternal(url)) {
       return fallback;
     }
-    if (this.cache.has(url)) {
-      return this.cache.get(url);
+    const key: string = url;
+    const cached = this.cache.get(key);
+    if (cached) {
+      return cached;
     }
-    const req = this.http.post<any>(`${API_URL}link/resolve`, { url, slugType })
+    const req = this.http.post<any>(`${API_URL}link/resolve`, { url: key, slugType })
       .pipe(
-        map((res: any) => (res && res.data && res.data.url) ? res.data.url : (url || '')),
+        map((res: any) => (res && res.data && res.data.url) ? res.data.url : key),
         catchError(() => fallback),
         shareReplay(1),
       );
-    this.cache.set(url, req);
+    this.cache.set(key, req);
     return req;
   }
 }
