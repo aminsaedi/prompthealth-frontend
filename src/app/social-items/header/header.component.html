@@ -203,7 +203,7 @@
             </div>
             <div>
               <div *ngIf="b.title" class="subtitle2 clamp-1line">{{b.title}}</div>
-              <div class="body2 clamp-2line" [ngClass]="{'text-label': b.title}" [innerHTML]="b.summary"></div>
+              <div class="body2 clamp-2line" [ngClass]="{'text-label': b.title}" [innerHTML]="b.summary" trackedContent></div>
             </div>
           </a>
 
