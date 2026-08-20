@@ -18,13 +18,11 @@ export class TrackedLinkService {
 
   constructor(private http: HttpClient) {}
 
-  /* Aligned with backend isExternal: only http/https count as trackable external.
-   * Excludes prompthealth.ca + all subdomains (fix M5). Rejects data:/javascript:/vbscript:. */
+  /* Aligned with backend isExternal: excludes prompthealth.ca + all subdomains (fix M5). */
   isExternal(url: string | null | undefined): boolean {
     if (!url) return false;
     try {
       const u = new URL(url.startsWith('http') ? url : `http://${url}`);
-      if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
       const host = u.hostname;
       return !PH_HOSTS.includes(host) && !host.endsWith('.prompthealth.ca');
     } catch (e) {
