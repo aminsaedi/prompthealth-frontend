@@ -59,6 +59,7 @@ import { FormItemProfileImageComponent } from './form-item-profile-image/form-it
 import { FormAdminGeneralComponent } from './form-admin-general/form-admin-general.component';
 import { CardNoContentComponent } from './card-no-content/card-no-content.component';
 import { TrackedLinkDirective } from './directives/tracked-link.directive';
+import { TrackedContentDirective } from './directives/tracked-content.directive';
 
 const LAZY_DECLARATIONS = [
   UserSidebarComponent,
@@ -109,6 +110,7 @@ const LAZY_DECLARATIONS = [
   FormAdminGeneralComponent,
   CardNoContentComponent,
   TrackedLinkDirective,
+  TrackedContentDirective,
 ];
 
 @NgModule({
