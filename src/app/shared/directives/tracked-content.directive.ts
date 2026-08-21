@@ -46,7 +46,7 @@ export class TrackedContentDirective implements OnInit, OnDestroy {
     } catch (e) {
       return;
     }
-    for (const a of Array.from(anchors)) {
+    for (const a of Array.from(anchors) as Element[]) {
       try {
         const href = a.getAttribute('href') || '';
         if (!href) continue;
