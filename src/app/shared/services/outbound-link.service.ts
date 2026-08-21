@@ -9,6 +9,8 @@ import { UniversalService } from './universal.service';
 const API_URL = environment.config.API_URL;
 const POLICY_CACHE_KEY = 'ph_link_policy';
 const POLICY_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+/* Upper bound on how long a tagging pass may wait for an idle moment. */
+const SWEEP_DEADLINE_MS = 400;
 
 export interface IRouteRule {
   pattern: string;
@@ -275,14 +277,24 @@ export class OutboundLinkService implements OnDestroy {
     }
   }
 
-  /* Batched so a burst of DOM mutations costs one pass, not one pass each. */
+  /* Batched so a burst of DOM mutations costs one pass, not one pass each.
+   *
+   * The deadline is not optional. An infinite-scroll feed keeps the main thread
+   * busy enough that a plain requestIdleCallback can go unserved for as long as
+   * the user keeps scrolling, which left inline links in post bodies untagged
+   * until they were clicked. A click still tags the link it is about to follow,
+   * but the href also has to be right for hover, middle-click and "copy link
+   * address", so the pass needs a guaranteed upper bound. */
   private scheduleSweep(): void {
     if (this.sweepHandle !== null) { return; }
-    const schedule = (window as any).requestIdleCallback || window.requestAnimationFrame;
-    this.sweepHandle = schedule.call(window, () => {
+    const run = () => {
       this.sweepHandle = null;
       this.sweep();
-    });
+    };
+    const idle = (window as any).requestIdleCallback;
+    this.sweepHandle = idle
+      ? idle.call(window, run, { timeout: SWEEP_DEADLINE_MS })
+      : window.setTimeout(run, 100);
   }
 
   private sweep(force = false): void {
