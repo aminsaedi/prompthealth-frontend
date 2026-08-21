@@ -217,18 +217,22 @@
           <div class="form-group col-md-3">
             <label class="small">utm_source</label>
             <input class="form-control" [(ngModel)]="form.utmSource" placeholder="prompthealth">
+            <small class="form-text text-muted" *ngIf="utmPreview('utmSource')">{{ utmPreview('utmSource') }}</small>
           </div>
           <div class="form-group col-md-3">
             <label class="small">utm_medium</label>
             <input class="form-control" [(ngModel)]="form.utmMedium" placeholder="referral">
+            <small class="form-text text-muted" *ngIf="utmPreview('utmMedium')">{{ utmPreview('utmMedium') }}</small>
           </div>
           <div class="form-group col-md-3">
             <label class="small">utm_campaign</label>
             <input class="form-control" [(ngModel)]="form.utmCampaign" placeholder="spring-2026">
+            <small class="form-text text-muted" *ngIf="utmPreview('utmCampaign')">{{ utmPreview('utmCampaign') }}</small>
           </div>
           <div class="form-group col-md-3">
             <label class="small">utm_content</label>
             <input class="form-control" [(ngModel)]="form.utmContent" placeholder="poster-a">
+            <small class="form-text text-muted" *ngIf="utmPreview('utmContent')">{{ utmPreview('utmContent') }}</small>
           </div>
         </div>
         <div class="form-row align-items-end">

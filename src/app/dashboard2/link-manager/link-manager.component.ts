@@ -9,6 +9,7 @@ import {
   LinkManagerService,
 } from 'src/app/shared/services/link-manager.service';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
+import { utmSafe } from 'src/app/shared/services/outbound-link.service';
 import { environment } from 'src/environments/environment';
 
 type Tab = 'overview' | 'links' | 'policy';
@@ -280,6 +281,15 @@ export class LinkManagerComponent implements OnInit, OnDestroy {
       if (value !== '' && value !== null && value !== undefined) { out[key] = value; }
     });
     return out;
+  }
+
+  /* What the server will actually store and send, shown next to the field so a
+   * value that gets rewritten is visible before it is saved rather than after. */
+  utmPreview(field: 'utmSource' | 'utmMedium' | 'utmCampaign' | 'utmContent'): string {
+    const raw = (this.form as any)[field] || '';
+    const safe = utmSafe(raw, field === 'utmSource' || field === 'utmMedium' ? 50 : 100);
+    if (!raw || safe === raw) { return ''; }
+    return safe ? `will be sent as ${safe}` : 'unusable, will be omitted';
   }
 
   private messageOf(err: any, fallback: string): string {

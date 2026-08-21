@@ -54,6 +54,55 @@ const FALLBACK_POLICY: ILinkPolicy = {
   beacon: true,
 };
 
+/* The character set every major analytics tool handles without complaint.
+ * Anything outside it arrives percent-encoded in the destination's reports
+ * (%E2%80%94 for an em dash), gets split on a delimiter, or is dropped.
+ * Mirrors utmSafe in the backend's link service; the two are applied at
+ * opposite ends of the same contract, so they must agree. */
+const UTM_SAFE = /^[a-z0-9][a-z0-9._~-]*$/;
+const UTM_MAX_LENGTH = 100;
+const UTM_TRANSLITERATE: [RegExp, string][] = [
+  [/[\u2010-\u2015\u2212]/g, '-'],
+  [/[\u2018\u2019\u201A\u201B\u2032]/g, ''],
+  [/[\u201C\u201D\u201E\u201F\u2033]/g, ''],
+  [/[\u2026]/g, '-'],
+  [/[&+]/g, '-and-'],
+  [/[@]/g, '-at-'],
+];
+
+/* Returns '' when nothing usable survives, which callers treat as "do not emit
+ * this parameter" rather than emitting an empty one. */
+export function utmSafe(value: any, maxLength: number = UTM_MAX_LENGTH): string {
+  if (value === null || value === undefined) { return ''; }
+  let out = String(value).trim();
+  if (!out) { return ''; }
+  UTM_TRANSLITERATE.forEach(([pattern, replacement]) => { out = out.replace(pattern, replacement); });
+  out = out.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+  out = out.toLowerCase();
+  out = out.replace(/[^a-z0-9._~-]+/g, '-');
+  out = out.replace(/-{2,}/g, '-');
+  out = out.replace(/^[-._~]+|[-._~]+$/g, '');
+  if (out.length > maxLength) { out = out.slice(0, maxLength).replace(/[-._~]+$/, ''); }
+  return UTM_SAFE.test(out) ? out : '';
+}
+
+/* A page path as one readable token: /community/profile/abc becomes
+ * community-profile-abc. location.pathname is percent-encoded, so emitting it
+ * directly produced utm_content=%2Fcommunity%2Ffeed — valid, but unreadable in
+ * a partner's reports and liable to be cut mid-escape by a length limit. */
+export function utmPathToken(path: string): string {
+  return utmSafe(decodePath(path).replace(/^\/+|\/+$/g, '').replace(/\//g, '-')) || 'home';
+}
+
+/* A path can carry escapes that are not valid UTF-8, which throws. */
+function decodePath(path: string): string {
+  try {
+    return decodeURIComponent(String(path || ''));
+  } catch (e) {
+    return String(path || '');
+  }
+}
+
 /* The href we last wrote, so a later pass can tell our value from one the page
  * changed underneath us. */
 const TAGGED_ATTR = 'data-ph-tagged';
@@ -229,13 +278,22 @@ export class OutboundLinkService implements OnDestroy {
     }
     if (!this.policy.overrideExisting && url.searchParams.has('utm_source')) { return null; }
 
+    /* Every value is normalised before it goes out, and an empty result means
+     * the parameter is omitted rather than emitted blank. The policy is editable,
+     * so nothing here can assume its values are already well formed. */
     const page = path || window.location.pathname;
-    url.searchParams.set('utm_source', this.policy.source);
-    url.searchParams.set('utm_medium', this.policy.medium);
-    url.searchParams.set('utm_campaign', this.campaignForPath(page));
+    const values: [string, string][] = [
+      ['utm_source', utmSafe(this.policy.source, 50)],
+      ['utm_medium', utmSafe(this.policy.medium, 50)],
+      ['utm_campaign', utmSafe(this.campaignForPath(page))],
+    ];
     if (this.policy.includeContent) {
-      url.searchParams.set('utm_content', page.slice(0, 100));
+      values.push(['utm_content', utmPathToken(page)]);
     }
+    const usable = values.filter(([, value]) => !!value);
+    if (!usable.length) { return null; }
+    usable.forEach(([key, value]) => url.searchParams.set(key, value));
+
     const tagged = url.toString();
     return tagged === href ? null : tagged;
   }
@@ -350,9 +408,10 @@ export class OutboundLinkService implements OnDestroy {
     const body = JSON.stringify({
       url,
       path: path.slice(0, 256),
-      utmSource: this.policy.source,
-      utmMedium: this.policy.medium,
-      utmCampaign: this.campaignForPath(path),
+      utmSource: utmSafe(this.policy.source, 50),
+      utmMedium: utmSafe(this.policy.medium, 50),
+      utmCampaign: utmSafe(this.campaignForPath(path)),
+      utmContent: this.policy.includeContent ? utmPathToken(path) : '',
     });
     const endpoint = `${API_URL}link/track`;
 
