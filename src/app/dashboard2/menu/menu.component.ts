@@ -175,7 +175,7 @@ const menuAffiliate: MenuItem = {
 
 const menuLinks: MenuItem = {
   id: 'links',
-  title: 'Tracked Links',
+  title: 'Link manager',
   icon: 'external-link',
 }
 

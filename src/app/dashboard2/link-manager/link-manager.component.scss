@@ -1,2 +1,54 @@
 .nowrap { white-space: nowrap; }
-.min-w-0 { min-width: 0; }
+.min-w-0 { min-width: 0; max-width: 0; }
+
+.link-manager {
+  .stat {
+    background: #f7f8fa;
+    border-radius: 8px;
+    padding: 14px 16px;
+    height: 100%;
+
+    &.stat-alert { background: #fdf1f1; }
+  }
+  .stat-value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .stat-label { font-size: 12px; color: #6c757d; margin-top: 2px; }
+
+  .trend {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 120px;
+  }
+  .trend-bar {
+    flex: 1 1 0;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    min-width: 2px;
+  }
+  .trend-fill {
+    width: 100%;
+    background: #4a7cf7;
+    border-radius: 2px 2px 0 0;
+    min-height: 1px;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+    background: #ced4da;
+  }
+  .health-ok { background: #2fa36b; }
+  .health-redirect,
+  .health-warn,
+  .health-blocked { background: #e0a72e; }
+  .health-broken,
+  .health-unreachable,
+  .health-bad { background: #d9534f; }
+  .health-unknown { background: #ced4da; }
+
+  table td { vertical-align: middle; }
+}

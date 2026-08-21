@@ -9,6 +9,7 @@ import { slideVerticalAnimation } from './_helpers/animations';
 import { SharedService } from './shared/services/shared.service';
 import { IResponseData } from './models/response-data';
 import { RegionService, RegionType } from './shared/services/region.service';
+import { OutboundLinkService } from './shared/services/outbound-link.service';
 import { Subscription , Subject } from 'rxjs';
 import { } from 'googlemaps';
 import { takeUntil } from 'rxjs/operators';
@@ -44,6 +45,7 @@ export class AppComponent implements OnInit , OnDestroy {
     private _uploadObserver: UploadObserverService,
     private _sharedService: SharedService,
     private _regionService: RegionService,
+    private _outboundLink: OutboundLinkService,
   ) { }
 
   @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
@@ -60,6 +62,10 @@ export class AppComponent implements OnInit , OnDestroy {
 
   async ngOnInit() {
     if (!this._uService.isServer) {
+      /* Tags every outbound link on the site with UTM parameters and reports
+       * outbound clicks. One listener on the document, installed once. */
+      this._outboundLink.install();
+
       this._uploadObserver.uploadingStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(status => {
         this.onUploadingStatusChanged(status);
       });

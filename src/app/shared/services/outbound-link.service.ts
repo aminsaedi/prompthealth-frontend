@@ -1,0 +1,371 @@
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { UniversalService } from './universal.service';
+
+const API_URL = environment.config.API_URL;
+const POLICY_CACHE_KEY = 'ph_link_policy';
+const POLICY_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+
+export interface IRouteRule {
+  pattern: string;
+  campaign: string;
+  label?: string;
+}
+
+export interface ILinkPolicy {
+  enabled: boolean;
+  source: string;
+  medium: string;
+  defaultCampaign: string;
+  routeRules: IRouteRule[];
+  includeContent: boolean;
+  overrideExisting: boolean;
+  internalHosts: string[];
+  excludeHosts: string[];
+  beacon: boolean;
+}
+
+/* Mirrors the server default so links are tagged correctly on the very first
+ * paint, and stay tagged if the policy request fails. */
+const FALLBACK_POLICY: ILinkPolicy = {
+  enabled: true,
+  source: 'prompthealth',
+  medium: 'referral',
+  defaultCampaign: 'site',
+  routeRules: [
+    { pattern: '^/community/profile/|^/profile/', campaign: 'profile' },
+    { pattern: '^/community/(article|content)/', campaign: 'article' },
+    { pattern: '^/community/event/', campaign: 'event' },
+    { pattern: '^/practitioners', campaign: 'directory' },
+    { pattern: '^/community', campaign: 'feed' },
+    { pattern: '^/dashboard', campaign: 'dashboard' },
+    { pattern: '^/$|^/about|^/plans|^/for-practitioners', campaign: 'marketing' },
+  ],
+  includeContent: true,
+  overrideExisting: false,
+  internalHosts: ['prompthealth.ca', 'www.prompthealth.ca', 'ocean.prompthealth.ca'],
+  excludeHosts: [],
+  beacon: true,
+};
+
+/* The href we last wrote, so a later pass can tell our value from one the page
+ * changed underneath us. */
+const TAGGED_ATTR = 'data-ph-tagged';
+/* The author's original href, kept so re-tagging always starts from the source
+ * rather than from a URL that already carries last route's parameters. */
+const SOURCE_ATTR = 'data-ph-href';
+
+/*
+ * Tags every outbound link on the site with UTM parameters and reports the click.
+ *
+ * One document-level listener replaces the per-component approach this used to
+ * take. That matters for two reasons. Coverage: a listener on the document sees
+ * links in the feed, in article bodies rendered through innerHTML, in profile
+ * pages and in anything added later, without each of those surfaces having to
+ * opt in and without any of them being able to forget. Timing: tagging is a
+ * local string operation against a cached policy, so the correct href is in
+ * place before the browser follows it. The previous design asked the server for
+ * a short code per link, which meant a link clicked before its response arrived
+ * navigated untagged.
+ *
+ * The click report is a separate, best-effort concern sent with sendBeacon, so a
+ * slow or failed report never delays or blocks navigation.
+ */
+@Injectable({ providedIn: 'root' })
+export class OutboundLinkService implements OnDestroy {
+
+  private policy: ILinkPolicy = FALLBACK_POLICY;
+  private compiledRules: { rule: IRouteRule; regex: RegExp }[] = [];
+  private installed = false;
+  private observer: MutationObserver = null;
+  private sweepHandle: any = null;
+  private reported = new Set<string>();
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private http: HttpClient,
+    private uService: UniversalService,
+    private ngZone: NgZone,
+    private router: Router,
+  ) {
+    this.compileRules();
+  }
+
+  /* Called once from the app root. Safe to call again; it is idempotent. */
+  install(): void {
+    if (this.installed || !this.uService.isBrowser) { return; }
+    this.installed = true;
+
+    this.loadPolicy();
+
+    /* Outside Angular: these fire on every click and DOM mutation on the page,
+     * and none of them touch component state. */
+    this.ngZone.runOutsideAngular(() => {
+      document.addEventListener('click', this.onPointer, true);
+      document.addEventListener('auxclick', this.onPointer, true);
+      document.addEventListener('contextmenu', this.onPointer, true);
+
+      this.scheduleSweep();
+      this.observer = new MutationObserver(() => this.scheduleSweep());
+      this.observer.observe(document.body, { childList: true, subtree: true });
+    });
+
+    /* utm_content and the campaign rule both depend on the current path, so a
+     * client-side navigation invalidates every tag on the page. */
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd), takeUntil(this.destroy$))
+      .subscribe(() => this.resetPageState());
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (!this.uService.isBrowser || !this.installed) { return; }
+    document.removeEventListener('click', this.onPointer, true);
+    document.removeEventListener('auxclick', this.onPointer, true);
+    document.removeEventListener('contextmenu', this.onPointer, true);
+    if (this.observer) { this.observer.disconnect(); this.observer = null; }
+  }
+
+  // --------------------------------------------------------------- policy
+
+  private compileRules(): void {
+    this.compiledRules = [];
+    (this.policy.routeRules || []).forEach(rule => {
+      try {
+        this.compiledRules.push({ rule, regex: new RegExp(rule.pattern, 'i') });
+      } catch (e) {
+        /* A malformed pattern must not take tagging down with it. */
+      }
+    });
+  }
+
+  private loadPolicy(): void {
+    const cached = this.readCachedPolicy();
+    if (cached) {
+      this.policy = cached;
+      this.compileRules();
+    }
+    this.http.get<any>(`${API_URL}link/policy`).subscribe(
+      res => {
+        if (res && res.data) {
+          this.policy = { ...FALLBACK_POLICY, ...res.data };
+          this.compileRules();
+          this.writeCachedPolicy(this.policy);
+          this.sweep(true);
+        }
+      },
+      () => { /* keep the cached or fallback policy */ },
+    );
+  }
+
+  private readCachedPolicy(): ILinkPolicy {
+    try {
+      const raw = this.uService.localStorage.getItem(POLICY_CACHE_KEY);
+      if (!raw) { return null; }
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.at || Date.now() - parsed.at > POLICY_CACHE_TTL_MS) { return null; }
+      return { ...FALLBACK_POLICY, ...parsed.policy };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  private writeCachedPolicy(policy: ILinkPolicy): void {
+    try {
+      this.uService.localStorage.setItem(POLICY_CACHE_KEY, JSON.stringify({ at: Date.now(), policy }));
+    } catch (e) {
+      /* private browsing or a full quota; tagging still works from memory */
+    }
+  }
+
+  // ----------------------------------------------------------------- urls
+
+  private hostMatches(hostname: string, entry: string): boolean {
+    const candidate = (entry || '').toLowerCase().replace(/^\*?\./, '');
+    if (!candidate) { return false; }
+    return hostname === candidate || hostname.endsWith('.' + candidate);
+  }
+
+  /* An outbound link is an http(s) link to a host we do not own and have not
+   * excluded. Everything else — in-app routes, anchors, mailto:, tel:,
+   * javascript: — is left exactly as the author wrote it. */
+  isOutbound(href: string): boolean {
+    if (!href) { return false; }
+    const trimmed = href.trim();
+    if (!trimmed || trimmed.startsWith('#')) { return false; }
+    let url: URL;
+    try {
+      url = new URL(trimmed, document.baseURI);
+    } catch (e) {
+      return false;
+    }
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') { return false; }
+    const hostname = url.hostname.toLowerCase();
+    if ((this.policy.internalHosts || []).some(entry => this.hostMatches(hostname, entry))) { return false; }
+    if ((this.policy.excludeHosts || []).some(entry => this.hostMatches(hostname, entry))) { return false; }
+    return true;
+  }
+
+  private campaignForPath(path: string): string {
+    const match = this.compiledRules.find(entry => entry.regex.test(path));
+    return match ? match.rule.campaign : this.policy.defaultCampaign;
+  }
+
+  /* Returns the tagged URL, or null when nothing needs to change. */
+  taggedUrl(href: string, path?: string): string {
+    if (!this.policy.enabled || !this.isOutbound(href)) { return null; }
+    let url: URL;
+    try {
+      url = new URL(href.trim(), document.baseURI);
+    } catch (e) {
+      return null;
+    }
+    if (!this.policy.overrideExisting && url.searchParams.has('utm_source')) { return null; }
+
+    const page = path || window.location.pathname;
+    url.searchParams.set('utm_source', this.policy.source);
+    url.searchParams.set('utm_medium', this.policy.medium);
+    url.searchParams.set('utm_campaign', this.campaignForPath(page));
+    if (this.policy.includeContent) {
+      url.searchParams.set('utm_content', page.slice(0, 100));
+    }
+    const tagged = url.toString();
+    return tagged === href ? null : tagged;
+  }
+
+  // -------------------------------------------------------------- tagging
+
+  private tag(anchor: HTMLAnchorElement, force = false): void {
+    const href = anchor.getAttribute('href');
+    if (!href) { return; }
+    if (!this.isOutbound(href)) {
+      anchor.removeAttribute(TAGGED_ATTR);
+      anchor.removeAttribute(SOURCE_ATTR);
+      return;
+    }
+
+    const written = anchor.getAttribute(TAGGED_ATTR);
+    const recorded = anchor.getAttribute(SOURCE_ATTR);
+    /* If the href is still the one we wrote, the author's URL is the recorded
+     * one. If it is not, the page replaced it and that new value is the source. */
+    const ours = written !== null && written === href && recorded !== null;
+    const source = ours ? recorded : href;
+    if (ours && !force) { return; }
+
+    const tagged = this.taggedUrl(source);
+    anchor.setAttribute(SOURCE_ATTR, source);
+    if (tagged) {
+      anchor.setAttribute('href', tagged);
+      anchor.setAttribute(TAGGED_ATTR, tagged);
+    } else {
+      if (href !== source) { anchor.setAttribute('href', source); }
+      anchor.setAttribute(TAGGED_ATTR, source);
+    }
+
+    /* Outbound links that open in a new tab should not hand the destination a
+     * usable window.opener. */
+    if (anchor.target === '_blank') {
+      const rel = anchor.getAttribute('rel') || '';
+      if (!/noopener/.test(rel)) { anchor.setAttribute('rel', (rel + ' noopener').trim()); }
+    }
+  }
+
+  /* Batched so a burst of DOM mutations costs one pass, not one pass each. */
+  private scheduleSweep(): void {
+    if (this.sweepHandle !== null) { return; }
+    const schedule = (window as any).requestIdleCallback || window.requestAnimationFrame;
+    this.sweepHandle = schedule.call(window, () => {
+      this.sweepHandle = null;
+      this.sweep();
+    });
+  }
+
+  private sweep(force = false): void {
+    let anchors: NodeListOf<Element>;
+    try {
+      anchors = document.querySelectorAll('a[href]');
+    } catch (e) {
+      return;
+    }
+    for (let i = 0; i < anchors.length; i++) {
+      try {
+        this.tag(anchors[i] as HTMLAnchorElement, force);
+      } catch (e) {
+        /* one bad anchor must not stop the sweep */
+      }
+    }
+  }
+
+  // --------------------------------------------------------------- clicks
+
+  private onPointer = (event: Event): void => {
+    try {
+      const target = event.target as Element;
+      if (!target || !target.closest) { return; }
+      const anchor = target.closest('a[href]') as HTMLAnchorElement;
+      if (!anchor) { return; }
+      const href = anchor.getAttribute('href');
+      if (!this.isOutbound(href)) { return; }
+
+      /* Tag before the browser acts on the click. This is the guarantee that
+       * makes the idle sweep an optimisation rather than a requirement. */
+      this.tag(anchor);
+      if (event.type !== 'contextmenu') {
+        /* Report the author's URL, not the one we just tagged. The catalog keys
+         * on the destination; reporting our own campaign back would file the
+         * same site under a new entry for every page it is linked from. */
+        this.report(anchor.getAttribute(SOURCE_ATTR) || href);
+      }
+    } catch (e) {
+      /* never interfere with a navigation */
+    }
+  };
+
+  /* One report per destination per page view. Repeated clicks on the same link
+   * in the same view are the same intent and would only inflate the count. */
+  private report(url: string): void {
+    if (!this.policy.beacon || !url) { return; }
+    const path = window.location.pathname;
+    const key = `${path}|${url}`;
+    if (this.reported.has(key)) { return; }
+    this.reported.add(key);
+
+    const body = JSON.stringify({
+      url,
+      path: path.slice(0, 256),
+      utmSource: this.policy.source,
+      utmMedium: this.policy.medium,
+      utmCampaign: this.campaignForPath(path),
+    });
+    const endpoint = `${API_URL}link/track`;
+
+    try {
+      if (navigator.sendBeacon) {
+        /* text/plain keeps this a CORS simple request, so it is not held up by
+         * a preflight the page is about to navigate away from. */
+        navigator.sendBeacon(endpoint, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
+        return;
+      }
+    } catch (e) {
+      /* fall through to fetch */
+    }
+    try {
+      fetch(endpoint, { method: 'POST', body, keepalive: true, headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
+        .catch(() => undefined);
+    } catch (e) {
+      /* reporting is best effort */
+    }
+  }
+
+  /* Drops the per-page-view report memo and re-tags, because the campaign and
+   * utm_content values are derived from the path that just changed. */
+  resetPageState(): void {
+    this.reported.clear();
+    this.sweep(true);
+  }
+}

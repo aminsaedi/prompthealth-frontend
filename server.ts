@@ -86,8 +86,8 @@ export function app() {
 
   /** out proxy — built-in link tracker redirects (/out/<code>) must reach the
    *  backend instead of being SSR-rendered by the Universal catch-all below.
-   *  Targets the PUBLIC backend (ocean) because 127.0.0.1:3001 (BACKEND_BASE)
-   *  is not reachable from this SSR container in the split-host deployment. */
+   *  Targets the public backend because BACKEND_BASE (127.0.0.1:3001) is not
+   *  reachable from this SSR container in the split-host deployment. */
   const outTarget = environment.config.API_URL.replace(/\/api\/v1\/?$/, '');
   const outProxy = proxy('/out', { target: outTarget || 'https://ocean.prompthealth.ca', changeOrigin: true });
   server.use('/out', outProxy);

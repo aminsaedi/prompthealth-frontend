@@ -76,7 +76,6 @@
     <a 
     [href]="post.link"
     target="_blank"
-    appTrackedLink="EVENT"
     class="btn btn-primary w-100"
     (click)="onClickLinkToEvent($event)"
     >Register</a>
@@ -92,6 +91,5 @@
   class="post-content"
   [ngClass]="{shorten: shorten, hidden: isContentGradientShown}"
   [innerHTML]="post.descriptionSanitized"
-  trackedContent="EVENT"
   ></div>
 </div>

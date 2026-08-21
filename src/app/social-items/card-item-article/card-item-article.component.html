@@ -58,7 +58,6 @@ class="h4"
   class="post-content"
   [ngClass]="{shorten: (shorten && !post.isAcademy), hidden: isContentGradientShown}"
   [innerHTML]="post.descriptionSanitized"
-  trackedContent
   ></div>
 </div>
 
@@ -100,7 +99,6 @@ style="max-width: 400px; width: 100%;"
     <a 
     [href]="post.authorWebsite" 
     target="_blank"
-    appTrackedLink="ARTICLE"
     class="d-inline-block text-label"
     style="word-break: break-all; max-width: 80%;"
     (click)="onClickExternalLink($event)"
