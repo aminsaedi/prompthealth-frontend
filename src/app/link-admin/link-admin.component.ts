@@ -47,10 +47,12 @@ export class LinkAdminComponent implements OnInit, OnDestroy {
 
   get isAdmin(): boolean { return this.store.isAdmin; }
 
-  /* The report builder carries its own range alongside its filters, so the
-   * header picker would be a second control claiming the same job. */
+  /* The window scopes figures, so it belongs on the pages that show figures.
+   * The report builder carries its own range alongside its filters, and the
+   * policy editor has no figures for it to act on. */
   get showWindow(): boolean {
-    return this.router.url.indexOf('/link-admin/reports') !== 0;
+    const url = this.router.url;
+    return url.indexOf('/link-admin/reports') !== 0 && url.indexOf('/link-admin/tagging') !== 0;
   }
 
   get sections(): Section[] {

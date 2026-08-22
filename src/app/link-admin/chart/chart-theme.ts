@@ -122,8 +122,10 @@ export const rankingConfig = (labels: string[], values: number[], title = 'Click
 });
 
 /* A split of a whole — device mix, destination health. A doughnut rather than a
- * pie so the total can sit in the middle where it is actually legible. */
-export const splitConfig = (labels: string[], values: number[], colors: string[]): ChartConfiguration => ({
+ * pie so the total can sit in the middle where it is actually legible. The
+ * legend is optional: where the panel already lists the slices by name and
+ * count, a second copy of the same six words beside the ring is noise. */
+export const splitConfig = (labels: string[], values: number[], colors: string[], legend = true): ChartConfiguration => ({
   type: 'doughnut',
   data: {
     labels,
@@ -137,7 +139,7 @@ export const splitConfig = (labels: string[], values: number[], colors: string[]
   options: {
     ...baseOptions(),
     cutoutPercentage: 68,
-    legend: { display: true, position: 'right', labels: { ...font, boxWidth: 10, usePointStyle: true } },
+    legend: { display: legend, position: 'right', labels: { ...font, boxWidth: 10, usePointStyle: true } },
     tooltips: { ...baseOptions().tooltips, mode: 'nearest', intersect: true },
     hover: { mode: 'nearest', intersect: true },
   } as any,

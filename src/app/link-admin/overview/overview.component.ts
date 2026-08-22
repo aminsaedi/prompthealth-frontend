@@ -76,6 +76,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
           this.healthSlices.map(slice => slice.label),
           this.healthSlices.map(slice => slice.count),
           this.healthSlices.map(slice => TONE_COLOR[slice.tone]),
+          /* The list under the ring is the legend, and it can be clicked. */
+          false,
         )
       : null;
 
