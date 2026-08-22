@@ -1,12 +1,12 @@
 <form class="panel filters mb-20p" (ngSubmit)="submit()" novalidate>
   <div class="form-row align-items-end">
-    <div class="form-group col-md-4 mb-10p">
+    <div class="form-group col-12 mb-10p">
       <label class="field-label" for="linkSearch">Search</label>
       <input id="linkSearch" class="form-control" [(ngModel)]="draft.search" name="search"
              placeholder="Title, code, URL or host">
     </div>
 
-    <div class="form-group col-6 col-md-2 mb-10p">
+    <div class="form-group col-6 col-md-3 mb-10p">
       <label class="field-label" for="linkSource">Origin</label>
       <select id="linkSource" class="form-control" [(ngModel)]="draft.source" name="source" (change)="submit()">
         <option value="">Any</option>
@@ -14,7 +14,7 @@
       </select>
     </div>
 
-    <div class="form-group col-6 col-md-2 mb-10p">
+    <div class="form-group col-6 col-md-3 mb-10p">
       <label class="field-label" for="linkHealth">Destination</label>
       <select id="linkHealth" class="form-control" [(ngModel)]="draft.health" name="health" (change)="submit()">
         <option value="">Any</option>
@@ -22,14 +22,14 @@
       </select>
     </div>
 
-    <div class="form-group col-6 col-md-2 mb-10p">
+    <div class="form-group col-6 col-md-3 mb-10p">
       <label class="field-label" for="linkSort">Sort by</label>
       <select id="linkSort" class="form-control" [(ngModel)]="draft.sortBy" name="sortBy" (change)="submit()">
         <option *ngFor="let sort of SORTS" [value]="sort.value">{{ sort.label }}</option>
       </select>
     </div>
 
-    <div class="form-group col-6 col-md-2 mb-10p filters-actions">
+    <div class="form-group col-6 col-md-3 mb-10p filters-actions">
       <button type="button" class="btn btn-text small" (click)="reset()" [disabled]="!hasFilters">Clear</button>
       <button type="submit" class="btn btn-primary small">Search</button>
     </div>
@@ -50,12 +50,10 @@
       <caption class="sr-only">Outbound links, {{ total }} in total</caption>
       <thead>
         <tr>
-          <th scope="col">Link</th>
-          <th scope="col">Tagging</th>
-          <th scope="col">Origin</th>
-          <th scope="col">Destination</th>
-          <th scope="col" class="num">Clicks</th>
-          <th scope="col"><span class="sr-only">Actions</span></th>
+          <th scope="col" class="cell-link">Link</th>
+          <th scope="col" class="cell-health">Destination</th>
+          <th scope="col" class="cell-clicks num">Clicks</th>
+          <th scope="col" class="cell-actions"><span class="sr-only">Actions</span></th>
         </tr>
       </thead>
       <tbody>
@@ -63,6 +61,7 @@
           <td class="cell-link">
             <span class="row-title">{{ label(link) }}</span>
             <a class="row-url" [href]="link.destinationUrl" target="_blank" rel="noopener">{{ link.destinationUrl }}</a>
+            <span class="row-meta">{{ provenance(link) }}</span>
             <span class="row-meta" *ngIf="link.foundOn">Found on {{ link.foundOn }}</span>
             <span class="row-code" *ngIf="link.managed">
               <code>/out/{{ link.code }}</code>
@@ -71,16 +70,6 @@
                 <i iconPh="copy" aria-hidden="true"></i>
               </button>
             </span>
-          </td>
-
-          <td class="cell-tagging">
-            <span *ngIf="tagging(link)">{{ tagging(link) }}</span>
-            <span class="row-meta" *ngIf="!tagging(link)">Not tagged</span>
-          </td>
-
-          <td class="cell-origin">
-            <span>{{ link.source | titlecase }}</span>
-            <span class="row-meta">{{ link.slugType | titlecase }}</span>
           </td>
 
           <td class="cell-health">

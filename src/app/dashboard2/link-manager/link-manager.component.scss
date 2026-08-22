@@ -212,7 +212,6 @@
     display: block;
     font-size: 13px;
     line-height: 18px;
-    max-width: 380px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -429,9 +428,13 @@
 
   .table-scroll { overflow-x: auto; }
 
+  /* Sized for the dashboard content column, which is about 640px at every
+   * desktop width. Fixed layout so the shares below hold; the min-width only
+   * comes into play on a phone, where the wrapper scrolls. */
   .data-table {
     border-collapse: collapse;
-    min-width: 800px;
+    min-width: 620px;
+    table-layout: fixed;
     width: 100%;
 
     th {
@@ -441,7 +444,7 @@
       font-weight: 700;
       letter-spacing: 0.5px;
       line-height: 16px;
-      padding: 12px 15px;
+      padding: 12px 10px;
       text-align: left;
       text-transform: uppercase;
       white-space: nowrap;
@@ -451,7 +454,7 @@
       border-bottom: 1px solid $colorGsBackground;
       font-size: 13px;
       line-height: 18px;
-      padding: 12px 15px;
+      padding: 12px 10px;
       vertical-align: top;
     }
 
@@ -460,10 +463,21 @@
 
     th.num,
     td.num { text-align: right; }
+
+    tr>:first-child { padding-left: 15px; }
+    tr>:last-child { padding-right: 15px; }
   }
 
-  .cell-tagging { max-width: 200px; }
-  .cell-actions { text-align: right; white-space: nowrap; }
+  .cell-link { width: 48%; }
+  .cell-health { width: 20%; }
+  .cell-clicks { width: 14%; }
+
+  .cell-actions {
+    text-align: right;
+    white-space: nowrap;
+    width: 18%;
+  }
+
   .clicks { display: block; }
 
   /* The house icon button is sized for a toolbar; in a table row it has to sit

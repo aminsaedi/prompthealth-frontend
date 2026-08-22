@@ -84,15 +84,22 @@ export class LinkCatalogComponent {
     return `${this.site}/out/${link.code}`;
   }
 
-  /* Shown as one line so a row stays readable; the editor is where the four
-   * parameters are pulled apart. */
-  tagging(link: ILinkRecord): string {
+  /* Where the link came from and which campaign it carries, on one line under
+   * the address. Source and medium are the same on every row — they are set once
+   * on the Tagging tab — so only the campaign is worth the space here. */
+  provenance(link: ILinkRecord): string {
+    const campaign = link.utmContent
+      ? `${link.utmCampaign || '—'} / ${link.utmContent}`
+      : link.utmCampaign;
     return [
-      link.utmSource && `source=${link.utmSource}`,
-      link.utmMedium && `medium=${link.utmMedium}`,
-      link.utmCampaign && `campaign=${link.utmCampaign}`,
-      link.utmContent && `content=${link.utmContent}`,
+      this.titleCase(link.source),
+      this.titleCase(link.slugType),
+      campaign || 'not tagged',
     ].filter(Boolean).join(' · ');
+  }
+
+  private titleCase(value: string): string {
+    return value ? value.charAt(0) + value.slice(1).toLowerCase() : '';
   }
 
   trackById(_index: number, link: ILinkRecord): string {

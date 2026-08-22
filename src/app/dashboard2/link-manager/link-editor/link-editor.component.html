@@ -11,7 +11,7 @@
         <label class="field-label" for="editorDestination">Destination</label>
         <input class="form-control" id="editorDestination" name="destinationUrl" type="url"
                placeholder="https://example.com/page"
-               [(ngModel)]="form.destinationUrl"
+               [(ngModel)]="form.destinationUrl" (ngModelChange)="destinationError = ''"
                [attr.aria-invalid]="destinationError ? 'true' : null"
                [attr.aria-describedby]="destinationError ? 'editorDestinationError' : 'editorDestinationHint'">
         <p class="field-error mb-0p" id="editorDestinationError" *ngIf="destinationError">{{ destinationError }}</p>
