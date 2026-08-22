@@ -1,0 +1,144 @@
+<section class="panel lr-builder" aria-labelledby="lrBuilder">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow mb-0" id="lrBuilder">Report builder</p>
+      <h2 class="subtitle1 mb-0">{{ question }}</h2>
+    </div>
+    <div class="lr-head-actions">
+      <button type="button" class="btn btn-text" (click)="share()">
+        <i iconPh="copy" class="mr-5p" aria-hidden="true"></i>Copy link to this report
+      </button>
+      <button type="button" class="btn btn-text" (click)="reset()">Reset</button>
+    </div>
+  </div>
+
+  <div class="lr-controls">
+    <div class="la-field">
+      <span class="field-label" id="lrWindow">Window</span>
+      <div class="la-window" role="group" aria-labelledby="lrWindow">
+        <button *ngFor="let window of WINDOWS" type="button" class="la-window-btn"
+          [class.is-active]="!customRange && state.days === window"
+          [attr.aria-pressed]="!customRange && state.days === window"
+          (click)="setWindow(window)">{{ window }}d</button>
+      </div>
+    </div>
+
+    <div class="la-field">
+      <label class="field-label" for="lrFrom">From</label>
+      <input id="lrFrom" type="date" class="form-control" #from [value]="state.from"
+        (change)="setRange(from.value, to.value)">
+    </div>
+
+    <div class="la-field">
+      <label class="field-label" for="lrTo">To</label>
+      <input id="lrTo" type="date" class="form-control" #to [value]="state.to"
+        (change)="setRange(from.value, to.value)">
+    </div>
+
+    <div class="la-field">
+      <label class="field-label" for="lrAudience">Audience</label>
+      <select id="lrAudience" class="form-control" [ngModel]="state.audience"
+        (ngModelChange)="patch({ audience: $event })">
+        <option value="humans">People only</option>
+        <option value="all">People and bots</option>
+        <option value="bots">Bots only</option>
+      </select>
+    </div>
+
+    <div class="la-field">
+      <label class="field-label" for="lrGroup">Group by</label>
+      <select id="lrGroup" class="form-control" [ngModel]="state.groupBy"
+        (ngModelChange)="patch({ groupBy: $event })">
+        <option *ngFor="let group of GROUPS" [value]="group.key">{{ group.label }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="lr-filters">
+    <div class="la-field" *ngFor="let field of FILTERS">
+      <label class="field-label" [attr.for]="'lr-' + field.key">{{ field.label }}</label>
+      <select class="form-control" [id]="'lr-' + field.key" [ngModel]="state[field.key]"
+        (ngModelChange)="patchField(field.key, $event)">
+        <option value="">Any</option>
+        <option *ngIf="isOrphan(field.key)" [value]="state[field.key]">{{ state[field.key] }}</option>
+        <option *ngFor="let facet of facetsFor(field.key)" [value]="facet.value">
+          {{ facet.label }} ({{ facet.total | number }})
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <p class="lr-note body-small text-label mb-0" *ngIf="report?.range?.truncated">
+    Clicks are kept for six months, so this report starts at {{ report.range.from }}.
+  </p>
+</section>
+
+<p class="empty" *ngIf="loading">Running the report…</p>
+<p class="empty" *ngIf="failed">The report could not be run. Try a narrower window.</p>
+
+<ng-container *ngIf="report && !loading">
+  <div class="la-cols la-cols-4 lr-totals">
+    <div class="kpi">
+      <p class="eyebrow mb-0">People</p>
+      <p class="kpi-value num mb-0">{{ report.totals.humans | number }}</p>
+      <p class="kpi-note body-small text-label mb-0">{{ report.totals.unique | number }} distinct visitors</p>
+    </div>
+    <div class="kpi">
+      <p class="eyebrow mb-0">Clicks</p>
+      <p class="kpi-value num mb-0">{{ report.totals.total | number }}</p>
+      <p class="kpi-note body-small text-label mb-0">{{ report.totals.bots | number }} from bots</p>
+    </div>
+    <div class="kpi">
+      <p class="eyebrow mb-0">Mobile</p>
+      <p class="kpi-value num mb-0">{{ report.totals.mobile | number }}</p>
+      <p class="kpi-note body-small text-label mb-0">{{ report.totals.desktop | number }} on desktop</p>
+    </div>
+    <div class="kpi">
+      <p class="eyebrow mb-0">{{ groupLabel }} rows</p>
+      <p class="kpi-value num mb-0">{{ rows.length | number }}</p>
+      <p class="kpi-note body-small text-label mb-0">
+        {{ report.range.from }} to {{ report.range.to }}
+      </p>
+    </div>
+  </div>
+
+  <div class="la-cols la-cols-2 mt-20p">
+    <section class="panel" aria-labelledby="lrTrend">
+      <div class="panel-head">
+        <h2 class="subtitle1 mb-0" id="lrTrend">Clicks per day</h2>
+      </div>
+      <app-chart *ngIf="trendChart; else noTrend" [config]="trendChart" [height]="260"
+        alt="Daily clicks matching the current filters"></app-chart>
+      <ng-template #noTrend><p class="empty">No clicks in this window.</p></ng-template>
+    </section>
+
+    <section class="panel" aria-labelledby="lrRank" *ngIf="rankingChart">
+      <div class="panel-head">
+        <h2 class="subtitle1 mb-0" id="lrRank">Top {{ groupLabel | lowercase }}</h2>
+      </div>
+      <app-chart [config]="rankingChart" [height]="260"
+        [alt]="'People per ' + groupLabel"></app-chart>
+    </section>
+  </div>
+
+  <section class="panel flush mt-20p" aria-labelledby="lrTable">
+    <div class="panel-head">
+      <h2 class="subtitle1 mb-0" id="lrTable">Every row</h2>
+      <button type="button" class="btn btn-outline" (click)="exportCsv()">
+        <i iconPh="file-download" class="mr-5p" aria-hidden="true"></i>Export CSV
+      </button>
+    </div>
+
+    <p class="lr-note body-small text-label" *ngIf="report.truncated">
+      Only the first {{ rows.length | number }} rows are shown. Narrow the filters for the rest.
+    </p>
+
+    <ag-grid-angular *ngIf="isBrowser" class="ag-theme-alpine la-grid la-grid-short"
+      [rowData]="rows"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [gridOptions]="gridOptions"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </section>
+</ng-container>

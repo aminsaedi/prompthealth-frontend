@@ -1,0 +1,56 @@
+@import '../../../assets/scss/variables';
+
+.link-admin {
+  .lr-builder {
+    padding-bottom: 20px;
+  }
+
+  .lr-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  /* The window, the range and the shape of the answer sit on one line; the
+   * values being filtered on sit under them. Two bands rather than one long
+   * row, because they are answers to different questions. */
+  .lr-controls {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 0 20px;
+  }
+
+  .lr-controls .la-field {
+    min-width: 150px;
+  }
+
+  .lr-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 15px;
+    padding: 20px 20px 0;
+    margin-top: 20px;
+    border-top: 1px solid $colorGsLine;
+  }
+
+  .lr-note {
+    padding: 0 20px;
+    margin-top: 15px;
+  }
+
+  .lr-totals {
+    margin-top: 20px;
+  }
+
+  .lr-builder .panel-head {
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .lr-builder .subtitle1 {
+    max-width: 70ch;
+  }
+}

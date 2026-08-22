@@ -46,5 +46,8 @@ testem.log
 .DS_Store
 Thumbs.db
 
-report*
+# Node writes its diagnostic reports into the repository root; the pattern was
+# unanchored, so it also swallowed any nested directory called reports/ —
+# including source that then never reached CI.
+/report*
 dist/
