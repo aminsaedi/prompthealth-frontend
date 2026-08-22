@@ -53,9 +53,9 @@
   align-items: baseline;
   border-bottom: 1px solid $colorGsLine;
   display: grid;
-  gap: 0 10px;
+  gap: 2px 15px;
   grid-template-columns: minmax(0, 1fr) auto;
-  padding: 8px 0;
+  padding: 10px 0;
 
   &:last-child { border-bottom: 0; }
 }
@@ -93,7 +93,7 @@
   display: grid;
   gap: 2px 15px;
   grid-template-columns: minmax(0, 1fr) auto auto;
-  padding: 12px 20px;
+  padding: 10px 20px;
 }
 
 .lo-broken-title {
