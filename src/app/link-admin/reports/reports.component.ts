@@ -214,16 +214,23 @@ export class ReportsComponent implements OnInit, OnDestroy {
     return found ? found.label : 'Group';
   }
 
-  facetsFor(key: string): IReportFacet[] {
-    return this.facets[key] || [];
+  /* One list per field, built here rather than in two passes in the template.
+   * A value that is set but no longer in the facet list still has to appear, or
+   * changing the window would silently drop the filter it was applied to — but
+   * it has to appear in the SAME option the facets will later supply. Rendering
+   * it separately means the option is destroyed and rebuilt the moment the
+   * facets land, and the browser clears the selection in the gap between the
+   * two, which is how a shared report link arrived with its filters empty. */
+  optionsFor(key: string): IReportFacet[] {
+    const facets = this.facets[key] || [];
+    const value = this.state[key];
+    if (!value || facets.some(facet => facet.value === value)) { return facets; }
+    return [{ value, label: value, total: 0 }].concat(facets);
   }
 
-  /* A value that is set but no longer in the facet list still has to appear,
-   * or changing the window would silently drop the filter it was applied to. */
-  isOrphan(key: string): boolean {
-    const value = this.state[key];
-    if (!value) { return false; }
-    return !this.facetsFor(key).some(facet => facet.value === value);
+  /* Keyed by value so the option holding the selection survives the swap. */
+  optionKey(index: number, facet: IReportFacet): string {
+    return facet.value;
   }
 
   patch(changes: any): void {

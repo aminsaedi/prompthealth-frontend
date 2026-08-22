@@ -60,10 +60,8 @@
       <select class="form-control" [id]="'lr-' + field.key" [ngModel]="state[field.key]"
         (ngModelChange)="patchField(field.key, $event)">
         <option value="">Any</option>
-        <option *ngIf="isOrphan(field.key)" [value]="state[field.key]">{{ state[field.key] }}</option>
-        <option *ngFor="let facet of facetsFor(field.key)" [value]="facet.value">
-          {{ facet.label }} ({{ facet.total | number }})
-        </option>
+        <option *ngFor="let facet of optionsFor(field.key); trackBy: optionKey" [value]="facet.value"
+          >{{ facet.label }}{{ facet.total ? ' (' + (facet.total | number) + ')' : '' }}</option>
       </select>
     </div>
   </div>
