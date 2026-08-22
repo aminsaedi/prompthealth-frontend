@@ -1,15 +1,35 @@
 @import '../../../assets/scss/variables';
 
 .link-admin {
+  /* The builder holds four bands — question, controls, filters, footnote —
+   * each of which insets itself by 20px so the divider between them can run
+   * the full width of the panel. The panel therefore keeps its padding on the
+   * vertical only; when it kept it on both, everything inside sat 40px in. */
   .lr-builder {
-    padding-bottom: 20px;
+    padding: 20px 0;
+  }
+
+  .lr-builder .panel-head {
+    margin-bottom: 20px;
+    padding: 0 20px;
+  }
+
+  /* The question is the long part and takes whatever the buttons leave. Below
+   * about 700px there is no line to share, and the two stack. */
+  .lr-question {
+    flex: 1 1 300px;
+    min-width: 0;
+  }
+
+  .lr-question .subtitle1 {
+    max-width: 70ch;
   }
 
   .lr-head-actions {
-    display: flex;
     align-items: center;
+    display: flex;
+    flex-wrap: wrap;
     gap: 5px;
-    flex-shrink: 0;
   }
 
   /* The window, the range and the shape of the answer sit on one line; the
@@ -24,6 +44,7 @@
   }
 
   .lr-controls .la-field {
+    flex: 1 1 150px;
     min-width: 150px;
   }
 
@@ -36,21 +57,22 @@
     border-top: 1px solid $colorGsLine;
   }
 
+  /* The table runs flush to the panel edge; everything above it is inset by
+   * the same 20px the builder uses, so the two panels line up down the page. */
+  .lr-table .panel-head {
+    margin-bottom: 15px;
+    padding: 20px 20px 0;
+  }
+
   .lr-note {
     padding: 0 20px;
     margin-top: 15px;
   }
 
-  .lr-totals {
+  /* Margin only. Setting display here would flatten the real totals row, which
+   * is the same class on a grid. */
+  .lr-totals,
+  .lr-grid-skeleton {
     margin-top: 20px;
-  }
-
-  .lr-builder .panel-head {
-    align-items: flex-start;
-    gap: 15px;
-  }
-
-  .lr-builder .subtitle1 {
-    max-width: 70ch;
   }
 }

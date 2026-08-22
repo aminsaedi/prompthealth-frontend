@@ -1,0 +1,58 @@
+<div class="la-loading" [attr.role]="label ? 'status' : null" [attr.aria-live]="label ? 'polite' : null"
+  [attr.aria-hidden]="label ? null : 'true'" [ngSwitch]="variant">
+
+  <span class="la-sr" *ngIf="label && variant !== 'inline'">{{ label }}</span>
+
+  <span class="la-inline" *ngSwitchCase="'inline'">
+    <span class="la-spinner"></span>
+    <span class="body-small text-label">{{ label || 'Loading…' }}</span>
+  </span>
+
+  <div class="la-cols la-cols-4 mb-0p" *ngSwitchCase="'kpis'">
+    <div class="kpi" *ngFor="let i of four">
+      <span class="la-skel la-skel-eyebrow"></span>
+      <span class="la-skel la-skel-value"></span>
+      <span class="la-skel la-skel-note"></span>
+    </div>
+  </div>
+
+  <div class="panel" *ngSwitchCase="'chart'">
+    <div class="panel-head">
+      <span class="la-skel la-skel-title"></span>
+    </div>
+    <span class="la-skel la-skel-chart"></span>
+  </div>
+
+  <div class="panel" *ngSwitchCase="'list'">
+    <div class="panel-head">
+      <span class="la-skel la-skel-title"></span>
+    </div>
+    <span class="la-skel la-skel-row" *ngFor="let i of lines" [style.width]="width(i)"></span>
+  </div>
+
+  <div class="panel flush" *ngSwitchCase="'grid'">
+    <div class="la-skel-toolbar">
+      <span class="la-skel la-skel-control la-skel-control-grow"></span>
+      <span class="la-skel la-skel-control"></span>
+      <span class="la-skel la-skel-control"></span>
+    </div>
+    <div class="la-skel-head">
+      <span class="la-skel la-skel-row" *ngFor="let i of four"></span>
+    </div>
+    <div class="la-skel-body">
+      <span class="la-skel la-skel-row" *ngFor="let i of lines" [style.width]="width(i)"></span>
+    </div>
+  </div>
+
+  <div class="panel mb-20p" *ngSwitchCase="'form'">
+    <div class="panel-head">
+      <span class="la-skel la-skel-title"></span>
+    </div>
+    <div class="la-form">
+      <div class="la-field-block" *ngFor="let i of lines">
+        <span class="la-skel la-skel-label"></span>
+        <span class="la-skel la-skel-control"></span>
+      </div>
+    </div>
+  </div>
+</div>

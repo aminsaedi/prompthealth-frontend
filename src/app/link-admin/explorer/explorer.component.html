@@ -28,15 +28,15 @@
   </div>
 
   <p class="lx-count body-small text-label">
-    <ng-container *ngIf="loading; else counted">Loading links…</ng-container>
-    <ng-template #counted>
+    <app-la-loading class="la-inline-slot" variant="inline" label="Loading links…" *ngIf="loading"></app-la-loading>
+    <ng-container *ngIf="!loading">
       Showing <strong class="num text-body">{{ rows.length | number }}</strong> of
       <strong class="num text-body">{{ total | number }}</strong> links.
       Sort, filter and search happen in the browser, and Export CSV takes exactly what you see.
-    </ng-template>
+    </ng-container>
   </p>
 
-  <ag-grid-angular *ngIf="isBrowser" class="ag-theme-alpine la-grid"
+  <ag-grid-angular *ngIf="isBrowser" class="ag-theme-alpine la-grid" [style.height.px]="gridHeight"
     [rowData]="rows"
     [columnDefs]="columnDefs"
     [defaultColDef]="defaultColDef"
@@ -75,7 +75,10 @@
   </div>
 
   <div class="drawer-body">
-    <p class="empty" *ngIf="analyticsLoading">Loading traffic…</p>
+    <ng-container *ngIf="analyticsLoading">
+      <app-la-loading variant="kpis" label="Loading traffic…"></app-la-loading>
+      <app-la-loading class="mt-20p" variant="chart"></app-la-loading>
+    </ng-container>
 
     <ng-container *ngIf="!analyticsLoading && analytics">
       <div class="la-cols la-cols-4 lx-stats">

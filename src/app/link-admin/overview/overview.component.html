@@ -1,5 +1,30 @@
 <div class="lo">
 
+  <!-- Nothing yet: stand-ins the size of what is coming, rather than a page of
+       zeros that reads as an answer. -->
+  <ng-container *ngIf="!dashboard">
+    <app-la-loading class="lo-kpis" variant="kpis" label="Loading the overview…" *ngIf="loading"></app-la-loading>
+    <div class="la-cols la-cols-2" *ngIf="loading">
+      <app-la-loading variant="chart"></app-la-loading>
+      <app-la-loading variant="chart"></app-la-loading>
+    </div>
+    <div class="la-cols" *ngIf="loading">
+      <app-la-loading variant="list" [rows]="6"></app-la-loading>
+      <app-la-loading variant="list" [rows]="6"></app-la-loading>
+      <app-la-loading variant="chart"></app-la-loading>
+    </div>
+    <div class="panel" *ngIf="!loading">
+      <p class="empty mb-0">The overview could not be loaded. Reload the page to try again.</p>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="dashboard">
+
+  <!-- A window change redraws everything below; say so without taking the
+       numbers away, so the reader keeps the figure they were reading. -->
+  <app-la-loading class="la-refresh" variant="inline"
+    [label]="'Updating the last ' + days + ' days…'" *ngIf="loading"></app-la-loading>
+
   <dl class="la-cols la-cols-4 lo-kpis">
     <div class="kpi">
       <dt class="eyebrow">People</dt>
@@ -137,5 +162,5 @@
     </ul>
   </section>
 
-  <p class="empty body2" *ngIf="loading && !dashboard">Loading the overview…</p>
+  </ng-container>
 </div>

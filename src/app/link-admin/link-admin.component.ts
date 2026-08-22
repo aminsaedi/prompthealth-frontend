@@ -17,7 +17,7 @@ interface Section {
 @Component({
   selector: 'app-link-admin',
   templateUrl: './link-admin.component.html',
-  styleUrls: ['./link-admin.component.scss'],
+  styleUrls: ['./link-admin.component.scss', './loading/loading.component.scss'],
   /* Encapsulation is off so this one stylesheet can dress the four pages and
    * their presentational children. Every rule is nested under .link-admin, so
    * nothing here reaches another page. */

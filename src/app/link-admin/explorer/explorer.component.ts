@@ -103,16 +103,25 @@ export class ExplorerComponent implements OnInit, OnDestroy {
       floatingFiltersHeight: 38,
       suppressCellSelection: true,
       overlayNoRowsTemplate: '<span class="ag-overlay-no-rows-center">No links match these filters.</span>',
+      /* Without this the grid says "no links match" while it is still waiting
+       * for the first page, which is an answer rather than a wait. */
+      overlayLoadingTemplate:
+        '<span class="ag-overlay-loading-center la-overlay">' +
+        '<span class="la-spinner"></span><span>Loading links…</span></span>',
     };
   }
 
   ngOnInit(): void {
-    this.store.linksLoading$.pipe(takeUntil(this.destroy$)).subscribe(loading => (this.loading = loading));
+    this.store.linksLoading$.pipe(takeUntil(this.destroy$)).subscribe(loading => {
+      this.loading = loading;
+      this.syncOverlay();
+    });
     this.store.linksTotal$.pipe(takeUntil(this.destroy$)).subscribe(total => (this.total = total));
     this.store.links$.pipe(takeUntil(this.destroy$)).subscribe(links => {
       this.allRows = (links || []).map(link => toRow(link, this.SITE));
       this.rows = this.allRows;
       this.applyQuery(this.route.snapshot.queryParams);
+      this.syncOverlay();
     });
     this.store.loadLinks();
 
@@ -157,6 +166,24 @@ export class ExplorerComponent implements OnInit, OnDestroy {
   onGridReady(event: any): void {
     this.gridApi = event.api;
     event.api.sizeColumnsToFit();
+    this.syncOverlay();
+  }
+
+  /* The grid owns the space where its own answer goes, so it is the grid that
+   * has to say which of the three states it is in. */
+  private syncOverlay(): void {
+    if (!this.gridApi) { return; }
+    if (this.loading) { this.gridApi.showLoadingOverlay(); }
+    else if (!this.rows.length) { this.gridApi.showNoRowsOverlay(); }
+    else { this.gridApi.hideOverlay(); }
+  }
+
+  /* Tall enough for the page it is showing and no taller. A fixed height left
+   * four hundred pixels of empty grid under a catalog of five links. */
+  get gridHeight(): number {
+    const shown = Math.min(this.rows.length || 0, this.gridOptions.paginationPageSize);
+    const rows = Math.max(shown, 4);
+    return Math.min(620, HEADER + FLOATING_FILTERS + rows * ROW + PAGING + SCROLLBAR);
   }
 
   onSearch(term: string): void {
@@ -203,26 +230,26 @@ export class ExplorerComponent implements OnInit, OnDestroy {
       { colId: 'title', field: 'title', headerName: 'Link', flex: 2, minWidth: 200, cellRenderer: titleCell },
       { colId: 'hostname', field: 'hostname', headerName: 'Destination', flex: 1, minWidth: 150 },
       { colId: 'path', field: 'path', headerName: 'Path', flex: 1, minWidth: 140, hide: true },
-      { colId: 'source', field: 'source', headerName: 'Source', width: 120 },
-      { colId: 'slugType', field: 'slugType', headerName: 'Type', width: 130 },
-      { colId: 'campaign', field: 'campaign', headerName: 'Campaign', width: 150 },
-      { colId: 'content', field: 'content', headerName: 'Content', width: 130, hide: true },
-      { colId: 'code', field: 'code', headerName: 'Short code', width: 130 },
+      { colId: 'source', field: 'source', headerName: 'Source', width: 130, minWidth: 130 },
+      { colId: 'slugType', field: 'slugType', headerName: 'Type', width: 140, minWidth: 140 },
+      { colId: 'campaign', field: 'campaign', headerName: 'Campaign', width: 160, minWidth: 160 },
+      { colId: 'content', field: 'content', headerName: 'Content', width: 140, minWidth: 140, hide: true },
+      { colId: 'code', field: 'code', headerName: 'Short code', width: 150, minWidth: 150 },
       {
-        colId: 'statusLabel', field: 'statusLabel', headerName: 'Health', width: 140,
+        colId: 'statusLabel', field: 'statusLabel', headerName: 'Health', width: 170, minWidth: 170,
         cellRenderer: (params: any) =>
           `<span class="pill tone-${params.data.statusTone}">${escapeHtml(params.value)}` +
           `${params.data.statusCode ? ' · ' + params.data.statusCode : ''}</span>`,
       },
-      { colId: 'clicks', field: 'clicks', headerName: 'Clicks', width: 110, type: 'numericColumn', filter: 'agNumberColumnFilter' },
-      { colId: 'humans', field: 'humans', headerName: 'People', width: 110, type: 'numericColumn', filter: 'agNumberColumnFilter' },
-      { colId: 'bots', field: 'bots', headerName: 'Bots', width: 100, type: 'numericColumn', filter: 'agNumberColumnFilter', hide: true },
-      { colId: 'lastClickAt', field: 'lastClickAt', headerName: 'Last click', width: 140, valueFormatter: dateCell },
-      { colId: 'createdAt', field: 'createdAt', headerName: 'Added', width: 130, valueFormatter: dateCell, hide: true },
+      { colId: 'clicks', field: 'clicks', headerName: 'Clicks', width: 125, minWidth: 125, type: 'numericColumn', filter: 'agNumberColumnFilter' },
+      { colId: 'humans', field: 'humans', headerName: 'People', width: 130, minWidth: 130, type: 'numericColumn', filter: 'agNumberColumnFilter' },
+      { colId: 'bots', field: 'bots', headerName: 'Bots', width: 115, minWidth: 115, type: 'numericColumn', filter: 'agNumberColumnFilter', hide: true },
+      { colId: 'lastClickAt', field: 'lastClickAt', headerName: 'Last click', width: 155, minWidth: 155, valueFormatter: dateCell },
+      { colId: 'createdAt', field: 'createdAt', headerName: 'Added', width: 140, minWidth: 140, valueFormatter: dateCell, hide: true },
       { colId: 'foundOn', field: 'foundOn', headerName: 'Found on', flex: 1, minWidth: 150, hide: true },
-      { colId: 'active', field: 'active', headerName: 'Active', width: 110, hide: true },
+      { colId: 'active', field: 'active', headerName: 'Active', width: 120, minWidth: 120, hide: true },
       {
-        colId: 'actions', headerName: '', width: 140, pinned: 'right',
+        colId: 'actions', headerName: '', width: 160, minWidth: 160, maxWidth: 160, pinned: 'right',
         sortable: false, filter: false, floatingFilter: false, resizable: false, suppressMenu: true,
         cellRenderer: actionsCell,
       },
@@ -309,6 +336,15 @@ export class ExplorerComponent implements OnInit, OnDestroy {
     this.router.navigate(['/link-admin/reports'], { queryParams: { linkId: link._id, groupBy: 'day' } });
   }
 }
+
+/* The grid's own furniture, in the sizes it was configured with above. */
+const HEADER = 40;
+const FLOATING_FILTERS = 38;
+const ROW = 44;
+const PAGING = 50;
+/* The columns are wider than most windows, so the grid scrolls sideways and
+ * that bar needs a line of its own or it sits on top of the last row. */
+const SCROLLBAR = 15;
 
 const EXPORT_COLUMNS = [
   'title', 'hostname', 'path', 'source', 'slugType', 'campaign', 'content',

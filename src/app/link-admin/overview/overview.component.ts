@@ -4,7 +4,7 @@ import { ChartConfiguration } from 'chart.js';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ILinkDashboard, ILinkRecord } from 'src/app/shared/services/link-manager.service';
-import { CHART_COLORS, rankingConfig, splitConfig, trendConfig } from '../chart/chart-theme';
+import { CHART_COLORS, splitConfig, trendConfig } from '../chart/chart-theme';
 import { HEALTH_META, healthMeta, IHealthMeta } from '../link-health';
 import { LinkAdminStore } from '../link-admin.store';
 
@@ -26,8 +26,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
   days = 30;
 
   trendChart: ChartConfiguration = null;
-  hostChart: ChartConfiguration = null;
   healthChart: ChartConfiguration = null;
+  deviceChart: ChartConfiguration = null;
 
   healthSlices: HealthSlice[] = [];
 
@@ -49,7 +49,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   private rebuild(): void {
     if (!this.dashboard) {
-      this.trendChart = this.hostChart = this.healthChart = null;
+      this.trendChart = this.healthChart = this.deviceChart = null;
       this.healthSlices = [];
       return;
     }
@@ -60,11 +60,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
       trend.map(row => row.humans || 0),
       trend.map(row => row.bots || 0),
     );
-
-    const hosts = (this.dashboard.topHosts || []).slice(0, 10);
-    this.hostChart = hosts.length
-      ? rankingConfig(hosts.map(host => host.hostname), hosts.map(host => host.humans || 0), 'People')
-      : null;
 
     const counts = this.dashboard.health || {};
     const inventory = Object.keys(counts).reduce((sum, key) => sum + (counts[key] || 0), 0);
@@ -82,6 +77,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
           this.healthSlices.map(slice => slice.count),
           this.healthSlices.map(slice => TONE_COLOR[slice.tone]),
         )
+      : null;
+
+    const { mobile, desktop } = this.totals;
+    this.deviceChart = mobile || desktop
+      ? splitConfig(['Mobile', 'Desktop'], [mobile, desktop], [CHART_COLORS.primary, CHART_COLORS.secondary])
       : null;
   }
 
@@ -112,14 +112,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   get hostPeak(): number {
     return this.topHosts.reduce((max, host) => Math.max(max, host.humans || 0), 0);
-  }
-
-  /* Mobile against desktop over the window. A doughnut of two values is only
-   * worth the space when both are non-zero. */
-  get deviceChart(): ChartConfiguration {
-    const { mobile, desktop } = this.totals;
-    if (!mobile && !desktop) { return null; }
-    return splitConfig(['Mobile', 'Desktop'], [mobile, desktop], [CHART_COLORS.primary, CHART_COLORS.secondary]);
   }
 
   barWidth(value: number): string {

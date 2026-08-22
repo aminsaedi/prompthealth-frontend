@@ -1,6 +1,6 @@
 <section class="panel lr-builder" aria-labelledby="lrBuilder">
   <div class="panel-head">
-    <div>
+    <div class="lr-question">
       <p class="eyebrow mb-0" id="lrBuilder">Report builder</p>
       <h2 class="subtitle1 mb-0">{{ question }}</h2>
     </div>
@@ -71,10 +71,26 @@
   </p>
 </section>
 
-<p class="empty" *ngIf="loading">Running the report…</p>
-<p class="empty" *ngIf="failed">The report could not be run. Try a narrower window.</p>
+<!-- The first run has nothing to keep, so stand-ins hold the shape of the
+     answer. A re-run has an answer on screen already; that one stays put and
+     the page says it is being replaced. -->
+<ng-container *ngIf="loading && !report">
+  <app-la-loading class="lr-totals" variant="kpis" label="Running the report…"></app-la-loading>
+  <div class="la-cols la-cols-2 mt-20p">
+    <app-la-loading variant="chart"></app-la-loading>
+    <app-la-loading variant="chart"></app-la-loading>
+  </div>
+  <app-la-loading class="lr-grid-skeleton" variant="grid" [rows]="6"></app-la-loading>
+</ng-container>
 
-<ng-container *ngIf="report && !loading">
+<div class="panel mt-20p" *ngIf="failed && !loading">
+  <p class="empty mb-0">The report could not be run. Try a narrower window.</p>
+</div>
+
+<ng-container *ngIf="report">
+
+  <app-la-loading class="la-refresh mt-20p" variant="inline" label="Running the report…"
+    *ngIf="loading"></app-la-loading>
   <div class="la-cols la-cols-4 lr-totals">
     <div class="kpi">
       <p class="eyebrow mb-0">People</p>
@@ -119,7 +135,7 @@
     </section>
   </div>
 
-  <section class="panel flush mt-20p" aria-labelledby="lrTable">
+  <section class="panel flush mt-20p lr-table" aria-labelledby="lrTable">
     <div class="panel-head">
       <h2 class="subtitle1 mb-0" id="lrTable">Every row</h2>
       <button type="button" class="btn btn-outline" (click)="exportCsv()">
@@ -131,7 +147,7 @@
       Only the first {{ rows.length | number }} rows are shown. Narrow the filters for the rest.
     </p>
 
-    <ag-grid-angular *ngIf="isBrowser" class="ag-theme-alpine la-grid la-grid-short"
+    <ag-grid-angular *ngIf="isBrowser" class="ag-theme-alpine la-grid" [style.height.px]="gridHeight"
       [rowData]="rows"
       [columnDefs]="columnDefs"
       [defaultColDef]="defaultColDef"

@@ -190,17 +190,17 @@ export class ReportsComponent implements OnInit, OnDestroy {
     ];
     if (linkGrouping) {
       columns.push({ colId: 'hostname', field: 'hostname', headerName: 'Destination', flex: 1, minWidth: 150 });
-      columns.push({ colId: 'code', field: 'code', headerName: 'Short code', width: 130 });
+      columns.push({ colId: 'code', field: 'code', headerName: 'Short code', width: 150, minWidth: 150 });
     }
     return columns.concat([
-      { colId: 'humans', field: 'humans', headerName: 'People', width: 110, type: 'numericColumn', filter: 'agNumberColumnFilter', sort: this.state.groupBy === 'day' ? null : 'desc' },
-      { colId: 'unique', field: 'unique', headerName: 'Visitors', width: 110, type: 'numericColumn', filter: 'agNumberColumnFilter', headerTooltip: 'Distinct visitors, counted once each' },
-      { colId: 'total', field: 'total', headerName: 'Clicks', width: 110, type: 'numericColumn', filter: 'agNumberColumnFilter' },
-      { colId: 'bots', field: 'bots', headerName: 'Bots', width: 100, type: 'numericColumn', filter: 'agNumberColumnFilter' },
-      { colId: 'mobile', field: 'mobile', headerName: 'Mobile', width: 105, type: 'numericColumn', filter: 'agNumberColumnFilter' },
-      { colId: 'desktop', field: 'desktop', headerName: 'Desktop', width: 110, type: 'numericColumn', filter: 'agNumberColumnFilter' },
+      { colId: 'humans', field: 'humans', headerName: 'People', width: 130, minWidth: 130, type: 'numericColumn', filter: 'agNumberColumnFilter', sort: this.state.groupBy === 'day' ? null : 'desc' },
+      { colId: 'unique', field: 'unique', headerName: 'Visitors', width: 135, minWidth: 135, type: 'numericColumn', filter: 'agNumberColumnFilter', headerTooltip: 'Distinct visitors, counted once each' },
+      { colId: 'total', field: 'total', headerName: 'Clicks', width: 125, minWidth: 125, type: 'numericColumn', filter: 'agNumberColumnFilter' },
+      { colId: 'bots', field: 'bots', headerName: 'Bots', width: 115, minWidth: 115, type: 'numericColumn', filter: 'agNumberColumnFilter' },
+      { colId: 'mobile', field: 'mobile', headerName: 'Mobile', width: 125, minWidth: 125, type: 'numericColumn', filter: 'agNumberColumnFilter' },
+      { colId: 'desktop', field: 'desktop', headerName: 'Desktop', width: 135, minWidth: 135, type: 'numericColumn', filter: 'agNumberColumnFilter' },
       {
-        colId: 'share', field: 'share', headerName: 'Share', width: 100, type: 'numericColumn',
+        colId: 'share', field: 'share', headerName: 'Share', width: 120, minWidth: 120, type: 'numericColumn',
         filter: 'agNumberColumnFilter',
         valueFormatter: (params: any) => `${params.value || 0}%`,
       },
@@ -287,6 +287,14 @@ export class ReportsComponent implements OnInit, OnDestroy {
     event.api.sizeColumnsToFit();
   }
 
+  /* Sized to the rows it holds, capped so a long report still leaves the page
+   * scrollable rather than becoming the page. */
+  get gridHeight(): number {
+    const shown = Math.min(this.rows.length || 0, this.gridOptions.paginationPageSize);
+    const rows = Math.max(shown, 4);
+    return Math.min(520, HEADER + rows * ROW + PAGING + SCROLLBAR);
+  }
+
   exportCsv(): void {
     if (!this.gridApi) { return; }
     this.gridApi.exportDataAsCsv({ fileName: this.fileName() });
@@ -311,3 +319,11 @@ const shortDay = (day: string): string => {
   if (parts.length !== 3) { return day; }
   return `${MONTHS[parseInt(parts[1], 10) - 1] || parts[1]} ${parseInt(parts[2], 10)}`;
 };
+
+/* The grid's own furniture, in the sizes it was configured with above. */
+const HEADER = 42;
+const ROW = 40;
+const PAGING = 50;
+/* Room for the sideways scrollbar, which appears whenever the window is
+ * narrower than the columns the report asked for. */
+const SCROLLBAR = 15;

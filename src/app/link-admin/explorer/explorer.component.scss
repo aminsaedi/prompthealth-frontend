@@ -1,7 +1,13 @@
 @import '../../../assets/scss/variables';
 
 .link-admin {
-  .lx-panel { padding-bottom: 15px; }
+  /* The panel holds the grid flush to its edges, so everything above the grid
+   * is inset by hand — and by the same 20px, which is what the toolbar was
+   * missing while the count line beneath it had it. */
+  .lx-panel .la-toolbar {
+    margin-bottom: 10px;
+    padding: 20px 20px 0;
+  }
 
   .lx-tools {
     display: flex;
@@ -12,6 +18,19 @@
 
   .lx-count {
     margin: 0 20px 10px;
+    min-height: 20px;
+  }
+
+  /* The count line and the spinner that replaces it occupy the same row. */
+  .lx-count .la-inline-slot { display: inline-block; vertical-align: middle; }
+
+  /* The grid's own loading overlay, in the section's voice. */
+  .ag-theme-alpine .la-overlay {
+    align-items: center;
+    color: $colorGsLabel;
+    display: inline-flex;
+    font-size: 14px;
+    gap: 8px;
   }
 
   /* Two lines inside one grid row: what the link is called, and where it
@@ -47,11 +66,19 @@
     align-items: flex-end;
   }
 
+  /* Four 28px controls in a pinned column. The cell's own padding is trimmed
+   * so they sit centred in the column rather than pushed against its edge. */
+  .ag-theme-alpine .ag-cell[col-id="actions"] {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .lx-actions {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 2px;
+    justify-content: flex-start;
   }
 
   .lx-actions .btn-icon {

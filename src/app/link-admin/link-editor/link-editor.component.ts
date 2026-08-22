@@ -22,7 +22,16 @@ const EMPTY_FORM = (): Partial<ILinkRecord> => ({
   templateUrl: './link-editor.component.html',
 })
 export class LinkEditorComponent implements OnChanges {
-  readonly SLUG_TYPES = ['SOCIAL', 'PROFILE_WEBSITE', 'BOOKING', 'ARTICLE', 'EVENT', 'CUSTOM'];
+  /* The value is what the server stores; the label is what it is called out
+   * loud. Title-casing the stored value gave "Profile_website". */
+  readonly SLUG_TYPES: { value: string; label: string }[] = [
+    { value: 'SOCIAL', label: 'Social post' },
+    { value: 'PROFILE_WEBSITE', label: 'Practitioner website' },
+    { value: 'BOOKING', label: 'Booking' },
+    { value: 'ARTICLE', label: 'Article' },
+    { value: 'EVENT', label: 'Event' },
+    { value: 'CUSTOM', label: 'Custom' },
+  ];
 
   /* null means a new link; a record means editing that one. */
   @Input() link: ILinkRecord = null;

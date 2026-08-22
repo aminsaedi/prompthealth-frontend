@@ -140,13 +140,28 @@
     &.flush { padding: 0; }
   }
 
+  /* Head and actions share a line while there is room for one, and become two
+   * lines when there is not. Without the wrap a long title and two buttons push
+   * each other past the panel on a phone. */
   .panel-head {
     align-items: flex-start;
+    column-gap: 15px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 15px;
+    row-gap: 10px;
 
-    >.btn { margin: -8px -10px -8px 10px; }
+    /* The title block takes the slack; the actions keep their own size. */
+    >:first-child { min-width: 0; }
+
+    /* Trims the button's own padding so its label lines up with the title
+     * rather than sitting inset from it. */
+    >.btn {
+      margin-bottom: -8px;
+      margin-right: -10px;
+      margin-top: -8px;
+    }
   }
 
   /* Small caps section labels; the house scale stops at .caption. */
@@ -178,6 +193,10 @@
 
   .la-cols-2 { grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); }
   .la-cols-4 { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+
+  /* The narrow column is often conditional. When it is not there, the wide one
+   * takes the whole row instead of leaving a third of it empty. */
+  .la-cols>:only-child { grid-column: 1 / -1; }
 
   @media (max-width: $breakpointLg) {
     .la-cols-2 { grid-template-columns: minmax(0, 1fr); }
@@ -309,16 +328,37 @@
     &:focus { border-color: $colorPrimary; box-shadow: none; outline: 0; }
   }
 
+  /* A select carries its own arrow in every browser and none of them agree on
+   * the space it needs, which is what clipped the descenders. Draw it here so
+   * every menu in the section is the same height as every text field. */
+  select.form-control {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: $colorGsWhite;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' stroke='%23656871' stroke-width='1.5' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+    background-size: 10px 6px;
+    padding-right: 28px;
+    text-overflow: ellipsis;
+  }
+
+  /* A list of hosts is written a line at a time, so the box grows with it. */
+  textarea.form-control {
+    height: auto;
+    min-height: 110px;
+    padding: 10px;
+    resize: vertical;
+  }
+
   .la-toolbar-spacer { flex: 1 1 auto; }
 
   /* ------------------------------------------------------------- the grid */
 
-  .la-grid {
-    height: 620px;
-    width: 100%;
-  }
-
-  .la-grid-short { height: 380px; }
+  /* Height is set by the component from the number of rows it holds, so five
+   * links do not sit above four hundred pixels of nothing. */
+  .la-grid { width: 100%; }
 
   /* The grid ships its own visual language; these few rules put it back into
    * the house one — same type, same rules, same greys. */
@@ -361,17 +401,156 @@
     z-index: 1050;
   }
 
+  /* 100vw counts the scrollbar gutter and 100% does not, which is the
+   * difference between a drawer that fits a narrow window and one that starts
+   * the page scrolling sideways. */
+  @media (max-width: 600px) {
+    .drawer { max-width: 100%; width: 100%; }
+  }
+
   .drawer-head {
     align-items: flex-start;
     background: $colorGsWhite;
     border-bottom: 1px solid $colorGsLine;
     display: flex;
+    gap: 10px;
     justify-content: space-between;
     padding: 20px;
     position: sticky;
     top: 0;
     z-index: 1;
+
+    /* The title is a link name and its address, and an address has no spaces
+     * to break at. Let it break anywhere rather than push the close button
+     * off the edge. */
+    >:first-child { min-width: 0; }
+    >:first-child * { overflow-wrap: break-word; word-break: break-word; }
+
+    >.btn { flex: 0 0 auto; }
   }
 
   .drawer-body { padding: 20px; }
+
+  /* ---------------------------------------------------------------- forms */
+
+  /* The editor and the tagging policy used Bootstrap's row, whose negative
+   * margins hang four pixels past whatever panel holds it. This is the same
+   * idea without the overhang, and it answers to the panel's width rather than
+   * the window's, so a form inside a 560px drawer wraps when the drawer is
+   * narrow and not a breakpoint later. */
+  .la-form {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  }
+
+  .la-form-single { grid-template-columns: minmax(0, 1fr); }
+  .la-form-wide { grid-column: 1 / -1; }
+  .la-field-block { min-width: 0; }
+
+  /* A page of seven rules needs a line between them, or the Note of one rule
+   * reads as belonging to the Page pattern under it. */
+  .la-rule + .la-rule {
+    border-top: 1px solid $colorGsLine;
+    margin-top: 15px;
+    padding-top: 15px;
+  }
+
+  /* A rule is three fields and the control that removes it. The fields share
+   * the row and wrap among themselves; the button keeps its own width at the
+   * end rather than claiming a whole column of its own. */
+  .la-form-rule {
+    align-items: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .la-form-rule .la-field-block { flex: 1 1 180px; }
+
+  .la-form-rule .la-field-remove {
+    flex: 0 0 auto;
+    padding-bottom: 3px;
+  }
+
+  fieldset.field-group {
+    border: 0;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
+  }
+
+  /* Bootstrap gives a legend the width of the form and a heading's size; here
+   * it is the same small label that titles every other group in the section. */
+  .field-group>legend {
+    float: none;
+    font-size: 12px;
+    margin-bottom: 10px;
+    padding: 0;
+    width: auto;
+  }
+
+  /* A group is fenced off from whatever came before it, whether that was
+   * another group or a plain row of fields. */
+  .field-group+.field-group,
+  .la-form+.field-group {
+    border-top: 1px solid $colorGsLine;
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+
+  .field-hint,
+  .field-note,
+  .field-error {
+    font-size: 12px;
+    line-height: 18px;
+    margin: 4px 0 0;
+  }
+
+  .field-hint { color: $colorGsLabel; }
+  .field-note { color: $colorYellowDark; }
+  .field-note.is-dropped,
+  .field-error { color: $colorErrorDark; }
+
+  /* A hint that titles a whole group sits above it rather than under a field. */
+  .field-lede {
+    color: $colorGsLabel;
+    font-size: 13px;
+    line-height: 20px;
+    margin: 0 0 15px;
+    max-width: 72ch;
+  }
+
+  .switch {
+    align-items: flex-start;
+    cursor: pointer;
+    display: flex;
+    gap: 8px;
+    margin: 0;
+
+    input {
+      flex: 0 0 auto;
+      height: 16px;
+      margin-top: 2px;
+      width: 16px;
+    }
+  }
+
+  .switch+.switch { margin-top: 10px; }
+
+  .switch-label {
+    color: $colorGsBody;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .editor-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 15px;
+
+    /* The row does the spacing; a hint sitting in it should not add its own. */
+    .field-hint { margin: 0; }
+  }
 }
