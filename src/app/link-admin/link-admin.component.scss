@@ -123,6 +123,18 @@
     }
   }
 
+  /* On a phone the four tabs and their glyphs are wider than the window, and a
+   * tab you have to swipe to reach is a tab nobody presses. The labels alone
+   * fit, so below the small breakpoint the glyphs step aside. */
+  @media (max-width: $breakpointSm - 1px) {
+    .la-nav-item {
+      padding-left: 10px;
+      padding-right: 10px;
+
+      i { display: none; }
+    }
+  }
+
   .la-body {
     padding-bottom: 80px;
     padding-top: 20px;
