@@ -48,6 +48,13 @@
     min-width: 150px;
   }
 
+  /* Four fixed labels in a pill: unlike a text box it has nothing to give up,
+   * so its field is sized to what it holds rather than to the column. */
+  .lr-controls .la-field-fit {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
   .lr-filters {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
