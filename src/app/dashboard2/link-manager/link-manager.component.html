@@ -1,494 +1,113 @@
-<div class="container-fluid py-4 link-manager">
+<div class="link-manager">
 
-  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-    <div>
-      <h4 class="mb-1">Link manager</h4>
-      <p class="text-muted mb-0 small">
-        Every outbound link on the site, how it is tagged, how often it is clicked and whether it still works.
+  <header class="lm-head">
+    <div class="lm-head-text">
+      <h1 class="h4 text-black mb-0p">Links</h1>
+      <p class="body2 text-label mt-5p mb-0p" *ngIf="dashboard">
+        {{ dashboard.inventory.total | number }} links ·
+        {{ dashboard.inventory.managed | number }} short links ·
+        {{ dashboard.inventory.hosts | number }} destinations
       </p>
+      <p class="body2 text-label mt-5p mb-0p" *ngIf="!dashboard">Every link we send people to, and what happens after they click.</p>
     </div>
-    <div class="d-flex align-items-center">
-      <button *ngIf="isAdmin" class="btn btn-outline-secondary btn-sm mr-2" (click)="discover()" [disabled]="running">
-        {{ running === 'discover' ? 'Scanning…' : 'Scan site' }}
-      </button>
-      <button *ngIf="isAdmin" class="btn btn-outline-secondary btn-sm mr-2" (click)="checkHealth()" [disabled]="running">
+
+    <div class="lm-head-actions">
+      <button type="button" class="btn btn-primary small" (click)="openCreate()">New link</button>
+      <button type="button" class="btn btn-outline small" *ngIf="isAdmin"
+              (click)="checkHealth()" [disabled]="running">
         {{ running === 'health' ? 'Checking…' : 'Check destinations' }}
       </button>
-      <button class="btn btn-primary btn-sm" (click)="selectTab('links'); openCreate()">New short link</button>
-    </div>
-  </div>
-
-  <ul class="nav nav-tabs mb-3">
-    <li class="nav-item">
-      <a class="nav-link" [class.active]="tab === 'overview'" href="javascript:void(0)" (click)="selectTab('overview')">Overview</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" [class.active]="tab === 'links'" href="javascript:void(0)" (click)="selectTab('links')">Links</a>
-    </li>
-    <li class="nav-item" *ngIf="isAdmin">
-      <a class="nav-link" [class.active]="tab === 'policy'" href="javascript:void(0)" (click)="selectTab('policy')">Tagging policy</a>
-    </li>
-  </ul>
-
-  <div class="d-flex align-items-center mb-3" *ngIf="tab !== 'policy'">
-    <span class="small text-muted mr-2">Window</span>
-    <div class="btn-group btn-group-sm">
-      <button *ngFor="let w of WINDOWS" class="btn" [class.btn-primary]="days === w" [class.btn-outline-secondary]="days !== w" (click)="setDays(w)">
-        {{ w }}d
+      <button type="button" class="btn btn-outline small" *ngIf="isAdmin"
+              (click)="discover()" [disabled]="running">
+        {{ running === 'discover' ? 'Scanning…' : 'Scan the site' }}
       </button>
     </div>
+  </header>
+
+  <div class="lm-bar">
+    <div class="lm-tabs" role="tablist" aria-label="Link manager sections" (keydown)="onTabKey($event)">
+      <button type="button" class="lm-tab" role="tab" id="tabOverview"
+              [class.is-active]="tab === 'overview'" [attr.aria-selected]="tab === 'overview'"
+              [attr.tabindex]="tab === 'overview' ? 0 : -1" aria-controls="panelOverview" (click)="selectTab('overview')">Overview</button>
+      <button type="button" class="lm-tab" role="tab" id="tabLinks"
+              [class.is-active]="tab === 'links'" [attr.aria-selected]="tab === 'links'"
+              [attr.tabindex]="tab === 'links' ? 0 : -1" aria-controls="panelLinks" (click)="selectTab('links')">All links</button>
+      <button type="button" class="lm-tab" role="tab" id="tabPolicy" *ngIf="isAdmin"
+              [class.is-active]="tab === 'policy'" [attr.aria-selected]="tab === 'policy'"
+              [attr.tabindex]="tab === 'policy' ? 0 : -1" aria-controls="panelPolicy" (click)="selectTab('policy')">Tagging</button>
+    </div>
+
+    <div class="lm-window" *ngIf="tab !== 'policy'">
+      <span class="field-label" id="windowLabel">Showing</span>
+      <div class="lm-window-choices" role="group" aria-labelledby="windowLabel">
+        <button type="button" class="lm-window-choice body-small" *ngFor="let window of WINDOWS"
+                [class.is-active]="days === window" [attr.aria-pressed]="days === window"
+                (click)="setDays(window)">{{ window }}d</button>
+      </div>
+    </div>
   </div>
 
-  <!-- ============================ OVERVIEW ============================ -->
-  <ng-container *ngIf="tab === 'overview'">
-    <div *ngIf="dashboardLoading" class="text-muted py-5 text-center">Loading…</div>
+  <section role="tabpanel" id="panelOverview" aria-labelledby="tabOverview" *ngIf="tab === 'overview'">
+    <app-link-overview [dashboard]="dashboard" [loading]="dashboardLoading"
+                       (focusHealth)="focusHealth($event)"></app-link-overview>
+  </section>
 
-    <ng-container *ngIf="!dashboardLoading && dashboard">
-      <div class="row mb-4">
-        <div class="col-6 col-lg-2 mb-2">
-          <div class="stat"><div class="stat-value">{{ dashboard.totals.humans | number }}</div><div class="stat-label">Clicks</div></div>
+  <section role="tabpanel" id="panelLinks" aria-labelledby="tabLinks" *ngIf="tab === 'links'">
+    <app-link-editor *ngIf="showForm" [link]="editing" [saving]="saving" [site]="SITE"
+                     (save)="save($event)" (cancel)="cancelForm()"></app-link-editor>
+
+    <app-link-catalog [links]="list" [total]="total" [page]="page" [totalPages]="totalPages"
+                      [loading]="listLoading" [isAdmin]="isAdmin" [site]="SITE" [filters]="filters"
+                      (apply)="applyFilters($event)" (paginate)="goToPage($event)"
+                      (edit)="openEdit($event)" (stats)="showAnalytics($event)"
+                      (remove)="remove($event)" (copy)="copy($event)"></app-link-catalog>
+
+    <section class="panel drawer mb-20p" *ngIf="activeLink" aria-labelledby="drawerHeading">
+      <div class="panel-head">
+        <div class="drawer-title">
+          <h2 class="eyebrow mb-0p" id="drawerHeading">{{ activeLink.title || activeLink.hostname }}</h2>
+          <a class="row-url" [href]="activeLink.destinationUrl" target="_blank" rel="noopener">{{ activeLink.destinationUrl }}</a>
         </div>
-        <div class="col-6 col-lg-2 mb-2">
-          <div class="stat"><div class="stat-value">{{ dashboard.totals.unique | number }}</div><div class="stat-label">Unique visitors</div></div>
-        </div>
-        <div class="col-6 col-lg-2 mb-2">
-          <div class="stat"><div class="stat-value">{{ dashboard.inventory.total | number }}</div><div class="stat-label">Links tracked</div></div>
-        </div>
-        <div class="col-6 col-lg-2 mb-2">
-          <div class="stat"><div class="stat-value">{{ dashboard.inventory.hosts | number }}</div><div class="stat-label">Destination sites</div></div>
-        </div>
-        <div class="col-6 col-lg-2 mb-2">
-          <div class="stat"><div class="stat-value">{{ dashboard.inventory.managed | number }}</div><div class="stat-label">Short links</div></div>
-        </div>
-        <div class="col-6 col-lg-2 mb-2">
-          <div class="stat" [class.stat-alert]="dashboard.broken.length">
-            <div class="stat-value">{{ dashboard.broken.length | number }}</div>
-            <div class="stat-label">Broken</div>
-          </div>
-        </div>
+        <button type="button" class="btn btn-text small" (click)="closeAnalytics()">Close</button>
       </div>
 
-      <div class="card mb-4">
-        <div class="card-body">
-          <h6 class="card-title mb-3">Outbound clicks, last {{ dashboard.days }} days</h6>
-          <div *ngIf="!dashboard.trend.length" class="text-muted small">No clicks recorded in this window yet.</div>
-          <div class="trend" *ngIf="dashboard.trend.length">
-            <div class="trend-bar" *ngFor="let row of dashboard.trend" [title]="row.day + ': ' + row.total + ' clicks (' + row.humans + ' human)'">
-              <div class="trend-fill" [style.height]="barHeight(row.total)"></div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-between small text-muted mt-2" *ngIf="dashboard.trend.length">
-            <span>{{ dashboard.trend[0].day }}</span>
-            <span>{{ dashboard.trend[dashboard.trend.length - 1].day }}</span>
-          </div>
-          <div class="small text-muted mt-2">
-            {{ dashboard.totals.humans | number }} human · {{ dashboard.totals.bots | number }} bot ·
-            {{ dashboard.totals.mobile | number }} mobile · {{ dashboard.totals.desktop | number }} desktop
-          </div>
-        </div>
-      </div>
+      <p class="loading-note mb-0p" *ngIf="analyticsLoading">Loading this link's clicks…</p>
 
-      <div class="row">
-        <div class="col-lg-6 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <h6 class="card-title mb-3">Most clicked links</h6>
-              <div *ngIf="!dashboard.topLinks.length" class="text-muted small">Nothing clicked yet.</div>
-              <table class="table table-sm mb-0" *ngIf="dashboard.topLinks.length">
-                <tbody>
-                  <tr *ngFor="let row of dashboard.topLinks">
-                    <td class="min-w-0">
-                      <div class="text-truncate font-weight-bold">{{ row.title || row.hostname }}</div>
-                      <a class="small text-muted text-truncate d-block" [href]="row.destinationUrl" target="_blank" rel="noopener">{{ row.destinationUrl }}</a>
-                      <div class="small text-muted" *ngIf="row.foundOn">on {{ row.foundOn }}</div>
-                    </td>
-                    <td class="nowrap text-right align-middle">{{ row.humans | number }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+      <ng-container *ngIf="!analyticsLoading && analytics">
+        <ul class="drawer-figures">
+          <li><span class="num h5 text-black">{{ analytics.totals.humans | number }}</span><span class="caption text-label">clicks</span></li>
+          <li><span class="num h5 text-black">{{ analytics.totals.unique | number }}</span><span class="caption text-label">people</span></li>
+          <li><span class="num h5 text-black">{{ analytics.totals.mobile | number }}</span><span class="caption text-label">mobile</span></li>
+          <li><span class="num h5 text-black">{{ analytics.totals.desktop | number }}</span><span class="caption text-label">desktop</span></li>
+          <li><span class="num h5 text-black">{{ analytics.totals.bots | number }}</span><span class="caption text-label">bots</span></li>
+        </ul>
 
-        <div class="col-lg-6 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <h6 class="card-title mb-3">Where traffic goes</h6>
-              <div *ngIf="!dashboard.topHosts.length" class="text-muted small">Nothing clicked yet.</div>
-              <table class="table table-sm mb-0" *ngIf="dashboard.topHosts.length">
-                <tbody>
-                  <tr *ngFor="let row of dashboard.topHosts">
-                    <td class="min-w-0 text-truncate">{{ row.hostname }}</td>
-                    <td class="nowrap text-right">{{ row.humans | number }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+        <svg class="trend trend-small" *ngIf="analyticsLine"
+             [attr.viewBox]="'0 0 ' + drawerWidth + ' ' + drawerHeight"
+             preserveAspectRatio="none" role="img"
+             [attr.aria-label]="'Daily clicks on this link over the last ' + days + ' days'">
+          <path class="trend-area" [attr.d]="analyticsArea"></path>
+          <path class="trend-line" [attr.d]="analyticsLine"></path>
+        </svg>
 
-      <div class="row">
-        <div class="col-lg-4 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <h6 class="card-title mb-3">Where links come from</h6>
-              <table class="table table-sm mb-0">
-                <tbody>
-                  <tr *ngFor="let row of entries(dashboard.inventory.bySource)">
-                    <td>{{ row.key | titlecase }}</td>
-                    <td class="text-right">{{ row.value | number }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <p class="empty-body mb-0p" *ngIf="!analyticsLine">No clicks on this link in the last {{ days }} days.</p>
 
-        <div class="col-lg-4 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <h6 class="card-title mb-3">Destination health</h6>
-              <table class="table table-sm mb-0">
-                <tbody>
-                  <tr *ngFor="let row of entries(dashboard.health)">
-                    <td><span class="dot" [ngClass]="'health-' + row.key.toLowerCase()"></span> {{ row.key | titlecase }}</td>
-                    <td class="text-right">{{ row.value | number }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <h6 class="card-title mb-3">Needs attention</h6>
-              <div *ngIf="!dashboard.broken.length" class="text-muted small">Every destination we have checked is reachable.</div>
-              <div *ngFor="let link of dashboard.broken" class="mb-2 pb-2 border-bottom">
-                <div class="text-truncate small font-weight-bold">{{ link.title || link.hostname }}</div>
-                <a class="small text-muted text-truncate d-block" [href]="link.destinationUrl" target="_blank" rel="noopener">{{ link.destinationUrl }}</a>
-                <div class="small text-danger">
-                  {{ link.health.status | titlecase }}
-                  <span *ngIf="link.health.statusCode"> · HTTP {{ link.health.statusCode }}</span>
-                  <span *ngIf="link.health.error"> · {{ link.health.error }}</span>
-                </div>
-                <div class="small text-muted" *ngIf="link.foundOn">on {{ link.foundOn }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-  </ng-container>
-
-  <!-- ============================== LINKS ============================== -->
-  <ng-container *ngIf="tab === 'links'">
-
-    <div class="card mb-3" *ngIf="showForm">
-      <div class="card-body">
-        <h6 class="card-title">{{ editing ? 'Edit link' : 'New short link' }}</h6>
-        <p class="small text-muted">
-          A short link redirects from <code>{{ SITE }}/out/&lt;code&gt;</code> with its UTM parameters attached, and
-          counts every click on the server. Use it for campaigns, printed material and QR codes.
-        </p>
-        <div class="form-row">
-          <div class="form-group col-md-8">
-            <label class="small">Destination URL</label>
-            <input class="form-control" [(ngModel)]="form.destinationUrl" placeholder="https://clinic.example.com/book">
-          </div>
-          <div class="form-group col-md-4">
-            <label class="small">Short code</label>
-            <input class="form-control" [(ngModel)]="form.code" placeholder="auto">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label class="small">Title</label>
-            <input class="form-control" [(ngModel)]="form.title" placeholder="Spring campaign — booking page">
-          </div>
-          <div class="form-group col-md-6">
-            <label class="small">Description</label>
-            <input class="form-control" [(ngModel)]="form.description" placeholder="Optional note">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-3">
-            <label class="small">utm_source</label>
-            <input class="form-control" [(ngModel)]="form.utmSource" placeholder="prompthealth">
-            <small class="form-text text-muted" *ngIf="utmPreview('utmSource')">{{ utmPreview('utmSource') }}</small>
-          </div>
-          <div class="form-group col-md-3">
-            <label class="small">utm_medium</label>
-            <input class="form-control" [(ngModel)]="form.utmMedium" placeholder="referral">
-            <small class="form-text text-muted" *ngIf="utmPreview('utmMedium')">{{ utmPreview('utmMedium') }}</small>
-          </div>
-          <div class="form-group col-md-3">
-            <label class="small">utm_campaign</label>
-            <input class="form-control" [(ngModel)]="form.utmCampaign" placeholder="spring-2026">
-            <small class="form-text text-muted" *ngIf="utmPreview('utmCampaign')">{{ utmPreview('utmCampaign') }}</small>
-          </div>
-          <div class="form-group col-md-3">
-            <label class="small">utm_content</label>
-            <input class="form-control" [(ngModel)]="form.utmContent" placeholder="poster-a">
-            <small class="form-text text-muted" *ngIf="utmPreview('utmContent')">{{ utmPreview('utmContent') }}</small>
-          </div>
-        </div>
-        <div class="form-row align-items-end">
-          <div class="form-group col-md-3">
-            <label class="small">Type</label>
-            <select class="form-control" [(ngModel)]="form.slugType">
-              <option *ngFor="let type of SLUG_TYPES" [value]="type">{{ type }}</option>
-            </select>
-          </div>
-          <div class="form-group col-md-3">
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="linkActive" [(ngModel)]="form.isActive">
-              <label class="custom-control-label small" for="linkActive">Active</label>
-            </div>
-          </div>
-          <div class="form-group col-md-6 text-right">
-            <button class="btn btn-light mr-2" (click)="cancelForm()">Cancel</button>
-            <button class="btn btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving…' : 'Save' }}</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mb-3">
-      <div class="card-body py-2">
-        <div class="form-row align-items-end">
-          <div class="form-group col-md-4 mb-2">
-            <label class="small">Search</label>
-            <input class="form-control form-control-sm" [(ngModel)]="filters.search" (keyup.enter)="loadList(true)" placeholder="Title, code, URL or host">
-          </div>
-          <div class="form-group col-md-2 mb-2">
-            <label class="small">Source</label>
-            <select class="form-control form-control-sm" [(ngModel)]="filters.source" (change)="loadList(true)">
-              <option value="">Any</option>
-              <option *ngFor="let source of SOURCES" [value]="source">{{ source | titlecase }}</option>
-            </select>
-          </div>
-          <div class="form-group col-md-2 mb-2">
-            <label class="small">Health</label>
-            <select class="form-control form-control-sm" [(ngModel)]="filters.health" (change)="loadList(true)">
-              <option value="">Any</option>
-              <option *ngFor="let status of HEALTH_STATUSES" [value]="status">{{ status | titlecase }}</option>
-            </select>
-          </div>
-          <div class="form-group col-md-2 mb-2">
-            <label class="small">Sort</label>
-            <select class="form-control form-control-sm" [(ngModel)]="filters.sortBy" (change)="loadList(true)">
-              <option value="stats.clicks">Most clicked</option>
-              <option value="createdAt">Newest</option>
-              <option value="lastSeenAt">Last seen</option>
-              <option value="title">Title</option>
-            </select>
-          </div>
-          <div class="form-group col-md-2 mb-2 text-right">
-            <button class="btn btn-sm btn-outline-secondary mr-1" (click)="clearFilters()">Reset</button>
-            <button class="btn btn-sm btn-primary" (click)="loadList(true)">Apply</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="listLoading" class="text-muted py-4 text-center">Loading…</div>
-    <div *ngIf="!listLoading && !list.length" class="text-muted py-4 text-center">
-      No links match these filters.<span *ngIf="isAdmin"> Run <strong>Scan site</strong> to inventory the links already published.</span>
-    </div>
-
-    <div class="table-responsive" *ngIf="!listLoading && list.length">
-      <table class="table table-sm align-middle">
-        <thead>
-          <tr>
-            <th>Link</th>
-            <th class="nowrap">Tagging</th>
-            <th class="nowrap">Source</th>
-            <th class="nowrap">Health</th>
-            <th class="nowrap text-right">Clicks</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let link of list">
-            <td class="min-w-0">
-              <div class="text-truncate font-weight-bold">{{ link.title || link.hostname }}</div>
-              <a class="small text-muted d-block text-truncate" [href]="link.destinationUrl" target="_blank" rel="noopener">{{ link.destinationUrl }}</a>
-              <div class="small text-muted" *ngIf="link.foundOn">on {{ link.foundOn }}</div>
-              <div class="small mt-1" *ngIf="link.managed">
-                <code>/out/{{ link.code }}</code>
-                <button class="btn btn-link btn-sm p-0 ml-1" (click)="copy(shortUrl(link))">copy</button>
-              </div>
-            </td>
-            <td class="nowrap small text-muted">
-              <div *ngIf="link.utmSource">source={{ link.utmSource }}</div>
-              <div *ngIf="link.utmMedium">medium={{ link.utmMedium }}</div>
-              <div *ngIf="link.utmCampaign">campaign={{ link.utmCampaign }}</div>
-            </td>
-            <td class="nowrap small">
-              {{ link.source | titlecase }}
-              <div class="text-muted">{{ link.slugType | titlecase }}</div>
-            </td>
-            <td class="nowrap small">
-              <span class="dot" [ngClass]="healthClass(link)"></span>
-              {{ (link.health && link.health.status) || 'Unknown' | titlecase }}
-              <div class="text-muted" *ngIf="link.health && link.health.statusCode">HTTP {{ link.health.statusCode }}</div>
-            </td>
-            <td class="nowrap text-right">
-              <div>{{ (link.stats && link.stats.humanClicks) || 0 | number }}</div>
-              <div class="small text-muted" *ngIf="link.stats && link.stats.botClicks">{{ link.stats.botClicks | number }} bot</div>
-            </td>
-            <td class="nowrap text-right">
-              <button class="btn btn-sm btn-link" (click)="showAnalytics(link)">Stats</button>
-              <button class="btn btn-sm btn-link" (click)="openEdit(link)">Edit</button>
-              <button class="btn btn-sm btn-link text-danger" (click)="remove(link)">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center" *ngIf="!listLoading && list.length">
-      <span class="small text-muted">{{ total | number }} links</span>
-      <div class="btn-group btn-group-sm">
-        <button class="btn btn-outline-secondary" (click)="goToPage(page - 1)" [disabled]="page <= 1">Previous</button>
-        <button class="btn btn-outline-secondary" disabled>{{ page }} / {{ totalPages }}</button>
-        <button class="btn btn-outline-secondary" (click)="goToPage(page + 1)" [disabled]="page >= totalPages">Next</button>
-      </div>
-    </div>
-
-    <div class="card mt-3" *ngIf="activeLink">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start">
-          <div class="min-w-0">
-            <h6 class="mb-1 text-truncate">{{ activeLink.title || activeLink.hostname }}</h6>
-            <a class="small text-muted text-truncate d-block" [href]="activeLink.destinationUrl" target="_blank" rel="noopener">{{ activeLink.destinationUrl }}</a>
-          </div>
-          <button class="btn btn-sm btn-light" (click)="closeAnalytics()">Close</button>
-        </div>
-
-        <div *ngIf="analyticsLoading" class="text-muted py-3">Loading…</div>
-
-        <ng-container *ngIf="!analyticsLoading && analytics">
-          <div class="row mt-3">
-            <div class="col-4 col-md-2"><div class="stat"><div class="stat-value">{{ analytics.totals.humans | number }}</div><div class="stat-label">Clicks</div></div></div>
-            <div class="col-4 col-md-2"><div class="stat"><div class="stat-value">{{ analytics.totals.unique | number }}</div><div class="stat-label">Unique</div></div></div>
-            <div class="col-4 col-md-2"><div class="stat"><div class="stat-value">{{ analytics.totals.bots | number }}</div><div class="stat-label">Bots</div></div></div>
-            <div class="col-4 col-md-2"><div class="stat"><div class="stat-value">{{ analytics.totals.mobile | number }}</div><div class="stat-label">Mobile</div></div></div>
-            <div class="col-4 col-md-2"><div class="stat"><div class="stat-value">{{ analytics.totals.desktop | number }}</div><div class="stat-label">Desktop</div></div></div>
-          </div>
-
-          <div class="trend mt-3" *ngIf="analytics.byDay.length">
-            <div class="trend-bar" *ngFor="let row of analytics.byDay" [title]="row.day + ': ' + row.total">
-              <div class="trend-fill" [style.height]="analyticsBar(row.total)"></div>
-            </div>
-          </div>
-          <div class="text-muted small mt-2" *ngIf="!analytics.byDay.length">No clicks in this window.</div>
-
-          <div class="mt-3" *ngIf="analytics.bySourcePath.length">
-            <h6 class="small text-muted">Clicked from</h6>
-            <table class="table table-sm mb-0">
-              <tbody>
-                <tr *ngFor="let row of analytics.bySourcePath">
-                  <td class="min-w-0 text-truncate">{{ row.path }}</td>
-                  <td class="text-right nowrap">{{ row.total | number }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <ng-container *ngIf="analytics.bySourcePath && analytics.bySourcePath.length">
+          <h3 class="eyebrow mt-20p">Clicked from</h3>
+          <ul class="drawer-paths">
+            <li *ngFor="let row of analytics.bySourcePath">
+              <span class="drawer-path caption text-body">{{ row.path }}</span>
+              <span class="caption text-black num">{{ row.total | number }}</span>
+            </li>
+          </ul>
         </ng-container>
-      </div>
-    </div>
-  </ng-container>
+      </ng-container>
+    </section>
+  </section>
 
-  <!-- ============================= POLICY ============================= -->
-  <ng-container *ngIf="tab === 'policy'">
-    <div *ngIf="policyLoading" class="text-muted py-4 text-center">Loading…</div>
+  <section role="tabpanel" id="panelPolicy" aria-labelledby="tabPolicy" *ngIf="tab === 'policy' && isAdmin">
+    <app-link-policy [policy]="policy" [loading]="policyLoading" [saving]="policySaving"
+                     (save)="savePolicy($event)"></app-link-policy>
+  </section>
 
-    <div class="card" *ngIf="!policyLoading && policy">
-      <div class="card-body">
-        <p class="small text-muted">
-          These rules are applied in the browser to every outbound link on the site — feed posts, article bodies,
-          practitioner profiles and anything else — without changing the pages themselves. Saving takes effect
-          within five minutes; no deploy is needed.
-        </p>
-
-        <div class="custom-control custom-switch mb-3">
-          <input type="checkbox" class="custom-control-input" id="policyEnabled" [(ngModel)]="policy.enabled">
-          <label class="custom-control-label" for="policyEnabled">Tag outbound links</label>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label class="small">utm_source</label>
-            <input class="form-control" [(ngModel)]="policy.source">
-          </div>
-          <div class="form-group col-md-4">
-            <label class="small">utm_medium</label>
-            <input class="form-control" [(ngModel)]="policy.medium">
-          </div>
-          <div class="form-group col-md-4">
-            <label class="small">Default utm_campaign</label>
-            <input class="form-control" [(ngModel)]="policy.defaultCampaign">
-          </div>
-        </div>
-
-        <div class="custom-control custom-checkbox mb-2">
-          <input type="checkbox" class="custom-control-input" id="policyContent" [(ngModel)]="policy.includeContent">
-          <label class="custom-control-label small" for="policyContent">
-            Set utm_content to the page the click came from
-          </label>
-        </div>
-        <div class="custom-control custom-checkbox mb-2">
-          <input type="checkbox" class="custom-control-input" id="policyOverride" [(ngModel)]="policy.overrideExisting">
-          <label class="custom-control-label small" for="policyOverride">
-            Replace UTM parameters an author already put on a link
-          </label>
-        </div>
-        <div class="custom-control custom-checkbox mb-4">
-          <input type="checkbox" class="custom-control-input" id="policyBeacon" [(ngModel)]="policy.beacon">
-          <label class="custom-control-label small" for="policyBeacon">Record outbound clicks</label>
-        </div>
-
-        <h6 class="mb-2">Campaign per surface</h6>
-        <p class="small text-muted">
-          The first rule whose pattern matches the page path sets utm_campaign. Patterns are regular expressions.
-        </p>
-        <div class="form-row align-items-end mb-2" *ngFor="let rule of policy.routeRules; let i = index">
-          <div class="form-group col-md-4 mb-1">
-            <input class="form-control form-control-sm" [(ngModel)]="rule.pattern" placeholder="^/profile/">
-          </div>
-          <div class="form-group col-md-3 mb-1">
-            <input class="form-control form-control-sm" [(ngModel)]="rule.campaign" placeholder="profile">
-          </div>
-          <div class="form-group col-md-4 mb-1">
-            <input class="form-control form-control-sm" [(ngModel)]="rule.label" placeholder="Practitioner profiles">
-          </div>
-          <div class="form-group col-md-1 mb-1">
-            <button class="btn btn-sm btn-link text-danger" (click)="removeRule(i)">Remove</button>
-          </div>
-        </div>
-        <button class="btn btn-sm btn-outline-secondary mb-4" (click)="addRule()">Add rule</button>
-
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label class="small">First-party hosts, never tagged</label>
-            <textarea class="form-control" rows="4" [(ngModel)]="internalHostsText"></textarea>
-          </div>
-          <div class="form-group col-md-6">
-            <label class="small">Hosts opted out of tagging</label>
-            <textarea class="form-control" rows="4" [(ngModel)]="excludeHostsText" placeholder="one host per line"></textarea>
-          </div>
-        </div>
-
-        <div class="text-right">
-          <button class="btn btn-primary" (click)="savePolicy()" [disabled]="policySaving">
-            {{ policySaving ? 'Saving…' : 'Save policy' }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </ng-container>
 </div>

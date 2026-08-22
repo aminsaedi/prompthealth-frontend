@@ -1,0 +1,121 @@
+<section class="panel editor mb-20p" aria-labelledby="editorHeading">
+  <div class="panel-head">
+    <h2 class="eyebrow mb-0p" id="editorHeading">{{ editing ? 'Edit link' : 'New link' }}</h2>
+    <button type="button" class="btn btn-text small" (click)="cancel.emit()">Close</button>
+  </div>
+
+  <form (ngSubmit)="submit()" novalidate>
+
+    <div class="form-row">
+      <div class="col-12 mb-15p">
+        <label class="field-label" for="editorDestination">Destination</label>
+        <input class="form-control" id="editorDestination" name="destinationUrl" type="url"
+               placeholder="https://example.com/page"
+               [(ngModel)]="form.destinationUrl"
+               [attr.aria-invalid]="destinationError ? 'true' : null"
+               [attr.aria-describedby]="destinationError ? 'editorDestinationError' : 'editorDestinationHint'">
+        <p class="field-error mb-0p" id="editorDestinationError" *ngIf="destinationError">{{ destinationError }}</p>
+        <p class="field-hint mb-0p" id="editorDestinationHint" *ngIf="!destinationError">
+          Where people land. Campaign tags are added on the way out.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-6 mb-15p">
+        <label class="field-label" for="editorTitle">Name</label>
+        <input class="form-control" id="editorTitle" name="title" type="text"
+               placeholder="Spring newsletter footer" [(ngModel)]="form.title">
+        <p class="field-hint mb-0p">Only you see this. It is how the link is listed.</p>
+      </div>
+      <div class="col-md-6 mb-15p">
+        <label class="field-label" for="editorDescription">Note</label>
+        <input class="form-control" id="editorDescription" name="description" type="text"
+               placeholder="Sent to lapsed members on 3 March" [(ngModel)]="form.description">
+        <p class="field-hint mb-0p">Context for whoever finds this link later.</p>
+      </div>
+    </div>
+
+    <fieldset class="field-group mb-15p">
+      <legend class="eyebrow">Campaign tags</legend>
+      <p class="field-hint mb-15p">
+        These travel with every click so the destination's analytics can credit us.
+        Anything outside letters, numbers and dashes is rewritten before it is sent.
+      </p>
+
+      <div class="form-row">
+        <div class="col-md-6 mb-15p">
+          <label class="field-label" for="editorUtmSource">Source</label>
+          <input class="form-control" id="editorUtmSource" name="utmSource" type="text"
+                 placeholder="prompthealth" [(ngModel)]="form.utmSource"
+                 aria-describedby="editorUtmSourcePreview">
+          <p class="field-note mb-0p" id="editorUtmSourcePreview" aria-live="polite"
+             [class.is-dropped]="utmDropped('utmSource')">{{ utmPreview('utmSource') }}</p>
+        </div>
+        <div class="col-md-6 mb-15p">
+          <label class="field-label" for="editorUtmMedium">Medium</label>
+          <input class="form-control" id="editorUtmMedium" name="utmMedium" type="text"
+                 placeholder="referral" [(ngModel)]="form.utmMedium"
+                 aria-describedby="editorUtmMediumPreview">
+          <p class="field-note mb-0p" id="editorUtmMediumPreview" aria-live="polite"
+             [class.is-dropped]="utmDropped('utmMedium')">{{ utmPreview('utmMedium') }}</p>
+        </div>
+        <div class="col-md-6 mb-15p">
+          <label class="field-label" for="editorUtmCampaign">Campaign</label>
+          <input class="form-control" id="editorUtmCampaign" name="utmCampaign" type="text"
+                 placeholder="spring-directory" [(ngModel)]="form.utmCampaign"
+                 aria-describedby="editorUtmCampaignPreview">
+          <p class="field-note mb-0p" id="editorUtmCampaignPreview" aria-live="polite"
+             [class.is-dropped]="utmDropped('utmCampaign')">{{ utmPreview('utmCampaign') }}</p>
+        </div>
+        <div class="col-md-6 mb-15p">
+          <label class="field-label" for="editorUtmContent">Content</label>
+          <input class="form-control" id="editorUtmContent" name="utmContent" type="text"
+                 placeholder="footer-button" [(ngModel)]="form.utmContent"
+                 aria-describedby="editorUtmContentPreview">
+          <p class="field-note mb-0p" id="editorUtmContentPreview" aria-live="polite"
+             [class.is-dropped]="utmDropped('utmContent')">{{ utmPreview('utmContent') }}</p>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="field-group mb-15p">
+      <legend class="eyebrow">Short link</legend>
+
+      <div class="form-row">
+        <div class="col-md-5 mb-15p">
+          <label class="field-label" for="editorSlugType">Kind</label>
+          <select class="form-control" id="editorSlugType" name="slugType" [(ngModel)]="form.slugType">
+            <option *ngFor="let type of SLUG_TYPES" [value]="type">{{ type | titlecase }}</option>
+          </select>
+          <p class="field-hint mb-0p">Groups the link in reports.</p>
+        </div>
+        <div class="col-md-7 mb-15p">
+          <label class="field-label" for="editorCode">Code</label>
+          <input class="form-control" id="editorCode" name="code" type="text"
+                 placeholder="leave blank to generate one" [(ngModel)]="form.code"
+                 aria-describedby="editorCodeHint">
+          <p class="field-hint mb-0p" id="editorCodeHint">
+            <ng-container *ngIf="shortUrl">Short link: {{ shortUrl }}</ng-container>
+            <ng-container *ngIf="!shortUrl">A code is generated when you save.</ng-container>
+          </p>
+        </div>
+      </div>
+
+      <label class="switch">
+        <input type="checkbox" name="isActive" [(ngModel)]="form.isActive">
+        <span class="switch-label">Redirect visitors who open this link</span>
+      </label>
+      <p class="field-hint mb-0p">
+        Turn this off to retire the link. Its history stays, but the short link stops working.
+      </p>
+    </fieldset>
+
+    <div class="editor-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="saving">
+        {{ saving ? 'Saving…' : (editing ? 'Save changes' : 'Create link') }}
+      </button>
+      <button type="button" class="btn btn-outline" (click)="cancel.emit()" [disabled]="saving">Cancel</button>
+    </div>
+  </form>
+</section>

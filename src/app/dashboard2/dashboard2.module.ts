@@ -39,6 +39,10 @@ import { PaymentHistoryComponent } from './payment-history/payment-history.compo
 import { PaymentCreditComponent } from './payment-credit/payment-credit.component';
 import { RequestVideoComponent } from './request-video/request-video.component';
 import { LinkManagerComponent } from './link-manager/link-manager.component';
+import { LinkOverviewComponent } from './link-manager/link-overview/link-overview.component';
+import { LinkCatalogComponent } from './link-manager/link-catalog/link-catalog.component';
+import { LinkEditorComponent } from './link-manager/link-editor/link-editor.component';
+import { LinkPolicyComponent } from './link-manager/link-policy/link-policy.component';
 import { ButtonsModule } from '../buttons/buttons.module';
 
 
@@ -119,6 +123,10 @@ const routes: Routes = [
     VideoManagerComponent,
     SocialManagerComponent,
     LinkManagerComponent,
+    LinkOverviewComponent,
+    LinkCatalogComponent,
+    LinkEditorComponent,
+    LinkPolicyComponent,
     AffiliateComponent,
     AffiliateAddComponent,
     AffiliateListComponent,

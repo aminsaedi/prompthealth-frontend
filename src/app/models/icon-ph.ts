@@ -464,4 +464,6 @@ export type IconName =
 'nutritutan'|
 'oral-care'|
 'clipboard'|
-'star'
+'star'|
+'edit'|
+'chart-line'

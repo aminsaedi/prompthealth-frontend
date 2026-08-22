@@ -1,0 +1,161 @@
+<p class="loading-note" *ngIf="loading">Loading the overview…</p>
+
+<ng-container *ngIf="!loading && dashboard">
+
+  <!-- The state of every destination we send people to, in one bar. Each
+       segment is the way into the links it counts. -->
+  <section class="panel mb-20p" aria-labelledby="ribbonHeading">
+    <div class="panel-head">
+      <h2 class="eyebrow mb-0p" id="ribbonHeading">Destination health</h2>
+      <p class="panel-note body-small text-placeholder text-right mb-0p">
+        {{ checked | number }} of {{ dashboard.inventory.total | number }} checked
+      </p>
+    </div>
+
+    <div class="ribbon" *ngIf="segments.length">
+      <button type="button" class="ribbon-seg" *ngFor="let segment of segments"
+              [ngClass]="'tone-' + segment.tone"
+              [style.width.%]="segment.percent"
+              (click)="focusHealth.emit(segment.status)"
+              [attr.aria-label]="segment.count + ' ' + segment.label + '. ' + segment.hint + ' Show these links.'">
+      </button>
+    </div>
+
+    <ul class="legend">
+      <li *ngFor="let segment of segments">
+        <button type="button" class="legend-item" (click)="focusHealth.emit(segment.status)"
+                [attr.aria-label]="'Show the ' + segment.count + ' links that are ' + segment.label">
+          <span class="status-dot" [ngClass]="'tone-' + segment.tone" aria-hidden="true"></span>
+          <span class="legend-label body-small text-label">{{ segment.label }}</span>
+          <span class="legend-count body-small text-black num">{{ segment.count | number }}</span>
+        </button>
+      </li>
+    </ul>
+  </section>
+
+  <div class="row">
+    <div class="col-lg-7 mb-20p">
+      <section class="panel h-100" aria-labelledby="trendHeading">
+        <div class="panel-head">
+          <h2 class="eyebrow mb-0p" id="trendHeading">Outbound clicks</h2>
+          <p class="panel-note body-small text-placeholder text-right mb-0p">Last {{ dashboard.days }} days</p>
+        </div>
+
+        <p class="h3 text-black num mb-0p">
+          {{ dashboard.totals.humans | number }}
+          <span class="body2 text-label ml-5p">clicks</span>
+        </p>
+        <p class="body2 text-label mb-15p">
+          {{ dashboard.totals.unique | number }} people ·
+          {{ dashboard.totals.mobile | number }} on mobile ·
+          {{ dashboard.totals.bots | number }} bots filtered out
+        </p>
+
+        <ng-container *ngIf="linePath">
+          <svg class="trend" [attr.viewBox]="'0 0 ' + viewWidth + ' ' + viewHeight"
+               preserveAspectRatio="none" role="img"
+               [attr.aria-label]="'Daily outbound clicks from ' + firstDay + ' to ' + lastDay + ', peaking at ' + peak">
+            <path class="trend-area" [attr.d]="areaPath"></path>
+            <path class="trend-line" [attr.d]="linePath"></path>
+          </svg>
+          <p class="trend-axis caption text-placeholder mb-0p">
+            <span>{{ firstDay }}</span>
+            <span class="text-label">peak {{ peak | number }}</span>
+            <span>{{ lastDay }}</span>
+          </p>
+        </ng-container>
+
+        <p class="empty-body mb-0p" *ngIf="!linePath">No clicks recorded in this window yet.</p>
+      </section>
+    </div>
+
+    <div class="col-lg-5 mb-20p">
+      <section class="panel h-100" aria-labelledby="attentionHeading">
+        <div class="panel-head">
+          <h2 class="eyebrow mb-0p" id="attentionHeading">Needs attention</h2>
+          <p class="panel-note body-small text-placeholder text-right mb-0p" *ngIf="attention.length">
+            {{ attention.length }} dead
+          </p>
+        </div>
+
+        <p class="empty-body mb-0p" *ngIf="!attention.length">
+          Every destination we have checked is answering.
+        </p>
+
+        <ul class="attention" *ngIf="attention.length">
+          <li *ngFor="let link of attention">
+            <span class="row-title">{{ link.title || link.hostname }}</span>
+            <a class="row-url" [href]="link.destinationUrl" target="_blank" rel="noopener">{{ link.destinationUrl }}</a>
+            <span class="caption text-error d-block mt-5p">
+              {{ statusLabel(link) }}
+              <ng-container *ngIf="link.health && link.health.statusCode"> · HTTP {{ link.health.statusCode }}</ng-container>
+              <ng-container *ngIf="link.health && link.health.error"> · {{ link.health.error }}</ng-container>
+            </span>
+            <span class="row-meta" *ngIf="clicksOf(link)">{{ clicksOf(link) | number }} clicks sent here</span>
+            <span class="row-meta" *ngIf="link.foundOn">Found on {{ link.foundOn }}</span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6 mb-20p">
+      <section class="panel h-100" aria-labelledby="hostsHeading">
+        <div class="panel-head">
+          <h2 class="eyebrow mb-0p" id="hostsHeading">Where traffic goes</h2>
+          <p class="panel-note body-small text-placeholder text-right mb-0p">
+            {{ dashboard.inventory.hosts | number }} destinations
+          </p>
+        </div>
+
+        <p class="empty-body mb-0p" *ngIf="!hosts.length">Nothing clicked yet in this window.</p>
+
+        <ul class="hosts" *ngIf="hosts.length">
+          <li *ngFor="let host of hosts">
+            <span class="host-name body-small text-body">{{ host.hostname }}</span>
+            <span class="host-track" aria-hidden="true"><span class="host-fill" [style.width.%]="host.percent"></span></span>
+            <span class="host-count body-small text-black num">{{ host.humans | number }}</span>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="col-lg-6 mb-20p">
+      <section class="panel h-100" aria-labelledby="topLinksHeading">
+        <div class="panel-head">
+          <h2 class="eyebrow mb-0p" id="topLinksHeading">Most clicked links</h2>
+        </div>
+
+        <p class="empty-body mb-0p" *ngIf="!dashboard.topLinks.length">Nothing clicked yet in this window.</p>
+
+        <ul class="top-links" *ngIf="dashboard.topLinks.length">
+          <li *ngFor="let row of dashboard.topLinks">
+            <span class="top-link-body">
+              <span class="row-title">{{ row.title || row.hostname }}</span>
+              <a class="row-url" [href]="row.destinationUrl" target="_blank" rel="noopener">{{ row.destinationUrl }}</a>
+              <span class="row-meta" *ngIf="row.foundOn">Found on {{ row.foundOn }}</span>
+            </span>
+            <span class="top-link-count subtitle1 text-black num">{{ row.humans | number }}</span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <section class="panel mb-20p" aria-labelledby="originsHeading">
+    <div class="panel-head">
+      <h2 class="eyebrow mb-0p" id="originsHeading">Where links come from</h2>
+      <p class="panel-note body-small text-placeholder text-right mb-0p">
+        {{ dashboard.inventory.managed | number }} are short links we mint
+      </p>
+    </div>
+    <ul class="origin-list">
+      <li *ngFor="let row of sources">
+        <span class="origin-count h5 text-black num">{{ row.value | number }}</span>
+        <span class="caption text-label">{{ row.key | titlecase }}</span>
+      </li>
+    </ul>
+  </section>
+
+</ng-container>

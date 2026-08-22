@@ -1,0 +1,142 @@
+<p class="loading-note" *ngIf="loading">Loading the tagging policy…</p>
+
+<p class="empty-body" *ngIf="!loading && !draft">
+  The tagging policy has not been set up yet. Reload the page to try again.
+</p>
+
+<form *ngIf="draft" (ngSubmit)="submit()" novalidate>
+
+  <section class="panel mb-20p" aria-labelledby="policyMasterHeading">
+    <div class="panel-head">
+      <h2 class="eyebrow mb-0p" id="policyMasterHeading">Automatic tagging</h2>
+    </div>
+    <p class="field-hint mb-15p">
+      When this is on, every outbound link on the public site carries campaign tags,
+      so partners can see the traffic we send them.
+    </p>
+
+    <label class="switch">
+      <input type="checkbox" name="enabled" [(ngModel)]="draft.enabled">
+      <span class="switch-label">Tag outbound links across the site</span>
+    </label>
+  </section>
+
+  <section class="panel mb-20p" aria-labelledby="policyDefaultsHeading">
+    <div class="panel-head">
+      <h2 class="eyebrow mb-0p" id="policyDefaultsHeading">What every link says</h2>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-4 mb-15p">
+        <label class="field-label" for="policySource">Source</label>
+        <input class="form-control" id="policySource" name="source" type="text" [(ngModel)]="draft.source">
+        <p class="field-hint mb-0p">Who sent the visitor. Usually our own name.</p>
+      </div>
+      <div class="col-md-4 mb-15p">
+        <label class="field-label" for="policyMedium">Medium</label>
+        <input class="form-control" id="policyMedium" name="medium" type="text" [(ngModel)]="draft.medium">
+        <p class="field-hint mb-0p">How they arrived. Usually referral.</p>
+      </div>
+      <div class="col-md-4 mb-15p">
+        <label class="field-label" for="policyCampaign">Fallback campaign</label>
+        <input class="form-control" id="policyCampaign" name="defaultCampaign" type="text" [(ngModel)]="draft.defaultCampaign">
+        <p class="field-hint mb-0p">Used when no rule below matches the page.</p>
+      </div>
+    </div>
+
+    <label class="switch">
+      <input type="checkbox" name="includeContent" [(ngModel)]="draft.includeContent">
+      <span class="switch-label">Add the page slug as the content tag</span>
+    </label>
+    <label class="switch">
+      <input type="checkbox" name="overrideExisting" [(ngModel)]="draft.overrideExisting">
+      <span class="switch-label">Replace tags that a link already carries</span>
+    </label>
+    <label class="switch">
+      <input type="checkbox" name="beacon" [(ngModel)]="draft.beacon">
+      <span class="switch-label">Record the click before the visitor leaves</span>
+    </label>
+    <p class="field-hint mb-0p">
+      Recording happens in the background and does not delay the visitor.
+    </p>
+  </section>
+
+  <section class="panel mb-20p" aria-labelledby="policyRulesHeading">
+    <div class="panel-head">
+      <h2 class="eyebrow mb-0p" id="policyRulesHeading">Campaign by page</h2>
+      <button type="button" class="btn btn-text small" (click)="addRule()">Add a rule</button>
+    </div>
+    <p class="field-hint mb-15p">
+      The first rule whose pattern matches the page path decides the campaign.
+      Patterns are regular expressions, matched against paths like /articles/sleep.
+    </p>
+
+    <p class="empty-body mb-0p" *ngIf="!draft.routeRules || !draft.routeRules.length">
+      No rules yet. Every link uses the fallback campaign above.
+    </p>
+
+    <div class="rule" *ngFor="let rule of draft.routeRules; let i = index; trackBy: trackByIndex">
+      <div class="form-row">
+        <div class="col-md-4 mb-10p">
+          <label class="field-label" [attr.for]="'rulePattern' + i">Page pattern</label>
+          <input class="form-control" [attr.id]="'rulePattern' + i" [name]="'rulePattern' + i" type="text"
+                 placeholder="^/articles/" [(ngModel)]="rule.pattern"
+                 [attr.aria-invalid]="isValidPattern(rule.pattern) ? null : 'true'">
+        </div>
+        <div class="col-md-4 mb-10p">
+          <label class="field-label" [attr.for]="'ruleCampaign' + i">Campaign</label>
+          <input class="form-control" [attr.id]="'ruleCampaign' + i" [name]="'ruleCampaign' + i" type="text"
+                 placeholder="articles" [(ngModel)]="rule.campaign">
+        </div>
+        <div class="col-md-3 mb-10p">
+          <label class="field-label" [attr.for]="'ruleLabel' + i">Note</label>
+          <input class="form-control" [attr.id]="'ruleLabel' + i" [name]="'ruleLabel' + i" type="text"
+                 placeholder="Blog posts" [(ngModel)]="rule.label">
+        </div>
+        <div class="col-md-1 mb-10p rule-remove">
+          <button type="button" class="btn btn-icon small" (click)="removeRule(i)"
+                  [attr.aria-label]="'Remove rule ' + (i + 1)">
+            <i iconPh="trash" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <p class="field-error mb-0p" *ngIf="!isValidPattern(rule.pattern)">
+        This pattern cannot be read. Check the brackets and slashes.
+      </p>
+    </div>
+
+    <p class="field-error mb-0p" *ngIf="patternError" role="alert">{{ patternError }}</p>
+  </section>
+
+  <section class="panel mb-20p" aria-labelledby="policyHostsHeading">
+    <div class="panel-head">
+      <h2 class="eyebrow mb-0p" id="policyHostsHeading">Hosts</h2>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-6 mb-15p">
+        <label class="field-label" for="policyInternalHosts">Ours</label>
+        <textarea class="form-control host-list" id="policyInternalHosts" name="internalHosts" rows="5"
+                  [(ngModel)]="internalHostsText" aria-describedby="policyInternalHostsHint"></textarea>
+        <p class="field-hint mb-0p" id="policyInternalHostsHint">
+          One host per line. Links to these are treated as staying on our site, so they are never tagged.
+        </p>
+      </div>
+      <div class="col-md-6 mb-15p">
+        <label class="field-label" for="policyExcludeHosts">Leave alone</label>
+        <textarea class="form-control host-list" id="policyExcludeHosts" name="excludeHosts" rows="5"
+                  [(ngModel)]="excludeHostsText" aria-describedby="policyExcludeHostsHint"></textarea>
+        <p class="field-hint mb-0p" id="policyExcludeHostsHint">
+          One host per line. Use this for sites that break when extra parameters arrive.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="editor-actions mb-20p">
+    <button type="submit" class="btn btn-primary" [disabled]="saving">
+      {{ saving ? 'Saving…' : 'Save policy' }}
+    </button>
+    <p class="field-hint mb-0p">Changes reach the public site within five minutes.</p>
+  </div>
+</form>
