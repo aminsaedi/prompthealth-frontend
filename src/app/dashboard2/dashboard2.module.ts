@@ -38,11 +38,6 @@ import { PaymentSubscriptionComponent } from './payment-subscription/payment-sub
 import { PaymentHistoryComponent } from './payment-history/payment-history.component';
 import { PaymentCreditComponent } from './payment-credit/payment-credit.component';
 import { RequestVideoComponent } from './request-video/request-video.component';
-import { LinkManagerComponent } from './link-manager/link-manager.component';
-import { LinkOverviewComponent } from './link-manager/link-overview/link-overview.component';
-import { LinkCatalogComponent } from './link-manager/link-catalog/link-catalog.component';
-import { LinkEditorComponent } from './link-manager/link-editor/link-editor.component';
-import { LinkPolicyComponent } from './link-manager/link-policy/link-policy.component';
 import { ButtonsModule } from '../buttons/buttons.module';
 
 
@@ -68,7 +63,9 @@ const routes: Routes = [
       { path: 'showcase', component: ShowcaseComponent, },
       { path: 'video', component: VideoManagerComponent, },
       { path: 'social', component: SocialManagerComponent, },
-      { path: 'links', component: LinkManagerComponent, },
+      /* Moved out of the dashboard's narrow content column; the sidebar entry
+       * still points here so old links and bookmarks keep working. */
+      { path: 'links', redirectTo: '/link-admin', },
 
       { path: 'bookmark', component: BookmarksComponent, },
       { path: 'password', component: PasswordComponent, },
@@ -122,11 +119,6 @@ const routes: Routes = [
     BadgesComponent,
     VideoManagerComponent,
     SocialManagerComponent,
-    LinkManagerComponent,
-    LinkOverviewComponent,
-    LinkCatalogComponent,
-    LinkEditorComponent,
-    LinkPolicyComponent,
     AffiliateComponent,
     AffiliateAddComponent,
     AffiliateListComponent,

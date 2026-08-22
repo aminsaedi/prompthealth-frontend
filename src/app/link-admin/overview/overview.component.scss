@@ -1,0 +1,121 @@
+@import '../../../assets/scss/variables';
+
+/* Only what is particular to the overview. Panels, tones, bars and the grid of
+ * columns come from the section stylesheet. */
+
+.lo-kpis { margin-bottom: 20px; }
+
+.lo .kpi-alert .kpi-value { color: $colorErrorDark; }
+
+.lo-health {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.lo-health-btn {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  display: flex;
+  padding: 5px 6px;
+  text-align: left;
+  width: 100%;
+
+  &:hover { background: $colorGsBackground; }
+}
+
+.lo-health-name { flex: 1 1 auto; font-size: 14px; line-height: 20px; }
+
+/* A destination name that opens a report reads as a link, but it is a control,
+ * so it stays a button and only borrows the appearance. */
+.lo-linkish {
+  background: transparent;
+  border: 0;
+  color: $colorPrimary;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0;
+  text-align: left;
+
+  &:hover { text-decoration: underline; }
+}
+
+.lo-top {
+  counter-reset: rank;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lo-top>li {
+  align-items: baseline;
+  border-bottom: 1px solid $colorGsLine;
+  display: grid;
+  gap: 0 10px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 8px 0;
+
+  &:last-child { border-bottom: 0; }
+}
+
+.lo-top-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lo-top-host {
+  grid-column: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lo-top-count {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  font-weight: 500;
+}
+
+.lo-attention-head { padding: 20px 20px 0; }
+
+.lo-broken {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lo-broken>li {
+  align-items: center;
+  border-top: 1px solid $colorGsLine;
+  display: grid;
+  gap: 2px 15px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  padding: 12px 20px;
+}
+
+.lo-broken-title {
+  grid-column: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lo-broken-url {
+  color: $colorGsLabel;
+  grid-column: 1;
+  grid-row: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lo-broken .pill,
+.lo-broken .num { grid-row: 1 / span 2; }
+
+@media (max-width: $breakpointMd) {
+  .lo-broken>li { grid-template-columns: minmax(0, 1fr) auto; }
+  .lo-broken .num { grid-column: 1; grid-row: 3; }
+}

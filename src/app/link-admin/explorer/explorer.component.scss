@@ -1,0 +1,95 @@
+@import '../../../assets/scss/variables';
+
+.link-admin {
+  .lx-panel { padding-bottom: 15px; }
+
+  .lx-tools {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .lx-count {
+    margin: 0 20px 10px;
+  }
+
+  /* Two lines inside one grid row: what the link is called, and where it
+   * actually goes. The address is what tells two similar titles apart. */
+  .lx-title,
+  .lx-url {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lx-title {
+    font-size: 14px;
+    line-height: 18px;
+    color: $colorGsBody;
+  }
+
+  .lx-url {
+    font-size: 12px;
+    line-height: 15px;
+    color: $colorGsLabel;
+  }
+
+  .ag-theme-alpine .ag-cell {
+    line-height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .ag-theme-alpine .ag-cell.ag-right-aligned-cell {
+    align-items: flex-end;
+  }
+
+  .lx-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .lx-actions .btn-icon {
+    background: none;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    padding: 0;
+    font-size: 14px;
+    color: $colorGsLabel;
+
+    &:hover {
+      color: $colorPrimary;
+      background: $colorGsBackground;
+    }
+
+    &:focus { outline: 2px solid $colorPrimary; outline-offset: 1px; }
+  }
+
+  .lx-stats {
+    gap: 10px;
+  }
+
+  .lx-stats .kpi {
+    padding: 12px 15px;
+  }
+
+  .lx-stats .kpi-value {
+    font-size: 22px;
+  }
+
+  .lx-stats-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+  }
+}

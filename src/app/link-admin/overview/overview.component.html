@@ -1,0 +1,141 @@
+<div class="lo">
+
+  <dl class="la-cols la-cols-4 lo-kpis">
+    <div class="kpi">
+      <dt class="eyebrow">People</dt>
+      <dd><span class="kpi-value num">{{ totals.humans | number }}</span>
+        <span class="kpi-note body-small text-label">{{ totals.unique | number }} of them distinct, last {{ days }} days</span>
+      </dd>
+    </div>
+    <div class="kpi">
+      <dt class="eyebrow">Clicks</dt>
+      <dd><span class="kpi-value num">{{ totals.total | number }}</span>
+        <span class="kpi-note body-small text-label">{{ totals.bots | number }} were bots</span>
+      </dd>
+    </div>
+    <div class="kpi">
+      <dt class="eyebrow">Links tracked</dt>
+      <dd><span class="kpi-value num">{{ inventory.total | number }}</span>
+        <span class="kpi-note body-small text-label">across {{ inventory.hosts | number }} destinations</span>
+      </dd>
+    </div>
+    <div class="kpi" [class.kpi-alert]="brokenCount > 0">
+      <dt class="eyebrow">Needs attention</dt>
+      <dd><span class="kpi-value num">{{ brokenCount | number }}</span>
+        <span class="kpi-note body-small text-label">
+          {{ brokenCount ? 'destinations are dead or unreachable' : 'every destination answered' }}
+        </span>
+      </dd>
+    </div>
+  </dl>
+
+  <div class="la-cols la-cols-2">
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="subtitle1 mb-0">Outbound traffic</h2>
+          <p class="body-small text-label mb-0">People and bots leaving the site, by day.</p>
+        </div>
+      </div>
+      <app-chart *ngIf="trendChart" [config]="trendChart" [height]="260"
+                 alt="Daily outbound clicks by people and by bots"
+                 [caption]="(totals.humans | number) + ' people and ' + (totals.bots | number) + ' bots over ' + days + ' days'">
+      </app-chart>
+      <p class="empty body2 mb-0" *ngIf="!trendChart && !loading">No clicks recorded in this window yet.</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="subtitle1 mb-0">Destination health</h2>
+          <p class="body-small text-label mb-0">Choose a status to open the catalog filtered to it.</p>
+        </div>
+      </div>
+      <app-chart *ngIf="healthChart" [config]="healthChart" [height]="170"
+                 alt="How many destinations answered normally, redirected, or failed"></app-chart>
+      <ul class="lo-health" *ngIf="healthSlices.length">
+        <li *ngFor="let slice of healthSlices">
+          <button type="button" class="lo-health-btn" (click)="openHealth(slice.status)">
+            <span class="dot" [ngClass]="'tone-' + slice.tone" aria-hidden="true"></span>
+            <span class="lo-health-name">{{ slice.label }}</span>
+            <span class="num body-small text-label">{{ slice.count | number }}</span>
+          </button>
+        </li>
+      </ul>
+      <p class="empty body2 mb-0" *ngIf="!healthSlices.length && !loading">Nothing has been checked yet.</p>
+    </section>
+  </div>
+
+  <div class="la-cols">
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="subtitle1 mb-0">Where traffic goes</h2>
+          <p class="body-small text-label mb-0">Choose a destination to report on its campaigns.</p>
+        </div>
+      </div>
+      <ul class="bars" *ngIf="topHosts.length">
+        <li *ngFor="let host of topHosts">
+          <button type="button" class="bar-name lo-linkish" (click)="openHost(host.hostname)"
+                  [attr.title]="host.hostname">{{ host.hostname }}</button>
+          <span class="bar-count num body-small text-label">{{ host.humans | number }}</span>
+          <span class="bar-track"><span class="bar-fill" [style.width]="barWidth(host.humans)"></span></span>
+        </li>
+      </ul>
+      <p class="empty body2 mb-0" *ngIf="!topHosts.length && !loading">No destinations have been clicked yet.</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="subtitle1 mb-0">Most clicked links</h2>
+          <p class="body-small text-label mb-0">Over the last {{ days }} days.</p>
+        </div>
+        <a class="btn btn-text small" [routerLink]="['/link-admin/links']">All links</a>
+      </div>
+      <ol class="lo-top" *ngIf="topLinks.length">
+        <li *ngFor="let link of topLinks">
+          <span class="lo-top-name">{{ label(link) }}</span>
+          <a class="lo-top-host body-small text-label" [href]="link.destinationUrl" target="_blank" rel="noopener">{{ link.hostname }}</a>
+          <span class="lo-top-count num">{{ link.humans | number }}</span>
+        </li>
+      </ol>
+      <p class="empty body2 mb-0" *ngIf="!topLinks.length && !loading">Nothing has been clicked yet.</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="subtitle1 mb-0">How people arrive</h2>
+          <p class="body-small text-label mb-0">Device mix over the window.</p>
+        </div>
+      </div>
+      <app-chart *ngIf="deviceChart" [config]="deviceChart" [height]="170"
+                 alt="Share of outbound clicks from mobile and from desktop"
+                 [caption]="(totals.mobile | number) + ' mobile, ' + (totals.desktop | number) + ' desktop'"></app-chart>
+      <p class="empty body2 mb-0" *ngIf="!deviceChart && !loading">No clicks recorded in this window yet.</p>
+    </section>
+  </div>
+
+  <section class="panel flush" *ngIf="broken.length">
+    <div class="panel-head lo-attention-head">
+      <div>
+        <h2 class="subtitle1 mb-0">Broken destinations carrying traffic</h2>
+        <p class="body-small text-label mb-0">Worst first. These send people to a page that is not there.</p>
+      </div>
+      <a class="btn btn-text small" [routerLink]="['/link-admin/links']" [queryParams]="{ health: 'BROKEN' }">See all</a>
+    </div>
+    <ul class="lo-broken">
+      <li *ngFor="let link of broken">
+        <span class="lo-broken-title">{{ label(link) }}</span>
+        <a class="lo-broken-url body-small" [href]="link.destinationUrl" target="_blank" rel="noopener">{{ link.destinationUrl }}</a>
+        <span class="pill" [ngClass]="'tone-' + healthTone(link)">
+          {{ healthLabel(link) }}<ng-container *ngIf="link.health?.statusCode"> · {{ link.health.statusCode }}</ng-container>
+        </span>
+        <span class="num body-small text-label">{{ (link.stats?.clicks || 0) | number }} clicks</span>
+      </li>
+    </ul>
+  </section>
+
+  <p class="empty body2" *ngIf="loading && !dashboard">Loading the overview…</p>
+</div>

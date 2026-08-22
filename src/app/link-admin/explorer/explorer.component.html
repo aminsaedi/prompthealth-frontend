@@ -1,0 +1,135 @@
+<div class="panel flush lx-panel">
+  <div class="la-toolbar">
+    <div class="la-field la-field-grow">
+      <label class="field-label" for="lxSearch">Search</label>
+      <input id="lxSearch" type="search" class="form-control" placeholder="Title, address, campaign, short code…"
+        [ngModel]="search" (ngModelChange)="onSearch($event)" autocomplete="off">
+    </div>
+
+    <div class="la-field">
+      <label class="field-label" for="lxHealth">Destination health</label>
+      <select id="lxHealth" class="form-control" [ngModel]="healthFilter" (ngModelChange)="setHealthFilter($event)">
+        <option value="">Any</option>
+        <option *ngFor="let meta of HEALTH_OPTIONS" [value]="meta.status">{{ meta.label }}</option>
+      </select>
+    </div>
+
+    <span class="la-toolbar-spacer"></span>
+
+    <div class="lx-tools">
+      <button type="button" class="btn btn-text" (click)="clearFilters()">Clear filters</button>
+      <button type="button" class="btn btn-outline" (click)="exportCsv()">
+        <i iconPh="file-download" class="mr-5p" aria-hidden="true"></i>Export CSV
+      </button>
+      <button type="button" class="btn btn-primary" (click)="openCreate()">
+        <i iconPh="plus" class="mr-5p" aria-hidden="true"></i>New link
+      </button>
+    </div>
+  </div>
+
+  <p class="lx-count body-small text-label">
+    <ng-container *ngIf="loading; else counted">Loading links…</ng-container>
+    <ng-template #counted>
+      Showing <strong class="num text-body">{{ rows.length | number }}</strong> of
+      <strong class="num text-body">{{ total | number }}</strong> links.
+      Sort, filter and search happen in the browser, and Export CSV takes exactly what you see.
+    </ng-template>
+  </p>
+
+  <ag-grid-angular *ngIf="isBrowser" class="ag-theme-alpine la-grid"
+    [rowData]="rows"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [gridOptions]="gridOptions"
+    (gridReady)="onGridReady($event)"
+    (cellClicked)="onCellClicked($event)">
+  </ag-grid-angular>
+</div>
+
+<!-- Editor -------------------------------------------------------------- -->
+<div class="drawer-scrim" *ngIf="editorOpen" (click)="closeEditor()"></div>
+<aside class="drawer" *ngIf="editorOpen" role="dialog" aria-modal="true" aria-labelledby="lxEditorTitle">
+  <div class="drawer-head">
+    <h2 class="h6 mb-0" id="lxEditorTitle">{{ editing ? 'Edit link' : 'New link' }}</h2>
+    <button type="button" class="btn btn-icon" (click)="closeEditor()" aria-label="Close">
+      <i iconPh="chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <app-link-editor [link]="editing" [saving]="saving" [site]="SITE"
+      (save)="save($event)" (cancel)="closeEditor()"></app-link-editor>
+  </div>
+</aside>
+
+<!-- Per-link traffic ------------------------------------------------------ -->
+<div class="drawer-scrim" *ngIf="active" (click)="closeAnalytics()"></div>
+<aside class="drawer" *ngIf="active" role="dialog" aria-modal="true" aria-labelledby="lxStatsTitle">
+  <div class="drawer-head">
+    <div>
+      <h2 class="h6 mb-0" id="lxStatsTitle">{{ label(active) }}</h2>
+      <p class="body-small text-label mb-0">{{ active.destinationUrl }}</p>
+    </div>
+    <button type="button" class="btn btn-icon" (click)="closeAnalytics()" aria-label="Close">
+      <i iconPh="chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+    <p class="empty" *ngIf="analyticsLoading">Loading traffic…</p>
+
+    <ng-container *ngIf="!analyticsLoading && analytics">
+      <div class="la-cols la-cols-4 lx-stats">
+        <div class="kpi">
+          <p class="eyebrow mb-0">People</p>
+          <p class="kpi-value num mb-0">{{ (analytics.totals?.humans || 0) | number }}</p>
+        </div>
+        <div class="kpi">
+          <p class="eyebrow mb-0">Clicks</p>
+          <p class="kpi-value num mb-0">{{ (analytics.totals?.total || 0) | number }}</p>
+        </div>
+        <div class="kpi">
+          <p class="eyebrow mb-0">Mobile</p>
+          <p class="kpi-value num mb-0">{{ (analytics.totals?.mobile || 0) | number }}</p>
+        </div>
+        <div class="kpi">
+          <p class="eyebrow mb-0">Bots</p>
+          <p class="kpi-value num mb-0">{{ (analytics.totals?.bots || 0) | number }}</p>
+        </div>
+      </div>
+
+      <div class="panel tight mt-20p" *ngIf="analyticsChart">
+        <div class="panel-head">
+          <h3 class="subtitle2 mb-0">Clicks over the last {{ store.days }} days</h3>
+        </div>
+        <app-chart [config]="analyticsChart" [height]="200"
+          [alt]="'Daily clicks on ' + label(active)"></app-chart>
+      </div>
+
+      <div class="panel tight mt-20p" *ngIf="analytics.bySourcePath?.length">
+        <div class="panel-head">
+          <h3 class="subtitle2 mb-0">Pages people clicked from</h3>
+        </div>
+        <ul class="bars">
+          <li *ngFor="let row of analytics.bySourcePath">
+            <span class="bar-name">{{ row.path }}</span>
+            <span class="bar-count num">{{ row.total | number }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <p class="empty" *ngIf="!analyticsChart && !analytics.bySourcePath?.length">
+        No clicks recorded in this window.
+      </p>
+
+      <div class="lx-stats-actions">
+        <button type="button" class="btn btn-outline" (click)="store.copy(SITE + '/out/' + active.code)"
+          *ngIf="active.code">
+          <i iconPh="copy" class="mr-5p" aria-hidden="true"></i>Copy short link
+        </button>
+        <button type="button" class="btn btn-text" (click)="reportOn(active)">
+          Open in reports<i iconPh="chevron-right" class="ml-5p" aria-hidden="true"></i>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</aside>

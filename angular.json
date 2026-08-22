@@ -30,7 +30,12 @@
               "src/manifest.webmanifest",
               "src/firebase-messaging-sw.js",
               "src/ads.txt",
-              "src/manifest.json"
+              "src/manifest.json",
+              {
+                "glob": "*.min.css",
+                "input": "node_modules/ag-grid-community/dist/styles",
+                "output": "/assets/ag-grid"
+              }
             ],
             "styles": [
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",

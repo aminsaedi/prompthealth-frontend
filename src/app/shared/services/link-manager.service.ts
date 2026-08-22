@@ -64,6 +64,39 @@ export interface ILinkDashboard {
   broken: ILinkRecord[];
 }
 
+export interface IReportRow {
+  key: string;
+  label: string;
+  total: number;
+  humans: number;
+  bots: number;
+  mobile: number;
+  desktop: number;
+  unique: number;
+  share: number;
+  lastAt?: string;
+  code?: string;
+  hostname?: string;
+  destinationUrl?: string;
+}
+
+export interface IReport {
+  range: { from: string; to: string; days: number; truncated: boolean };
+  groupBy: string;
+  dimensions: string[];
+  filters: { [key: string]: string };
+  totals: { total: number; humans: number; bots: number; mobile: number; desktop: number; unique: number };
+  rows: IReportRow[];
+  trend: { day: string; total: number; humans: number; bots: number }[];
+  truncated: boolean;
+}
+
+export interface IReportFacet {
+  value: string;
+  label: string;
+  total: number;
+}
+
 export interface ILinkPolicyRecord {
   enabled: boolean;
   source: string;
@@ -103,6 +136,14 @@ export class LinkManagerService {
   }
   remove(id: string): Observable<any> {
     return this.shared.deleteContent(`link/${id}`);
+  }
+  /* The report builder. Filters and grouping both come from the caller, so one
+   * call answers a question the fixed dashboard panels were not built for. */
+  report(params: any = {}): Observable<any> {
+    return this.shared.get(`link/report${this.toQuery(params)}`);
+  }
+  reportFacets(params: any = {}): Observable<any> {
+    return this.shared.get(`link/report/facets${this.toQuery(params)}`);
   }
   getPolicy(): Observable<any> {
     return this.shared.get('link/policy');

@@ -1,0 +1,377 @@
+@import '../../assets/scss/variables';
+
+/* One stylesheet for the whole section. Encapsulation is off, so every rule is
+ * nested under .link-admin and nothing escapes to another page. Type, colour and
+ * spacing come from the house utility classes in the markup; what is here is
+ * structure, and the few treatments the system has no class for. */
+
+.link-admin {
+  $bad: $colorError;
+  $warn: $colorYellow;
+  $info: $colorSecondaryDark;
+  $good: $colorSuccess;
+  $idle: $colorGsPlaceholder;
+
+  color: $colorGsBody;
+  min-height: 100vh;
+
+  /* Counts sit in columns to be compared, not just read. */
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ------------------------------------------------------------ structure */
+
+  /* The section runs the full width of the window rather than the dashboard's
+   * narrow content column: a grid of a thousand links and a chart of a year of
+   * traffic both need the room. */
+  .la-wrap {
+    margin: 0 auto;
+    max-width: 1560px;
+    padding: 0 20px;
+    width: 100%;
+  }
+
+  .la-masthead {
+    background: $colorGsWhite;
+    border-bottom: 1px solid $colorGsLine;
+  }
+
+  .la-masthead-inner {
+    align-items: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    padding-top: 20px;
+  }
+
+  .la-identity {
+    min-width: 260px;
+
+    >p { margin-top: 4px; max-width: 62ch; }
+  }
+
+  .la-back {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0 4px -10px;
+
+    i { margin-right: 6px; }
+  }
+
+  .la-masthead-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .btn i { margin-right: 6px; }
+  }
+
+  .la-window {
+    background: $colorGsBackground;
+    border-radius: 8px;
+    display: inline-flex;
+    padding: 3px;
+  }
+
+  .la-window-btn {
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    color: $colorGsLabel;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    padding: 4px 12px;
+
+    &.is-active {
+      background: $colorGsWhite;
+      box-shadow: 0 1px 2px rgba($colorGsBlack, 0.12);
+      color: $colorPrimary;
+      font-weight: 700;
+    }
+
+    &:hover:not(.is-active) { color: $colorGsBody; }
+  }
+
+  .la-nav-inner {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+  }
+
+  .la-nav-item {
+    border-bottom: 2px solid transparent;
+    color: $colorGsLabel;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    padding: 10px 12px;
+    white-space: nowrap;
+
+    i { margin-right: 8px; }
+
+    &:hover { color: $colorGsBody; text-decoration: none; }
+
+    &.is-active {
+      border-bottom-color: $colorPrimary;
+      color: $colorPrimary;
+      font-weight: 700;
+    }
+  }
+
+  .la-body {
+    padding-bottom: 80px;
+    padding-top: 20px;
+  }
+
+  /* ---------------------------------------------------------------- panels */
+
+  .panel {
+    background: $colorGsWhite;
+    border: 1px solid $colorGsLine;
+    border-radius: 8px;
+    padding: 20px;
+
+    &.tight { padding: 15px; }
+    &.flush { padding: 0; }
+  }
+
+  .panel-head {
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    >.btn { margin: -8px -10px -8px 10px; }
+  }
+
+  /* Small caps section labels; the house scale stops at .caption. */
+  .eyebrow,
+  .field-label {
+    color: $colorGsLabel;
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 16px;
+    text-transform: uppercase;
+  }
+
+  .field-label {
+    letter-spacing: 0.4px;
+    margin-bottom: 4px;
+    text-transform: none;
+  }
+
+  /* A layout that answers to its own width instead of the viewport's, so a
+   * panel narrows when the window does and not a breakpoint later. */
+  .la-cols {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    margin-bottom: 20px;
+  }
+
+  .la-cols-2 { grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); }
+  .la-cols-4 { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+
+  @media (max-width: $breakpointLg) {
+    .la-cols-2 { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* ------------------------------------------------------------------- kpi */
+
+  .kpi {
+    background: $colorGsWhite;
+    border: 1px solid $colorGsLine;
+    border-radius: 8px;
+    padding: 15px 20px;
+
+    dt { margin: 0; }
+    dd { margin: 4px 0 0; }
+  }
+
+  .kpi-value {
+    color: $colorGsBlack;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 34px;
+  }
+
+  .kpi-note { display: block; margin-top: 2px; }
+
+  /* ------------------------------------------------------------ status tone */
+
+  .pill {
+    border-radius: 20px;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    padding: 2px 10px;
+    white-space: nowrap;
+  }
+
+  .tone-good { background: $colorSuccessLight; color: $colorSuccessDark; }
+  .tone-warn { background: $colorYellowLight; color: $colorYellowDark; }
+  .tone-bad  { background: $colorErrorLight; color: $colorErrorDark; }
+  .tone-info { background: $colorSecondaryLight; color: $colorSecondaryDark; }
+  .tone-idle { background: $colorGsBackground; color: $colorGsLabel; }
+
+  .dot {
+    border-radius: 50%;
+    display: inline-block;
+    height: 8px;
+    margin-right: 6px;
+    width: 8px;
+
+    &.tone-good { background: $good; }
+    &.tone-warn { background: $warn; }
+    &.tone-bad  { background: $bad; }
+    &.tone-info { background: $info; }
+    &.tone-idle { background: $idle; }
+  }
+
+  /* ----------------------------------------------------------- ranked bars */
+
+  .bars { list-style: none; margin: 0; padding: 0; }
+
+  .bars>li {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 6px 0;
+  }
+
+  .bar-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    padding-right: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .bar-count { flex: 0 0 auto; }
+
+  .bar-track {
+    background: $colorGsBackground;
+    border-radius: 3px;
+    flex: 0 0 100%;
+    height: 6px;
+    margin-top: 4px;
+    order: 3;
+    overflow: hidden;
+  }
+
+  .bar-fill { background: $colorPrimary; display: block; height: 100%; }
+
+  /* ------------------------------------------------------------- utilities */
+
+  .empty {
+    color: $colorGsLabel;
+    padding: 30px 20px;
+    text-align: center;
+  }
+
+  .la-toolbar {
+    align-items: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .la-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+  }
+
+  .la-field-grow { flex: 1 1 260px; }
+
+  /* Every field in the section, the editor's included, so a form does not
+   * change its manners depending on which panel it sits in. */
+  .form-control {
+    border: 1px solid $colorGsLine;
+    border-radius: 6px;
+    color: $colorGsBody;
+    font-size: 14px;
+    height: 38px;
+    line-height: 20px;
+    padding: 8px 10px;
+    width: 100%;
+
+    &:focus { border-color: $colorPrimary; box-shadow: none; outline: 0; }
+  }
+
+  .la-toolbar-spacer { flex: 1 1 auto; }
+
+  /* ------------------------------------------------------------- the grid */
+
+  .la-grid {
+    height: 620px;
+    width: 100%;
+  }
+
+  .la-grid-short { height: 380px; }
+
+  /* The grid ships its own visual language; these few rules put it back into
+   * the house one — same type, same rules, same greys. */
+  .ag-theme-alpine {
+    font-family: $themeFont;
+
+    .ag-root-wrapper { border-color: $colorGsLine; border-radius: 8px; }
+    .ag-header { background: $colorGsBackground; border-bottom-color: $colorGsLine; }
+    .ag-header-cell-text { color: $colorGsLabel; font-size: 12px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; }
+    .ag-row { border-color: $colorGsLine; color: $colorGsBody; font-size: 14px; }
+    .ag-row-hover { background: rgba($colorGsBackground, 0.7); }
+    .ag-cell { line-height: 40px; }
+    .ag-paging-panel { border-top-color: $colorGsLine; color: $colorGsLabel; }
+  }
+
+  /* -------------------------------------------------------------- drawers */
+
+  .drawer-scrim {
+    background: rgba($colorGsBlack, 0.4);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1040;
+  }
+
+  .drawer {
+    background: $colorGsWhite;
+    bottom: 0;
+    box-shadow: -4px 0 24px rgba($colorGsBlack, 0.18);
+    display: flex;
+    flex-direction: column;
+    max-width: 100vw;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 560px;
+    z-index: 1050;
+  }
+
+  .drawer-head {
+    align-items: flex-start;
+    background: $colorGsWhite;
+    border-bottom: 1px solid $colorGsLine;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .drawer-body { padding: 20px; }
+}

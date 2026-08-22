@@ -1,0 +1,62 @@
+<div class="link-admin bg-background">
+
+  <div class="sticky-top" style="z-index: 90;">
+    <header-social></header-social>
+  </div>
+
+  <header class="la-masthead">
+    <div class="la-wrap la-masthead-inner">
+      <div class="la-identity">
+        <a class="btn btn-text small la-back" [routerLink]="['/dashboard']">
+          <i iconPh="arrow-left" aria-hidden="true"></i> Dashboard
+        </a>
+        <h1 class="h4 mb-0">Link manager</h1>
+        <p class="body-small text-label mb-0">
+          Every outbound link the site publishes, how it is tagged, and where the traffic actually goes.
+        </p>
+      </div>
+
+      <div class="la-masthead-actions">
+        <div class="la-window" role="group" aria-label="Reporting window" *ngIf="showWindow">
+          <button type="button"
+                  *ngFor="let window of WINDOWS"
+                  class="la-window-btn"
+                  [class.is-active]="days === window"
+                  [attr.aria-pressed]="days === window"
+                  (click)="setDays(window)">{{ window }}d</button>
+        </div>
+
+        <button type="button" class="btn btn-primary small" (click)="newLink()">
+          <i iconPh="plus" aria-hidden="true"></i> New link
+        </button>
+
+        <button type="button" class="btn btn-outline small" *ngIf="isAdmin"
+                (click)="checkHealth()" [disabled]="!!running">
+          {{ running === 'health' ? 'Checking…' : 'Check destinations' }}
+        </button>
+
+        <button type="button" class="btn btn-outline small" *ngIf="isAdmin"
+                (click)="discover()" [disabled]="!!running">
+          {{ running === 'discover' ? 'Scanning…' : 'Scan the site' }}
+        </button>
+      </div>
+    </div>
+
+    <nav class="la-nav" aria-label="Link manager sections">
+      <div class="la-wrap la-nav-inner">
+        <a *ngFor="let section of sections"
+           class="la-nav-item"
+           [routerLink]="[section.path]"
+           routerLinkActive="is-active"
+           #active="routerLinkActive"
+           [attr.aria-current]="active.isActive ? 'page' : null">
+          <i [iconPh]="section.icon" aria-hidden="true"></i>{{ section.label }}
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="la-wrap la-body">
+    <router-outlet></router-outlet>
+  </main>
+</div>

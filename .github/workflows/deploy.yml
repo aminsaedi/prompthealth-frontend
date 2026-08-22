@@ -40,6 +40,13 @@ jobs:
           username: hedieh
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
+            set -e
+
+            # Reclaim the images the last few deploys left behind. Without this
+            # the disk fills, the pull below fails, and the deploy silently
+            # restarts the old image instead. Images in use are never removed.
+            docker image prune -af || true
+
             docker pull ${{ env.IMAGE_NAME }}:latest
             cd ~/prompthealth-frontend
             docker compose down
