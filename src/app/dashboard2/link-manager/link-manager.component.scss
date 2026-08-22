@@ -374,14 +374,18 @@
   .top-link-body { min-width: 0; padding-right: 15px; }
   .top-link-count { white-space: nowrap; }
 
+  /* Hostname and count share a line and the bar sits under them: in a panel this
+   * narrow, a bar beside the name leaves the name too little room to finish. */
   .hosts>li {
-    align-items: center;
+    align-items: baseline;
     display: flex;
+    flex-wrap: wrap;
     padding: 6px 0;
   }
 
   .host-name {
-    flex: 0 0 40%;
+    flex: 1 1 auto;
+    min-width: 0;
     overflow: hidden;
     padding-right: 10px;
     text-overflow: ellipsis;
@@ -391,8 +395,10 @@
   .host-track {
     background: $colorGsBackground;
     border-radius: 3px;
-    flex: 1 1 auto;
+    flex: 0 0 100%;
     height: 6px;
+    margin-top: 4px;
+    order: 3;
     overflow: hidden;
   }
 
@@ -402,7 +408,7 @@
     height: 100%;
   }
 
-  .host-count { flex: 0 0 60px; text-align: right; }
+  .host-count { flex: 0 0 auto; }
 
   .origin-list,
   .drawer-figures {
