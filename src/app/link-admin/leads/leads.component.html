@@ -17,6 +17,14 @@
   <app-la-loading class="la-refresh" variant="inline"
     [label]="'Loading the last ' + days + ' days…'" *ngIf="loading"></app-la-loading>
 
+  <!-- The window picker offers a year, and the funnel reads individual clicks,
+       which are kept for six months. Say so rather than quietly answering a
+       different question. -->
+  <p class="body-small text-label" *ngIf="funnel && funnel.range.days < days">
+    Showing {{ funnel.range.from }} to {{ funnel.range.to }}. Individual clicks are kept for
+    {{ funnel.range.days }} days, which is as far back as this can look.
+  </p>
+
   <!-- ============================ the whole site ============================ -->
   <ng-container *ngIf="funnel">
     <dl class="la-cols la-cols-4">
@@ -151,8 +159,9 @@
     </dl>
 
     <p class="body-small text-label" *ngIf="report.detailLimited">
-      The totals above cover the whole window. The breakdowns below start
-      {{ report.range.detailFrom }}, which is as far back as individual clicks are kept.
+      Leads and profile readers cover the whole window. Distinct visitors, and every
+      breakdown below, start {{ report.range.detailFrom }}, which is as far back as
+      individual clicks are kept.
     </p>
 
     <div class="la-cols la-cols-2">

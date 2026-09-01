@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { UniversalService } from './universal.service';
-import { JourneyService } from './journey.service';
+import { JourneyService, send } from './journey.service';
 
 const API_URL = environment.config.API_URL;
 const POLICY_CACHE_KEY = 'ph_link_policy';
@@ -482,24 +482,7 @@ export class OutboundLinkService implements OnDestroy {
       etype: this.journey.currentType,
       eid: this.journey.currentId,
     });
-    const endpoint = `${API_URL}link/track`;
-
-    try {
-      if (navigator.sendBeacon) {
-        /* text/plain keeps this a CORS simple request, so it is not held up by
-         * a preflight the page is about to navigate away from. */
-        navigator.sendBeacon(endpoint, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
-        return;
-      }
-    } catch (e) {
-      /* fall through to fetch */
-    }
-    try {
-      fetch(endpoint, { method: 'POST', body, keepalive: true, headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
-        .catch(() => undefined);
-    } catch (e) {
-      /* reporting is best effort */
-    }
+    send(`${API_URL}link/track`, body);
   }
 
   /* Drops the per-page-view report memo and re-tags, because the campaign and

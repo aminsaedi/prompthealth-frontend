@@ -18,6 +18,37 @@ const SESSION_IDLE_MS = 30 * 60 * 1000;
  * because it waits on the questionnaire, so this has to be generous. */
 const ENTITY_DEADLINE_MS = 4000;
 
+
+/*
+ * Sends a small report without holding up the page.
+ *
+ * sendBeacon is preferred because the browser owns the request from that point
+ * on and will finish it even if the page goes away mid-navigation, which is
+ * exactly when these are sent. It returns false when it declines to queue, and
+ * that return value is checked: a browser that refuses and is not asked again
+ * loses the event silently, which is the worst failure mode for something whose
+ * whole job is to be recorded.
+ *
+ * text/plain keeps it a CORS simple request, so it is not held up by a preflight
+ * the page is about to navigate away from.
+ */
+export function send(endpoint: string, body: string): void {
+  try {
+    if (navigator.sendBeacon &&
+        navigator.sendBeacon(endpoint, new Blob([body], { type: 'text/plain;charset=UTF-8' }))) {
+      return;
+    }
+  } catch (e) {
+    /* fall through */
+  }
+  try {
+    fetch(endpoint, { method: 'POST', body, keepalive: true, headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
+      .catch(() => undefined);
+  } catch (e) {
+    /* reporting is best effort and must never affect the page */
+  }
+}
+
 export type JourneyEntityType =
   'article' | 'event' | 'practitioner' | 'clinic' | 'directory' | 'feed' | 'home' | 'other';
 
@@ -55,8 +86,14 @@ export class JourneyService implements OnDestroy {
   private entityId = '';
 
   private pendingTimer: any = null;
-  private reportedForThisPage = false;
   private navigationCount = 0;
+  /* What was last reported, as type and id. Reporting is idempotent against
+   * this, which is what lets setEntity and the deadline timer both call it
+   * without either having to know whether the other already did. */
+  private reportedKey = '';
+  /* The address setEntity last spoke for, so a navigation that arrives after it
+   * does not throw the answer away. */
+  private announcedRoot = '';
   /* The part of the address that names the thing being looked at, so a tab
    * change underneath it is recognised as the same page. */
   private entityRootReported = '';
@@ -72,8 +109,8 @@ export class JourneyService implements OnDestroy {
     if (this.installed || !this.uService.isBrowser) { return; }
     this.installed = true;
 
-    this.visitorId = this.readVisitor();
     this.sessionId = this.readSession();
+    this.visitorId = this.readVisitor();
 
     this.ngZone.runOutsideAngular(() => {
       this.onNavigated();
@@ -150,7 +187,11 @@ export class JourneyService implements OnDestroy {
   }
 
   private readVisitor(): string {
-    if (!this.tracksAcrossVisits()) { return this.token(); }
+    /* A visitor who has asked not to be followed across visits gets the visit's
+     * own id rather than a new random one per page load: a fresh id each load
+     * would count one reader as many, which is worse for them and worse for the
+     * figures. */
+    if (!this.tracksAcrossVisits()) { return this.sessionId || this.token(); }
     let id = this.read(this.uService.localStorage as Storage, VISITOR_KEY);
     if (!/^[a-z0-9]{16,64}$/.test(id)) {
       id = this.token();
@@ -221,24 +262,31 @@ export class JourneyService implements OnDestroy {
      * has not changed. */
     const root = this.entityRoot(path);
     if (root && root === this.entityRootReported) { return; }
-
     this.entityRootReported = root;
-    this.reportedForThisPage = false;
-    this.entityId = '';
-    this.entityType = this.typeFromPath(path);
+
+    /* A component can announce its entity before the router says the navigation
+     * finished: the route parameters are read in ngOnInit, which runs during
+     * activation, and a cached post or profile resolves synchronously. When
+     * that has already happened for this address, keep what it said instead of
+     * replacing it with a guess from the URL. */
+    const alreadyAnnounced = !!root && root === this.announcedRoot;
+    if (!alreadyAnnounced) {
+      this.entityId = '';
+      this.entityType = this.typeFromPath(path);
+    }
 
     /* A page that is about an entity is not reported until it says which one,
      * or until the deadline. A page that is not about one has nothing to wait
      * for and is reported immediately. */
-    if (this.entityType === 'article' || this.entityType === 'event' || this.entityType === 'practitioner') {
+    const waitsForAnEntity =
+      !alreadyAnnounced &&
+      (this.entityType === 'article' || this.entityType === 'event' || this.entityType === 'practitioner');
+
+    if (waitsForAnEntity) {
       const nav = this.navigationCount;
       this.pendingTimer = window.setTimeout(() => {
         this.pendingTimer = null;
-        /* Only if nothing has reported this page yet. A reader who clicks an
-         * outbound link inside the deadline is flushed on the way out, and
-         * without this check the timer would then report the same page a
-         * second time. */
-        if (nav === this.navigationCount && !this.reportedForThisPage) { this.report(); }
+        if (nav === this.navigationCount) { this.report(); }
       }, ENTITY_DEADLINE_MS);
     } else {
       this.report();
@@ -255,8 +303,13 @@ export class JourneyService implements OnDestroy {
     if (!this.installed) { return; }
     this.entityType = type;
     this.entityId = /^[a-f0-9]{24}$/i.test(String(id || '')) ? String(id) : '';
+    try {
+      this.announcedRoot = this.entityRoot(window.location.pathname);
+    } catch (e) {
+      this.announcedRoot = '';
+    }
     this.clearTimer();
-    if (!this.reportedForThisPage) { this.report(); }
+    this.report();
   }
 
   private clearTimer(): void {
@@ -269,12 +322,16 @@ export class JourneyService implements OnDestroy {
   /* Sent before the browser leaves, so a reader who lands and clicks straight
    * out is still a visit that happened. */
   flush(): void {
-    if (this.installed && !this.reportedForThisPage) { this.report(); }
+    if (this.installed) { this.report(); }
   }
 
+  /* Idempotent against the page it is describing. Every caller can just ask,
+   * and the one that gets there first is the one that sends. */
   private report(): void {
     if (!this.sessionId) { return; }
-    this.reportedForThisPage = true;
+    const key = `${this.entityType}|${this.entityId}`;
+    if (key === this.reportedKey) { return; }
+    this.reportedKey = key;
     this.clearTimer();
 
     let ref = '';
@@ -297,21 +354,7 @@ export class JourneyService implements OnDestroy {
       ...entry,
     });
 
-    const endpoint = `${API_URL}track/view`;
-    try {
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(endpoint, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
-        return;
-      }
-    } catch (e) {
-      /* fall through to fetch */
-    }
-    try {
-      fetch(endpoint, { method: 'POST', body, keepalive: true, headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
-        .catch(() => undefined);
-    } catch (e) {
-      /* reporting is best effort and must never affect the page */
-    }
+    send(`${API_URL}track/view`, body);
   }
 
   /* The campaign that brought the reader to us, read once per visit from the

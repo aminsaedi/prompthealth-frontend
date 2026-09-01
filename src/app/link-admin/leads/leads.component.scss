@@ -9,7 +9,14 @@
   gap: 12px;
   margin-bottom: 20px;
 
-  select { max-width: 420px; }
+  /* The shared .form-control padding is sized for a taller control, so a
+   * select inherits 24px of vertical padding into a 38px box and clips the
+   * descenders of whatever is chosen. */
+  select {
+    max-width: 420px;
+    min-height: 44px;
+    padding: 10px 14px;
+  }
 }
 
 .ll-subject { margin-bottom: 20px; }
