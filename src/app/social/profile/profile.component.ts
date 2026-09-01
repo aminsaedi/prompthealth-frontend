@@ -72,10 +72,20 @@ export class ProfileComponent implements OnInit , OnDestroy {
     return path;
   }
 
+  /*
+   * The address the tabs link to, which has to be the one the router serves.
+   *
+   * /practitioners/<slug> is a redirectTo with no children, so
+   * /practitioners/<slug>/service matched no route at all and clicking a tab
+   * did nothing. And because a reader who arrives on the pretty URL is
+   * immediately rewritten to /community/profile/s/<slug>, routerLinkActive was
+   * comparing the current address against links that could never equal it, so
+   * no tab was ever marked as the one you are on.
+   */
   linkToChildRoute(link: string) {
     const slug = this.profile?.slug;
     const route = slug
-      ? ['/practitioners', slug]
+      ? ['/community/profile/s', slug]
       : ['/community/profile', this.profileId];
     if(link) {
       route.push(link);

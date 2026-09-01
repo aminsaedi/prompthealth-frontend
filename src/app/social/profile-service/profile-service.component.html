@@ -1,16 +1,22 @@
-<div 
+<div
 *ngIf="!(profile && questionnaires)"
 class="mt-100p text-center"
 >
   <loader></loader>
 </div>
 
-<div 
+<div
 *ngIf="profile && questionnaires"
 class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
 >
-  <div class="mb-30p">
-    <h6>Type of Provider:</h6>
+  <!-- Nothing filled in yet. Saying so once is better than five headings with
+       nothing under them, which reads as a page that failed to load. -->
+  <p *ngIf="!hasAnything" class="body2 text-label mb-0">
+    {{ profile.name }} has not listed services on PromptHealth yet.
+  </p>
+
+  <div class="mb-30p" *ngIf="hasTypeOfProvider">
+    <h6>{{ providerTypeLabel }}:</h6>
     <form-item-checkbox-group
     id="type_of_provider"
     label="Type of provider"
@@ -21,7 +27,7 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
     ></form-item-checkbox-group>
   </div>
 
-  <div class="mb-30p">
+  <div class="mb-30p" *ngIf="hasTreatmentModality">
     <h6>Treatment Modalities:</h6>
     <form-item-checkbox-group
     id="treatment_modality"
@@ -33,7 +39,7 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
     ></form-item-checkbox-group>
   </div>
 
-  <div class="mb-30p">
+  <div class="mb-30p" *ngIf="hasCustomerHealth">
     <h6>Health Status:</h6>
     <form-item-customer-health
     type="detail"
@@ -42,10 +48,10 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
     [disabled]="true"
     [col2]="false"
     [option]="optionNestedFormCheckboxGroup"
-    ></form-item-customer-health>  
+    ></form-item-customer-health>
   </div>
 
-  <div class="mb-30p">
+  <div class="mb-30p" *ngIf="hasServiceDelivery">
     <h6>Service Delivery:</h6>
     <form-item-checkbox-group
     id="service_delivery"
@@ -60,15 +66,15 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
       ** This provider can't see patients who are out of {{profile.state}}
     </p>
 
-    <p 
+    <p
     *ngIf="profile.provideVirtual"
-    class="body2 text-placeholder my-5p" 
+    class="body2 text-placeholder my-5p"
     >
       ** Virtual/Online services may not be available to all locations. Please inquire the service provider for confirmation.
     </p>
   </div>
 
-  <div class="mb-30p">
+  <div class="mb-30p" *ngIf="hasServices">
     <h6>Services:</h6>
     <form-item-service
     [data]="profile.allServiceId"
