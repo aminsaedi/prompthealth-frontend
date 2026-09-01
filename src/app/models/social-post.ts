@@ -4,6 +4,16 @@ import { environment } from "src/environments/environment";
 import { Profile } from "./profile";
 import { IUserDetail } from "./user-detail";
 
+/* The clinic an author works at, as the backend returns it on the article
+ * detail routes. It is absent from list responses, so anything reading it has
+ * to tolerate undefined. */
+export interface IAuthorClinic {
+  _id: string;
+  name: string;
+  slug?: string;
+  profileImage?: string;
+}
+
 export interface ISocialPost {
   _id: string;
   contentType: 'NOTE' | 'PROMO' | 'ARTICLE' | 'EVENT';
@@ -78,6 +88,9 @@ export interface ISocialPost {
   authorWebsite?: string;
   authorCertification?: string;
   authorOrganization?: string;
+  authorClinic?: IAuthorClinic;
+  authorClinicImage?: string;
+  authorClinicLink?: any[];
   descriptionSanitized?: SafeHtml;
   summary?: string;
   isNews?: boolean;
@@ -169,6 +182,19 @@ export class SocialPostBase implements ISocialPost {
   get authorBelled() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.belled) ? true : false; } 
   get authorFollowed() { return (this.data.author && typeof this.data.author != 'string' && this.data.author.followed) ? true : false; } 
   get author() { return (this.data.author && typeof this.data.author != 'string') ? this.data.author : null ; }
+
+  /* Only the article detail routes carry this, so it is undefined in the feed
+   * and every consumer guards on it. */
+  get authorClinic(): IAuthorClinic { return (this.data as any).authorClinic || null; }
+  get authorClinicImage(): string {
+    const image = this.authorClinic && this.authorClinic.profileImage;
+    return image ? this._s3 + '350x220/' + image : 'assets/img/logo-sm-square.png';
+  }
+  get authorClinicLink(): any[] {
+    const clinic = this.authorClinic;
+    if (!clinic) { return null; }
+    return clinic.slug ? ['/practitioners', clinic.slug] : ['/community/profile', clinic._id];
+  }
 
   get coverImage() { return this.data.image ? this._s3 + this.data.image : (this.data.images && this.data.images.length > 0) ? this._s3 + this.data.images[0] + '?ver=2.3' : '/assets/img/logo-100x35-primary-light.png?ver=2.3'; }
   get coverImageType() { return this.getImageTypeOf(this.coverImage); }

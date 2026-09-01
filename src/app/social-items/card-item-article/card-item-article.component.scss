@@ -1,0 +1,16 @@
+@import '../../../assets/scss/variables';
+
+/* The clinic a doctor works at, shown under their name on their own articles.
+ * Sized to read as a label rather than a call to action: the article's job is
+ * to send the reader to the doctor, and the clinic is context on the way. */
+.clinic-badge {
+  padding: 6px 12px 6px 6px;
+  max-width: 100%;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    border-color: $primaryColor !important;
+  }
+}

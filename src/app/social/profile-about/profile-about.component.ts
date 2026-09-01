@@ -4,7 +4,6 @@ import { EmbedVideoService } from 'ngx-embed-video';
 import { Subscription , Subject } from 'rxjs';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
-import { IGetStaffsResult } from 'src/app/models/response-data';
 import { Staff } from 'src/app/models/staff';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
@@ -77,9 +76,9 @@ export class ProfileAboutComponent implements OnInit , OnDestroy {
       this.fetchProduct();
     }
 
-    if(p && p.eligibleFeatureStaffs && !p.doneInitStaffs) {
-      this.fetchStaffs();
-    }
+    /* The team is fetched by the parent profile component, which needs it for
+     * the page's JSON-LD as well as for this list. Asking for it here too
+     * raced that request and fetched it twice. */
   }
 
   createIframesForVideo() {
@@ -126,21 +125,6 @@ export class ProfileAboutComponent implements OnInit , OnDestroy {
     })
   }
 
-  fetchStaffs() {
-    return new Promise((resolve, reject) => {
-      const path = `staff/get-by-center/${this.profile._id}`;
-      this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetStaffsResult) => {
-        if(res.statusCode == 200) {
-          this.profile.setStaffs(res.data);
-          resolve(true);  
-        } else {
-          reject();
-        }
-      }, error => {
-        reject();
-      });
-    });
-  }
 
   countupSocial(type: string) {
     this._sharedService.postNoAuth({
