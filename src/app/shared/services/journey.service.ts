@@ -234,7 +234,11 @@ export class JourneyService implements OnDestroy {
       const nav = this.navigationCount;
       this.pendingTimer = window.setTimeout(() => {
         this.pendingTimer = null;
-        if (nav === this.navigationCount) { this.report(); }
+        /* Only if nothing has reported this page yet. A reader who clicks an
+         * outbound link inside the deadline is flushed on the way out, and
+         * without this check the timer would then report the same page a
+         * second time. */
+        if (nav === this.navigationCount && !this.reportedForThisPage) { this.report(); }
       }, ENTITY_DEADLINE_MS);
     } else {
       this.report();

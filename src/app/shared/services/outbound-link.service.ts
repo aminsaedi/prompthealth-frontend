@@ -457,6 +457,9 @@ export class OutboundLinkService implements OnDestroy {
    * in the same view are the same intent and would only inflate the count. */
   private report(url: string): void {
     if (!this.policy.beacon || !url) { return; }
+    /* The reader is leaving. If this page has not reported itself yet, send it
+     * now, so the click has a visit to belong to. */
+    this.journey.flush();
     const path = window.location.pathname;
     const key = `${path}|${url}`;
     if (this.reported.has(key)) { return; }
