@@ -27,6 +27,18 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
     ></form-item-checkbox-group>
   </div>
 
+  <div class="mb-30p" *ngIf="hasSpecialty">
+    <h6>Areas of Focus:</h6>
+    <form-item-checkbox-group
+    id="specialty"
+    label="Areas of focus"
+    [data]="profile.allServiceId"
+    [selectionsByQuestionnaire]="questionnaires.specialty"
+    [disabled]="true"
+    [option]="optionFormCheckboxGroup"
+    ></form-item-checkbox-group>
+  </div>
+
   <div class="mb-30p" *ngIf="hasTreatmentModality">
     <h6>Treatment Modalities:</h6>
     <form-item-checkbox-group

@@ -170,6 +170,7 @@ export class QuestionnaireService {
         Promise.all(promiseAll).then( async values => {
           const data: QuestionnaireMapProfilePractitioner = {
             typeOfProvider: null, 
+            specialty: null, 
             treatmentModality: null, 
             customerHealth: null, 
             serviceDelivery: null, 
@@ -182,6 +183,12 @@ export class QuestionnaireService {
             for(const q of qs){
               if(q.question_type == 'health' && q.slug == 'who-are-your-customers') {
                 data.customerHealth = q;
+                isSet = true;
+              }else if(q.question_type == 'goal' && q.slug == 'your-goal-specialties') {
+                /* Providers have been picking specialties since onboarding, but
+                 * nothing ever mapped this questionnaire, so the answers sat in
+                 * the profile unread and no page could show them. */
+                data.specialty = q;
                 isSet = true;
               }else if(q.question_type == 'service' && q.slug == 'treatment-modalities') {
                 data.treatmentModality = q;
@@ -353,6 +360,7 @@ type QuestionnaireMapPersonalMatch = {
 
 export type QuestionnaireMapProfilePractitioner = {
   typeOfProvider: Questionnaire; 
+  specialty: Questionnaire; 
   treatmentModality: Questionnaire; 
   customerHealth: Questionnaire; 
   serviceDelivery: Questionnaire; 
