@@ -27,16 +27,19 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
     ></form-item-checkbox-group>
   </div>
 
+  <!-- Nested rather than flat: the useful detail is in the answers underneath,
+       and form-item-checkbox-group only ever renders the top level, so the
+       individual treatments a provider picked would be stored but invisible. -->
   <div class="mb-30p" *ngIf="hasSpecialty">
     <h6>Areas of Focus:</h6>
-    <form-item-checkbox-group
-    id="specialty"
-    label="Areas of focus"
+    <form-item-customer-health
+    type="detail"
     [data]="profile.allServiceId"
-    [selectionsByQuestionnaire]="questionnaires.specialty"
+    [selections]="questionnaires.specialty.answers"
     [disabled]="true"
-    [option]="optionFormCheckboxGroup"
-    ></form-item-checkbox-group>
+    [col2]="false"
+    [option]="optionNestedFormCheckboxGroup"
+    ></form-item-customer-health>
   </div>
 
   <div class="mb-30p" *ngIf="hasTreatmentModality">
