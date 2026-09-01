@@ -35,7 +35,6 @@ export class ProfileServiceComponent implements OnInit, OnDestroy {
   private get deliveryIds(): string[] { return (this.profile && this.profile.serviceOfferIds) || []; }
 
   get hasTypeOfProvider(): boolean { return this.picked(this.questionnaireAnswers('typeOfProvider')); }
-  get hasSpecialty(): boolean { return this.picked(this.questionnaireAnswers('specialty')); }
   get hasTreatmentModality(): boolean { return this.picked(this.questionnaireAnswers('treatmentModality')); }
   get hasCustomerHealth(): boolean { return this.picked(this.questionnaireAnswers('customerHealth')); }
   get hasServiceDelivery(): boolean { return this.deliveryIds.length > 0; }
@@ -48,8 +47,8 @@ export class ProfileServiceComponent implements OnInit, OnDestroy {
   }
 
   get hasAnything(): boolean {
-    return this.hasTypeOfProvider || this.hasSpecialty || this.hasTreatmentModality
-      || this.hasCustomerHealth || this.hasServiceDelivery || this.hasServices;
+    return this.hasTypeOfProvider || this.hasTreatmentModality || this.hasCustomerHealth
+      || this.hasServiceDelivery || this.hasServices;
   }
 
   /* A clinic and a solo practitioner read the same fields, but "Type of
@@ -58,7 +57,7 @@ export class ProfileServiceComponent implements OnInit, OnDestroy {
     return this.profile && this.profile.isC ? 'Practitioner types' : 'Type of Provider';
   }
 
-  private questionnaireAnswers(key: 'typeOfProvider' | 'specialty' | 'treatmentModality' | 'customerHealth'): any[] {
+  private questionnaireAnswers(key: 'typeOfProvider' | 'treatmentModality' | 'customerHealth'): any[] {
     const q = this.questionnaires ? (this.questionnaires as any)[key] : null;
     return (q && q.answers) || [];
   }
