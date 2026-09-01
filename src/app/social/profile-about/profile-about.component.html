@@ -32,12 +32,15 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
     <div class="pt-30p border-top border-line">
       <div class="row">
         <div class="col-12">
-          <div class="mb-20p">
+          <!-- Each of these appears only when it has an answer. A column of
+               headings with nothing under them reads as a profile nobody
+               finished, which is the opposite of what a landing page is for. -->
+          <div class="mb-20p" *ngIf="profile.priceFull !== 'N/A'">
             <h6>Fees:</h6>
             <p>Standard Hourly Fees: {{profile.priceFull}}</p>
           </div>
     
-          <div class="mb-20p">
+          <div class="mb-20p" *ngIf="profile.age_range?.length">
             <h6>Age Group:</h6>
             <form-item-checkbox-group
             id="age_range"
@@ -48,17 +51,17 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
             ></form-item-checkbox-group>
           </div>
           
-          <div class="mb-20p">
+          <div class="mb-20p" *ngIf="profile.organization">
             <h6>Organization:</h6>
             <p>{{profile.organization}}</p>
           </div>
     
-          <div class="mb-20p">
+          <div class="mb-20p" *ngIf="profile.certification">
             <h6>Certification:</h6>
             <p>{{profile.certification}}</p>
           </div>
     
-          <div class="mb-20p">
+          <div class="mb-20p" *ngIf="profile.languagesId?.length">
             <h6>Language:</h6>
             <form-item-checkbox-group
             *ngIf="questionnaires"
@@ -71,7 +74,7 @@ class="position-relative rounded-8p bg-white p-20p p-xl-30p body1 text-body"
             ></form-item-checkbox-group>  
           </div>
     
-          <div class="mb-20p">
+          <div class="mb-20p" *ngIf="profile.yearsOfExperience">
             <h6>Experience:</h6>
             <form-item-checkbox-group
             id="years_of_experience"
