@@ -276,6 +276,10 @@ export class ProfileComponent implements OnInit , OnDestroy {
       this.setProfileMenu();
       this._socialService.setProfile(this.profile);
       this.announceEntity();
+      /* The other four branches do this. Without it, a clinic reached from a
+       * cached profile shows no team: the tab that used to fetch it no longer
+       * does, because this component needs the answer for the page's schema. */
+      this.fetchClinicRelationship();
       this.setMetaForActiveTab();
       this.setBreadcrumbs();
     } else {

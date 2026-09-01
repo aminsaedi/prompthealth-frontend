@@ -87,10 +87,12 @@ export class JourneyService implements OnDestroy {
 
   private pendingTimer: any = null;
   private navigationCount = 0;
-  /* What was last reported, as type and id. Reporting is idempotent against
+  /* Which navigation has already been reported. Reporting is idempotent against
    * this, which is what lets setEntity and the deadline timer both call it
-   * without either having to know whether the other already did. */
-  private reportedKey = '';
+   * without either having to know whether the other already did, and what stops
+   * two consecutive pages that happen to classify the same from collapsing into
+   * one row. */
+  private reportedNav = -1;
   /* The address setEntity last spoke for, so a navigation that arrives after it
    * does not throw the answer away. */
   private announcedRoot = '';
@@ -112,8 +114,11 @@ export class JourneyService implements OnDestroy {
     this.sessionId = this.readSession();
     this.visitorId = this.readVisitor();
 
+    /* The router owns the first navigation too: initialNavigation is enabled,
+     * so it emits NavigationEnd for the page that was loaded. Calling this
+     * directly as well ran it twice for one page, and the second run tore down
+     * the deadline the first had armed. */
     this.ngZone.runOutsideAngular(() => {
-      this.onNavigated();
       this.router.events
         .pipe(filter(event => event instanceof NavigationEnd), takeUntil(this.destroy$))
         .subscribe(() => this.onNavigated());
@@ -245,7 +250,6 @@ export class JourneyService implements OnDestroy {
   private onNavigated(): void {
     this.navigationCount++;
     this.touchSession();
-    this.clearTimer();
 
     let path = '/';
     try {
@@ -261,8 +265,11 @@ export class JourneyService implements OnDestroy {
      * doctor. The entity is carried while the part of the address that names it
      * has not changed. */
     const root = this.entityRoot(path);
+    /* Tabs under a profile or an article are the same page. Nothing to clear
+     * and nothing to send, and in particular no deadline to tear down. */
     if (root && root === this.entityRootReported) { return; }
     this.entityRootReported = root;
+    this.clearTimer();
 
     /* A component can announce its entity before the router says the navigation
      * finished: the route parameters are read in ngOnInit, which runs during
@@ -329,9 +336,8 @@ export class JourneyService implements OnDestroy {
    * and the one that gets there first is the one that sends. */
   private report(): void {
     if (!this.sessionId) { return; }
-    const key = `${this.entityType}|${this.entityId}`;
-    if (key === this.reportedKey) { return; }
-    this.reportedKey = key;
+    if (this.reportedNav === this.navigationCount) { return; }
+    this.reportedNav = this.navigationCount;
     this.clearTimer();
 
     let ref = '';

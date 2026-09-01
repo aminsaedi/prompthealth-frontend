@@ -386,8 +386,17 @@ export class OutboundLinkService implements OnDestroy {
       /* A managed short link is one of ours, so it is not tagged, but it is the
        * one outbound path where no script of ours runs afterwards: the browser
        * leaves for /out/<code> and the redirect happens on the server. The
-       * journey has to travel in the URL or it does not travel at all. */
-      if (this.stampShortLink(anchor, href)) { return; }
+       * journey has to travel in the URL or it does not travel at all.
+       *
+       * Only for an event that is about to follow the link. A right-click is
+       * not: the browser reads the href out of the DOM synchronously while it
+       * builds the menu, so a stamped href would be what "copy link address"
+       * hands over, and a session token would travel wherever that URL was
+       * pasted. Nothing runs early enough to take it back. */
+      if (href && href.indexOf('/out/') >= 0) {
+        if (event.type === 'contextmenu') { return; }
+        if (this.stampShortLink(anchor, href)) { return; }
+      }
 
       if (!this.isOutbound(href)) { return; }
 
@@ -416,7 +425,6 @@ export class OutboundLinkService implements OnDestroy {
    * with the shape of a real short code, is stamped.
    */
   private stampShortLink(anchor: HTMLAnchorElement, href: string): boolean {
-    if (!href || href.indexOf('/out/') < 0) { return false; }
     let url: URL;
     try {
       url = new URL(href, document.baseURI);
@@ -437,12 +445,13 @@ export class OutboundLinkService implements OnDestroy {
     if (this.journey.currentId) { url.searchParams.set('e', this.journey.currentId); }
 
     const original = anchor.getAttribute('href');
-    anchor.setAttribute('href', url.pathname + url.search);
-    /* Put the plain href back once the browser has acted on the click. The
-     * handler also runs on contextmenu, and leaving the stamped one in place
-     * meant "copy link address" handed out a live session token. */
+    const stamped = url.pathname + url.search;
+    anchor.setAttribute('href', stamped);
+    /* Put the plain href back once the browser has acted on the click, so the
+     * stamped one is not what a later right-click or a hover would show. This
+     * is tidiness, not the control: a right-click never reaches here. */
     window.setTimeout(() => {
-      if (anchor.getAttribute('href') === url.pathname + url.search) {
+      if (anchor.getAttribute('href') === stamped) {
         anchor.setAttribute('href', original);
       }
     }, 0);
