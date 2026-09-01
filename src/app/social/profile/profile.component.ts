@@ -682,10 +682,6 @@ export class ProfileComponent implements OnInit , OnDestroy {
       if (team.length > 0) {
         mainSchema.member = team;
       }
-    } else if (p.team) {
-      const clinic: any = { '@type': 'MedicalBusiness', 'name': p.team.name };
-      if (p.team.linkToProfile) { clinic.url = 'https://www.prompthealth.ca' + p.team.linkToProfile; }
-      mainSchema.memberOf = clinic;
     }
 
     // Additional structured properties
@@ -756,14 +752,23 @@ export class ProfileComponent implements OnInit , OnDestroy {
     }
 
     // Professional organizations
+    /* memberOf carries both the professional bodies a practitioner belongs to
+     * and the clinic they practise at. They are the same relationship in schema
+     * terms and they were being written to the same key, so whichever ran last
+     * used to erase the other. */
+    const memberships: any[] = [];
     if (p.organization) {
-      const orgs = p.organization.split(',').map(o => o.trim()).filter(o => o.length > 0);
-      if (orgs.length > 0) {
-        mainSchema.memberOf = orgs.map(name => ({
-          '@type': 'Organization',
-          'name': name,
-        }));
-      }
+      p.organization.split(',').map(o => o.trim()).filter(o => o.length > 0).forEach(name => {
+        memberships.push({ '@type': 'Organization', 'name': name });
+      });
+    }
+    if (!p.isC && p.team) {
+      const clinic: any = { '@type': 'MedicalBusiness', 'name': p.team.name };
+      if (p.team.linkToProfile) { clinic.url = 'https://www.prompthealth.ca' + p.team.linkToProfile; }
+      memberships.push(clinic);
+    }
+    if (memberships.length > 0) {
+      mainSchema.memberOf = memberships;
     }
 
     // Typical availability
