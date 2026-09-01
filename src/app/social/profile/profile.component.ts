@@ -7,7 +7,7 @@ import { ProfileManagementService } from 'src/app/shared/services/profile-manage
 import { GetReferralsQuery } from 'src/app/models/get-referrals-query';
 import { Partner } from 'src/app/models/partner';
 import { Professional } from 'src/app/models/professional';
-import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetStaffResult, IGetReferralsResult, IUnbellResult, IUnfollowResult, IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
+import { IBellResult, IFollowResult, IGetBellStatusResult, IGetFollowStatusResult, IGetProfileResult, IGetStaffResult, IGetStaffsResult, IGetReferralsResult, IUnbellResult, IUnfollowResult, IGetSocialContentsByAuthorResult } from 'src/app/models/response-data';
 import { SocialPostSearchQuery } from 'src/app/models/social-post-search-query';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { FormItemDatetimeComponent } from 'src/app/shared/form-item-datetime/form-item-datetime.component';
@@ -26,6 +26,7 @@ import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { filter, takeUntil } from 'rxjs/operators';
 import { TransferState, makeStateKey } from '@angular/platform-browser';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
+import { JourneyService } from 'src/app/shared/services/journey.service';
 
 
 @Component({
@@ -123,6 +124,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
     private _uService: UniversalService,
     private _transferState: TransferState,
     private _jsonLdService: JsonLdService,
+    private _journey: JourneyService,
   ) { }
 
   ngOnDestroy() {
@@ -193,14 +195,13 @@ export class ProfileComponent implements OnInit , OnDestroy {
           this.initRecommendationByMe();
           this.setProfileMenu();
           this._socialService.setProfile(this.profile);
+          this.announceEntity();
           this.setBreadcrumbs();
           this.setMetaForActiveTab();
 
           this.getQuestionnaire().then(() => {
             this.setMetaForActiveTab();
-            if (this.profile.isSP && !this.profile.triedFetchingTeam) {
-              this.fetchTeam();
-            }
+            this.fetchClinicRelationship();
             if (this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
               this.fetchPromos();
             }
@@ -233,14 +234,13 @@ export class ProfileComponent implements OnInit , OnDestroy {
               this.initRecommendationByMe();
               this.setProfileMenu();
               this._socialService.setProfile(this.profile);
+              this.announceEntity();
               this.setBreadcrumbs();
               this.setMetaForActiveTab();
 
               this.getQuestionnaire().then(() => {
                 this.setMetaForActiveTab();
-                if (this.profile.isSP && !this.profile.triedFetchingTeam) {
-                  this.fetchTeam();
-                }
+                this.fetchClinicRelationship();
                 if (this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
                   this.fetchPromos();
                 }
@@ -275,6 +275,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
       this.initRecommendationByMe();
       this.setProfileMenu();
       this._socialService.setProfile(this.profile);
+      this.announceEntity();
       this.setMetaForActiveTab();
       this.setBreadcrumbs();
     } else {
@@ -300,13 +301,12 @@ export class ProfileComponent implements OnInit , OnDestroy {
         this.initRecommendationByMe();
         this.setProfileMenu();
         this._socialService.setProfile(this.profile);
+        this.announceEntity();
         this.setMetaForActiveTab();
         this.setBreadcrumbs();
 
         this.getQuestionnaire().then(() => {
-          if (this.profile.isSP && !this.profile.triedFetchingTeam) {
-            this.fetchTeam();
-          }
+          this.fetchClinicRelationship();
           if (this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
             this.fetchPromos();
           }
@@ -323,13 +323,12 @@ export class ProfileComponent implements OnInit , OnDestroy {
           this.initRecommendationByMe();
           this.setProfileMenu();
           this._socialService.setProfile(this.profile);
+          this.announceEntity();
 
           this.setMetaForActiveTab();
           this.setBreadcrumbs();
 
-          if(this.profile.isSP && !this.profile.triedFetchingTeam) {
-            this.fetchTeam();
-          }
+          this.fetchClinicRelationship();
 
           if(this.profile.isP && !this._socialService.promosOfUser(this.profileId)) {
             this.fetchPromos();
@@ -659,6 +658,36 @@ export class ProfileComponent implements OnInit , OnDestroy {
       }
     }
 
+    /* The clinic relationship, stated in both directions.
+     *
+     * This is the part of the page a search engine or an assistant cannot infer
+     * from the prose: that these named practitioners and this named clinic are
+     * the same organisation. Saying it in schema is what lets "who practises at
+     * X" and "where does Dr Y work" be answered from the markup rather than
+     * guessed from a sentence.
+     *
+     * member and memberOf, not employee and worksFor. A centre here can be a
+     * network of independently owned practices as easily as a single employer,
+     * and membership is the claim we can actually stand behind. */
+    if (p.isC) {
+      const team = (p.staffs || [])
+        .filter((s: any) => !!s.name)
+        .slice(0, 50)
+        .map((s: any) => {
+          const member: any = { '@type': 'Person', 'name': s.name };
+          if (s.title) { member.jobTitle = s.title; }
+          if (s.linkToProfile) { member.url = 'https://www.prompthealth.ca' + s.linkToProfile.join('/').replace(/^\/+/, '/'); }
+          return member;
+        });
+      if (team.length > 0) {
+        mainSchema.member = team;
+      }
+    } else if (p.team) {
+      const clinic: any = { '@type': 'MedicalBusiness', 'name': p.team.name };
+      if (p.team.linkToProfile) { clinic.url = 'https://www.prompthealth.ca' + p.team.linkToProfile; }
+      mainSchema.memberOf = clinic;
+    }
+
     // Additional structured properties
     if (schemaTypeUrls.length > 0) {
       mainSchema.additionalType = schemaTypeUrls;
@@ -943,13 +972,44 @@ export class ProfileComponent implements OnInit , OnDestroy {
     });
   }
 
+  /*
+   * Tells the journey tracker what this page is.
+   *
+   * It has to come from here. A clinic and a practitioner are both Users and
+   * both render through this component at the same address, so nothing looking
+   * at the URL could ever tell them apart, and /practitioners/<slug> is a
+   * redirect a browser never actually sits on. This component holds the only
+   * copy of the answer.
+   */
+  announceEntity(): void {
+    if (!this.profile) { return; }
+    this._journey.setEntity(this.profile.isC ? 'clinic' : 'practitioner', this.profile._id);
+  }
+
+  /* The clinic relationship, in whichever direction this profile has one: a
+   * practitioner shows the clinic they are a member of, a clinic shows its team.
+   *
+   * Both are fetched here rather than in the tab that displays them, because the
+   * page's JSON-LD states the relationship and is built by this component. The
+   * meta is rebuilt once the answer arrives, and since Angular Universal waits
+   * for in-flight requests before it serialises, the rendered HTML a crawler
+   * receives already carries the relationship rather than only the name. */
+  fetchClinicRelationship(): void {
+    const p = this.profile;
+    if (!p) { return; }
+    if (p.isC) {
+      if (!p.doneInitStaffs) { this.fetchStaffs().then(() => this.setMetaForActiveTab()); }
+    } else if (p.isProvider && !p.triedFetchingTeam) {
+      this.fetchTeam().then(() => this.setMetaForActiveTab());
+    }
+  }
+
   fetchTeam(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.profile.markAsTriedFetchingTeam();
       const path = `staff/get-by-user/${this.profile._id}`;
       this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetStaffResult) => {
-        if(res.statusCode == 200) {
-
+        if(res.statusCode == 200 && res.data && res.data.center) {
           this.profile.setTeam(res.data.center as IUserDetail);
           resolve();
         } else {
@@ -959,6 +1019,18 @@ export class ProfileComponent implements OnInit , OnDestroy {
       }, error => {
         resolve();
       });
+    });
+  }
+
+  fetchStaffs(): Promise<void> {
+    return new Promise((resolve) => {
+      const path = `staff/get-by-center/${this.profile._id}`;
+      this._sharedService.getNoAuth(path).pipe(takeUntil(this.destroy$)).subscribe((res: IGetStaffsResult) => {
+        if(res.statusCode == 200 && res.data) {
+          this.profile.setStaffs(res.data);
+        }
+        resolve();
+      }, () => resolve());
     });
   }
 

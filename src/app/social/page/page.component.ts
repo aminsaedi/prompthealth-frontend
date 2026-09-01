@@ -10,6 +10,7 @@ import { formatDateToString } from 'src/app/_helpers/date-formatter';
 import { slugify } from 'src/app/_helpers/slugify';
 import { SocialService } from '../social.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
+import { JourneyService } from 'src/app/shared/services/journey.service';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -49,6 +50,7 @@ export class PageComponent implements OnInit , OnDestroy {
     private _uService: UniversalService,
     private _headerService: HeaderStatusService,
     private _jsonLdService: JsonLdService,
+    private _journey: JourneyService,
   ) { }
 
   ngOnDestroy() {
@@ -88,6 +90,11 @@ export class PageComponent implements OnInit , OnDestroy {
     }
 
     if(this.post) {
+      /* Which piece of content this is, for the journey tracker. Sent from here
+       * rather than derived from the URL because the same component serves
+       * /community/article/<slug> and /community/content/<id>, and only one of
+       * those carries an id. */
+      this._journey.setEntity(this.post.isEvent ? 'event' : 'article', this.post._id);
       this.setMeta();
       this.setBreadcrumbs();
       this.buildDirectoryLinks();

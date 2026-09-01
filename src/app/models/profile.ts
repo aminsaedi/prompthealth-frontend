@@ -75,7 +75,11 @@ export class Profile implements IProfile {
   get numFollowing() { return this.data.follow.following || 0; }
   get numFollower() { return this.data.follow.followed || 0; }
 
-  get staffs() { return (this.eligibleToManageTeam) ? (this._staffs || []) : []; }
+  /* Showing a team is not the same permission as managing one. The team is
+   * public information about a clinic that helps a reader and helps the page
+   * rank, so the plan gates the dashboard that edits it, not the list itself.
+   * A profile that is not a clinic has no team to show either way. */
+  get staffs() { return this.isC ? (this._staffs || []) : []; }
   get showcases() { return (this.eligibleToManageShowcase) ? (this._showcases || []) : []; }
   get videos() { return (this.eligibleToManageVideo) ? this.data.videos : []; } 
   get socialLinks() { return this.eligibleToConnectSocial ? this.data.socialLinks : []; }

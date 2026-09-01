@@ -89,7 +89,11 @@ export function app() {
    *  Targets the public backend because BACKEND_BASE (127.0.0.1:3001) is not
    *  reachable from this SSR container in the split-host deployment. */
   const outTarget = environment.config.API_URL.replace(/\/api\/v1\/?$/, '');
-  const outProxy = proxy('/out', { target: outTarget || 'https://ocean.prompthealth.ca', changeOrigin: true });
+  /* xfwd forwards the reader's address. Without it every /out click reached the
+   * backend as this container, so every one of them shared a single hashed
+   * address: unique-visitor counts on the busiest click channel were counting
+   * one visitor, and all of them sat in one rate-limit bucket. */
+  const outProxy = proxy('/out', { target: outTarget || 'https://ocean.prompthealth.ca', changeOrigin: true, xfwd: true });
   server.use('/out', outProxy);
 
 
@@ -118,6 +122,11 @@ export function app() {
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/dashboard',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
+  /* Behind a login guard, so a server render produces an empty shell at the
+     cost of a full Angular render per request. Measured against production:
+     1.02 s for /link-admin/overview against 0.086 s for /dashboard, which is
+     already on this list. */
+  server.use('/link-admin',            (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/dashboard-old',         (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/personal-match',        (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/compare-practitioners', (req, res) => { res.sendFile(join(distFolder, 'index.html')); })

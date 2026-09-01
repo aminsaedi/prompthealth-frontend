@@ -57,7 +57,7 @@ export class UniversalService {
 
     if(!meta.robots) {
       meta.robots = 
-      (path.match(/\/(dashboard|auth|personal-match|compare-practitioners|invitation|unsubscribe|404|thankyou)/)) ? 'noindex' :
+      (path.match(/\/(dashboard|link-admin|auth|personal-match|compare-practitioners|invitation|unsubscribe|404|thankyou)/)) ? 'noindex' :
       'index, follow';
     }
 

@@ -1,0 +1,43 @@
+@import '../../../assets/scss/variables';
+
+/* Only what is particular to this page. Panels, KPIs, bars and the grid of
+ * columns come from the section stylesheet. */
+
+.ll-picker {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  select { max-width: 420px; }
+}
+
+.ll-subject { margin-bottom: 20px; }
+
+.ll-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    align-items: baseline;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    padding: 6px 0;
+
+    & + li { border-top: 1px solid $colorGsLine; }
+  }
+}
+
+/* A title can be long and a count never is, so the title takes the slack and
+ * truncates rather than pushing the number off the panel. */
+.ll-name {
+  color: $colorPrimary;
+  flex: 1 1 auto;
+  font-size: 14px;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

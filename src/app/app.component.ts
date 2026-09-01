@@ -10,6 +10,7 @@ import { SharedService } from './shared/services/shared.service';
 import { IResponseData } from './models/response-data';
 import { RegionService, RegionType } from './shared/services/region.service';
 import { OutboundLinkService } from './shared/services/outbound-link.service';
+import { JourneyService } from './shared/services/journey.service';
 import { Subscription , Subject } from 'rxjs';
 import { } from 'googlemaps';
 import { takeUntil } from 'rxjs/operators';
@@ -46,6 +47,7 @@ export class AppComponent implements OnInit , OnDestroy {
     private _sharedService: SharedService,
     private _regionService: RegionService,
     private _outboundLink: OutboundLinkService,
+    private _journey: JourneyService,
   ) { }
 
   @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
@@ -62,6 +64,11 @@ export class AppComponent implements OnInit , OnDestroy {
 
   async ngOnInit() {
     if (!this._uService.isServer) {
+      /* Records the path a reader walks, so an outbound click can say what led
+       * to it. Installed before the link service, which reads the current page
+       * from it when a click happens. */
+      this._journey.install();
+
       /* Tags every outbound link on the site with UTM parameters and reports
        * outbound clicks. One listener on the document, installed once. */
       this._outboundLink.install();
