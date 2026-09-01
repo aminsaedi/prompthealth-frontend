@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { UniversalService } from './universal.service';
+import { JourneyService } from './journey.service';
 
 const API_URL = environment.config.API_URL;
 const POLICY_CACHE_KEY = 'ph_link_policy';
@@ -142,6 +143,7 @@ export class OutboundLinkService implements OnDestroy {
     private uService: UniversalService,
     private ngZone: NgZone,
     private router: Router,
+    private journey: JourneyService,
   ) {
     this.compileRules();
   }
@@ -380,6 +382,13 @@ export class OutboundLinkService implements OnDestroy {
       const anchor = target.closest('a[href]') as HTMLAnchorElement;
       if (!anchor) { return; }
       const href = anchor.getAttribute('href');
+
+      /* A managed short link is one of ours, so it is not tagged, but it is the
+       * one outbound path where no script of ours runs afterwards: the browser
+       * leaves for /out/<code> and the redirect happens on the server. The
+       * journey has to travel in the URL or it does not travel at all. */
+      if (this.stampShortLink(anchor, href)) { return; }
+
       if (!this.isOutbound(href)) { return; }
 
       /* Tag before the browser acts on the click. This is the guarantee that
@@ -395,6 +404,54 @@ export class OutboundLinkService implements OnDestroy {
       /* never interfere with a navigation */
     }
   };
+
+  /*
+   * Appends the visit to a /out/<code> href, immediately before it is followed.
+   *
+   * The origin check is the point of this method, not a detail of it. Article
+   * bodies are raw unsanitised HTML, so an author, or anyone who can get an
+   * article approved, can write <a href="//somewhere.example/out/abc">. Matching
+   * on the path alone would hand that host a live session token, and with it the
+   * ability to write into this reader's visit. Only a link on our own origin,
+   * with the shape of a real short code, is stamped.
+   */
+  private stampShortLink(anchor: HTMLAnchorElement, href: string): boolean {
+    if (!href || href.indexOf('/out/') < 0) { return false; }
+    let url: URL;
+    try {
+      url = new URL(href, document.baseURI);
+    } catch (e) {
+      return false;
+    }
+    if (url.origin !== window.location.origin) { return false; }
+    if (!/^\/out\/[0-9a-z]{3,32}$/.test(url.pathname)) { return false; }
+
+    const session = this.journey.session;
+    if (!session) { return true; }
+    /* The visitor id is deliberately not sent. The server reads it from the
+     * session it already holds, and the pair of the two is what proves a write
+     * belongs to this visit: putting both in a URL would make that pair
+     * something a reader can copy out of the address bar. */
+    url.searchParams.set('s', session);
+    url.searchParams.set('t', this.journey.currentType);
+    if (this.journey.currentId) { url.searchParams.set('e', this.journey.currentId); }
+
+    const original = anchor.getAttribute('href');
+    anchor.setAttribute('href', url.pathname + url.search);
+    /* Put the plain href back once the browser has acted on the click. The
+     * handler also runs on contextmenu, and leaving the stamped one in place
+     * meant "copy link address" handed out a live session token. */
+    window.setTimeout(() => {
+      if (anchor.getAttribute('href') === url.pathname + url.search) {
+        anchor.setAttribute('href', original);
+      }
+    }, 0);
+
+    /* The reader is about to leave, and this page may never have reported
+     * itself. Send it now so the visit it belongs to exists. */
+    this.journey.flush();
+    return true;
+  }
 
   /* One report per destination per page view. Repeated clicks on the same link
    * in the same view are the same intent and would only inflate the count. */
@@ -412,6 +469,15 @@ export class OutboundLinkService implements OnDestroy {
       utmMedium: utmSafe(this.policy.medium, 50),
       utmCampaign: utmSafe(this.campaignForPath(path)),
       utmContent: this.policy.includeContent ? utmPathToken(path) : '',
+      /* The visit, and the page the click happened on. The page is sent rather
+       * than looked up from the visit afterwards, because sessionStorage is
+       * copied into a tab opened from a link: two doctors opened in background
+       * tabs share one visit, and whichever finished loading last would
+       * otherwise take the credit for a click made in the other. */
+      sid: this.journey.session,
+      vid: this.journey.visitor,
+      etype: this.journey.currentType,
+      eid: this.journey.currentId,
     });
     const endpoint = `${API_URL}link/track`;
 

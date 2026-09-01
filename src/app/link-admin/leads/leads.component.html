@@ -1,0 +1,228 @@
+<div class="ll">
+
+  <!-- Whose figures these are. An administrator can look at anyone; a clinic or
+       a practitioner only ever sees themselves, so they are not shown a choice
+       they do not have. -->
+  <div class="panel ll-picker" *ngIf="isAdmin">
+    <label class="eyebrow" for="ll-clinic">Showing</label>
+    <select id="ll-clinic" class="form-control" [ngModel]="selectedClinicId"
+            (ngModelChange)="onClinicChanged($event)">
+      <option value="">The whole site</option>
+      <option *ngFor="let clinic of clinics" [value]="clinic.clinicId">
+        {{ clinic.name }}{{ clinic.linkedMembers ? ' (' + clinic.linkedMembers + ' linked)' : '' }}
+      </option>
+    </select>
+  </div>
+
+  <app-la-loading class="la-refresh" variant="inline"
+    [label]="'Loading the last ' + days + ' days…'" *ngIf="loading"></app-la-loading>
+
+  <!-- ============================ the whole site ============================ -->
+  <ng-container *ngIf="funnel">
+    <dl class="la-cols la-cols-4">
+      <div class="kpi">
+        <dt class="eyebrow">Leads</dt>
+        <dd><span class="kpi-value num">{{ funnel.clicks.leads | number }}</span>
+          <span class="kpi-note body-small text-label">readers who reached a practice's own website</span>
+        </dd>
+      </div>
+      <div class="kpi">
+        <dt class="eyebrow">Outbound clicks</dt>
+        <dd><span class="kpi-value num">{{ funnel.clicks.total | number }}</span>
+          <span class="kpi-note body-small text-label">every link off the site, leads included</span>
+        </dd>
+      </div>
+      <div class="kpi">
+        <dt class="eyebrow">Article readers</dt>
+        <dd><span class="kpi-value num">{{ peopleOf('article') | number }}</span>
+          <span class="kpi-note body-small text-label">{{ viewsOf('article') | number }} article views</span>
+        </dd>
+      </div>
+      <div class="kpi">
+        <dt class="eyebrow">Profile readers</dt>
+        <dd><span class="kpi-value num">{{ (peopleOf('practitioner') + peopleOf('clinic')) | number }}</span>
+          <span class="kpi-note body-small text-label">practitioner and clinic pages</span>
+        </dd>
+      </div>
+    </dl>
+
+    <div class="la-cols la-cols-2">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="subtitle1 mb-0">How readers got there</h2>
+            <p class="body-small text-label mb-0">The route through the site that ended in an outbound click.</p>
+          </div>
+        </div>
+        <ul class="bars" *ngIf="funnel.byPath.length">
+          <li *ngFor="let row of funnel.byPath">
+            <span class="bar-name">{{ readablePath(row.pathType) }}</span>
+            <span class="bar-count num body-small text-label">{{ row.leads | number }} / {{ row.total | number }}</span>
+            <span class="bar-track"><span class="bar-fill"
+              [style.width]="rate(row.total, funnel.byPath[0].total)"></span></span>
+          </li>
+        </ul>
+        <p class="empty body2 mb-0" *ngIf="!funnel.byPath.length">No outbound clicks in this window yet.</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="subtitle1 mb-0">Where they arrived from</h2>
+            <p class="body-small text-label mb-0">The site that sent them to us, before any of this started.</p>
+          </div>
+        </div>
+        <ul class="bars" *ngIf="funnel.entrySources.length">
+          <li *ngFor="let row of funnel.entrySources">
+            <span class="bar-name">{{ row.referrer }}</span>
+            <span class="bar-count num body-small text-label">{{ row.leads | number }} / {{ row.total | number }}</span>
+            <span class="bar-track"><span class="bar-fill"
+              [style.width]="rate(row.total, funnel.entrySources[0].total)"></span></span>
+          </li>
+        </ul>
+        <p class="empty body2 mb-0" *ngIf="!funnel.entrySources.length">Nothing recorded yet.</p>
+      </section>
+    </div>
+
+    <div class="la-cols la-cols-2">
+      <section class="panel">
+        <div class="panel-head">
+          <div><h2 class="subtitle1 mb-0">Articles that produced leads</h2></div>
+        </div>
+        <ul class="ll-list" *ngIf="funnel.topArticles.length">
+          <li *ngFor="let row of funnel.topArticles">
+            <a [href]="row.url" target="_blank" rel="noopener" class="ll-name">{{ row.title || 'Untitled' }}</a>
+            <span class="num body-small text-label">{{ row.leads | number }}</span>
+          </li>
+        </ul>
+        <p class="empty body2 mb-0" *ngIf="!funnel.topArticles.length">No article has produced one yet.</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div><h2 class="subtitle1 mb-0">Practitioners readers clicked through from</h2></div>
+        </div>
+        <ul class="ll-list" *ngIf="funnel.topPractitioners.length">
+          <li *ngFor="let row of funnel.topPractitioners">
+            <a [href]="row.url" target="_blank" rel="noopener" class="ll-name">{{ row.name || 'Unknown' }}</a>
+            <span class="num body-small text-label">{{ row.leads | number }}</span>
+          </li>
+        </ul>
+        <p class="empty body2 mb-0" *ngIf="!funnel.topPractitioners.length">Nothing yet.</p>
+      </section>
+    </div>
+  </ng-container>
+
+  <!-- ============================ one clinic ============================ -->
+  <ng-container *ngIf="report">
+    <div class="panel ll-subject">
+      <h2 class="h5 mb-0">{{ report.subject.name }}</h2>
+      <p class="body-small text-label mb-0">
+        <a [href]="report.subject.url" target="_blank" rel="noopener">Profile</a>
+        <span *ngIf="report.subject.website"> · {{ report.subject.website }}</span>
+      </p>
+    </div>
+
+    <dl class="la-cols la-cols-4">
+      <div class="kpi">
+        <dt class="eyebrow">Leads</dt>
+        <dd><span class="kpi-value num">{{ report.totals.leads | number }}</span>
+          <span class="kpi-note body-small text-label">people PromptHealth sent to their own website</span>
+        </dd>
+      </div>
+      <div class="kpi">
+        <dt class="eyebrow">Distinct visitors</dt>
+        <dd><span class="kpi-value num">{{ report.totals.uniqueVisitors | number }}</span>
+          <span class="kpi-note body-small text-label">behind those leads</span>
+        </dd>
+      </div>
+      <div class="kpi">
+        <dt class="eyebrow">Profile readers</dt>
+        <dd><span class="kpi-value num">{{ report.totals.profilePeople | number }}</span>
+          <span class="kpi-note body-small text-label">{{ report.totals.profileViews | number }} views of this page</span>
+        </dd>
+      </div>
+      <div class="kpi">
+        <dt class="eyebrow">Team page readers</dt>
+        <dd><span class="kpi-value num">{{ report.totals.teamProfilePeople | number }}</span>
+          <span class="kpi-note body-small text-label">across the practitioners listed here</span>
+        </dd>
+      </div>
+    </dl>
+
+    <p class="body-small text-label" *ngIf="report.detailLimited">
+      The totals above cover the whole window. The breakdowns below start
+      {{ report.range.detailFrom }}, which is as far back as individual clicks are kept.
+    </p>
+
+    <div class="la-cols la-cols-2">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="subtitle1 mb-0">How they found their way</h2>
+            <p class="body-small text-label mb-0">The pages a reader passed through before clicking out.</p>
+          </div>
+        </div>
+        <ul class="bars" *ngIf="report.byPath.length">
+          <li *ngFor="let row of report.byPath">
+            <span class="bar-name">{{ readablePath(row.pathType) }}</span>
+            <span class="bar-count num body-small text-label">{{ row.leads | number }}</span>
+            <span class="bar-track"><span class="bar-fill"
+              [style.width]="rate(row.leads, report.byPath[0].leads)"></span></span>
+          </li>
+        </ul>
+        <p class="empty body2 mb-0" *ngIf="!report.byPath.length">No leads in this window yet.</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="subtitle1 mb-0">Which of their pages sent them</h2>
+            <p class="body-small text-label mb-0">Destination websites the readers landed on.</p>
+          </div>
+        </div>
+        <ul class="bars" *ngIf="report.byDestination.length">
+          <li *ngFor="let row of report.byDestination">
+            <span class="bar-name">{{ row.hostname }}</span>
+            <span class="bar-count num body-small text-label">{{ row.leads | number }}</span>
+            <span class="bar-track"><span class="bar-fill"
+              [style.width]="rate(row.leads, report.byDestination[0].leads)"></span></span>
+          </li>
+        </ul>
+        <p class="empty body2 mb-0" *ngIf="!report.byDestination.length">Nothing yet.</p>
+      </section>
+    </div>
+
+    <div class="la-cols la-cols-2">
+      <section class="panel">
+        <div class="panel-head">
+          <div><h2 class="subtitle1 mb-0">By practitioner</h2></div>
+        </div>
+        <ul class="ll-list" *ngIf="report.byPractitioner.length">
+          <li *ngFor="let row of report.byPractitioner">
+            <a [href]="row.url" target="_blank" rel="noopener" class="ll-name">{{ row.name || 'Unknown' }}</a>
+            <span class="num body-small text-label">{{ row.leads | number }}</span>
+          </li>
+        </ul>
+        <p class="empty body2 mb-0" *ngIf="!report.byPractitioner.length">No lead has been credited to a named practitioner yet.</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div><h2 class="subtitle1 mb-0">By article</h2></div>
+        </div>
+        <ul class="ll-list" *ngIf="report.byArticle.length">
+          <li *ngFor="let row of report.byArticle">
+            <a [href]="row.url" target="_blank" rel="noopener" class="ll-name">{{ row.title || 'Untitled' }}</a>
+            <span class="num body-small text-label">{{ row.leads | number }}</span>
+          </li>
+        </ul>
+        <p class="empty body2 mb-0" *ngIf="!report.byArticle.length">No lead has come through an article yet.</p>
+      </section>
+    </div>
+  </ng-container>
+
+  <div class="panel" *ngIf="!loading && !funnel && !report">
+    <p class="empty mb-0">Nothing to show. Reload the page to try again.</p>
+  </div>
+</div>

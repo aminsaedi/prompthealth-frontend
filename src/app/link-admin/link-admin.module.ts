@@ -12,6 +12,7 @@ import { LinkAdminStore } from './link-admin.store';
 import { LinkEditorComponent } from './link-editor/link-editor.component';
 import { LinkPolicyComponent } from './link-policy/link-policy.component';
 import { LoadingComponent } from './loading/loading.component';
+import { LeadsComponent } from './leads/leads.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ReportsComponent } from './reports/reports.component';
 import { TaggingComponent } from './tagging/tagging.component';
@@ -23,6 +24,7 @@ const routes: Routes = [
     path: '', component: LinkAdminComponent, children: [
       { path: 'overview', component: OverviewComponent },
       { path: 'links', component: ExplorerComponent },
+      { path: 'leads', component: LeadsComponent },
       { path: 'reports', component: ReportsComponent },
       { path: 'tagging', component: TaggingComponent },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -34,6 +36,7 @@ const routes: Routes = [
   declarations: [
     LinkAdminComponent,
     OverviewComponent,
+    LeadsComponent,
     ExplorerComponent,
     ReportsComponent,
     TaggingComponent,

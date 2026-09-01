@@ -31,6 +31,7 @@ export class LinkAdminComponent implements OnInit, OnDestroy {
   readonly SECTIONS: Section[] = [
     { path: 'overview', label: 'Overview', icon: 'dashboard' },
     { path: 'links', label: 'Links', icon: 'external-link' },
+    { path: 'leads', label: 'Leads', icon: 'users' },
     { path: 'reports', label: 'Reports', icon: 'barchart' },
     { path: 'tagging', label: 'Tagging', icon: 'tag', adminOnly: true },
   ];

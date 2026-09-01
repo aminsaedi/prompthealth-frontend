@@ -142,6 +142,18 @@ export class LinkManagerService {
   report(params: any = {}): Observable<any> {
     return this.shared.get(`link/report${this.toQuery(params)}`);
   }
+  /* Where the leads came from. `funnel` is the whole site and is refused to
+   * anyone who is not an administrator; `leadReport` is scoped by the server to
+   * whoever is asking unless an administrator names somebody. */
+  funnel(params: any = {}): Observable<any> {
+    return this.shared.get(`link/funnel${this.toQuery(params)}`);
+  }
+  leadReport(params: any = {}): Observable<any> {
+    return this.shared.get(`link/lead-report${this.toQuery(params)}`);
+  }
+  clinics(params: any = {}): Observable<any> {
+    return this.shared.get(`link/clinics${this.toQuery(params)}`);
+  }
   reportFacets(params: any = {}): Observable<any> {
     return this.shared.get(`link/report/facets${this.toQuery(params)}`);
   }
