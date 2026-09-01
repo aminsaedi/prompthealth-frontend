@@ -87,18 +87,25 @@ export class JourneyService implements OnDestroy {
 
   private pendingTimer: any = null;
   private navigationCount = 0;
-  /* Which navigation has already been reported. Reporting is idempotent against
-   * this, which is what lets setEntity and the deadline timer both call it
-   * without either having to know whether the other already did, and what stops
-   * two consecutive pages that happen to classify the same from collapsing into
-   * one row. */
-  private reportedNav = -1;
+  /* Which page has already been reported.
+   *
+   * The key is the page, not the navigation and not what the page is about.
+   * Keying on the navigation counted a page twice as soon as the reader changed
+   * tab, because a tab change is a navigation that is not a new page. Keying on
+   * what the page is about collapsed two different pages that classify the
+   * same, the feed and a note for instance, into one. The address, reduced to
+   * the part that identifies the page, is the thing that is neither.
+   *
+   * It never leaves the browser. */
+  private reportedPage = '';
   /* The address setEntity last spoke for, so a navigation that arrives after it
    * does not throw the answer away. */
   private announcedRoot = '';
   /* The part of the address that names the thing being looked at, so a tab
    * change underneath it is recognised as the same page. */
   private entityRootReported = '';
+  /* The page currently open, in the same terms report() de-duplicates on. */
+  private currentPage = '';
 
   constructor(
     private uService: UniversalService,
@@ -227,6 +234,13 @@ export class JourneyService implements OnDestroy {
    * as identifies the entity: /community/profile/s/<slug>/review and
    * /community/profile/s/<slug> are the same doctor. Returns '' for pages that
    * are not about an entity, which are reported on every navigation. */
+  /* What counts as one page for reporting: the entity address when there is
+   * one, so its tabs share it, and the plain path otherwise, so two different
+   * pages under the same label stay two pages. */
+  private pageKey(path: string): string {
+    return this.entityRoot(path) || path;
+  }
+
   private entityRoot(path: string): string {
     const profile = path.match(/^\/community\/profile\/(s\/)?[^/]+/);
     if (profile) { return profile[0]; }
@@ -265,6 +279,7 @@ export class JourneyService implements OnDestroy {
      * doctor. The entity is carried while the part of the address that names it
      * has not changed. */
     const root = this.entityRoot(path);
+    this.currentPage = root || path;
     /* Tabs under a profile or an article are the same page. Nothing to clear
      * and nothing to send, and in particular no deadline to tear down. */
     if (root && root === this.entityRootReported) { return; }
@@ -290,10 +305,12 @@ export class JourneyService implements OnDestroy {
       (this.entityType === 'article' || this.entityType === 'event' || this.entityType === 'practitioner');
 
     if (waitsForAnEntity) {
-      const nav = this.navigationCount;
+      /* Guarded by the page rather than by the navigation, so changing tab
+       * while waiting does not disarm the fallback for the page underneath. */
+      const page = this.pageKey(path);
       this.pendingTimer = window.setTimeout(() => {
         this.pendingTimer = null;
-        if (nav === this.navigationCount) { this.report(); }
+        if (page === this.currentPage) { this.report(); }
       }, ENTITY_DEADLINE_MS);
     } else {
       this.report();
@@ -336,8 +353,8 @@ export class JourneyService implements OnDestroy {
    * and the one that gets there first is the one that sends. */
   private report(): void {
     if (!this.sessionId) { return; }
-    if (this.reportedNav === this.navigationCount) { return; }
-    this.reportedNav = this.navigationCount;
+    if (this.reportedPage && this.reportedPage === this.currentPage) { return; }
+    this.reportedPage = this.currentPage;
     this.clearTimer();
 
     let ref = '';
