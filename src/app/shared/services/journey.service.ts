@@ -254,7 +254,17 @@ export class JourneyService implements OnDestroy {
   private typeFromPath(path: string): JourneyEntityType {
     if (/^\/community\/(article|content)\//.test(path)) { return 'article'; }
     if (/^\/community\/event\//.test(path)) { return 'event'; }
-    if (/^\/community\/profile\//.test(path) || /^\/practitioners\/[^/]/.test(path)) { return 'practitioner'; }
+    if (/^\/community\/profile\//.test(path)) { return 'practitioner'; }
+    /* Every page under /practitioners is the directory except the single
+     * segment profile shortcut, and that one is a redirectTo, so a browser
+     * only passes through it and never rests there. Matching /practitioners/
+     * followed by anything as a practitioner therefore filed every filtered
+     * directory page as a doctor: type, category, area and the cities hub all
+     * counted as practitioner views with no id, which is most of the
+     * directory's traffic, and no journey could show the directory feeding a
+     * lead. The directory's own routes are named first. */
+    if (/^\/practitioners\/(type|category|area|cities)(\/|$)/.test(path)) { return 'directory'; }
+    if (/^\/practitioners\/[^/]+\/?$/.test(path)) { return 'practitioner'; }
     if (/^\/practitioners/.test(path)) { return 'directory'; }
     if (/^\/community/.test(path)) { return 'feed'; }
     if (path === '/' || path === '') { return 'home'; }
