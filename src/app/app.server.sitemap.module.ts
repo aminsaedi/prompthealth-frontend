@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { locations } from 'src/app/_helpers/location-data';
 import { slugify } from 'src/app/_helpers/slugify';
 import { isIndexableCityCategory, isIndexableCityType } from 'src/app/_helpers/indexable-combos';
-import { staticPageDates } from 'src/app/static-page-dates';
+import { staticPages } from 'src/app/static-page-dates';
 
 const apiURL = environment.config.API_URL;
 const baseURL = environment.config.FRONTEND_BASE;
@@ -95,97 +95,23 @@ const sitemapRoot = `<?xml version="1.0" encoding="UTF-8"?>
   </sitemapindex>
 `;
 
-// PH-021 + SEO-044: Static page lastmod from git commit dates (generated at build time)
+// PH-021 + SEO-044: the static pages, and each one's lastmod, come from
+// scripts/generate-static-page-dates.js, which dates a page by the last commit
+// to its source; add or remove a page there, not here. A page it could not
+// date gets no <lastmod>, as everywhere else in this file. The old fallback was
+// the time this module loaded, which is every deploy and every restart, and a
+// date that keeps announcing changes that never happened is one crawlers learn
+// to ignore.
 function buildSitemapMain(): string {
-  const d = (route: string) => staticPageDates[route] || new Date().toISOString().split('T')[0];
+  const urls = staticPages.map(page => `
+    <url>
+      <loc>${baseURL}${page.route === '/' ? '' : page.route}</loc>${page.lastmod ? `
+      <lastmod>${page.lastmod}</lastmod>` : ''}
+      <changefreq>${page.changefreq}</changefreq>${page.priority ? `
+      <priority>${page.priority}</priority>` : ''}
+    </url>`).join('');
   return `<?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <url>
-      <loc>${baseURL}</loc>
-      <lastmod>${d('/')}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>1.0</priority>
-    </url>
-    <url>
-      <loc>${baseURL}/about</loc>
-      <lastmod>${d('/about')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/about/partner</loc>
-      <lastmod>${d('/about/partner')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/about/editorial-standards</loc>
-      <lastmod>${d('/about/editorial-standards')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/plans</loc>
-      <lastmod>${d('/plans')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/plans/product</loc>
-      <lastmod>${d('/plans/product')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/companies</loc>
-      <lastmod>${d('/companies')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/ambassador-program</loc>
-      <lastmod>${d('/ambassador-program')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/press-release</loc>
-      <lastmod>${d('/press-release')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/online-academy</loc>
-      <lastmod>${d('/online-academy')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/testimonial</loc>
-      <lastmod>${d('/testimonial')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/faq</loc>
-      <lastmod>${d('/faq')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/subscribe/newsletter</loc>
-      <lastmod>${d('/subscribe/newsletter')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/contact-us</loc>
-      <lastmod>${d('/contact-us')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/policy</loc>
-      <lastmod>${d('/policy')}</lastmod>
-      <changefreq>yearly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/terms</loc>
-      <lastmod>${d('/terms')}</lastmod>
-      <changefreq>yearly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/medical-disclaimer</loc>
-      <lastmod>${d('/medical-disclaimer')}</lastmod>
-      <changefreq>yearly</changefreq>
-    </url>
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">${urls}
   </urlset>`;
 }
 const sitemapMain = buildSitemapMain();

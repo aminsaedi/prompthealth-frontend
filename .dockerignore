@@ -1,5 +1,7 @@
 node_modules
 dist
+# .git stays out on purpose. The one thing in the build that needs history,
+# the sitemap's lastmod dates, is computed in CI before docker build.
 .git
 .github
 *.md

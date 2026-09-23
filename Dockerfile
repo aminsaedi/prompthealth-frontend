@@ -8,6 +8,9 @@ RUN npm ci --no-audit --no-fund || (sleep 20 && npm ci --no-audit --no-fund)
 COPY scripts/patch-angular-compiler.js scripts/
 RUN node scripts/patch-angular-compiler.js
 COPY . .
+# prebuild:ssr runs the sitemap date generator here too. There is no git in
+# this stage, so it keeps the dates CI wrote into the build context
+# (.github/workflows/deploy.yml) instead of computing any.
 RUN npm run build:ssr
 
 FROM node:14-alpine
