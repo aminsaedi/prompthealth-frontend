@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { environment } from 'src/environments/environment';
 import { default as axios } from 'axios';
+import { withQueryOf } from 'src/app/_helpers/with-query-of';
 
 const apiURL = environment.config.API_URL;
 const rProfileRedirect = Router();
@@ -24,7 +25,7 @@ rProfileRedirect.use('/', async (req, res, next) => {
     if (result.data.statusCode === 200 && result.data.data.slug) {
       const slug = result.data.data.slug;
       const target = `/practitioners/${slug}${subpath}`;
-      return res.redirect(301, target);
+      return res.redirect(301, withQueryOf(req.originalUrl, target));
     }
   } catch (err) {
     // If API fails, fall through to Angular SSR

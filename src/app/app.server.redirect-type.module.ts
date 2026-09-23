@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { environment } from 'src/environments/environment';
 import { default as axios } from 'axios';
+import { withQueryOf } from 'src/app/_helpers/with-query-of';
 import { slugify } from 'src/app/_helpers/slugify';
 import { QuestionnaireAnswer } from './shared/services/questionnaire.service';
 
@@ -53,7 +54,7 @@ rTypeOfProvider.use('/', async (req, res, next) => {
     const target = city
       ? `/practitioners/type/${slug}/${city}`
       : `/practitioners/type/${slug}`;
-    return res.redirect(301, target);
+    return res.redirect(301, withQueryOf(req.originalUrl, target));
   }
 
   // Unknown ID — let Angular handle it

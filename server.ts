@@ -31,6 +31,7 @@ import { routerRedirectForContent } from 'src/app/app.server.redirect-content.mo
 import { routerRedirectForCategory } from 'src/app/app.server.redirect-category.module';
 import { stripTrackingParams } from './src/app/_helpers/tracking-params';
 import { slugify } from './src/app/_helpers/slugify';
+import { withQueryOf } from './src/app/_helpers/with-query-of';
 
 /* A third of nginx's 60 s upstream timeout. A healthy render takes 1 to 7 s on
  * this box; one still going at 20 s is not going to finish in time to help. */
@@ -118,12 +119,14 @@ export function app() {
   // SEO-064: 301 redirects for legacy / SEO-friendly aliases so Google
   // consolidates signals to the canonical /policy, /terms, and
   // /medical-disclaimer URLs instead of treating the alias paths as 404.
-  server.get('/privacy-policy',     (req, res) => { res.redirect(301, '/policy'); });
-  server.get('/privacy-policy/',    (req, res) => { res.redirect(301, '/policy'); });
-  server.get('/terms-of-service',   (req, res) => { res.redirect(301, '/terms'); });
-  server.get('/terms-of-service/',  (req, res) => { res.redirect(301, '/terms'); });
-  server.get('/terms-and-conditions', (req, res) => { res.redirect(301, '/terms'); });
-  server.get('/disclaimer',         (req, res) => { res.redirect(301, '/medical-disclaimer'); });
+  // Every 301 here and in the redirect routers keeps the query it arrived
+  // with (withQueryOf), or the UTMs on an alias never reach the page.
+  server.get('/privacy-policy',     (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/policy')); });
+  server.get('/privacy-policy/',    (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/policy')); });
+  server.get('/terms-of-service',   (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/terms')); });
+  server.get('/terms-of-service/',  (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/terms')); });
+  server.get('/terms-and-conditions', (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/terms')); });
+  server.get('/disclaimer',         (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/medical-disclaimer')); });
 
   /* Aliases of the newsletter page. A 301 here costs no render and tells a
    * crawler which URL is real. /subscribe-email in particular must never reach
@@ -131,10 +134,10 @@ export function app() {
    * and each request hung the render until nginx gave up and took www down for
    * ten seconds. Express routing is not strict, so '/subscribe' also answers
    * '/subscribe/' but not '/subscribe/newsletter'. */
-  server.get(['/subscribe-email', '/subscribe', '/clubhouse'], (req, res) => { res.redirect(301, '/subscribe/newsletter'); });
+  server.get(['/subscribe-email', '/subscribe', '/clubhouse'], (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/subscribe/newsletter')); });
   /* The retired 2021 coupon landing (home-routing.module.ts). '/invitation/'
    * matches too; '/invitation/<id>', the ambassador's client invitation, does not. */
-  server.get('/invitation', (req, res) => { res.redirect(301, '/plans'); });
+  server.get('/invitation', (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/plans')); });
 
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
