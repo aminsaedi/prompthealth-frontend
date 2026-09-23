@@ -204,13 +204,14 @@ export class PageComponent implements OnInit , OnDestroy {
       ? '/community/article/' + this.post.slug
       : canonicalPathOf(this._router.url);
 
+    /* Only a picture the post really has. Without one, setMeta shares the
+     * site's own card rather than the wordmark the feed shows in its place. */
+    const shareImage = this.post.shareImage;
     this._uService.setMeta(canonicalPath, {
       title: seoTitle + ' | PromptHealth Community',
       description: seoDescription,
       pageType: 'article',
-      image: this.post.coverImage,
-      imageType: this.post.coverImageType,
-      imageAlt: title,
+      ...(shareImage ? { image: shareImage, imageAlt: title } : {}),
       ...this.pathToApp && {iosLink: this.pathToApp},
     });
 
@@ -235,7 +236,7 @@ export class PageComponent implements OnInit , OnDestroy {
         'name': this.post.authorName || '',
         ...(this.post.authorSlug ? { 'url': 'https://www.prompthealth.ca/practitioners/' + this.post.authorSlug } : {})
       },
-      ...(this.post.coverImage ? { 'image': this.post.coverImage } : {}),
+      'image': shareImage || 'https://www.prompthealth.ca/assets/img/prompthealth.png',
       ...(this.post.isArticle && this.post.location ? { 'contentLocation': { '@type': 'Place', 'name': this.post.location } } : {}),
       'publisher': {
         '@type': 'Organization',

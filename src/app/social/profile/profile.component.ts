@@ -463,11 +463,14 @@ export class ProfileComponent implements OnInit , OnDestroy {
     const tab = this.activeTabOf(url);
     const p = this.profile;
     const canonicalPath = this.getCanonicalPath(url);
-    const imageMeta = {
-      image: p.imageFull,
+    /* The provider's own photo, or none: imageFull falls back to
+     * /assets/img/no-image.jpg, which went out as the share image of every
+     * tab of a provider without a photo. setMeta then uses the site card. */
+    const imageMeta = p.profileImageFull ? {
+      image: p.profileImageFull,
       imageType: p.imageType,
       imageAlt: p.name,
-    };
+    } : {};
 
     if (tab === '/event/past') {
       this._uService.setMeta(canonicalPath, {

@@ -2,6 +2,7 @@ import { environment } from "src/environments/environment";
 import { IShowcase, Showcase } from "./showcase";
 import { IStaff, Staff } from "./staff";
 import { IUserDetail, IVideo } from "./user-detail";
+import { imageTypeOf } from "../_helpers/image-type";
 
 export interface IProfile {
   _id: IUserDetail['_id'];
@@ -142,13 +143,7 @@ export class Profile implements IProfile {
         null;
 
     this._profileImage = image ? image + '?ver=2.3' : null;
-    let imageType = '';
-    if(image) {
-      const regex = /\.(jpe?g|png)$/;
-      const match = image.match(regex);
-      imageType = match ? ('image/' + match[1]) : '';  
-    }
-    this._profileImageType = imageType;
+    this._profileImageType = image ? (imageTypeOf(image) || '') : '';
   }
 
   setFollowings(users: IUserDetail[]) {
