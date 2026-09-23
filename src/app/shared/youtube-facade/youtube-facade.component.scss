@@ -1,0 +1,80 @@
+@import '../../../assets/scss/variables';
+
+/* A custom element is inline by default, which would wrap this block box in an
+ * inline one. */
+:host {
+  display: block;
+}
+
+/* The box keeps its shape before the thumbnail arrives, so nothing below it
+ * moves when the lazy image lands. */
+.yt-facade {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: $colorGsBlack;
+
+  &--portrait {
+    padding-top: 177.78%;
+  }
+}
+
+.yt-facade__button,
+.yt-facade__frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.yt-facade__button {
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+
+  &:focus {
+    outline: 3px solid $colorPrimary;
+    outline-offset: -3px;
+  }
+
+  &:hover .yt-facade__glyph,
+  &:focus .yt-facade__glyph {
+    background: rgba($colorPrimaryDark, 0.9);
+  }
+}
+
+.yt-facade__thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Drawn, not an icon font or an image: it has to show before either would
+ * arrive. */
+.yt-facade__glyph {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  background: rgba($colorGsBlack, 0.65);
+  transition: background-color 150ms;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -7px;
+    border-style: solid;
+    border-width: 12px 0 12px 20px;
+    border-color: transparent transparent transparent $colorGsWhite;
+  }
+}
