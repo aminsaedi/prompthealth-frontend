@@ -130,6 +130,9 @@ export function app() {
    * ten seconds. Express routing is not strict, so '/subscribe' also answers
    * '/subscribe/' but not '/subscribe/newsletter'. */
   server.get(['/subscribe-email', '/subscribe', '/clubhouse'], (req, res) => { res.redirect(301, '/subscribe/newsletter'); });
+  /* The retired 2021 coupon landing (home-routing.module.ts). '/invitation/'
+   * matches too; '/invitation/<id>', the ambassador's client invitation, does not. */
+  server.get('/invitation', (req, res) => { res.redirect(301, '/plans'); });
 
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
