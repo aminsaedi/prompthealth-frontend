@@ -72,9 +72,12 @@ export class ContactUsComponent implements OnInit , OnDestroy {
       /* complete() never runs after an error, and it was the only place that
        * enabled the button again. ErrorInterceptor has already reduced the
        * response to the server's message, so its wording (a validation rule,
-       * the rate limit) is what the visitor sees. */
+       * the rate limit) is what the visitor sees. With no response at all it
+       * hands over Angular's own "Http failure response for <url>", which
+       * means nothing to a visitor. */
       this.isUploading = false;
-      this._toastr.error(typeof error === 'string' && error ? error : 'Your message was not sent. Please try again.');
+      const fromServer = typeof error === 'string' && error && error.indexOf('Http failure') !== 0;
+      this._toastr.error(fromServer ? error : 'Your message was not sent. Please try again.');
     });
 
   }
