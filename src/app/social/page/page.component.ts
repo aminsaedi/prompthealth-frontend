@@ -248,7 +248,7 @@ export class PageComponent implements OnInit , OnDestroy {
     };
 
     this._jsonLdService.setJsonLd([
-      articleJsonLd,
+      (this.post.isEvent && this.eventJsonLdOf(articleJsonLd)) || articleJsonLd,
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -274,6 +274,54 @@ export class PageComponent implements OnInit , OnDestroy {
         ]
       }
     ]);
+  }
+
+  /* An event described as an Event, from the post itself: its dates exactly
+   * and in UTC, and the place or link it gives. server-wrapper.js used to make
+   * this by scraping the rendered page for the first date, venue and Register
+   * link it met, which could be text the author wrote into the title or the
+   * summary in the head, and a date that was not one threw and left the
+   * request unanswered.
+   *
+   * Only an Event a search engine can use: it needs a start, and a place, which
+   * for an online event is the address to join it. Without them the page keeps
+   * its Article, which is valid, rather than an Event that Search Console
+   * reports as broken. */
+  private eventJsonLdOf(article: any): any {
+    const post = this.post;
+    const start = post.startAt;
+    if (!start || isNaN(start.getTime())) {
+      return null;
+    }
+
+    let location: any;
+    if (post.isVirtual) {
+      if (!/^https?:\/\//i.test(post.link || '')) {
+        return null;
+      }
+      location = { '@type': 'VirtualLocation', 'url': post.link };
+    } else {
+      const address = (post.venue || '').trim();
+      if (!address) {
+        return null;
+      }
+      location = { '@type': 'Place', 'name': address, 'address': address };
+    }
+
+    const end = post.endAt;
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Event',
+      'name': article.headline,
+      'description': article.description,
+      'url': article.mainEntityOfPage['@id'],
+      'image': article.image,
+      'startDate': start.toISOString(),
+      ...(end && !isNaN(end.getTime()) && end.getTime() >= start.getTime() ? { 'endDate': end.toISOString() } : {}),
+      'eventAttendanceMode': post.isVirtual ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
+      'location': location,
+      'organizer': article.author,
+    };
   }
 
   showReturnToAppIfNeeded() {

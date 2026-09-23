@@ -233,28 +233,26 @@ function injectJsonLd(url, html, categoryPractitioners) {
   // produced two JSON-LD blocks (and duplicate DOM IDs) in SSR output.
   // Those static blocks are deliberately removed here.
 
-  // Community content pages: /community/content/<mongoId> (notes, and posts
-  // without a slug) and /community/article/<slug> (articles and events).
-  // The Angular SSR already renders a JSON-LD block with Article + BreadcrumbList.
-  // We enhance it with missing fields rather than injecting a duplicate.
-  // For event-type posts, we convert Article to Event schema.
-  const communityMatch = url.match(/^\/community\/(?:content\/[a-f0-9]{24}|article\/[^/?#]+)/);
-  if (communityMatch) {
-    /* An event is known by what the page rendered, not by its address. This
-     * used to run only on /community/content/<id>, but every event has a slug
-     * and that address 301s to /community/article/<slug>, so no event was ever
-     * converted and all of them published Article schema. The event card is
-     * rendered only for a post whose contentType is EVENT; related posts are
-     * plain links, never cards. */
-    const isEventPost = /<card-item-event[\s>]/.test(html);
-    /* Articles on their slug address keep the schema PageComponent rendered,
-     * as they always have: the enrichment below was written for the id route
-     * and would, for one, replace the author's /practitioners/<slug> link with
-     * whichever profile id the page mentions first. */
-    if (!isEventPost && url.indexOf('/community/article/') === 0) {
-      return html;
-    }
+  // Community content pages. PageComponent renders the page's JSON-LD (an
+  // Article, or an Event for an event, with a BreadcrumbList); this never adds
+  // a second block beside it.
+  /* On the slug address (articles and events) the page's schema is left
+   * exactly as PageComponent rendered it. An event's Event is built there from
+   * the post itself. It used to be made here instead, by scraping the rendered
+   * page for the first date, venue and Register link anywhere in it, so text an
+   * author wrote into the title or summary in the head came first and could set
+   * the dates, and one that was not a real date threw inside res.send and left
+   * the request unanswered. The enrichment below was written for the id route
+   * and would, for one, replace the author's /practitioners/<slug> link with
+   * whichever profile id the page mentions first. */
+  if (/^\/community\/article\/[^/?#]+/.test(url)) {
+    return html;
+  }
 
+  // /community/content/<mongoId>: notes, promos, and posts without a slug.
+  // Their Article is enriched with the fields PageComponent leaves out.
+  const communityMatch = url.match(/^\/community\/content\/([a-f0-9]{24})/);
+  if (communityMatch) {
     const baseUrl = 'https://www.prompthealth.ca';
     /* A page's own address in its schema is its canonical. Built from the
      * request, an ad click's ?utm_...&fbclid=... became this page's url and
@@ -264,53 +262,6 @@ function injectJsonLd(url, html, categoryPractitioners) {
     const pageUrl = canonical
       ? canonical[1].replace(/&amp;/g, '&')
       : baseUrl + url.split('#')[0].split('?')[0];
-
-    // Extract event details from rendered HTML if this is an event.
-    // The event card renders dates like "yyyy/MM/dd hh:mm AM/PM - yyyy/MM/dd hh:mm AM/PM (your local time)"
-    let eventStartDate = null;
-    let eventEndDate = null;
-    let eventLocation = null;
-    let isVirtualEvent = false;
-    let eventLink = null;
-
-    if (isEventPost) {
-      // Extract dates: "2024/03/15 02:00 PM - 2024/03/15 04:00 PM (your local time)"
-      const dateMatch = html.match(/(\d{4}\/\d{2}\/\d{2}\s+\d{1,2}:\d{2}\s+[AP]M)\s*-\s*(\d{4}\/\d{2}\/\d{2}\s+\d{1,2}:\d{2}\s+[AP]M)\s*\(your local time\)/);
-      if (dateMatch) {
-        eventStartDate = new Date(dateMatch[1]).toISOString();
-        eventEndDate = new Date(dateMatch[2]).toISOString();
-      }
-
-      // Check if virtual: icon "video-camera" means online
-      isVirtualEvent = /iconPh="video-camera"/.test(html) || /Virtual event/.test(html);
-
-      // Extract venue/location text
-      if (isVirtualEvent) {
-        const venueMatch = html.match(/iconPh="video-camera"[\s\S]*?<span[^>]*>\s*(?:<ng-container[^>]*>)?\s*(?:On\s+)?(\w[\w\s]*?)(?:<\/ng-container>)?\s*<\/span>/);
-        if (venueMatch) {
-          eventLocation = { '@type': 'VirtualLocation', 'url': '' };
-        } else {
-          eventLocation = { '@type': 'VirtualLocation', 'name': 'Online Event' };
-        }
-      } else {
-        const addressMatch = html.match(/iconPh="pin"[\s\S]*?<span[^>]*>([\s\S]*?)<\/span>/);
-        if (addressMatch) {
-          const addr = addressMatch[1].replace(/<[^>]+>/g, '').replace(/At\s+/i, '').trim();
-          if (addr) {
-            eventLocation = { '@type': 'Place', 'name': addr, 'address': addr };
-          }
-        }
-      }
-
-      // Extract registration link
-      const linkMatch = html.match(/href="(https?:\/\/[^"]+)"[^>]*>\s*Register\s*<\/a>/i);
-      if (linkMatch) {
-        eventLink = linkMatch[1];
-        if (isVirtualEvent && eventLocation && eventLocation['@type'] === 'VirtualLocation') {
-          eventLocation.url = linkMatch[1];
-        }
-      }
-    }
 
     // Find and parse the existing Angular-rendered JSON-LD
     const ldRegex = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
@@ -324,90 +275,37 @@ function injectJsonLd(url, html, categoryPractitioners) {
         const breadcrumb = data.find(d => d['@type'] === 'BreadcrumbList');
         if (!article) continue;
 
-        if (isEventPost) {
-          // Convert Article to Event schema
-          const eventSchema = {
-            '@context': 'https://schema.org',
-            '@type': 'Event',
-            'name': article.headline || '',
-            'description': article.description || '',
-            'url': pageUrl,
-            'image': article.image || '',
-          };
+        article.url = pageUrl;
+        article.mainEntityOfPage = pageUrl;
+        article.publisher = {
+          "@type": "Organization",
+          "name": "PromptHealth",
+          // The file is 800x350; 600 described an image that does not exist.
+          "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png", "width": 800, "height": 350 }
+        };
 
-          if (eventStartDate) eventSchema.startDate = eventStartDate;
-          if (eventEndDate) eventSchema.endDate = eventEndDate;
+        if (article.datePublished && !article.dateModified) {
+          article.dateModified = article.datePublished;
+        }
 
-          if (eventLocation) {
-            eventSchema.location = eventLocation;
+        if (article.author && article.author.name) {
+          const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
+          if (authorIdMatch) {
+            article.author.url = baseUrl + '/community/profile/' + authorIdMatch[1];
           }
+        }
 
-          // Organizer from author. PageComponent already gives the author's
-          // /practitioners/<slug> page when there is one; the first profile id
-          // in the page is only the fallback, and may be someone else's.
-          if (article.author && article.author.name) {
-            eventSchema.organizer = { '@type': 'Person', 'name': article.author.name };
-            const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
-            if (article.author.url) {
-              eventSchema.organizer.url = article.author.url;
-            } else if (authorIdMatch) {
-              eventSchema.organizer.url = baseUrl + '/community/profile/' + authorIdMatch[1];
-            }
-          }
+        if (article.image && !article.image.startsWith('http')) {
+          article.image = baseUrl + (article.image.startsWith('/') ? '' : '/') + article.image;
+        }
+        if (!article.image) {
+          article.image = baseUrl + '/assets/img/prompthealth.png';
+        }
 
-          // Ensure image is absolute
-          if (eventSchema.image && !eventSchema.image.startsWith('http')) {
-            eventSchema.image = baseUrl + (eventSchema.image.startsWith('/') ? '' : '/') + eventSchema.image;
-          }
-          if (!eventSchema.image) {
-            eventSchema.image = baseUrl + '/assets/img/prompthealth.png';
-          }
-
-          // Replace Article with Event in the data array
-          const articleIdx = data.indexOf(article);
-          data[articleIdx] = eventSchema;
-
-          // Fix BreadcrumbList
-          if (breadcrumb && breadcrumb.itemListElement) {
-            const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
-            if (lastItem && !lastItem.item) {
-              lastItem.item = pageUrl;
-            }
-          }
-        } else {
-          // Enrich Article schema (non-event posts)
-          article.url = pageUrl;
-          article.mainEntityOfPage = pageUrl;
-          article.publisher = {
-            "@type": "Organization",
-            "name": "PromptHealth",
-            // The file is 800x350; 600 described an image that does not exist.
-            "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png", "width": 800, "height": 350 }
-          };
-
-          if (article.datePublished && !article.dateModified) {
-            article.dateModified = article.datePublished;
-          }
-
-          if (article.author && article.author.name) {
-            const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
-            if (authorIdMatch) {
-              article.author.url = baseUrl + '/community/profile/' + authorIdMatch[1];
-            }
-          }
-
-          if (article.image && !article.image.startsWith('http')) {
-            article.image = baseUrl + (article.image.startsWith('/') ? '' : '/') + article.image;
-          }
-          if (!article.image) {
-            article.image = baseUrl + '/assets/img/prompthealth.png';
-          }
-
-          if (breadcrumb && breadcrumb.itemListElement) {
-            const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
-            if (lastItem && !lastItem.item) {
-              lastItem.item = pageUrl;
-            }
+        if (breadcrumb && breadcrumb.itemListElement) {
+          const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
+          if (lastItem && !lastItem.item) {
+            lastItem.item = pageUrl;
           }
         }
 
