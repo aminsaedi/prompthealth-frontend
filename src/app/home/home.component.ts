@@ -360,6 +360,8 @@ export class HomeComponent implements OnInit , OnDestroy {
 
   /** temporary solution to fill featured practitioners */
   getPractitionersFeatured() {
+    /* A failed call used to leave the twenty skeleton cards up for good. Now
+     * it counts as nobody to feature, and the empty carousel is dropped. */
     this._sharedService.getNoAuth("user/get-paid-spc").pipe(takeUntil(this.destroy$)).subscribe(
       (res: any) => {
         if (res.statusCode === 200) {
@@ -368,9 +370,12 @@ export class HomeComponent implements OnInit , OnDestroy {
             users.push(new Professional(d._id, d));
           });
           this.featuredExpertController.addData(users);
+        } else {
+          this.featuredExpertController.addData([]);
         }
       },
       (error) => {
+        this.featuredExpertController.addData([]);
       }
     );
   }

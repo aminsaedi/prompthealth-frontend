@@ -296,7 +296,7 @@
     </div>
   </div>
 
-  <div *ngIf="!!featuredExpertController" class="expert-finder-scroll-horizontal" #expertFinderScrollHorizontal>
+  <div *ngIf="!!featuredExpertController && !featuredExpertController.isEmpty" class="expert-finder-scroll-horizontal" #expertFinderScrollHorizontal>
     <div class="intersection-observer" intersectionObserver rootMargin="10000px 0px -500px 0px"
       (changeStatus)="onEnterExpertFinder($event)"></div>
     <ul *ngFor="
