@@ -77,11 +77,25 @@ export function app() {
   // Example Express Rest API endpoints
   // app.get('/api/**', (req, res) => { });
   // Serve static files from /browser
-  server.get('/bootstrap.min.css.map', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary not to try SSR because this file doesn't exist. */
-  server.get('/sockjs-node/iframe.html', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary not to try SSR because this file doesn't exist. */
   server.get('*.*', express.static(distFolder, {
     maxAge: '1y'
   }));
+
+  /* A file that is not there is answered here, in plain text, not by the
+   * renderer. Every miss used to cost a full Angular render of the Not Found
+   * page on the 1-vCPU box: scrapers still ask for images deleted long ago, and
+   * each deploy strands the previous build's bundle names in open tabs and
+   * caches. Only /assets and the bundles at the root are ended here. Other paths
+   * with a dot in them can be pages: /unsubscribe/<email> is one.
+   *
+   * /bootstrap.min.css.map and /sockjs-node/iframe.html used to have handlers of
+   * their own, meant to keep them from being rendered, that never answered at
+   * all, so each request hung until nginx gave up. The root rule covers the
+   * first; the dev server's path is ended explicitly. */
+  const fileNotFound: express.RequestHandler = (req, res) => { res.status(404).type('text/plain').send('Not Found'); };
+  server.get('/assets/*', fileNotFound);
+  server.get(/^\/[^/]+\.(?:js|css|map)$/, fileNotFound);
+  server.get('/sockjs-node/*', fileNotFound);
 
   /** api proxy */
   const apiProxy = proxy('/api', {target: environment.config.BACKEND_BASE, changeOrigin: false});
