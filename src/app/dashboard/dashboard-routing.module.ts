@@ -65,9 +65,14 @@ const routes: Routes = [
       },
     ],
   },
+  /* Every target here must be a page, never another redirect. After an
+   * absolute redirect Angular applies no further redirects, so a target that
+   * is itself a redirect (/community, /practitioners/:id,
+   * /dashboard/register-*) matches nothing that renders and leaves a blank
+   * page. */
   {
     path: 'register-product/complete',
-    redirectTo: '/community',
+    redirectTo: '/community/feed',
   },
 
   { path: 'subscriptionplan',   redirectTo: '/plans' },
@@ -75,9 +80,9 @@ const routes: Routes = [
   { path: 'questions/User',     redirectTo: '/personal-match/gender' },
   { path: 'listing',            redirectTo: '/practitioners' },
   { path: 'listingCompare',     redirectTo: '/compare-practitioners' },
-  { path: 'detail/:id',         redirectTo: '/practitioners/:id' },
-  { path: 'register-partner',   redirectTo: '/dashboard/register-product/general' },
-  { path: 'professional-info',  redirectTo: '/dashboard/register-practitioner/general' },
+  { path: 'detail/:id',         redirectTo: '/community/profile/:id' },
+  { path: 'register-partner',   redirectTo: '/dashboard-old/register-product/general' },
+  { path: 'professional-info',  redirectTo: '/dashboard-old/register-practitioner/general' },
 ];
 
 @NgModule({
