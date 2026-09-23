@@ -411,9 +411,12 @@ function injectJsonLd(url, html, categoryPractitioners) {
           }
         }
 
-        // Replace the original JSON-LD block with enhanced version
-        const enhanced = '<script type="application/ld+json">' + JSON.stringify(data) + '</script>';
-        html = html.replace(ldMatch[0], enhanced);
+        // Replace the original JSON-LD block with enhanced version. ldJson,
+        // because JSON.parse above turned the page's escaped '<' back into a
+        // real one. Replaced through a function, so a '$' in the text is
+        // written as it is rather than read as a replacement pattern.
+        const enhanced = '<script type="application/ld+json">' + ldJson(data) + '</script>';
+        html = html.replace(ldMatch[0], function() { return enhanced; });
         break; // Only enhance the first matching block
       } catch (e) {
         // Skip unparseable blocks
@@ -572,8 +575,8 @@ function injectJsonLd(url, html, categoryPractitioners) {
   }
 
   if (jsonLd) {
-    const script = '<script type="application/ld+json" id="json-ld-schema">' + JSON.stringify(jsonLd) + '</script>';
-    html = html.replace('</head>', script + '</head>');
+    const script = '<script type="application/ld+json" id="json-ld-schema">' + ldJson(jsonLd) + '</script>';
+    html = html.replace('</head>', function() { return script + '</head>'; });
   }
 
   return html;
