@@ -1,16 +1,16 @@
 import { default as axios, AxiosResponse } from 'axios';
 
 /*
- * A GET to the API from the server render, bounded as a whole.
+ * A GET to the API from the server render, with one clock on the whole call.
  *
  * The SSR redirect routers call the API while the reader's request waits, and
- * before server.ts's render timeout exists. axios's own timeout option is
- * req.setTimeout underneath, which on Node 14 starts counting only once the
- * socket has connected: a backend that never answered the TCP handshake held
- * the request for the kernel's connect timeout, over two minutes, well past
- * nginx's 60 s, after which nginx counts the site's only upstream as down. The
- * cancel token fires on the clock whatever state the request is in; the
- * timeout option stays for a server that connects and then stops talking.
+ * before server.ts's render timeout exists. axios's timeout option does cover
+ * connecting: axios sends through follow-redirects, whose timer starts when the
+ * socket is assigned (a 2 s timeout fired at 2 s against a listener that drops
+ * every SYN). But that timer stops once the response has begun, after which
+ * only the socket's idle limit applies, and the /magazines/<slug> lookup had
+ * no timeout at all. The cancel token fires on the clock whatever state the
+ * request is in, so no redirect can hold a reader past API_DEADLINE_MS.
  */
 export const API_DEADLINE_MS = 10000;
 
