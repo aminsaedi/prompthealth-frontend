@@ -1,6 +1,8 @@
 <div class="hero-video overflow-hidden">
+  <!-- The poster is likely the page's largest paint. It was a 3.4 MB PNG screenshot with a
+       transparent shadow margin; this is an opaque 16:9 crop of it at the video's size, 47 KB. -->
   <video #videoPlayer [muted]="true" autoplay loop playsinline [ngClass]="isVideoLgReady ? 'd-none' : ''"
-    [src]="videoLink" poster="/assets/video/about-practitioner-thumbnail.png"></video>
+    [src]="videoLink" poster="/assets/video/about-practitioner-poster-1280x720.v1.jpg"></video>
   <video #videoLg playinline [muted]="true" [ngClass]="!isVideoLgReady ? 'd-none' : ''" preload="none"
     [src]="videoLinkLg"></video>
 </div>
