@@ -38,8 +38,12 @@ export class ModalService {
 
   private goBack() {
     this._data = null;
+    /* No state means the page cannot tell whether back() stays on the site:
+     * replaceState without a state (the markCurrentPosition handlers,
+     * AppComponent's Stripe cleanup) leaves null, and the server has none.
+     * Replacing is safe either way; reading navigationId off null threw. */
     const state = this._location.getState() as any;
-    if(state.navigationId == 1) {
+    if(!state || state.navigationId == 1) {
       this.goNext();
     } else {
       this._location.back();

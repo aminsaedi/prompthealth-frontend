@@ -1,6 +1,5 @@
-import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output , OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ModalService } from '../services/modal.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,8 +22,6 @@ export class ModalComponent implements OnInit , OnDestroy {
 
   constructor(
     private _route: ActivatedRoute,
-    private _router: Router,
-    private _location: Location,
     private _modalService: ModalService,
     private _changeDetector: ChangeDetectorRef,
   ) { }
@@ -59,23 +56,12 @@ export class ModalComponent implements OnInit , OnDestroy {
     this._modalService.show(this.id, data);
   }
 
+  /* The backdrop closes through here too. It used to run a copy of the
+   * service's back/next logic that cleared only ?modal, so closing a
+   * deep-linked data modal by the backdrop left modal-data in the address and
+   * the service's data behind. */
   hide(goNext: boolean = false, routeNext: string[] = null) {
     this._modalService.hide(goNext, routeNext);
-  }
-
-  goBack() {
-    const state = this._location.getState() as any;
-    if(state?.navigationId == 1) {
-      this.goNext();
-    } else {
-      this._location.back();
-    }
-  }
-
-  goNext() {
-    const [path, queryParams] = this._modalService.currentPathAndQueryParams;
-    queryParams.modal = null;
-    this._router.navigate([path], {queryParams: queryParams, replaceUrl: true});
   }
 
 
