@@ -212,6 +212,19 @@ function fetchFilteredPractitioners(categoryId) {
 // Fetch categories at startup (non-blocking)
 fetchCategories();
 
+/* The schema goes in first thing in the head. It used to go before '</head>',
+ * which String.replace finds at its first occurrence, and a head meta can hold
+ * text a provider wrote (og:title carries their name). Domino escapes only &
+ * and " in an attribute value, so a name holding '</head>' took the insertion:
+ * the script's own quote ended the attribute, and the rest of the name was
+ * read as markup, then cached and served to everyone for 30 minutes. Nothing a
+ * provider writes can come before the opening tag. The charset is declared in
+ * the Content-Type header, which a browser reads before any meta, so the
+ * charset meta moving further down does not matter. */
+function intoHead(html, script) {
+  return html.replace(/<head(?:\s[^>]*)?>/i, function(tag) { return tag + script; });
+}
+
 // Extract content from a meta tag by property or name
 function extractMeta(html, attr) {
   // Try property first (og:*), then name
@@ -467,14 +480,12 @@ function injectJsonLd(url, html, categoryPractitioners) {
       var merged = pageScript.open + ldJson([itemList].concat(pageScript.blocks)) + pageScript.close;
       return html.replace(pageScript.whole, function() { return merged; });
     }
-    return html.replace('</head>', function() {
-      return '<script type="application/ld+json">' + ldJson(itemList) + '</script></head>';
-    });
+    return intoHead(html, '<script type="application/ld+json">' + ldJson(itemList) + '</script>');
   }
 
   if (jsonLd) {
     const script = '<script type="application/ld+json" id="json-ld-schema">' + ldJson(jsonLd) + '</script>';
-    html = html.replace('</head>', function() { return script + '</head>'; });
+    html = intoHead(html, script);
   }
 
   return html;
