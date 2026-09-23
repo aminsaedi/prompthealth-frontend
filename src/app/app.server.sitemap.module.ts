@@ -526,17 +526,35 @@ function getAllPractitionerIds(): Promise<{id: string, updatedAt?: string, slug?
 // Calls the existing user/get-slug/:id endpoint which generates and saves the slug on-demand.
 // Processes in batches to avoid overwhelming the backend.
 
-/* Practitioners the backend has answered "no slug can be made" for, kept for
- * the life of the process. About fifty listed providers have no name to make
- * one from, and the backend mints none for a clinic, so the answer is 404 and
- * stays 404. Asked again on every rebuild (hourly, and after every restart),
- * they logged some 830 failures a day and never changed an answer. A timeout,
- * a network error or a 5xx is not an answer, and is asked again next time.
- * A provider who adds a name is picked up after the next deploy or restart. */
-const slugUnavailable = new Set<string>();
+/* Practitioners the backend has answered "no slug" for, with when it said so.
+ * About fifty listed providers have no name to make one from, and the backend
+ * mints none for a clinic, so for them the answer is 404 and stays 404. Asked
+ * again on every rebuild (hourly, and after every restart), they logged some
+ * 830 failures a day and never changed an answer.
+ *
+ * Kept for a day, not for the life of the process, because a 404 is not always
+ * that answer. getSlugForId catches every error, a database timeout or a
+ * duplicate key after its retries included, and returns null, which the
+ * controller sends as the same 404 "No slug found". Remembered for good, one
+ * rebuild during a database hiccup would have left every slugless provider it
+ * asked out of the sitemap until the next deploy. A day still turns hourly
+ * asking into daily asking, and a provider who adds a name is picked up within
+ * a day. A timeout, a network error, 408, 429 or a 5xx is not remembered at
+ * all, and is asked again on the next rebuild. */
+const SLUG_UNAVAILABLE_TTL_MS = 24 * 60 * 60 * 1000;
+const slugUnavailableSince = new Map<string, number>();
+
+function isSlugUnavailable(id: string, now: number): boolean {
+  const since = slugUnavailableSince.get(id);
+  if (since === undefined) { return false; }
+  if (now - since < SLUG_UNAVAILABLE_TTL_MS) { return true; }
+  slugUnavailableSince.delete(id);
+  return false;
+}
 
 async function generateMissingSlugs(practitioners: {id: string, updatedAt?: string, slug?: string, city?: string}[]): Promise<void> {
-  const withoutSlug = practitioners.filter(p => !p.slug && !slugUnavailable.has(p.id));
+  const now = Date.now();
+  const withoutSlug = practitioners.filter(p => !p.slug && !isSlugUnavailable(p.id, now));
   if (withoutSlug.length === 0) return;
 
   const newlyUnavailable: string[] = [];
@@ -562,8 +580,9 @@ async function generateMissingSlugs(practitioners: {id: string, updatedAt?: stri
     );
     results.forEach((result, idx) => {
       if (result.status !== 'rejected') { return; }
-      /* A 4xx is the backend's answer about this id. 408 and 429 are about
-       * the moment, not the id. */
+      /* A 4xx is the backend's answer about this id, or its caught failure
+       * dressed as one (see above), which is why it is kept only for a day.
+       * 408 and 429 are about the moment, not the id. */
       const status = result.reason?.response?.status;
       if (status >= 400 && status < 500 && status !== 408 && status !== 429) {
         newlyUnavailable.push(batch[idx].id);
@@ -575,8 +594,9 @@ async function generateMissingSlugs(practitioners: {id: string, updatedAt?: stri
   }
 
   if (newlyUnavailable.length > 0) {
-    newlyUnavailable.forEach(id => slugUnavailable.add(id));
-    console.warn(`SEO-060: ${newlyUnavailable.length} listed practitioners have no slug and none can be made; not asking again until restart (${slugUnavailable.size} in all)`);
+    const answeredAt = Date.now();
+    newlyUnavailable.forEach(id => slugUnavailableSince.set(id, answeredAt));
+    console.warn(`SEO-060: ${newlyUnavailable.length} listed practitioners have no slug and the backend made none; asking again in a day (${slugUnavailableSince.size} waiting in all)`);
   }
 }
 
