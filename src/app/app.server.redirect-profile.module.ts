@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { environment } from 'src/environments/environment';
-import { default as axios } from 'axios';
+import { getWithDeadline } from 'src/app/_helpers/get-with-deadline';
 import { withQueryOf } from 'src/app/_helpers/with-query-of';
 
 const apiURL = environment.config.API_URL;
@@ -21,7 +21,7 @@ rProfileRedirect.use('/', async (req, res, next) => {
   const subpath = match[2] || '';
 
   try {
-    const result = await axios.get(apiURL + 'user/get-slug/' + id, { timeout: 10000 });
+    const result = await getWithDeadline(apiURL + 'user/get-slug/' + id);
     if (result.data.statusCode === 200 && result.data.data.slug) {
       const slug = result.data.data.slug;
       const target = `/practitioners/${slug}${subpath}`;

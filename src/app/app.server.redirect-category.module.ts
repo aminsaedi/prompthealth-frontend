@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { environment } from 'src/environments/environment';
-import { default as axios } from 'axios';
+import { getWithDeadline } from 'src/app/_helpers/get-with-deadline';
 import { withQueryOf } from 'src/app/_helpers/with-query-of';
 import { slugify } from 'src/app/_helpers/slugify';
 
@@ -15,7 +15,7 @@ async function getIdToSlugMap(): Promise<{ [id: string]: string }> {
 
   const map: { [id: string]: string } = {};
   try {
-    const res = await axios.get(apiURL + 'questionare/get-service', { timeout: 10000 });
+    const res = await getWithDeadline(apiURL + 'questionare/get-service');
     if (res.status === 200) {
       for (const data of res.data.data) {
         if (data.category_type.toLowerCase() === 'goal') {

@@ -44,22 +44,40 @@ if (typeof originalModule.slugify !== 'function') {
 
 /* These calls run while a reader's request waits (categoryPreFetch), and
  * https has no timeout of its own. A backend that stops answering would
- * otherwise hold every directory page until nginx gives up at 60 s. */
+ * otherwise hold every directory page until nginx gives up at 60 s.
+ *
+ * The limit is on the whole call, connecting included. req.setTimeout is not
+ * enough on Node 14: it arms only once the socket has connected, so a backend
+ * that never answered the TCP handshake was waited on for the kernel's connect
+ * timeout instead (136 s, logged by a local container). server.ts's render
+ * timeout cannot help, because this runs before the render starts. */
 const API_TIMEOUT_MS = 10000;
+
+/* Fails the call and tears the request down once API_TIMEOUT_MS has passed,
+ * whatever state it is in. Returns what stops the clock. */
+function deadlineFor(req, reject) {
+  const timer = setTimeout(function() {
+    reject(new Error('timeout'));
+    req.destroy(new Error('timeout'));
+  }, API_TIMEOUT_MS);
+  return function() { clearTimeout(timer); };
+}
 
 // Simple HTTPS GET returning parsed JSON
 function httpsGetJson(url) {
   return new Promise((resolve, reject) => {
+    let stopClock = function() {};
     const req = https.get(url, (res) => {
       let data = '';
       res.on('data', chunk => { data += chunk; });
       res.on('end', () => {
+        stopClock();
         try { resolve(JSON.parse(data)); }
         catch (e) { reject(new Error('JSON parse error')); }
       });
     });
-    req.on('error', reject);
-    req.setTimeout(API_TIMEOUT_MS, () => { req.destroy(new Error('timeout')); });
+    req.on('error', (e) => { stopClock(); reject(e); });
+    stopClock = deadlineFor(req, reject);
   });
 }
 
@@ -68,6 +86,7 @@ function httpsPostJson(url, body) {
   return new Promise((resolve, reject) => {
     const parsed = new URL(url);
     const postData = JSON.stringify(body);
+    let stopClock = function() {};
     const req = https.request({
       hostname: parsed.hostname,
       path: parsed.pathname + parsed.search,
@@ -80,12 +99,13 @@ function httpsPostJson(url, body) {
       let data = '';
       res.on('data', chunk => { data += chunk; });
       res.on('end', () => {
+        stopClock();
         try { resolve(JSON.parse(data)); }
         catch (e) { reject(new Error('JSON parse error')); }
       });
     });
-    req.on('error', reject);
-    req.setTimeout(API_TIMEOUT_MS, () => { req.destroy(new Error('timeout')); });
+    req.on('error', (e) => { stopClock(); reject(e); });
+    stopClock = deadlineFor(req, reject);
     req.write(postData);
     req.end();
   });

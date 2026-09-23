@@ -1,7 +1,7 @@
 
 import { Router } from 'express';
 import { environment } from 'src/environments/environment';
-import { default as axios } from 'axios';
+import { getWithDeadline } from 'src/app/_helpers/get-with-deadline';
 import { withQueryOf } from 'src/app/_helpers/with-query-of';
 
 const apiURL = environment.config.API_URL;
@@ -33,7 +33,7 @@ rMagazine.use('/tag', (req, res) => {
 rMagazine.use('/', (req, res) => {
   const slug = req.path.substr(1);
   if(slug) {
-    axios.get(apiURL + 'blog/get-by-slug/' + slug).then(result => {
+    getWithDeadline(apiURL + 'blog/get-by-slug/' + slug).then(result => {
       if(result.data.statusCode == 200 && result.data.data.status == 'APPROVED') {
         const article = result.data.data;
         const target = article.slug
