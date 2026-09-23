@@ -90,13 +90,3 @@
   </div>
 </section>
 
-<div [@slideHorizontal] class="message-coupon blur" *ngIf="isCouponShown" [ngClass]="{ shrink: isCouponShrink }"
-  (click)="expandCoupon()">
-  <div class="d-flex justify-content-between align-items-center mb-10p">
-    <div class="subtitle1 mb-0">You have coupon!</div>
-    <button class="btn btn-shrink" (click)="shrinkCoupon($event)">
-      <i iconPh="chevron-right" class="large"></i>
-    </button>
-  </div>
-  <card-coupon [couponData]="couponData"></card-coupon>
-</div>

@@ -7,10 +7,7 @@ import {
   HostListener,
 } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { ICouponData } from "src/app/models/coupon-data";
-import { SharedService } from "src/app/shared/services/shared.service";
 import { UniversalService } from "src/app/shared/services/universal.service";
-import { slideHorizontalAnimation } from "src/app/_helpers/animations";
 import { smoothWindowScrollTo } from "src/app/_helpers/smooth-scroll";
 import { IFAQItem } from "../_elements/faq-item/faq-item.component";
 import { first } from "rxjs/operators";
@@ -24,7 +21,6 @@ import { JsonLdService } from 'src/app/shared/services/json-ld.service';
   selector: "app-about-practitioner",
   templateUrl: "./about-practitioner.component.html",
   styleUrls: ["./about-practitioner.component.scss"],
-  animations: [slideHorizontalAnimation],
 })
 export class AboutPractitionerComponent implements OnInit , OnDestroy {
   private destroy$ = new Subject<void>();
@@ -37,10 +33,6 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
   public freePlanFeatures = freePlanFeatures;
   public aiPlanFeatures = aiPlanFeatures;
   public faqs = faqs;
-
-  public couponData: ICouponData = null;
-  public isCouponShown = false;
-  public isCouponShrink = false;
 
   public videoLink = "/assets/video/about-practitioner-sm.mp4";
   public videoLinkLg = "/assets/video/about-practitioner-md.mp4";
@@ -55,7 +47,6 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
   }
 
   constructor(
-    private _sharedService: SharedService,
     private _uService: UniversalService,
     private _router: Router,
     private _route: ActivatedRoute,
@@ -208,8 +199,6 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
         })),
       },
     ]);
-
-    this.initCoupon();
   }
 
   loadVideoLgIfNeeded() {
@@ -228,30 +217,8 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
     }
   }
 
-  initCoupon() {
-    const coupon = this._uService.sessionStorage.getItem("stripe_coupon_code");
-    if (!coupon) return;
-
-    this.couponData = JSON.parse(coupon);
-    const isApplicable = ["SP", "C"].some((role) =>
-      this._sharedService.isCouponApplicableTo(this.couponData, role)
-    );
-    if (isApplicable) {
-      setTimeout(() => (this.isCouponShown = true), 1000);
-    }
-  }
-
   onClickCreateFreeProfile() {
     this._router.navigate(["/auth", "registration", "sp"]);
-  }
-
-  expandCoupon() {
-    this.isCouponShrink = false;
-  }
-
-  shrinkCoupon(e: Event) {
-    e.stopPropagation();
-    this.isCouponShrink = true;
   }
 
   
