@@ -15,6 +15,7 @@ export const staticPages: IStaticPage[] = [
   { route: '/about/editorial-standards', lastmod: '2026-05-01', changefreq: 'monthly', priority: null },
   { route: '/plans', lastmod: '2026-09-23', changefreq: 'monthly', priority: null },
   { route: '/for-practitioners', lastmod: '2026-09-23', changefreq: 'monthly', priority: null },
+  { route: '/for-dentists', lastmod: '2026-09-23', changefreq: 'monthly', priority: null },
   { route: '/plans/product', lastmod: '2026-04-08', changefreq: 'monthly', priority: null },
   { route: '/companies', lastmod: '2026-04-02', changefreq: 'monthly', priority: null },
   { route: '/ambassador-program', lastmod: '2026-04-08', changefreq: 'monthly', priority: null },

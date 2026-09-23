@@ -47,6 +47,7 @@ const STATIC_PAGES = [
   { route: '/about/editorial-standards', changefreq: 'monthly', paths: ['src/app/home/editorial-standards'] },
   { route: '/plans',                     changefreq: 'monthly', paths: ['src/app/home/about-practitioner'] },
   { route: '/for-practitioners',         changefreq: 'monthly', paths: ['src/app/home/for-practitioners'] },
+  { route: '/for-dentists',              changefreq: 'monthly', paths: ['src/app/home/growth-landing'] },
   { route: '/plans/product',             changefreq: 'monthly', paths: ['src/app/home/about-company'] },
   { route: '/companies',                 changefreq: 'monthly', paths: ['src/app/home/listing-company'] },
   { route: '/ambassador-program',        changefreq: 'monthly', paths: ['src/app/home/landing-ambassador'] },
