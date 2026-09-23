@@ -104,23 +104,27 @@ async function fetchCategories(retries) {
    * router reads (app.server.redirect-category.module.ts). This used to read
    * data[].item_text and subCategories, which do not exist, and logged "Loaded
    * 0 category slugs" on every start, so no health-goal page ever got its
-   * ItemList. */
+   * ItemList.
+   *
+   * Three names occur under two goals each (Natural Remedies, Sexual Health,
+   * Oral Care on 2026-09-23). The page resolves a slug to the first match in
+   * this same order (CategoryService.categoryListFlatten), so the first one
+   * wins here too; letting the last overwrite it listed another goal's
+   * providers in the page's ItemList. */
   try {
     var resp = await httpsGetJson('https://ocean.prompthealth.ca/api/v1/questionare/get-service');
     var groups = (resp && Array.isArray(resp.data)) ? resp.data : [];
+    var addGoal = function(item) {
+      var slug = item.item_text ? slugify(item.item_text) : '';
+      if (slug && !categorySlugMap.has(slug)) {
+        categorySlugMap.set(slug, { id: item._id, name: item.item_text });
+      }
+    };
     groups.forEach(function(group) {
       if (String(group.category_type || '').toLowerCase() !== 'goal') return;
       (group.category || []).forEach(function(cat) {
-        var slug = cat.item_text ? slugify(cat.item_text) : '';
-        if (slug) {
-          categorySlugMap.set(slug, { id: cat._id, name: cat.item_text });
-        }
-        (cat.subCategory || []).forEach(function(sub) {
-          var subSlug = sub.item_text ? slugify(sub.item_text) : '';
-          if (subSlug) {
-            categorySlugMap.set(subSlug, { id: sub._id, name: sub.item_text });
-          }
-        });
+        addGoal(cat);
+        (cat.subCategory || []).forEach(addGoal);
       });
     });
     console.log('[SEO-021] Loaded', categorySlugMap.size, 'category slugs from get-service');
