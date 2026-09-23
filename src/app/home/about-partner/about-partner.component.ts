@@ -22,8 +22,8 @@ export class AboutPartnerComponent implements OnInit {
       description: 'PromptHealth strives to partner with health and wellness focused organizations who are making an impact on the community.',
       robots: 'index, follow',
       image: `${environment.config.FRONTEND_BASE}/assets/img/about/top-partner.png`,
-      imageWidth: 1094,
-      imageHeight: 615,
+      imageWidth: 1000,
+      imageHeight: 562,
       imageAlt: 'Partner with PromptHealth',
     });
   }

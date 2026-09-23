@@ -188,7 +188,7 @@ export class HomeComponent implements OnInit , OnDestroy {
           "@id": "https://www.prompthealth.ca/#organization",
           "name": "PromptHealth",
           "url": "https://www.prompthealth.ca",
-          "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 600 },
+          "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 350 },
           "description": "PromptHealth is Canada's leading integrative health platform connecting patients with 500+ verified wellness practitioners across 21 cities in 4 provinces (BC, ON, AB, MB). Search by specialty, location, and delivery method to discover naturopaths, physiotherapists, dentists, psychologists, and 50+ other practitioner types, read expert health content, and book appointments online.",
           "foundingDate": "2020",
           "areaServed": { "@type": "Country", "name": "Canada" },

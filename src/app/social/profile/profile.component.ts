@@ -15,7 +15,7 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { QuestionnaireMapProfilePractitioner, QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { UniversalService } from 'src/app/shared/services/universal.service';
+import { UniversalService, canonicalPathOf } from 'src/app/shared/services/universal.service';
 import { expandVerticalAnimation, slideInSocialProfileChildRouteAnimation } from 'src/app/_helpers/animations';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { smoothHorizontalScrolling } from 'src/app/_helpers/smooth-scroll';
@@ -459,7 +459,8 @@ export class ProfileComponent implements OnInit , OnDestroy {
       return;
     }
 
-    const url = this._router.url.split('?')[0];
+    const url = canonicalPathOf(this._router.url);
+    const tab = this.activeTabOf(url);
     const p = this.profile;
     const canonicalPath = this.getCanonicalPath(url);
     const imageMeta = {
@@ -468,37 +469,37 @@ export class ProfileComponent implements OnInit , OnDestroy {
       imageAlt: p.name,
     };
 
-    if (url.match(/\/event\/past/)) {
+    if (tab === '/event/past') {
       this._uService.setMeta(canonicalPath, {
         title: `Past events from ${p.name} | PromptHealth Community`,
         description: `View past events and workshops hosted by ${p.name} on PromptHealth.`,
         ...imageMeta,
       });
-    } else if (url.match(/\/event/)) {
+    } else if (tab === '/event') {
       this._uService.setMeta(canonicalPath, {
         title: `Upcoming events from ${p.name} | PromptHealth Community`,
         description: `Browse upcoming healthcare events and workshops by ${p.name} on PromptHealth.`,
         ...imageMeta,
       });
-    } else if (url.match(/\/service/)) {
+    } else if (tab === '/service') {
       this._uService.setMeta(canonicalPath, {
         title: `Service by ${p.name} | PromptHealth Community`,
         description: `${p.name} offers healthcare services${p.city ? ' in ' + p.city : ''}. Browse available treatments and book an appointment on PromptHealth.`,
         ...imageMeta,
       });
-    } else if (url.match(/\/feed/)) {
+    } else if (tab === '/feed') {
       this._uService.setMeta(canonicalPath, {
         title: `Contents from ${p.name} | PromptHealth Community`,
         description: `Read health articles, tips, and posts shared by ${p.name} on PromptHealth.`,
         ...imageMeta,
       });
-    } else if (url.match(/\/review/)) {
+    } else if (tab === '/review') {
       this._uService.setMeta(canonicalPath, {
         title: `${p.name} review | PromptHealth Community`,
         description: `Read patient reviews for ${p.name} on PromptHealth.` + (p.rating && p.ratingCount ? ` Rated ${p.rating}/5 based on ${p.ratingCount} reviews.` : ''),
         ...imageMeta,
       });
-    } else if (url.match(/\/promotion/)) {
+    } else if (tab === '/promotion') {
       this._uService.setMeta(canonicalPath, {
         title: `Special offers from ${p.name} | PromptHealth Community`,
         description: `View special offers and promotions from ${p.name} on PromptHealth.`,
@@ -507,6 +508,15 @@ export class ProfileComponent implements OnInit , OnDestroy {
     } else {
       this.setMetaForAbout();
     }
+  }
+
+  /* The tab is the segment after the profile's id or slug. Matched anywhere
+   * in router.url, a query like ?utm_campaign=review made the About page skip
+   * setMeta entirely: title 'Prompthealth', no canonical, og:url of the home
+   * page. And a slug starting 'event' or 'service' would pick the wrong tab. */
+  private activeTabOf(path: string): string {
+    const m = path.match(/^\/community\/profile\/(?:s\/)?[^/]+(\/.*)?$/);
+    return (m && m[1]) || '';
   }
 
   private getCanonicalPath(url: string): string {
@@ -522,14 +532,14 @@ export class ProfileComponent implements OnInit , OnDestroy {
   }
 
   setMetaForAbout() {
-    const url = this._router.url;
-    if(!url.match('service|feed|review|promotion|event')) {
+    const url = canonicalPathOf(this._router.url);
+    if (this.activeTabOf(url) === '') {
       if (!this.profile || !this.questionnaires?.typeOfProvider || !this.questionnaires?.serviceDelivery) {
         return;
       }
       const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
       const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
-      const canonicalPath = this.profile?.slug ? `/practitioners/${this.profile.slug}` : this._router.url;
+      const canonicalPath = this.profile?.slug ? `/practitioners/${this.profile.slug}` : url;
       this._uService.setMeta(canonicalPath, {
         title: `${this.profile.name}${this.profile.city || this.profile.state ? ` in ${[this.profile.city, this.profile.state].filter(Boolean).join(', ')}` : ''} | PromptHealth Community`,
         description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,

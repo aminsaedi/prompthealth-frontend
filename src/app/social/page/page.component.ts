@@ -5,7 +5,7 @@ import { IGetSocialContentResult, IGetSocialContentsResult } from 'src/app/model
 import { ISocialPost } from 'src/app/models/social-post';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { UniversalService } from 'src/app/shared/services/universal.service';
+import { UniversalService, canonicalPathOf } from 'src/app/shared/services/universal.service';
 import { formatDateToString } from 'src/app/_helpers/date-formatter';
 import { slugify } from 'src/app/_helpers/slugify';
 import { SocialService } from '../social.service';
@@ -198,9 +198,11 @@ export class PageComponent implements OnInit , OnDestroy {
     const seoTitle = (this.post.isArticle && this.post.metaTitle) ? this.post.metaTitle : title;
     const seoDescription = (this.post.isArticle && this.post.metaDescription) ? this.post.metaDescription : this.post.summary;
 
+    /* Cleaned here as well as in setMeta, because the Article @id and the
+     * breadcrumb below are built from it directly. */
     const canonicalPath = (this.post.isArticle && this.post.slug && !this._isSlugRoute)
       ? '/community/article/' + this.post.slug
-      : this._router.url;
+      : canonicalPathOf(this._router.url);
 
     this._uService.setMeta(canonicalPath, {
       title: seoTitle + ' | PromptHealth Community',

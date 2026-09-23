@@ -79,10 +79,15 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
       description:
         "PromptHealth helps healthcare providers become discoverable through content, video, and AI search.",
       robots: "index, follow",
-      image: `${environment.config.FRONTEND_BASE}/assets/video/about-practitioner-thumbnail.jpg`,
-      imageWidth: 992,
-      imageHeight: 558,
-      imageType: "image/jpg",
+      /* The .jpg this pointed at was replaced by a 3.4 MB .png screenshot in
+       * Feb 2022 and this line never followed, so /plans shared with no image
+       * for four years. A 1.91:1 crop is the shape every large share card
+       * uses. Versioned, because /assets is served immutable. */
+      image: `${environment.config.FRONTEND_BASE}/assets/img/share/plans-1200x630.v1.jpg`,
+      imageWidth: 1200,
+      imageHeight: 630,
+      imageType: "image/jpeg",
+      imageAlt: "Two women standing by a sunlit window",
     });
 
     this._jsonLdService.setJsonLd([
@@ -106,7 +111,7 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
             '@type': 'ImageObject',
             url: 'https://www.prompthealth.ca/assets/img/prompthealth.png',
             width: 800,
-            height: 600,
+            height: 350,
           },
         },
         breadcrumb: {
