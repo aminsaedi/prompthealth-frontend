@@ -209,8 +209,18 @@ export function app() {
      * address, so UTMs are still read client side, where they always were.
      * ngExpressEngine renders options.url in place of req.originalUrl; the
      * redirect routers, static files and the /out proxy above still see the
-     * untouched request. */
-    const renderUrl = `${req.protocol}://${req.get('host') || ''}${stripTrackingParams(req.originalUrl)}`;
+     * untouched request.
+     *
+     * The origin is fixed rather than taken from the Host header, because the
+     * cache key is the path and query alone and the render must depend on
+     * nothing else. Angular parses the address it is given, so a Host ending in
+     * '#' pushed the real path into the fragment and rendered the home page,
+     * and a Host with backslashes in it picked any other page; either result
+     * was stored under the key that was asked for and served to everyone for
+     * 30 minutes. Nothing in the app reads the host: canonical and og:url are
+     * built on www.prompthealth.ca already. nginx only forwards that host
+     * today, which is not something this container should rely on. */
+    const renderUrl = environment.config.FRONTEND_BASE + stripTrackingParams(req.originalUrl);
 
     res.render(
       indexHtml,
