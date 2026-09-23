@@ -55,16 +55,26 @@ export class ContactUsComponent implements OnInit , OnDestroy {
 
     this.isUploading = true;
     this._sharedService.postNoAuth(this.form.value, 'user/contactus').pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      this.isUploading = false;
       if (res.statusCode === 200) {
         this._toastr.success(res.message);
+        /* Explicit '', because reset() alone sets null, which the server's
+         * string rules reject on the next message. */
+        this.form.reset({ name: '', email: '', message: '' });
         this.isSubmitted = false;
       } else {
-        this._toastr.error(res.error.message);
+        /* A service error answers 200 with failAction, which has no `error`
+         * field: reading res.error.message threw here, so the visitor saw no
+         * toast and the button stayed disabled. */
+        this._toastr.error(res.message || 'Your message was not sent. Please try again.');
       }
     }, error => {
-      this._toastr.error('There are some error please try after some time');
-    }, () => {
+      /* complete() never runs after an error, and it was the only place that
+       * enabled the button again. ErrorInterceptor has already reduced the
+       * response to the server's message, so its wording (a validation rule,
+       * the rate limit) is what the visitor sees. */
       this.isUploading = false;
+      this._toastr.error(typeof error === 'string' && error ? error : 'Your message was not sent. Please try again.');
     });
 
   }

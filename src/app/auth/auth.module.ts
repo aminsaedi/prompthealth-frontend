@@ -15,7 +15,6 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ContactUspageComponent } from './contact-uspage/contact-uspage.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { EnterpriseContactComponent } from './enterprise-contact/enterprise-contact.component';
 import { FormAuthComponent } from './form-auth/form-auth.component';
@@ -54,7 +53,6 @@ const routes: Routes = [
     AngularFireMessagingModule,
   ],
   declarations: [
-    ContactUspageComponent,
     ForgotPasswordComponent,
     RegistrationComponent,
     EnterpriseContactComponent,
