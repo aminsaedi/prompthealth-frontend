@@ -480,6 +480,23 @@ function injectJsonLd(url, html, categoryPractitioners) {
   return html;
 }
 
+/* Schema improves a page; it is never a reason to lose one. injectJsonLd runs
+ * inside res.send, so a throw there rejected the render's promise, and
+ * ngExpressEngine called server.ts's callback a second time with the error.
+ * That callback had already marked the request answered, so nothing ever
+ * answered it: nginx waited out its limit and then answered 502 for every page
+ * for ten seconds, and since the page was never cached, every request for it
+ * did the same. So a failure here sends, and caches, the page as rendered. Only
+ * the path is logged: a query can carry a token. */
+function withJsonLd(key, html, categoryPractitioners) {
+  try {
+    return injectJsonLd(key, html, categoryPractitioners);
+  } catch (e) {
+    console.error('[json-ld] skipped for ' + key.split('?')[0] + ': ' + (e && e.message || e));
+    return html;
+  }
+}
+
 // No-op: script deferring removed to prevent hydration mismatch
 function deferScripts(html) {
   return html;
@@ -577,7 +594,7 @@ const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCac
     const isPage = typeof body === 'string' && body.length > 500;
     // Inject JSON-LD before caching
     if (isPage) {
-      body = injectJsonLd(key, body, req._categoryPractitioners);
+      body = withJsonLd(key, body, req._categoryPractitioners);
       body = deferScripts(body);
     }
     if (isPage && res.statusCode === 200) {
@@ -598,7 +615,7 @@ const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCac
    * request for it paid for a full render nobody saw, on a 1-vCPU box. */
   req._ssrStoreLate = function(html) {
     if (typeof html !== 'string' || html.length <= 500 || freshEntry(key)) return;
-    storeEntry(key, deferScripts(injectJsonLd(key, html, req._categoryPractitioners)));
+    storeEntry(key, deferScripts(withJsonLd(key, html, req._categoryPractitioners)));
   };
 
   next();
