@@ -599,10 +599,21 @@ function getAllPractitionerIds(): Promise<{id: string, updatedAt?: string, slug?
 // SEO-060: Generate missing slugs for practitioners that don't have one.
 // Calls the existing user/get-slug/:id endpoint which generates and saves the slug on-demand.
 // Processes in batches to avoid overwhelming the backend.
+
+/* Practitioners the backend has answered "no slug can be made" for, kept for
+ * the life of the process. About fifty listed providers have no name to make
+ * one from, and the backend mints none for a clinic, so the answer is 404 and
+ * stays 404. Asked again on every rebuild (hourly, and after every restart),
+ * they logged some 830 failures a day and never changed an answer. A timeout,
+ * a network error or a 5xx is not an answer, and is asked again next time.
+ * A provider who adds a name is picked up after the next deploy or restart. */
+const slugUnavailable = new Set<string>();
+
 async function generateMissingSlugs(practitioners: {id: string, updatedAt?: string, slug?: string, city?: string}[]): Promise<void> {
-  const withoutSlug = practitioners.filter(p => !p.slug);
+  const withoutSlug = practitioners.filter(p => !p.slug && !slugUnavailable.has(p.id));
   if (withoutSlug.length === 0) return;
 
+  const newlyUnavailable: string[] = [];
   const BATCH_SIZE = 5;
   for (let i = 0; i < withoutSlug.length; i += BATCH_SIZE) {
     const batch = withoutSlug.slice(i, i + BATCH_SIZE);
@@ -613,6 +624,8 @@ async function generateMissingSlugs(practitioners: {id: string, updatedAt?: stri
             .then(res => {
               if (res.status === 200 && res.data?.data?.slug) {
                 p.slug = res.data.data.slug;
+              } else {
+                newlyUnavailable.push(p.id);
               }
             })
         ).then(
@@ -621,12 +634,23 @@ async function generateMissingSlugs(practitioners: {id: string, updatedAt?: stri
         )
       )
     );
-    // Log failures but continue — don't break the sitemap for individual errors
     results.forEach((result, idx) => {
-      if (result.status === 'rejected') {
+      if (result.status !== 'rejected') { return; }
+      /* A 4xx is the backend's answer about this id. 408 and 429 are about
+       * the moment, not the id. */
+      const status = result.reason?.response?.status;
+      if (status >= 400 && status < 500 && status !== 408 && status !== 429) {
+        newlyUnavailable.push(batch[idx].id);
+      } else {
+        // Log failures but continue: don't break the sitemap for individual errors
         console.warn(`SEO-060: Failed to generate slug for practitioner ${batch[idx].id}:`, result.reason?.message || result.reason);
       }
     });
+  }
+
+  if (newlyUnavailable.length > 0) {
+    newlyUnavailable.forEach(id => slugUnavailable.add(id));
+    console.warn(`SEO-060: ${newlyUnavailable.length} listed practitioners have no slug and none can be made; not asking again until restart (${slugUnavailable.size} in all)`);
   }
 }
 
