@@ -5,7 +5,7 @@ import { IGetSocialContentResult, IGetSocialContentsResult } from 'src/app/model
 import { ISocialPost } from 'src/app/models/social-post';
 import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { UniversalService } from 'src/app/shared/services/universal.service';
+import { UniversalService, canonicalPathOf } from 'src/app/shared/services/universal.service';
 import { formatDateToString } from 'src/app/_helpers/date-formatter';
 import { slugify } from 'src/app/_helpers/slugify';
 import { SocialService } from '../social.service';
@@ -198,18 +198,20 @@ export class PageComponent implements OnInit , OnDestroy {
     const seoTitle = (this.post.isArticle && this.post.metaTitle) ? this.post.metaTitle : title;
     const seoDescription = (this.post.isArticle && this.post.metaDescription) ? this.post.metaDescription : this.post.summary;
 
+    /* Cleaned here as well as in setMeta, because the Article @id and the
+     * breadcrumb below are built from it directly. */
     const canonicalPath = (this.post.isArticle && this.post.slug && !this._isSlugRoute)
       ? '/community/article/' + this.post.slug
-      : this._router.url;
+      : canonicalPathOf(this._router.url);
 
+    /* Only a picture the post really has. Without one, setMeta shares the
+     * site's own card rather than the wordmark the feed shows in its place. */
+    const shareImage = this.post.shareImage;
     this._uService.setMeta(canonicalPath, {
       title: seoTitle + ' | PromptHealth Community',
       description: seoDescription,
       pageType: 'article',
-      image: this.post.coverImage,
-      imageType: this.post.coverImageType,
-      imageAlt: title,
-      ...this.pathToApp && {iosLink: this.pathToApp},
+      ...(shareImage ? { image: shareImage, imageAlt: title } : {}),
     });
 
     const articleJsonLd: any = {
@@ -233,7 +235,7 @@ export class PageComponent implements OnInit , OnDestroy {
         'name': this.post.authorName || '',
         ...(this.post.authorSlug ? { 'url': 'https://www.prompthealth.ca/practitioners/' + this.post.authorSlug } : {})
       },
-      ...(this.post.coverImage ? { 'image': this.post.coverImage } : {}),
+      'image': shareImage || 'https://www.prompthealth.ca/assets/img/prompthealth.png',
       ...(this.post.isArticle && this.post.location ? { 'contentLocation': { '@type': 'Place', 'name': this.post.location } } : {}),
       'publisher': {
         '@type': 'Organization',
@@ -246,7 +248,7 @@ export class PageComponent implements OnInit , OnDestroy {
     };
 
     this._jsonLdService.setJsonLd([
-      articleJsonLd,
+      (this.post.isEvent && this.eventJsonLdOf(articleJsonLd)) || articleJsonLd,
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -272,6 +274,54 @@ export class PageComponent implements OnInit , OnDestroy {
         ]
       }
     ]);
+  }
+
+  /* An event described as an Event, from the post itself: its dates exactly
+   * and in UTC, and the place or link it gives. server-wrapper.js used to make
+   * this by scraping the rendered page for the first date, venue and Register
+   * link it met, which could be text the author wrote into the title or the
+   * summary in the head, and a date that was not one threw and left the
+   * request unanswered.
+   *
+   * Only an Event a search engine can use: it needs a start, and a place, which
+   * for an online event is the address to join it. Without them the page keeps
+   * its Article, which is valid, rather than an Event that Search Console
+   * reports as broken. */
+  private eventJsonLdOf(article: any): any {
+    const post = this.post;
+    const start = post.startAt;
+    if (!start || isNaN(start.getTime())) {
+      return null;
+    }
+
+    let location: any;
+    if (post.isVirtual) {
+      if (!/^https?:\/\//i.test(post.link || '')) {
+        return null;
+      }
+      location = { '@type': 'VirtualLocation', 'url': post.link };
+    } else {
+      const address = (post.venue || '').trim();
+      if (!address) {
+        return null;
+      }
+      location = { '@type': 'Place', 'name': address, 'address': address };
+    }
+
+    const end = post.endAt;
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Event',
+      'name': article.headline,
+      'description': article.description,
+      'url': article.mainEntityOfPage['@id'],
+      'image': article.image,
+      'startDate': start.toISOString(),
+      ...(end && !isNaN(end.getTime()) && end.getTime() >= start.getTime() ? { 'endDate': end.toISOString() } : {}),
+      'eventAttendanceMode': post.isVirtual ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
+      'location': location,
+      'organizer': article.author,
+    };
   }
 
   showReturnToAppIfNeeded() {

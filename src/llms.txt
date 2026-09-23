@@ -1,16 +1,17 @@
 # PromptHealth
 
-> PromptHealth is Canada's wellness navigator — a directory and community platform connecting Canadians with verified healthcare and wellness practitioners. Find practitioners by specialty, city, insurance acceptance, and delivery method (in-person or virtual). Browse profiles with credentials, services, pricing, availability, and patient reviews.
+> PromptHealth is Canada's wellness navigator: a directory and community platform connecting Canadians with verified healthcare and wellness practitioners. Find practitioners by specialty, city, insurance acceptance, and delivery method (in-person or virtual). Browse profiles with credentials, services, pricing, availability, and patient reviews.
 
 ## Key Pages
 
 - [Find Practitioners](https://www.prompthealth.ca/practitioners): Search and filter all practitioners by specialty, city, and delivery method
 - [Homepage](https://www.prompthealth.ca/): Featured practitioners and health content
 - [Community Feed](https://www.prompthealth.ca/community/feed): Health and wellness articles and expert content from practitioners
-- [Online Academy](https://www.prompthealth.ca/online-academy): Health education resources
+- [Online Academy](https://www.prompthealth.ca/online-academy): Free video guides for practitioners on social media, content and marketing
 - [About PromptHealth](https://www.prompthealth.ca/about): Company mission and background
 - [FAQ](https://www.prompthealth.ca/faq): How PromptHealth works for patients and practitioners
-- [Practitioner Plans](https://www.prompthealth.ca/plans): Listing plans and pricing for healthcare providers
+- [Practitioner Plans](https://www.prompthealth.ca/plans): Plans for healthcare providers
+- [For Practitioners](https://www.prompthealth.ca/for-practitioners): How healthcare providers list their practice on PromptHealth
 - [Partner Program](https://www.prompthealth.ca/about/partner): Corporate wellness partnerships
 
 ## Practitioners by City
@@ -58,7 +59,7 @@
 
 ## Content Licensing
 
-PromptHealth public content — including practitioner profiles, specialty descriptions, and health articles — may be cited, summarized, and referenced by AI assistants for the purpose of helping patients find appropriate healthcare providers in Canada. Attribution should link back to the original PromptHealth URL. Patient review content may be summarized but should not be reproduced verbatim without attribution to PromptHealth.
+PromptHealth public content (practitioner profiles, specialty descriptions and health articles) may be cited, summarized, and referenced by AI assistants for the purpose of helping patients find appropriate healthcare providers in Canada. Attribution should link back to the original PromptHealth URL. Patient review content may be summarized but should not be reproduced verbatim without attribution to PromptHealth.
 
 ## Notes
 

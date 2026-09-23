@@ -7,7 +7,7 @@ const apiURL = environment.config.API_URL;
 const rProfileRedirect = Router();
 
 // Match /community/profile/:id where :id is a 24-char MongoDB ObjectId
-// Redirect to /practitioners/:slug with 301
+// Redirect to /practitioners/:slug with 301, or a tab to /community/profile/s/:slug/<tab>
 const objectIdPattern = /^\/([a-f0-9]{24})(\/.*)?$/;
 
 rProfileRedirect.use('/', async (req, res, next) => {
@@ -18,13 +18,17 @@ rProfileRedirect.use('/', async (req, res, next) => {
   }
 
   const id = match[1];
-  const subpath = match[2] || '';
+  const subpath = (match[2] || '').replace(/\/+$/, '');
 
   try {
     const result = await getWithDeadline(apiURL + 'user/get-slug/' + id);
     if (result.data.statusCode === 200 && result.data.data.slug) {
       const slug = result.data.data.slug;
-      const target = `/practitioners/${slug}${subpath}`;
+      /* A tab goes to the slug address of that tab. /practitioners/<slug>/<tab>
+       * renders the About page instead, because the /practitioners/<slug>
+       * redirect keeps nothing after the slug, so this sent every tab link
+       * to the wrong page. */
+      const target = subpath ? `/community/profile/s/${slug}${subpath}` : `/practitioners/${slug}`;
       return res.redirect(301, withQueryOf(req.originalUrl, target));
     }
   } catch (err) {

@@ -130,7 +130,8 @@ export class HeaderComponent implements OnInit , OnDestroy {
 
   hideMenu() {
     const state = this._location.getState() as any;
-    if(state.navigationId == 1) {
+    /* Null after a replaceState without a state; see ModalService.goBack. */
+    if(!state || state.navigationId == 1) {
       const [path, queryParams] = this._modalService.currentPathAndQueryParams;
       queryParams.menu = null;
       this._router.navigate([path], {queryParams: queryParams, replaceUrl: true});

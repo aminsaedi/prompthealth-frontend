@@ -3,6 +3,7 @@ import { Observable, Subject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { Profile } from "./profile";
 import { IUserDetail } from "./user-detail";
+import { imageTypeOf } from "../_helpers/image-type";
 
 /* The clinic an author works at, as the backend returns it on the article
  * detail routes. It is absent from list responses, so anything reading it has
@@ -107,6 +108,7 @@ export interface ISocialPost {
   isCommentDoneInit?: boolean;
   coverImage?: string;
   coverImageType?: string;
+  shareImage?: string | null;
   linkToPost?: string;
   setComments?(s: ISocialComment[]): void;
   setComment?(s: ISocialComment, updateNumCommentTo?: number): void;
@@ -196,8 +198,12 @@ export class SocialPostBase implements ISocialPost {
     return clinic.slug ? ['/practitioners', clinic.slug] : ['/community/profile', clinic._id];
   }
 
-  get coverImage() { return this.data.image ? this._s3 + this.data.image : (this.data.images && this.data.images.length > 0) ? this._s3 + this.data.images[0] + '?ver=2.3' : '/assets/img/logo-100x35-primary-light.png?ver=2.3'; }
+  get coverImage() { return this.shareImage || '/assets/img/logo-100x35-primary-light.png?ver=2.3'; }
   get coverImageType() { return this.getImageTypeOf(this.coverImage); }
+  /* The post's own picture, or null. coverImage falls back to the wordmark so
+   * the card has something to show, and that 800x280 logo went out as the
+   * share image of every post without a picture. */
+  get shareImage(): string | null { return this.data.image ? this._s3 + this.data.image : (this.data.images && this.data.images.length > 0) ? this._s3 + this.data.images[0] + '?ver=2.3' : null; }
 
   get description() { return this.data.description || ''; }
   get descriptionSanitized() { return this._description; }
@@ -338,13 +344,7 @@ export class SocialPostBase implements ISocialPost {
   }
 
   getImageTypeOf(s: string) {
-    let imageType: string = '';
-    if(s) {
-      const regex = /\.(jpe?g|png)$/;
-      const match = s.match(regex);
-      imageType = match ? ('image/' + match[1]) : '';  
-    }
-    return imageType;
+    return imageTypeOf(s) || '';
   }
 
   changed() {

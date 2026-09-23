@@ -50,7 +50,7 @@ export class ForPractitionersComponent implements OnInit, OnDestroy {
             '@type': 'ImageObject',
             url: 'https://www.prompthealth.ca/assets/img/prompthealth.png',
             width: 800,
-            height: 600,
+            height: 350,
           },
         },
         about: {

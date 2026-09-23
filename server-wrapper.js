@@ -212,6 +212,19 @@ function fetchFilteredPractitioners(categoryId) {
 // Fetch categories at startup (non-blocking)
 fetchCategories();
 
+/* The schema goes in first thing in the head. It used to go before '</head>',
+ * which String.replace finds at its first occurrence, and a head meta can hold
+ * text a provider wrote (og:title carries their name). Domino escapes only &
+ * and " in an attribute value, so a name holding '</head>' took the insertion:
+ * the script's own quote ended the attribute, and the rest of the name was
+ * read as markup, then cached and served to everyone for 30 minutes. Nothing a
+ * provider writes can come before the opening tag. The charset is declared in
+ * the Content-Type header, which a browser reads before any meta, so the
+ * charset meta moving further down does not matter. */
+function intoHead(html, script) {
+  return html.replace(/<head(?:\s[^>]*)?>/i, function(tag) { return tag + script; });
+}
+
 // Extract content from a meta tag by property or name
 function extractMeta(html, attr) {
   // Try property first (og:*), then name
@@ -233,10 +246,24 @@ function injectJsonLd(url, html, categoryPractitioners) {
   // produced two JSON-LD blocks (and duplicate DOM IDs) in SSR output.
   // Those static blocks are deliberately removed here.
 
-  // Community content pages: /community/<mongoId>
-  // The Angular SSR already renders a JSON-LD block with Article + BreadcrumbList.
-  // We enhance it with missing fields rather than injecting a duplicate.
-  // For event-type posts, we convert Article to Event schema.
+  // Community content pages. PageComponent renders the page's JSON-LD (an
+  // Article, or an Event for an event, with a BreadcrumbList); this never adds
+  // a second block beside it.
+  /* On the slug address (articles and events) the page's schema is left
+   * exactly as PageComponent rendered it. An event's Event is built there from
+   * the post itself. It used to be made here instead, by scraping the rendered
+   * page for the first date, venue and Register link anywhere in it, so text an
+   * author wrote into the title or summary in the head came first and could set
+   * the dates, and one that was not a real date threw inside res.send and left
+   * the request unanswered. The enrichment below was written for the id route
+   * and would, for one, replace the author's /practitioners/<slug> link with
+   * whichever profile id the page mentions first. */
+  if (/^\/community\/article\/[^/?#]+/.test(url)) {
+    return html;
+  }
+
+  // /community/content/<mongoId>: notes, promos, and posts without a slug.
+  // Their Article is enriched with the fields PageComponent leaves out.
   const communityMatch = url.match(/^\/community\/content\/([a-f0-9]{24})/);
   if (communityMatch) {
     const baseUrl = 'https://www.prompthealth.ca';
@@ -248,56 +275,6 @@ function injectJsonLd(url, html, categoryPractitioners) {
     const pageUrl = canonical
       ? canonical[1].replace(/&amp;/g, '&')
       : baseUrl + url.split('#')[0].split('?')[0];
-
-    // Detect if this is an event post by looking for event-specific HTML
-    // The event card renders dates like "yyyy/MM/dd hh:mm AM/PM - yyyy/MM/dd hh:mm AM/PM (your local time)"
-    const isEventPost = /class="status-indicator[\s\S]*?\(your local time\)/.test(html);
-
-    // Extract event details from rendered HTML if this is an event
-    let eventStartDate = null;
-    let eventEndDate = null;
-    let eventLocation = null;
-    let isVirtualEvent = false;
-    let eventLink = null;
-
-    if (isEventPost) {
-      // Extract dates: "2024/03/15 02:00 PM - 2024/03/15 04:00 PM (your local time)"
-      const dateMatch = html.match(/(\d{4}\/\d{2}\/\d{2}\s+\d{1,2}:\d{2}\s+[AP]M)\s*-\s*(\d{4}\/\d{2}\/\d{2}\s+\d{1,2}:\d{2}\s+[AP]M)\s*\(your local time\)/);
-      if (dateMatch) {
-        eventStartDate = new Date(dateMatch[1]).toISOString();
-        eventEndDate = new Date(dateMatch[2]).toISOString();
-      }
-
-      // Check if virtual: icon "video-camera" means online
-      isVirtualEvent = /iconPh="video-camera"/.test(html) || /Virtual event/.test(html);
-
-      // Extract venue/location text
-      if (isVirtualEvent) {
-        const venueMatch = html.match(/iconPh="video-camera"[\s\S]*?<span[^>]*>\s*(?:<ng-container[^>]*>)?\s*(?:On\s+)?(\w[\w\s]*?)(?:<\/ng-container>)?\s*<\/span>/);
-        if (venueMatch) {
-          eventLocation = { '@type': 'VirtualLocation', 'url': '' };
-        } else {
-          eventLocation = { '@type': 'VirtualLocation', 'name': 'Online Event' };
-        }
-      } else {
-        const addressMatch = html.match(/iconPh="pin"[\s\S]*?<span[^>]*>([\s\S]*?)<\/span>/);
-        if (addressMatch) {
-          const addr = addressMatch[1].replace(/<[^>]+>/g, '').replace(/At\s+/i, '').trim();
-          if (addr) {
-            eventLocation = { '@type': 'Place', 'name': addr, 'address': addr };
-          }
-        }
-      }
-
-      // Extract registration link
-      const linkMatch = html.match(/href="(https?:\/\/[^"]+)"[^>]*>\s*Register\s*<\/a>/i);
-      if (linkMatch) {
-        eventLink = linkMatch[1];
-        if (isVirtualEvent && eventLocation && eventLocation['@type'] === 'VirtualLocation') {
-          eventLocation.url = linkMatch[1];
-        }
-      }
-    }
 
     // Find and parse the existing Angular-rendered JSON-LD
     const ldRegex = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
@@ -311,92 +288,46 @@ function injectJsonLd(url, html, categoryPractitioners) {
         const breadcrumb = data.find(d => d['@type'] === 'BreadcrumbList');
         if (!article) continue;
 
-        if (isEventPost) {
-          // Convert Article to Event schema
-          const eventSchema = {
-            '@context': 'https://schema.org',
-            '@type': 'Event',
-            'name': article.headline || '',
-            'description': article.description || '',
-            'url': pageUrl,
-            'image': article.image || '',
-          };
+        article.url = pageUrl;
+        article.mainEntityOfPage = pageUrl;
+        article.publisher = {
+          "@type": "Organization",
+          "name": "PromptHealth",
+          // The file is 800x350; 600 described an image that does not exist.
+          "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png", "width": 800, "height": 350 }
+        };
 
-          if (eventStartDate) eventSchema.startDate = eventStartDate;
-          if (eventEndDate) eventSchema.endDate = eventEndDate;
+        if (article.datePublished && !article.dateModified) {
+          article.dateModified = article.datePublished;
+        }
 
-          if (eventLocation) {
-            eventSchema.location = eventLocation;
-          }
-
-          // Organizer from author
-          if (article.author && article.author.name) {
-            eventSchema.organizer = { '@type': 'Person', 'name': article.author.name };
-            const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
-            if (authorIdMatch) {
-              eventSchema.organizer.url = baseUrl + '/community/profile/' + authorIdMatch[1];
-            }
-          }
-
-          // Ensure image is absolute
-          if (eventSchema.image && !eventSchema.image.startsWith('http')) {
-            eventSchema.image = baseUrl + (eventSchema.image.startsWith('/') ? '' : '/') + eventSchema.image;
-          }
-          if (!eventSchema.image) {
-            eventSchema.image = baseUrl + '/assets/img/prompthealth.png';
-          }
-
-          // Replace Article with Event in the data array
-          const articleIdx = data.indexOf(article);
-          data[articleIdx] = eventSchema;
-
-          // Fix BreadcrumbList
-          if (breadcrumb && breadcrumb.itemListElement) {
-            const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
-            if (lastItem && !lastItem.item) {
-              lastItem.item = pageUrl;
-            }
-          }
-        } else {
-          // Enrich Article schema (non-event posts)
-          article.url = pageUrl;
-          article.mainEntityOfPage = pageUrl;
-          article.publisher = {
-            "@type": "Organization",
-            "name": "PromptHealth",
-            // The file is 800x350; 600 described an image that does not exist.
-            "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png", "width": 800, "height": 350 }
-          };
-
-          if (article.datePublished && !article.dateModified) {
-            article.dateModified = article.datePublished;
-          }
-
-          if (article.author && article.author.name) {
-            const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
-            if (authorIdMatch) {
-              article.author.url = baseUrl + '/community/profile/' + authorIdMatch[1];
-            }
-          }
-
-          if (article.image && !article.image.startsWith('http')) {
-            article.image = baseUrl + (article.image.startsWith('/') ? '' : '/') + article.image;
-          }
-          if (!article.image) {
-            article.image = baseUrl + '/assets/img/prompthealth.png';
-          }
-
-          if (breadcrumb && breadcrumb.itemListElement) {
-            const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
-            if (lastItem && !lastItem.item) {
-              lastItem.item = pageUrl;
-            }
+        if (article.author && article.author.name) {
+          const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
+          if (authorIdMatch) {
+            article.author.url = baseUrl + '/community/profile/' + authorIdMatch[1];
           }
         }
 
-        // Replace the original JSON-LD block with enhanced version
-        const enhanced = '<script type="application/ld+json">' + JSON.stringify(data) + '</script>';
-        html = html.replace(ldMatch[0], enhanced);
+        if (article.image && !article.image.startsWith('http')) {
+          article.image = baseUrl + (article.image.startsWith('/') ? '' : '/') + article.image;
+        }
+        if (!article.image) {
+          article.image = baseUrl + '/assets/img/prompthealth.png';
+        }
+
+        if (breadcrumb && breadcrumb.itemListElement) {
+          const lastItem = breadcrumb.itemListElement[breadcrumb.itemListElement.length - 1];
+          if (lastItem && !lastItem.item) {
+            lastItem.item = pageUrl;
+          }
+        }
+
+        // Replace the original JSON-LD block with enhanced version. ldJson,
+        // because JSON.parse above turned the page's escaped '<' back into a
+        // real one. Replaced through a function, so a '$' in the text is
+        // written as it is rather than read as a replacement pattern.
+        const enhanced = '<script type="application/ld+json">' + ldJson(data) + '</script>';
+        html = html.replace(ldMatch[0], function() { return enhanced; });
         break; // Only enhance the first matching block
       } catch (e) {
         // Skip unparseable blocks
@@ -549,17 +480,32 @@ function injectJsonLd(url, html, categoryPractitioners) {
       var merged = pageScript.open + ldJson([itemList].concat(pageScript.blocks)) + pageScript.close;
       return html.replace(pageScript.whole, function() { return merged; });
     }
-    return html.replace('</head>', function() {
-      return '<script type="application/ld+json">' + ldJson(itemList) + '</script></head>';
-    });
+    return intoHead(html, '<script type="application/ld+json">' + ldJson(itemList) + '</script>');
   }
 
   if (jsonLd) {
-    const script = '<script type="application/ld+json" id="json-ld-schema">' + JSON.stringify(jsonLd) + '</script>';
-    html = html.replace('</head>', script + '</head>');
+    const script = '<script type="application/ld+json" id="json-ld-schema">' + ldJson(jsonLd) + '</script>';
+    html = intoHead(html, script);
   }
 
   return html;
+}
+
+/* Schema improves a page; it is never a reason to lose one. injectJsonLd runs
+ * inside res.send, so a throw there rejected the render's promise, and
+ * ngExpressEngine called server.ts's callback a second time with the error.
+ * That callback had already marked the request answered, so nothing ever
+ * answered it: nginx waited out its limit and then answered 502 for every page
+ * for ten seconds, and since the page was never cached, every request for it
+ * did the same. So a failure here sends, and caches, the page as rendered. Only
+ * the path is logged: a query can carry a token. */
+function withJsonLd(key, html, categoryPractitioners) {
+  try {
+    return injectJsonLd(key, html, categoryPractitioners);
+  } catch (e) {
+    console.error('[json-ld] skipped for ' + key.split('?')[0] + ': ' + (e && e.message || e));
+    return html;
+  }
 }
 
 // No-op: script deferring removed to prevent hydration mismatch
@@ -659,7 +605,7 @@ const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCac
     const isPage = typeof body === 'string' && body.length > 500;
     // Inject JSON-LD before caching
     if (isPage) {
-      body = injectJsonLd(key, body, req._categoryPractitioners);
+      body = withJsonLd(key, body, req._categoryPractitioners);
       body = deferScripts(body);
     }
     if (isPage && res.statusCode === 200) {
@@ -680,7 +626,7 @@ const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCac
    * request for it paid for a full render nobody saw, on a 1-vCPU box. */
   req._ssrStoreLate = function(html) {
     if (typeof html !== 'string' || html.length <= 500 || freshEntry(key)) return;
-    storeEntry(key, deferScripts(injectJsonLd(key, html, req._categoryPractitioners)));
+    storeEntry(key, deferScripts(withJsonLd(key, html, req._categoryPractitioners)));
   };
 
   next();

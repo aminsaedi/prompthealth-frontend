@@ -29,6 +29,15 @@ import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 
+/* The query keys this page owns: the controller's filters (toQueryParams),
+ * the page number, and the UI state that must not survive a new search.
+ * Everything else in the address, UTMs included, belongs to someone else and
+ * is kept when a filter changes. */
+const FILTER_QUERY_KEYS = [
+  'gndr', 'lng', 'aval', 'age', 'offr', 'cat', 'cnd', 'type', 'lt', 'lg', 'zoom', 'dist', 'vr',
+  'keyword', 'keyloc', 'rate', 'prmax', 'prmin', 'page', 'pg', 'modal', 'modal-data', 'menu',
+];
+
 @Component({
   selector: 'app-expert-finder',
   templateUrl: './expert-finder.component.html',
@@ -808,11 +817,20 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     }
   }
 
+  /* The address with this page's filters replaced by the controller's. The
+   * three navigations below used toQueryParams() alone, which dropped every
+   * other parameter: a campaign's UTMs vanished at the first filter change. */
+  private addressWithFilters(): [string, Params] {
+    const [path, query] = this._modalService.currentPathAndQueryParams;
+    FILTER_QUERY_KEYS.forEach(key => { delete query[key]; });
+    return [path, { ...query, ...this.controller.toQueryParams() }];
+  }
+
   onClickButtonToggleVirtual() { 
     this.controller.updateFilter('virtual', !this.isVirtual);
 
-    const [path, query] = this._modalService.currentPathAndQueryParams;
-    this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
+    const [path, query] = this.addressWithFilters();
+    this._router.navigate([path], {queryParams: query});
     // this.search();
   }
 
@@ -906,8 +924,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     this.controller.updateFilterByMap(this.mapDataCurrent);
     this.f.distance.setValue(this.mapDataCurrent.dist);
 
-    const [path, query] = this._modalService.currentPathAndQueryParams;
-    this._router.navigate([path], {queryParams: this.controller.toQueryParams()});
+    const [path, query] = this.addressWithFilters();
+    this._router.navigate([path], {queryParams: query});
     // this.search();
   }
 
@@ -963,8 +981,8 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
   }
 
   closeModal() {
-    const [path, query] = this._modalService.currentPathAndQueryParams;
-    this._modalService.hide(true, [path], this.controller.toQueryParams());
+    const [path, query] = this.addressWithFilters();
+    this._modalService.hide(true, [path], query);
   }
 
   preventDefaultClickAction(e: Event, stopPropagation = true) {

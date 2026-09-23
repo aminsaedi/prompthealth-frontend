@@ -26,6 +26,8 @@ export class HomeComponent implements OnInit , OnDestroy {
 
   get topics() { return this._catService.categoryList; }
   get user() { return this._profileService.profile; }
+  /* Read at render, so the sidebar never goes stale again: it said 2021. */
+  get currentYear() { return new Date().getFullYear(); }
   // get imageSponsor() {
   //   return this.sponsor?.productImages?.length > 0 ? 
   //     this.sponsor.productImages[0].url :

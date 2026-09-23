@@ -5,7 +5,6 @@ export interface IGetOnlineAcademyQuery {
   order?: 1 | -1;
   search?: string;
   category?: string;
-  onlyFreeAcademy?: boolean;
 }
 
 export class GetOnlineAcademyQuery {
@@ -26,9 +25,6 @@ export class GetOnlineAcademyQuery {
   get category() {
     return this.data.category || null;
   }
-  get onlyFreeAcademy() {
-    return this.data.onlyFreeAcademy || false;
-  }
   
   constructor(protected data: IGetOnlineAcademyQuery = {}) {}
 
@@ -39,7 +35,6 @@ export class GetOnlineAcademyQuery {
       ...(this.sortBy && { sortBy: this.sortBy }),
       ...(this.order !== null && { order: this.order }),
       ...(this.category !== null && { category: this.category }),
-      ...(this.onlyFreeAcademy !== false && { onlyFreeAcademy: this.onlyFreeAcademy }),
     };
     return json;
   }

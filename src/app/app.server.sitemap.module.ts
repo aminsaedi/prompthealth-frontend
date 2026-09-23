@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { locations } from 'src/app/_helpers/location-data';
 import { slugify } from 'src/app/_helpers/slugify';
 import { isIndexableCityCategory, isIndexableCityType } from 'src/app/_helpers/indexable-combos';
-import { staticPageDates } from 'src/app/static-page-dates';
+import { staticPages } from 'src/app/static-page-dates';
 
 const apiURL = environment.config.API_URL;
 const baseURL = environment.config.FRONTEND_BASE;
@@ -95,97 +95,23 @@ const sitemapRoot = `<?xml version="1.0" encoding="UTF-8"?>
   </sitemapindex>
 `;
 
-// PH-021 + SEO-044: Static page lastmod from git commit dates (generated at build time)
+// PH-021 + SEO-044: the static pages, and each one's lastmod, come from
+// scripts/generate-static-page-dates.js, which dates a page by the last commit
+// to its source; add or remove a page there, not here. A page it could not
+// date gets no <lastmod>, as everywhere else in this file. The old fallback was
+// the time this module loaded, which is every deploy and every restart, and a
+// date that keeps announcing changes that never happened is one crawlers learn
+// to ignore.
 function buildSitemapMain(): string {
-  const d = (route: string) => staticPageDates[route] || new Date().toISOString().split('T')[0];
+  const urls = staticPages.map(page => `
+    <url>
+      <loc>${baseURL}${page.route === '/' ? '' : page.route}</loc>${page.lastmod ? `
+      <lastmod>${page.lastmod}</lastmod>` : ''}
+      <changefreq>${page.changefreq}</changefreq>${page.priority ? `
+      <priority>${page.priority}</priority>` : ''}
+    </url>`).join('');
   return `<?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <url>
-      <loc>${baseURL}</loc>
-      <lastmod>${d('/')}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>1.0</priority>
-    </url>
-    <url>
-      <loc>${baseURL}/about</loc>
-      <lastmod>${d('/about')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/about/partner</loc>
-      <lastmod>${d('/about/partner')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/about/editorial-standards</loc>
-      <lastmod>${d('/about/editorial-standards')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/plans</loc>
-      <lastmod>${d('/plans')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/plans/product</loc>
-      <lastmod>${d('/plans/product')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/companies</loc>
-      <lastmod>${d('/companies')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/ambassador-program</loc>
-      <lastmod>${d('/ambassador-program')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/press-release</loc>
-      <lastmod>${d('/press-release')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/online-academy</loc>
-      <lastmod>${d('/online-academy')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/testimonial</loc>
-      <lastmod>${d('/testimonial')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/faq</loc>
-      <lastmod>${d('/faq')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/subscribe/newsletter</loc>
-      <lastmod>${d('/subscribe/newsletter')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/contact-us</loc>
-      <lastmod>${d('/contact-us')}</lastmod>
-      <changefreq>monthly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/policy</loc>
-      <lastmod>${d('/policy')}</lastmod>
-      <changefreq>yearly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/terms</loc>
-      <lastmod>${d('/terms')}</lastmod>
-      <changefreq>yearly</changefreq>
-    </url>
-    <url>
-      <loc>${baseURL}/medical-disclaimer</loc>
-      <lastmod>${d('/medical-disclaimer')}</lastmod>
-      <changefreq>yearly</changefreq>
-    </url>
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">${urls}
   </urlset>`;
 }
 const sitemapMain = buildSitemapMain();
@@ -599,10 +525,39 @@ function getAllPractitionerIds(): Promise<{id: string, updatedAt?: string, slug?
 // SEO-060: Generate missing slugs for practitioners that don't have one.
 // Calls the existing user/get-slug/:id endpoint which generates and saves the slug on-demand.
 // Processes in batches to avoid overwhelming the backend.
+
+/* Practitioners the backend has answered "no slug" for, with when it said so.
+ * About fifty listed providers have no name to make one from, and the backend
+ * mints none for a clinic, so for them the answer is 404 and stays 404. Asked
+ * again on every rebuild (hourly, and after every restart), they logged some
+ * 830 failures a day and never changed an answer.
+ *
+ * Kept for a day, not for the life of the process, because a 404 is not always
+ * that answer. getSlugForId catches every error, a database timeout or a
+ * duplicate key after its retries included, and returns null, which the
+ * controller sends as the same 404 "No slug found". Remembered for good, one
+ * rebuild during a database hiccup would have left every slugless provider it
+ * asked out of the sitemap until the next deploy. A day still turns hourly
+ * asking into daily asking, and a provider who adds a name is picked up within
+ * a day. A timeout, a network error, 408, 429 or a 5xx is not remembered at
+ * all, and is asked again on the next rebuild. */
+const SLUG_UNAVAILABLE_TTL_MS = 24 * 60 * 60 * 1000;
+const slugUnavailableSince = new Map<string, number>();
+
+function isSlugUnavailable(id: string, now: number): boolean {
+  const since = slugUnavailableSince.get(id);
+  if (since === undefined) { return false; }
+  if (now - since < SLUG_UNAVAILABLE_TTL_MS) { return true; }
+  slugUnavailableSince.delete(id);
+  return false;
+}
+
 async function generateMissingSlugs(practitioners: {id: string, updatedAt?: string, slug?: string, city?: string}[]): Promise<void> {
-  const withoutSlug = practitioners.filter(p => !p.slug);
+  const now = Date.now();
+  const withoutSlug = practitioners.filter(p => !p.slug && !isSlugUnavailable(p.id, now));
   if (withoutSlug.length === 0) return;
 
+  const newlyUnavailable: string[] = [];
   const BATCH_SIZE = 5;
   for (let i = 0; i < withoutSlug.length; i += BATCH_SIZE) {
     const batch = withoutSlug.slice(i, i + BATCH_SIZE);
@@ -613,6 +568,8 @@ async function generateMissingSlugs(practitioners: {id: string, updatedAt?: stri
             .then(res => {
               if (res.status === 200 && res.data?.data?.slug) {
                 p.slug = res.data.data.slug;
+              } else {
+                newlyUnavailable.push(p.id);
               }
             })
         ).then(
@@ -621,12 +578,25 @@ async function generateMissingSlugs(practitioners: {id: string, updatedAt?: stri
         )
       )
     );
-    // Log failures but continue — don't break the sitemap for individual errors
     results.forEach((result, idx) => {
-      if (result.status === 'rejected') {
+      if (result.status !== 'rejected') { return; }
+      /* A 4xx is the backend's answer about this id, or its caught failure
+       * dressed as one (see above), which is why it is kept only for a day.
+       * 408 and 429 are about the moment, not the id. */
+      const status = result.reason?.response?.status;
+      if (status >= 400 && status < 500 && status !== 408 && status !== 429) {
+        newlyUnavailable.push(batch[idx].id);
+      } else {
+        // Log failures but continue: don't break the sitemap for individual errors
         console.warn(`SEO-060: Failed to generate slug for practitioner ${batch[idx].id}:`, result.reason?.message || result.reason);
       }
     });
+  }
+
+  if (newlyUnavailable.length > 0) {
+    const answeredAt = Date.now();
+    newlyUnavailable.forEach(id => slugUnavailableSince.set(id, answeredAt));
+    console.warn(`SEO-060: ${newlyUnavailable.length} listed practitioners have no slug and the backend made none; asking again in a day (${slugUnavailableSince.size} waiting in all)`);
   }
 }
 

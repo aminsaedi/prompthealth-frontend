@@ -27,7 +27,6 @@ export interface IMyProfile {
   eligibleToRecommend: boolean;
   eligibleToManageBookings: boolean;
   eligibleToSeePerformance: boolean;
-  isEligibleToSeePremiumAcademy: boolean;
 
 
   bookmarks: ISocialPost[];
@@ -59,7 +58,6 @@ export class MyProfile extends Profile implements IMyProfile {
 
   get isApproved() { return this.isU || this.isSA || this.data.isApproved; }
   get isEligibleToCreateNote() { return this.isProvider || this.isSA; }
-  get isEligibleToSeePremiumAcademy() { return this.isPaid || this.isSA; }
   get isEligibleToCreatePromo() { return this.isP; }
   get isEligibleToCreateArticle() { return (this.isProvider) || this.isSA; }
   get isEligibleToCreateEvent() { return (!this.isU) || this.isSA; }

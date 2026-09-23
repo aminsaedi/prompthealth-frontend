@@ -258,7 +258,19 @@ export class SaveQuery implements ISaveQuery {
   get online_academy_category() { return this.data.online_academy_category || 'templates'; }
   get isAcademy() { return this.data.isAcademy || false; }
   get isFreeAcademy() { return this.data.isFreeAcademy || false; }
-  get rolesRestrictedTo() { return this.data.rolesRestrictedTo || null; }
+  /* The provider checkbox's value is the composite 'SP+C', and loading an
+   * article folds 'SP' and 'C' into it. Only a change event split it back, so
+   * saving without touching the checkbox stored 'SP+C', a role no account has,
+   * and every feed then hid that article from providers. Always send real
+   * roles. */
+  get rolesRestrictedTo() {
+    const raw: string[] | string = this.data.rolesRestrictedTo;
+    const roles = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+    if (roles.length == 0) { return null; }
+    const out: string[] = [];
+    roles.forEach(r => r.split('+').forEach(x => { if (x && out.indexOf(x) < 0) { out.push(x); } }));
+    return out;
+  }
   get location() { return this.data.location || null; }
   get metaTitle() { return this.data.metaTitle || null; }
   get metaDescription() { return this.data.metaDescription || null; }

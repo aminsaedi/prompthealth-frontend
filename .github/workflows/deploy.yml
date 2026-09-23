@@ -15,7 +15,24 @@ jobs:
       packages: write
 
     steps:
+      # Full history, because each static page's <lastmod> in sitemap/main is
+      # the date its source last changed (scripts/generate-static-page-dates.js).
+      # At the default depth of 1 the one commit present looks as if it added
+      # every file, so every page would be dated by the commit being deployed.
+      # blob:none keeps that history to commits and trees, a few MB, instead of
+      # every version of every asset (the full pack is about 345 MB).
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+
+      # Here and not in the image: the build stage has neither git nor .git.
+      # The file this writes reaches the image with the rest of the working
+      # tree (context: . below), and prebuild:ssr inside the image finds no git
+      # and keeps these dates. --strict fails the deploy rather than ship a
+      # guessed date.
+      - name: Date the static pages in the sitemap
+        run: node scripts/generate-static-page-dates.js --strict
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -27,6 +44,9 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
+          # A path, not the action's default git context: the git context
+          # builds from the commit and would drop the sitemap dates the step
+          # above just wrote into the working tree.
           context: .
           push: true
           tags: |

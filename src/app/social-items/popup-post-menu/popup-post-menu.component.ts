@@ -110,8 +110,11 @@ export class PopupPostMenuComponent implements OnInit , OnDestroy {
     e.stopPropagation();
     e.preventDefault();
     this._socialService.setProfileForReferral(new Profile(this.post.author));
+    /* The slug address of the form itself. /practitioners/<slug>/new-recommend
+     * opened the About page, because the /practitioners/<slug> redirect keeps
+     * nothing after the slug. */
     const route = this.post.authorSlug
-      ? ['/practitioners', this.post.authorSlug, 'new-recommend']
+      ? ['/community/profile/s', this.post.authorSlug, 'new-recommend']
       : ['/community/profile', this.post.authorId, 'new-recommend'];
     this._router.navigate(route);
   }

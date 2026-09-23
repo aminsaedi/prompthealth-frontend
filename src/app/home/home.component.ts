@@ -9,7 +9,7 @@ import {
   ViewChildren,
   QueryList,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { SharedService } from "../shared/services/shared.service";
 import { HeaderStatusService } from "../shared/services/header-status.service";
 import { UniversalService } from "../shared/services/universal.service";
@@ -72,7 +72,6 @@ export class HomeComponent implements OnInit , OnDestroy {
 
   constructor(
     private _router: Router,
-    private _route: ActivatedRoute,
     private _catService: CategoryService,
     private _sharedService: SharedService,
     private _headerStatusService: HeaderStatusService,
@@ -188,7 +187,7 @@ export class HomeComponent implements OnInit , OnDestroy {
           "@id": "https://www.prompthealth.ca/#organization",
           "name": "PromptHealth",
           "url": "https://www.prompthealth.ca",
-          "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 600 },
+          "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 350 },
           "description": "PromptHealth is Canada's leading integrative health platform connecting patients with 500+ verified wellness practitioners across 21 cities in 4 provinces (BC, ON, AB, MB). Search by specialty, location, and delivery method to discover naturopaths, physiotherapists, dentists, psychologists, and 50+ other practitioner types, read expert health content, and book appointments online.",
           "foundingDate": "2020",
           "areaServed": { "@type": "Country", "name": "Canada" },
@@ -284,10 +283,11 @@ export class HomeComponent implements OnInit , OnDestroy {
 
   /** HEADER FOR HOMEPAGE */
   showMenuSm() {
-    this._router.navigate(["./"], {
-      relativeTo: this._route,
-      queryParams: { menu: "show" },
-    });
+    /* Kept the rest of the query, and built from the address the reader sees,
+     * for the reasons in the theme header's showMenuSm. */
+    const [path, queryParams] = this._modalService.currentPathAndQueryParams;
+    queryParams.menu = "show";
+    this._router.navigate([path], { queryParams: queryParams });
   }
 
   onClickGetListed() {
@@ -357,6 +357,8 @@ export class HomeComponent implements OnInit , OnDestroy {
 
   /** temporary solution to fill featured practitioners */
   getPractitionersFeatured() {
+    /* A failed call used to leave the twenty skeleton cards up for good. Now
+     * it counts as nobody to feature, and the empty carousel is dropped. */
     this._sharedService.getNoAuth("user/get-paid-spc").pipe(takeUntil(this.destroy$)).subscribe(
       (res: any) => {
         if (res.statusCode === 200) {
@@ -365,9 +367,12 @@ export class HomeComponent implements OnInit , OnDestroy {
             users.push(new Professional(d._id, d));
           });
           this.featuredExpertController.addData(users);
+        } else {
+          this.featuredExpertController.addData([]);
         }
       },
       (error) => {
+        this.featuredExpertController.addData([]);
       }
     );
   }

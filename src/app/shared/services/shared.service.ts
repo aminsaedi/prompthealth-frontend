@@ -401,10 +401,6 @@ export class SharedService {
     return this.http.put(this.rootUrl + 'user/updateStatus', formData, { headers });
   }
 
-  sendEmailSubscribers(data: string | object) {
-    return this.http.post(this.rootUrl + 'user/subscribe', data);
-  }
-
   delete(id: string, model: string) {
 
     const headers = this.getAuthorizationHeader();
@@ -415,9 +411,6 @@ export class SharedService {
     const headers = this.getAuthorizationHeader();
     const url = this.rootUrl + `user/remove-favorite/${id}`;
     return this.http.delete(url, { headers });
-  }
-  contactus(body: string | object) {
-    return this.http.post(this.rootUrl + 'user/contactus', body);
   }
   uploadImage(object: FormData) {
     const headers = this.getAuthorizationHeader();

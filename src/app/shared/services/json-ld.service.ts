@@ -44,7 +44,12 @@ export class JsonLdService {
       const script = this.doc.createElement('script');
       script.setAttribute('type', 'application/ld+json');
       script.setAttribute('id', 'json-ld-schema');
-      script.textContent = JSON.stringify(data);
+      /* On the server this text is written into the page as it is, and the
+       * schema carries text providers wrote (names, titles, summaries). A
+       * '</script>' in one would end the element early and put the rest into
+       * the page as markup. Written as \u003c, '<' is the same character to
+       * a JSON reader. */
+      script.textContent = JSON.stringify(data).replace(/</g, '\\u003c');
       head.appendChild(script);
     } catch (e) {
       console.error('Error within JsonLdService:', e);

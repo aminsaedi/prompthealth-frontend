@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-landing-clubhouse',
@@ -23,7 +24,11 @@ export class LandingClubhouseComponent implements OnInit {
 		this._uService.setMeta(this._router.url, {
 			title: 'Newsletter | PromptHealth',
 			description: 'Subscribe to receive meaningful, illuminating insight into the wins and challenges of the health and wellness industry.',
-			image: 'https://prompthealth.ca/assets/img/newsletter.png',
+			/* On www, not the apex, which answers every request with a 301 that
+			 * a scraper has to follow first. 432x360 is the file's real size. */
+			image: `${environment.config.FRONTEND_BASE}/assets/img/newsletter.png`,
+			imageWidth: 432,
+			imageHeight: 360,
 			imageAlt: 'newsletter',
 			imageType: 'image/png',
 		});

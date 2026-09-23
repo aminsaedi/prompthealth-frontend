@@ -64,8 +64,11 @@ const routes: Routes = [
       { path: 'video', component: VideoManagerComponent, },
       { path: 'social', component: SocialManagerComponent, },
       /* Moved out of the dashboard's narrow content column; the sidebar entry
-       * still points here so old links and bookmarks keep working. */
-      { path: 'links', redirectTo: '/link-admin', },
+       * still points here so old links and bookmarks keep working. Straight to
+       * a page: after an absolute redirect Angular applies no more redirects,
+       * so link-admin's own '' -> overview default never ran and this opened
+       * an empty shell. */
+      { path: 'links', redirectTo: '/link-admin/overview', },
 
       { path: 'bookmark', component: BookmarksComponent, },
       { path: 'password', component: PasswordComponent, },
@@ -86,12 +89,16 @@ const routes: Routes = [
     
   },
 
+  /* Every target here must be a page, never another redirect. After an
+   * absolute redirect Angular applies no further redirects, so a target that
+   * is itself a redirect matches nothing that renders and leaves a blank page
+   * (/practitioners/:id and /dashboard/register-product/* both did). */
   { path: 'subscriptionplan',   redirectTo: '/plans' },
   { path: 'questionnaire/u',    redirectTo: '/personal-match/gender' },
   { path: 'questions/User',     redirectTo: '/personal-match/gender' },
   { path: 'listing',            redirectTo: '/practitioners' },
   { path: 'listingCompare',     redirectTo: '/compare-practitioners' },
-  { path: 'detail/:id',         redirectTo: '/practitioners/:id' },
+  { path: 'detail/:id',         redirectTo: '/community/profile/:id' },
   { path: 'register-product',   redirectTo: '/dashboard-old/register-product/general'},
   { path: 'register-partner',   redirectTo: '/dashboard-old/register-product/general' },
   { path: 'professional-info',  redirectTo: '/dashboard-old/register-practitioner/general' },

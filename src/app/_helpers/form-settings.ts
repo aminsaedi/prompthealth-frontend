@@ -415,7 +415,10 @@ export const validators = {
   /** contact form */
   contactName: validatorFirstNameClient,
   contactEmail: validatorEmail,
-  contactMessage: [Validators.maxLength(minmax.bookingNoteMax)],
+  /* A message with nothing in it tells us nothing, so the form asks for one
+   * before sending. It used to go out blank and come back 400 with no word on
+   * the form. The server accepts a blank one (a cached bundle may send it). */
+  contactMessage: [Validators.required, Validators.maxLength(minmax.bookingNoteMax)],
 
   /** blog post for users */
   publishPostDescription: [Validators.required],
