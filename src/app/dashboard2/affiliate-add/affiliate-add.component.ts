@@ -51,11 +51,13 @@ export class AffiliateAddComponent implements OnInit , OnDestroy {
 
       const data = this.formEditor.value;
       data.isVipAffiliateUser = false;
-      data.addedBy = this.user._id;
 
+      /* Sent with the session token. The server takes the inviter from the token,
+       * never from the body: an anonymous caller used to be able to name anyone as
+       * the inviter and send mail from our domain to any address. */
       const path = 'user/request';
       this.isUploading = true;
-      this._sharedService.postNoAuth(data, path).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
+      this._sharedService.post(data, path).pipe(takeUntil(this.destroy$)).subscribe((res: IResponseData) => {
         this.isUploading = false;
 
         if (res.statusCode === 200) {
