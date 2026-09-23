@@ -29,6 +29,7 @@ import { routerRedirectForTypeOfProvider } from 'src/app/app.server.redirect-typ
 import { routerRedirectForProfile } from 'src/app/app.server.redirect-profile.module';
 import { routerRedirectForContent } from 'src/app/app.server.redirect-content.module';
 import { routerRedirectForCategory } from 'src/app/app.server.redirect-category.module';
+import { stripTrackingParams } from './src/app/_helpers/tracking-params';
 
 /* A third of nginx's 60 s upstream timeout. A healthy render takes 1 to 7 s on
  * this box; one still going at 20 s is not going to finish in time to help. */
@@ -178,9 +179,20 @@ export function app() {
       res.sendFile(join(distFolder, 'index.html'));
     }, RENDER_TIMEOUT_MS);
 
+    /* Rendered without tracking parameters, because server-wrapper.js caches the
+     * result under the address without them and hands it to every request that
+     * differs only in those. Rendered from the raw address, the canonical, og:url
+     * and the article JSON-LD all carried the first clicker's fbclid, and every
+     * crawler served from that entry was told so. The browser keeps the full
+     * address, so UTMs are still read client side, where they always were.
+     * ngExpressEngine renders options.url in place of req.originalUrl; the
+     * redirect routers, static files and the /out proxy above still see the
+     * untouched request. */
+    const renderUrl = `${req.protocol}://${req.get('host') || ''}${stripTrackingParams(req.originalUrl)}`;
+
     res.render(
       indexHtml,
-      { req, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ]},
+      { req, url: renderUrl, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ]},
       (err, html) => {
         if (answered) { return; }
         answered = true;
@@ -229,6 +241,10 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
 }
 
 export * from './src/main.server';
+
+/* server-wrapper.js keys its cache with this, so the key and the render cannot
+ * disagree about which parameters make a different page. */
+export { stripTrackingParams };
 
 function injectPaginationLinks(req: any, html: string): string {
   // Only inject pagination links for community feed pages

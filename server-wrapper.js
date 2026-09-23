@@ -18,6 +18,16 @@ const https = require('https');
 const originalModule = require('./main.js');
 const expressApp = originalModule.app();
 
+/* The same function server.ts renders with, so the cache key and the render
+ * cannot disagree about which parameters make a different page. A build that
+ * lost the export falls back to caching on the raw URL, which is how this
+ * worked before, rather than failing to start. */
+const stripTrackingParams = typeof originalModule.stripTrackingParams === 'function'
+  ? originalModule.stripTrackingParams : function(url) { return url; };
+if (typeof originalModule.stripTrackingParams !== 'function') {
+  console.error('[ssr-cache] stripTrackingParams missing from main.js; caching on the raw URL');
+}
+
 // --- SEO-021: Category page filtered ItemList JSON-LD ---
 
 function slugify(str) {
@@ -168,7 +178,14 @@ function injectJsonLd(url, html, categoryPractitioners) {
   const communityMatch = url.match(/^\/community\/content\/([a-f0-9]{24})/);
   if (communityMatch) {
     const baseUrl = 'https://www.prompthealth.ca';
-    const pageUrl = baseUrl + url;
+    /* A page's own address in its schema is its canonical. Built from the
+     * request, an ad click's ?utm_...&fbclid=... became this page's url and
+     * mainEntityOfPage. Use the canonical the page rendered, and fall back to
+     * the bare path. */
+    const canonical = html.match(/<link rel="canonical" href="([^"]+)"/);
+    const pageUrl = canonical
+      ? canonical[1].replace(/&amp;/g, '&')
+      : baseUrl + url.split('#')[0].split('?')[0];
 
     // Detect if this is an event post by looking for event-specific HTML
     // The event card renders dates like "yyyy/MM/dd hh:mm AM/PM - yyyy/MM/dd hh:mm AM/PM (your local time)"
@@ -285,7 +302,8 @@ function injectJsonLd(url, html, categoryPractitioners) {
           article.publisher = {
             "@type": "Organization",
             "name": "PromptHealth",
-            "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png", "width": 800, "height": 600 }
+            // The file is 800x350; 600 described an image that does not exist.
+            "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png", "width": 800, "height": 350 }
           };
 
           if (article.datePublished && !article.dateModified) {
@@ -474,39 +492,108 @@ function deferScripts(html) {
   return html;
 }
 
-// Simple cache
+// SSR cache.
+//
+// One entry per page, keyed on the address without tracking parameters, kept
+// for 30 minutes. Entries leave oldest first: a Map keeps insertion order, and
+// storeEntry always removes a key before setting it again, so insertion order
+// is also age order. Everything that removes an entry goes through dropEntry,
+// or the byte count drifts.
 const cache = new Map();
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
 const MAX_CACHE = 500;
+/* The container was OOM-killed about every 90 minutes (anon-rss 505 MB against a
+ * 512 MB limit), and every kill dropped the requests in flight and emptied this
+ * cache. Capped only by count, 500 pages of 50 to 270 kB could hold 250 MB, and
+ * an expired page stayed until its own address was asked for again. So the
+ * budget is in bytes, counted as the heap holds them, and expired pages leave
+ * whenever anything is stored. */
+const MAX_CACHE_BYTES = 64 * 1024 * 1024;
+let cacheBytes = 0;
+
+/* V8 keeps a string at one byte a character only while every character is
+ * Latin-1. One curly quote or dash puts the whole page at two, and every page
+ * measured on 2026-09-23 had some. */
+function heapBytesOf(html) {
+  return /[^\u0000-\u00ff]/.test(html) ? html.length * 2 : html.length;
+}
+
+function freshEntry(key) {
+  const entry = cache.get(key);
+  return (entry && (Date.now() - entry.time < CACHE_TTL)) ? entry : null;
+}
+
+function dropEntry(key) {
+  const entry = cache.get(key);
+  if (!entry) return;
+  cacheBytes -= entry.bytes;
+  cache.delete(key);
+}
+
+function storeEntry(key, html) {
+  dropEntry(key);
+  const bytes = heapBytesOf(html);
+  if (bytes > MAX_CACHE_BYTES) return;
+  const now = Date.now();
+  for (const [oldKey, oldEntry] of cache) {
+    if (now - oldEntry.time < CACHE_TTL) break;
+    dropEntry(oldKey);
+  }
+  while (cache.size > 0 && (cache.size >= MAX_CACHE || cacheBytes + bytes > MAX_CACHE_BYTES)) {
+    dropEntry(cache.keys().next().value);
+  }
+  cache.set(key, { html: html, time: now, bytes: bytes });
+  cacheBytes += bytes;
+}
 
 // Inject cache layer AFTER expressInit+compression (position 3) but before routes
 const Layer = Object.getPrototypeOf(expressApp._router.stack[0]).constructor;
 
 const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCache(req, res, next) {
-  if (req.method !== 'GET' || req.url.includes('.') || req.url.startsWith('/api') || req.url.startsWith('/stripe') || req.url.startsWith('/sitemap')) {
+  if (req.method !== 'GET' || req.url.startsWith('/api') || req.url.startsWith('/stripe') || req.url.startsWith('/sitemap')) {
     return next();
   }
 
-  const key = req.url;
-  const entry = cache.get(key);
-  if (entry && (Date.now() - entry.time < CACHE_TTL)) {
+  /* Every ad click carries an id unique to that click, so keyed on the raw URL
+   * each one missed, cost a full render on a 1-vCPU box and evicted a page a
+   * crawler had warmed. server.ts renders from this same stripped address, so
+   * what is stored is exactly what a request without the parameters gets, and
+   * an ad click now warms the cache instead of emptying it.
+   *
+   * The dot test is on the key, after the tracking parameters are gone. On the
+   * whole URL it also skipped every page whose query had a dot in it
+   * (utm_source=chatgpt.com, l.facebook.com), so those rendered on every
+   * request. A dot anywhere else still bypasses the cache, as before: static
+   * files, and queries such as ?url=http://... that no page needs cached. */
+  const key = stripTrackingParams(req.url);
+  if (key.includes('.')) {
+    return next();
+  }
+
+  const entry = freshEntry(key);
+  if (entry) {
     res.set('X-Cache', 'HIT');
     return res.send(entry.html);
   }
-  if (entry) cache.delete(key);
+  dropEntry(key);
 
   // Patch res.send once to capture SSR output and inject JSON-LD
   const _send = res.send.bind(res);
   res.send = function(body) {
     res.send = _send; // restore
+    const isPage = typeof body === 'string' && body.length > 500;
     // Inject JSON-LD before caching
-    if (typeof body === 'string' && body.length > 500) {
-      body = injectJsonLd(req.originalUrl, body, req._categoryPractitioners);
+    if (isPage) {
+      body = injectJsonLd(key, body, req._categoryPractitioners);
       body = deferScripts(body);
     }
-    if (typeof body === 'string' && body.length > 500 && res.statusCode === 200) {
-      if (cache.size >= MAX_CACHE) cache.delete(cache.keys().next().value);
-      cache.set(key, { html: body, time: Date.now() });
+    if (isPage && res.statusCode === 200) {
+      storeEntry(key, body);
+    }
+    /* Sent only on a hit, a miss and a bypass looked the same to anyone
+     * checking whether a page was cached. */
+    if (isPage && !res.headersSent) {
+      res.set('X-Cache', 'MISS');
     }
     return _send(body);
   };
@@ -528,7 +615,7 @@ const categoryLayer = new Layer('/', { strict: false, end: false }, function cat
   if (!catInfo) return next();
 
   // Clear SSR cache for this category page to prevent stale data
-  cache.delete(req.url);
+  dropEntry(stripTrackingParams(req.url));
 
   fetchFilteredPractitioners(catInfo.id)
     .then(function(resp) {
