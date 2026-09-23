@@ -9,7 +9,6 @@ import { SharedService } from '../../shared/services/shared.service';
 import { BehaviorService } from '../../shared/services/behavior.service';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { UniversalService } from 'src/app/shared/services/universal.service';
-import { IDefaultPlan } from 'src/app/models/default-plan';
 import { ProfileManagementService } from '../../shared/services/profile-management.service';
 import { takeUntil } from 'rxjs/operators';
 
@@ -99,31 +98,19 @@ export class RegisterQuestionnaireComponent implements OnInit , OnDestroy {
     else{ 
       this._sharedService.loader('show');
       try{
-        const user = await this.save();
-        const plan = this.retrieveSelectedPlan();
-        if(plan) {
-          try {
-            const monthly = (this._uService.sessionStorage.getItem('selectedMonthly') === 'true') ? true : false;
-            const result = await this._sharedService.checkoutPlan(user, plan, 'default', monthly);
-            switch(result.nextAction) {
-              case 'complete':
-                this._router.navigate(['/community']);
-                this._toastr.success('Thank you for joining us. You can always upgrade your plan!');
-                break;
-              case 'stripe':
-                //automatically redirect to stripe. nothing to do.
-                this._toastr.success(result.message);
-                break;
-            }
-          } catch(error) {
-            this._toastr.error(error);
-          }
-        } else {
-          this._toastr.error('You haven\'t selected plan yet. Please select Plan.');
-          const route = ['/'];
-          // if(this.userRole == 'P') { route.push('product'); }
-          this._router.navigate(route); 
-        }
+        await this.save();
+        /* Sign-up sells nothing: the profile is free and checkout is refused
+         * server-side. The old branch looked for a plan picked on /plans and,
+         * finding none, told a provider who had just finished their profile
+         * that they had not selected a plan and sent them home. Seven did in
+         * the year to 2026-09. What is left in session from an old visit to
+         * /plans is cleared so nothing reads it later. */
+        this._uService.sessionStorage.removeItem('selectedPlan');
+        this._uService.sessionStorage.removeItem('selectedMonthly');
+        this._router.navigate(['/community']);
+        /* True to the code: SP, C and P are saved isApproved false, and the
+         * directory lists only isApproved not false. */
+        this._toastr.success('Thank you for joining us. We will review your profile before it appears in the directory.');
       }catch(err){
         this._toastr.error(err);
       }finally{
@@ -162,23 +149,6 @@ export class RegisterQuestionnaireComponent implements OnInit , OnDestroy {
       this._headerService.hideHeader();
     } else{ 
       this._headerService.showHeader(); 
-    }
-  }  
-
-  retrieveSelectedPlan(): IDefaultPlan {
-    const user = this._profileService.user;
-    if (user.plan) {
-      return user.plan;
-    } else {
-      let planSelected: IDefaultPlan = null;
-      const planStr = this._uService.sessionStorage.getItem('selectedPlan');
-      if(planStr) {
-        const plan: IDefaultPlan = JSON.parse(planStr);
-        if(plan?.userType?.includes(this.userRole)) {
-          planSelected = plan;
-        }
-      }
-      return planSelected;  
     }
   }
 }

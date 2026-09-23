@@ -7,7 +7,6 @@ import {
   Router,
 } from "@angular/router";
 import { Observable } from "rxjs";
-import { IDefaultPlan } from "../models/default-plan";
 import { UniversalService } from "../shared/services/universal.service";
 
 @Injectable({
@@ -38,40 +37,23 @@ export class AuthGuard implements CanActivate {
     const params = next.params;
     const role = (params && params.type ? params.type : "u").toUpperCase();
 
-    /** U can access to register page always  */
-    /** SP / C / P can access to register page ONLY IF eligible default plan is already selected */
-    switch(role) {
+    switch (role) {
+      /* Company accounts are no longer opened from the site (2026-09): partners
+       * are set up by PromptHealth after a conversation. The API refuses the
+       * role too (user/register.js, oauth/signup.js, oauth/login.js); this is
+       * the polite half. */
+      case 'P':
+        return this._router.parseUrl('/contact-us');
+      /* A provider profile is free and nothing is bought at sign-up any more.
+       * The old rule, pick a plan on /plans first, only bounced every Create
+       * Free Profile link on /for-practitioners back to /plans, while the
+       * "null" plan /plans stored let a company through. */
       case 'U':
+      case 'SP':
+      case 'C':
         return true;
       default:
-        const eligiblePlanSelected = this.eligiblePlanSelected(role);
-        if(eligiblePlanSelected) {
-          return true;
-        } else {
-          const route = ['plans'];
-          if(role == 'P') {
-            route.push('product');
-          }
-          this._router.navigate(route);
-          return false;
-        }
-    }
-  }
-
-  eligiblePlanSelected(role: string) {
-    const ss = this._uService.sessionStorage;
-    const planStr = ss.getItem("selectedPlan");
-    if (!planStr) {
-      return false;
-    } else {
-      const plan: IDefaultPlan = JSON.parse(planStr);
-      if (!plan || plan.userType.includes(role)) {
-        return true;
-      } else {
-        ss.removeItem("selectedPlan");
-        ss.removeItem("selectedMonthly");
-        return false;
-      }
+        return this._router.parseUrl('/auth/registration/u');
     }
   }
 }
