@@ -85,8 +85,12 @@ export function app() {
    * renderer. Every miss used to cost a full Angular render of the Not Found
    * page on the 1-vCPU box: scrapers still ask for images deleted long ago, and
    * each deploy strands the previous build's bundle names in open tabs and
-   * caches. Only /assets and the bundles at the root are ended here. Other paths
-   * with a dot in them can be pages: /unsubscribe/<email> is one.
+   * caches. Only /assets is ended here, and at the root the kinds of file the
+   * build writes there (bundles, their maps, the hashed fonts and svg) plus .ico:
+   * browsers and crawlers ask for /favicon.ico whatever the page declares, and
+   * this build has none at the root (1.2 s and a Not Found render each, measured
+   * on production 2026-09-23). Other paths with a dot in them can be pages:
+   * /unsubscribe/<email> is one.
    *
    * /bootstrap.min.css.map and /sockjs-node/iframe.html used to have handlers of
    * their own, meant to keep them from being rendered, that never answered at
@@ -94,7 +98,7 @@ export function app() {
    * first; the dev server's path is ended explicitly. */
   const fileNotFound: express.RequestHandler = (req, res) => { res.status(404).type('text/plain').send('Not Found'); };
   server.get('/assets/*', fileNotFound);
-  server.get(/^\/[^/]+\.(?:js|css|map)$/, fileNotFound);
+  server.get(/^\/[^/]+\.(?:js|css|map|woff2?|ttf|eot|svg|ico)$/, fileNotFound);
   server.get('/sockjs-node/*', fileNotFound);
 
   /** api proxy */
