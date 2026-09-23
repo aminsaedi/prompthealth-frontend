@@ -18,6 +18,11 @@ export const environment = {
     APPLE_CLIENT_ID: 'com.prompthealth',
     GOOGLE_CLIENT_ID: '911768983583-hrth6fagg8em1oc6v6mkcv21bsoac0ar.apps.googleusercontent.com',
     FACEBOOK_APP_ID: '2053494228293760',
+    /* Always empty here. Development runs with production: true against the
+     * live API, so a real id would send every developer's page views to her
+     * Pixel and skew the audiences she optimizes on. Empty means no Pixel
+     * script loads at all. */
+    META_PIXEL_ID: '',
 
     idSA: '5edb61483cd45aa28f6413c0',
 
