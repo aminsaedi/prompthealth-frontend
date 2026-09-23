@@ -31,6 +31,7 @@ import { HomeComponent } from "./home.component";
 import { ForPractitionersComponent } from "./for-practitioners/for-practitioners.component";
 import { CitiesHubComponent } from "./cities-hub/cities-hub.component";
 import { EditorialStandardsComponent } from "./editorial-standards/editorial-standards.component";
+import { GrowthLandingComponent } from "./growth-landing/growth-landing.component";
 
 const routes: Routes = [
   {
@@ -42,6 +43,10 @@ const routes: Routes = [
     path: 'for-practitioners',
     component: ForPractitionersComponent,
   },
+  /* Growth landings render from a config named by `landing` (see
+   * growth-landing/landings). growthLanding marks the route for the site
+   * header, which should not offer the page a reader is already on. */
+  { path: 'for-dentists', component: GrowthLandingComponent, data: { landing: 'dentists', growthLanding: true } },
   {
     path: "faq",
     component: FAQComponent

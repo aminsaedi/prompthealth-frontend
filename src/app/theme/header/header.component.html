@@ -68,7 +68,7 @@
               <span class="text-primary-dark">Prompt Academy</span>
             </a>
           </li> -->
-          <li class="ml-10p ml-lg-15p">
+          <li *ngIf="!onGrowthLanding" class="ml-10p ml-lg-15p">
             <a routerLink="/plans" class="btn btn-primary small">
               <i iconPh="users"></i>
               <span>Get Featured Now</span>

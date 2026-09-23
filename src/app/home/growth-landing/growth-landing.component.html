@@ -1,0 +1,125 @@
+<ng-container *ngIf="config">
+
+  <!-- Hero. Heading, text and button fit the first screen of a 375x667 phone
+  under the sticky header; the video follows. -->
+  <section class="growth-hero bg-lightyellow position-relative overflow-hidden">
+    <div class="growth-dim growth-dim--1" aria-hidden="true"></div>
+    <div class="growth-dim growth-dim--2" aria-hidden="true"></div>
+    <div class="container position-relative">
+      <div class="growth-hero__copy mx-auto text-center">
+        <h1 class="h3 h2-md text-primary-dark mb-15p mb-md-20p">{{ config.hero.heading }}</h1>
+        <p class="subtitle1 text-label mb-20p mb-md-30p">{{ config.hero.text }}</p>
+        <button #heroCta type="button" class="btn btn-primary" (click)="openBooking('hero')">{{ config.ctaLabel }}</button>
+      </div>
+      <div class="growth-hero__video mx-auto mt-30p mt-md-50p">
+        <hero-video [video]="config.hero.video" [landingKey]="config.key"></hero-video>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why us -->
+  <section class="bg-primary-dark text-white py-50p py-md-80p">
+    <div class="container">
+      <h2 class="h3 h2-md text-white text-center mx-auto mb-30p mb-md-50p growth-narrow">{{ config.whyUs.heading }}</h2>
+      <ul class="row list-unstyled mb-0">
+        <li *ngFor="let point of config.whyUs.points" class="col-12 col-md-4 mb-20p mb-md-0p">
+          <div class="growth-why rounded-12p p-30p h-100">
+            <h3 class="h4 text-white mb-10p">{{ point.title }}</h3>
+            <p class="mb-0 growth-on-dark">{{ point.text }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- See our work -->
+  <section class="py-50p py-md-80p">
+    <div class="container">
+      <h2 class="h3 h2-md text-center mb-15p">{{ config.work.heading }}</h2>
+      <p class="subtitle1 text-label text-center mx-auto mb-30p mb-md-50p growth-narrow">{{ config.work.text }}</p>
+      <ul class="row list-unstyled mb-0">
+        <li *ngFor="let video of config.work.videos" class="col-6 col-lg-3 mb-30p">
+          <youtube-facade [videoId]="video.id" [title]="video.title" ratio="9:16"></youtube-facade>
+        </li>
+      </ul>
+      <div class="text-center">
+        <a class="btn btn-outline" [href]="config.work.moreUrl" target="_blank" rel="noopener">{{ config.work.moreLabel }}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works: two numbered steps joined by a line, down the page on a
+  phone and across it on a desktop. -->
+  <section class="bg-lightgreen py-50p py-md-80p">
+    <div class="container">
+      <h2 class="growth-visually-hidden">{{ config.hiddenHeadings.howItWorks }}</h2>
+      <ol class="growth-steps list-unstyled mb-0">
+        <li *ngFor="let step of config.steps; let i = index" class="growth-step">
+          <div class="growth-step__number" aria-hidden="true">{{ i + 1 }}</div>
+          <div class="growth-step__card bg-white rounded-12p p-30p">
+            <h3 class="h4 text-primary-dark mb-10p">{{ step.title }}</h3>
+            <p class="subtitle1 mb-20p">{{ step.intro }}</p>
+            <ul class="list-unstyled mb-0">
+              <li *ngFor="let item of step.items" class="growth-step__item">
+                <i class="growth-step__check text-primary" iconPh="check" aria-hidden="true"></i>
+                <span *ngIf="item.lead" class="font-weight-bold text-primary-dark growth-lead-in">{{ item.lead }}</span>
+                {{ item.text }}
+              </li>
+            </ul>
+            <p *ngIf="step.note" class="small font-italic text-label growth-note mt-20p mb-0">{{ step.note }}</p>
+          </div>
+        </li>
+      </ol>
+      <div class="text-center mt-30p mt-md-50p">
+        <p class="small font-italic text-label growth-note mb-20p">{{ config.stepsFootnote }}</p>
+        <button type="button" class="btn btn-primary" (click)="openBooking('steps')">{{ config.ctaLabel }}</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-50p py-md-80p">
+    <div class="container">
+      <h2 class="growth-visually-hidden">{{ config.hiddenHeadings.faq }}</h2>
+      <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+          <ul class="list-unstyled mb-0">
+            <li *ngFor="let faq of faqs" class="mb-20p">
+              <faq-item [data]="faq" [headingLevel]="3"></faq-item>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final call to action -->
+  <section class="bg-primary-dark text-white py-60p py-md-100p">
+    <div class="container text-center">
+      <h2 class="h3 h2-md text-white mx-auto mb-20p growth-narrow">{{ config.final.heading }}</h2>
+      <p class="subtitle1 growth-on-dark mx-auto mb-30p mb-md-40p growth-narrow">{{ config.final.text }}</p>
+      <button #finalCta type="button" class="btn btn-primary" (click)="openBooking('final')">{{ config.ctaLabel }}</button>
+    </div>
+  </section>
+
+  <!-- Phones only, between the hero's button and the final one. Not rendered
+  until the observer places it, so the server's HTML never has it. -->
+  <div *ngIf="isStickyShown" class="growth-sticky">
+    <button type="button" class="btn btn-primary growth-sticky__button" (click)="openBooking('sticky')">{{ config.ctaLabel }}</button>
+  </div>
+
+  <modal [id]="bookingModalId" [bodyStyle]="bookingBodyStyle">
+    <div class="growth-booking" role="dialog" aria-modal="true" aria-labelledby="booking-form-heading">
+      <button type="button" class="btn btn-icon small growth-booking__close" aria-label="Close" (click)="closeBooking()">
+        <i iconPh="cross" aria-hidden="true"></i>
+      </button>
+      <booking-form
+      [landing]="config"
+      [ctaPosition]="ctaPosition"
+      [open]="isBookingShown"
+      (stepChange)="onBookingStep($event)"
+      ></booking-form>
+    </div>
+  </modal>
+
+</ng-container>

@@ -1,0 +1,82 @@
+@import '../../../../assets/scss/variables';
+
+/* A custom element is inline by default, which would wrap this block box in an
+ * inline one. */
+:host {
+  display: block;
+}
+
+/* 16:9 from the first paint, poster or not, so the sections below never move. */
+.hero-video {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: $colorGsBlack;
+  box-shadow: 0 8px 24px rgba($colorGsBlack, 0.12);
+}
+
+.hero-video__player,
+.hero-video__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-video__player {
+  display: block;
+  object-fit: contain;
+}
+
+/* Transparent: the poster underneath is the video's own. */
+.hero-video__overlay {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  &:focus {
+    outline: 3px solid $colorPrimary;
+    outline-offset: -3px;
+  }
+
+  &:hover .hero-video__glyph,
+  &:focus .hero-video__glyph {
+    background: $colorPrimaryDark;
+  }
+}
+
+/* In the lower third, not the middle: the poster is a title card, and its
+ * headline fills the middle band. */
+.hero-video__glyph {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  margin-left: -28px;
+  border-radius: 50%;
+  background: $colorPrimary;
+  box-shadow: 0 4px 16px rgba($colorGsBlack, 0.3);
+  transition: background-color 150ms;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -13px 0 0 -8px;
+    border-style: solid;
+    border-width: 13px 0 13px 22px;
+    border-color: transparent transparent transparent $colorGsWhite;
+  }
+
+  @media (min-width: $breakpointMd) {
+    width: 80px;
+    height: 80px;
+    margin-left: -40px;
+  }
+}

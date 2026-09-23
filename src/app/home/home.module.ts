@@ -42,6 +42,9 @@ import { OnlineAcademyComponent } from './online-academy/online-academy.componen
 import { ForPractitionersComponent } from './for-practitioners/for-practitioners.component';
 import { CitiesHubComponent } from './cities-hub/cities-hub.component';
 import { EditorialStandardsComponent } from './editorial-standards/editorial-standards.component';
+import { GrowthLandingComponent } from './growth-landing/growth-landing.component';
+import { HeroVideoComponent } from './growth-landing/hero-video/hero-video.component';
+import { BookingFormComponent } from './growth-landing/booking-form/booking-form.component';
 
 
 @NgModule({
@@ -81,6 +84,9 @@ import { EditorialStandardsComponent } from './editorial-standards/editorial-sta
     ForPractitionersComponent,
     CitiesHubComponent,
     EditorialStandardsComponent,
+    GrowthLandingComponent,
+    HeroVideoComponent,
+    BookingFormComponent,
   ],
   imports: [
     FormsModule,

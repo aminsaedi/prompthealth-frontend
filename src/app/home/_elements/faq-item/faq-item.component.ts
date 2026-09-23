@@ -7,6 +7,10 @@ import { Component, Input, OnInit } from '@angular/core';
 export class FaqItemComponent implements OnInit {
 
   @Input() data: IFAQItem;
+  /* 4 is what /faq and /for-practitioners have always rendered, and they keep
+   * it. A growth landing puts its questions straight under an H2, so it asks
+   * for 3 rather than skip a level in the outline. */
+  @Input() headingLevel: 3 | 4 = 4;
 
   constructor() { }
 
