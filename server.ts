@@ -90,10 +90,11 @@ export function app() {
    * each deploy strands the previous build's bundle names in open tabs and
    * caches. Only /assets is ended here, and at the root the kinds of file the
    * build writes there (bundles, their maps, the hashed fonts and svg) plus .ico:
-   * browsers and crawlers ask for /favicon.ico whatever the page declares, and
-   * this build has none at the root (1.2 s and a Not Found render each, measured
-   * on production 2026-09-23). Other paths with a dot in them can be pages:
-   * /unsubscribe/<email> is one.
+   * browsers and crawlers ask for /favicon.ico whatever the page declares. The
+   * build copies the site's icon there (angular.json), so the static handler
+   * above answers it; any other .ico ends here instead of costing a Not Found
+   * render (1.2 s each, measured on production 2026-09-23). Other paths with a
+   * dot in them can be pages: /unsubscribe/<email> is one.
    *
    * /bootstrap.min.css.map and /sockjs-node/iframe.html used to have handlers of
    * their own, meant to keep them from being rendered, that never answered at

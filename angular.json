@@ -32,6 +32,11 @@
               "src/ads.txt",
               "src/manifest.json",
               {
+                "glob": "favicon.ico",
+                "input": "src/assets/favicon",
+                "output": "/"
+              },
+              {
                 "glob": "*.min.css",
                 "input": "node_modules/ag-grid-community/dist/styles",
                 "output": "/assets/ag-grid"
