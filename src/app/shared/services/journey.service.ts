@@ -118,7 +118,8 @@ export class JourneyService implements OnDestroy {
    * stored with no source. install() runs in AppComponent.ngOnInit, during
    * bootstrap's first change detection, which is before the router releases the
    * initial navigation and before its deferred URL update, so the address here
-   * is still the one that was clicked. */
+   * is still the one that was clicked. Emptied once the first view of the page
+   * load has carried it; see report(). */
   private landingSearch = '';
 
   constructor(
@@ -393,7 +394,17 @@ export class JourneyService implements OnDestroy {
       ref = '';
     }
 
+    /* The landing campaign goes with the first view of the page load only,
+     * which is the landing page, reported after any redirect. The server takes
+     * a visit's campaign from the view that creates it and ignores it on every
+     * later one, so repeating it gains nothing. It would cost a lot for as long
+     * as track/view refuses a campaign over its length limits instead of
+     * cutting it (until the backend's utmField change is live): every view of
+     * the page load would be refused, and the visit never recorded at all.
+     * Sent once, a refusal loses only the landing view, as it always did, and
+     * the next view still opens the visit. */
     const entry = this.inboundCampaign();
+    this.landingSearch = '';
     const body = JSON.stringify({
       sid: this.sessionId,
       vid: this.visitorId,
@@ -408,8 +419,8 @@ export class JourneyService implements OnDestroy {
 
   /* The campaign that brought the reader to us, read once per page load from
    * the address they arrived on (landingSearch), not from the address bar, which
-   * a redirect may already have rewritten. Every report of this page load
-   * carries it, which is harmless: the server keeps whichever arrives first.
+   * a redirect may already have rewritten. Only the first report of the page
+   * load carries it (report()).
    *
    * Values go as they arrived, trimmed and cut at UTM_TRANSPORT_MAX. They are
    * not cut to the stored lengths here, because the server normalises before it
