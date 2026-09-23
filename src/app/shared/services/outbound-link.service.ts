@@ -46,7 +46,10 @@ const FALLBACK_POLICY: ILinkPolicy = {
     { pattern: '^/practitioners', campaign: 'directory' },
     { pattern: '^/community', campaign: 'feed' },
     { pattern: '^/dashboard', campaign: 'dashboard' },
-    { pattern: '^/$|^/about|^/plans|^/for-practitioners', campaign: 'marketing' },
+    /* ^/for- rather than each page: every growth landing (/for-dentists and
+     * the ones after it) is a marketing page, and a new one then needs no
+     * policy change here, in the backend default or in the live policy. */
+    { pattern: '^/$|^/about|^/plans|^/for-', campaign: 'marketing' },
   ],
   includeContent: true,
   overrideExisting: false,
