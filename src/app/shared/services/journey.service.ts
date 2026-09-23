@@ -17,6 +17,10 @@ const SESSION_IDLE_MS = 30 * 60 * 1000;
  * anyway. Measured: a practitioner page reached by id takes about two seconds
  * because it waits on the questionnaire, so this has to be generous. */
 const ENTITY_DEADLINE_MS = 4000;
+/* The most track/view is sent for each UTM. The stored lengths are the
+ * server's business: it normalises each value and only then applies them
+ * (utmSafe in the backend's services/journey.js); see inboundCampaign. */
+const UTM_TRANSPORT_MAX = 200;
 
 
 /*
@@ -106,6 +110,17 @@ export class JourneyService implements OnDestroy {
   private entityRootReported = '';
   /* The page currently open, in the same terms report() de-duplicates on. */
   private currentPage = '';
+  /* The query string this page load arrived with, read before the router can
+   * replace it. An absolute redirectTo drops the query in Angular 9
+   * (/practitioners/<slug> -> /community/profile/s/<slug>), and the view is
+   * reported after NavigationEnd, when the address no longer carries it: a
+   * visit that arrived on /practitioners/<slug>?utm_source=gemini on 19 Sep was
+   * stored with no source. install() runs in AppComponent.ngOnInit, during
+   * bootstrap's first change detection, which is before the router releases the
+   * initial navigation and before its deferred URL update, so the address here
+   * is still the one that was clicked. Emptied once the first view of the page
+   * load has carried it; see report(). */
+  private landingSearch = '';
 
   constructor(
     private uService: UniversalService,
@@ -117,6 +132,8 @@ export class JourneyService implements OnDestroy {
   install(): void {
     if (this.installed || !this.uService.isBrowser) { return; }
     this.installed = true;
+
+    try { this.landingSearch = window.location.search || ''; } catch (e) { this.landingSearch = ''; }
 
     this.sessionId = this.readSession();
     this.visitorId = this.readVisitor();
@@ -377,7 +394,17 @@ export class JourneyService implements OnDestroy {
       ref = '';
     }
 
+    /* The landing campaign goes with the first view of the page load only,
+     * which is the landing page, reported after any redirect. The server takes
+     * a visit's campaign from the view that creates it and ignores it on every
+     * later one, so repeating it gains nothing. It would cost a lot for as long
+     * as track/view refuses a campaign over its length limits instead of
+     * cutting it (until the backend's utmField change is live): every view of
+     * the page load would be refused, and the visit never recorded at all.
+     * Sent once, a refusal loses only the landing view, as it always did, and
+     * the next view still opens the visit. */
     const entry = this.inboundCampaign();
+    this.landingSearch = '';
     const body = JSON.stringify({
       sid: this.sessionId,
       vid: this.visitorId,
@@ -390,13 +417,21 @@ export class JourneyService implements OnDestroy {
     send(`${API_URL}track/view`, body);
   }
 
-  /* The campaign that brought the reader to us, read once per visit from the
-   * address they arrived on. Only useful on the first page, and harmless after
-   * it, because the server keeps whichever arrives first. */
+  /* The campaign that brought the reader to us, read once per page load from
+   * the address they arrived on (landingSearch), not from the address bar, which
+   * a redirect may already have rewritten. Only the first report of the page
+   * load carries it (report()).
+   *
+   * Values go as they arrived, trimmed and cut at UTM_TRANSPORT_MAX. They are
+   * not cut to the stored lengths here, because the server normalises before it
+   * cuts, and cutting first would store a different string from the one the
+   * link manager derives from the same address. utm_term must not be
+   * added without adding it to track/view's schema and to visitsessions:
+   * track/view refuses unknown fields, and the whole view with them. */
   private inboundCampaign(): { [key: string]: string } {
     const out: { [key: string]: string } = {};
     try {
-      const params = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(this.landingSearch);
       const map: [string, string][] = [
         ['utm_source', 'utmSource'],
         ['utm_medium', 'utmMedium'],
@@ -404,8 +439,8 @@ export class JourneyService implements OnDestroy {
         ['utm_content', 'utmContent'],
       ];
       map.forEach(([from, to]) => {
-        const value = params.get(from);
-        if (value) { out[to] = value.slice(0, 200); }
+        const value = (params.get(from) || '').trim();
+        if (value) { out[to] = value.slice(0, UTM_TRANSPORT_MAX); }
       });
     } catch (e) {
       /* an unparseable query string is not worth a broken pageview */

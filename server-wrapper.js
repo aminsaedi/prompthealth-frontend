@@ -18,23 +18,66 @@ const https = require('https');
 const originalModule = require('./main.js');
 const expressApp = originalModule.app();
 
+/* The same function server.ts renders with, so the cache key and the render
+ * cannot disagree about which parameters make a different page. A build that
+ * lost the export falls back to caching on the raw URL, which is how this
+ * worked before, rather than failing to start. */
+const stripTrackingParams = typeof originalModule.stripTrackingParams === 'function'
+  ? originalModule.stripTrackingParams : function(url) { return url; };
+if (typeof originalModule.stripTrackingParams !== 'function') {
+  console.error('[ssr-cache] stripTrackingParams missing from main.js; caching on the raw URL');
+}
+
 // --- SEO-021: Category page filtered ItemList JSON-LD ---
 
-function slugify(str) {
-  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+/* The slug every category and type URL on the site is built with
+ * (src/app/_helpers/slugify.ts), taken from the bundle rather than copied. The
+ * copy this file had turned "Stress/Anxiety" into stress-anxiety where the
+ * site links stressanxiety: 14 of the 128 goals and provider types could never
+ * be matched. A build without the export gets no slugs, and so no ItemList,
+ * rather than wrong ones. */
+const slugify = typeof originalModule.slugify === 'function'
+  ? originalModule.slugify : function() { return ''; };
+if (typeof originalModule.slugify !== 'function') {
+  console.error('[SEO-021] slugify missing from main.js; no category slugs will load');
+}
+
+/* These calls run while a reader's request waits (categoryPreFetch), and
+ * https has no timeout of its own. A backend that stops answering would
+ * otherwise hold every directory page until nginx gives up at 60 s.
+ *
+ * The limit is on the whole call, connecting included. req.setTimeout is not
+ * enough on Node 14: it arms only once the socket has connected, so a backend
+ * that never answered the TCP handshake was waited on for the kernel's connect
+ * timeout instead (136 s, logged by a local container). server.ts's render
+ * timeout cannot help, because this runs before the render starts. */
+const API_TIMEOUT_MS = 10000;
+
+/* Fails the call and tears the request down once API_TIMEOUT_MS has passed,
+ * whatever state it is in. Returns what stops the clock. */
+function deadlineFor(req, reject) {
+  const timer = setTimeout(function() {
+    reject(new Error('timeout'));
+    req.destroy(new Error('timeout'));
+  }, API_TIMEOUT_MS);
+  return function() { clearTimeout(timer); };
 }
 
 // Simple HTTPS GET returning parsed JSON
 function httpsGetJson(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
+    let stopClock = function() {};
+    const req = https.get(url, (res) => {
       let data = '';
       res.on('data', chunk => { data += chunk; });
       res.on('end', () => {
+        stopClock();
         try { resolve(JSON.parse(data)); }
         catch (e) { reject(new Error('JSON parse error')); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', (e) => { stopClock(); reject(e); });
+    stopClock = deadlineFor(req, reject);
   });
 }
 
@@ -43,6 +86,7 @@ function httpsPostJson(url, body) {
   return new Promise((resolve, reject) => {
     const parsed = new URL(url);
     const postData = JSON.stringify(body);
+    let stopClock = function() {};
     const req = https.request({
       hostname: parsed.hostname,
       path: parsed.pathname + parsed.search,
@@ -55,11 +99,13 @@ function httpsPostJson(url, body) {
       let data = '';
       res.on('data', chunk => { data += chunk; });
       res.on('end', () => {
+        stopClock();
         try { resolve(JSON.parse(data)); }
         catch (e) { reject(new Error('JSON parse error')); }
       });
     });
-    req.on('error', reject);
+    req.on('error', (e) => { stopClock(); reject(e); });
+    stopClock = deadlineFor(req, reject);
     req.write(postData);
     req.end();
   });
@@ -72,22 +118,34 @@ async function fetchCategories(retries) {
   retries = retries || 5;
 
   // Step 1: Fetch health goal categories from get-service
+  /* get-service answers { data: [{ category_type, category: [{ _id, item_text,
+   * subCategory: [{ _id, item_text }] }] }] }, one group per category type. The
+   * health goals are the 'Goal' group, the same one the category redirect
+   * router reads (app.server.redirect-category.module.ts). This used to read
+   * data[].item_text and subCategories, which do not exist, and logged "Loaded
+   * 0 category slugs" on every start, so no health-goal page ever got its
+   * ItemList.
+   *
+   * Three names occur under two goals each (Natural Remedies, Sexual Health,
+   * Oral Care on 2026-09-23). The page resolves a slug to the first match in
+   * this same order (CategoryService.categoryListFlatten), so the first one
+   * wins here too; letting the last overwrite it listed another goal's
+   * providers in the page's ItemList. */
   try {
     var resp = await httpsGetJson('https://ocean.prompthealth.ca/api/v1/questionare/get-service');
-    var items = (resp && resp.data) ? resp.data : [];
-    items.forEach(function(cat) {
-      if (cat.item_text) {
-        var slug = slugify(cat.item_text);
-        categorySlugMap.set(slug, { id: cat._id, name: cat.item_text });
-        if (cat.subCategories) {
-          cat.subCategories.forEach(function(sub) {
-            if (sub.item_text) {
-              var subSlug = slugify(sub.item_text);
-              categorySlugMap.set(subSlug, { id: sub._id, name: sub.item_text });
-            }
-          });
-        }
+    var groups = (resp && Array.isArray(resp.data)) ? resp.data : [];
+    var addGoal = function(item) {
+      var slug = item.item_text ? slugify(item.item_text) : '';
+      if (slug && !categorySlugMap.has(slug)) {
+        categorySlugMap.set(slug, { id: item._id, name: item.item_text });
       }
+    };
+    groups.forEach(function(group) {
+      if (String(group.category_type || '').toLowerCase() !== 'goal') return;
+      (group.category || []).forEach(function(cat) {
+        addGoal(cat);
+        (cat.subCategory || []).forEach(addGoal);
+      });
     });
     console.log('[SEO-021] Loaded', categorySlugMap.size, 'category slugs from get-service');
   } catch (e) {
@@ -107,7 +165,7 @@ async function fetchCategories(retries) {
         q.answers.forEach(function(ans) {
           if (ans.item_text && ans._id) {
             var slug = slugify(ans.item_text);
-            if (!categorySlugMap.has(slug)) {
+            if (slug && !categorySlugMap.has(slug)) {
               categorySlugMap.set(slug, { id: ans._id, name: ans.item_text });
             }
           }
@@ -118,6 +176,20 @@ async function fetchCategories(retries) {
   } catch (e) {
     console.error('[SEO-021] fetchCategories get-questions error:', e.message);
   }
+}
+
+/* A type or health-goal directory page without a city: /practitioners/type/<slug>
+ * or /practitioners/category/<slug>, with an optional trailing slash. The
+ * filtered list below is fetched without a location, so it describes only
+ * these, never /practitioners/type/<slug>/<city>. */
+const CATEGORY_PAGE = /^\/practitioners\/(?:category|type)\/([^?/#]+)\/?(?:[?#]|$)/;
+
+/* JSON for a script element. Provider names and image keys come from the API
+ * and are written by providers, and a '</script>' in one would end the
+ * element early and put the rest into the page as markup. Written as <,
+ * '<' is the same character to a JSON reader. */
+function ldJson(value) {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
 function fetchFilteredPractitioners(categoryId) {
@@ -168,7 +240,14 @@ function injectJsonLd(url, html, categoryPractitioners) {
   const communityMatch = url.match(/^\/community\/content\/([a-f0-9]{24})/);
   if (communityMatch) {
     const baseUrl = 'https://www.prompthealth.ca';
-    const pageUrl = baseUrl + url;
+    /* A page's own address in its schema is its canonical. Built from the
+     * request, an ad click's ?utm_...&fbclid=... became this page's url and
+     * mainEntityOfPage. Use the canonical the page rendered, and fall back to
+     * the bare path. */
+    const canonical = html.match(/<link rel="canonical" href="([^"]+)"/);
+    const pageUrl = canonical
+      ? canonical[1].replace(/&amp;/g, '&')
+      : baseUrl + url.split('#')[0].split('?')[0];
 
     // Detect if this is an event post by looking for event-specific HTML
     // The event card renders dates like "yyyy/MM/dd hh:mm AM/PM - yyyy/MM/dd hh:mm AM/PM (your local time)"
@@ -285,7 +364,8 @@ function injectJsonLd(url, html, categoryPractitioners) {
           article.publisher = {
             "@type": "Organization",
             "name": "PromptHealth",
-            "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png", "width": 800, "height": 600 }
+            // The file is 800x350; 600 described an image that does not exist.
+            "logo": { "@type": "ImageObject", "url": baseUrl + "/assets/img/prompthealth.png", "width": 800, "height": 350 }
           };
 
           if (article.datePublished && !article.dateModified) {
@@ -400,16 +480,28 @@ function injectJsonLd(url, html, categoryPractitioners) {
   }
 
   // Category listing pages: /practitioners/category/:slug or /practitioners/type/:slug (SEO-021)
-  const categoryMatch = url.match(/^\/practitioners\/(?:category|type)\/([^?/]+)(?:\/([^?/]+))?/);
+  /* A fallback, not a replacement. ExpertFinderComponent renders its own
+   * ItemList from the listing the reader sees, in one script with the page's
+   * BreadcrumbList and FAQPage. This used to swap that whole script for the
+   * list below, which deleted the breadcrumb and the FAQ from every type page,
+   * and would have from every goal page once their slugs loaded; the browser
+   * never puts them back, because JsonLdService keeps what the server rendered.
+   * It also replaced the page's list (rating, phone, price, the results on
+   * screen) with one from a different call. So a page that has its own
+   * ItemList is left alone, and this list is added only when it has none, as
+   * when its listing call failed, into the page's script when there is one so
+   * the breadcrumb and FAQ stay beside it.
+   *
+   * City pages (/practitioners/type/<type>/<city>) never get it: the list is
+   * fetched without a location, so it named the city and listed providers from
+   * across the country. CATEGORY_PAGE matches no city segment. */
+  const categoryMatch = url.match(CATEGORY_PAGE);
   if (categoryMatch && categoryPractitioners && categoryPractitioners.length > 0) {
     const baseUrl = 'https://www.prompthealth.ca';
-    // Build dynamic ItemList name from slug + optional city (SEO-029)
     var catSlug = categoryMatch[1];
-    var citySlug = categoryMatch[2];
     var catInfo = categorySlugMap.get(catSlug);
     var specialist = catInfo ? catInfo.name : catSlug.split('-').map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ');
-    var cityName = citySlug ? citySlug.split('-').map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ') : 'Canada';
-    var listName = 'Find Best ' + specialist + ' in ' + cityName;
+    var listName = 'Find Best ' + specialist + ' in Canada';
     const itemList = {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
@@ -439,26 +531,27 @@ function injectJsonLd(url, html, categoryPractitioners) {
       }),
     };
 
-    // Replace existing Angular-rendered ItemList JSON-LD if present
-    var ldRegex = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
+    var ldRegex = /(<script[^>]*application\/ld\+json[^>]*>)([\s\S]*?)(<\/script>)/g;
+    var pageScript = null;
     var ldMatch;
-    var replaced = false;
     while ((ldMatch = ldRegex.exec(html)) !== null) {
-      try {
-        var parsed = JSON.parse(ldMatch[1]);
-        var isItemList = (parsed && parsed['@type'] === 'ItemList') ||
-          (Array.isArray(parsed) && parsed.some(function(d) { return d['@type'] === 'ItemList'; }));
-        if (isItemList) {
-          html = html.replace(ldMatch[0], '<script type="application/ld+json">' + JSON.stringify(itemList) + '</script>');
-          replaced = true;
-          break;
-        }
-      } catch (e) { /* skip unparseable */ }
+      var parsed;
+      try { parsed = JSON.parse(ldMatch[2]); } catch (e) { continue; }
+      var blocks = Array.isArray(parsed) ? parsed : [parsed];
+      if (blocks.some(function(d) { return d && d['@type'] === 'ItemList'; })) {
+        return html;
+      }
+      if (!pageScript) pageScript = { whole: ldMatch[0], open: ldMatch[1], blocks: blocks, close: ldMatch[3] };
     }
-    if (!replaced) {
-      html = html.replace('</head>', '<script type="application/ld+json">' + JSON.stringify(itemList) + '</script></head>');
+    /* Replaced through a function, so a '$' in a name or a price is written
+     * as it is rather than read as a replacement pattern. */
+    if (pageScript) {
+      var merged = pageScript.open + ldJson([itemList].concat(pageScript.blocks)) + pageScript.close;
+      return html.replace(pageScript.whole, function() { return merged; });
     }
-    return html;
+    return html.replace('</head>', function() {
+      return '<script type="application/ld+json">' + ldJson(itemList) + '</script></head>';
+    });
   }
 
   if (jsonLd) {
@@ -474,41 +567,120 @@ function deferScripts(html) {
   return html;
 }
 
-// Simple cache
+// SSR cache.
+//
+// One entry per page, keyed on the address without tracking parameters, kept
+// for 30 minutes. Entries leave oldest first: a Map keeps insertion order, and
+// storeEntry always removes a key before setting it again, so insertion order
+// is also age order. Everything that removes an entry goes through dropEntry,
+// or the byte count drifts.
 const cache = new Map();
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
 const MAX_CACHE = 500;
+/* The container was OOM-killed about every 90 minutes (anon-rss 505 MB against a
+ * 512 MB limit), and every kill dropped the requests in flight and emptied this
+ * cache. Capped only by count, 500 pages of 50 to 270 kB could hold 250 MB, and
+ * an expired page stayed until its own address was asked for again. So the
+ * budget is in bytes, counted as the heap holds them, and expired pages leave
+ * whenever anything is stored. */
+const MAX_CACHE_BYTES = 64 * 1024 * 1024;
+let cacheBytes = 0;
+
+/* V8 keeps a string at one byte a character only while every character is
+ * Latin-1. One curly quote or dash puts the whole page at two, and every page
+ * measured on 2026-09-23 had some. */
+function heapBytesOf(html) {
+  return /[^\u0000-\u00ff]/.test(html) ? html.length * 2 : html.length;
+}
+
+function freshEntry(key) {
+  const entry = cache.get(key);
+  return (entry && (Date.now() - entry.time < CACHE_TTL)) ? entry : null;
+}
+
+function dropEntry(key) {
+  const entry = cache.get(key);
+  if (!entry) return;
+  cacheBytes -= entry.bytes;
+  cache.delete(key);
+}
+
+function storeEntry(key, html) {
+  dropEntry(key);
+  const bytes = heapBytesOf(html);
+  if (bytes > MAX_CACHE_BYTES) return;
+  const now = Date.now();
+  for (const [oldKey, oldEntry] of cache) {
+    if (now - oldEntry.time < CACHE_TTL) break;
+    dropEntry(oldKey);
+  }
+  while (cache.size > 0 && (cache.size >= MAX_CACHE || cacheBytes + bytes > MAX_CACHE_BYTES)) {
+    dropEntry(cache.keys().next().value);
+  }
+  cache.set(key, { html: html, time: now, bytes: bytes });
+  cacheBytes += bytes;
+}
 
 // Inject cache layer AFTER expressInit+compression (position 3) but before routes
 const Layer = Object.getPrototypeOf(expressApp._router.stack[0]).constructor;
 
 const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCache(req, res, next) {
-  if (req.method !== 'GET' || req.url.includes('.') || req.url.startsWith('/api') || req.url.startsWith('/stripe') || req.url.startsWith('/sitemap')) {
+  if (req.method !== 'GET' || req.url.startsWith('/api') || req.url.startsWith('/stripe') || req.url.startsWith('/sitemap')) {
     return next();
   }
 
-  const key = req.url;
-  const entry = cache.get(key);
-  if (entry && (Date.now() - entry.time < CACHE_TTL)) {
+  /* Every ad click carries an id unique to that click, so keyed on the raw URL
+   * each one missed, cost a full render on a 1-vCPU box and evicted a page a
+   * crawler had warmed. server.ts renders from this same stripped address, so
+   * what is stored is exactly what a request without the parameters gets, and
+   * an ad click now warms the cache instead of emptying it.
+   *
+   * The dot test is on the key, after the tracking parameters are gone. On the
+   * whole URL it also skipped every page whose query had a dot in it
+   * (utm_source=chatgpt.com, l.facebook.com), so those rendered on every
+   * request. A dot anywhere else still bypasses the cache, as before: static
+   * files, and queries such as ?url=http://... that no page needs cached. */
+  const key = stripTrackingParams(req.url);
+  if (key.includes('.')) {
+    return next();
+  }
+
+  const entry = freshEntry(key);
+  if (entry) {
     res.set('X-Cache', 'HIT');
     return res.send(entry.html);
   }
-  if (entry) cache.delete(key);
+  dropEntry(key);
 
   // Patch res.send once to capture SSR output and inject JSON-LD
   const _send = res.send.bind(res);
   res.send = function(body) {
     res.send = _send; // restore
+    const isPage = typeof body === 'string' && body.length > 500;
     // Inject JSON-LD before caching
-    if (typeof body === 'string' && body.length > 500) {
-      body = injectJsonLd(req.originalUrl, body, req._categoryPractitioners);
+    if (isPage) {
+      body = injectJsonLd(key, body, req._categoryPractitioners);
       body = deferScripts(body);
     }
-    if (typeof body === 'string' && body.length > 500 && res.statusCode === 200) {
-      if (cache.size >= MAX_CACHE) cache.delete(cache.keys().next().value);
-      cache.set(key, { html: body, time: Date.now() });
+    if (isPage && res.statusCode === 200) {
+      storeEntry(key, body);
+    }
+    /* Sent only on a hit, a miss and a bypass looked the same to anyone
+     * checking whether a page was cached. */
+    if (isPage && !res.headersSent) {
+      res.set('X-Cache', 'MISS');
     }
     return _send(body);
+  };
+
+  /* server.ts answers a render still running at its timeout with the client
+   * shell, and the render's page arrives later with no response left to go
+   * in. It is kept here instead, unless a fresher copy got there first. Thrown
+   * away, a page that renders slowly under load could never be cached: every
+   * request for it paid for a full render nobody saw, on a 1-vCPU box. */
+  req._ssrStoreLate = function(html) {
+    if (typeof html !== 'string' || html.length <= 500 || freshEntry(key)) return;
+    storeEntry(key, deferScripts(injectJsonLd(key, html, req._categoryPractitioners)));
   };
 
   next();
@@ -520,15 +692,21 @@ expressApp._router.stack.splice(3, 0, cacheLayer);
 
 // SEO-021: Pre-fetch filtered practitioners for category pages before caching
 const categoryLayer = new Layer('/', { strict: false, end: false }, function categoryPreFetch(req, res, next) {
-  var catMatch = req.url.match(/^\/practitioners\/(?:category|type)\/([^?/]+)/);
+  var catMatch = req.url.match(CATEGORY_PAGE);
   if (!catMatch) return next();
 
   var slug = catMatch[1];
   var catInfo = categorySlugMap.get(slug);
   if (!catInfo) return next();
 
-  // Clear SSR cache for this category page to prevent stale data
-  cache.delete(req.url);
+  /* A page the cache layer is about to serve needs nothing fetched. This used
+   * to delete the entry on every request instead, so type and category pages
+   * were never served from the cache (5 to 7 s each, measured on
+   * /practitioners/type/dentist), and every render still stored an entry that
+   * nothing would read, evicting pages that would have been. The ItemList is
+   * built at render time and ages with its page, on the same 30 minutes as
+   * every other page. */
+  if (freshEntry(stripTrackingParams(req.url))) return next();
 
   fetchFilteredPractitioners(catInfo.id)
     .then(function(resp) {

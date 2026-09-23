@@ -237,7 +237,6 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
   }
 
   onClickCreateFreeProfile() {
-    this._uService.sessionStorage.setItem("selectedPlan", "null");
     this._router.navigate(["/auth", "registration", "sp"]);
   }
 

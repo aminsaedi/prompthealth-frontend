@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { environment } from 'src/environments/environment';
-import { default as axios } from 'axios';
+import { getWithDeadline } from 'src/app/_helpers/get-with-deadline';
+import { withQueryOf } from 'src/app/_helpers/with-query-of';
 
 const apiURL = environment.config.API_URL;
 const rContentRedirect = Router();
@@ -20,13 +21,13 @@ rContentRedirect.use('/', async (req, res, next) => {
   const subpath = match[2] || '';
 
   try {
-    const result = await axios.get(apiURL + 'blog/get-slug/' + id, { timeout: 10000 });
+    const result = await getWithDeadline(apiURL + 'blog/get-slug/' + id);
     if (result.data.statusCode === 200 && result.data.data.slug) {
       const slug = result.data.data.slug;
       // SEO-064: encode the slug so em-dash and other non-ASCII characters
       // produce an RFC 3986-compliant Location header.
       const target = `/community/article/${encodeURIComponent(slug)}${subpath}`;
-      return res.redirect(301, target);
+      return res.redirect(301, withQueryOf(req.originalUrl, target));
     }
   } catch (err) {
     // If API fails, fall through to Angular SSR

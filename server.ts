@@ -29,6 +29,16 @@ import { routerRedirectForTypeOfProvider } from 'src/app/app.server.redirect-typ
 import { routerRedirectForProfile } from 'src/app/app.server.redirect-profile.module';
 import { routerRedirectForContent } from 'src/app/app.server.redirect-content.module';
 import { routerRedirectForCategory } from 'src/app/app.server.redirect-category.module';
+import { stripTrackingParams } from './src/app/_helpers/tracking-params';
+import { slugify } from './src/app/_helpers/slugify';
+import { withQueryOf } from './src/app/_helpers/with-query-of';
+
+/* A third of nginx's 60 s upstream timeout. A healthy render takes 1 to 7 s on
+ * this box; one still going at 20 s is not going to finish in time to help. */
+const RENDER_TIMEOUT_MS = 20000;
+/* NotFoundComponent's title: the only sign that a render is the Not Found page
+ * rather than a page that merely had trouble loading its data. */
+const NOT_FOUND_TITLE = '<title>Not Found | PromptHealth</title>';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
@@ -70,11 +80,29 @@ export function app() {
   // Example Express Rest API endpoints
   // app.get('/api/**', (req, res) => { });
   // Serve static files from /browser
-  server.get('/bootstrap.min.css.map', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary not to try SSR because this file doesn't exist. */
-  server.get('/sockjs-node/iframe.html', (res, req) => { express.static(distFolder, {maxAge: '1y'}); }); /** nothing to do, but it's nessesary not to try SSR because this file doesn't exist. */
   server.get('*.*', express.static(distFolder, {
     maxAge: '1y'
   }));
+
+  /* A file that is not there is answered here, in plain text, not by the
+   * renderer. Every miss used to cost a full Angular render of the Not Found
+   * page on the 1-vCPU box: scrapers still ask for images deleted long ago, and
+   * each deploy strands the previous build's bundle names in open tabs and
+   * caches. Only /assets is ended here, and at the root the kinds of file the
+   * build writes there (bundles, their maps, the hashed fonts and svg) plus .ico:
+   * browsers and crawlers ask for /favicon.ico whatever the page declares, and
+   * this build has none at the root (1.2 s and a Not Found render each, measured
+   * on production 2026-09-23). Other paths with a dot in them can be pages:
+   * /unsubscribe/<email> is one.
+   *
+   * /bootstrap.min.css.map and /sockjs-node/iframe.html used to have handlers of
+   * their own, meant to keep them from being rendered, that never answered at
+   * all, so each request hung until nginx gave up. The root rule covers the
+   * first; the dev server's path is ended explicitly. */
+  const fileNotFound: express.RequestHandler = (req, res) => { res.status(404).type('text/plain').send('Not Found'); };
+  server.get('/assets/*', fileNotFound);
+  server.get(/^\/[^/]+\.(?:js|css|map|woff2?|ttf|eot|svg|ico)$/, fileNotFound);
+  server.get('/sockjs-node/*', fileNotFound);
 
   /** api proxy */
   const apiProxy = proxy('/api', {target: environment.config.BACKEND_BASE, changeOrigin: false});
@@ -112,12 +140,25 @@ export function app() {
   // SEO-064: 301 redirects for legacy / SEO-friendly aliases so Google
   // consolidates signals to the canonical /policy, /terms, and
   // /medical-disclaimer URLs instead of treating the alias paths as 404.
-  server.get('/privacy-policy',     (req, res) => { res.redirect(301, '/policy'); });
-  server.get('/privacy-policy/',    (req, res) => { res.redirect(301, '/policy'); });
-  server.get('/terms-of-service',   (req, res) => { res.redirect(301, '/terms'); });
-  server.get('/terms-of-service/',  (req, res) => { res.redirect(301, '/terms'); });
-  server.get('/terms-and-conditions', (req, res) => { res.redirect(301, '/terms'); });
-  server.get('/disclaimer',         (req, res) => { res.redirect(301, '/medical-disclaimer'); });
+  // Every 301 here and in the redirect routers keeps the query it arrived
+  // with (withQueryOf), or the UTMs on an alias never reach the page.
+  server.get('/privacy-policy',     (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/policy')); });
+  server.get('/privacy-policy/',    (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/policy')); });
+  server.get('/terms-of-service',   (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/terms')); });
+  server.get('/terms-of-service/',  (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/terms')); });
+  server.get('/terms-and-conditions', (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/terms')); });
+  server.get('/disclaimer',         (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/medical-disclaimer')); });
+
+  /* Aliases of the newsletter page. A 301 here costs no render and tells a
+   * crawler which URL is real. /subscribe-email in particular must never reach
+   * the renderer again: its Angular redirect pointed at a URL no route matched,
+   * and each request hung the render until nginx gave up and took www down for
+   * ten seconds. Express routing is not strict, so '/subscribe' also answers
+   * '/subscribe/' but not '/subscribe/newsletter'. */
+  server.get(['/subscribe-email', '/subscribe', '/clubhouse'], (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/subscribe/newsletter')); });
+  /* The retired 2021 coupon landing (home-routing.module.ts). '/invitation/'
+   * matches too; '/invitation/<id>', the ambassador's client invitation, does not. */
+  server.get('/invitation', (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/plans')); });
 
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
@@ -147,22 +188,76 @@ export function app() {
 
   // All other routes use the Universal engine
   server.get('*', (req, res) => {
+    /* A render that never finishes held the request until nginx gave up at 60 s,
+     * and nginx then answered 502 for every page for ten seconds. The known
+     * causes are recovered in app.module.ts (recoverFirstNavigation); this is for
+     * the ones nobody has found yet, such as a guard whose promise never settles
+     * on the server. Answer with the client-rendered shell well before nginx's
+     * limit, as an SSR error already does. sendFile bypasses server-wrapper.js's
+     * cache, which only captures res.send, so the shell is never stored as the
+     * page. Whichever of the two answers first is the only one that answers. */
+    const startedAt = Date.now();
+    let answered = false;
+    const timer = setTimeout(() => {
+      if (answered) { return; }
+      answered = true;
+      console.log('SSR timeout for ' + req.url);
+      res.sendFile(join(distFolder, 'index.html'));
+    }, RENDER_TIMEOUT_MS);
+
+    /* Rendered without tracking parameters, because server-wrapper.js caches the
+     * result under the address without them and hands it to every request that
+     * differs only in those. Rendered from the raw address, the canonical, og:url
+     * and the article JSON-LD all carried the first clicker's fbclid, and every
+     * crawler served from that entry was told so. The browser keeps the full
+     * address, so UTMs are still read client side, where they always were.
+     * ngExpressEngine renders options.url in place of req.originalUrl; the
+     * redirect routers, static files and the /out proxy above still see the
+     * untouched request.
+     *
+     * The origin is fixed rather than taken from the Host header, because the
+     * cache key is the path and query alone and the render must depend on
+     * nothing else. Angular parses the address it is given, so a Host ending in
+     * '#' pushed the real path into the fragment and rendered the home page,
+     * and a Host with backslashes in it picked any other page; either result
+     * was stored under the key that was asked for and served to everyone for
+     * 30 minutes. Nothing in the app reads the host: canonical and og:url are
+     * built on www.prompthealth.ca already. nginx only forwards that host
+     * today, which is not something this container should rely on. */
+    const renderUrl = environment.config.FRONTEND_BASE + stripTrackingParams(req.originalUrl);
+
     res.render(
       indexHtml,
-      { req, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ]},
+      { req, url: renderUrl, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ]},
       (err, html) => {
+        if (answered) {
+          /* Too late for this reader, who already has the shell, but a
+           * finished page is not wasted: server-wrapper.js keeps it for the
+           * next request (_ssrStoreLate), as it would have kept a page that
+           * rendered in time. Not a failed render or the Not Found page, which
+           * would not have been kept either. */
+          console.log('SSR finished late for ' + req.url + ' after ' + (Date.now() - startedAt) + ' ms');
+          const storeLate = (req as any)._ssrStoreLate;
+          if (!err && html && !html.includes(NOT_FOUND_TITLE) && typeof storeLate === 'function') {
+            storeLate(html);
+          }
+          return;
+        }
+        answered = true;
+        clearTimeout(timer);
         if(err){
           console.log('SSR error for ' + req.url + ':');
           console.log(err.message || err);
           // Fall back to client-side rendering on SSR error
           return res.sendFile(join(distFolder, 'index.html'));
         }
-        if (html) {
-          html = injectPaginationLinks(req, html);
-        }
+        /* No rel=next/prev on the community lists. They were added here for
+         * every /community/<type> page, but the lists load more by scrolling
+         * and a ?page address rendered page one again, so each next link was a
+         * duplicate leading to another: ClaudeBot followed them to page 1649. */
         // Only return 404 if the page explicitly rendered as Not Found
         // (not due to transient API failures like 429)
-        if (html && html.includes('<title>Not Found | PromptHealth</title>')) {
+        if (html && html.includes(NOT_FOUND_TITLE)) {
           res.status(404).send(html);
         } else {
           res.send(html);
@@ -196,34 +291,11 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
 
 export * from './src/main.server';
 
-function injectPaginationLinks(req: any, html: string): string {
-  // Only inject pagination links for community feed pages
-  const feedPattern = /^\/community\/(feed|article|media|event|note|voice|promotion)(\/[a-f0-9]{24})?$/;
-  const pathWithoutQuery = req.path;
-  if (!feedPattern.test(pathWithoutQuery)) {
-    return html;
-  }
-
-  const page = parseInt(req.query.page, 10) || 1;
-  const baseUrl = 'https://www.prompthealth.ca' + pathWithoutQuery;
-  let links = '';
-
-  if (page > 1) {
-    const prevPage = page - 1;
-    const prevUrl = prevPage === 1 ? baseUrl : `${baseUrl}?page=${prevPage}`;
-    links += `<link rel="prev" href="${prevUrl}">`;
-  }
-
-  // Always add next link (crawlers will stop when they get empty pages)
-  const nextUrl = `${baseUrl}?page=${page + 1}`;
-  links += `<link rel="next" href="${nextUrl}">`;
-
-  if (links) {
-    html = html.replace('</head>', links + '</head>');
-  }
-
-  return html;
-}
+/* server-wrapper.js keys its cache with stripTrackingParams, so the key and the
+ * render cannot disagree about which parameters make a different page, and
+ * matches category URLs with slugify, so it recognizes the slugs the site
+ * actually links. */
+export { stripTrackingParams, slugify };
 
 function showMeta(url: string, html: string) {
   console.log('=============== SHOW META START');

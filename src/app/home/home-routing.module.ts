@@ -7,7 +7,6 @@ import { MedicalDisclaimerComponent } from "./medical-disclaimer/medical-disclai
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { UnsubscribeComponent } from './unsubscribe/unsubscribe.component';
 import { ListingCompanyComponent } from './listing-company/listing-company.component';
-import { InvitationComponent } from './invitation/invitation.component';
 import { LandingClubhouseComponent } from "./landing-clubhouse/landing-clubhouse.component";
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingAmbassadorComponent } from "./landing-ambassador/landing-ambassador.component";
@@ -114,13 +113,24 @@ const routes: Routes = [
   { path: 'press-release', component: PressReleaseComponent, },
   { path: 'online-academy', component: OnlineAcademyComponent, },
 
-  { path: 'invitation', component: InvitationComponent }, /** invitation for webinars */
+  /* The 2021 webinar coupon landing. Plans are no longer sold online, so its
+   * offer could not be honoured, and it read localStorage bare, which threw
+   * during every server render. Old links go to the plans page; server.ts
+   * answers the same with a 301 before any render. pathMatch 'full' keeps
+   * /invitation/:id, the ambassador's client invitation below, out of it: a
+   * prefix match would swallow it. */
+  { path: 'invitation', redirectTo: '/plans', pathMatch: 'full' },
   { path: 'invitation/:id', component: LandingAmbassadorComponent, data: {type: 'client'}}, /** invitation for clients by ambassador */
   { path: 'join-team/:id', component: TagProviderComponent },
 
   { path: 'subscribe/newsletter', component: LandingClubhouseComponent },
   { path: 'subscribe', redirectTo: '/subscribe/newsletter'},
-  { path: 'subscribe-email', redirectTo: '/subscribe/newslet,ter'},
+  /* The newsletter page's old address. A stray comma (2021-09) pointed this at a
+   * URL no route matches. After an absolute redirect Angular applies no more
+   * redirects, so '**' never caught it. Every server render of this URL hung
+   * until nginx gave up, and took www down with it. server.ts now answers it
+   * with a 301 before any render; this covers a link followed inside the app. */
+  { path: 'subscribe-email', redirectTo: '/subscribe/newsletter' },
   { path: 'clubhouse', redirectTo: '/subscribe/newsletter' },
   { 
     path: 'ambassador-program', 

@@ -15,7 +15,6 @@ import { SharedModule } from '../shared/shared.module';
 import { AgmCoreModule } from '@agm/core';
 import { ListingCompanyComponent } from './listing-company/listing-company.component';
 import { CardProductComponent } from './_elements/card-product/card-product.component';
-import { InvitationComponent } from './invitation/invitation.component';
 import { LandingClubhouseComponent } from './landing-clubhouse/landing-clubhouse.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingAmbassadorComponent } from './landing-ambassador/landing-ambassador.component';
@@ -56,7 +55,6 @@ import { EditorialStandardsComponent } from './editorial-standards/editorial-sta
     UnsubscribeComponent,
     ListingCompanyComponent,
     CardProductComponent,
-    InvitationComponent,
     LandingClubhouseComponent,
     NotFoundComponent,
     LandingAmbassadorComponent,
