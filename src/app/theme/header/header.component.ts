@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef , OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { environment } from '../../../environments/environment';
 import { expandVerticalAnimation, fadeAnimation, fadeFastAnimation, slideHorizontalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
@@ -31,7 +31,6 @@ export class HeaderComponent implements OnInit , OnDestroy {
 
   constructor(
     private _router: Router,
-    private _route: ActivatedRoute,
     private _headerStatusService: HeaderStatusService,
     public catService: CategoryService,
     private _profileService: ProfileManagementService,
@@ -75,10 +74,17 @@ export class HeaderComponent implements OnInit , OnDestroy {
     }
   }
 
-  /* Merged, because the menu is state on top of the page, not a new page:
-   * replacing the query dropped a campaign's UTMs whenever the menu opened. */
+  /* The menu is state on top of the page, not a new page, so it keeps the rest
+   * of the query: replacing it dropped a campaign's UTMs whenever the menu
+   * opened. Built from the address the reader sees, as ModalService does, and
+   * not with queryParamsHandling 'merge', which merges into the router's copy.
+   * AppComponent removes ?action=stripe-cancel with location.replaceState,
+   * which the router never hears about, so 'merge' put it back and the Stripe
+   * toast showed a second time. */
   showMenuSm() {
-    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {menu: 'show'}, queryParamsHandling: 'merge'});
+    const [path, queryParams] = this._modalService.currentPathAndQueryParams;
+    queryParams.menu = 'show';
+    this._router.navigate([path], {queryParams: queryParams});
   }
   
   onClickUserIcon() {

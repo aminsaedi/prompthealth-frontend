@@ -9,7 +9,7 @@ import {
   ViewChildren,
   QueryList,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { SharedService } from "../shared/services/shared.service";
 import { HeaderStatusService } from "../shared/services/header-status.service";
 import { UniversalService } from "../shared/services/universal.service";
@@ -72,7 +72,6 @@ export class HomeComponent implements OnInit , OnDestroy {
 
   constructor(
     private _router: Router,
-    private _route: ActivatedRoute,
     private _catService: CategoryService,
     private _sharedService: SharedService,
     private _headerStatusService: HeaderStatusService,
@@ -284,13 +283,11 @@ export class HomeComponent implements OnInit , OnDestroy {
 
   /** HEADER FOR HOMEPAGE */
   showMenuSm() {
-    /* Merged, as in the theme header: replacing the query dropped a
-     * campaign's UTMs whenever the menu opened. */
-    this._router.navigate(["./"], {
-      relativeTo: this._route,
-      queryParams: { menu: "show" },
-      queryParamsHandling: "merge",
-    });
+    /* Kept the rest of the query, and built from the address the reader sees,
+     * for the reasons in the theme header's showMenuSm. */
+    const [path, queryParams] = this._modalService.currentPathAndQueryParams;
+    queryParams.menu = "show";
+    this._router.navigate([path], { queryParams: queryParams });
   }
 
   onClickGetListed() {
