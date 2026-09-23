@@ -233,12 +233,28 @@ function injectJsonLd(url, html, categoryPractitioners) {
   // produced two JSON-LD blocks (and duplicate DOM IDs) in SSR output.
   // Those static blocks are deliberately removed here.
 
-  // Community content pages: /community/<mongoId>
+  // Community content pages: /community/content/<mongoId> (notes, and posts
+  // without a slug) and /community/article/<slug> (articles and events).
   // The Angular SSR already renders a JSON-LD block with Article + BreadcrumbList.
   // We enhance it with missing fields rather than injecting a duplicate.
   // For event-type posts, we convert Article to Event schema.
-  const communityMatch = url.match(/^\/community\/content\/([a-f0-9]{24})/);
+  const communityMatch = url.match(/^\/community\/(?:content\/[a-f0-9]{24}|article\/[^/?#]+)/);
   if (communityMatch) {
+    /* An event is known by what the page rendered, not by its address. This
+     * used to run only on /community/content/<id>, but every event has a slug
+     * and that address 301s to /community/article/<slug>, so no event was ever
+     * converted and all of them published Article schema. The event card is
+     * rendered only for a post whose contentType is EVENT; related posts are
+     * plain links, never cards. */
+    const isEventPost = /<card-item-event[\s>]/.test(html);
+    /* Articles on their slug address keep the schema PageComponent rendered,
+     * as they always have: the enrichment below was written for the id route
+     * and would, for one, replace the author's /practitioners/<slug> link with
+     * whichever profile id the page mentions first. */
+    if (!isEventPost && url.indexOf('/community/article/') === 0) {
+      return html;
+    }
+
     const baseUrl = 'https://www.prompthealth.ca';
     /* A page's own address in its schema is its canonical. Built from the
      * request, an ad click's ?utm_...&fbclid=... became this page's url and
@@ -249,11 +265,8 @@ function injectJsonLd(url, html, categoryPractitioners) {
       ? canonical[1].replace(/&amp;/g, '&')
       : baseUrl + url.split('#')[0].split('?')[0];
 
-    // Detect if this is an event post by looking for event-specific HTML
+    // Extract event details from rendered HTML if this is an event.
     // The event card renders dates like "yyyy/MM/dd hh:mm AM/PM - yyyy/MM/dd hh:mm AM/PM (your local time)"
-    const isEventPost = /class="status-indicator[\s\S]*?\(your local time\)/.test(html);
-
-    // Extract event details from rendered HTML if this is an event
     let eventStartDate = null;
     let eventEndDate = null;
     let eventLocation = null;
@@ -329,11 +342,15 @@ function injectJsonLd(url, html, categoryPractitioners) {
             eventSchema.location = eventLocation;
           }
 
-          // Organizer from author
+          // Organizer from author. PageComponent already gives the author's
+          // /practitioners/<slug> page when there is one; the first profile id
+          // in the page is only the fallback, and may be someone else's.
           if (article.author && article.author.name) {
             eventSchema.organizer = { '@type': 'Person', 'name': article.author.name };
             const authorIdMatch = html.match(/community\/profile\/([a-f0-9]{24})/);
-            if (authorIdMatch) {
+            if (article.author.url) {
+              eventSchema.organizer.url = article.author.url;
+            } else if (authorIdMatch) {
               eventSchema.organizer.url = baseUrl + '/community/profile/' + authorIdMatch[1];
             }
           }
