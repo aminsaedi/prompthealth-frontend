@@ -68,19 +68,6 @@
     object-fit: cover;
   }
 
-  .lockImg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  .category {
-    position: absolute;
-    bottom: 5%;
-    right: 5%;
-  }
-
   ::ng-deep {
     .eyecatch-video {
       iframe {

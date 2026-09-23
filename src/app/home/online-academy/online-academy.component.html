@@ -6,7 +6,7 @@
       <h1 class="h4 h2-md">Prompt Academy</h1>
       <p class="text-body">
         Advance your online presence with our free<br />
-        depository of resources and videos.
+        repository of resources and videos.
       </p>
     </div>
   </div>
@@ -55,13 +55,7 @@
   </div>
   <div class="d-flex justify-content-between mt-20p">
     <span class="h3">All Contents</span>
-    <div class="d-flex justify-content-between align-items-center">
-      <button class="btn btn-link p-2 mr-2" (click)="onChangeOnlyFree()">
-        <ng-container *ngIf="onlyShowFreeContent">View All</ng-container>
-        <ng-container *ngIf="!onlyShowFreeContent">View Only Free</ng-container>
-      </button>
-      <button-sort class="text-nowrap" [items]="sortItems" (onChange)="onChangeSort($event)"></button-sort>
-    </div>
+    <button-sort class="text-nowrap" [items]="sortItems" (onChange)="onChangeSort($event)"></button-sort>
   </div>
 </section>
 
@@ -72,7 +66,10 @@
         <ng-container *ngIf="!p">
           <ng-container *ngTemplateOutlet="card; context: { $implicit: p, size: 'medium' }"></ng-container>
         </ng-container>
-        <a *ngIf="p" (click)="onClickPost(p.data)">
+        <!-- A real link, not a (click) handler: crawlers follow href, and an anchor without one
+             cannot take keyboard focus or open in a new tab. The handler existed only to gate
+             "premium" items, and there has been no premium tier to sell since 2026-09-22. -->
+        <a *ngIf="p" [routerLink]="p.linkToPost">
           <ng-container *ngTemplateOutlet="card; context: { $implicit: p, size: 'medium' }"></ng-container>
         </a>
       </div>
@@ -126,24 +123,9 @@
             ? s3 + data.image + '?ver=2.3'
             : '/assets/img/prompthealth-4_3.png?ver=2.3'
         " [attr.alt]="data.title ? data.title : 'PromptHealth online academy course'" crossorigin="anonymous" loading="lazy" />
-      <img loading="lazy" *ngIf="data && !data.isFreeAcademy" src="/assets/img/lock.svg" class="lockImg" />
-      <span *ngIf="data && data.online_academy_category" class="category">
-        {{ data.online_academy_category }}
-      </span>
     </div>
 
     <div class="info-container">
-      <div class="stat-container body2 mb-10p">
-        <div class="d-flex align-items-center flex-wrap">
-          <span class="mb-10p text-nowrap">
-            <i *ngIf="data && data.isFreeAcademy" iconPh="bookmark" class="mr-1 text-green"></i>
-            <span *ngIf="!data" class="color-dummy">Free</span>
-            <span *ngIf="data && !data.isFreeAcademy" class="text-yellow-dark">Premium</span>
-            <span *ngIf="data && data.isFreeAcademy" class="text-green">Free</span>
-          </span>
-        </div>
-      </div>
-
       <div class="content-container">
         <ng-container *ngIf="browserS">
           <h3 class="mb-10p h5">
@@ -217,76 +199,3 @@
     <div *ngIf="!data" class="loading-2 bg-white"></div>
   </div>
 </ng-template>
-
-<modal id="upgrade-plan-with-user" #alertUpgradePlanUser>
-  <div class="title-container d-flex justify-content-between align-items-center">
-    <h6 class="h5-md mb-0">Only for Premium Providers</h6>
-    <button class="btn pr-0 btn-icon" (click)="alertUpgradePlanNoUser.hide()">
-      <i iconPh="cross"></i>
-    </button>
-  </div>
-
-  <div class="content-container">
-    <h5 class="h4-md mb-0">
-      Become a premium member and unlock all these cool features
-    </h5>
-    <ul class="list-unstyled flex-grow-1 mt-10p">
-      <li class="position-relative mb-20p body2">
-        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
-        <span>Access to all basic features</span>
-      </li>
-      <li class="position-relative mb-20p body2">
-        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
-        <span>Exclusive access to Prompt Academy Resources</span>
-      </li>
-      <li class="position-relative mb-20p body2">
-        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
-        <span>Social Collaborations with PromptHealth</span>
-      </li>
-      <li class="position-relative mb-20p body2">
-        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
-        <span>Monthly Check- In with a PromptHealth Mentor</span>
-      </li>
-    </ul>
-    <div class="text-center mt-30p">
-      <a routerLink="/plans" class="btn btn-primary"><span class="subtitle2">UPGRADE NOW</span><span class="body2"> -
-          For Only 25$/m</span></a>
-    </div>
-  </div>
-</modal>
-<modal id="upgrade-plan-with-out-user" #alertUpgradePlanNoUser>
-  <div class="title-container d-flex justify-content-between align-items-center">
-    <h6 class="h5-md mb-0">Only for Premium Providers</h6>
-    <button class="btn pr-0 btn-icon" (click)="alertUpgradePlanNoUser.hide()">
-      <i iconPh="cross"></i>
-    </button>
-  </div>
-
-  <div class="content-container">
-    <h5 class="h4-md mb-0">
-      Become a premium member and unlock all these cool features
-    </h5>
-    <ul class="list-unstyled flex-grow-1 mt-10p">
-      <li class="position-relative mb-20p body2">
-        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
-        <span>Access to all basic features</span>
-      </li>
-      <li class="position-relative mb-20p body2">
-        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
-        <span>Exclusive access to Prompt Academy Resources</span>
-      </li>
-      <li class="position-relative mb-20p body2">
-        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
-        <span>Social Collaborations with PromptHealth</span>
-      </li>
-      <li class="position-relative mb-20p body2">
-        <i class="icon-pre text-green mr-2" iconPh="checkbox-square"></i>
-        <span>Monthly Check- In with a PromptHealth Mentor</span>
-      </li>
-    </ul>
-    <div class="text-center mt-30p">
-      <a routerLink="/plans" class="btn btn-primary"><span class="subtitle2">UPGRADE NOW</span><span class="body2"> -
-          For Only 25$/m</span></a>
-    </div>
-  </div>
-</modal>
