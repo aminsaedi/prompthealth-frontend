@@ -92,7 +92,7 @@
           >
             <a
             class="text-body"
-            [routerLink]="profile.slug ? ['/practitioners', profile.slug, 'followings'] : ['/community/profile', profile._id, 'followings']"
+            [routerLink]="profile.slug ? ['/community/profile/s', profile.slug, 'followings'] : ['/community/profile', profile._id, 'followings']"
             >
               <div class="subtitle2">Following</div>
               <div class="h5">{{profile.numFollowing}}</div>

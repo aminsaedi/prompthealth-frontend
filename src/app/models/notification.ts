@@ -39,7 +39,7 @@ export class SocialNotification implements ISocialNotification{
 
       case 'new-review':
       case 'new-recommend': link = this.data.slug
-        ? '/practitioners/' + this.data.slug + '/review'
+        ? '/community/profile/s/' + this.data.slug + '/review'
         : '/community/profile/' + this.userId + '/review'; break;
       default: link = this.data.link; break;
     }

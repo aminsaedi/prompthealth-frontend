@@ -519,14 +519,16 @@ export class ProfileComponent implements OnInit , OnDestroy {
     return (m && m[1]) || '';
   }
 
+  /* A tab's canonical is the address that renders it. This used to be
+   * /practitioners/<slug>/<tab>, which answers 200 but renders the About page:
+   * /practitioners/<slug> is an absolute redirectTo, and it drops whatever
+   * follows the slug. So every tab named the About page's content as its own
+   * canonical. The About page itself keeps /practitioners/<slug>, which does
+   * lead to it (setMetaForAbout). */
   private getCanonicalPath(url: string): string {
     const p = this.profile;
     if (p?.slug) {
-      const slugIdx = url.indexOf(p.slug);
-      if (slugIdx >= 0) {
-        const subPath = url.substring(slugIdx + p.slug.length);
-        return `/practitioners/${p.slug}${subPath}`;
-      }
+      return `/community/profile/s/${p.slug}${this.activeTabOf(url)}`;
     }
     return url;
   }
@@ -1223,8 +1225,10 @@ export class ProfileComponent implements OnInit , OnDestroy {
 
   onClickWriteRecommendation() {
     this._socialService.setProfileForReferral(this.profile);
+    /* Not /practitioners/<slug>/...: that redirect keeps nothing after the
+     * slug, so it opened the About page instead of the form. */
     const route = this.profile.slug
-      ? ['/practitioners', this.profile.slug, 'new-recommend']
+      ? ['/community/profile/s', this.profile.slug, 'new-recommend']
       : ['/community/profile/', this.profile._id, 'new-recommend'];
     this._router.navigate(route);
   }
