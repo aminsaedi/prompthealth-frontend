@@ -30,21 +30,36 @@ if (typeof originalModule.stripTrackingParams !== 'function') {
 
 // --- SEO-021: Category page filtered ItemList JSON-LD ---
 
-function slugify(str) {
-  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+/* The slug every category and type URL on the site is built with
+ * (src/app/_helpers/slugify.ts), taken from the bundle rather than copied. The
+ * copy this file had turned "Stress/Anxiety" into stress-anxiety where the
+ * site links stressanxiety: 14 of the 128 goals and provider types could never
+ * be matched. A build without the export gets no slugs, and so no ItemList,
+ * rather than wrong ones. */
+const slugify = typeof originalModule.slugify === 'function'
+  ? originalModule.slugify : function() { return ''; };
+if (typeof originalModule.slugify !== 'function') {
+  console.error('[SEO-021] slugify missing from main.js; no category slugs will load');
 }
+
+/* These calls run while a reader's request waits (categoryPreFetch), and
+ * https has no timeout of its own. A backend that stops answering would
+ * otherwise hold every directory page until nginx gives up at 60 s. */
+const API_TIMEOUT_MS = 10000;
 
 // Simple HTTPS GET returning parsed JSON
 function httpsGetJson(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
+    const req = https.get(url, (res) => {
       let data = '';
       res.on('data', chunk => { data += chunk; });
       res.on('end', () => {
         try { resolve(JSON.parse(data)); }
         catch (e) { reject(new Error('JSON parse error')); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(API_TIMEOUT_MS, () => { req.destroy(new Error('timeout')); });
   });
 }
 
@@ -70,6 +85,7 @@ function httpsPostJson(url, body) {
       });
     });
     req.on('error', reject);
+    req.setTimeout(API_TIMEOUT_MS, () => { req.destroy(new Error('timeout')); });
     req.write(postData);
     req.end();
   });
@@ -82,22 +98,30 @@ async function fetchCategories(retries) {
   retries = retries || 5;
 
   // Step 1: Fetch health goal categories from get-service
+  /* get-service answers { data: [{ category_type, category: [{ _id, item_text,
+   * subCategory: [{ _id, item_text }] }] }] }, one group per category type. The
+   * health goals are the 'Goal' group, the same one the category redirect
+   * router reads (app.server.redirect-category.module.ts). This used to read
+   * data[].item_text and subCategories, which do not exist, and logged "Loaded
+   * 0 category slugs" on every start, so no health-goal page ever got its
+   * ItemList. */
   try {
     var resp = await httpsGetJson('https://ocean.prompthealth.ca/api/v1/questionare/get-service');
-    var items = (resp && resp.data) ? resp.data : [];
-    items.forEach(function(cat) {
-      if (cat.item_text) {
-        var slug = slugify(cat.item_text);
-        categorySlugMap.set(slug, { id: cat._id, name: cat.item_text });
-        if (cat.subCategories) {
-          cat.subCategories.forEach(function(sub) {
-            if (sub.item_text) {
-              var subSlug = slugify(sub.item_text);
-              categorySlugMap.set(subSlug, { id: sub._id, name: sub.item_text });
-            }
-          });
+    var groups = (resp && Array.isArray(resp.data)) ? resp.data : [];
+    groups.forEach(function(group) {
+      if (String(group.category_type || '').toLowerCase() !== 'goal') return;
+      (group.category || []).forEach(function(cat) {
+        var slug = cat.item_text ? slugify(cat.item_text) : '';
+        if (slug) {
+          categorySlugMap.set(slug, { id: cat._id, name: cat.item_text });
         }
-      }
+        (cat.subCategory || []).forEach(function(sub) {
+          var subSlug = sub.item_text ? slugify(sub.item_text) : '';
+          if (subSlug) {
+            categorySlugMap.set(subSlug, { id: sub._id, name: sub.item_text });
+          }
+        });
+      });
     });
     console.log('[SEO-021] Loaded', categorySlugMap.size, 'category slugs from get-service');
   } catch (e) {
@@ -117,7 +141,7 @@ async function fetchCategories(retries) {
         q.answers.forEach(function(ans) {
           if (ans.item_text && ans._id) {
             var slug = slugify(ans.item_text);
-            if (!categorySlugMap.has(slug)) {
+            if (slug && !categorySlugMap.has(slug)) {
               categorySlugMap.set(slug, { id: ans._id, name: ans.item_text });
             }
           }
@@ -614,8 +638,14 @@ const categoryLayer = new Layer('/', { strict: false, end: false }, function cat
   var catInfo = categorySlugMap.get(slug);
   if (!catInfo) return next();
 
-  // Clear SSR cache for this category page to prevent stale data
-  dropEntry(stripTrackingParams(req.url));
+  /* A page the cache layer is about to serve needs nothing fetched. This used
+   * to delete the entry on every request instead, so type and category pages
+   * were never served from the cache (5 to 7 s each, measured on
+   * /practitioners/type/dentist), and every render still stored an entry that
+   * nothing would read, evicting pages that would have been. The ItemList is
+   * built at render time and ages with its page, on the same 30 minutes as
+   * every other page. */
+  if (freshEntry(stripTrackingParams(req.url))) return next();
 
   fetchFilteredPractitioners(catInfo.id)
     .then(function(resp) {

@@ -30,6 +30,7 @@ import { routerRedirectForProfile } from 'src/app/app.server.redirect-profile.mo
 import { routerRedirectForContent } from 'src/app/app.server.redirect-content.module';
 import { routerRedirectForCategory } from 'src/app/app.server.redirect-category.module';
 import { stripTrackingParams } from './src/app/_helpers/tracking-params';
+import { slugify } from './src/app/_helpers/slugify';
 
 /* A third of nginx's 60 s upstream timeout. A healthy render takes 1 to 7 s on
  * this box; one still going at 20 s is not going to finish in time to help. */
@@ -242,9 +243,11 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
 
 export * from './src/main.server';
 
-/* server-wrapper.js keys its cache with this, so the key and the render cannot
- * disagree about which parameters make a different page. */
-export { stripTrackingParams };
+/* server-wrapper.js keys its cache with stripTrackingParams, so the key and the
+ * render cannot disagree about which parameters make a different page, and
+ * matches category URLs with slugify, so it recognizes the slugs the site
+ * actually links. */
+export { stripTrackingParams, slugify };
 
 function injectPaginationLinks(req: any, html: string): string {
   // Only inject pagination links for community feed pages
