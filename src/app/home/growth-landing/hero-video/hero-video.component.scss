@@ -53,11 +53,11 @@
  * headline fills the middle band. */
 .hero-video__glyph {
   position: absolute;
-  bottom: 8%;
+  bottom: 5%;
   left: 50%;
-  width: 56px;
-  height: 56px;
-  margin-left: -28px;
+  width: 48px;
+  height: 48px;
+  margin-left: -24px;
   border-radius: 50%;
   background: $colorPrimary;
   box-shadow: 0 4px 16px rgba($colorGsBlack, 0.3);
@@ -68,15 +68,22 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    margin: -13px 0 0 -8px;
+    margin: -10px 0 0 -6px;
     border-style: solid;
-    border-width: 13px 0 13px 22px;
+    border-width: 10px 0 10px 17px;
     border-color: transparent transparent transparent $colorGsWhite;
   }
 
+  /* The tap target is the whole poster; this is only the sign. */
   @media (min-width: $breakpointMd) {
+    bottom: 8%;
     width: 80px;
     height: 80px;
     margin-left: -40px;
+
+    &::after {
+      margin: -13px 0 0 -8px;
+      border-width: 13px 0 13px 22px;
+    }
   }
 }

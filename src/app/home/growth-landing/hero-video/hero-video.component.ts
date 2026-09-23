@@ -59,8 +59,11 @@ export class HeroVideoComponent {
            * are there to try again. */
         });
       }
-      /* The overlay that held focus has just been removed. */
-      video.focus();
+      /* The overlay that held focus is about to be removed. The video can take
+       * focus only once its controls are on, after this change detection. */
+      setTimeout(() => {
+        try { video.focus(); } catch (e) { /* focus stays on the page */ }
+      });
     } catch (e) {
       /* as above */
     }
