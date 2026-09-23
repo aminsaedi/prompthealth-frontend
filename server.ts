@@ -207,9 +207,10 @@ export function app() {
           // Fall back to client-side rendering on SSR error
           return res.sendFile(join(distFolder, 'index.html'));
         }
-        if (html) {
-          html = injectPaginationLinks(req, html);
-        }
+        /* No rel=next/prev on the community lists. They were added here for
+         * every /community/<type> page, but the lists load more by scrolling
+         * and a ?page address rendered page one again, so each next link was a
+         * duplicate leading to another: ClaudeBot followed them to page 1649. */
         // Only return 404 if the page explicitly rendered as Not Found
         // (not due to transient API failures like 429)
         if (html && html.includes('<title>Not Found | PromptHealth</title>')) {
@@ -251,35 +252,6 @@ export * from './src/main.server';
  * matches category URLs with slugify, so it recognizes the slugs the site
  * actually links. */
 export { stripTrackingParams, slugify };
-
-function injectPaginationLinks(req: any, html: string): string {
-  // Only inject pagination links for community feed pages
-  const feedPattern = /^\/community\/(feed|article|media|event|note|voice|promotion)(\/[a-f0-9]{24})?$/;
-  const pathWithoutQuery = req.path;
-  if (!feedPattern.test(pathWithoutQuery)) {
-    return html;
-  }
-
-  const page = parseInt(req.query.page, 10) || 1;
-  const baseUrl = 'https://www.prompthealth.ca' + pathWithoutQuery;
-  let links = '';
-
-  if (page > 1) {
-    const prevPage = page - 1;
-    const prevUrl = prevPage === 1 ? baseUrl : `${baseUrl}?page=${prevPage}`;
-    links += `<link rel="prev" href="${prevUrl}">`;
-  }
-
-  // Always add next link (crawlers will stop when they get empty pages)
-  const nextUrl = `${baseUrl}?page=${page + 1}`;
-  links += `<link rel="next" href="${nextUrl}">`;
-
-  if (links) {
-    html = html.replace('</head>', links + '</head>');
-  }
-
-  return html;
-}
 
 function showMeta(url: string, html: string) {
   console.log('=============== SHOW META START');
