@@ -21,7 +21,7 @@ describe('ModalService', () => {
     const address = '/community/article/crown-vs-veneers-what%E2%80%99s?utm_campaign=Growth%20Dentists&keyloc=Toronto,%20ON';
     location.go(address);
     const [path, queryParams] = service.currentPathAndQueryParams;
-    expect(path).toBe('/community/article/crown-vs-veneers-what’s');
+    expect(path).toBe('/community/article/crown-vs-veneers-what\u2019s');
     expect(queryParams).toEqual({ utm_campaign: 'Growth Dentists', keyloc: 'Toronto, ON' });
     expect(router.serializeUrl(router.createUrlTree([path], { queryParams }))).toBe(address);
   });
