@@ -17,10 +17,11 @@ import { ToastrService } from 'ngx-toastr';
 import { takeUntil } from 'rxjs/operators';
 
 /* The list's name in its title. Pluralizing by appending 's' gave
- * "Academys" and "Medias", and the feed's 'Home' never applied because it was
- * compared with the capitalized type, so the feed was titled "Feeds". */
+ * "Academys", "Medias" and "Feeds". The feed is 'Feed', not the 'Home' the old
+ * code compared for and never matched: /community/feed is the one list page
+ * that is indexed under its own title, and 'Home' reads as the homepage. */
 const LIST_TITLES: { [type: string]: string } = {
-  feed: 'Home',
+  feed: 'Feed',
   article: 'Articles',
   event: 'Events',
   media: 'Media',
