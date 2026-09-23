@@ -36,6 +36,9 @@ import { withQueryOf } from './src/app/_helpers/with-query-of';
 /* A third of nginx's 60 s upstream timeout. A healthy render takes 1 to 7 s on
  * this box; one still going at 20 s is not going to finish in time to help. */
 const RENDER_TIMEOUT_MS = 20000;
+/* NotFoundComponent's title: the only sign that a render is the Not Found page
+ * rather than a page that merely had trouble loading its data. */
+const NOT_FOUND_TITLE = '<title>Not Found | PromptHealth</title>';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
@@ -193,6 +196,7 @@ export function app() {
      * limit, as an SSR error already does. sendFile bypasses server-wrapper.js's
      * cache, which only captures res.send, so the shell is never stored as the
      * page. Whichever of the two answers first is the only one that answers. */
+    const startedAt = Date.now();
     let answered = false;
     const timer = setTimeout(() => {
       if (answered) { return; }
@@ -226,7 +230,19 @@ export function app() {
       indexHtml,
       { req, url: renderUrl, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ]},
       (err, html) => {
-        if (answered) { return; }
+        if (answered) {
+          /* Too late for this reader, who already has the shell, but a
+           * finished page is not wasted: server-wrapper.js keeps it for the
+           * next request (_ssrStoreLate), as it would have kept a page that
+           * rendered in time. Not a failed render or the Not Found page, which
+           * would not have been kept either. */
+          console.log('SSR finished late for ' + req.url + ' after ' + (Date.now() - startedAt) + ' ms');
+          const storeLate = (req as any)._ssrStoreLate;
+          if (!err && html && !html.includes(NOT_FOUND_TITLE) && typeof storeLate === 'function') {
+            storeLate(html);
+          }
+          return;
+        }
         answered = true;
         clearTimeout(timer);
         if(err){
@@ -241,7 +257,7 @@ export function app() {
          * duplicate leading to another: ClaudeBot followed them to page 1649. */
         // Only return 404 if the page explicitly rendered as Not Found
         // (not due to transient API failures like 429)
-        if (html && html.includes('<title>Not Found | PromptHealth</title>')) {
+        if (html && html.includes(NOT_FOUND_TITLE)) {
           res.status(404).send(html);
         } else {
           res.send(html);

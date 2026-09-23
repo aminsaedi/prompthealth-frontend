@@ -673,6 +673,16 @@ const cacheLayer = new Layer('/', { strict: false, end: false }, function ssrCac
     return _send(body);
   };
 
+  /* server.ts answers a render still running at its timeout with the client
+   * shell, and the render's page arrives later with no response left to go
+   * in. It is kept here instead, unless a fresher copy got there first. Thrown
+   * away, a page that renders slowly under load could never be cached: every
+   * request for it paid for a full render nobody saw, on a 1-vCPU box. */
+  req._ssrStoreLate = function(html) {
+    if (typeof html !== 'string' || html.length <= 500 || freshEntry(key)) return;
+    storeEntry(key, deferScripts(injectJsonLd(key, html, req._categoryPractitioners)));
+  };
+
   next();
 });
 cacheLayer.route = undefined;
