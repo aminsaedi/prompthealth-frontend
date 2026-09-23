@@ -178,6 +178,20 @@ async function fetchCategories(retries) {
   }
 }
 
+/* A type or health-goal directory page without a city: /practitioners/type/<slug>
+ * or /practitioners/category/<slug>, with an optional trailing slash. The
+ * filtered list below is fetched without a location, so it describes only
+ * these, never /practitioners/type/<slug>/<city>. */
+const CATEGORY_PAGE = /^\/practitioners\/(?:category|type)\/([^?/#]+)\/?(?:[?#]|$)/;
+
+/* JSON for a script element. Provider names and image keys come from the API
+ * and are written by providers, and a '</script>' in one would end the
+ * element early and put the rest into the page as markup. Written as <,
+ * '<' is the same character to a JSON reader. */
+function ldJson(value) {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
 function fetchFilteredPractitioners(categoryId) {
   return httpsPostJson('https://ocean.prompthealth.ca/api/v1/user/filter', {
     services: [categoryId],
@@ -466,16 +480,28 @@ function injectJsonLd(url, html, categoryPractitioners) {
   }
 
   // Category listing pages: /practitioners/category/:slug or /practitioners/type/:slug (SEO-021)
-  const categoryMatch = url.match(/^\/practitioners\/(?:category|type)\/([^?/]+)(?:\/([^?/]+))?/);
+  /* A fallback, not a replacement. ExpertFinderComponent renders its own
+   * ItemList from the listing the reader sees, in one script with the page's
+   * BreadcrumbList and FAQPage. This used to swap that whole script for the
+   * list below, which deleted the breadcrumb and the FAQ from every type page,
+   * and would have from every goal page once their slugs loaded; the browser
+   * never puts them back, because JsonLdService keeps what the server rendered.
+   * It also replaced the page's list (rating, phone, price, the results on
+   * screen) with one from a different call. So a page that has its own
+   * ItemList is left alone, and this list is added only when it has none, as
+   * when its listing call failed, into the page's script when there is one so
+   * the breadcrumb and FAQ stay beside it.
+   *
+   * City pages (/practitioners/type/<type>/<city>) never get it: the list is
+   * fetched without a location, so it named the city and listed providers from
+   * across the country. CATEGORY_PAGE matches no city segment. */
+  const categoryMatch = url.match(CATEGORY_PAGE);
   if (categoryMatch && categoryPractitioners && categoryPractitioners.length > 0) {
     const baseUrl = 'https://www.prompthealth.ca';
-    // Build dynamic ItemList name from slug + optional city (SEO-029)
     var catSlug = categoryMatch[1];
-    var citySlug = categoryMatch[2];
     var catInfo = categorySlugMap.get(catSlug);
     var specialist = catInfo ? catInfo.name : catSlug.split('-').map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ');
-    var cityName = citySlug ? citySlug.split('-').map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ') : 'Canada';
-    var listName = 'Find Best ' + specialist + ' in ' + cityName;
+    var listName = 'Find Best ' + specialist + ' in Canada';
     const itemList = {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
@@ -505,26 +531,27 @@ function injectJsonLd(url, html, categoryPractitioners) {
       }),
     };
 
-    // Replace existing Angular-rendered ItemList JSON-LD if present
-    var ldRegex = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
+    var ldRegex = /(<script[^>]*application\/ld\+json[^>]*>)([\s\S]*?)(<\/script>)/g;
+    var pageScript = null;
     var ldMatch;
-    var replaced = false;
     while ((ldMatch = ldRegex.exec(html)) !== null) {
-      try {
-        var parsed = JSON.parse(ldMatch[1]);
-        var isItemList = (parsed && parsed['@type'] === 'ItemList') ||
-          (Array.isArray(parsed) && parsed.some(function(d) { return d['@type'] === 'ItemList'; }));
-        if (isItemList) {
-          html = html.replace(ldMatch[0], '<script type="application/ld+json">' + JSON.stringify(itemList) + '</script>');
-          replaced = true;
-          break;
-        }
-      } catch (e) { /* skip unparseable */ }
+      var parsed;
+      try { parsed = JSON.parse(ldMatch[2]); } catch (e) { continue; }
+      var blocks = Array.isArray(parsed) ? parsed : [parsed];
+      if (blocks.some(function(d) { return d && d['@type'] === 'ItemList'; })) {
+        return html;
+      }
+      if (!pageScript) pageScript = { whole: ldMatch[0], open: ldMatch[1], blocks: blocks, close: ldMatch[3] };
     }
-    if (!replaced) {
-      html = html.replace('</head>', '<script type="application/ld+json">' + JSON.stringify(itemList) + '</script></head>');
+    /* Replaced through a function, so a '$' in a name or a price is written
+     * as it is rather than read as a replacement pattern. */
+    if (pageScript) {
+      var merged = pageScript.open + ldJson([itemList].concat(pageScript.blocks)) + pageScript.close;
+      return html.replace(pageScript.whole, function() { return merged; });
     }
-    return html;
+    return html.replace('</head>', function() {
+      return '<script type="application/ld+json">' + ldJson(itemList) + '</script></head>';
+    });
   }
 
   if (jsonLd) {
@@ -655,7 +682,7 @@ expressApp._router.stack.splice(3, 0, cacheLayer);
 
 // SEO-021: Pre-fetch filtered practitioners for category pages before caching
 const categoryLayer = new Layer('/', { strict: false, end: false }, function categoryPreFetch(req, res, next) {
-  var catMatch = req.url.match(/^\/practitioners\/(?:category|type)\/([^?/]+)/);
+  var catMatch = req.url.match(CATEGORY_PAGE);
   if (!catMatch) return next();
 
   var slug = catMatch[1];
