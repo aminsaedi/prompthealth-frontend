@@ -144,7 +144,6 @@ export class UniversalService {
     this.setOrRemoveProperty('og:image:width', sized ? String(image.width) : null);
     this.setOrRemoveProperty('og:image:height', sized ? String(image.height) : null);
     this._meta.updateTag({property: 'og:image:alt', content: image.alt});
-    this._meta.updateTag({name: 'apple-itunes-app', content: 'app-id=1532951934' + (meta.iosLink ? `, app-argument=prompthealth://${meta.iosLink}` : '')});
 
     this._canonicalLink.addTag({ rel: 'canonical', href: canonicalUrl });
   }
@@ -189,7 +188,6 @@ export interface MetaData {
   imageAlt?: string;
   pageType?: 'article' | 'website' | 'blog';
   robots?: string;
-  iosLink?: string;
 }
 
 type TwitterCardType = 'summary' | 'summary_large_image';

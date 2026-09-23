@@ -212,7 +212,6 @@ export class PageComponent implements OnInit , OnDestroy {
       description: seoDescription,
       pageType: 'article',
       ...(shareImage ? { image: shareImage, imageAlt: title } : {}),
-      ...this.pathToApp && {iosLink: this.pathToApp},
     });
 
     const articleJsonLd: any = {
