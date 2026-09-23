@@ -30,6 +30,10 @@ import { routerRedirectForProfile } from 'src/app/app.server.redirect-profile.mo
 import { routerRedirectForContent } from 'src/app/app.server.redirect-content.module';
 import { routerRedirectForCategory } from 'src/app/app.server.redirect-category.module';
 
+/* A third of nginx's 60 s upstream timeout. A healthy render takes 1 to 7 s on
+ * this box; one still going at 20 s is not going to finish in time to help. */
+const RENDER_TIMEOUT_MS = 20000;
+
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
   const server = express();
@@ -119,6 +123,14 @@ export function app() {
   server.get('/terms-and-conditions', (req, res) => { res.redirect(301, '/terms'); });
   server.get('/disclaimer',         (req, res) => { res.redirect(301, '/medical-disclaimer'); });
 
+  /* Aliases of the newsletter page. A 301 here costs no render and tells a
+   * crawler which URL is real. /subscribe-email in particular must never reach
+   * the renderer again: its Angular redirect pointed at a URL no route matched,
+   * and each request hung the render until nginx gave up and took www down for
+   * ten seconds. Express routing is not strict, so '/subscribe' also answers
+   * '/subscribe/' but not '/subscribe/newsletter'. */
+  server.get(['/subscribe-email', '/subscribe', '/clubhouse'], (req, res) => { res.redirect(301, '/subscribe/newsletter'); });
+
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
   server.use('/dashboard',             (req, res) => { res.sendFile(join(distFolder, 'index.html')); })
@@ -147,10 +159,29 @@ export function app() {
 
   // All other routes use the Universal engine
   server.get('*', (req, res) => {
+    /* A render that never finishes held the request until nginx gave up at 60 s,
+     * and nginx then answered 502 for every page for ten seconds. The known
+     * causes are recovered in app.module.ts (recoverFirstNavigation); this is for
+     * the ones nobody has found yet, such as a guard whose promise never settles
+     * on the server. Answer with the client-rendered shell well before nginx's
+     * limit, as an SSR error already does. sendFile bypasses server-wrapper.js's
+     * cache, which only captures res.send, so the shell is never stored as the
+     * page. Whichever of the two answers first is the only one that answers. */
+    let answered = false;
+    const timer = setTimeout(() => {
+      if (answered) { return; }
+      answered = true;
+      console.log('SSR timeout for ' + req.url);
+      res.sendFile(join(distFolder, 'index.html'));
+    }, RENDER_TIMEOUT_MS);
+
     res.render(
       indexHtml,
       { req, providers: [ { provide: APP_BASE_HREF, useValue: req.baseUrl } ]},
       (err, html) => {
+        if (answered) { return; }
+        answered = true;
+        clearTimeout(timer);
         if(err){
           console.log('SSR error for ' + req.url + ':');
           console.log(err.message || err);

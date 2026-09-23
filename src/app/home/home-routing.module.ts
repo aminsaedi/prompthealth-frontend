@@ -120,7 +120,12 @@ const routes: Routes = [
 
   { path: 'subscribe/newsletter', component: LandingClubhouseComponent },
   { path: 'subscribe', redirectTo: '/subscribe/newsletter'},
-  { path: 'subscribe-email', redirectTo: '/subscribe/newslet,ter'},
+  /* The newsletter page's old address. A stray comma (2021-09) pointed this at a
+   * URL no route matches. After an absolute redirect Angular applies no more
+   * redirects, so '**' never caught it. Every server render of this URL hung
+   * until nginx gave up, and took www down with it. server.ts now answers it
+   * with a 301 before any render; this covers a link followed inside the app. */
+  { path: 'subscribe-email', redirectTo: '/subscribe/newsletter' },
   { path: 'clubhouse', redirectTo: '/subscribe/newsletter' },
   { 
     path: 'ambassador-program', 
