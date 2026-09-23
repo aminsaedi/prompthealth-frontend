@@ -284,9 +284,12 @@ export class HomeComponent implements OnInit , OnDestroy {
 
   /** HEADER FOR HOMEPAGE */
   showMenuSm() {
+    /* Merged, as in the theme header: replacing the query dropped a
+     * campaign's UTMs whenever the menu opened. */
     this._router.navigate(["./"], {
       relativeTo: this._route,
       queryParams: { menu: "show" },
+      queryParamsHandling: "merge",
     });
   }
 

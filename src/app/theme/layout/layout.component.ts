@@ -122,9 +122,15 @@ export class LayoutComponent implements OnDestroy, OnInit {
     const regexHideFooter = /(dashboard)/;
     this.showFooter = !this._location.path().match(regexHideFooter);
 
-    this.onHomepage = this._location.path() == '';
-
-    this.isMenuSmShown = !!this._location.path().match(/\?menu=show/);
+    /* Both read from the parsed address, not the raw string. Compared whole,
+     * the homepage stopped being the homepage the moment a campaign landed on
+     * it (/?utm_source=...) or a modal opened (/?modal=user-menu), and got the
+     * inner pages' sticky header instead of its overlay. And /\?menu=show/
+     * matched only when menu came first, which held only because opening the
+     * menu used to throw the rest of the query away. */
+    const [path, query] = this._modalService.currentPathAndQueryParams;
+    this.onHomepage = path === '/';
+    this.isMenuSmShown = query.menu === 'show';
   }
 
   onClickMenuItemSm(goto: string) {

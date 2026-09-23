@@ -75,8 +75,10 @@ export class HeaderComponent implements OnInit , OnDestroy {
     }
   }
 
+  /* Merged, because the menu is state on top of the page, not a new page:
+   * replacing the query dropped a campaign's UTMs whenever the menu opened. */
   showMenuSm() {
-    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {menu: 'show'}});
+    this._router.navigate(['./'], {relativeTo: this._route, queryParams: {menu: 'show'}, queryParamsHandling: 'merge'});
   }
   
   onClickUserIcon() {

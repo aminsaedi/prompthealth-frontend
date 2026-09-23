@@ -228,7 +228,17 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
             break;
         }
       }
-      this._router.navigate([next]);
+      /* A next page is an address, often with its own query: tag-provider
+       * passes location.path(), encoded, as ?next=. navigate() takes it as
+       * one path segment, so '?' became %3F and '%' became %25, and an invite
+       * link carrying UTMs landed on a URL that does not exist.
+       * navigateByUrl parses it. Only a same-site path ('/', not '//'); the
+       * role defaults above are plain paths either way. */
+      if (next && next.charAt(0) === '/' && next.charAt(1) !== '/') {
+        this._router.navigateByUrl(next);
+      } else {
+        this._router.navigate([next]);
+      }
     }
 
     this.changeState.emit('done');

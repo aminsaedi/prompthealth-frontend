@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, HostListener, OnInit , OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from './shared/services/universal.service';
@@ -41,6 +41,7 @@ export class AppComponent implements OnInit , OnDestroy {
   constructor(
     private _uService: UniversalService,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _toastr: ToastrService,
     private _location: Location,
     private _uploadObserver: UploadObserverService,
@@ -163,15 +164,13 @@ export class AppComponent implements OnInit , OnDestroy {
         this._toastr.error('You haven\'t completed subscribing plan.');
       }
 
-      params.action = null;
-      const paramList = [];
-      for (let key in params) {
-        if (params[key]) {
-          paramList.push(key += '=' + params[key]);
-        }
-      }
-
-      this._location.replaceState(location.pathname, (paramList.length > 0) ? '?' + paramList.join('&') : '');
+      /* Serialized by the router, which encodes what it writes. This used to
+       * join the decoded values with '&' by hand, so a value holding &, #, %
+       * or = corrupted the address, and it dropped any parameter whose value
+       * was empty. */
+      this._location.replaceState(this._router.serializeUrl(
+        this._router.createUrlTree([], { queryParams: { ...params, action: null } })
+      ));
     }
   }
 
