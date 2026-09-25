@@ -95,10 +95,10 @@ export class HeaderComponent implements OnInit , OnDestroy {
   /* The menu is state on top of the page, not a new page, so it keeps the rest
    * of the query: replacing it dropped a campaign's UTMs whenever the menu
    * opened. Built from the address the reader sees, as ModalService does, and
-   * not with queryParamsHandling 'merge', which merges into the router's copy.
-   * AppComponent removes ?action=stripe-cancel with location.replaceState,
-   * which the router never hears about, so 'merge' put it back and the Stripe
-   * toast showed a second time. */
+   * not with queryParamsHandling 'merge', which merges into the router's copy
+   * and misses any location.replaceState: when AppComponent removed
+   * ?action=stripe-cancel that way, 'merge' put it back and the Stripe toast
+   * showed a second time. */
   showMenuSm() {
     const [path, queryParams] = this._modalService.currentPathAndQueryParams;
     queryParams.menu = 'show';

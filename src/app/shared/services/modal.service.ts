@@ -39,8 +39,8 @@ export class ModalService {
   private goBack() {
     this._data = null;
     /* No state means the page cannot tell whether back() stays on the site:
-     * replaceState without a state (the markCurrentPosition handlers,
-     * AppComponent's Stripe cleanup) leaves null, and the server has none.
+     * replaceState without a state (the markCurrentPosition handlers)
+     * leaves null, and the server has none.
      * Replacing is safe either way; reading navigationId off null threw. */
     const state = this._location.getState() as any;
     if(!state || state.navigationId == 1) {
@@ -81,11 +81,13 @@ export class ModalService {
    * reads as a space and a repeated key as an array, exactly as ActivatedRoute
    * sees them.
    *
-   * It reads location.path() and not router.url because AppComponent removes
-   * ?action=stripe-success with location.replaceState, which the router never
-   * hears about; router.url would put it back and replay the Stripe toast on
-   * the next modal. router.url is only the fallback for an address the
-   * serializer refuses, where Router.parseUrl would answer with the home page. */
+   * It reads location.path() and not router.url because the address the
+   * reader sees is the one to keep, and a location.replaceState is something
+   * the router never hears about. When AppComponent removed
+   * ?action=stripe-success that way, router.url put it back and replayed the
+   * Stripe toast on the next modal. router.url is only the fallback for an
+   * address the serializer refuses, where Router.parseUrl would answer with
+   * the home page. */
   private _getPathAndQueryParams(): [string, Params] {
     let tree: UrlTree;
     try {
