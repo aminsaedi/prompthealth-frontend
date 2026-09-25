@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
+import { GROWTH_PLAN_CARD, PAID_PLAN_FAQ } from '../growth-landing/landings/other-pages';
 
 @Component({
   selector: 'app-for-practitioners',
@@ -59,7 +60,6 @@ export class ForPractitionersComponent implements OnInit, OnDestroy {
           description:
             'A wellness discovery platform connecting patients with trusted healthcare providers through content, video, and AI search.',
           url: 'https://www.prompthealth.ca',
-          priceRange: '$$',
           areaServed: [
             { '@type': 'City', name: 'Toronto' },
             { '@type': 'City', name: 'Vancouver' },
@@ -90,9 +90,9 @@ export class ForPractitionersComponent implements OnInit, OnDestroy {
                 '@type': 'Offer',
                 itemOffered: {
                   '@type': 'Service',
-                  name: 'AI Visibility Plan',
-                  description:
-                    'SEO-optimized content, expert video production, keyword strategy, and ongoing visibility optimization.',
+                  name: 'PromptHealth Growth',
+                  description: GROWTH_PLAN_CARD.body,
+                  url: 'https://www.prompthealth.ca' + GROWTH_PLAN_CARD.link,
                 },
               },
             ],
@@ -192,9 +192,11 @@ const faqs: IFAQItem[] = [
     a: 'PromptHealth combines SEO-optimized content, expert video production, and AI search optimization to ensure your practice appears when patients search on Google, ChatGPT, and other AI tools. We create keyword-targeted content based on what patients in your specialty are actually searching for.',
     opened: false,
   },
+  /* A copy, not the shared object: faq-item writes `opened` onto what it is
+   * given, and /faq carries the same question. */
   {
-    q: 'What does it cost to list my practice?',
-    a: 'We offer a <strong>free basic profile</strong> that lists your practice on PromptHealth. Our <strong>AI Visibility Program</strong> starts at $500/month and includes professional video content, SEO-optimized articles, keyword strategy, and placement on high-intent pages. <a href="/plans">View full pricing details</a>.',
+    q: PAID_PLAN_FAQ.q,
+    a: PAID_PLAN_FAQ.aHtml,
     opened: false,
   },
   {
@@ -214,12 +216,12 @@ const faqs: IFAQItem[] = [
   },
   {
     q: 'How long before I see results?',
-    a: 'Free profiles are visible immediately. For the AI Visibility Program, most providers see measurable increases in profile views and patient inquiries within 4–8 weeks as content is indexed by search engines and AI tools.',
+    a: 'Free profiles are visible immediately.',
     opened: false,
   },
   {
     q: 'Can I track my performance?',
-    a: 'Yes. All providers have access to profile analytics including views, engagement metrics, and content performance. AI Visibility Program members receive detailed monthly reports with insights and recommendations.',
+    a: 'Yes. All providers have access to profile analytics including views, engagement metrics, and content performance.',
     opened: false,
   },
 ];
