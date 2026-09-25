@@ -45,6 +45,7 @@ import { EditorialStandardsComponent } from './editorial-standards/editorial-sta
 import { GrowthLandingComponent } from './growth-landing/growth-landing.component';
 import { HeroVideoComponent } from './growth-landing/hero-video/hero-video.component';
 import { BookingFormComponent } from './growth-landing/booking-form/booking-form.component';
+import { GrowthPlanCardComponent } from './_elements/growth-plan-card/growth-plan-card.component';
 
 
 @NgModule({
@@ -87,6 +88,7 @@ import { BookingFormComponent } from './growth-landing/booking-form/booking-form
     GrowthLandingComponent,
     HeroVideoComponent,
     BookingFormComponent,
+    GrowthPlanCardComponent,
   ],
   imports: [
     FormsModule,

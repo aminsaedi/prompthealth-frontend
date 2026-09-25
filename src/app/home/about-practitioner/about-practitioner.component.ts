@@ -15,7 +15,7 @@ import { environment } from "src/environments/environment";
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
-
+import { GROWTH_PLAN_CARD, PLANS_PAGE } from '../growth-landing/landings/other-pages';
 
 @Component({
   selector: "app-about-practitioner",
@@ -31,7 +31,6 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
 
   public features = features;
   public freePlanFeatures = freePlanFeatures;
-  public aiPlanFeatures = aiPlanFeatures;
   public faqs = faqs;
 
   public videoLink = "/assets/video/about-practitioner-sm.mp4";
@@ -65,10 +64,11 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
   }
 
   ngOnInit(): void {
-    this._uService.setMeta(this._router.url, {
-      title: "Grow Your Visibility in the Age of AI Search | PromptHealth",
-      description:
-        "PromptHealth helps healthcare providers become discoverable through content, video, and AI search.",
+    /* The page used to be titled for the AI Visibility Program it sold. It now
+     * names both plans and prices neither. */
+    this._uService.setMeta('/plans', {
+      title: PLANS_PAGE.title,
+      description: PLANS_PAGE.description,
       robots: "index, follow",
       /* The .jpg this pointed at was replaced by a 3.4 MB .png screenshot in
        * Feb 2022 and this line never followed, so /plans shared with no image
@@ -81,13 +81,17 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
       imageAlt: "Two women standing by a sunlit window",
     });
 
+    /* No offer here carries a price, a currency or a price specification:
+     * nothing on this site states what PromptHealth charges. The catalogue
+     * belongs to the publisher, which offers both plans. It used to hang off
+     * the paid service, which listed the free profile as one of that
+     * service's own offers. */
     this._jsonLdService.setJsonLd([
       {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        name: 'Grow Your Visibility in the Age of AI Search | PromptHealth Plans',
-        description:
-          'PromptHealth helps healthcare providers become discoverable through content, video, and AI search.',
+        name: PLANS_PAGE.title,
+        description: PLANS_PAGE.description,
         url: 'https://www.prompthealth.ca/plans',
         isPartOf: {
           '@type': 'WebSite',
@@ -103,6 +107,30 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
             url: 'https://www.prompthealth.ca/assets/img/prompthealth.png',
             width: 800,
             height: 350,
+          },
+          hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: 'PromptHealth Plans',
+            itemListElement: [
+              {
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Service',
+                  name: 'Free Profile',
+                  description:
+                    'Basic provider listing with category placement and platform visibility.',
+                },
+              },
+              {
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Service',
+                  name: 'PromptHealth Growth',
+                  description: GROWTH_PLAN_CARD.body,
+                  url: 'https://www.prompthealth.ca' + GROWTH_PLAN_CARD.link,
+                },
+              },
+            ],
           },
         },
         breadcrumb: {
@@ -127,9 +155,9 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
         '@context': 'https://schema.org',
         '@type': 'Service',
         serviceType: 'Healthcare Provider Visibility & Marketing',
-        name: 'AI Visibility Program',
-        description:
-          'SEO-optimized content, expert video production, keyword strategy, and ongoing visibility optimization for healthcare providers.',
+        name: 'PromptHealth Growth',
+        description: GROWTH_PLAN_CARD.body,
+        url: 'https://www.prompthealth.ca' + GROWTH_PLAN_CARD.link,
         provider: {
           '@type': 'Organization',
           name: 'PromptHealth',
@@ -138,52 +166,6 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
         areaServed: {
           '@type': 'Country',
           name: 'Canada',
-        },
-        offers: {
-          '@type': 'Offer',
-          price: '500',
-          priceCurrency: 'CAD',
-          priceSpecification: {
-            '@type': 'UnitPriceSpecification',
-            price: '500',
-            priceCurrency: 'CAD',
-            unitText: 'month',
-          },
-          availability: 'https://schema.org/LimitedAvailability',
-        },
-        hasOfferCatalog: {
-          '@type': 'OfferCatalog',
-          name: 'PromptHealth Plans',
-          itemListElement: [
-            {
-              '@type': 'Offer',
-              itemOffered: {
-                '@type': 'Service',
-                name: 'Free Profile',
-                description:
-                  'Basic provider listing with category placement and platform visibility.',
-              },
-              price: '0',
-              priceCurrency: 'CAD',
-            },
-            {
-              '@type': 'Offer',
-              itemOffered: {
-                '@type': 'Service',
-                name: 'AI Visibility Program',
-                description:
-                  'SEO-optimized content, expert video production, keyword strategy, placement on high-intent pages, and ongoing visibility optimization.',
-              },
-              price: '500',
-              priceCurrency: 'CAD',
-              priceSpecification: {
-                '@type': 'UnitPriceSpecification',
-                price: '500',
-                priceCurrency: 'CAD',
-                unitText: 'month',
-              },
-            },
-          ],
         },
       },
       {
@@ -256,15 +238,6 @@ const freePlanFeatures: string[] = [
   "Visibility on PromptHealth",
 ];
 
-const aiPlanFeatures: string[] = [
-  "SEO-optimized content based on patient searches",
-  "Expert video content (YouTube + short-form)",
-  "Keyword and topic strategy",
-  "Placement on high-intent pages",
-  "Internal linking across content",
-  "Ongoing visibility optimization",
-];
-
 const faqs: IFAQItem[] = [
   {
     q: "What are the benefits of joining PromptHealth?",
@@ -304,11 +277,4 @@ const faqs: IFAQItem[] = [
     a: "Click <strong>Create Free Profile</strong>, complete the brief onboarding, and start building your visibility on PromptHealth.",
     opened: false,
   },
-  {
-    q: "What's the cost and value of this service?",
-    a: `Think of this as an affordable PR strategy. For $500/month (just $125/week), you receive professionally produced, authentic content distributed to a highly targeted audience of wellness seekers.
-    <br><br>
-    Hiring a marketing agency or running generic social media ads often costs much more—and typically reaches a broad, non-specific audience. With PromptHealth, your message lands in front of the right people, through trusted, human content that builds real engagement and credibility.`,
-    opened: false,
-},
 ];
