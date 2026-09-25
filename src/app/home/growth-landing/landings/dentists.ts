@@ -194,6 +194,7 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     submitWithoutCalendly: 'Send',
     thanksWithCalendly: 'Thank you. Choose a time for your consultation below.',
     thanksWithoutCalendly: "Thank you. We'll be in touch shortly to book your consultation.",
+    thanksScheduled: 'Thank you. Your consultation is booked.',
     errorGeneric: 'Your request could not be sent. Please try again, or email info@prompthealth.ca.',
   },
 };

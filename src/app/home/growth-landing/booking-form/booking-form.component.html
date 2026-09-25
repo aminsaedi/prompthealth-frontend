@@ -49,7 +49,7 @@
   </form>
 
   <div *ngIf="step === 'schedule' || step === 'scheduled'">
-    <p *ngIf="step === 'schedule'" class="subtitle1 mb-20p" role="status">{{ booking.thanksWithCalendly }}</p>
+    <p class="subtitle1 mb-20p" role="status">{{ step === 'schedule' ? booking.thanksWithCalendly : booking.thanksScheduled }}</p>
     <div #calendly class="booking-form__calendly"></div>
   </div>
 

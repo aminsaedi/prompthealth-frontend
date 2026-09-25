@@ -89,6 +89,8 @@ export interface IGrowthBooking {
   submitWithoutCalendly: string;
   thanksWithCalendly: string;
   thanksWithoutCalendly: string;
+  /** Once a time is booked, above Calendly's own confirmation. */
+  thanksScheduled: string;
   errorGeneric: string;
 }
 
