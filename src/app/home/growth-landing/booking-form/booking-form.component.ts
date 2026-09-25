@@ -116,6 +116,10 @@ export class BookingFormComponent implements OnChanges, OnDestroy {
   private scheduledFor = '';
   private calendlyMounted = false;
   private listening = false;
+  /* Calendly's details form is filled from this, and it is kept to be sent
+   * again (resendPrefill). */
+  private calendlyPrefill: { [key: string]: string } = null;
+  private prefillResentOn: { [cue: string]: boolean } = {};
   /* Bypasses the app's HTTP interceptors. The global one turns every error
    * into a bare string, which hides the status this form decides its message
    * by, and answers any 401 by sending the visitor to the sign-in page, which
@@ -323,14 +327,18 @@ export class BookingFormComponent implements OnChanges, OnDestroy {
        * Joined into the address by hand, "Smith & Jones Dental" would end the
        * name at the ampersand. */
       const url = this.booking.calendlyUrl;
+      const name = String(this.form.value.name || '').trim();
+      const email = String(this.form.value.email || '').trim();
+      const a1 = this.prepNote();
+      /* The shape the widget itself sends into its frame. */
+      this.calendlyPrefill = {};
+      if (name) { this.calendlyPrefill.name = name; }
+      if (email) { this.calendlyPrefill.email = email; }
+      if (a1) { this.calendlyPrefill.a1 = a1; }
       calendly.initInlineWidget({
         url: url + (url.indexOf('?') === -1 ? '?' : '&') + 'hide_gdpr_banner=1',
         parentElement: this.calendlyElement,
-        prefill: {
-          name: String(this.form.value.name || '').trim(),
-          email: String(this.form.value.email || '').trim(),
-          customAnswers: { a1: this.prepNote() },
-        },
+        prefill: { name, email, customAnswers: { a1 } },
         utm,
       });
     }).catch(() => {
@@ -355,8 +363,33 @@ export class BookingFormComponent implements OnChanges, OnDestroy {
     return lines.join('\n').slice(0, 2000);
   }
 
+  /*
+   * Calendly's widget hands the prefill to its frame by message, when the
+   * frame's load event fires and twice more within 250ms. The booking page in
+   * the frame listens only once it has fetched the event, and when that is
+   * slower the message reaches nobody and the visitor types their name and
+   * email a second time: one run in five in testing, and likelier on the
+   * phones this page is for. The page says when it has drawn the calendar and
+   * when a time is picked, just before its details form, and the same message
+   * is sent at each, once: never after the visitor has seen that form. (Going
+   * back and picking another time refills it from the prefill anyway; that is
+   * Calendly's own behaviour, with or without this.)
+   */
+  private resendPrefill(cue: string, source: any): void {
+    if (!this.calendlyPrefill || this.prefillResentOn[cue] || !this.calendlyElement) { return; }
+    const frame = this.calendlyElement.querySelector('iframe');
+    const target = frame && frame.contentWindow;
+    if (!target || source !== target) { return; }
+    this.prefillResentOn[cue] = true;
+    try {
+      target.postMessage({ event: 'calendly.prefill', payload: this.calendlyPrefill }, CALENDLY_ORIGIN);
+    } catch (e) {
+      /* the visitor fills Calendly's form by hand */
+    }
+  }
+
   /* Registered once, outside Angular: Calendly posts a message for every
-   * resize and page change inside the widget, and only one of them matters. */
+   * resize and page change inside the widget, and few of them matter. */
   private listen(): void {
     if (this.listening || !this._uService.isBrowser) { return; }
     this.listening = true;
@@ -376,7 +409,12 @@ export class BookingFormComponent implements OnChanges, OnDestroy {
   private onMessage = (event: MessageEvent) => {
     if (!event || event.origin !== CALENDLY_ORIGIN) { return; }
     const data: any = event.data;
-    if (!data || data.event !== 'calendly.event_scheduled') { return; }
+    if (!data) { return; }
+    if (data.event === 'calendly.event_type_viewed' || data.event === 'calendly.date_and_time_selected') {
+      this.resendPrefill(data.event, event.source);
+      return;
+    }
+    if (data.event !== 'calendly.event_scheduled') { return; }
     /* Once per request, however many times the message arrives. */
     if (!this.eventId || this.scheduledFor === this.eventId) { return; }
     this.scheduledFor = this.eventId;
