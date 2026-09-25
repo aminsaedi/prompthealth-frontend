@@ -1122,7 +1122,14 @@ export class ProfileComponent implements OnInit , OnDestroy {
     }, () => {
       /* A count that did not land must not stop the reader from booking. */
     });
-    window.open(this.profile.bookingUrlHref, '_blank');
+    /* noopener: the booking page is whatever address the provider typed, and
+     * www sends no Cross-Origin-Opener-Policy, so without it that page could
+     * set window.opener.location and swap this tab for one of its own while
+     * the reader looks at the new one. OutboundLinkService adds rel=noopener
+     * to anchors for the same reason; this open is not an anchor. Not
+     * noreferrer: /out/ reads the Referer to tell which page a click came
+     * from. */
+    window.open(this.profile.bookingUrlHref, '_blank', 'noopener');
   }
 
   async onClickFollow() {
