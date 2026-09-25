@@ -5,31 +5,39 @@ class="p-20p rounded-12p border border-line faq-item overflow-hidden"
 >
   <!-- The level follows the page's outline. It looks the same at either level:
   the h3 borrows h4's size, which is what the h4 shows on phones. -->
-  <h3 *ngIf="headingLevel === 3; else questionAsH4" class="h4 h5-md mb-0 d-flex justify-content-between">
+  <h3 *ngIf="headingLevel === 3; else questionAsH4" class="h4 h5-md mb-0">
     <ng-container *ngTemplateOutlet="question"></ng-container>
   </h3>
   <ng-template #questionAsH4>
-    <h4 class="h5-md mb-0 d-flex justify-content-between">
+    <h4 class="h5-md mb-0">
       <ng-container *ngTemplateOutlet="question"></ng-container>
     </h4>
   </ng-template>
   <div
   class="faq-answer"
+  [id]="answerId"
   [class.faq-answer--open]="data.opened"
   >
     <p class="mb-0 pt-10p" [innerHTML]="data.a"></p>
   </div>
 </div>
 
+<!-- The whole question is the toggle, named by its own text and saying whether
+its answer is open. The chevron used to be the only control: a 37px unlabelled
+button that a screen reader announced as "button" and nothing more. -->
 <ng-template #question>
-  <span>{{data.q}}</span>
   <button
-  class="btn btn-icon pr-0 py-0"
+  type="button"
+  class="faq-question"
+  [attr.aria-expanded]="data.opened ? 'true' : 'false'"
+  [attr.aria-controls]="answerId"
   (click)="toggleState($event)"
   >
+    <span class="faq-question__text">{{data.q}}</span>
     <i
     iconPh="chevron-down"
-    class="text-placeholder"
+    class="faq-question__icon text-placeholder"
+    aria-hidden="true"
     ></i>
   </button>
 </ng-template>

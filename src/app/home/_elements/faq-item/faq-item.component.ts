@@ -1,4 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
+
+/* Ids for aria-controls. Only uniqueness within a page matters: the server's
+ * count runs on from one request to the next, and the browser, which renders
+ * the page again from scratch, starts its own. */
+let nextAnswerId = 0;
+
 @Component({
   selector: 'faq-item',
   templateUrl: './faq-item.component.html',
@@ -11,6 +17,8 @@ export class FaqItemComponent implements OnInit {
    * it. A growth landing puts its questions straight under an H2, so it asks
    * for 3 rather than skip a level in the outline. */
   @Input() headingLevel: 3 | 4 = 4;
+
+  public readonly answerId = 'faq-answer-' + (++nextAnswerId);
 
   constructor() { }
 
