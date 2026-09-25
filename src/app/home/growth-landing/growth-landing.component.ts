@@ -1,6 +1,7 @@
 import {
   AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild,
 } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -47,6 +48,9 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
   public isBookingShown = false;
   public ctaPosition: GrowthCtaPosition = 'direct';
   public bookingStep: BookingStep = 'form';
+  /* Between location.back() and the address it leads to, so a double click on
+   * the close button cannot go back twice and off the page. */
+  private isClosing = false;
 
   /* Whether the reader is between the hero's button and the final one. */
   public isStickyInRange = false;
@@ -61,6 +65,7 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _location: Location,
     private _zone: NgZone,
     private _host: ElementRef,
     private _uService: UniversalService,
@@ -127,7 +132,26 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
+  /*
+   * Closes the way the modal's backdrop does (ModalService), so the close
+   * button, Escape and the backdrop all leave the same history. Opening pushed
+   * an entry, and going back removes it. Replacing it instead left two entries
+   * with the landing's address, and the next Back press went from one to the
+   * other and seemed to do nothing: an extra press to leave the page, for
+   * readers who mostly arrive in an in-app browser.
+   *
+   * A form reached by a link or a reload has no entry of this page's behind
+   * it (the router's first navigation is id 1), and back() would leave the
+   * site, so that one is replaced.
+   */
   closeBooking(): void {
+    if (!this.isBookingShown || this.isClosing) { return; }
+    const state: any = this._location.getState();
+    if (state && state.navigationId > 1) {
+      this.isClosing = true;
+      this._location.back();
+      return;
+    }
     this._router.navigate([], {
       relativeTo: this._route,
       queryParams: { modal: null, cta: null },
@@ -141,6 +165,7 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private onQueryChanged(params: ParamMap): void {
+    this.isClosing = false;
     this.isBookingShown = params.get('modal') === BOOKING_MODAL_ID;
     const cta = params.get('cta');
     this.ctaPosition = isGrowthCtaPosition(cta) ? cta : 'direct';
