@@ -53,6 +53,14 @@ p.growth-note {
   max-width: 820px;
 }
 
+/* On a phone the heading broke with "Yet" alone on its third line, the first
+ * thing a paid visitor reads. The words are her copy, so the lines are
+ * balanced rather than the text edited. Browsers without text-wrap (before
+ * Chrome 114 and Safari 17.5) ignore it and break as before. */
+.growth-hero__heading {
+  text-wrap: balance;
+}
+
 .growth-hero__video {
   max-width: 720px;
 }
