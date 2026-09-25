@@ -34,7 +34,8 @@ export class CardNewPostComponent implements OnInit , OnDestroy {
   get userImage(): string { return this.user ? this.user.profileImage : ''; }
   get user(): MyProfile { return this._profileService.profile; }
 
-  get linkToPlan(): string[] { return this.user?.role == 'P' ? ['/plans/product'] : ['/plans']; }
+  /* Company plans are arranged by conversation now; /plans/product is gone. */
+  get linkToPlan(): string[] { return this.user?.role == 'P' ? ['/contact-us'] : ['/plans']; }
 
   get lengthDescription() { return this.f.description?.value?.length - 1 || 0;}
   // get isDescriptionOverLimit() { return !!(this.lengthDescription > this.maxDescription); }

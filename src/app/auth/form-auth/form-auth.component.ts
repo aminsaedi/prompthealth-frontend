@@ -208,8 +208,10 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
             case 'c':
               next = '/plans';
               break;
+            /* Company plans are no longer sold from the site: a partner is
+             * set up after a conversation. */
             case 'p':
-              next = '/plans/product';
+              next = '/contact-us';
               break;
           }
         }

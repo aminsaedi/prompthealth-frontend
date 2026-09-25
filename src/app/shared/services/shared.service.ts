@@ -637,7 +637,7 @@ export class SharedService {
     return new Promise((resolve, reject) => {
       const ss = this._uService.sessionStorage;
       const savedCoupon: ICouponData = JSON.parse(ss.getItem('stripe_coupon_code'));
-      const _option = new CheckoutPlanOption(option, user.roles);
+      const _option = new CheckoutPlanOption(option);
       // console.log(user);
       const payload: IStripeCheckoutData = {
         cancel_url: _option.cancelUrl,
@@ -703,7 +703,7 @@ export class SharedService {
 type StripeCheckoutType = 'default' | 'addon';
 
 interface ICheckoutPlanOption {
-  cancelUrl?: string; // default: '/plans' || '/plans/product'
+  cancelUrl?: string; // default: '/plans'
   successUrl?: string; // default: '/community'
   showSuccessMessage?: boolean; // default true
   showErrorMessage?: boolean; // default true
@@ -712,8 +712,11 @@ interface ICheckoutPlanOption {
 class CheckoutPlanOption implements ICheckoutPlanOption {
 
   /** if user cancel, user cannot go back to questionnaire page, because data is already destroyed and user will be guarded to access */
+  /* /plans for every role. A company used to go back to /plans/product, which
+   * is retired and now redirects to the contact form, and a cancelled checkout
+   * should not land there. */
   get cancelUrl() {
-    const url = location.origin + (this.data.cancelUrl ? this.data.cancelUrl : ('/plans' + (this.role == 'P' ? '/product' : '')));
+    const url = location.origin + (this.data.cancelUrl ? this.data.cancelUrl : '/plans');
     return url + (this._showErrorMessage ? '?action=stripe-cancel' : '');
   }
 
@@ -726,7 +729,7 @@ class CheckoutPlanOption implements ICheckoutPlanOption {
   private _showSuccessMessage: boolean;
   private _showErrorMessage: boolean;
 
-  constructor(private data: ICheckoutPlanOption, private role: IUserDetail['roles']) {
+  constructor(private data: ICheckoutPlanOption) {
     this._showSuccessMessage = (data.showSuccessMessage === false) ? false : true;
     this._showErrorMessage = (data.showErrorMessage === false) ? false : true;
   }
