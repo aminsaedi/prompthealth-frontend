@@ -17,6 +17,8 @@ export class FooterComponent implements OnInit , OnDestroy {
 
   
   get isU() { return this._profileService.profile?.isU; }
+  /* Read at render, so the footer never goes stale again: it said 2021. */
+  get currentYear() { return new Date().getFullYear(); }
   
   constructor(
     private _qService: QuestionnaireService,

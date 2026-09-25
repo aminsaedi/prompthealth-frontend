@@ -16,7 +16,6 @@ export class SocialButtonsComponent implements OnInit {
     // tiktok: 'https://www.tiktok.com/@prompthealth',
     tiktok: null,
     youtube: 'https://www.youtube.com/channel/UCnMigPMOdit9i6koo3-VSMg',
-    clubhouse: 'https://www.clubhouse.com/club/prompthealth',
   }
 
   @Input() size: number = 40;
@@ -53,5 +52,4 @@ export interface SocialLinkData {
   spotify?: string;
   tiktok: string;
   youtube: string;
-  clubhouse?: string;
 }
