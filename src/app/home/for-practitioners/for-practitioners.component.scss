@@ -21,9 +21,11 @@
   }
 }
 
+/* In the list's 25px left padding, beside the text. At left: 0 each icon sat
+ * on the first letter of its line, since the li starts after that padding. */
 .icon-pre {
   position: absolute;
-  left: 0;
+  left: -25px;
   top: 2px;
   font-size: 18px;
 }
