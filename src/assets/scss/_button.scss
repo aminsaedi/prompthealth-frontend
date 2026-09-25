@@ -178,6 +178,28 @@
   box-shadow: none;
 }
 
+/* The rule above removes Bootstrap's focus glow, and Bootstrap's own
+ * .btn:focus sets outline 0, so a keyboard user tabbing through the site saw
+ * nothing move. :focus-visible is the browser's "focus came from the
+ * keyboard" test, so a mouse click still shows no ring, which is what the
+ * rule above was for. A rule of its own: a browser that does not know the
+ * selector drops the whole rule, and must not drop the one above with it.
+ * The primary blue, as the FAQ toggle has it. */
+.btn:focus-visible {
+  outline: 2px solid $colorPrimary;
+  outline-offset: 2px;
+}
+
+/* On the dark footer and on photographs the blue ring is hard to see, so the
+ * buttons made for dark backgrounds take a white one, as the Growth
+ * landing's buttons on its blue band do. */
+.btn.btn-text-lightgrey:focus-visible,
+.btn.btn-text-light:focus-visible,
+.btn.btn-text-white:focus-visible,
+.btn.btn-icon-white:focus-visible {
+  outline-color: $colorGsWhite;
+}
+
 .btn {
   >* {
     vertical-align: middle;
