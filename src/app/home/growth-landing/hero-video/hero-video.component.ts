@@ -1,6 +1,8 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AnalyticsService } from 'src/app/shared/services/analytics.service';
 import { MetaPixelService } from 'src/app/shared/services/meta-pixel.service';
+import { MediaPlaybackService } from 'src/app/shared/services/media-playback.service';
 import { IGrowthVideo } from '../growth-landing.model';
 
 /* HTMLMediaElement.NETWORK_NO_SOURCE */
@@ -15,13 +17,16 @@ const NETWORK_NO_SOURCE = 3;
  * user's gesture: a <video autoplay> inserted after the tap can sit paused on
  * an iPhone. Until then the native controls are off and the overlay button
  * covers the player, and its click handler calls play() synchronously.
+ *
+ * It pauses when another player on the page starts, and a Short playing below
+ * stops when this one starts (MediaPlaybackService).
  */
 @Component({
   selector: 'hero-video',
   templateUrl: './hero-video.component.html',
   styleUrls: ['./hero-video.component.scss'],
 })
-export class HeroVideoComponent {
+export class HeroVideoComponent implements OnDestroy {
 
   @Input() video: IGrowthVideo;
   /* The landing's registry key, for the analytics label. */
@@ -31,11 +36,23 @@ export class HeroVideoComponent {
 
   public started = false;
   private reported = false;
+  private readonly playerId: string;
+  private readonly otherStarted: Subscription;
 
   constructor(
     private _analytics: AnalyticsService,
     private _pixel: MetaPixelService,
-  ) {}
+    private _playback: MediaPlaybackService,
+  ) {
+    this.playerId = _playback.newPlayerId();
+    this.otherStarted = _playback.started.subscribe(id => {
+      if (id !== this.playerId) { this.pause(); }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.otherStarted.unsubscribe();
+  }
 
   private get element(): HTMLVideoElement {
     return this.player ? this.player.nativeElement as HTMLVideoElement : null;
@@ -83,12 +100,24 @@ export class HeroVideoComponent {
     }
   }
 
-  /* Reported once per page, on the first play however it started. */
+  /* Every play stops the other players, from the overlay, the native controls
+   * or a resume. Reported once per page, on the first play however it
+   * started. */
   onPlay(): void {
     this.started = true;
+    this._playback.announce(this.playerId);
     if (this.reported) { return; }
     this.reported = true;
     this._analytics.event('video_play', { video_title: this.landingKey + '-hero' });
     this._pixel.trackCustom('HeroVideoPlay');
+  }
+
+  private pause(): void {
+    const video = this.element;
+    try {
+      if (video && !video.paused) { video.pause(); }
+    } catch (e) {
+      /* nothing is playing that could be paused */
+    }
   }
 }

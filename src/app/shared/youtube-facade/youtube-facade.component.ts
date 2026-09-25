@@ -1,5 +1,7 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+import { MediaPlaybackService } from '../services/media-playback.service';
 
 /* The only ids an embed is ever built from. The address is marked trusted for
  * the iframe, which switches off Angular's sanitizer for it, so nothing but a
@@ -22,13 +24,17 @@ const MISSING_THUMBNAIL_WIDTH = 120;
  * autoplay, and the visitor taps the player's own button a second time. Loading
  * the IFrame Player API on click (about 165 KB) does not reliably fix that
  * either, so the second tap is accepted.
+ *
+ * When another player on the page starts, this one goes back to its thumbnail.
+ * Removing the iframe is what stops YouTube's player, so the IFrame API is not
+ * needed for that either.
  */
 @Component({
   selector: 'youtube-facade',
   templateUrl: './youtube-facade.component.html',
   styleUrls: ['./youtube-facade.component.scss'],
 })
-export class YoutubeFacadeComponent implements OnChanges {
+export class YoutubeFacadeComponent implements OnChanges, OnDestroy {
 
   @Input() videoId: string;
   @Input() title = '';
@@ -39,8 +45,20 @@ export class YoutubeFacadeComponent implements OnChanges {
   public thumbnail = '';
   public embedUrl: SafeResourceUrl = null;
   private triedFallback = false;
+  private readonly playerId: string;
+  private readonly otherStarted: Subscription;
 
-  constructor(private _sanitizer: DomSanitizer) {}
+  constructor(
+    private _sanitizer: DomSanitizer,
+    private _playback: MediaPlaybackService,
+  ) {
+    this.playerId = _playback.newPlayerId();
+    this.otherStarted = _playback.started.subscribe(id => {
+      if (id !== this.playerId && this.isPlaying) {
+        this.stop();
+      }
+    });
+  }
 
   get isValid(): boolean { return YOUTUBE_ID.test(this.videoId || ''); }
   get isPortrait(): boolean { return this.ratio === '9:16'; }
@@ -70,11 +88,21 @@ export class YoutubeFacadeComponent implements OnChanges {
     this.thumbnail = `https://i.ytimg.com/vi/${this.videoId}/hqdefault.jpg`;
   }
 
+  ngOnDestroy(): void {
+    this.otherStarted.unsubscribe();
+  }
+
   play(): void {
     if (!this.isValid) { return; }
     this.embedUrl = this._sanitizer.bypassSecurityTrustResourceUrl(
       `https://www.youtube-nocookie.com/embed/${this.videoId}?autoplay=1&playsinline=1&rel=0`
     );
     this.isPlaying = true;
+    this._playback.announce(this.playerId);
+  }
+
+  private stop(): void {
+    this.isPlaying = false;
+    this.embedUrl = null;
   }
 }
