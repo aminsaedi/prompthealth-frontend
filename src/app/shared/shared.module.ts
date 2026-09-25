@@ -13,8 +13,6 @@ import { SharedCoreModule } from './shared-core.module';
 // Components NOT in SharedCoreModule (only needed by lazy-loaded modules)
 import { SearchPipe } from '../shared/pipes/search-pipe';
 import { UserSidebarComponent } from './user-sidebar/user-sidebar.component';
-import { SubscriptionPlanItemCardComponent } from './subscription-plan-item-card/subscription-plan-item-card.component';
-import { SubscriptionPlanAddonCardComponent } from './subscription-plan-addon-card/subscription-plan-addon-card.component';
 import { PriceRangeSwitcherComponent } from './price-range-switcher/price-range-switcher.component';
 import { FocusDirective } from './focus.directive';
 import { SocialButtonsComponent } from './social-buttons/social-buttons.component';
@@ -62,8 +60,6 @@ import { YoutubeFacadeComponent } from './youtube-facade/youtube-facade.componen
 const LAZY_DECLARATIONS = [
   UserSidebarComponent,
   SearchPipe,
-  SubscriptionPlanItemCardComponent,
-  SubscriptionPlanAddonCardComponent,
   PriceRangeSwitcherComponent,
   FocusDirective,
   SocialButtonsComponent,

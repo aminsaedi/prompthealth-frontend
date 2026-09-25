@@ -18,11 +18,7 @@ import { ProfileManagementService } from 'src/app/shared/services/profile-manage
 
 import { DOCUMENT } from '@angular/common';
 import { UniversalService } from './universal.service';
-import { IStripeCheckoutData } from 'src/app/models/stripe-checkout-data';
-import { StripeService } from 'ngx-stripe';
 import { IUserDetail } from 'src/app/models/user-detail';
-import { IDefaultPlan } from 'src/app/models/default-plan';
-import { IAddonPlan } from 'src/app/models/addon-plan';
 import { IResponseData } from 'src/app/models/response-data';
 import { ToastrService } from 'ngx-toastr';
 import { Professional } from 'src/app/models/professional';
@@ -43,7 +39,6 @@ export class SharedService {
     private previousRouteService: PreviousRouteService,
     private _bs: BehaviorService,
     private _uService: UniversalService,
-    @Optional() private _stripeService: StripeService,
     private _profileManager: ProfileManagementService,
     private _socialManager: SocialService,
     private _toastr: ToastrService,
@@ -571,95 +566,6 @@ export class SharedService {
     });
   }
 
-  async checkoutPlan(
-    user: IUserDetail,
-    plan: IDefaultPlan | IAddonPlan,
-    type: StripeCheckoutType,
-    monthly: boolean,
-    metadata = {}, // this is for addon plan
-    option: ICheckoutPlanOption = {}
-  ): Promise<{ message: string, nextAction: string }> {
-    const result = { message: null, nextAction: null };
-    if (plan.price == 0 && plan.name == 'Basic') {
-      try {
-        result.message = await this.checkoutFreePlan(user, (plan as IDefaultPlan));
-        result.nextAction = 'complete';
-        return result;
-      } catch (error) {
-        throw error;
-      }
-    } else {
-      try {
-        result.message = await this.checkoutPremiumPlan(user, plan, type, monthly, metadata, option);
-        result.nextAction = 'stripe';
-        return result;
-      } catch (error) {
-        throw error;
-      }
-    }
-  }
-
-  private checkoutFreePlan(user: IUserDetail, plan: IDefaultPlan): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const payload: IUserDetail = { _id: user._id, plan };
-      this.post(payload, 'user/updateProfile').subscribe((res: IResponseData) => {
-        if (res.statusCode === 200) { resolve(res.message); } else { reject(res.message); }
-      }, err => {
-        reject('There are some errors, please try again after some time!');
-      });
-    });
-  }
-
-  private checkoutPremiumPlan(
-    user: IUserDetail,
-    plan: IDefaultPlan | IAddonPlan,
-    type: StripeCheckoutType,
-    monthly: boolean,
-    metadata = null,
-    option: ICheckoutPlanOption = {}
-  ): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const _option = new CheckoutPlanOption(option);
-      // console.log(user);
-      const payload: IStripeCheckoutData = {
-        cancel_url: _option.cancelUrl,
-        success_url: _option.successUrl,
-        userId: user._id,
-        userType: user.roles,
-        email: user.email,
-        plan,
-        isMonthly: monthly,
-        type,
-      };
-      if (metadata) {
-        payload.metadata = metadata;
-      }
-
-      this.post(payload, 'user/checkoutSession').subscribe((res: IResponseData) => {
-        if (res.statusCode === 200) {
-          // console.log(res.data);
-          this._stripeService.changeKey(environment.config.stripeKey);
-
-          if (res.data.type === 'checkout') {
-            this._stripeService.redirectToCheckout({ sessionId: res.data.sessionId }).subscribe(stripeResult => {
-              // console.log('success!');
-            }, error => {
-            });
-            resolve('Checking out...');
-          } else if (res.data.type === 'portal') {
-            // console.log(res.data);
-            location.href = res.data.url;
-            resolve('You already have this plan. Redirecting to billing portal.');
-          }
-        } else {
-          reject(res.message);
-        }
-      }, (error) => {
-        reject(error);
-      });
-    });
-  }
-
   getReferrer() {
     const ref = document.referrer;
     let res: string;
@@ -669,43 +575,6 @@ export class SharedService {
       res = ref.replace(/http(s)?:\/\//, '').replace(/\/.*$/, '');
     }
     return res;
-  }
-}
-
-
-
-type StripeCheckoutType = 'default' | 'addon';
-
-interface ICheckoutPlanOption {
-  cancelUrl?: string; // default: '/plans'
-  successUrl?: string; // default: '/community'
-  showSuccessMessage?: boolean; // default true
-  showErrorMessage?: boolean; // default true
-}
-
-class CheckoutPlanOption implements ICheckoutPlanOption {
-
-  /** if user cancel, user cannot go back to questionnaire page, because data is already destroyed and user will be guarded to access */
-  /* /plans for every role. A company used to go back to /plans/product, which
-   * is retired and now redirects to the contact form, and a cancelled checkout
-   * should not land there. */
-  get cancelUrl() {
-    const url = location.origin + (this.data.cancelUrl ? this.data.cancelUrl : '/plans');
-    return url + (this._showErrorMessage ? '?action=stripe-cancel' : '');
-  }
-
-  /** currently, practitioner complete page url is same as product complete page. */
-  get successUrl() {
-    const url = location.origin + (this.data.successUrl ? this.data.successUrl : '/community');
-    return url + (this._showSuccessMessage ? '?action=stripe-success' : '');
-  }
-
-  private _showSuccessMessage: boolean;
-  private _showErrorMessage: boolean;
-
-  constructor(private data: ICheckoutPlanOption) {
-    this._showSuccessMessage = (data.showSuccessMessage === false) ? false : true;
-    this._showErrorMessage = (data.showErrorMessage === false) ? false : true;
   }
 }
 

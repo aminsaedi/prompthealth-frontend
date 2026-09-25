@@ -23,7 +23,6 @@ export class HeaderComponent implements OnInit , OnDestroy {
   private destroy$ = new Subject<void>();
 
 
-  get onProductPage(){ return !!this._router.url.match('product'); }
   get isLoggedIn(): boolean { return !!this.user; }
   get userRole() { return this.user ? this.user.role : null; }
   get userId() { return this.user ? this.user._id : ''; }
