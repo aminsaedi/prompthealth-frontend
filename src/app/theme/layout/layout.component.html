@@ -48,6 +48,10 @@
           <div class="subtitle1" (click)="onClickFindProviders()">Find Providers</div>
         </list-item>
 
+        <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/for-dentists')">
+          <div class="subtitle1">For Dentists</div>
+        </list-item>
+
         <list-item action="chevron-right" (onTap)="onClickMenuItemSm('/about')">
           <div class="subtitle1">About</div>
         </list-item>
@@ -60,8 +64,9 @@
             <div class="subtitle1">Get Listed</div>
           </list-item> -->
 
+        <!-- No page shows pricing any more; the menu opens onto the plans. -->
         <list-item action="chevron-down" (onTap)="onClickGetListed()">
-          <div class="subtitle1">Pricing</div>
+          <div class="subtitle1">Plans</div>
         </list-item>
 
         <div *ngIf="isPlanMenuShown" [@expandVertical]>
