@@ -1099,10 +1099,11 @@ export class ProfileComponent implements OnInit , OnDestroy {
   /* The request needs a session (POST /booking/create is behind checkToken),
    * so a reader who is not signed in is asked to sign in first. The login
    * modal keeps them on this profile, where "Book now" then opens the form.
-   * A profile the backend takes no requests for never shows the button, and
-   * is refused here too in case a stale template still calls this. */
+   * A profile the backend takes no requests for, and the reader's own, never
+   * shows the button, and is refused here too in case a stale template still
+   * calls this. */
   onClickBook() {
-    if(!this.profile?.takesBookingRequests) {
+    if(!this.profile?.takesBookingRequests || this.isProfileMyself) {
       return;
     }
     if(this.user) {
@@ -1279,6 +1280,10 @@ export class ProfileComponent implements OnInit , OnDestroy {
      * so the button's conditions are checked again here. */
     if (!this.profile?.takesBookingRequests) {
       this._toastr.error('This provider is not taking booking requests on PromptHealth.');
+      return;
+    }
+    if (this.isProfileMyself) {
+      this._toastr.error('You cannot send a booking request to yourself.');
       return;
     }
     if (!this.user) {

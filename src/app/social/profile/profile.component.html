@@ -364,8 +364,10 @@
 </ng-template>
 
 <!-- Not rendered where the backend takes no requests, so ?modal=booking
-     (a reload, a shared link) cannot open the form on such a profile. -->
-<ng-container *ngIf="profile?.takesBookingRequests">
+     (a reload, a shared link) cannot open the form on such a profile. That
+     includes the provider's own profile: the backend refuses a request to
+     yourself, and the button above is already hidden there. -->
+<ng-container *ngIf="profile?.takesBookingRequests && !isProfileMyself">
   <modal
   id="booking"
   [bodyStyle]="{'padding-bottom': 0, 'max-width': '650px'}"
