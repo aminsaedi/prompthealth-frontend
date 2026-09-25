@@ -34,7 +34,7 @@ export class ForPractitionersComponent implements OnInit, OnDestroy {
       {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        name: 'For Practitioners — List Your Practice on PromptHealth',
+        name: 'For Practitioners: List Your Practice on PromptHealth',
         description:
           'Join PromptHealth to get discovered by patients searching on Google and AI tools. List your wellness practice and grow your patient base.',
         url: 'https://www.prompthealth.ca/for-practitioners',
@@ -130,7 +130,7 @@ const features = [
     icon: 'video-library',
     title: 'Expert Video Content',
     description:
-      'We produce professional video interviews shared across our YouTube, TikTok, and Instagram channels — reaching over 1 million health-conscious followers.',
+      'We produce professional video interviews shared across our YouTube, TikTok, and Instagram channels, reaching over 1 million health-conscious followers.',
   },
   {
     icon: 'file',
@@ -142,7 +142,7 @@ const features = [
     icon: 'chart-bar',
     title: 'Data-Driven Visibility',
     description:
-      'Track your performance with insights on profile views, content engagement, and patient inquiries — so you know what\'s working.',
+      'Track your performance with insights on profile views, content engagement, and patient inquiries, so you know what\'s working.',
   },
   {
     icon: 'user-check-outline',
@@ -203,17 +203,17 @@ const faqs: IFAQItem[] = [
   },
   {
     q: 'Do I need to create content myself?',
-    a: 'No — we handle everything. Our team conducts a professional video interview via Zoom, edits the content, and publishes it across our platforms including YouTube, TikTok, and Instagram. We also create written articles optimized for search.',
+    a: 'No, we handle everything. Our team conducts a professional video interview via Zoom, edits the content, and publishes it across our platforms including YouTube, TikTok, and Instagram. We also create written articles optimized for search.',
     opened: false,
   },
   {
     q: 'How is this different from other provider directories?',
-    a: 'Most directories are passive listings. PromptHealth actively drives patient traffic to your profile through <strong>SEO content, video distribution, and AI search optimization</strong>. We don\'t just list you — we make sure patients find you.',
+    a: 'Most directories are passive listings. PromptHealth actively drives patient traffic to your profile through <strong>SEO content, video distribution, and AI search optimization</strong>. We don\'t just list you: we make sure patients find you.',
     opened: false,
   },
   {
     q: 'What types of practitioners can join?',
-    a: 'PromptHealth welcomes all licensed wellness and healthcare providers — including naturopaths, chiropractors, physiotherapists, psychologists, dentists, nutritionists, acupuncturists, and more. We cover 50+ wellness categories.',
+    a: 'PromptHealth welcomes all licensed wellness and healthcare providers, including naturopaths, chiropractors, physiotherapists, psychologists, dentists, nutritionists, acupuncturists, and more. We cover 50+ wellness categories.',
     opened: false,
   },
   {

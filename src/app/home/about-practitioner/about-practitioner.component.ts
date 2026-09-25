@@ -268,7 +268,7 @@ const faqs: IFAQItem[] = [
     q: "What kind of content will be posted?",
     a: `
 <ul>
-  <li>Short-form clips (30–60 sec) from your interview will be shared on TikTok and Instagram</li>
+  <li>Short-form clips (30 to 60 sec) from your interview will be shared on TikTok and Instagram</li>
   <li>A long-form version will be posted on our YouTube channel</li>
   <li>Posts are shared as a collab (tagging your account for exposure)</li>
 </ul>
