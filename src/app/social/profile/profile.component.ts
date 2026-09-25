@@ -545,9 +545,21 @@ export class ProfileComponent implements OnInit , OnDestroy {
       const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
       const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
       const canonicalPath = this.profile?.slug ? `/practitioners/${this.profile.slug}` : url;
+      /* The About page is the profile's canonical URL, the one that gets
+       * shared, and it was the one tab that named no image, so every share
+       * showed the site card instead of the provider. The same photo as the
+       * other tabs, or none, and then setMeta uses the site card. No size:
+       * the upload keeps whatever the provider sent, and a guessed pair is
+       * worse than none (setMeta). */
+      const p = this.profile;
       this._uService.setMeta(canonicalPath, {
-        title: `${this.profile.name}${this.profile.city || this.profile.state ? ` in ${[this.profile.city, this.profile.state].filter(Boolean).join(', ')}` : ''} | PromptHealth Community`,
-        description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
+        title: `${p.name}${p.city || p.state ? ` in ${[p.city, p.state].filter(Boolean).join(', ')}` : ''} | PromptHealth Community`,
+        description: `${p.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
+        ...(p.profileImageFull ? {
+          image: p.profileImageFull,
+          imageType: p.imageType,
+          imageAlt: p.name,
+        } : {}),
       });
 
       // Set structured data for AI and search engine discoverability
