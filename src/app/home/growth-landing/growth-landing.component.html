@@ -72,7 +72,7 @@
       </ol>
       <div class="text-center mt-30p mt-md-50p">
         <p class="small font-italic text-label growth-note mb-20p">{{ config.stepsFootnote }}</p>
-        <button type="button" class="btn btn-primary" (click)="openBooking('steps')">{{ config.ctaLabel }}</button>
+        <button #stepsCta type="button" class="btn btn-primary" (click)="openBooking('steps')">{{ config.ctaLabel }}</button>
       </div>
     </div>
   </section>
@@ -105,11 +105,18 @@
   <!-- Phones only, between the hero's button and the final one. Not rendered
   until the observer places it, so the server's HTML never has it. -->
   <div *ngIf="isStickyShown" class="growth-sticky">
-    <button type="button" class="btn btn-primary growth-sticky__button" (click)="openBooking('sticky')">{{ config.ctaLabel }}</button>
+    <button #stickyCta type="button" class="btn btn-primary growth-sticky__button" (click)="openBooking('sticky')">{{ config.ctaLabel }}</button>
   </div>
 
   <modal [id]="bookingModalId" [bodyStyle]="bookingBodyStyle">
-    <div class="growth-booking" role="dialog" aria-modal="true" aria-labelledby="booking-form-heading">
+    <div
+    #dialog
+    class="growth-booking"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="booking-form-heading"
+    (keydown)="onDialogKeydown($event)"
+    >
       <button type="button" class="btn btn-icon small growth-booking__close" aria-label="Close" (click)="closeBooking()">
         <i iconPh="cross" aria-hidden="true"></i>
       </button>

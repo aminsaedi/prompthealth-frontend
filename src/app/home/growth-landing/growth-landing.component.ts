@@ -22,6 +22,9 @@ const HEADER_HEIGHT_PX = 61;
 /* One object, not a new one per change detection pass: the modal's input
  * would otherwise change on every check. */
 const WIDE_MODAL_BODY = { maxWidth: '720px' };
+/* What Tab can reach. Filtered further by tabIndex, disabled and rendering
+ * (see dialogFocusables). */
+const FOCUSABLE = 'a[href], area[href], button, input, select, textarea, iframe, [tabindex]';
 
 /*
  * A growth landing: the page a paid ad sends a practitioner to, rendered from a
@@ -57,7 +60,11 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
   private isMenuShown = false;
 
   @ViewChild('heroCta') private heroCta: ElementRef;
+  @ViewChild('stepsCta') private stepsCta: ElementRef;
   @ViewChild('finalCta') private finalCta: ElementRef;
+  @ViewChild('stickyCta') private stickyCta: ElementRef;
+  @ViewChild('dialog') private dialog: ElementRef;
+  private isTrappingFocus = false;
 
   private observer: IntersectionObserver = null;
   private destroy$ = new Subject<void>();
@@ -111,6 +118,7 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.trapFocus(false);
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
@@ -164,12 +172,42 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     this.bookingStep = step;
   }
 
+  /*
+   * Tab and Shift+Tab go round the dialog rather than out of it: past Send,
+   * focus used to walk on through the footer links behind the backdrop, where
+   * nobody can see it. The close button is always the first stop.
+   */
+  onDialogKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'Tab') { return; }
+    const items = this.dialogFocusables();
+    if (items.length === 0) { return; }
+    const first = items[0];
+    const last = items[items.length - 1];
+    const active = document.activeElement;
+    if (event.shiftKey && active === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
   private onQueryChanged(params: ParamMap): void {
+    const wasShown = this.isBookingShown;
+    const openedFrom = this.ctaPosition;
     this.isClosing = false;
     this.isBookingShown = params.get('modal') === BOOKING_MODAL_ID;
     const cta = params.get('cta');
     this.ctaPosition = isGrowthCtaPosition(cta) ? cta : 'direct';
     this.isMenuShown = params.get('menu') === 'show';
+
+    if (this.isBookingShown && !wasShown) {
+      this.trapFocus(true);
+    } else if (!this.isBookingShown && wasShown) {
+      this.trapFocus(false);
+      this.returnFocus(openedFrom);
+    }
 
     /* The modal's backdrop closes it through ModalService, which removes
      * modal and modal-data and knows nothing of cta. Left behind, a stale cta
@@ -183,6 +221,87 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
         replaceUrl: true,
       });
     }
+  }
+
+  /* What Tab can reach inside the dialog now: the close button first, then the
+   * form or the thank-you, and the Calendly frame on its step. The honeypot is
+   * out of the tab order, and a disabled Send is skipped. */
+  private dialogFocusables(): HTMLElement[] {
+    const root: HTMLElement = this.dialog ? this.dialog.nativeElement : null;
+    if (!root) { return []; }
+    const all: HTMLElement[] = Array.prototype.slice.call(root.querySelectorAll(FOCUSABLE));
+    return all.filter(el => el.tabIndex >= 0 && !(el as any).disabled && el.getClientRects().length > 0);
+  }
+
+  /*
+   * A fallback for what the keydown handler cannot see. Tab pressed inside the
+   * Calendly frame is handled by Calendly's document, not this one, and on
+   * the thank-you step Tab from the heading has nowhere in the dialog to go.
+   * Either way focus lands on the page behind, and is brought back to the
+   * start of the dialog.
+   */
+  private trapFocus(on: boolean): void {
+    if (!this._uService.isBrowser || on === this.isTrappingFocus) { return; }
+    this.isTrappingFocus = on;
+    if (on) {
+      this._zone.runOutsideAngular(() => document.addEventListener('focusin', this.onFocusIn, true));
+    } else {
+      document.removeEventListener('focusin', this.onFocusIn, true);
+    }
+  }
+
+  private onFocusIn = (event: FocusEvent) => {
+    const root: HTMLElement = this.dialog ? this.dialog.nativeElement : null;
+    const target = event.target as Node;
+    /* Not yet in the page: the modal renders after the query changes. */
+    if (!root || !document.body.contains(root) || !target || root.contains(target)) { return; }
+    const items = this.dialogFocusables();
+    if (items.length > 0) { items[0].focus(); }
+  }
+
+  /*
+   * Back to the button that opened the form, however it closed: close
+   * button, Escape, backdrop or Back. Without this, focus fell to the body,
+   * and a keyboard reader who opened the form from the final button or the
+   * sticky bar started again from the logo at the top of the page.
+   *
+   * The position comes from the address, so it works for a form reopened by
+   * Forward as well. A form reached by a link names no button, and focus is
+   * left alone.
+   *
+   * The sticky bar is gone while the form is open, and back only if the
+   * reader is still between the hero's button and the final one. If not,
+   * the final button when it is on screen, otherwise the hero's. Scrolling is
+   * suppressed, so a reader on a touch screen, who never sees focus, is not
+   * moved.
+   */
+  private returnFocus(position: GrowthCtaPosition): void {
+    if (!this._uService.isBrowser || position === 'direct') { return; }
+    /* After this change detection pass, which puts the sticky bar back. */
+    setTimeout(() => {
+      let target = this.ctaElement(position);
+      if (!target && position === 'sticky') {
+        const final = this.ctaElement('final');
+        target = final && final.getBoundingClientRect().top < window.innerHeight ? final : this.ctaElement('hero');
+      }
+      if (!target || typeof target.focus !== 'function') { return; }
+      try {
+        target.focus({ preventScroll: true });
+      } catch (e) {
+        target.focus();
+      }
+    });
+  }
+
+  private ctaElement(position: GrowthCtaPosition): HTMLElement {
+    let ref: ElementRef = null;
+    switch (position) {
+      case 'hero': ref = this.heroCta; break;
+      case 'steps': ref = this.stepsCta; break;
+      case 'final': ref = this.finalCta; break;
+      case 'sticky': ref = this.stickyCta; break;
+    }
+    return ref ? ref.nativeElement : null;
   }
 
   private setMeta(): void {
