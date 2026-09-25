@@ -111,6 +111,8 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
       this.observer = null;
     }
     this._jsonLd.removeJsonLd();
+    /* The Pixel runs on this page only; the next page must not report to it. */
+    this._pixel.leave();
   }
 
   /* Merged into the query as it stands, so a campaign's utm_* stay in the
