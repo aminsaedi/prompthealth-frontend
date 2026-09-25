@@ -455,14 +455,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
     const tab = this.activeTabOf(url);
     const p = this.profile;
     const canonicalPath = this.getCanonicalPath(url);
-    /* The provider's own photo, or none: imageFull falls back to
-     * /assets/img/no-image.jpg, which went out as the share image of every
-     * tab of a provider without a photo. setMeta then uses the site card. */
-    const imageMeta = p.profileImageFull ? {
-      image: p.profileImageFull,
-      imageType: p.imageType,
-      imageAlt: p.name,
-    } : {};
+    const imageMeta = this.shareImageMeta();
 
     if (tab === '/event/past') {
       this._uService.setMeta(canonicalPath, {
@@ -503,6 +496,26 @@ export class ProfileComponent implements OnInit , OnDestroy {
     } else {
       this.setMetaForAbout();
     }
+  }
+
+  /* The provider's own photo as the share image, or none, and then setMeta
+   * uses the site card. imageFull falls back to /assets/img/no-image.jpg,
+   * which went out as the share image of every tab of a provider without a
+   * photo.
+   *
+   * Only a photo whose type is known. Some older accounts (52 live profiles
+   * when this was written, most from 2021) keep theirs under an S3 key with
+   * no extension, which S3 serves as binary/octet-stream, and Facebook's
+   * scraper refuses an og:image that is not served as an image. For those
+   * providers a share would show no picture where the site card shows one.
+   * imageType comes from the key's extension, so an empty one is exactly
+   * that case. */
+  private shareImageMeta(): { image?: string, imageType?: string, imageAlt?: string } {
+    const p = this.profile;
+    if (!p || !p.profileImageFull || !p.imageType) {
+      return {};
+    }
+    return { image: p.profileImageFull, imageType: p.imageType, imageAlt: p.name };
   }
 
   /* The tab is the segment after the profile's id or slug. Matched anywhere
@@ -547,11 +560,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
       this._uService.setMeta(canonicalPath, {
         title: `${p.name}${p.city || p.state ? ` in ${[p.city, p.state].filter(Boolean).join(', ')}` : ''} | PromptHealth Community`,
         description: `${p.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
-        ...(p.profileImageFull ? {
-          image: p.profileImageFull,
-          imageType: p.imageType,
-          imageAlt: p.name,
-        } : {}),
+        ...this.shareImageMeta(),
       });
 
       // Set structured data for AI and search engine discoverability
