@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef , OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { HeaderStatusService } from '../../shared/services/header-status.service';
 import { environment } from '../../../environments/environment';
 import { expandVerticalAnimation, fadeAnimation, fadeFastAnimation, slideHorizontalAnimation, slideVerticalAnimation } from '../../_helpers/animations';
@@ -11,7 +11,7 @@ import { Subscription , Subject } from 'rxjs';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { getListedMenu } from 'src/app/_helpers/get-listed-menu';
 import { SearchBarService } from 'src/app/shared/services/search-bar.service';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -43,6 +43,9 @@ export class HeaderComponent implements OnInit , OnDestroy {
   public isHeaderShown = true;
   public isShadowShown = false;
   public isPlanMenuShown = false;
+  /* On a growth landing the header's call to action would point at the page
+   * the reader is on, and compete with the page's own button. */
+  public onGrowthLanding = false;
 
   public AWS_S3 = environment.config.AWS_S3;
 
@@ -62,6 +65,16 @@ export class HeaderComponent implements OnInit , OnDestroy {
   async ngOnInit() {
     const ls = this._uService.localStorage;
 
+    /* From the route, not the address: the route's data says what the page
+     * is. Read now for the server render, and again after each navigation. */
+    this.onGrowthLanding = this.isGrowthLandingRoute();
+    this._router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$),
+    ).subscribe(() => {
+      this.onGrowthLanding = this.isGrowthLandingRoute();
+    });
+
     if (!this._uService.isServer) {
       this._headerStatusService.observeHeaderStatus().pipe(takeUntil(this.destroy$)).subscribe(([key, val]: [string, any]) => {
         this[key] = val;
@@ -72,6 +85,12 @@ export class HeaderComponent implements OnInit , OnDestroy {
         this.setPriceType(this.user ? this.user.role : null);
       });
     }
+  }
+
+  private isGrowthLandingRoute(): boolean {
+    let route: ActivatedRouteSnapshot = this._router.routerState.snapshot.root;
+    while (route.firstChild) { route = route.firstChild; }
+    return !!(route.data && route.data.growthLanding);
   }
 
   /* The menu is state on top of the page, not a new page, so it keeps the rest

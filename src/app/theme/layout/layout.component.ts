@@ -81,6 +81,14 @@ export class LayoutComponent implements OnDestroy, OnInit {
 
     this.changeStatusBasedOnPath();
 
+    /* The address this layout was created for. It is created during the
+     * first navigation and subscribes only here, after that navigation's
+     * NavigationEnd has gone by, so urlPrev used to stay '' until the next
+     * one. The next one is usually the page opening something through its
+     * query (the mobile menu, a modal, the booking form), and '' against the
+     * path read as a new page and scrolled the reader to the top. */
+    this.urlPrev = this._router.url;
+
     this.routerEventSubscription = this._router.events.subscribe((event) => {
       if (event instanceof ActivationStart) { 
         this.isInitial = false; 

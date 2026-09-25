@@ -160,6 +160,12 @@ export function app() {
   /* The retired 2021 coupon landing (home-routing.module.ts). '/invitation/'
    * matches too; '/invitation/<id>', the ambassador's client invitation, does not. */
   server.get('/invitation', (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/plans')); });
+  /* The company plans page, retired 2026-09. Company accounts are no longer
+   * opened from the site; a partner is set up after a conversation, which
+   * starts at the contact form. The app's own redirect would answer 200, with
+   * the contact page, at the old address; a 301 tells a crawler the page
+   * moved, and costs no render. */
+  server.get(['/plans/product', '/plans/product/'], (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/contact-us')); });
 
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })

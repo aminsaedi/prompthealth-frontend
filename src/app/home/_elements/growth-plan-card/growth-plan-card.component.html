@@ -1,0 +1,15 @@
+<div class="card h-100 p-30p d-flex flex-column" [ngClass]="cardClass">
+  <div *ngIf="icon" class="mb-20p">
+    <i [iconPh]="icon" style="font-size: 42px" class="text-primary"></i>
+  </div>
+  <p class="eyebrow text-primary mb-10p">{{ card.eyebrow }}</p>
+  <h3 class="h4 h3-md mb-10p">{{ card.heading }}</h3>
+  <p class="text-label mb-25p">{{ card.body }}</p>
+  <!-- The spacer takes the slack, so this card's button lines up with the free
+       card's however long either one's text runs. -->
+  <div class="flex-grow-1">
+    <p class="flow subtitle1 text-primary-dark mb-15p">{{ card.flow }}</p>
+    <p class="body2 text-label mb-0">{{ card.availability }}</p>
+  </div>
+  <a [routerLink]="card.link" class="btn btn-primary mt-30p w-100">{{ card.button }}</a>
+</div>

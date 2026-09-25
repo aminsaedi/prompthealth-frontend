@@ -203,8 +203,15 @@ export class JourneyService implements OnDestroy {
 
   /* Global Privacy Control and Do Not Track are honoured by not keeping an id
    * that outlives the visit. The visit is still counted, because a count with
-   * nothing attached to it is not the thing either signal is about. */
-  private tracksAcrossVisits(): boolean {
+   * nothing attached to it is not the thing either signal is about.
+   *
+   * Public because the same answer governs AttributionService (whether a
+   * campaign is remembered past the visit) and MetaPixelService (whether the
+   * Pixel loads at all): one reading of the signal, so the three never
+   * disagree about the same reader. False on the server, which has no reader to
+   * ask; domino's navigator would otherwise answer for them. */
+  public tracksAcrossVisits(): boolean {
+    if (!this.uService.isBrowser) { return false; }
     try {
       const nav: any = window.navigator;
       if (nav.globalPrivacyControl === true) { return false; }

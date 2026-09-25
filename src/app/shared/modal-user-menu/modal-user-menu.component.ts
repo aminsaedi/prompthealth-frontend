@@ -18,7 +18,8 @@ export class ModalUserMenuComponent implements OnInit {
   get userId() { return this.user ? this.user._id : ''; }
   get userCoverImage() { return this.coverImageTemp ? this.coverImageTemp : this.user ? this.user.coverImage : ''; };
   get userProfileImage() { return this.profileImageTemp ? this.profileImageTemp : this.user ? this.user.profileImageFull : ''; };
-  get linkToPlan(): string[] { return this.user?.role == 'P' ? ['/plans/product'] : ['/plans']; }
+  /* Company plans are arranged by conversation now; /plans/product is gone. */
+  get linkToPlan(): string[] { return this.user?.role == 'P' ? ['/contact-us'] : ['/plans']; }
   get eligibleToUpgradePlan() { return !!(this.user && (this.user.isProvider || this.user.isP) && !this.user.isPaid); }
 
   public isUploading = false;

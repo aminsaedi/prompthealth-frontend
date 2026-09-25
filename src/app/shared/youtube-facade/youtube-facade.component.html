@@ -1,0 +1,31 @@
+<div class="yt-facade" [class.yt-facade--portrait]="isPortrait">
+  <button
+  *ngIf="!isPlaying"
+  type="button"
+  class="yt-facade__button"
+  [disabled]="!isValid"
+  [attr.aria-label]="'Play video: ' + title"
+  (click)="play()"
+  >
+    <img
+    *ngIf="thumbnail"
+    class="yt-facade__thumb"
+    [src]="thumbnail"
+    alt=""
+    loading="lazy"
+    [attr.width]="isPortrait ? 360 : 640"
+    [attr.height]="isPortrait ? 640 : 360"
+    (load)="onThumbnailLoad($event.target)"
+    (error)="onThumbnailError()"
+    >
+    <span class="yt-facade__glyph" aria-hidden="true"></span>
+  </button>
+  <iframe
+  *ngIf="isPlaying"
+  class="yt-facade__frame"
+  [src]="embedUrl"
+  [title]="title"
+  allow="autoplay; encrypted-media; picture-in-picture"
+  allowfullscreen
+  ></iframe>
+</div>

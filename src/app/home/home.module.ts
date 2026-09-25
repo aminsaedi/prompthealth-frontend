@@ -32,7 +32,6 @@ import { AboutPractitionerComponent } from './about-practitioner/about-practitio
 import { ScrollIndicatorComponent } from './_elements/scroll-indicator/scroll-indicator.component';
 import { FaqItemComponent } from './_elements/faq-item/faq-item.component';
 import { TablePlanFeatureComponent } from './_elements/table-plan-feature/table-plan-feature.component';
-import { AboutCompanyComponent } from './about-company/about-company.component';
 import { TagProviderComponent } from './tag-provider/tag-provider.component';
 import { AboutPartnerComponent } from './about-partner/about-partner.component';
 import { ButtonsModule } from "../buttons/buttons.module";
@@ -42,6 +41,10 @@ import { OnlineAcademyComponent } from './online-academy/online-academy.componen
 import { ForPractitionersComponent } from './for-practitioners/for-practitioners.component';
 import { CitiesHubComponent } from './cities-hub/cities-hub.component';
 import { EditorialStandardsComponent } from './editorial-standards/editorial-standards.component';
+import { GrowthLandingComponent } from './growth-landing/growth-landing.component';
+import { HeroVideoComponent } from './growth-landing/hero-video/hero-video.component';
+import { BookingFormComponent } from './growth-landing/booking-form/booking-form.component';
+import { GrowthPlanCardComponent } from './_elements/growth-plan-card/growth-plan-card.component';
 
 
 @NgModule({
@@ -72,7 +75,6 @@ import { EditorialStandardsComponent } from './editorial-standards/editorial-sta
     ScrollIndicatorComponent,
     FaqItemComponent,
     TablePlanFeatureComponent,
-    AboutCompanyComponent,
     TagProviderComponent,
     AboutPartnerComponent,
     PressReleaseComponent,
@@ -81,6 +83,10 @@ import { EditorialStandardsComponent } from './editorial-standards/editorial-sta
     ForPractitionersComponent,
     CitiesHubComponent,
     EditorialStandardsComponent,
+    GrowthLandingComponent,
+    HeroVideoComponent,
+    BookingFormComponent,
+    GrowthPlanCardComponent,
   ],
   imports: [
     FormsModule,

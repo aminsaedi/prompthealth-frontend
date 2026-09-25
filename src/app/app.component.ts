@@ -11,6 +11,7 @@ import { IResponseData } from './models/response-data';
 import { RegionService, RegionType } from './shared/services/region.service';
 import { OutboundLinkService } from './shared/services/outbound-link.service';
 import { JourneyService } from './shared/services/journey.service';
+import { AttributionService } from './shared/services/attribution.service';
 import { Subscription , Subject } from 'rxjs';
 import { } from 'googlemaps';
 import { takeUntil } from 'rxjs/operators';
@@ -49,6 +50,7 @@ export class AppComponent implements OnInit , OnDestroy {
     private _regionService: RegionService,
     private _outboundLink: OutboundLinkService,
     private _journey: JourneyService,
+    private _attribution: AttributionService,
   ) { }
 
   @HostListener('window:beforeunload', ['$event']) onBeforeUnload(e: BeforeUnloadEvent) {
@@ -69,6 +71,12 @@ export class AppComponent implements OnInit , OnDestroy {
        * to it. Installed before the link service, which reads the current page
        * from it when a click happens. */
       this._journey.install();
+
+      /* Remembers the campaign a reader arrived with, for a booking made later
+       * in the same browser. Here for the same reason as the journey: the
+       * address still carries the query the reader clicked, before any
+       * redirect can drop it. */
+      this._attribution.install();
 
       /* Tags every outbound link on the site with UTM parameters and reports
        * outbound clicks. One listener on the document, installed once. */

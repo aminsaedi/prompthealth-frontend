@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
+import { PAID_PLAN_FAQ } from '../_elements/growth-plan-card/growth-plan-copy';
 
 export interface IFAQCategory {
   category: string;
@@ -39,7 +40,10 @@ export class FAQComponent implements OnInit, OnDestroy {
         'name': item.q,
         'acceptedAnswer': {
           '@type': 'Answer',
-          'text': item.a,
+          /* Answers may carry HTML for the page (the paid-plan answer links
+           * /for-dentists). JSON-LD text is read as text, so the tags would
+           * reach a search result as literal markup. */
+          'text': item.a.replace(/<[^>]*>/g, ''),
         }
       }))
     });
@@ -99,9 +103,11 @@ const faqCategories: IFAQCategory[] = [
         a: 'Yes. Healthcare professionals can create a free listing, which includes basic profile, services offered, location details, and contact information. This allows patients to discover your practice and learn about your services.',
         opened: false,
       },
+      /* A copy, not the shared object: faq-item writes `opened` onto what it
+       * is given, and /for-practitioners carries the same question. */
       {
-        q: 'What is the Authority Visibility Tier?',
-        a: 'The Authority Visibility Tier is designed for professionals who want to significantly increase their online visibility and authority. This premium option may include educational article publishing, video integration, SEO optimization, AI discovery optimization, priority profile placement, and authority-building content support.',
+        q: PAID_PLAN_FAQ.q,
+        a: PAID_PLAN_FAQ.aHtml,
         opened: false,
       },
       {

@@ -23,7 +23,6 @@ import { StripeService } from 'ngx-stripe';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { IAddonPlan } from 'src/app/models/addon-plan';
-import { ICouponData } from 'src/app/models/coupon-data';
 import { IResponseData } from 'src/app/models/response-data';
 import { ToastrService } from 'ngx-toastr';
 import { Professional } from 'src/app/models/professional';
@@ -572,21 +571,6 @@ export class SharedService {
     });
   }
 
-  isCouponApplicableTo(coupon: ICouponData, role: string): boolean {
-    if (!coupon) { return false; }
-    if (!coupon.metadata.roles || coupon.metadata.roles.length == 0) {
-      return true;
-    } else {
-      const rolesStr = coupon.metadata.roles.replace(/'/g, '"');
-      const roles: string[] = JSON.parse(rolesStr);
-      if (roles.includes(role)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
   async checkoutPlan(
     user: IUserDetail,
     plan: IDefaultPlan | IAddonPlan,
@@ -635,9 +619,7 @@ export class SharedService {
     option: ICheckoutPlanOption = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
-      const ss = this._uService.sessionStorage;
-      const savedCoupon: ICouponData = JSON.parse(ss.getItem('stripe_coupon_code'));
-      const _option = new CheckoutPlanOption(option, user.roles);
+      const _option = new CheckoutPlanOption(option);
       // console.log(user);
       const payload: IStripeCheckoutData = {
         cancel_url: _option.cancelUrl,
@@ -651,11 +633,6 @@ export class SharedService {
       };
       if (metadata) {
         payload.metadata = metadata;
-      }
-
-      if (savedCoupon && this.isCouponApplicableTo(savedCoupon, user.roles)) {
-        payload.coupon = savedCoupon.id;
-        // payload.success_url += '?action=couponused';
       }
 
       this.post(payload, 'user/checkoutSession').subscribe((res: IResponseData) => {
@@ -678,9 +655,6 @@ export class SharedService {
           reject(res.message);
         }
       }, (error) => {
-        if (error.errorCode === 'COUPON_INVALID') {
-          ss.removeItem('stripe_coupon_code');
-        }
         reject(error);
       });
     });
@@ -703,7 +677,7 @@ export class SharedService {
 type StripeCheckoutType = 'default' | 'addon';
 
 interface ICheckoutPlanOption {
-  cancelUrl?: string; // default: '/plans' || '/plans/product'
+  cancelUrl?: string; // default: '/plans'
   successUrl?: string; // default: '/community'
   showSuccessMessage?: boolean; // default true
   showErrorMessage?: boolean; // default true
@@ -712,8 +686,11 @@ interface ICheckoutPlanOption {
 class CheckoutPlanOption implements ICheckoutPlanOption {
 
   /** if user cancel, user cannot go back to questionnaire page, because data is already destroyed and user will be guarded to access */
+  /* /plans for every role. A company used to go back to /plans/product, which
+   * is retired and now redirects to the contact form, and a cancelled checkout
+   * should not land there. */
   get cancelUrl() {
-    const url = location.origin + (this.data.cancelUrl ? this.data.cancelUrl : ('/plans' + (this.role == 'P' ? '/product' : '')));
+    const url = location.origin + (this.data.cancelUrl ? this.data.cancelUrl : '/plans');
     return url + (this._showErrorMessage ? '?action=stripe-cancel' : '');
   }
 
@@ -726,7 +703,7 @@ class CheckoutPlanOption implements ICheckoutPlanOption {
   private _showSuccessMessage: boolean;
   private _showErrorMessage: boolean;
 
-  constructor(private data: ICheckoutPlanOption, private role: IUserDetail['roles']) {
+  constructor(private data: ICheckoutPlanOption) {
     this._showSuccessMessage = (data.showSuccessMessage === false) ? false : true;
     this._showErrorMessage = (data.showErrorMessage === false) ? false : true;
   }

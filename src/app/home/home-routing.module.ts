@@ -21,7 +21,6 @@ import { SitemapComponent } from "./sitemap/sitemap.component";
 import { ExpertFinderComponent } from "./expert-finder/expert-finder.component";
 import { AboutComponent } from "./about/about.component";
 import { AboutPractitionerComponent } from "./about-practitioner/about-practitioner.component";
-import { AboutCompanyComponent } from "./about-company/about-company.component";
 import { TagProviderComponent } from "./tag-provider/tag-provider.component";
 import { AboutPartnerComponent } from "./about-partner/about-partner.component";
 import { PressReleaseComponent } from "./press-release/press-release.component";
@@ -31,6 +30,7 @@ import { HomeComponent } from "./home.component";
 import { ForPractitionersComponent } from "./for-practitioners/for-practitioners.component";
 import { CitiesHubComponent } from "./cities-hub/cities-hub.component";
 import { EditorialStandardsComponent } from "./editorial-standards/editorial-standards.component";
+import { GrowthLandingComponent } from "./growth-landing/growth-landing.component";
 
 const routes: Routes = [
   {
@@ -42,6 +42,10 @@ const routes: Routes = [
     path: 'for-practitioners',
     component: ForPractitionersComponent,
   },
+  /* Growth landings render from a config named by `landing` (see
+   * growth-landing/landings). growthLanding marks the route for the site
+   * header, which should not offer the page a reader is already on. */
+  { path: 'for-dentists', component: GrowthLandingComponent, data: { landing: 'dentists', growthLanding: true } },
   {
     path: "faq",
     component: FAQComponent
@@ -73,7 +77,11 @@ const routes: Routes = [
   { path: 'about/partner', component: AboutPartnerComponent, },
 
   { path: 'plans', component: AboutPractitionerComponent },
-  { path: 'plans/product', component: AboutCompanyComponent },
+  /* The company plans page is retired: companies are set up after a
+   * conversation, not a checkout. server.ts answers a request for it with a
+   * 301 before any render; this covers a link followed inside the app.
+   * pathMatch 'full' so it matches this address and nothing under it. */
+  { path: 'plans/product', redirectTo: '/contact-us', pathMatch: 'full' },
   { path: 'subscriptionplan', redirectTo: '/plans'},
 
   { path: 'testimonial', component: TestimonialComponent, },

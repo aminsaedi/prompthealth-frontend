@@ -16,12 +16,9 @@ export class PaymentSubscriptionComponent implements OnInit , OnDestroy {
 
 
   get user() { return this._profileService.profile; }
+  /* Company plans are arranged by conversation now; /plans/product is gone. */
   get linkToPlan() {
-    const link = ['/plans'];
-    if(this.user.isP) {
-      link.push('product');
-    }
-    return link;
+    return this.user.isP ? ['/contact-us'] : ['/plans'];
   }
   
   public isUploading: boolean = false;

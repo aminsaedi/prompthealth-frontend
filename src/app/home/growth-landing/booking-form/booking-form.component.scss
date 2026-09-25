@@ -1,0 +1,64 @@
+@import '../../../../assets/scss/variables';
+
+/* A custom element is inline by default, which would wrap this block box in an
+ * inline one. */
+:host {
+  display: block;
+}
+
+.booking-form__heading:focus {
+  outline: none;
+}
+
+/* 16px, so iOS does not zoom the page when a field takes focus. */
+.form-control {
+  font-size: 16px;
+}
+
+.booking-form__textarea {
+  height: auto;
+  min-height: 110px;
+  resize: vertical;
+}
+
+.booking-form__field-error,
+.booking-form__alert {
+  font-size: 14px;
+  line-height: 20px;
+  color: $colorErrorDark;
+}
+
+.booking-form__alert {
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: $colorErrorLight;
+}
+
+.booking-form__submit {
+  width: 100%;
+}
+
+/* Off-screen rather than display: none, which some bots check for. */
+.booking-form__hp {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Calendly draws into this at whatever height it is given, and scrolls
+ * inside the modal body when the screen is shorter. */
+.booking-form__calendly {
+  min-width: 280px;
+  height: 700px;
+
+  @media (max-width: $breakpointMd - 1) {
+    height: 600px;
+  }
+
+  @media (max-height: 700px) {
+    height: 520px;
+  }
+}

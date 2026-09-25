@@ -1,0 +1,57 @@
+<div class="booking-form">
+  <h2 #heading id="booking-form-heading" class="h4 mb-20p pr-40p booking-form__heading" tabindex="-1">{{ booking.formHeading }}</h2>
+
+  <form *ngIf="step === 'form'" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div *ngFor="let field of fields" class="mb-15p">
+      <label class="subtitle2 text-body mb-5p d-block" [attr.for]="'booking-' + field.name">{{ booking.labels[field.name] }}</label>
+      <textarea
+      *ngIf="field.type === 'textarea'; else singleLine"
+      class="form-control booking-form__textarea"
+      [id]="'booking-' + field.name"
+      [formControlName]="field.name"
+      [attr.maxlength]="field.max"
+      [attr.aria-invalid]="showError(field.name) ? 'true' : null"
+      [attr.aria-describedby]="showError(field.name) ? 'booking-' + field.name + '-error' : null"
+      rows="4"
+      ></textarea>
+      <ng-template #singleLine>
+        <input
+        class="form-control"
+        [type]="field.type"
+        [id]="'booking-' + field.name"
+        [formControlName]="field.name"
+        [attr.autocomplete]="field.autocomplete"
+        [attr.maxlength]="field.max"
+        [attr.inputmode]="field.type === 'email' ? 'email' : (field.type === 'tel' ? 'tel' : null)"
+        [attr.autocapitalize]="field.type === 'email' ? 'off' : null"
+        [attr.aria-invalid]="showError(field.name) ? 'true' : null"
+        [attr.aria-describedby]="showError(field.name) ? 'booking-' + field.name + '-error' : null"
+        >
+      </ng-template>
+      <p
+      *ngIf="showError(field.name)"
+      class="booking-form__field-error mt-5p mb-0"
+      [id]="'booking-' + field.name + '-error'"
+      >{{ booking.validation[field.name] }}</p>
+    </div>
+
+    <!-- Off-screen, not type="hidden", which a bot knows to skip. Out of the tab
+    order and the accessibility tree, and named so that no password manager or
+    Safari AutoFill mistakes it for a website or address field. -->
+    <div class="booking-form__hp" aria-hidden="true">
+      <input type="text" id="booking-hp-extra" name="hp_extra" formControlName="hp_extra" autocomplete="off" tabindex="-1">
+    </div>
+
+    <button type="submit" class="btn btn-primary booking-form__submit mt-10p" [disabled]="isSending">
+      {{ hasCalendly ? booking.submitWithCalendly : booking.submitWithoutCalendly }}
+    </button>
+    <p *ngIf="errorMessage" class="booking-form__alert mt-15p mb-0" role="alert">{{ errorMessage }}</p>
+  </form>
+
+  <div *ngIf="step === 'schedule' || step === 'scheduled'">
+    <p class="subtitle1 mb-20p" role="status">{{ step === 'schedule' ? booking.thanksWithCalendly : booking.thanksScheduled }}</p>
+    <div #calendly class="booking-form__calendly"></div>
+  </div>
+
+  <p *ngIf="step === 'thanks'" class="subtitle1 mb-0" role="status">{{ booking.thanksWithoutCalendly }}</p>
+</div>

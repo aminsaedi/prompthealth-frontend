@@ -9,7 +9,8 @@ import { ProfileManagementService } from 'src/app/shared/services/profile-manage
 export class CardFeatureNotEligibleComponent implements OnInit {
 
   get user() { return this._profileService.profile; }
-  get linkToPlan() { return this.user?.role == 'P' ? ['/plans', 'product'] : ['/plans']; }
+  /* Company plans are arranged by conversation now; /plans/product is gone. */
+  get linkToPlan() { return this.user?.role == 'P' ? ['/contact-us'] : ['/plans']; }
 
   constructor(
     private _profileService: ProfileManagementService,

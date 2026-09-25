@@ -33,3 +33,48 @@
     }
   }
 }
+
+/*
+ * A button that still reads as the heading it sits in. Every property is set
+ * here rather than left to Bootstrap's reboot, which arrives from a CDN after
+ * first paint.
+ *
+ * At least 44px tall to tap, without making the card taller on any page that
+ * uses it: the button reaches 9px above and below the text and 8px to either
+ * side, into the card's 20px padding, and negative margins give that space
+ * back, so the text sits where it did. The same room keeps the focus ring off
+ * the words.
+ */
+.faq-question {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% + 16px);
+  min-height: 44px;
+  margin: -9px -8px;
+  padding: 9px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid $colorPrimary;
+    outline-offset: 0;
+  }
+}
+
+.faq-question__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.faq-question__icon {
+  flex: 0 0 auto;
+  margin-left: 16px;
+}

@@ -1,0 +1,21 @@
+/* The host stands between the page's column and the card, and h-100 on the
+ * card only works if the host passes the column's height down. */
+:host {
+  display: block;
+  height: 100%;
+}
+
+/* Written out rather than borrowed from Bootstrap's small or font-weight-bold:
+ * Bootstrap arrives from a CDN after first paint, and the eyebrow would first
+ * render at body size. */
+.eyebrow {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.flow {
+  font-weight: 700;
+}

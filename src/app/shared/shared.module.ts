@@ -33,7 +33,6 @@ import { FormPartnerGeneralComponent } from './form-partner-general/form-partner
 import { FormPartnerOfferComponent } from './form-partner-offer/form-partner-offer.component';
 import { FormItemPlaceComponent } from './form-item-place/form-item-place.component';
 import { FormCentreGeneralComponent } from './form-centre-general/form-centre-general.component';
-import { CardCouponComponent } from './card-coupon/card-coupon.component';
 import { ButtonTutorialComponent } from './button-tutorial/button-tutorial.component';
 import { FormProviderGeneralComponent } from './form-provider-general/form-provider-general.component';
 import { FormItemCheckboxGroupComponent } from './form-item-checkbox-group/form-item-checkbox-group.component';
@@ -58,6 +57,7 @@ import { FormItemSelectBoxComponent } from './form-item-select-box/form-item-sel
 import { FormItemProfileImageComponent } from './form-item-profile-image/form-item-profile-image.component';
 import { FormAdminGeneralComponent } from './form-admin-general/form-admin-general.component';
 import { CardNoContentComponent } from './card-no-content/card-no-content.component';
+import { YoutubeFacadeComponent } from './youtube-facade/youtube-facade.component';
 
 const LAZY_DECLARATIONS = [
   UserSidebarComponent,
@@ -82,7 +82,6 @@ const LAZY_DECLARATIONS = [
   FormPartnerOfferComponent,
   FormItemPlaceComponent,
   FormCentreGeneralComponent,
-  CardCouponComponent,
   ButtonTutorialComponent,
   FormProviderGeneralComponent,
   FormItemCheckboxGroupComponent,
@@ -107,6 +106,7 @@ const LAZY_DECLARATIONS = [
   FormItemProfileImageComponent,
   FormAdminGeneralComponent,
   CardNoContentComponent,
+  YoutubeFacadeComponent,
 ];
 
 @NgModule({
