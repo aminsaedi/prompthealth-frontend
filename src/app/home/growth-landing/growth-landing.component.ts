@@ -87,6 +87,11 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     return this.isStickyInRange && !this.isBookingShown && !this.isMenuShown;
   }
 
+  get heroPortrait(): boolean {
+    const video = this.config && this.config.hero.video;
+    return !!video && video.height > video.width;
+  }
+
   /* The modal body is 500px wide with 50px padding; Calendly needs more. */
   get bookingBodyStyle(): { [key: string]: string } {
     return (this.bookingStep === 'schedule' || this.bookingStep === 'scheduled') ? WIDE_MODAL_BODY : null;

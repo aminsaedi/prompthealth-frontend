@@ -6,11 +6,10 @@
   display: block;
 }
 
-/* 16:9 from the first paint, poster or not, so the sections below never move. */
+/* The height comes from the template, as the video's own ratio. */
 .hero-video {
   position: relative;
   width: 100%;
-  padding-top: 56.25%;
   overflow: hidden;
   border-radius: 12px;
   background: $colorGsBlack;
@@ -51,6 +50,13 @@
   }
 }
 
+/* A portrait player is never wider than a phone, however wide the screen, and
+ * 5% of its height would be larger than the picture's own words. */
+.hero-video--portrait .hero-video__player::cue {
+  font-size: 16px;
+  line-height: 1.35;
+}
+
 /* Transparent: the poster underneath is the video's own. */
 .hero-video__overlay {
   padding: 0;
@@ -69,8 +75,9 @@
   }
 }
 
-/* In the lower third, not the middle: the poster is a title card, and its
- * headline fills the middle band. */
+/* Near the foot, not the middle: every poster so far has carried its words
+ * through the middle band, a headline on the landscape one and two stat cards
+ * on the portrait one. */
 .hero-video__glyph {
   position: absolute;
   bottom: 5%;

@@ -9,7 +9,8 @@ import { IGrowthVideo } from '../growth-landing.model';
 const NETWORK_NO_SOURCE = 3;
 
 /*
- * The landing's own video: self-hosted, click to play, captions on.
+ * The landing's own video: self-hosted, click to play, captions on unless the
+ * words are already in the picture.
  *
  * The <video> is in the page from the start, with preload="none", so nothing
  * but the poster is fetched until the tap. It has to exist before the tap
@@ -54,6 +55,15 @@ export class HeroVideoComponent implements OnDestroy {
     this.otherStarted.unsubscribe();
   }
 
+  /* The frame's height as a share of its width, so the box has the video's
+   * shape from the first paint, poster or not, and nothing below it moves. */
+  get ratio(): number {
+    const v = this.video;
+    return v && v.width > 0 && v.height > 0 ? v.height / v.width * 100 : 56.25;
+  }
+
+  get portrait(): boolean { return this.ratio > 100; }
+
   private get element(): HTMLVideoElement {
     return this.player ? this.player.nativeElement as HTMLVideoElement : null;
   }
@@ -87,8 +97,10 @@ export class HeroVideoComponent implements OnDestroy {
   }
 
   /* `default` on the track is not honoured everywhere, and she asked for
-   * captions on from the first second. */
+   * captions on from the first second. A video that carries its own words
+   * leaves the track to the player's menu. */
   onLoadedMetadata(): void {
+    if (this.video && this.video.captionsBurnedIn) { return; }
     const video = this.element;
     try {
       const tracks = video && video.textTracks;

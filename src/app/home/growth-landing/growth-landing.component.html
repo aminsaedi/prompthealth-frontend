@@ -1,17 +1,19 @@
 <ng-container *ngIf="config">
 
   <!-- Hero. Heading, text and button fit the first screen of a 375x667 phone
-  under the sticky header; the video follows. -->
-  <section class="growth-hero bg-lightyellow position-relative overflow-hidden">
+  under the sticky header; the video follows. A portrait video stands beside
+  the words from tablet width, where below them it would push the button's
+  row of the page past the first screen. -->
+  <section class="growth-hero bg-lightyellow position-relative overflow-hidden" [class.growth-hero--portrait]="heroPortrait">
     <div class="growth-dim growth-dim--1" aria-hidden="true"></div>
     <div class="growth-dim growth-dim--2" aria-hidden="true"></div>
-    <div class="container position-relative">
-      <div class="growth-hero__copy mx-auto text-center">
+    <div class="container position-relative growth-hero__layout">
+      <div class="growth-hero__copy">
         <h1 class="h3 h2-md text-primary-dark mb-15p mb-md-20p growth-hero__heading">{{ config.hero.heading }}</h1>
         <p class="subtitle1 text-label mb-20p mb-md-30p">{{ config.hero.text }}</p>
         <button #heroCta type="button" class="btn btn-primary" (click)="openBooking('hero')">{{ config.ctaLabel }}</button>
       </div>
-      <div class="growth-hero__video mx-auto mt-30p mt-md-50p">
+      <div class="growth-hero__video">
         <hero-video [video]="config.hero.video" [landingKey]="config.key"></hero-video>
       </div>
     </div>
