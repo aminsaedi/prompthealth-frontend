@@ -139,11 +139,11 @@ export class ListComponent implements OnInit , OnDestroy {
     switch(this.selectedTaxonomyType) {
       case 'feed': desc = `See what\'s happening in healthcare scene${topic ? ' about ' + topic : ''} around the world.`; break;
       case 'article': desc = `Learn about healthcare topics${topic ? ' about ' + topic : ''} and improve your health with us!`; break;
-      case 'event': desc = `Find your favorite healthcare event${topic ? ' about ' + topic : ''} and join now!`; break;
-      case 'media': desc = `Find your favorite quick tips${topic ? ' about ' + topic : ''} from best providers with voice, photos and media`; break;
+      case 'event': desc = `Find your favourite healthcare event${topic ? ' about ' + topic : ''} and join now!`; break;
+      case 'media': desc = `Find your favourite quick tips${topic ? ' about ' + topic : ''} from best providers with voice, photos and media`; break;
       case 'note': desc = `Find latest update${topic ? ' about ' + topic : '' } from best providers`; break;
       case 'voice': desc = `Find latest update with voice note${topic ? ' about ' + topic : '' } from best providers`; break;
-      case 'promotion': desc = `Find your favorite products`; break;
+      case 'promotion': desc = `Find your favourite products`; break;
       case 'academy': desc = `Learn with PromptHealth`; break;
     } 
 

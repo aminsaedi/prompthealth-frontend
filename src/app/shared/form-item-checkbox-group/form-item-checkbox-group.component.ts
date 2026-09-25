@@ -189,7 +189,7 @@ const years_of_experience: CheckboxSelectionItem[] = [
 
 const business_kind: CheckboxSelectionItem[] = [
   { id: 'business1', label: 'Clinic', value: 'clinic' },
-  { id: 'business2', label: 'Health Center', value: 'health_center' },
+  { id: 'business2', label: 'Health Centre', value: 'health_center' },
   { id: 'business3', label: 'Health Club', value: 'health_club' },
   { id: 'business4', label: 'Gym', value: 'gym' },
   { id: 'business5', label: 'Studio', value: 'studio' },
