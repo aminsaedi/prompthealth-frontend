@@ -1,14 +1,15 @@
 /*
- * Hedieh's copy for the existing pages that lead to the growth landings, as the
- * TypeScript on those pages needs it: the plan card that /plans and
- * /for-practitioners both show and both describe in their structured data, the
- * paid-plan answer that /for-practitioners and /faq both carry, and the /plans
- * title and description, which the page's meta and its WebPage JSON-LD share.
+ * Hedieh's copy for PromptHealth Growth where existing pages offer it: the plan
+ * card that /plans and /for-practitioners both show and both describe in their
+ * structured data, and the paid-plan answer that /for-practitioners and /faq
+ * both carry. Each is used in more than one place, so it is written once here.
  *
  * Taken from plan-specs/growth/dentists-landing-copy.json (otherPages) by a
- * script rather than typed, like dentists.ts. Edit wording there first and here
- * second, so the two agree. Text that appears once, in a template, is written in
- * that template instead.
+ * script rather than typed, like growth-landing/landings/dentists.ts. Edit
+ * wording there first and here second, so the two agree.
+ *
+ * Kept out of growth-landing/: the sitemap dates /for-dentists by the last
+ * change under that directory, and this is not that page's text.
  *
  * None of it states a price: nothing on this site says what PromptHealth charges,
  * and the terms defer to the service agreement.
@@ -29,11 +30,4 @@ export const GROWTH_PLAN_CARD = {
 export const PAID_PLAN_FAQ = {
   q: 'Is there a paid plan for practitioners?',
   aHtml: 'Yes. PromptHealth Growth is our done-for-you patient acquisition service, starting with dental practices. Visit <a href="/for-dentists">/for-dentists</a> to learn more.',
-};
-
-/* Proposed wording, on her sign-off list (plan section 6). The page's H2 is
- * in its template. */
-export const PLANS_PAGE = {
-  title: 'Plans for Practitioners | PromptHealth',
-  description: 'Create a free PromptHealth profile, or grow your practice with PromptHealth Growth: video production and targeted advertising, now available for dental practices.',
 };

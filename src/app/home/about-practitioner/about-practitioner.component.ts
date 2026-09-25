@@ -15,7 +15,15 @@ import { environment } from "src/environments/environment";
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
-import { GROWTH_PLAN_CARD, PLANS_PAGE } from '../growth-landing/landings/other-pages';
+import { GROWTH_PLAN_CARD } from '../_elements/growth-plan-card/growth-plan-copy';
+
+/* Proposed wording, on Hedieh's sign-off list (plan section 6), taken from
+ * plan-specs/growth/dentists-landing-copy.json (otherPages) by a script. The
+ * meta and the WebPage JSON-LD share it; the page's H2 is in its template. */
+const PLANS_PAGE = {
+  title: 'Plans for Practitioners | PromptHealth',
+  description: 'Create a free PromptHealth profile, or grow your practice with PromptHealth Growth: video production and targeted advertising, now available for dental practices.',
+};
 
 @Component({
   selector: "app-about-practitioner",

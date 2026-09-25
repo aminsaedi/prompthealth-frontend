@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IconName } from 'src/app/models/icon-ph';
-import { GROWTH_PLAN_CARD } from '../../growth-landing/landings/other-pages';
+import { GROWTH_PLAN_CARD } from './growth-plan-copy';
 
 /*
  * PromptHealth Growth as a plan, beside the free profile on /plans and
