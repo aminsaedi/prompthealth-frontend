@@ -64,14 +64,6 @@ export class ProfileComponent implements OnInit , OnDestroy {
     return this.profile && !this.isProfileMyself && this.user?.eligibleToRecommend && !this.user.recommendationsByMe.find(item => item.to == this.profile._id);
   }
 
-  get pathToApp() {
-    let path = '';
-    if(this.profile?.isProvider) {
-      path = 'provider/' + this.profile._id;
-    }
-    return path;
-  }
-
   /*
    * The address the tabs link to, which has to be the one the router serves.
    *
