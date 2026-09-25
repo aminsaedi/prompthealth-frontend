@@ -68,7 +68,11 @@
   }
 }
 
-.card {
+/* The Growth plan card is its own component, so these scoped rules would stop
+ * at its host and the two plans would not match. :host ::ng-deep carries them
+ * into it on this page only; /for-practitioners styles its cards differently. */
+.card,
+:host ::ng-deep growth-plan-card .card {
   border: 2px solid #e5e5e5;
   border-radius: 12px;
   transition: all 0.3s ease;
