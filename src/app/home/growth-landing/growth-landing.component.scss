@@ -183,6 +183,35 @@ $stepGap: 30px;
   font-size: 18px;
 }
 
+// ---------------------------------------------------------- final CTA
+
+/*
+ * The last button on the page, on the dark band. btn-primary there measured
+ * 1.99:1 against the band, under the 3:1 a control needs to be seen, on the
+ * button whose one job is the conversion. White with the band's own blue as
+ * text is about 10.5:1, and the other buttons, on light grounds, stay
+ * btn-primary. Written from tokens rather than Bootstrap's btn-light, which
+ * arrives from a CDN after first paint.
+ */
+.btn.growth-final__cta {
+  color: $colorPrimaryDark;
+  background: $colorGsWhite;
+  border: 1px solid $colorGsWhite;
+  border-radius: 5px;
+  padding: 16.5px 25px;
+
+  &:hover:not(:disabled) {
+    color: $colorPrimaryDark;
+    background: $colorPrimaryLight;
+    border-color: $colorPrimaryLight;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $colorGsWhite;
+    outline-offset: 3px;
+  }
+}
+
 // -------------------------------------------------------------- sticky
 
 /* Below the header (90) and the mobile menu (100), far below the modal. */
