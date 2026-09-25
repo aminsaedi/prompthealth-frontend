@@ -160,7 +160,9 @@ const features = [
 
 const stats = [
   { value: '1M+', label: 'Social Followers' },
-  { value: '500+', label: 'Verified Providers' },
+  /* A read-only count of the production database found 453 approved, listed
+   * providers on 2026-09-23, so the 500+ this used to claim was not true. */
+  { value: '450+', label: 'Verified Providers' },
   { value: '8', label: 'Cities Covered' },
   { value: '50+', label: 'Health Categories' },
 ];
