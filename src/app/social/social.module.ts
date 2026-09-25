@@ -43,7 +43,6 @@ import { ProfileEventComponent } from './profile-event/profile-event.component';
 import { ProfileEventUpcomingComponent } from './profile-event-upcoming/profile-event-upcoming.component';
 import { ProfileEventPastComponent } from './profile-event-past/profile-event-past.component';
 import { ButtonsModule } from '../buttons/buttons.module';
-import { ActionSheetOpenAppComponent } from './action-sheet-open-app/action-sheet-open-app.component';
 
 
 const routes: Routes = [
@@ -151,7 +150,6 @@ const routes: Routes = [
     ProfileEventComponent,
     ProfileEventUpcomingComponent,
     ProfileEventPastComponent,
-    ActionSheetOpenAppComponent,
   ],
   providers: [
     CategoryService,

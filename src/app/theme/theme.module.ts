@@ -14,7 +14,6 @@ import { AuthGuardService } from '../auth/auth-gaurd.service';
 import { RoleGuardService } from '../auth/role-guard.service';
 import { ThankuPageComponent } from './thanku-page/thanku-page.component';
 import { DashboardMenuComponent } from './dashboard-menu/dashboard-menu.component';
-import { BannerTopComponent } from './banner-top/banner-top.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +22,6 @@ import { BannerTopComponent } from './banner-top/banner-top.component';
     LayoutComponent,
     ThankuPageComponent,
     DashboardMenuComponent,
-    BannerTopComponent,
   ],
   providers: [
     AuthService,

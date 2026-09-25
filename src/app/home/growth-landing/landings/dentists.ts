@@ -34,7 +34,8 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     video: {
       src: 'https://prompt-images.s3.us-east-2.amazonaws.com/landing/for-dentists/hero-720p-v1.mp4',
       poster: '/assets/video/for-dentists-hero-poster.v1.jpg',
-      captions: '/assets/video/for-dentists-hero.v1.en.vtt',
+      /* v2 lifts the first two cues off the video's own title card. */
+      captions: '/assets/video/for-dentists-hero.v2.en.vtt',
       title: 'PromptHealth Growth: attract new patients',
     },
   },

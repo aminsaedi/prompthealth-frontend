@@ -64,14 +64,6 @@ export class ProfileComponent implements OnInit , OnDestroy {
     return this.profile && !this.isProfileMyself && this.user?.eligibleToRecommend && !this.user.recommendationsByMe.find(item => item.to == this.profile._id);
   }
 
-  get pathToApp() {
-    let path = '';
-    if(this.profile?.isProvider) {
-      path = 'provider/' + this.profile._id;
-    }
-    return path;
-  }
-
   /*
    * The address the tabs link to, which has to be the one the router serves.
    *
@@ -463,14 +455,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
     const tab = this.activeTabOf(url);
     const p = this.profile;
     const canonicalPath = this.getCanonicalPath(url);
-    /* The provider's own photo, or none: imageFull falls back to
-     * /assets/img/no-image.jpg, which went out as the share image of every
-     * tab of a provider without a photo. setMeta then uses the site card. */
-    const imageMeta = p.profileImageFull ? {
-      image: p.profileImageFull,
-      imageType: p.imageType,
-      imageAlt: p.name,
-    } : {};
+    const imageMeta = this.shareImageMeta();
 
     if (tab === '/event/past') {
       this._uService.setMeta(canonicalPath, {
@@ -513,6 +498,26 @@ export class ProfileComponent implements OnInit , OnDestroy {
     }
   }
 
+  /* The provider's own photo as the share image, or none, and then setMeta
+   * uses the site card. imageFull falls back to /assets/img/no-image.jpg,
+   * which went out as the share image of every tab of a provider without a
+   * photo.
+   *
+   * Only a photo whose type is known. Some older accounts (52 live profiles
+   * when this was written, most from 2021) keep theirs under an S3 key with
+   * no extension, which S3 serves as binary/octet-stream, and Facebook's
+   * scraper refuses an og:image that is not served as an image. For those
+   * providers a share would show no picture where the site card shows one.
+   * imageType comes from the key's extension, so an empty one is exactly
+   * that case. */
+  private shareImageMeta(): { image?: string, imageType?: string, imageAlt?: string } {
+    const p = this.profile;
+    if (!p || !p.profileImageFull || !p.imageType) {
+      return {};
+    }
+    return { image: p.profileImageFull, imageType: p.imageType, imageAlt: p.name };
+  }
+
   /* The tab is the segment after the profile's id or slug. Matched anywhere
    * in router.url, a query like ?utm_campaign=review made the About page skip
    * setMeta entirely: title 'Prompthealth', no canonical, og:url of the home
@@ -545,9 +550,17 @@ export class ProfileComponent implements OnInit , OnDestroy {
       const typeOfProvider = this._qService.getSelectedLabel(this.questionnaires.typeOfProvider, this.profile.allServiceId);
       const serviceDelivery = this._qService.getSelectedLabel(this.questionnaires.serviceDelivery, this.profile.serviceOfferIds);;
       const canonicalPath = this.profile?.slug ? `/practitioners/${this.profile.slug}` : url;
+      /* The About page is the profile's canonical URL, the one that gets
+       * shared, and it was the one tab that named no image, so every share
+       * showed the site card instead of the provider. The same photo as the
+       * other tabs, or none, and then setMeta uses the site card. No size:
+       * the upload keeps whatever the provider sent, and a guessed pair is
+       * worse than none (setMeta). */
+      const p = this.profile;
       this._uService.setMeta(canonicalPath, {
-        title: `${this.profile.name}${this.profile.city || this.profile.state ? ` in ${[this.profile.city, this.profile.state].filter(Boolean).join(', ')}` : ''} | PromptHealth Community`,
-        description: `${this.profile.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
+        title: `${p.name}${p.city || p.state ? ` in ${[p.city, p.state].filter(Boolean).join(', ')}` : ''} | PromptHealth Community`,
+        description: `${p.name} is ${typeOfProvider.join(', ')} offering ${serviceDelivery.join(', ')}.`,
+        ...this.shareImageMeta(),
       });
 
       // Set structured data for AI and search engine discoverability
@@ -1092,7 +1105,16 @@ export class ProfileComponent implements OnInit , OnDestroy {
     this._modalService.show('login-menu');
   }
 
+  /* The request needs a session (POST /booking/create is behind checkToken),
+   * so a reader who is not signed in is asked to sign in first. The login
+   * modal keeps them on this profile, where "Book now" then opens the form.
+   * A profile the backend takes no requests for, and the reader's own, never
+   * shows the button, and is refused here too in case a stale template still
+   * calls this. */
   onClickBook() {
+    if(!this.profile?.takesBookingRequests || this.isProfileMyself) {
+      return;
+    }
     if(this.user) {
       this._modalService.show('booking');
     } else {
@@ -1100,12 +1122,24 @@ export class ProfileComponent implements OnInit , OnDestroy {
     }
   }
 
-  async onClickBookOutside() {
-    this._sharedService.post({ _id: this.user._id }, '/booking/gain-booking-count').pipe(takeUntil(this.destroy$)).subscribe(res => {
-    }, err => {
-      console.error(err);
+  /* The provider's id, not the reader's. It sent this.user._id, which the
+   * backend refuses to count (a reader's own id never counts), and to
+   * '/booking/...', which API_URL's trailing slash made api/v1//booking, a
+   * path no route matches. So no click through to a provider's booking page
+   * was ever counted. */
+  onClickBookOutside() {
+    this._sharedService.post({ _id: this.profile._id }, 'booking/gain-booking-count').pipe(takeUntil(this.destroy$)).subscribe(() => {
+    }, () => {
+      /* A count that did not land must not stop the reader from booking. */
     });
-    window.open(this.profile.bookingUrlHref, '_blank');
+    /* noopener: the booking page is whatever address the provider typed, and
+     * www sends no Cross-Origin-Opener-Policy, so without it that page could
+     * set window.opener.location and swap this tab for one of its own while
+     * the reader looks at the new one. OutboundLinkService adds rel=noopener
+     * to anchors for the same reason; this open is not an anchor. Not
+     * noreferrer: /out/ reads the Referer to tell which page a click came
+     * from. */
+    window.open(this.profile.bookingUrlHref, '_blank', 'noopener');
   }
 
   async onClickFollow() {
@@ -1237,37 +1271,78 @@ export class ProfileComponent implements OnInit , OnDestroy {
   }
 
 
+  /*
+   * Sends exactly the fields POST /booking/create takes. Its schema refuses
+   * any other key (allowUnknown false), so the form's value is not spread in:
+   * a control added to the form later would otherwise make every request a
+   * 400. Text is trimmed as the server trims it, so what it measures against
+   * its limits is what was sent.
+   *
+   * What the server says is what the reader sees, on success and on refusal
+   * alike: a 4xx carries a message written for them (a field it could not
+   * take, a provider not taking requests, the daily limit), and the error
+   * interceptor hands that message over as the error.
+   */
   onSubmitBooking() {
     this.submittedFormBooking = true;
-    if (this.formBooking.invalid) {
-      this._toastr.error('There are several items that requires your attention');
+    /* The modal also opens from ?modal=booking, on a reload or a shared link,
+     * so the button's conditions are checked again here. */
+    if (!this.profile?.takesBookingRequests) {
+      this._toastr.error('This provider is not taking booking requests on PromptHealth.');
       return;
-    } else {
-
-      const data = {
-        drId: this.profileId,
-        customerId: this.user._id,
-        ...this.formBooking.value,
-      };
-
-      data.phone = data.phone.toString();
-      // data.bookingDateTime = this.formDateTimeComponent.getFormattedValue().toString();
-      this.isBookingLoading = true;
-      const path = `booking/create`;
-      this._sharedService.post(data, path).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
-        this.isBookingLoading = false;
-        if (res.statusCode === 200) {
-          this.submittedFormBooking = false;
-          this._toastr.success(res.message);
-          this.modalBooking.hide();
-        } else {
-          this._toastr.error(res.message);
-        }
-      }, (error) => {
-        this.isBookingLoading = false;
-        this._toastr.error(error);
-      });
     }
+    if (this.isProfileMyself) {
+      this._toastr.error('You cannot send a booking request to yourself.');
+      return;
+    }
+    if (!this.user) {
+      this._modalService.show('login-menu');
+      return;
+    }
+    if (this.formBooking.invalid) {
+      this._toastr.error('There are several items that require your attention.');
+      return;
+    }
+
+    const value = this.formBooking.value;
+    const text = (v: any) => (v === null || v === undefined) ? '' : String(v).trim();
+    const data = {
+      drId: this.profile._id,
+      customerId: this.user._id,
+      name: text(value.name),
+      email: text(value.email),
+      phone: text(value.phone),
+      note: text(value.note),
+      isUrgent: !!value.isUrgent,
+    };
+
+    this.isBookingLoading = true;
+    this._sharedService.post(data, 'booking/create').pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      this.isBookingLoading = false;
+      if (res && res.statusCode === 200) {
+        this.submittedFormBooking = false;
+        this.formBooking.reset({ name: '', email: '', phone: '', note: '', isUrgent: false });
+        this._toastr.success(res.message || 'Your booking request has been sent.');
+        this.modalBooking.hide();
+      } else {
+        this._toastr.error(this.messageOf(res));
+      }
+    }, (error) => {
+      this.isBookingLoading = false;
+      this._toastr.error(this.messageOf(error));
+    });
+  }
+
+  private messageOf(error: any): string {
+    const fallback = 'Something went wrong. Please try again later.';
+    if (typeof error === 'string') {
+      return error.trim() || fallback;
+    }
+    /* A reply body carries its message at the top; an HttpErrorResponse that
+     * got past the interceptor carries the server's under error, and its own
+     * message is Angular's, not one for a reader. */
+    const message = error && (error.error ? error.error.message : error.message);
+    return (typeof message === 'string' && message.trim()) ? message : fallback;
   }
 
   prepareRoute(outlet: RouterOutlet) {

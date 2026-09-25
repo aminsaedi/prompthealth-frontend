@@ -415,59 +415,6 @@ export class HomeComponent implements OnInit , OnDestroy {
   public introductionPostType = introductionPostType;
   /** COMMUNITY END */
 
-  /** APP */
-  isAppFeatureSelected(index: number) {
-    return this.selectedAppFeature === index;
-  }
-  get isAppFeatureLeftSelected() {
-    return (
-      this.selectedAppFeature === 0 ||
-      (this.selectedAppFeature > 0 && this.selectedAppFeature < 3)
-    );
-  }
-  get isAppFeatureRightSelected() {
-    return this.selectedAppFeature >= 3;
-  }
-
-  public appFeatureItems = appFeatureItems;
-  public selectedAppFeature: number = null;
-  public isOnAppFeature: boolean = false;
-  @ViewChildren("appFeatureSwitcher")
-  private appFeatureSwitchers: QueryList<ElementRef>;
-
-  onIntersectAppFeature(enter: boolean) {
-    this.isOnAppFeature = enter;
-  }
-
-  onIntersectAppFeatureItem(select: boolean, index: number) {
-    if (this.isOnAppFeature) {
-      if (select) {
-        this.selectedAppFeature = index;
-      } else if (index > 0) {
-        this.selectedAppFeature = index - 1;
-      } else {
-        this.selectedAppFeature = null;
-      }
-    } else {
-      this.selectedAppFeature = null;
-    }
-  }
-
-  onClickAppFeatureItem(index: number) {
-    if (!this._uService.isServer) {
-      let topEl = (
-        this.appFeatureSwitchers.toArray()[index]
-          .nativeElement as HTMLDivElement
-      ).getBoundingClientRect().top;
-      // if(this.selectedAppFeature > index)
-      window.scrollTo({ top: topEl + window.scrollY });
-      setTimeout(() => {
-        this.selectedAppFeature = index;
-      }, 10);
-    }
-  }
-  /** APP END */
-
   /** CITIES */
   public citiesFeatured: { id: CityId; label: string }[];
   /** CITIES END */
@@ -502,45 +449,6 @@ export class HomeComponent implements OnInit , OnDestroy {
   }
   /** BLOGS END */
 }
-
-const appFeatureItems = [
-  [
-    {
-      icon: "verified-outline",
-      title: "A network of trusted wellness providers.",
-      content: "",
-    },
-    {
-      icon: "checkbox-square-outline",
-      title: "Expert created content.",
-      content: "",
-    },
-    {
-      icon: "users-outline",
-      title: "Connect and learn.",
-      content: "",
-    },
-  ],
-  [
-    {
-      icon: "book-open-outline",
-      title: "Stay engaged with your favorites experts",
-      content: "",
-    },
-    {
-      icon: "tags-2-outline",
-      title: "Wellness events and workshops.",
-      content: "",
-      // content: 'Your privacy and security is ensured.',
-      // content: 'Your privacy and security is ensured. PIPEDA/HIPPA approved.',
-    },
-    {
-      icon: "shield-check-outline",
-      title: "Holistic products and services.",
-      content: "",
-    },
-  ],
-];
 
 const introductionPostType = {
   note: {

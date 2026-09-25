@@ -130,6 +130,25 @@ export class Professional extends Profile implements IProfessional{
     return (this.p.bookingURL && !this.p.bookingURL.match(/^http/)) ? 'http://' + this.p.bookingURL : this.p.bookingURL || null;
   }
   get bookingUrlHref() { return this.trackedHref(this.p.trackedBookingUrl) || this.bookingUrl; }
+  /* Whether POST /booking/create takes a request for this profile: a provider
+   * the directory lists, by the backend's own rule (utilities/listing.js
+   * listedAccount, roles SP or C), with no booking page of their own. The
+   * form used to be offered on every provider profile without a booking URL,
+   * and a reader who filled it in on an unlisted one got a refusal after
+   * typing it all. isPlanExpired must be false, not merely absent, because
+   * that is what the backend matches on; isTestAccount is never sent to the
+   * page, so it reads as not a test account, and the server still refuses one. */
+  get takesBookingRequests() {
+    const p = this.p;
+    return this.isProvider
+      && !this.bookingUrl
+      && p.isDeleted !== true
+      && p.status === true
+      && p.isVerified === 'Y'
+      && p.isPlanExpired === false
+      && p.isApproved !== false
+      && p.isTestAccount !== true;
+  }
   /* The backend sends a short code, not a URL. Turn it into the /out path the
    * link manager serves, so the click is counted before the redirect. */
   private trackedHref(code: string): string {

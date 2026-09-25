@@ -159,7 +159,7 @@ id="badge-editor"
           #inputFile
           type="file" 
           class="d-none" 
-          accept="image/jpeg, image/x-png, image/png, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf" 
+          [accept]="certificateAccept"
           [disabled]="isUploading || isUploadingFile"
           (change)="onSelectFile($event)"
           >

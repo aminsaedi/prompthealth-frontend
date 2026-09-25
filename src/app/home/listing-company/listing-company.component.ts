@@ -71,7 +71,7 @@ export class ListingCompanyComponent implements OnInit , OnDestroy {
   async ngOnInit() {
     this._uService.setMeta(this._router.url, {
       title: 'Find wellness products & services | PromptHealth',
-      description: 'Discover our favorite innovative health apps, products and services. Find promo codes, free samples and reviews.',
+      description: 'Discover our favourite innovative health apps, products and services. Find promo codes, free samples and reviews.',
       pageType: 'website',
     });
 

@@ -23,16 +23,10 @@ export class ResetPasswordComponent implements OnInit , OnDestroy {
 
   get token() { return this._route.snapshot.params.token; }
 
-  // get isAndroid() { return this._uService.isAndroid; }
-  // get isIPhone()  { return this._uService.isIphone; }
-  // get isAppAvailable() { return this._uService.isAppAvailable; }  
-
   public form: FormControl;
   public isSubmitted: boolean = false;
   public isUpdating: boolean = false;
   public doneUpdate: boolean = false;
-
-  // public isAppNavigationShown: boolean = true;
 
   constructor(
     private _toastr: ToastrService,
@@ -50,15 +44,6 @@ export class ResetPasswordComponent implements OnInit , OnDestroy {
       robots: 'noindex, follow'
     });
   }
-
-  // openApp() {
-  //   this._uService.openApp('confirmResetPassword/' + this.token);
-  // }
-
-  // closeAppNavigation(e: Event) {
-  //   e.stopPropagation();
-  //   this.isAppNavigationShown = false;
-  // }
 
   onSubmit() {
     this.isSubmitted = true;

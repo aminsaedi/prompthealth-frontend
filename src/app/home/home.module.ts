@@ -29,9 +29,7 @@ import { CardTestimonialComponent } from './_elements/card-testimonial/card-test
 import { ExpertFinderComponent } from './expert-finder/expert-finder.component';
 import { AboutComponent } from './about/about.component';
 import { AboutPractitionerComponent } from './about-practitioner/about-practitioner.component';
-import { ScrollIndicatorComponent } from './_elements/scroll-indicator/scroll-indicator.component';
 import { FaqItemComponent } from './_elements/faq-item/faq-item.component';
-import { TablePlanFeatureComponent } from './_elements/table-plan-feature/table-plan-feature.component';
 import { TagProviderComponent } from './tag-provider/tag-provider.component';
 import { AboutPartnerComponent } from './about-partner/about-partner.component';
 import { ButtonsModule } from "../buttons/buttons.module";
@@ -72,9 +70,7 @@ import { GrowthPlanCardComponent } from './_elements/growth-plan-card/growth-pla
     ExpertFinderComponent,
     AboutComponent,
     AboutPractitionerComponent,
-    ScrollIndicatorComponent,
     FaqItemComponent,
-    TablePlanFeatureComponent,
     TagProviderComponent,
     AboutPartnerComponent,
     PressReleaseComponent,

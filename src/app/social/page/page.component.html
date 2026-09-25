@@ -1,12 +1,11 @@
 <div class="container">
   <div class="row align-items-start justify-content-center">
-    <section class="col-12 col-md-10 col-xl-8" *ngIf="!isReturnToAppShown">
+    <section class="col-12 col-md-10 col-xl-8">
       <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
     </section>
   </div>
   <div class="row align-items-start justify-content-center">
     <section
-    *ngIf="!isReturnToAppShown"
     class="col-12 col-md-2 col-xl-2"
     >
       <div class="text-md-right">
@@ -65,13 +64,3 @@
   </div>
 </div>
 
-<a
-*ngIf="isReturnToAppShown"
-href="prompthealth://goBack"
-class="position-fixed btn btn-primary shadow"
-style="z-index: 100; bottom: 15px; left: 50%; transform: translateX(-50%); width: calc(100vw - 60px); max-width: 400px;"
->
-  Return to app
-</a>
-
-<!-- <action-sheet-open-app [path]="pathToApp"></action-sheet-open-app> -->

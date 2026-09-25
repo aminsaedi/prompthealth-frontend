@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IGetSocialContentResult, IGetSocialContentsResult } from 'src/app/models/response-data';
 import { ISocialPost } from 'src/app/models/social-post';
-import { HeaderStatusService } from 'src/app/shared/services/header-status.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService, canonicalPathOf } from 'src/app/shared/services/universal.service';
 import { formatDateToString } from 'src/app/_helpers/date-formatter';
@@ -24,19 +23,10 @@ export class PageComponent implements OnInit , OnDestroy {
   private destroy$ = new Subject<void>();
 
 
-  get pathToApp() {
-    let path = '';
-    if(this.post?.isNote || this.post?.isPromo) {
-      path = this.post.contentType.toLowerCase() + '/' + this.post._id;
-    }
-    return path;
-  }
-
   public post: ISocialPost;
   private postId: string;
   private _isSlugRoute: boolean = false;
 
-  public isReturnToAppShown = false;
   public relatedPosts: ISocialPost[] = [];
   public relatedDirectoryLinks: {url: string, label: string}[] = [];
   public breadcrumbs: BreadcrumbItem[] = [];
@@ -48,7 +38,6 @@ export class PageComponent implements OnInit , OnDestroy {
     private _sharedService: SharedService,
     private _toastr: ToastrService,
     private _uService: UniversalService,
-    private _headerService: HeaderStatusService,
     private _jsonLdService: JsonLdService,
     private _journey: JourneyService,
   ) { }
@@ -56,7 +45,6 @@ export class PageComponent implements OnInit , OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-    this.hideReturnToApp();
     this._jsonLdService.removeJsonLd();
   }
 
@@ -66,12 +54,7 @@ export class PageComponent implements OnInit , OnDestroy {
       this.postId = routeType === 'slug' ? param.slug : param.postid;
       this._isSlugRoute = routeType === 'slug';
       this.initPost();
-
-      //when url is changed within this component after second time, then returnToApp should be false;
-      this.hideReturnToApp();
     });
-
-    this.showReturnToAppIfNeeded();
   }
 
   async initPost() {
@@ -322,22 +305,5 @@ export class PageComponent implements OnInit , OnDestroy {
       'location': location,
       'organizer': article.author,
     };
-  }
-
-  showReturnToAppIfNeeded() {
-    const params = this._route.snapshot.queryParams;
-    if(params.returnToApp) {
-      this.showReturnToApp();
-    }
-  }
-
-  showReturnToApp() {
-    this.isReturnToAppShown = true;
-    this._headerService.hideHeader();
-  }
-
-  hideReturnToApp() {
-    this.isReturnToAppShown = false;
-    this._headerService.showHeader();
   }
 }

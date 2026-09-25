@@ -247,9 +247,25 @@ export class OutboundLinkService implements OnDestroy {
     return hostname === candidate || hostname.endsWith('.' + candidate);
   }
 
+  /* The page's own host and the loopback names are ours wherever the site
+   * runs. internalHosts lists the production names only, so on any other
+   * origin (a local build on 127.0.0.1:4100, a preview host) every in-app
+   * link resolved against the page was a host we "do not own": the sweep
+   * rewrote routerLink hrefs with UTM parameters and each click was reported
+   * as an outbound click. Exact names, not suffixes: a subdomain of the host
+   * serving the page is not necessarily ours. */
+  private isOwnHost(hostname: string): boolean {
+    if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') { return true; }
+    try {
+      return hostname === String(window.location.hostname || '').toLowerCase();
+    } catch (e) {
+      return false;
+    }
+  }
+
   /* An outbound link is an http(s) link to a host we do not own and have not
-   * excluded. Everything else — in-app routes, anchors, mailto:, tel:,
-   * javascript: — is left exactly as the author wrote it. */
+   * excluded. Everything else (in-app routes, anchors, mailto:, tel:,
+   * javascript:) is left exactly as the author wrote it. */
   isOutbound(href: string): boolean {
     if (!href) { return false; }
     const trimmed = href.trim();
@@ -262,6 +278,7 @@ export class OutboundLinkService implements OnDestroy {
     }
     if (url.protocol !== 'http:' && url.protocol !== 'https:') { return false; }
     const hostname = url.hostname.toLowerCase();
+    if (this.isOwnHost(hostname)) { return false; }
     if ((this.policy.internalHosts || []).some(entry => this.hostMatches(hostname, entry))) { return false; }
     if ((this.policy.excludeHosts || []).some(entry => this.hostMatches(hostname, entry))) { return false; }
     return true;

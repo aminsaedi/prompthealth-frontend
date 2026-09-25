@@ -8,7 +8,7 @@
       </div>
       <div class="col-12 col-lg-11 col-xl-10 text-center text-lg-left">
         <div class="row">
-          <div class="col-12 col-lg-3">
+          <div class="col-12 col-lg-4">
             <div class="subtitle1 text-white my-30p mt-lg-0">Find providers</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
               <li class="mb-3"><a class="btn btn-text-lightgrey small p-0"
@@ -22,7 +22,7 @@
             </ul>
           </div>
 
-          <div class="col-12 col-lg-3">
+          <div class="col-12 col-lg-4">
             <div class="subtitle1 text-white my-30p mt-lg-0">Services</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
               <li class="mb-3">
@@ -46,7 +46,7 @@
             </ul>
           </div>
 
-          <div class="col-12 col-lg-3">
+          <div class="col-12 col-lg-4">
             <div class="subtitle1 text-white my-30p mt-lg-0">PromptHealth</div>
             <ul class="opacity-70pc p-0 m-0 list-unstyled">
               <li class="mb-3">
@@ -76,37 +76,25 @@
             </ul>
           </div>
 
-          <div class="col-12 col-lg-3">
-            <div class="subtitle1 text-white my-30p mt-lg-0">PromptHealth app</div>
-
-            <div class="mb-10p">
-              <a href="https://apps.apple.com/ca/app/prompthealth/id1532951934" target="_blank">
-                <img loading="lazy" width="130" src="/assets/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
-                  alt="Download on app store" loading="lazy" />
-              </a>
-            </div>
-            <div>
-              <a href='https://play.google.com/store/apps/details?id=com.prompthealth&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
-                target="_blank">
-                <img loading="lazy" class="badge-playstore" alt='Get it on Google Play' width="150"
-                  src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'
-                  loading="lazy" />
-              </a>
-            </div>
-
-            <div class="mt-90p mb-10p opacity-70pc">
-              <button class="btn btn-text-lightgrey p-0 small" (click)="showModalRegion()">{{regionFormatted}}</button>
-            </div>
-          </div>
-
-
         </div>
       </div>
     </section>
 
     <section class="row justify-content-between align-items-center text-center text-md-left">
+      <!-- The region switch sat under the app store badges. The app is gone from
+           both stores, so its column went, and the switch moved down here
+           beside the copyright, where a site's locale control usually is. -->
       <div class="col-12 col-md mt-20p mt-md-0 order-2 order-md-1">
-        <div class="text-placeholder body2">© {{ currentYear }} PromptHealth. All Rights Reserved</div>
+        <div class="d-flex flex-column flex-md-row align-items-center align-items-md-baseline">
+          <div class="text-placeholder body2">© {{ currentYear }} PromptHealth. All Rights Reserved</div>
+          <button
+          *ngIf="regionFormatted"
+          type="button"
+          class="btn btn-text-lightgrey p-0 small opacity-70pc mt-15p mt-md-0 ml-md-25p"
+          [attr.aria-label]="'Change region, now ' + regionFormatted"
+          (click)="showModalRegion()"
+          >{{regionFormatted}}</button>
+        </div>
       </div>
       <div class="col-12 col-md order-1 order-md-2">
         <social-buttons></social-buttons>

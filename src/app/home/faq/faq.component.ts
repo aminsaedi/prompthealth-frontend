@@ -60,7 +60,7 @@ const faqCategories: IFAQCategory[] = [
     items: [
       {
         q: 'What is PromptHealth?',
-        a: 'PromptHealth is an AI-powered healthcare discovery platform that helps patients find trusted healthcare professionals and helps providers become more discoverable online. Unlike traditional directories, PromptHealth allows healthcare professionals to publish educational content such as articles and videos, helping them build authority and improve visibility in modern search environments — including AI-powered tools. Patients can search for services, watch educational videos, read expert content, and connect with healthcare providers who share helpful information about treatments and care options.',
+        a: 'PromptHealth is an AI-powered healthcare discovery platform that helps patients find trusted healthcare professionals and helps providers become more discoverable online. Unlike traditional directories, PromptHealth allows healthcare professionals to publish educational content such as articles and videos, helping them build authority and improve visibility in modern search environments, including AI-powered tools. Patients can search for services, watch educational videos, read expert content, and connect with healthcare providers who share helpful information about treatments and care options.',
         opened: false,
       },
       {
@@ -95,7 +95,7 @@ const faqCategories: IFAQCategory[] = [
     items: [
       {
         q: 'Why should I join PromptHealth?',
-        a: 'PromptHealth helps healthcare professionals become discoverable where patients are searching today — including search engines, video platforms, and AI-powered search tools. By publishing educational content, professionals can increase online visibility, build authority in their field, educate patients, attract new patients, and stay competitive in digital healthcare discovery.',
+        a: 'PromptHealth helps healthcare professionals become discoverable where patients are searching today, including search engines, video platforms, and AI-powered search tools. By publishing educational content, professionals can increase online visibility, build authority in their field, educate patients, attract new patients, and stay competitive in digital healthcare discovery.',
         opened: false,
       },
       {

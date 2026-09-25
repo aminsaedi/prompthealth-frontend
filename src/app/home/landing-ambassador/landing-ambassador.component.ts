@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild , OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IUserDetail } from 'src/app/models/user-detail';
-import { ButtonGuidelineComponent } from 'src/app/shared/button-guideline/button-guideline.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { environment } from 'src/environments/environment';
@@ -29,7 +28,6 @@ export class LandingAmbassadorComponent implements OnInit , OnDestroy {
 
   private canvas: HTMLElement;
   @ViewChild('referralLink') private elLink: ElementRef;
-  @ViewChild(ButtonGuidelineComponent) private buttonGuideLine: ButtonGuidelineComponent;
 
   @HostListener('window:scroll') windowScroll() {
     if (this.canvas) {
@@ -90,13 +88,11 @@ export class LandingAmbassadorComponent implements OnInit , OnDestroy {
     });
   }
 
-  ngAfterViewInit() {
-    this._route.queryParams.subscribe((data: {mediakit: string}) => {
-      if(typeof data.mediakit == 'string') {
-        this.buttonGuideLine.openModal();
-      }
-    });
-  }
+  /* ?mediakit used to open the ambassador guidelines modal from here. The
+   * page lost its <button-guideline> in the 2021 redesign, so the parameter
+   * threw "Cannot read property 'openModal' of undefined", on the server and
+   * in the browser. It is ignored now rather than brought back: that modal
+   * promises credits toward premium plans, which are no longer sold. */
 
   copyLink() {
     const el: HTMLInputElement = this.elLink.nativeElement;

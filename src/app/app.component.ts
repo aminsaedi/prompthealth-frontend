@@ -1,6 +1,4 @@
-import { Location } from '@angular/common';
 import { Component, HostListener, OnInit , OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { UniversalService } from './shared/services/universal.service';
@@ -41,10 +39,7 @@ export class AppComponent implements OnInit , OnDestroy {
 
   constructor(
     private _uService: UniversalService,
-    private _route: ActivatedRoute,
-    private _router: Router,
     private _toastr: ToastrService,
-    private _location: Location,
     private _uploadObserver: UploadObserverService,
     private _sharedService: SharedService,
     private _regionService: RegionService,
@@ -84,19 +79,6 @@ export class AppComponent implements OnInit , OnDestroy {
 
       this._uploadObserver.uploadingStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(status => {
         this.onUploadingStatusChanged(status);
-      });
-
-      this._route.queryParams.subscribe((params: IAppQueryParams) => {
-        const paramsCopy = JSON.parse(JSON.stringify(params));
-
-        if (params && params.action) {
-          switch (params.action) {
-            case 'stripe-success':
-            case 'stripe-cancel':
-              this.onRedirectFromStripe(paramsCopy);
-              break;
-          }
-        }
       });
 
       // try { await this.getPosition(); }
@@ -164,24 +146,6 @@ export class AppComponent implements OnInit , OnDestroy {
     this.currentUploadingStatus = status;
   }
 
-  onRedirectFromStripe(params: { [k: string]: any }) {
-    if (!this._uService.isServer) {
-      if (params.action == 'stripe-success') {
-        this._toastr.success('Thank you for subscribing our premium plan!');
-      } else if (params.action == 'stripe-cancel') {
-        this._toastr.error('You haven\'t completed subscribing plan.');
-      }
-
-      /* Serialized by the router, which encodes what it writes. This used to
-       * join the decoded values with '&' by hand, so a value holding &, #, %
-       * or = corrupted the address, and it dropped any parameter whose value
-       * was empty. */
-      this._location.replaceState(this._router.serializeUrl(
-        this._router.createUrlTree([], { queryParams: { ...params, action: null } })
-      ));
-    }
-  }
-
   getPosition(): Promise<any> {
     return new Promise((resolve, reject) => {
 
@@ -213,9 +177,4 @@ export class AppComponent implements OnInit , OnDestroy {
       this._toastr.error('Please select resion.');
     }
   }
-}
-
-
-interface IAppQueryParams {
-  action?: 'stripe-cancel' | 'stripe-success';
 }

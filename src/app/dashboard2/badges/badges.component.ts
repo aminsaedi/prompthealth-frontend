@@ -76,6 +76,7 @@ export class BadgesComponent implements OnInit , OnDestroy {
   public certificateForVerifiedBadge: ICertificate = null;
 
   public s3 = environment.config.AWS_S3;
+  public certificateAccept = CERTIFICATE_TYPES.join(',') + ',.pdf,.jpg,.jpeg,.png,.gif,.webp';
 
   @ViewChild('modalBadgeEditor') private modalBadgeEditor: ElementRef; 
   @ViewChild('inputFile') private inputFile: ElementRef;
@@ -147,12 +148,20 @@ export class BadgesComponent implements OnInit , OnDestroy {
   }
 
   onSelectFile(e: Event) { 
-    const files = (e.target as HTMLInputElement).files;
+    const input = e.target as HTMLInputElement;
+    const files = input.files;
     const file = files?.length > 0 ? files[0] : null;
+    /* Cleared so that choosing the same file again, after a refusal, still
+     * fires change. The File object is kept below, not the input's value. */
+    input.value = '';
     if(!file) {
       return;
+    } else if(CERTIFICATE_TYPES.indexOf((file.type || '').toLowerCase()) < 0) {
+      /* The accept attribute is a hint a file picker can be told to ignore. */
+      this._toastr.error(NOT_A_CERTIFICATE_FILE);
+      return;
     } else if(file.size > 10 * 1000 * 1000) /** 10MB */ {
-      this._toastr.error('File size is too big. Please shink less than 10MB');
+      this._toastr.error('File size is too big. Please choose one smaller than 10 MB.');
       return;
     }
 
@@ -169,11 +178,11 @@ export class BadgesComponent implements OnInit , OnDestroy {
           this.fEditor.certificateFiles.setValue(res.data.certificateFiles);
           this.fEditor.certificateFiles.updateValueAndValidity();
         } else {
-          this._toastr.error('Something went wrong. Please try again later');
+          this._toastr.error(messageOf(res, 'Something went wrong. Please try again later.'));
         }
       }, error => {
         this.isUploadingFile = false;
-        this._toastr.error('Something went wrong. Please try again later');
+        this._toastr.error(messageOf(error, 'Something went wrong. Please try again later.'));
       })
     } else {
       //put file into fEditor.certificateFiles and upload later
@@ -248,11 +257,11 @@ export class BadgesComponent implements OnInit , OnDestroy {
         this._toastr.success(this.selectedCertificate ? 'Updated successfully.' : 'Uploaded successfully');
         this._modalService.hide();
       } else {
-        this._toastr.error('Something went wrong. Please try again.');
+        this._toastr.error(messageOf(res, 'Something went wrong. Please try again.'));
       }
     }, error => {
       this.isUploading = false
-      this._toastr.error('Something went wrong. Please try again.');
+      this._toastr.error(messageOf(error, 'Something went wrong. Please try again.'));
     });
   }
 
@@ -291,3 +300,23 @@ interface ICertificate {
 }
 
 type badgeStatusType = 'approved' | 'pending' | 'notApplied' | 'notApplicable';
+
+/* What the backend stores as a certificate (utilities/upload.js
+ * isCertificateFile): a PDF, or a photo or scan of one. It refuses Word,
+ * Excel, PowerPoint and SVG, which this page used to offer, so a provider
+ * could pick one, fill in the form and only then be told no. */
+const CERTIFICATE_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+const NOT_A_CERTIFICATE_FILE = 'A certificate can be a PDF or a picture (JPEG, PNG, GIF or WebP).';
+
+/* The server's own words where it gave any. A refusal comes back two ways:
+ * as a 4xx, which the error interceptor turns into its message, or as a 200
+ * whose body carries statusCode and message. Either says what to fix (the
+ * file type, a picture too large to read), which "Something went wrong"
+ * did not. */
+function messageOf(response: any, fallback: string): string {
+  if (typeof response === 'string') {
+    return response.trim() || fallback;
+  }
+  const message = response && response.message;
+  return (typeof message === 'string' && message.trim()) ? message : fallback;
+}
