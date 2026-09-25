@@ -31,6 +31,26 @@
   object-fit: contain;
 }
 
+/*
+ * Captions are on from the first second, and most of this page's visitors
+ * arrive on a phone. Chromium sizes caption text at 5% of the player's height,
+ * which in a 360px-wide phone player is about 10px, too small to read. Below
+ * tablet width the size is fixed instead; from there up the player is at least
+ * 690px wide and the browser's own size is already larger than this. Safari on
+ * an iPhone may apply the reader's system caption style over all of it, which
+ * is the reader's setting to make.
+ */
+.hero-video__player::cue {
+  background: rgba($colorGsBlack, 0.75);
+}
+
+@media (max-width: $breakpointMd - 1px) {
+  .hero-video__player::cue {
+    font-size: 16px;
+    line-height: 1.35;
+  }
+}
+
 /* Transparent: the poster underneath is the video's own. */
 .hero-video__overlay {
   padding: 0;
