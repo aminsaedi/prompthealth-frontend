@@ -5,6 +5,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
  * the iframe, which switches off Angular's sanitizer for it, so nothing but a
  * YouTube id may reach it. */
 const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
+/* The width of the placeholder i.ytimg.com serves for a thumbnail it lacks. */
+const MISSING_THUMBNAIL_WIDTH = 120;
 
 /*
  * A YouTube video as a thumbnail and a play button until someone asks for it.
@@ -50,6 +52,16 @@ export class YoutubeFacadeComponent implements OnChanges {
     /* oardefault is the frame at the video's own shape, so a Short fills a 9:16
      * box. hqdefault is 4:3, letterboxed, but exists for every video. */
     this.thumbnail = this.isValid ? `https://i.ytimg.com/vi/${this.videoId}/oardefault.jpg` : '';
+  }
+
+  /* A missing thumbnail does not fail to load. i.ytimg.com answers 404 with a
+   * real 120x90 grey JPEG, so the image fires load, not error, and would show
+   * YouTube's placeholder stretched across the tile. Every real oardefault or
+   * hqdefault is wider than that. */
+  onThumbnailLoad(img: HTMLImageElement): void {
+    if (img && img.naturalWidth > 0 && img.naturalWidth <= MISSING_THUMBNAIL_WIDTH) {
+      this.onThumbnailError();
+    }
   }
 
   onThumbnailError(): void {
