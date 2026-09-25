@@ -69,6 +69,14 @@ export interface IGrowthVideo {
    *  and a cross-origin <track> needs them. */
   captions: string;
   title: string;
+  /** The encoded frame size. The player reserves this shape before anything
+   *  loads, and a taller-than-wide video gets the hero's portrait layout. */
+  width: number;
+  height: number;
+  /** True when the words are part of the picture. The captions track is then
+   *  offered in the player's menu but starts off, or every line would be
+   *  on screen twice. */
+  captionsBurnedIn: boolean;
 }
 
 export interface IGrowthStep {

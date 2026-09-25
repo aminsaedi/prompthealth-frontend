@@ -12,8 +12,9 @@ import { GROWTH_LANDING_PATHS } from './paths';
  * booking form's text and the two hidden headings are ours, proposed in the
  * same section. Edit wording there first and here second, so the two agree.
  *
- * booking.calendlyUrl stays empty until the 30-minute event exists. Until then
- * the form thanks the visitor and she follows up by email.
+ * The hero video is her own vertical cut, filmed on a production day, with the
+ * words already in the picture. booking.calendlyUrl is her 30-minute Discovery
+ * Call; emptied, the form thanks the visitor and she follows up by email.
  */
 export const DENTISTS_LANDING: IGrowthLanding = {
   key: 'dentists',
@@ -21,22 +22,26 @@ export const DENTISTS_LANDING: IGrowthLanding = {
   seo: {
     title: 'Growth for Dentists | Video Creative & Patient Acquisition',
     description: 'A full production day at your practice, a six-month content library, and targeted Meta advertising that brings new patients. Book a 30-minute consultation.',
-    image: '/assets/video/for-dentists-hero-poster.v1.jpg',
-    imageWidth: 1280,
-    imageHeight: 720,
+    /* The share card is landscape, as every network crops to; the vertical
+     * poster alone would be cut to a strip. */
+    image: '/assets/img/share/for-dentists-share.v1.jpg',
+    imageWidth: 1200,
+    imageHeight: 630,
     imageType: 'image/jpeg',
-    imageAlt: "Patients are looking for you. They just don't know it yet.",
+    imageAlt: 'Hedieh Safiyari on set at a practice, with 1.7M followers and 400+ dental videos',
   },
   ctaLabel: 'Book a 30-Minute Consultation',
   hero: {
     heading: "We Bring You Patients Who Aren't Searching Yet",
     text: 'Most dental marketing competes for people already looking for a dentist. We reach the people near your practice before they start looking, and give them a reason to choose you.',
     video: {
-      src: 'https://prompt-images.s3.us-east-2.amazonaws.com/landing/for-dentists/hero-720p-v1.mp4',
-      poster: '/assets/video/for-dentists-hero-poster.v1.jpg',
-      /* v2 lifts the first two cues off the video's own title card. */
-      captions: '/assets/video/for-dentists-hero.v2.en.vtt',
-      title: 'PromptHealth Growth: attract new patients',
+      src: 'https://prompt-images.s3.us-east-2.amazonaws.com/landing/for-dentists/hero-vertical-v2.mp4',
+      poster: '/assets/video/for-dentists-hero-vertical-poster.v1.jpg',
+      captions: '/assets/video/for-dentists-hero-vertical.v1.en.vtt',
+      title: 'PromptHealth Growth, with Hedieh Safiyari',
+      width: 576,
+      height: 1024,
+      captionsBurnedIn: true,
     },
   },
   whyUs: {
@@ -173,7 +178,7 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     text: "In 30 minutes we'll look at where your new patients come from today, and what a campaign could realistically bring you.",
   },
   booking: {
-    calendlyUrl: '',
+    calendlyUrl: 'https://calendly.com/hediehsafiyari/generalmeeting',
     formHeading: 'Book a 30-Minute Consultation',
     labels: {
       name: 'Name',

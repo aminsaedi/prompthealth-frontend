@@ -329,6 +329,7 @@ export class BookingFormComponent implements OnChanges, OnDestroy {
         prefill: {
           name: String(this.form.value.name || '').trim(),
           email: String(this.form.value.email || '').trim(),
+          customAnswers: { a1: this.prepNote() },
         },
         utm,
       });
@@ -337,6 +338,21 @@ export class BookingFormComponent implements OnChanges, OnDestroy {
        * the thank-you that promises a follow-up by email, which is then true. */
       this._zone.run(() => this.goTo('thanks'));
     });
+  }
+
+  /* The event's first question asks for anything that helps her prepare, and
+   * the form has just asked the same things. Answered here, they arrive with
+   * the calendar invitation rather than only in the saved request. The
+   * visitor sees it and can change it. If the event's questions are
+   * reordered, this lands in whichever one is first. */
+  private prepNote(): string {
+    const value = this.form.value;
+    const text = (v: any) => String(v || '').trim();
+    const place = [text(value.practiceName), text(value.city)].filter(Boolean).join(', ');
+    const lines: string[] = [];
+    if (place) { lines.push('Practice: ' + place); }
+    if (text(value.patientSource)) { lines.push('How patients find us today: ' + text(value.patientSource)); }
+    return lines.join('\n').slice(0, 2000);
   }
 
   /* Registered once, outside Angular: Calendly posts a message for every
