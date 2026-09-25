@@ -23,7 +23,6 @@ import { StripeService } from 'ngx-stripe';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { IDefaultPlan } from 'src/app/models/default-plan';
 import { IAddonPlan } from 'src/app/models/addon-plan';
-import { ICouponData } from 'src/app/models/coupon-data';
 import { IResponseData } from 'src/app/models/response-data';
 import { ToastrService } from 'ngx-toastr';
 import { Professional } from 'src/app/models/professional';
@@ -572,21 +571,6 @@ export class SharedService {
     });
   }
 
-  isCouponApplicableTo(coupon: ICouponData, role: string): boolean {
-    if (!coupon) { return false; }
-    if (!coupon.metadata.roles || coupon.metadata.roles.length == 0) {
-      return true;
-    } else {
-      const rolesStr = coupon.metadata.roles.replace(/'/g, '"');
-      const roles: string[] = JSON.parse(rolesStr);
-      if (roles.includes(role)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
   async checkoutPlan(
     user: IUserDetail,
     plan: IDefaultPlan | IAddonPlan,
@@ -635,8 +619,6 @@ export class SharedService {
     option: ICheckoutPlanOption = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
-      const ss = this._uService.sessionStorage;
-      const savedCoupon: ICouponData = JSON.parse(ss.getItem('stripe_coupon_code'));
       const _option = new CheckoutPlanOption(option);
       // console.log(user);
       const payload: IStripeCheckoutData = {
@@ -651,11 +633,6 @@ export class SharedService {
       };
       if (metadata) {
         payload.metadata = metadata;
-      }
-
-      if (savedCoupon && this.isCouponApplicableTo(savedCoupon, user.roles)) {
-        payload.coupon = savedCoupon.id;
-        // payload.success_url += '?action=couponused';
       }
 
       this.post(payload, 'user/checkoutSession').subscribe((res: IResponseData) => {
@@ -678,9 +655,6 @@ export class SharedService {
           reject(res.message);
         }
       }, (error) => {
-        if (error.errorCode === 'COUPON_INVALID') {
-          ss.removeItem('stripe_coupon_code');
-        }
         reject(error);
       });
     });

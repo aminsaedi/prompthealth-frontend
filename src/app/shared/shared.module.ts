@@ -33,7 +33,6 @@ import { FormPartnerGeneralComponent } from './form-partner-general/form-partner
 import { FormPartnerOfferComponent } from './form-partner-offer/form-partner-offer.component';
 import { FormItemPlaceComponent } from './form-item-place/form-item-place.component';
 import { FormCentreGeneralComponent } from './form-centre-general/form-centre-general.component';
-import { CardCouponComponent } from './card-coupon/card-coupon.component';
 import { ButtonTutorialComponent } from './button-tutorial/button-tutorial.component';
 import { FormProviderGeneralComponent } from './form-provider-general/form-provider-general.component';
 import { FormItemCheckboxGroupComponent } from './form-item-checkbox-group/form-item-checkbox-group.component';
@@ -83,7 +82,6 @@ const LAZY_DECLARATIONS = [
   FormPartnerOfferComponent,
   FormItemPlaceComponent,
   FormCentreGeneralComponent,
-  CardCouponComponent,
   ButtonTutorialComponent,
   FormProviderGeneralComponent,
   FormItemCheckboxGroupComponent,
