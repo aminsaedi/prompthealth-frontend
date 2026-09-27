@@ -62,12 +62,14 @@
           <li *ngIf="isLoggedIn" class="mx-10p mx-lg-15p cursor-pointer">
             <profile-image [image]="user?.profileImageFull" (click)="onClickUserIcon()"></profile-image>
           </li>
-          <!-- <li class="ml-10p ml-lg-15p">
+          <!-- The Academy comes with a practitioner profile, so it is shown to
+               everyone but patients: a visitor meets the invitation to sign up. -->
+          <li *ngIf="!user?.isU" class="ml-10p ml-lg-15p d-none d-lg-block">
             <a routerLink="/online-academy" class="btn btn-secondary small">
-              <i class="text-primary-dark" iconPh="users"></i>
-              <span class="text-primary-dark">Prompt Academy</span>
+              <i class="text-primary-dark" iconPh="play"></i>
+              <span class="text-primary-dark">Academy</span>
             </a>
-          </li> -->
+          </li>
           <!-- PromptHealth Growth is the one thing the site sells. Hidden on a growth
                landing, where it would point at the page the reader is on. -->
           <li *ngIf="!onGrowthLanding" class="ml-10p ml-lg-15p">

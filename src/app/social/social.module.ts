@@ -113,6 +113,9 @@ const routes: Routes = [
     { path: 'followers',  redirectTo: '/dashboard/follow/followers'},
 
     { path: '', component: HomeComponent, children: [
+      /* The academy is members-only now and has one page. This list asked the
+       * API for academy items as a feed, which answers a visitor with nothing. */
+      { path: 'academy', pathMatch: 'full', redirectTo: '/online-academy' },
       { path: ':taxonomyType', component: ListComponent },
       { path: ':taxonomyType/:topicId', component: ListComponent },  
 
