@@ -1,6 +1,44 @@
 @import "../../assets/scss/mixins";
 @import "../../assets/scss/variables";
 
+/*
+ * The hero's own nav: the logo, six links and two buttons share a container
+ * capped at 1150px (960px on a small laptop), about 30px short of what the
+ * spacing utilities on each item added up to. The browser made up the
+ * difference by breaking every two-word link onto a second line, at every
+ * desktop width. No item may break now, and the gaps are one even step,
+ * smaller on a small laptop, where the buttons also lose a little padding.
+ * The margins are !important only because the utility classes they replace
+ * are; below lg the utilities still space the phone header.
+ */
+.home-nav {
+  > li {
+    white-space: nowrap;
+  }
+
+  @media (min-width: $breakpointLg) {
+    > li {
+      margin-left: 14px !important;
+      margin-right: 0 !important;
+    }
+
+    > li:first-child {
+      margin-left: 24px !important;
+    }
+  }
+
+  @media (min-width: $breakpointLg) and (max-width: $breakpointXl - 1px) {
+    > li {
+      margin-left: 10px !important;
+    }
+
+    .btn.small {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+}
+
 // .bg-primary-lighter {
 //   background: rgba($color: $colorPrimaryLight, $alpha: 0.7);
 // }
