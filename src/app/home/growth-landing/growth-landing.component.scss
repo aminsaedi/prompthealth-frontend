@@ -281,31 +281,6 @@ $stepGap: 30px;
   }
 }
 
-// -------------------------------------------------------------- sticky
-
-/* Below the header (90) and the mobile menu (100), far below the modal. */
-.growth-sticky {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 89;
-  padding: 10px 15px;
-  background: $colorGsWhite;
-  box-shadow: 0 -4px 16px rgba($colorGsBlack, 0.12);
-
-  /* Here, not d-md-none: Bootstrap arrives asynchronously, and until it did
-   * the bar would show on a desktop. */
-  @media (min-width: $breakpointMd) {
-    display: none;
-  }
-}
-
-.growth-sticky__button {
-  display: block;
-  width: 100%;
-}
-
 // --------------------------------------------------------------- modal
 
 .growth-booking {

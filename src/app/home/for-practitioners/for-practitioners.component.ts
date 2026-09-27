@@ -160,10 +160,11 @@ const features = [
 
 const stats = [
   { value: '1M+', label: 'Social Followers' },
-  /* A read-only count of the production database found 453 approved, listed
-   * providers on 2026-09-23, so the 500+ this used to claim was not true. */
-  { value: '450+', label: 'Verified Providers' },
-  { value: '8', label: 'Cities Covered' },
+  /* Hedieh's figures (2026-09-27), the same as the homepage's; change both
+   * together. 600+ counts practitioner and clinic accounts (631 then), which is
+   * why it no longer says verified: 442 of them were approved and listed. */
+  { value: '600+', label: 'Practitioners' },
+  { value: '20', label: 'Cities' },
   { value: '50+', label: 'Health Categories' },
 ];
 
