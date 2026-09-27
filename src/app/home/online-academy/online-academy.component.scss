@@ -1,3 +1,5 @@
+@import '../../../assets/scss/variables';
+
 .header-image {
   position: absolute;
   width: 100%;
@@ -5,7 +7,9 @@
   top: 0;
   left: 0;
   z-index: 1;
+  object-fit: cover;
 }
+
 .header-backdrop {
   position: absolute;
   width: 100%;
@@ -16,136 +20,30 @@
   z-index: 2;
 }
 
-.paginators {
-  button {
-    position: relative;
-    padding: 0;
-    width: 35px;
-    height: 35px;
-    span {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
+.academy-intro {
+  max-width: 620px;
 }
 
-.category-button {
-  // font-size: 13px;
+.academy-invite {
+  max-width: 640px;
+  box-shadow: 0 8px 24px rgba($colorGsBlack, 0.08);
 }
 
-.color-dummy {
-  background-color: rgba(160, 163, 189, 1);
-  color: rgba(160, 163, 189, 1);
-  opacity: 0.2;
+.academy-number {
+  display: inline-block;
+  min-width: 1.4em;
+  font-weight: 700;
 }
 
-.card-post {
-  //   margin: 0 -10px;
-  transition: background-color 180ms;
-  border-radius: 12px;
-  background-color: #eff3f7;
-
-  &:hover {
-    background-color: rgba(12, 116, 255, 0.13);
-  }
+/* The shape of a 16:9 player and a title line, so nothing below moves when
+ * the guides arrive. */
+.academy-dummy {
+  padding-top: 56.25%;
+  background: rgba(160, 163, 189, 0.2);
 }
 
-.card-post {
-  .eyecatch-container::after {
-    content: "";
-    display: block;
-    padding-top: 66%;
-  }
-
-  .eyecatch,
-  .eyecatch-dummy {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-    object-fit: cover;
-  }
-
-  ::ng-deep {
-    .eyecatch-video {
-      iframe {
-        position: absolute;
-        width: 100%;
-        height: calc(100% + 120px);
-        top: -60px;
-      }
-    }
-  }
-
-  .content-container {
-    word-break: break-word;
-  }
-
-  .author,
-  .author-dummy {
-    width: 35px;
-    height: 35px;
-    border-radius: 12px;
-    object-fit: cover;
-  }
-
-  .info-container {
-    padding: 0 10px;
-  }
-}
-
-.byPromptContainer {
-  margin-top: 20px;
-  margin-bottom: 23px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  .square {
-    width: 32px;
-    height: 32px;
-    margin-right: 10px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
-[class^="loading"] {
-  position: absolute;
-  top: 50%;
-  left: 0%;
-  width: 25%;
-  height: 150%;
-  opacity: 0;
-  border-radius: 12px;
-}
-.loading-1 {
-  animation: 2s linear infinite running slidein1;
-}
-.loading-2 {
-  animation: 2s 1s linear infinite running slidein2;
-}
-
-@keyframes slidein1 {
-  from {
-    transform: translate(-150%, -50%) rotate(-20deg);
-    opacity: 0.4;
-  }
-  to {
-    transform: translate(550%, -50%) rotate(-20deg);
-    opacity: 0.4;
-  }
-}
-@keyframes slidein2 {
-  from {
-    transform: translate(-150%, -50%) rotate(-20deg);
-    opacity: 0.4;
-  }
-  to {
-    transform: translate(550%, -50%) rotate(-20deg);
-    opacity: 0.4;
-  }
+.academy-dummy-line {
+  height: 1.2em;
+  width: 70%;
+  background: rgba(160, 163, 189, 0.2);
 }

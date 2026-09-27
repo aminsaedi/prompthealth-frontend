@@ -7,7 +7,7 @@
 - [Find Practitioners](https://www.prompthealth.ca/practitioners): Search and filter all practitioners by specialty, city, and delivery method
 - [Homepage](https://www.prompthealth.ca/): Featured practitioners and health content
 - [Community Feed](https://www.prompthealth.ca/community/feed): Health and wellness articles and expert content from practitioners
-- [Online Academy](https://www.prompthealth.ca/online-academy): Free video guides for practitioners on social media, content and marketing
+- [PromptHealth Academy](https://www.prompthealth.ca/online-academy): Video guides on social media, content, Google Business Profile and SEO, free for practitioners with a PromptHealth profile (sign-in required)
 - [About PromptHealth](https://www.prompthealth.ca/about): Company mission and background
 - [FAQ](https://www.prompthealth.ca/faq): How PromptHealth works for patients and practitioners
 - [Practitioner Plans](https://www.prompthealth.ca/plans): Plans for healthcare providers: a free profile, or PromptHealth Growth

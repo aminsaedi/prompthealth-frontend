@@ -1,114 +1,125 @@
-import { Component, OnInit , OnDestroy } from "@angular/core";
-import { GetOnlineAcademyQuery } from "src/app/models/get-online-academy-query";
-import { IGetPressReleasesResult } from "src/app/models/response-data";
-import { SocialArticle } from "src/app/models/social-article";
-import { ISocialPost } from "src/app/models/social-post";
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { IResponseData } from "src/app/models/response-data";
 import { SharedService } from "src/app/shared/services/shared.service";
 import { UniversalService } from "src/app/shared/services/universal.service";
-import { environment } from "src/environments/environment";
-import { SortItem } from "src/app/buttons/button-sort/button-sort.component";
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { LoginStatusType, ProfileManagementService } from "src/app/shared/services/profile-management.service";
+
+/*
+ * The PromptHealth Academy: short video guides, free to anyone with a
+ * practitioner, clinic or partner profile (Hedieh, 2026-09-26). The videos are
+ * unlisted on YouTube, and the API hands them only to a signed-in member
+ * (ph-backend services/content-access.js), so this page asks for them only
+ * once it knows the reader is one.
+ *
+ * 'checking' while the browser finds out who is signed in. The server always
+ * renders 'guest', which is also what a crawler should see: the invitation,
+ * not the videos.
+ */
+type AcademyView = "checking" | "guest" | "patient" | "member";
+
+export interface IAcademyVideo {
+  id: string;
+  videoId: string;
+  title: string;
+}
+
+/* An academy item's body is the editor's YouTube embed. */
+const EMBED = /youtube(?:-nocookie)?\.com\/embed\/([A-Za-z0-9_-]{6,20})/;
+
 @Component({
   selector: "app-online-academy",
   templateUrl: "./online-academy.component.html",
   styleUrls: ["./online-academy.component.scss"],
 })
-export class OnlineAcademyComponent implements OnInit , OnDestroy {
+export class OnlineAcademyComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  public latest: ISocialPost[] = null;
-  public postTotal: number;
-  public selectedCategory: string = "all";
+  public view: AcademyView = "checking";
+  public videos: IAcademyVideo[] = null;
+  public loadFailed = false;
+  private loading = false;
 
-  private selectedSort: SortItem = {
-    id: "createdAtAsc",
-    label: "Latest",
-    type: "number",
-    order: "desc",
-    sortBy: "createdAt",
-  };
-
-  public sortItems: SortItem[] = [
-    {
-      id: "createdAtAsc",
-      label: "Latest",
-      type: "number",
-      order: "desc",
-      sortBy: "createdAt",
-    },
-    {
-      id: "createdAtDesc",
-      label: "Oldest",
-      type: "number",
-      order: "asc",
-      sortBy: "createdAt",
-    },
-  ];
-
-  public s3 = environment.config.AWS_S3;
-
-  get browserS() {
-    return this._uService.isServer || window?.innerWidth < 768;
-  }
-
-  get getSelectedCategory() {
-    return this.selectedCategory;
-  }
-
-  onChangeSort(item: SortItem) {
-    this.selectedSort = item;
-    this.fetchLatest();
-  }
+  /* Back here after signing in. */
+  public readonly loginQuery = { next: "/online-academy" };
 
   constructor(
     private _sharedService: SharedService,
     private _uService: UniversalService,
+    private _profileService: ProfileManagementService,
   ) { }
 
   ngOnInit(): void {
-    /* A literal path, so a query string can never reach the canonical. The
-     * title used to be a copy of /press-release's ("News and press"), so the
-     * two pages competed for one title, and the description credited "top
-     * practitioners" for guides that are all by PromptHealth. */
     this._uService.setMeta("/online-academy", {
-      title: "Prompt Academy, Free Social Media Guides | PromptHealth",
-      description: "Free video guides from PromptHealth on social media, content and marketing, made for health and wellness practitioners.",
+      title: "PromptHealth Academy | Free Video Guides for Practitioners",
+      description: "Short video guides from PromptHealth on social media, content, Google Business Profile and SEO, free for practitioners with a PromptHealth profile.",
       robots: "index, follow",
     });
 
-    this.fetchLatest();
+    if (this._uService.isServer) {
+      this.view = "guest";
+      return;
+    }
+    this.onLoginStatus(this._profileService.loginStatus);
+    this._profileService.loginStatusChanged()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(status => this.onLoginStatus(status));
   }
 
-  changeCategory(category: string) {
-    this.selectedCategory = category;
-    this.fetchLatest();
-  }
-
-  fetchLatest() {
-    const query = new GetOnlineAcademyQuery({
-      /* The academy is a closed set: 55 guides, the newest from 2022-06, and
-       * the editor's academy controls are commented out. The page has no
-       * pager, so the API's default of 20 hid the older 35 under "All". Ask
-       * for all of them in one request. */
-      count: 100,
-      ...(this.selectedCategory !== "all"
-        ? { category: this.selectedCategory }
-        : {}),
-      order: this.selectedSort.order === "asc" ? 1 : -1,
-    });
-    this._sharedService
-      .getNoAuth("note/get-academy" + query.toQueryParamsString())
-      .pipe(takeUntil(this.destroy$)).subscribe((res: IGetPressReleasesResult) => {
-        if (res.statusCode == 200) {
-          this.latest = res.data.data.map((item) => new SocialArticle(item));
-          this.postTotal = res.data.total;
-        }
-      });
-  }
-
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  retry(): void {
+    this.loadFailed = false;
+    this.fetch();
+  }
+
+  private onLoginStatus(status: LoginStatusType): void {
+    if (status === "notChecked" || status === "loggingIn") {
+      this.view = "checking";
+      return;
+    }
+    const user = this._profileService.profile;
+    if (status !== "loggedIn" || !user) {
+      this.view = "guest";
+      this.videos = null;
+      return;
+    }
+    if (user.isU) {
+      this.view = "patient";
+      this.videos = null;
+      return;
+    }
+    this.view = "member";
+    if (!this.videos) { this.fetch(); }
+  }
+
+  /* Oldest first: the order they were published in is the order Hedieh gave
+   * them, a course rather than a news feed. */
+  private fetch(): void {
+    if (this.loading) { return; }
+    this.loading = true;
+    this._sharedService.get("note/get-academy?count=100&order=1")
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: IResponseData) => {
+        this.loading = false;
+        const items: any[] = res && res.statusCode === 200 && res.data && Array.isArray(res.data.data) ? res.data.data : null;
+        if (!items) {
+          this.loadFailed = true;
+          return;
+        }
+        this.videos = items
+          .map(item => {
+            const match = EMBED.exec(String(item.description || ""));
+            return match ? { id: String(item._id), videoId: match[1], title: String(item.title || "") } : null;
+          })
+          .filter(Boolean);
+      }, () => {
+        this.loading = false;
+        this.loadFailed = true;
+      });
   }
 }

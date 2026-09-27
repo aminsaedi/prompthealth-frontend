@@ -40,10 +40,10 @@
             </div>
           </div>
           <div class="d-flex flex-row-reverse flex-xl-row align-items-center">
-            <!-- <a class="btn btn-secondary small ml-15p ml-xl-0p" routerLink="/online-academy">
-              <i class="text-primary-dark" iconPh="users"></i>
-              <span class="text-primary-dark">Prompt Academy</span>
-            </a> -->
+            <a *ngIf="!user?.isU" class="btn btn-secondary small ml-15p ml-xl-0p" routerLink="/online-academy">
+              <i class="text-primary-dark" iconPh="play"></i>
+              <span class="text-primary-dark">Academy</span>
+            </a>
             <button class="btn btn-icon-grey small ml-15p d-none d-lg-block" (click)="showMenu('search')">
               <i iconPh="search" class="large"></i>
             </button>
@@ -129,22 +129,22 @@
       </div>
     </div>
 
-    <!-- <div class="container my-15p" *ngIf="!user || !user.isU">
+    <div class="container my-15p" *ngIf="!user || !user.isU">
       <div class="d-block rounded-8p overflow-hidden">
         <div class="image-container">
-          <img src="/assets/img/social/online-academy.png" alt="Learn with PromptHealth">
+          <img loading="lazy" src="/assets/img/social/online-academy.png" alt="">
           <div class="mb-20p mx-30p position-absolute text-white" style="bottom:0; text-shadow: 1px 1px 3px #747474">
             <div class="subtitle1 mb-10p">
               <img style="width: auto; height: 12px; filter: brightness(0.85)" class="mr-5p"
                 src="assets/img/logo-sm-small.png" alt="PromptHealth logo">
               PromptHealth
             </div>
-            <h5 class="mb-15p">PROMPT ACADEMY</h5>
-            <a routerLink="/community/academy" class="btn btn-primary">See tutorials</a>
+            <h5 class="mb-15p">PROMPTHEALTH ACADEMY</h5>
+            <a routerLink="/online-academy" class="btn btn-primary">Watch the Guides</a>
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <div class="container">
       <div class="bg-primary p-20p rounded-8p mt-15p mb-50p">
