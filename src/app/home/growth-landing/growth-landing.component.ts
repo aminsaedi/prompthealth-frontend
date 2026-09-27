@@ -1,5 +1,5 @@
 import {
-  AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild,
+  Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild,
 } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -17,9 +17,6 @@ import { BookingStep } from './booking-form/booking-form.component';
 
 const BASE_URL = environment.config.FRONTEND_BASE;
 const BOOKING_MODAL_ID = 'book-consultation';
-/* The site header is sticky and this tall on a phone, which is the only width
- * the sticky button shows at. A CTA behind it is out of view. */
-const HEADER_HEIGHT_PX = 61;
 /* One object, not a new one per change detection pass: the modal's input
  * would otherwise change on every check. */
 const WIDE_MODAL_BODY = { maxWidth: '720px' };
@@ -43,7 +40,7 @@ const FOCUSABLE = 'a[href], area[href], button, input, select, textarea, iframe,
   templateUrl: './growth-landing.component.html',
   styleUrls: ['./growth-landing.component.scss'],
 })
-export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy {
+export class GrowthLandingComponent implements OnInit, OnDestroy {
 
   public config: IGrowthLanding = null;
   /* A copy per page: faq-item toggles `opened` on the object it is given, and
@@ -60,17 +57,14 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
   private closeFallback: any = null;
 
   /* Whether the reader is between the hero's button and the final one. */
-  public isStickyInRange = false;
-  private isMenuShown = false;
 
   @ViewChild('heroCta') private heroCta: ElementRef;
-  @ViewChild('stepsCta') private stepsCta: ElementRef;
+
   @ViewChild('finalCta') private finalCta: ElementRef;
-  @ViewChild('stickyCta') private stickyCta: ElementRef;
+
   @ViewChild('dialog') private dialog: ElementRef;
   private isTrappingFocus = false;
 
-  private observer: IntersectionObserver = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -78,19 +72,11 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     private _router: Router,
     private _location: Location,
     private _zone: NgZone,
-    private _host: ElementRef,
     private _uService: UniversalService,
     private _jsonLd: JsonLdService,
     private _pixel: MetaPixelService,
     private _modalService: ModalService,
   ) {}
-
-  /* Out of the way of the mobile menu and of the modal, both of which sit
-   * above it anyway; hidden rather than merely covered, so it cannot be
-   * reached behind them. */
-  get isStickyShown(): boolean {
-    return this.isStickyInRange && !this.isBookingShown && !this.isMenuShown;
-  }
 
   get heroPortrait(): boolean {
     const video = this.config && this.config.hero.video;
@@ -121,19 +107,11 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     this._pixel.pageView();
   }
 
-  ngAfterViewInit(): void {
-    this.observeCtas();
-  }
-
   ngOnDestroy(): void {
     clearTimeout(this.closeFallback);
     this.destroy$.next();
     this.destroy$.complete();
     this.trapFocus(false);
-    if (this.observer) {
-      this.observer.disconnect();
-      this.observer = null;
-    }
     this._jsonLd.removeJsonLd();
     /* The Pixel runs on this page only; the next page must not report to it. */
     this._pixel.leave();
@@ -229,7 +207,6 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     this.isBookingShown = params.get('modal') === BOOKING_MODAL_ID;
     const cta = params.get('cta');
     this.ctaPosition = isGrowthCtaPosition(cta) ? cta : 'direct';
-    this.isMenuShown = params.get('menu') === 'show';
 
     if (this.isBookingShown && !wasShown) {
       this.trapFocus(true);
@@ -291,28 +268,19 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
   /*
    * Back to the button that opened the form, however it closed: close
    * button, Escape, backdrop or Back. Without this, focus fell to the body,
-   * and a keyboard reader who opened the form from the final button or the
-   * sticky bar started again from the logo at the top of the page.
+   * and a keyboard reader who opened the form from the final button started
+   * again from the logo at the top of the page.
    *
    * The position comes from the address, so it works for a form reopened by
-   * Forward as well. A form reached by a link names no button, and focus is
-   * left alone.
-   *
-   * The sticky bar is gone while the form is open, and back only if the
-   * reader is still between the hero's button and the final one. If not,
-   * the final button when it is on screen, otherwise the hero's. Scrolling is
-   * suppressed, so a reader on a touch screen, who never sees focus, is not
-   * moved.
+   * Forward as well. A form reached by a link names no button, nor does an
+   * old address naming a button the page no longer has, and focus is left
+   * alone. Scrolling is suppressed, so a reader on a touch screen, who never
+   * sees focus, is not moved.
    */
   private returnFocus(position: GrowthCtaPosition): void {
     if (!this._uService.isBrowser || position === 'direct') { return; }
-    /* After this change detection pass, which puts the sticky bar back. */
     setTimeout(() => {
-      let target = this.ctaElement(position);
-      if (!target && position === 'sticky') {
-        const final = this.ctaElement('final');
-        target = final && final.getBoundingClientRect().top < window.innerHeight ? final : this.ctaElement('hero');
-      }
+      const target = this.ctaElement(position);
       if (!target || typeof target.focus !== 'function') { return; }
       try {
         target.focus({ preventScroll: true });
@@ -326,9 +294,7 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     let ref: ElementRef = null;
     switch (position) {
       case 'hero': ref = this.heroCta; break;
-      case 'steps': ref = this.stepsCta; break;
       case 'final': ref = this.finalCta; break;
-      case 'sticky': ref = this.stickyCta; break;
     }
     return ref ? ref.nativeElement : null;
   }
@@ -390,41 +356,5 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
         })),
       },
     ]);
-  }
-
-  /*
-   * The sticky button shows only between the hero's button and the final one:
-   * once the hero's has scrolled up out of view, and until the final one comes
-   * into view or has gone above it. That keeps it off the first screen, which
-   * has its own button, and off the footer, which is outside this component.
-   *
-   * A dedicated observer, because the shared intersectionObserver directive
-   * reports only in or out, not which side of the screen a button left by. It
-   * watches the page's sections as well as the two buttons, and decides from
-   * where the buttons are, not from what the report says about them: an
-   * observer reports only when a target's visibility changes, and a fling or a
-   * tap on an iPhone's status bar can carry a button from below the screen to
-   * above it without it ever being visible. Some section always changes on
-   * the way, so the decision is made again.
-   */
-  private observeCtas(): void {
-    if (!this._uService.isBrowser || !this.heroCta || !this.finalCta) { return; }
-    const w: any = window;
-    if (typeof w.IntersectionObserver !== 'function') { return; }
-    const hero: Element = this.heroCta.nativeElement;
-    const final: Element = this.finalCta.nativeElement;
-    const sections: Element[] = Array.prototype.slice.call(this._host.nativeElement.querySelectorAll('section'));
-
-    this._zone.runOutsideAngular(() => {
-      this.observer = new IntersectionObserver(() => {
-        const heroPassed = hero.getBoundingClientRect().bottom <= HEADER_HEIGHT_PX;
-        const finalAhead = final.getBoundingClientRect().top >= window.innerHeight;
-        const inRange = heroPassed && finalAhead;
-        if (inRange !== this.isStickyInRange) {
-          this._zone.run(() => { this.isStickyInRange = inRange; });
-        }
-      }, { rootMargin: `-${HEADER_HEIGHT_PX}px 0px 0px 0px`, threshold: 0 });
-      [hero, final].concat(sections).forEach(el => this.observer.observe(el));
-    });
   }
 }

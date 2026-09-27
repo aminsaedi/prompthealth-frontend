@@ -73,8 +73,7 @@
         </li>
       </ol>
       <div class="text-center mt-30p mt-md-50p">
-        <p class="small font-italic text-label growth-note mb-20p">{{ config.stepsFootnote }}</p>
-        <button #stepsCta type="button" class="btn btn-primary" (click)="openBooking('steps')">{{ config.ctaLabel }}</button>
+        <p class="small font-italic text-label growth-note mb-0">{{ config.stepsFootnote }}</p>
       </div>
     </div>
   </section>
@@ -103,12 +102,6 @@
       <button #finalCta type="button" class="btn growth-final__cta" (click)="openBooking('final')">{{ config.ctaLabel }}</button>
     </div>
   </section>
-
-  <!-- Phones only, between the hero's button and the final one. Not rendered
-  until the observer places it, so the server's HTML never has it. -->
-  <div *ngIf="isStickyShown" class="growth-sticky">
-    <button #stickyCta type="button" class="btn btn-primary growth-sticky__button" (click)="openBooking('sticky')">{{ config.ctaLabel }}</button>
-  </div>
 
   <modal [id]="bookingModalId" [bodyStyle]="bookingBodyStyle">
     <div

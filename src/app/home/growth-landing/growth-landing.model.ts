@@ -109,7 +109,9 @@ export type IGrowthBookingText = { [field in GrowthBookingField]: string };
 /* Which button opened the booking form. Stored with the request, so she can see
  * which part of the page does the persuading. 'direct' is a link or a reload
  * that lands on the open form without a button. The backend accepts exactly
- * these. */
+ * these. Since 2026-09-27 the page has only the hero's and the final button
+ * (Hedieh); 'steps' and 'sticky' stay because stored requests and old
+ * addresses carry them. */
 export type GrowthCtaPosition = 'hero' | 'steps' | 'final' | 'sticky' | 'direct';
 
 const CTA_POSITIONS: GrowthCtaPosition[] = ['hero', 'steps', 'final', 'sticky', 'direct'];
