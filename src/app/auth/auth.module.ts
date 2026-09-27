@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
+import { NgModule, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
@@ -25,6 +26,35 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
 // import { AppleLoginProvider } from './apple.provider';
 // import { environment } from 'src/environments/environment';
+
+/*
+ * The sign-in providers exist in the browser only. SocialAuthService starts
+ * every provider as soon as a page with the sign-in form is created, and on the
+ * server that page is created for every render. The Google provider appended
+ * apis.google.com/js/platform.js to the server's shared stand-in document and
+ * waited for a load event that never comes; the waiting promise held that
+ * render's zone, and through it the whole rendered app. Every such render
+ * stayed in memory, and the server ran out of heap about every three and a half
+ * hours (19 restarts from 2026-09-25 to 09-27). The server never signs anyone
+ * in, so it gets no providers at all.
+ */
+export function socialAuthConfig(platformId: object): SocialAuthServiceConfig {
+  return {
+    autoLogin: false,
+    providers: isPlatformBrowser(platformId) ? [
+      {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider(
+          environment.config.GOOGLE_CLIENT_ID
+        ),
+      },
+      {
+        id: FacebookLoginProvider.PROVIDER_ID,
+        provider: new FacebookLoginProvider(environment.config.FACEBOOK_APP_ID),
+      },
+    ] : [],
+  };
+}
 
 const routes: Routes = [
 
@@ -64,27 +94,9 @@ const routes: Routes = [
   providers: [
     {
       provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              environment.config.GOOGLE_CLIENT_ID
-            ),
-          },
-          {
-            id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider(environment.config.FACEBOOK_APP_ID),
-          }
-          // {
-          //   id: AppleLoginProvider.PROVIDER_ID,
-          //   provider: new AppleLoginProvider(
-          //     environment.config.APPLE_CLIENT_ID
-          //   ),
-          // },
-        ],
-      } as SocialAuthServiceConfig,
-    }]
+      useFactory: socialAuthConfig,
+      deps: [PLATFORM_ID],
+    },
+  ],
 })
 export class AuthModule { }
