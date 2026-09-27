@@ -44,6 +44,7 @@ export class ModalComponent implements OnInit , OnDestroy {
 
       if(this.isShown != isShown) {
         this.isShown = isShown;
+        if (isShown) { this._modalService.markOpened(); }
         this.onStateChanged.emit(isShown ? 'open' : 'close');
         this._changeDetector.detectChanges();  
       }

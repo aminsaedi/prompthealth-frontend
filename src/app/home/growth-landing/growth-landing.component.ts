@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { MetaPixelService } from 'src/app/shared/services/meta-pixel.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 import { GrowthCtaPosition, IGrowthLanding, isGrowthCtaPosition } from './growth-landing.model';
 import { growthLandingFor } from './landings';
@@ -22,6 +23,8 @@ const HEADER_HEIGHT_PX = 61;
 /* One object, not a new one per change detection pass: the modal's input
  * would otherwise change on every check. */
 const WIDE_MODAL_BODY = { maxWidth: '720px' };
+/* How long a close by history may take before the address is fixed directly. */
+const CLOSE_FALLBACK_MS = 1000;
 /* What Tab can reach. Filtered further by tabIndex, disabled and rendering
  * (see dialogFocusables). */
 const FOCUSABLE = 'a[href], area[href], button, input, select, textarea, iframe, [tabindex]';
@@ -54,6 +57,7 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
   /* Between location.back() and the address it leads to, so a double click on
    * the close button cannot go back twice and off the page. */
   private isClosing = false;
+  private closeFallback: any = null;
 
   /* Whether the reader is between the hero's button and the final one. */
   public isStickyInRange = false;
@@ -78,6 +82,7 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     private _uService: UniversalService,
     private _jsonLd: JsonLdService,
     private _pixel: MetaPixelService,
+    private _modalService: ModalService,
   ) {}
 
   /* Out of the way of the mobile menu and of the modal, both of which sit
@@ -121,6 +126,7 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
+    clearTimeout(this.closeFallback);
     this.destroy$.next();
     this.destroy$.complete();
     this.trapFocus(false);
@@ -162,9 +168,26 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     const state: any = this._location.getState();
     if (state && state.navigationId > 1) {
       this.isClosing = true;
-      this._location.back();
+      /* Past any entries the Calendly frame added (ModalService). */
+      this._modalService.leaveModalEntry();
+      /* A history step that ends somewhere other than expected leaves the
+       * address, and so the modal, unchanged. isClosing then blocked every
+       * later press, which is how the button came to do nothing after a time
+       * was picked in Calendly. If the modal is still open once the step has
+       * had time to land, the address is fixed directly. */
+      clearTimeout(this.closeFallback);
+      this.closeFallback = setTimeout(() => {
+        if (this.isBookingShown && this.isClosing) {
+          this.isClosing = false;
+          this.replaceWithoutBooking();
+        }
+      }, CLOSE_FALLBACK_MS);
       return;
     }
+    this.replaceWithoutBooking();
+  }
+
+  private replaceWithoutBooking(): void {
     this._router.navigate([], {
       relativeTo: this._route,
       queryParams: { modal: null, cta: null },
@@ -202,6 +225,7 @@ export class GrowthLandingComponent implements OnInit, AfterViewInit, OnDestroy 
     const wasShown = this.isBookingShown;
     const openedFrom = this.ctaPosition;
     this.isClosing = false;
+    clearTimeout(this.closeFallback);
     this.isBookingShown = params.get('modal') === BOOKING_MODAL_ID;
     const cta = params.get('cta');
     this.ctaPosition = isGrowthCtaPosition(cta) ? cta : 'direct';

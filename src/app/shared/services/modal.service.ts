@@ -16,6 +16,9 @@ export class ModalService {
   private _data: any
   get data() { return this._data; }
 
+  /* history.length when a modal last opened, 0 before any has. */
+  private _historyLengthAtOpen = 0;
+
   get currentPathAndQueryParams():[string, Params] { return this._getPathAndQueryParams();}
 
   public show(id: string, data?: any) {
@@ -36,6 +39,37 @@ export class ModalService {
     }
   }
 
+  /* Called by ModalComponent once the modal's own entry is in the history. */
+  public markOpened() {
+    if (typeof window !== 'undefined' && window.history) {
+      this._historyLengthAtOpen = window.history.length;
+    }
+  }
+
+  /*
+   * Leaves the entry that opening the modal pushed, which is what back() does
+   * until the modal holds an iframe that navigates. A frame's navigations join
+   * the tab's history, after the modal's entry: Calendly pushes one when a time
+   * is picked and another for its own back arrow. back() then only moved the
+   * frame back a page, the address kept ?modal, and the modal stayed open
+   * however often it was closed. Every entry since the modal opened is the
+   * frame's, so going back past all of them lands where the reader was before.
+   *
+   * It assumes the reader is on the newest entry, which every push makes true.
+   * A reader who pressed the browser's Back inside the frame and then closed
+   * would be taken one page further back per press. Callers that must not
+   * stay open if this undershoots check afterwards (GrowthLandingComponent).
+   */
+  public leaveModalEntry() {
+    const extra = (typeof window !== 'undefined' && window.history && this._historyLengthAtOpen > 0)
+      ? window.history.length - this._historyLengthAtOpen : 0;
+    if (extra > 0) {
+      window.history.go(-(extra + 1));
+    } else {
+      this._location.back();
+    }
+  }
+
   private goBack() {
     this._data = null;
     /* No state means the page cannot tell whether back() stays on the site:
@@ -46,7 +80,7 @@ export class ModalService {
     if(!state || state.navigationId == 1) {
       this.goNext();
     } else {
-      this._location.back();
+      this.leaveModalEntry();
     }
   }
 
