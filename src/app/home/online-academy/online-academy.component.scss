@@ -1,27 +1,80 @@
 @import '../../../assets/scss/variables';
 
-.header-image {
+/* The cover's own background colour, so the box never shows a seam before
+ * the image arrives or beside it on a very wide screen. */
+$academyCream: #F7EFE4;
+
+.academy-hero {
+  display: flex;
+  align-items: center;
+  min-height: 260px;
+  padding: 40px 0;
+  background: $academyCream;
+
+  @media (min-width: $breakpointMd) {
+    min-height: 360px;
+  }
+
+  @media (min-width: $breakpointLg) {
+    min-height: 420px;
+  }
+
+  /* Wider than this, a fixed height crops the 2.6:1 cover top and bottom
+   * (at 1920 the cap and the social icons were cut off). Growing with the
+   * width keeps about three quarters of its height in view. */
+  @media (min-width: 1400px) {
+    min-height: 30vw;
+  }
+}
+
+/* Anchored right, so however the box crops it the illustrations stay in view
+ * and the open cream side sits behind the words. */
+.academy-hero__image {
   position: absolute;
-  width: 100%;
-  height: 100%;
   top: 0;
   left: 0;
-  z-index: 1;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: right center;
 }
 
-.header-backdrop {
+/* On a phone the words run across the illustrations, so the cream is brought
+ * forward behind them. From tablet width the words have the open side to
+ * themselves and only a trace is needed. */
+.academy-hero__fade {
   position: absolute;
-  width: 100%;
-  height: 100%;
   top: 0;
   left: 0;
-  opacity: 0.8;
-  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba($academyCream, 0.96) 0%, rgba($academyCream, 0.88) 60%, rgba($academyCream, 0.55) 100%);
+
+  @media (min-width: $breakpointMd) {
+    background: linear-gradient(90deg, rgba($academyCream, 0.7) 0%, rgba($academyCream, 0) 50%);
+  }
 }
 
+.academy-hero__content {
+  z-index: 1;
+}
+
+/* Below 1200 the illustrations reach almost halfway across, so the words
+ * take a narrower column there. */
 .academy-intro {
-  max-width: 620px;
+  max-width: 520px;
+
+  @media (min-width: $breakpointMd) and (max-width: $breakpointLg - 1px) {
+    max-width: 330px;
+  }
+
+  @media (min-width: $breakpointLg) and (max-width: $breakpointXl - 1px) {
+    max-width: 460px;
+  }
+
+  @media (min-width: $breakpointXl) {
+    max-width: 560px;
+  }
 }
 
 .academy-invite {
