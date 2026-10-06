@@ -94,6 +94,11 @@
 /* White with the band's blue, as the For Dentists page's last button is:
  * btn-primary measured under 3:1 against this band. */
 .pro-join--on-dark {
+  /* Not btn-primary, which is what carries the padding, so it is set here. */
+  padding: 12px 28px;
+  font-size: 16px;
+  line-height: 22px;
+  border-radius: 8px;
   background: $colorGsWhite;
   border-color: $colorGsWhite;
   color: $colorPrimaryDark !important;
