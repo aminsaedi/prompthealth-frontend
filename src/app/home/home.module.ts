@@ -42,7 +42,13 @@ import { EditorialStandardsComponent } from './editorial-standards/editorial-sta
 import { GrowthLandingComponent } from './growth-landing/growth-landing.component';
 import { HeroVideoComponent } from './growth-landing/hero-video/hero-video.component';
 import { BookingFormComponent } from './growth-landing/booking-form/booking-form.component';
-import { GrowthPlanCardComponent } from './_elements/growth-plan-card/growth-plan-card.component';
+import { PlanChoiceComponent } from './_elements/offer/plan-choice.component';
+import { GrowthApplyComponent } from './_elements/offer/growth-apply.component';
+import { ProComponent } from './pro/pro.component';
+import { ProWelcomeComponent } from './pro/pro-welcome.component';
+import { ProLibraryComponent } from './pro/pro-library.component';
+import { ProDropComponent } from './pro/pro-drop.component';
+import { ProGoComponent } from './pro/pro-go.component';
 
 
 @NgModule({
@@ -82,7 +88,13 @@ import { GrowthPlanCardComponent } from './_elements/growth-plan-card/growth-pla
     GrowthLandingComponent,
     HeroVideoComponent,
     BookingFormComponent,
-    GrowthPlanCardComponent,
+    PlanChoiceComponent,
+    GrowthApplyComponent,
+    ProComponent,
+    ProWelcomeComponent,
+    ProLibraryComponent,
+    ProDropComponent,
+    ProGoComponent,
   ],
   imports: [
     FormsModule,

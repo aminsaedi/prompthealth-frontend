@@ -36,6 +36,15 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
 
   get f() { return this.form.controls; }
 
+  /* The page to come back to survives a switch between signing in and signing
+   * up. Someone joining PromptHealth Pro is a practitioner or clinic, so from
+   * a /pro address "Create Account" opens the provider form, not the patient
+   * one. */
+  get nextQuery() { return this.nextPage ? { next: this.nextPage } : null; }
+  get registrationLink() {
+    return this.nextPage && this.nextPage.indexOf('/pro') === 0 ? '/auth/registration/sp' : '/auth/registration/U';
+  }
+
   public form: FormGroup;
   public formRole: FormControl;
   public isSubmitted = false;

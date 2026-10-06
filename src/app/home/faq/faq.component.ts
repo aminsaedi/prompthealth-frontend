@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
-import { PAID_PLAN_FAQ } from '../_elements/growth-plan-card/growth-plan-copy';
+import { PAID_PLAN_FAQ } from '../_elements/offer/offer-copy';
 
 export interface IFAQCategory {
   category: string;

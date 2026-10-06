@@ -37,10 +37,10 @@ export class MenuComponent implements OnInit {
         this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, /*menuNotification, */ menuPassword ];
         break;
       case 'SP':
-        this.menus = [ menuGeneral, menuAcademy, menuBookInterview,menuRquestAdditionalVideo, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuLinks, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
+        this.menus = [ menuGeneral, menuMembership, menuAcademy, menuBookInterview,menuRquestAdditionalVideo, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuLinks, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
         break;
       case 'C':
-        this.menus = [ menuGeneral, menuAcademy, menuServices, menuPerformance, menuBookProvider, menuBadge, menuTeam, menuShowcase, menuVideo, menuSocial, menuLinks, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
+        this.menus = [ menuGeneral, menuMembership, menuAcademy, menuServices, menuPerformance, menuBookProvider, menuBadge, menuTeam, menuShowcase, menuVideo, menuSocial, menuLinks, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
         break;
       case 'P':
         this.menus = [ menuGeneral, menuAcademy, menuServices, menuFollow, /*menuNotification, */ menuPassword, menuPayment, menuAffiliate ];
@@ -65,6 +65,13 @@ export class MenuComponent implements OnInit {
   }
 
 }
+
+/* PromptHealth Basic or Pro (offer v2): practitioners and clinics only. */
+const menuMembership: MenuItem = {
+  id: 'membership',
+  title: 'Membership',
+  icon: 'star',
+};
 
 const menuGeneral: MenuItem = {
   id: 'profile',

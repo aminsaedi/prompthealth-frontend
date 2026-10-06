@@ -26,11 +26,12 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const OUT_PATH = path.join(ROOT, 'src', 'app', 'static-page-dates.ts');
 
-// The Growth plan card and its copy render on /plans and /for-practitioners,
-// and the paid-plan answer on /faq, from one shared place, so an edit there
-// changes those pages as much as an edit to their own components does.
-const GROWTH_PLAN_CARD = 'src/app/home/_elements/growth-plan-card';
-const GROWTH_PLAN_COPY = 'src/app/home/_elements/growth-plan-card/growth-plan-copy.ts';
+// The plan section (Basic, Pro and Growth) renders on /plans and
+// /for-practitioners, and the paid-plan answer on /faq, from one shared place,
+// so an edit there changes those pages as much as an edit to their own
+// components does.
+const OFFER = 'src/app/home/_elements/offer';
+const OFFER_COPY = 'src/app/home/_elements/offer/offer-copy.ts';
 
 // Every static URL in sitemap/main, in the order it is listed there.
 // app.server.sitemap.module.ts renders this list and has none of its own, so a
@@ -51,15 +52,16 @@ const STATIC_PAGES = [
   { route: '/about',                     changefreq: 'monthly', paths: ['src/app/home/about'] },
   { route: '/about/partner',             changefreq: 'monthly', paths: ['src/app/home/about-partner'] },
   { route: '/about/editorial-standards', changefreq: 'monthly', paths: ['src/app/home/editorial-standards'] },
-  { route: '/plans',                     changefreq: 'monthly', paths: ['src/app/home/about-practitioner', GROWTH_PLAN_CARD] },
-  { route: '/for-practitioners',         changefreq: 'monthly', paths: ['src/app/home/for-practitioners', GROWTH_PLAN_CARD] },
+  { route: '/plans',                     changefreq: 'monthly', paths: ['src/app/home/about-practitioner', OFFER] },
+  { route: '/for-practitioners',         changefreq: 'monthly', paths: ['src/app/home/for-practitioners', OFFER] },
   { route: '/for-dentists',              changefreq: 'monthly', paths: ['src/app/home/growth-landing'] },
+  { route: '/pro',                       changefreq: 'monthly', paths: ['src/app/home/pro/pro.component.html', 'src/app/home/pro/pro.component.ts', 'src/app/home/pro/pro-copy.ts', OFFER_COPY] },
   { route: '/companies',                 changefreq: 'monthly', paths: ['src/app/home/listing-company'] },
   { route: '/ambassador-program',        changefreq: 'monthly', paths: ['src/app/home/landing-ambassador'] },
   { route: '/press-release',             changefreq: 'monthly', paths: ['src/app/home/press-release'] },
   { route: '/online-academy',            changefreq: 'monthly', paths: ['src/app/home/online-academy'] },
   { route: '/testimonial',               changefreq: 'monthly', paths: ['src/app/home/testimonial'] },
-  { route: '/faq',                       changefreq: 'monthly', paths: ['src/app/home/faq', GROWTH_PLAN_COPY] },
+  { route: '/faq',                       changefreq: 'monthly', paths: ['src/app/home/faq', OFFER_COPY] },
   { route: '/subscribe/newsletter',      changefreq: 'monthly', paths: ['src/app/home/landing-clubhouse'] },
   { route: '/contact-us',                changefreq: 'monthly', paths: ['src/app/home/contact-us'] },
   { route: '/policy',                    changefreq: 'yearly',  paths: ['src/app/home/privacy-policy'] },

@@ -1,0 +1,33 @@
+@import '../../../assets/scss/variables';
+
+.membership-card {
+  border: 1px solid $colorGsLine;
+
+  &--pro {
+    border-color: $colorPrimary;
+    background: rgba($colorPrimary, 0.03);
+  }
+}
+
+.membership-team {
+  border-bottom: 1px solid $colorGsLine;
+}
+
+.membership-alert {
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  color: $colorErrorDark;
+  background: $colorErrorLight;
+}
+
+.membership-dummy {
+  height: 120px;
+  background: rgba(160, 163, 189, 0.2);
+}
+
+/* 16px, so iOS does not zoom the page when the field takes focus. */
+.form-control {
+  font-size: 16px;
+}

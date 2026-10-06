@@ -29,8 +29,10 @@ p.growth-note {
   font-style: italic;
 }
 
+/* Balanced, so a closing line never ends on one word. */
 .growth-narrow {
   max-width: 760px;
+  text-wrap: balance;
 }
 
 .growth-on-dark {
@@ -292,4 +294,43 @@ $stepGap: 30px;
   top: -8px;
   right: -8px;
   z-index: 1;
+}
+
+// ------------------------------------------------------------ link band
+
+/* Slim and secondary (her section 8): a line of text and an outline button
+ * on a light rule, side by side from tablet width. */
+.growth-band {
+  padding: 22px 0;
+  background: $colorGsBackground;
+  border-top: 1px solid $colorGsLine;
+  border-bottom: 1px solid $colorGsLine;
+}
+
+.growth-band__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  @media (min-width: $breakpointMd) {
+    flex-direction: row;
+    justify-content: center;
+    text-align: left;
+  }
+}
+
+.growth-band__text {
+  font-size: 16px;
+  line-height: 24px;
+  color: $colorGsBody;
+}
+
+.growth-band__button {
+  margin-top: 12px;
+  white-space: nowrap;
+
+  @media (min-width: $breakpointMd) {
+    margin: 0 0 0 24px;
+  }
 }

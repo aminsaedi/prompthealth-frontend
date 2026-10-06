@@ -1,0 +1,59 @@
+<div class="bg-white py-40p px-15p px-lg-30p rounded-8p">
+  <h5 class="mb-20p">Membership</h5>
+
+  <p *ngIf="loadFailed" class="text-label" role="alert">
+    Your membership could not be loaded. <button type="button" class="btn btn-link p-0 align-baseline" (click)="load()">Try again</button>
+  </p>
+
+  <div *ngIf="!membership && !loadFailed" class="membership-dummy rounded-8p" aria-busy="true"></div>
+
+  <ng-container *ngIf="membership">
+    <!-- PromptHealth Pro -->
+    <div *ngIf="membership.isPro; else basic" class="membership-card membership-card--pro rounded-8p p-20p">
+      <p class="subtitle1 mb-5p">Your membership: <strong>PromptHealth Pro ({{ planName }})</strong></p>
+      <p *ngIf="!membership.cancelAtPeriodEnd && membership.currentPeriodEnd" class="text-label mb-0">Next payment: {{ membership.currentPeriodEnd | date:'MMMM d, y' }}</p>
+      <p *ngIf="membership.cancelAtPeriodEnd && membership.currentPeriodEnd" class="text-label mb-0">Ends on {{ membership.currentPeriodEnd | date:'MMMM d, y' }}. Until then your team keeps every Pro benefit.</p>
+      <p *ngIf="membership.status === 'past_due'" class="membership-alert mt-15p mb-0" role="alert">
+        Your latest payment didn't go through. Update your card in Manage Membership to keep PromptHealth Pro.
+      </p>
+      <div class="d-flex flex-column flex-sm-row mt-20p">
+        <button type="button" class="btn btn-primary mb-10p mb-sm-0p mr-sm-10p" [disabled]="isOpeningPortal" (click)="manage()">Manage Membership</button>
+        <a routerLink="/pro/library" class="btn btn-outline">Members' Library</a>
+      </div>
+      <p *ngIf="portalError" class="membership-alert mt-15p mb-0" role="alert">{{ portalError }}</p>
+    </div>
+
+    <ng-template #basic>
+      <div class="membership-card rounded-8p p-20p">
+        <p class="subtitle1 mb-0">Your membership: <strong>PromptHealth Basic (free)</strong></p>
+        <ng-container *ngIf="isProvider">
+          <a *ngIf="paymentsEnabled" routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary mt-20p">{{ upgradeLabel }}</a>
+          <p *ngIf="!paymentsEnabled" class="text-label mt-15p mb-0">PromptHealth Pro is coming soon. <a routerLink="/pro">See what it includes</a>.</p>
+        </ng-container>
+      </div>
+    </ng-template>
+
+    <!-- Team emails, Pro only -->
+    <div *ngIf="membership.isPro" class="mt-40p">
+      <h6 class="mb-5p">Your team</h6>
+      <p class="text-label mb-20p">
+        Everyone at your clinic is included. Add up to {{ membership.teamLimit }} team emails, and each one gets the weekly email too.
+      </p>
+      <ul class="list-unstyled mb-15p">
+        <li *ngFor="let email of team" class="membership-team d-flex align-items-center justify-content-between py-10p">
+          <span class="text-break">{{ email }}</span>
+          <button type="button" class="btn btn-icon small" [attr.aria-label]="'Remove ' + email" [disabled]="isSavingTeam" (click)="removeEmail(email)">
+            <i iconPh="trash" aria-hidden="true"></i>
+          </button>
+        </li>
+      </ul>
+      <form *ngIf="team.length < membership.teamLimit" class="d-flex" (ngSubmit)="addEmail()">
+        <label for="membership-team-email" class="sr-only">Team email</label>
+        <input id="membership-team-email" name="teamEmail" type="email" class="form-control mr-10p" placeholder="name@yourclinic.ca" autocomplete="off" autocapitalize="off" [(ngModel)]="newEmail" maxlength="200">
+        <button type="submit" class="btn btn-primary" [disabled]="isSavingTeam">Add</button>
+      </form>
+      <p *ngIf="teamError" class="membership-alert mt-10p mb-0" role="alert">{{ teamError }}</p>
+      <p *ngIf="teamMessage && !teamError" class="text-label small mt-10p mb-0" role="status">{{ teamMessage }}</p>
+    </div>
+  </ng-container>
+</div>

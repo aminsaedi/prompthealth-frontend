@@ -1,0 +1,161 @@
+@import '../../../../assets/scss/variables';
+
+:host {
+  display: block;
+}
+
+.plan-choice__narrow {
+  max-width: 640px;
+}
+
+/* Written out rather than borrowed from Bootstrap's utilities, which arrive
+ * from a CDN after first paint. */
+.plan-eyebrow {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $colorPrimary;
+}
+
+/* The two membership cards are the same size and style; only the accent
+ * along the top differs (her section 2). */
+.plan-card {
+  padding: 30px;
+  border-top: 4px solid $colorGsLine;
+  box-shadow: 0 6px 20px rgba($colorGsBlack, 0.06);
+
+  &--pro {
+    border-top-color: $colorPrimary;
+  }
+}
+
+.plan-card__price {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+}
+
+.plan-card__note {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.plan-bullet {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  line-height: 23px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.plan-bullet__check {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  font-size: 18px;
+  color: $colorPrimary;
+}
+
+.plan-bullet__lead {
+  font-weight: 700;
+  color: $colorPrimaryDark;
+}
+
+.plan-bullet--on-dark {
+  color: rgba($colorGsWhite, 0.9);
+
+  .plan-bullet__check {
+    color: $colorSecondary;
+  }
+
+  .plan-bullet__lead {
+    color: $colorGsWhite;
+  }
+}
+
+/* At least 64px between the parts (her section 2), with a thin rule. */
+.plan-choice__divider {
+  margin: 64px auto;
+  max-width: 920px;
+  border: 0;
+  border-top: 1px solid $colorGsLine;
+
+  @media (min-width: $breakpointLg) {
+    margin: 80px auto;
+  }
+}
+
+/* The site's dark brand colour with white text: a panel, not a card. */
+.growth-panel {
+  padding: 30px 20px;
+  background: $colorPrimaryDark;
+
+  @media (min-width: $breakpointMd) {
+    padding: 50px;
+  }
+}
+
+.growth-panel__eyebrow {
+  color: $colorSecondary;
+}
+
+.growth-panel__heading {
+  line-height: 1.25;
+}
+
+.growth-panel__soft {
+  color: rgba($colorGsWhite, 0.85);
+}
+
+/* Her "smaller text" for the availability note. */
+.growth-panel__note {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.growth-panel__actions {
+  margin-top: 40px;
+}
+
+/* The main button style on the dark panel: white with the panel's blue, as
+ * the For Dentists page's last button is, because btn-primary measured under
+ * 3:1 against this blue. Full width on a phone, where the label wraps. */
+/* The theme's button classes carry the padding, and these two use neither,
+ * so they set their own to match the cards' buttons. */
+.growth-panel__main,
+.growth-panel__apply {
+  padding: 12px 28px;
+  font-size: 16px;
+  line-height: 22px;
+  border-radius: 8px;
+}
+
+.growth-panel__main {
+  display: inline-block;
+  max-width: 100%;
+  white-space: normal;
+  background: $colorGsWhite;
+  color: $colorPrimaryDark !important;
+  border-color: $colorGsWhite;
+  font-weight: 700;
+
+  &:hover,
+  &:focus {
+    background: rgba($colorGsWhite, 0.9);
+  }
+}
+
+.growth-panel__line {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.growth-panel__apply {
+  min-width: 160px;
+}

@@ -1,0 +1,66 @@
+@import '../../../assets/scss/variables';
+
+.pro-eyebrow {
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $colorPrimary;
+}
+
+.library-invite {
+  max-width: 640px;
+  box-shadow: 0 8px 24px rgba($colorGsBlack, 0.08);
+}
+
+.library-card {
+  overflow: hidden;
+  border: 1px solid $colorGsLine;
+  color: inherit;
+  text-decoration: none;
+
+  &--open:hover,
+  &--open:focus {
+    border-color: $colorPrimary;
+    box-shadow: 0 6px 20px rgba($colorGsBlack, 0.08);
+  }
+
+  &--locked {
+    background: $colorGsBackground !important;
+  }
+}
+
+.library-card__thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.library-card__meta {
+  font-size: 13px;
+  line-height: 18px;
+  color: $colorGsLabel;
+}
+
+.library-dummy {
+  height: 220px;
+  background: rgba(160, 163, 189, 0.2);
+}
+
+/* The icon font has no lock, so it is drawn here. */
+.library-lock {
+  margin: -2px 4px 0 0;
+  vertical-align: middle;
+}
+
+.sr-only-pro {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}

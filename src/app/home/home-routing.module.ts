@@ -31,6 +31,11 @@ import { ForPractitionersComponent } from "./for-practitioners/for-practitioners
 import { CitiesHubComponent } from "./cities-hub/cities-hub.component";
 import { EditorialStandardsComponent } from "./editorial-standards/editorial-standards.component";
 import { GrowthLandingComponent } from "./growth-landing/growth-landing.component";
+import { ProComponent } from "./pro/pro.component";
+import { ProWelcomeComponent } from "./pro/pro-welcome.component";
+import { ProLibraryComponent } from "./pro/pro-library.component";
+import { ProDropComponent } from "./pro/pro-drop.component";
+import { ProGoComponent } from "./pro/pro-go.component";
 
 const routes: Routes = [
   {
@@ -46,6 +51,15 @@ const routes: Routes = [
    * growth-landing/landings). growthLanding marks the route for the site
    * header, which should not offer the page a reader is already on. */
   { path: 'for-dentists', component: GrowthLandingComponent, data: { landing: 'dentists', growthLanding: true } },
+  /* PromptHealth Pro (offer v2, 2026-10). Not in the main menu yet (Hedieh).
+   * /pro is public and indexed; everything under it is noindex. */
+  { path: 'pro', component: ProComponent },
+  { path: 'pro/welcome', component: ProWelcomeComponent },
+  { path: 'pro/library', component: ProLibraryComponent },
+  { path: 'pro/library/:slug', component: ProDropComponent, data: { mode: 'library' } },
+  { path: 'pro/preview/:token', component: ProDropComponent, data: { mode: 'preview' } },
+  { path: 'pro/checkout', component: ProGoComponent, data: { mode: 'checkout' } },
+  { path: 'pro/manage', component: ProGoComponent, data: { mode: 'manage' } },
   {
     path: "faq",
     component: FAQComponent

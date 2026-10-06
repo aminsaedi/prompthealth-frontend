@@ -15,7 +15,7 @@ import { environment } from "src/environments/environment";
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
-import { GROWTH_PLAN_CARD } from '../_elements/growth-plan-card/growth-plan-copy';
+import { GROWTH_PANEL, OFFER_CATALOG_ITEMS } from '../_elements/offer/offer-copy';
 
 /* Proposed wording, on Hedieh's sign-off list (plan section 6), taken from
  * plan-specs/growth/dentists-landing-copy.json (otherPages) by a script. The
@@ -38,7 +38,6 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
   }
 
   public features = features;
-  public freePlanFeatures = freePlanFeatures;
   public faqs = faqs;
 
   public videoLink = "/assets/video/about-practitioner-sm.mp4";
@@ -72,8 +71,7 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
   }
 
   ngOnInit(): void {
-    /* The page used to be titled for the AI Visibility Program it sold. It now
-     * names both plans and prices neither. */
+    /* The page used to be titled for the AI Visibility Program it sold. */
     this._uService.setMeta('/plans', {
       title: PLANS_PAGE.title,
       description: PLANS_PAGE.description,
@@ -89,11 +87,9 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
       imageAlt: "Two women standing by a sunlit window",
     });
 
-    /* No offer here carries a price, a currency or a price specification:
-     * nothing on this site states what PromptHealth charges. The catalogue
-     * belongs to the publisher, which offers both plans. It used to hang off
-     * the paid service, which listed the free profile as one of that
-     * service's own offers. */
+    /* The catalogue belongs to the publisher, which offers all three plans.
+     * Since offer v2 (2026-10) Basic and Pro carry their prices, as the page
+     * does; Growth never does (offer-copy.ts). */
     this._jsonLdService.setJsonLd([
       {
         '@context': 'https://schema.org',
@@ -119,26 +115,7 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
           hasOfferCatalog: {
             '@type': 'OfferCatalog',
             name: 'PromptHealth Plans',
-            itemListElement: [
-              {
-                '@type': 'Offer',
-                itemOffered: {
-                  '@type': 'Service',
-                  name: 'Free Profile',
-                  description:
-                    'Basic provider listing with category placement and platform visibility.',
-                },
-              },
-              {
-                '@type': 'Offer',
-                itemOffered: {
-                  '@type': 'Service',
-                  name: 'PromptHealth Growth',
-                  description: GROWTH_PLAN_CARD.body,
-                  url: 'https://www.prompthealth.ca' + GROWTH_PLAN_CARD.link,
-                },
-              },
-            ],
+            itemListElement: OFFER_CATALOG_ITEMS,
           },
         },
         breadcrumb: {
@@ -164,8 +141,8 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
         '@type': 'Service',
         serviceType: 'Healthcare Provider Visibility & Marketing',
         name: 'PromptHealth Growth',
-        description: GROWTH_PLAN_CARD.body,
-        url: 'https://www.prompthealth.ca' + GROWTH_PLAN_CARD.link,
+        description: GROWTH_PANEL.description,
+        url: 'https://www.prompthealth.ca' + GROWTH_PANEL.link,
         provider: {
           '@type': 'Organization',
           name: 'PromptHealth',
@@ -207,10 +184,6 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
     }
   }
 
-  onClickCreateFreeProfile() {
-    this._router.navigate(["/auth", "registration", "sp"]);
-  }
-
   
   ngOnDestroy() {
     this._jsonLdService.removeJsonLd();
@@ -238,12 +211,6 @@ const features = [
     content:
       "Position yourself as a go-to expert by sharing your insights through engaging video content. Build credibility and connect with an audience seeking trusted health guidance.",
   },
-];
-
-const freePlanFeatures: string[] = [
-  "Basic provider profile",
-  "Listed under categories",
-  "Visibility on PromptHealth",
 ];
 
 const faqs: IFAQItem[] = [

@@ -1,0 +1,80 @@
+<!-- Hero -->
+<section class="pro-hero bg-lightyellow position-relative overflow-hidden">
+  <div class="pro-dim pro-dim--1" aria-hidden="true"></div>
+  <div class="pro-dim pro-dim--2" aria-hidden="true"></div>
+  <div class="container position-relative text-center">
+    <p class="pro-eyebrow mb-15p">PromptHealth Pro</p>
+    <h1 class="h3 h2-md text-primary-dark mx-auto mb-15p mb-md-20p pro-hero__heading">{{ page.hero.heading }}</h1>
+    <p class="subtitle1 text-label mx-auto mb-30p pro-narrow">{{ page.hero.text }}</p>
+    <button type="button" class="btn btn-primary pro-join" [disabled]="joinDisabled" (click)="onJoin()">{{ joinLabel }}</button>
+  </div>
+</section>
+
+<!-- What arrives, and when: her four blocks, in her order. -->
+<section class="bg-lightgreen py-50p py-md-80p">
+  <div class="container">
+    <ol class="row list-unstyled mb-0 pro-rhythm">
+      <li *ngFor="let block of page.rhythm" class="col-12 col-md-6 mb-30p">
+        <div class="bg-white rounded-12p p-30p h-100">
+          <h2 class="h4 text-primary-dark mb-15p">{{ block.heading }}</h2>
+          <ul class="list-unstyled mb-0">
+            <li *ngFor="let item of block.items" class="pro-item">
+              <i class="pro-item__check text-primary" iconPh="check" aria-hidden="true"></i>
+              {{ item }}
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- Price -->
+<section class="bg-primary-dark text-white py-60p py-md-100p">
+  <div class="container text-center">
+    <h2 class="h3 h2-md text-white mb-20p">{{ page.price.heading }}</h2>
+    <p class="subtitle1 pro-on-dark mx-auto mb-30p mb-md-40p pro-narrow">{{ page.price.text }}</p>
+    <button type="button" class="btn pro-join pro-join--on-dark" [disabled]="joinDisabled" (click)="onJoin()">{{ joinLabel }}</button>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-50p py-md-80p">
+  <div class="container">
+    <h2 class="h3 h2-md text-center mb-30p mb-md-50p">{{ page.faqHeading }}</h2>
+    <div class="row justify-content-center">
+      <div class="col-12 col-xl-10" (click)="onFaqClick($event)">
+        <ul class="list-unstyled mb-0">
+          <li *ngFor="let faq of faqs" class="mb-20p">
+            <faq-item [data]="faq" [headingLevel]="3"></faq-item>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12.1 -->
+<modal [id]="planModalId" [bodyStyle]="planBodyStyle">
+  <div class="pro-plan" role="dialog" aria-modal="true" aria-labelledby="pro-plan-heading">
+    <button type="button" class="btn btn-icon small pro-plan__close" aria-label="Close" (click)="closePlan()">
+      <i iconPh="cross" aria-hidden="true"></i>
+    </button>
+    <h2 id="pro-plan-heading" class="h4 mb-20p pr-40p">{{ choice.heading }}</h2>
+    <div class="pro-plan__options" role="radiogroup" aria-labelledby="pro-plan-heading">
+      <label *ngFor="let option of choice.options" class="pro-plan__option" [class.pro-plan__option--selected]="interval === option.interval">
+        <input type="radio" name="pro-interval" [value]="option.interval" [checked]="interval === option.interval" (change)="interval = option.interval">
+        <span class="pro-plan__name">{{ option.name }}</span>
+        <span class="pro-plan__price">{{ option.price }}</span>
+        <span class="pro-plan__note">{{ option.note }}</span>
+      </label>
+    </div>
+    <button type="button" class="btn btn-primary w-100 mt-20p" [disabled]="!paymentsEnabled || isSending" (click)="continueToPayment()">
+      {{ paymentsEnabled ? choice.button : page.comingSoon }}
+    </button>
+    <p *ngIf="errorMessage" class="pro-plan__alert mt-15p mb-0" role="alert">{{ errorMessage }}</p>
+    <p class="pro-plan__small text-label mt-15p mb-0">{{ choice.small }}</p>
+  </div>
+</modal>
+
+<growth-apply #apply source="pro"></growth-apply>
