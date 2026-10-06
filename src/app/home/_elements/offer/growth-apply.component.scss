@@ -1,0 +1,46 @@
+@import '../../../../assets/scss/variables';
+
+.growth-apply {
+  position: relative;
+}
+
+.growth-apply__close {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+}
+
+.growth-apply__heading:focus {
+  outline: none;
+}
+
+/* 16px, so iOS does not zoom the page when a field takes focus. */
+.form-control {
+  font-size: 16px;
+}
+
+.growth-apply__field-error,
+.growth-apply__alert {
+  font-size: 14px;
+  line-height: 20px;
+  color: $colorErrorDark;
+}
+
+.growth-apply__alert {
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: $colorErrorLight;
+}
+
+.growth-apply__submit {
+  width: 100%;
+}
+
+.growth-apply__hp {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

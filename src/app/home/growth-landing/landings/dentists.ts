@@ -4,13 +4,14 @@ import { GROWTH_LANDING_PATHS } from './paths';
 /*
  * /for-dentists, the first growth landing.
  *
- * Every string here is Hedieh's Website-Copy-FINAL, taken from
- * plan-specs/growth/dentists-landing-copy.json by a script rather than typed,
- * with the house-style edits already applied there and listed for her sign-off
- * in the plan (section 6): no em dashes, straight apostrophes, and the $1,000
- * advertising FAQ reworded, because no price appears anywhere on the site. The
- * booking form's text and the two hidden headings are ours, proposed in the
- * same section. Edit wording there first and here second, so the two agree.
+ * Every string here is Hedieh's. The hero, How It Works, the link band, the
+ * FAQ, the closing line and the title and description are her offer v2 copy
+ * (2026-10-04, plan-specs/source/offer-v2/PromptHealth_1_Copy.txt, sections
+ * 6 to 11) with straight quotes for her curly ones; the rest is her
+ * Website-Copy-FINAL (plan-specs/growth/dentists-landing-copy.json). The
+ * advertising answer states the $500 to $1,000 she recommends: since offer v2
+ * the site shows prices again, except Growth's own. The booking form's text
+ * is ours.
  *
  * The hero video is her own vertical cut, filmed on a production day, with the
  * words already in the picture. booking.calendlyUrl is her 30-minute Discovery
@@ -20,8 +21,8 @@ export const DENTISTS_LANDING: IGrowthLanding = {
   key: 'dentists',
   path: GROWTH_LANDING_PATHS.dentists,
   seo: {
-    title: 'Growth for Dentists | Video Creative & Patient Acquisition',
-    description: 'A full production day at your practice, a six-month content library, and targeted Meta advertising that brings new patients. Book a 30-minute consultation.',
+    title: 'PromptHealth Growth for Dentists | Video Filming, Coaching & Local Ads',
+    description: 'Professional videos of you and your team, filmed every three months and promoted to people near your practice. By application. Book a 30-minute consultation.',
     /* The share card is landscape, as every network crops to; the vertical
      * poster alone would be cut to a strip. */
     image: '/assets/img/share/for-dentists-share.v1.jpg',
@@ -32,8 +33,8 @@ export const DENTISTS_LANDING: IGrowthLanding = {
   },
   ctaLabel: 'Book a 30-Minute Consultation',
   hero: {
-    heading: "We Bring You Patients Who Aren't Searching Yet",
-    text: 'Most dental marketing competes for people already looking for a dentist. We reach the people near your practice before they start looking, and give them a reason to choose you.',
+    heading: 'Let Patients Get to Know You Before They Ever Book',
+    text: 'We film, coach and produce videos that show people near your practice who you are and why to trust you. Then we put your best video in front of them every month.',
     video: {
       src: 'https://prompt-images.s3.us-east-2.amazonaws.com/landing/for-dentists/hero-vertical-v2.mp4',
       poster: '/assets/video/for-dentists-hero-vertical-poster.v1.jpg',
@@ -85,10 +86,11 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     moreLabel: 'See More Dental Videos',
     moreUrl: 'https://www.youtube.com/@prompthealth2058',
   },
+  stepsIntro: 'PromptHealth Growth is by application only.',
   steps: [
     {
       title: 'Step 1: Implementation',
-      intro: 'Everything starts with one full production day at your practice.',
+      intro: 'Everything starts with strategy and your first production day.',
       items: [
         {
           text: 'Strategy session with you and your team',
@@ -97,85 +99,95 @@ export const DENTISTS_LANDING: IGrowthLanding = {
           text: 'Your brand story: what makes your practice different',
         },
         {
-          text: 'Full production day: video, photography and drone footage',
-        },
-        {
-          text: 'A content library built to last six months',
+          text: 'Your first production day: video, photography and drone footage',
         },
         {
           lead: "Your team's social playbook:",
-          text: 'on-camera coaching so your team is confident on video, plus simple guidance and templates for what to post at the clinic between campaigns',
+          text: 'on-camera coaching so your team is confident on video, plus simple guidance and templates for what to post between shoots',
         },
         {
           lead: 'Your online presence checklist:',
           text: 'practical guidance on your Google Business Profile, reviews, and where your content should live',
         },
         {
-          text: 'Campaign and lead capture setup',
+          text: 'Meta ad account and tracking setup',
         },
       ],
-      note: 'Outside Greater Vancouver? We also offer a remote production option using AI-powered video.',
+      note: 'Filming is in person for clinics in Greater Vancouver. Outside Greater Vancouver? We offer a remote option using an AI video clone of you.',
     },
     {
-      title: 'Step 2: Growth',
-      intro: 'Then we turn that content into patients, month after month.',
+      title: 'Step 2: Growth, every month',
+      intro: 'Then we keep your practice visible, month after month.',
       items: [
         {
-          text: 'Targeted Meta advertising to patients near your practice',
+          text: '4 professionally edited videos every month',
         },
         {
-          text: 'New edited content released every month from your production day',
+          text: 'Filming at your practice every 3 months',
         },
         {
-          text: 'Continuous creative testing and campaign optimization',
+          text: 'Scripts and on-camera coaching for every shoot',
         },
         {
-          text: 'Every lead captured and sent straight to your team',
+          text: 'Your videos posted for you on your Instagram and Google Business Profile',
         },
         {
-          text: "A monthly report: leads, cost per lead, and what's next",
+          text: "Your videos shared as collaboration posts with PromptHealth's Instagram, followed by 21,000+ people interested in health",
         },
         {
-          text: 'Your videos published to your Instagram and Google Business Profile',
+          text: 'Your best video each month run as a Meta ad to people near your practice, with tracking set up',
+        },
+        {
+          text: 'A monthly report: reach, views, messages and calls, and cost per message',
         },
       ],
     },
   ],
-  stepsFootnote: "No long-term contract. Continue month to month, cancel with 30 days' notice.",
-  hiddenHeadings: {
+  stepsFootnote: 'No contract. Billed in 3-month cycles, each built around one production day. Cancel anytime before your next cycle.',
+  headings: {
     howItWorks: 'How It Works',
     faq: 'Frequently Asked Questions',
+  },
+  linkBand: {
+    text: 'Want your team to make its own content? Get a new video idea and post idea every week.',
+    button: 'See PromptHealth Pro',
+    link: '/pro',
   },
   faq: [
     {
       q: 'How much should we spend on advertising?',
-      a: "Advertising spend is paid directly to Meta and is separate from our fees. We'll recommend the right monthly budget for your goals and your area on the call.",
+      a: "Ad spend is paid directly to Meta and is separate from our fees. We recommend $500 to $1,000 a month so the results are meaningful, and we'll suggest the right budget for your area on the call.",
+      opened: false,
+    },
+    {
+      q: 'What results will we see?',
+      a: "Every month you'll see how many people your videos reached, how many watched, and how many messaged or called. Your front desk asks new patients how they heard about you, so you can see which ones came from your videos. We don't promise a number of new patients, because that also depends on how your clinic follows up.",
       opened: false,
     },
     {
       q: 'Are we locked into a contract?',
-      a: "No. After implementation, you continue month to month and can cancel with 30 days' notice. We do recommend giving campaigns at least three months, since advertising needs time to find your best patients.",
+      a: 'No. PromptHealth Growth is billed in 3-month cycles, and each cycle is built around one production day at your practice. You can cancel anytime before your next cycle starts. We recommend at least two cycles, so your videos and ads have time to work.',
       opened: false,
     },
     {
       q: 'How much filming do we have to do?',
-      a: 'One production day at your practice. We plan everything in advance and coach your team on camera, so nobody has to be a performer. That single day gives us about six months of content.',
+      a: 'For clinics in Greater Vancouver, one production day at your practice every three months. We plan everything in advance and coach your team on camera, so nobody has to be a performer. Outside Greater Vancouver, we offer a remote option using an AI video clone of you.',
       opened: false,
     },
     {
       q: 'Do you manage our social media or SEO?',
-      a: 'No. We focus on one thing: creative and advertising that brings new patients. During implementation we show your team how to handle everyday posting and how to keep your Google Business Profile and reviews in good shape, and your campaign videos are published to your Instagram and Google Business Profile. We guide, your team runs it day to day.',
+      a: "No. We focus on video. We publish your videos to your Instagram and Google Business Profile and show your team how to handle everyday posting. We don't do SEO, websites, or replies to comments and messages.",
       opened: false,
     },
     {
-      q: "What's a new patient worth to us?",
-      a: "That's the number that matters most. Most practices find a single new patient covers the monthly investment several times over. We'll work it out together on the call.",
+      q: 'Do we approve the videos?',
+      a: "Yes. Your practice reviews and approves every video and ad before it's published. We keep content educational and accurate, without discounts, guarantees or patient testimonials in ads.",
       opened: false,
     },
   ],
   final: {
     heading: 'Great Healthcare Professionals Deserve to Be Seen, Heard and Trusted.',
-    text: "In 30 minutes we'll look at where your new patients come from today, and what a campaign could realistically bring you.",
+    text: "In 30 minutes, we'll look at how patients find you today and whether PromptHealth Growth is the right fit.",
   },
   booking: {
     calendlyUrl: 'https://calendly.com/hediehsafiyari/generalmeeting',

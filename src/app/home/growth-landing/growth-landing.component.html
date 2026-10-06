@@ -54,7 +54,8 @@
   phone and across it on a desktop. -->
   <section class="bg-lightgreen py-50p py-md-80p">
     <div class="container">
-      <h2 class="growth-visually-hidden">{{ config.hiddenHeadings.howItWorks }}</h2>
+      <h2 class="h3 h2-md text-center mb-15p">{{ config.headings.howItWorks }}</h2>
+      <p *ngIf="config.stepsIntro" class="subtitle1 text-label text-center mx-auto mb-30p mb-md-50p growth-narrow">{{ config.stepsIntro }}</p>
       <ol class="growth-steps list-unstyled mb-0">
         <li *ngFor="let step of config.steps; let i = index" class="growth-step">
           <div class="growth-step__number" aria-hidden="true">{{ i + 1 }}</div>
@@ -78,10 +79,19 @@
     </div>
   </section>
 
+  <!-- Link band: one line and one button, deliberately quieter than the
+  sections around it. -->
+  <section *ngIf="config.linkBand" class="growth-band">
+    <div class="container growth-band__inner">
+      <p class="growth-band__text mb-0">{{ config.linkBand.text }}</p>
+      <a [routerLink]="config.linkBand.link" class="btn btn-outline growth-band__button">{{ config.linkBand.button }}</a>
+    </div>
+  </section>
+
   <!-- FAQ -->
   <section class="py-50p py-md-80p">
     <div class="container">
-      <h2 class="growth-visually-hidden">{{ config.hiddenHeadings.faq }}</h2>
+      <h2 class="h3 h2-md text-center mb-30p mb-md-50p">{{ config.headings.faq }}</h2>
       <div class="row justify-content-center">
         <div class="col-12 col-xl-10">
           <ul class="list-unstyled mb-0">

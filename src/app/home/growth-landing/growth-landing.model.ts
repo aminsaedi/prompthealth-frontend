@@ -33,13 +33,23 @@ export interface IGrowthLanding {
     moreLabel: string;
     moreUrl: string;
   };
+  /** Under the How It Works heading, above Step 1. */
+  stepsIntro?: string;
   steps: IGrowthStep[];
+  /** The contract line, under the steps. */
   stepsFootnote: string;
-  /** Headings for screen readers only. Her copy gives these sections no visible
-   *  heading, and the outline would skip from H2 to H3 without them. */
-  hiddenHeadings: {
+  /** Section headings. Her first copy gave these sections none, and they were
+   *  for screen readers only; offer v2 (2026-10) names both, so they show. */
+  headings: {
     howItWorks: string;
     faq: string;
+  };
+  /** A slim strip above the FAQ pointing to another page: secondary, never
+   *  a pricing card. */
+  linkBand?: {
+    text: string;
+    button: string;
+    link: string;
   };
   faq: IFAQItem[];
   final: {

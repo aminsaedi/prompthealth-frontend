@@ -1,0 +1,73 @@
+<modal [id]="modalId" [bodyStyle]="bodyStyle" (onStateChanged)="onModalState($event)">
+  <div class="growth-apply" role="dialog" aria-modal="true" aria-labelledby="growth-apply-heading">
+    <button type="button" class="btn btn-icon small growth-apply__close" aria-label="Close" (click)="close()">
+      <i iconPh="cross" aria-hidden="true"></i>
+    </button>
+    <h2 #heading id="growth-apply-heading" class="h4 mb-10p pr-40p growth-apply__heading" tabindex="-1">{{ copy.heading }}</h2>
+
+    <form *ngIf="step === 'form'" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <p class="text-label mb-20p">{{ copy.intro }}</p>
+
+      <div *ngFor="let field of textFields" class="mb-15p">
+        <label class="subtitle2 text-body mb-5p d-block" [attr.for]="'apply-' + field.name">{{ copy.labels[field.name] }}</label>
+        <input
+        class="form-control"
+        [type]="field.type"
+        [id]="'apply-' + field.name"
+        [formControlName]="field.name"
+        [attr.autocomplete]="field.autocomplete"
+        [attr.maxlength]="field.max"
+        [attr.inputmode]="field.type === 'email' ? 'email' : (field.type === 'tel' ? 'tel' : null)"
+        [attr.autocapitalize]="field.type === 'email' || field.name === 'website' ? 'off' : null"
+        [attr.aria-invalid]="showError(field.name) ? 'true' : null"
+        [attr.aria-describedby]="showError(field.name) ? 'apply-' + field.name + '-error' : null"
+        >
+        <p *ngIf="!field.optional && showError(field.name)" class="growth-apply__field-error mt-5p mb-0" [id]="'apply-' + field.name + '-error'">{{ validation[field.name] }}</p>
+      </div>
+
+      <div class="mb-15p">
+        <label class="subtitle2 text-body mb-5p d-block" for="apply-practitionerType">{{ copy.labels.practitionerType }}</label>
+        <select
+        class="form-control"
+        id="apply-practitionerType"
+        formControlName="practitionerType"
+        [attr.aria-invalid]="showError('practitionerType') ? 'true' : null"
+        [attr.aria-describedby]="showError('practitionerType') ? 'apply-practitionerType-error' : null"
+        >
+          <option value="" disabled>Choose one</option>
+          <option *ngFor="let type of types" [value]="type">{{ type === 'Other' ? 'Other: please specify' : type }}</option>
+        </select>
+        <p *ngIf="showError('practitionerType')" class="growth-apply__field-error mt-5p mb-0" id="apply-practitionerType-error">{{ validation.practitionerType }}</p>
+      </div>
+
+      <div *ngIf="isOther" class="mb-15p">
+        <label class="subtitle2 text-body mb-5p d-block" for="apply-practitionerTypeOther">{{ copy.labels.practitionerTypeOther }}</label>
+        <input
+        class="form-control"
+        type="text"
+        id="apply-practitionerTypeOther"
+        formControlName="practitionerTypeOther"
+        maxlength="120"
+        [attr.aria-invalid]="showError('practitionerTypeOther') ? 'true' : null"
+        [attr.aria-describedby]="showError('practitionerTypeOther') ? 'apply-practitionerTypeOther-error' : null"
+        >
+        <p *ngIf="showError('practitionerTypeOther')" class="growth-apply__field-error mt-5p mb-0" id="apply-practitionerTypeOther-error">{{ validation.practitionerTypeOther }}</p>
+      </div>
+
+      <!-- Off-screen, as on the booking form: a person never fills it. -->
+      <div class="growth-apply__hp" aria-hidden="true">
+        <input type="text" id="apply-hp-extra" name="hp_extra" formControlName="hp_extra" autocomplete="off" tabindex="-1">
+      </div>
+
+      <button type="submit" class="btn btn-primary growth-apply__submit mt-10p" [disabled]="isSending">{{ copy.submit }}</button>
+      <p *ngIf="errorMessage" class="growth-apply__alert mt-15p mb-0" role="alert">{{ errorMessage }}</p>
+    </form>
+
+    <div *ngIf="step === 'dentist'" role="status">
+      <p class="subtitle1 mb-20p">{{ copy.thanksDentist }}</p>
+      <a *ngIf="bookingUrl" [href]="bookingUrl" class="btn btn-primary growth-apply__submit" (click)="goToBooking(); $event.preventDefault()">{{ copy.bookButton }}</a>
+    </div>
+
+    <p *ngIf="step === 'other'" class="subtitle1 mb-0" role="status">{{ copy.thanksOther }}</p>
+  </div>
+</modal>

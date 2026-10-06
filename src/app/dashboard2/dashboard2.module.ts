@@ -34,6 +34,8 @@ import { AffiliateComponent } from './affiliate/affiliate.component';
 import { AffiliateAddComponent } from './affiliate-add/affiliate-add.component';
 import { AffiliateListComponent } from './affiliate-list/affiliate-list.component';
 import { PaymentComponent } from './payment/payment.component';
+import { MembershipComponent } from './membership/membership.component';
+import { ProBannerComponent } from './pro-banner/pro-banner.component';
 import { PaymentSubscriptionComponent } from './payment-subscription/payment-subscription.component';
 import { PaymentHistoryComponent } from './payment-history/payment-history.component';
 import { PaymentCreditComponent } from './payment-credit/payment-credit.component';
@@ -73,6 +75,8 @@ const routes: Routes = [
       { path: 'bookmark', component: BookmarksComponent, },
       { path: 'password', component: PasswordComponent, },
 
+      /* PromptHealth Pro or Basic, and the Pro team (offer v2, 2026-10). */
+      { path: 'membership', component: MembershipComponent, },
       { path: 'payment', component: PaymentComponent, children: [
         { path: 'subscription', component: PaymentSubscriptionComponent, },
         { path: 'history', component: PaymentHistoryComponent, },
@@ -109,6 +113,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     MenuComponent,
+    MembershipComponent,
+    ProBannerComponent,
     BaseComponent,
     ProfileComponent,
     BookingsComponent,

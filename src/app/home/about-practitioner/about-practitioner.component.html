@@ -19,40 +19,9 @@
   </ul>
 </section>
 
-<section class="container my-100p">
-  <h2 class="h3 h2-md text-center mb-60p">Plans for Practitioners</h2>
-  <div class="row justify-content-center">
-
-    <!-- Free Profile -->
-    <div class="col-12 col-lg-5 mb-20p mb-lg-0p mr-lg-20p">
-      <div class="card h-100 p-30p d-flex flex-column">
-        <div class="mb-20p">
-          <!-- "gift", not "gift-outline": the font has no outline gift, and the class
-               rendered as empty space. The two-tone gift matches the Growth
-               card's video-camera beside it. -->
-          <i iconPh="gift" style="font-size: 42px" class="text-primary"></i>
-        </div>
-        <h3 class="h4 h3-md mb-10p">Free Profile</h3>
-        <p class="text-label mb-25p">Create your presence on PromptHealth and be discoverable.</p>
-        <ul class="list-unstyled pl-25p plan-features flex-grow-1">
-          <li *ngFor="let item of freePlanFeatures" class="position-relative mb-15p subtitle2">
-            <i class="icon-pre text-placeholder" iconPh="checkbox-square-outline"></i>
-            <span>{{ item }}</span>
-          </li>
-        </ul>
-        <button class="btn btn-primary-dark mt-30p w-100" (click)="onClickCreateFreeProfile()">
-          Create Free Profile
-        </button>
-      </div>
-    </div>
-
-    <!-- PromptHealth Growth -->
-    <div class="col-12 col-lg-5 mb-20p mb-lg-0p">
-      <growth-plan-card icon="video-camera"></growth-plan-card>
-    </div>
-
-  </div>
-</section>
+<!-- Basic, Pro and Growth, the same section as /for-practitioners
+(Hedieh's offer v2, section 2). -->
+<plan-choice source="plans" sectionClass="bg-lightgreen"></plan-choice>
 
 <section class="container my-100p position-relative">
   <span id="faq" style="top: -100px; position: absolute"></span>

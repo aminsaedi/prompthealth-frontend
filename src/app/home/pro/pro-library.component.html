@@ -1,0 +1,57 @@
+<section class="bg-lightyellow py-50p py-md-80p">
+  <div class="container text-center">
+    <p class="pro-eyebrow mb-15p">PromptHealth Pro</p>
+    <h1 class="h3 h2-md text-primary-dark mb-15p">Members' Library</h1>
+    <p class="subtitle1 text-label mx-auto mb-0" style="max-width: 640px">
+      Every weekly video idea and post idea, trend alert, monthly update and live session recording, in one place.
+    </p>
+  </div>
+</section>
+
+<section class="container py-40p py-md-60p">
+  <div *ngIf="loadFailed" class="text-center" role="alert">
+    <p class="subtitle1 mb-20p">The library could not be loaded.</p>
+    <button type="button" class="btn btn-outline" (click)="retry()">Try Again</button>
+  </div>
+
+  <div *ngIf="!loadFailed && !items" class="row" aria-busy="true">
+    <div *ngFor="let i of [0, 1, 2]" class="col-12 col-md-6 col-lg-4 mb-30p">
+      <div class="library-dummy rounded-12p"></div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loadFailed && items">
+    <!-- Not a member: the locked list and the way in. -->
+    <div *ngIf="!isMember" class="library-invite bg-white rounded-12p text-center mx-auto p-30p p-md-40p mb-40p">
+      <h2 class="h4 text-primary-dark mb-10p">For PromptHealth Pro members</h2>
+      <p class="text-label mb-25p">Join to open every idea in the library, and get a new one at the start of each week.</p>
+      <a routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary">Upgrade to Pro</a>
+      <p *ngIf="!isSignedIn" class="small text-label mt-20p mb-0">Already a member? <a routerLink="/auth/login" [queryParams]="{ next: '/pro/library' }">Log in</a></p>
+    </div>
+
+    <p *ngIf="items.length === 0" class="subtitle1 text-label text-center">The first ideas arrive at the start of next week.</p>
+
+    <ul *ngIf="items.length > 0" class="row list-unstyled mb-0">
+      <li *ngFor="let item of items" class="col-12 col-md-6 col-lg-4 mb-30p">
+        <a *ngIf="isMember; else locked" [routerLink]="['/pro/library', item.slug]" class="library-card library-card--open d-block bg-white rounded-12p h-100">
+          <img *ngIf="item.videoId" class="library-card__thumb" [src]="'https://i.ytimg.com/vi/' + item.videoId + '/hqdefault.jpg'" alt="" loading="lazy" width="480" height="360">
+          <div class="p-20p">
+            <p class="library-card__meta mb-5p">{{ kinds[item.kind] || kinds.other }} · {{ item.publishedAt | date:'MMM d, y' }}</p>
+            <h2 class="h5 text-primary-dark mb-10p">{{ item.title }}</h2>
+            <p *ngIf="item.summary" class="text-label mb-0">{{ item.summary }}</p>
+          </div>
+        </a>
+        <ng-template #locked>
+          <div class="library-card library-card--locked bg-white rounded-12p h-100 p-20p">
+            <p class="library-card__meta mb-5p">
+              <svg class="library-lock" width="12" height="14" viewBox="0 0 12 14" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 0a3.5 3.5 0 0 0-3.5 3.5V6H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-.5V3.5A3.5 3.5 0 0 0 6 0zm2 6H4V3.5a2 2 0 1 1 4 0V6z"/></svg>
+              <span class="sr-only-pro">Members only:</span>
+              {{ kinds[item.kind] || kinds.other }} · {{ item.publishedAt | date:'MMM d, y' }}
+            </p>
+            <h2 class="h5 text-body mb-0">{{ item.title }}</h2>
+          </div>
+        </ng-template>
+      </li>
+    </ul>
+  </ng-container>
+</section>

@@ -1,0 +1,42 @@
+<div *ngIf="mode === 'preview' && drop" class="drop-preview-bar" role="note">
+  Preview of version {{ drop.version }} ({{ drop.status }}). Only people with this link can see it. Members see it like this once it is published.
+</div>
+
+<section class="container py-40p py-md-60p">
+  <div class="drop">
+    <a *ngIf="mode === 'library'" routerLink="/pro/library" class="drop-back small mb-20p d-inline-block">Members' Library</a>
+
+    <div *ngIf="state === 'loading'" aria-busy="true">
+      <div class="drop-dummy drop-dummy--title rounded-8p mb-20p"></div>
+      <div class="drop-dummy drop-dummy--video rounded-12p"></div>
+    </div>
+
+    <div *ngIf="state === 'locked'" class="text-center py-40p">
+      <h1 class="h4 text-primary-dark mb-15p">For PromptHealth Pro members</h1>
+      <p class="text-label mb-25p">This idea is in the members' library.</p>
+      <a routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary">Upgrade to Pro</a>
+    </div>
+
+    <div *ngIf="state === 'missing'" class="text-center py-40p">
+      <h1 class="h4 mb-15p">Not found</h1>
+      <p class="text-label mb-25p">{{ mode === 'preview' ? 'This preview link is not valid.' : 'This idea is not in the library.' }}</p>
+      <a *ngIf="mode === 'library'" routerLink="/pro/library" class="btn btn-outline">Members' Library</a>
+    </div>
+
+    <div *ngIf="state === 'failed'" class="text-center py-40p" role="alert">
+      <p class="subtitle1 mb-0">This page could not be loaded. Please try again.</p>
+    </div>
+
+    <article *ngIf="state === 'ready' && drop">
+      <p class="drop-meta mb-10p">
+        {{ kinds[drop.kind] || kinds.other }}<ng-container *ngIf="drop.publishedAt"> · {{ drop.publishedAt | date:'MMMM d, y' }}</ng-container>
+      </p>
+      <h1 class="h3 h2-md text-primary-dark mb-20p">{{ drop.title }}</h1>
+      <p *ngIf="drop.summary" class="subtitle1 text-label mb-30p">{{ drop.summary }}</p>
+      <div *ngIf="drop.videoId" class="drop-video mb-30p">
+        <youtube-facade [videoId]="drop.videoId" [title]="drop.title" ratio="16:9"></youtube-facade>
+      </div>
+      <div class="drop-body" [innerHTML]="body"></div>
+    </article>
+  </div>
+</section>

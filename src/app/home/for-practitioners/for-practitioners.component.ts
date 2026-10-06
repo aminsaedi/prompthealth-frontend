@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
-import { GROWTH_PLAN_CARD, PAID_PLAN_FAQ } from '../_elements/growth-plan-card/growth-plan-copy';
+import { OFFER_CATALOG_ITEMS, PAID_PLAN_FAQ } from '../_elements/offer/offer-copy';
 
 @Component({
   selector: 'app-for-practitioners',
@@ -76,26 +76,7 @@ export class ForPractitionersComponent implements OnInit, OnDestroy {
           hasOfferCatalog: {
             '@type': 'OfferCatalog',
             name: 'Practitioner Plans',
-            itemListElement: [
-              {
-                '@type': 'Offer',
-                itemOffered: {
-                  '@type': 'Service',
-                  name: 'Free Provider Profile',
-                  description:
-                    'Basic provider listing with category placement and platform visibility.',
-                },
-              },
-              {
-                '@type': 'Offer',
-                itemOffered: {
-                  '@type': 'Service',
-                  name: 'PromptHealth Growth',
-                  description: GROWTH_PLAN_CARD.body,
-                  url: 'https://www.prompthealth.ca' + GROWTH_PLAN_CARD.link,
-                },
-              },
-            ],
+            itemListElement: OFFER_CATALOG_ITEMS,
           },
         },
       },
@@ -128,15 +109,15 @@ const features = [
   },
   {
     icon: 'video-library',
-    title: 'Expert Video Content',
+    title: 'Video That Builds Trust',
     description:
-      'We produce professional video interviews shared across our YouTube, TikTok, and Instagram channels, reaching over 1 million health-conscious followers.',
+      'Learn to make your own videos with PromptHealth Pro, or let us film and produce them for you with PromptHealth Growth. Growth videos are also shared with PromptHealth\'s 21,000+ Instagram followers.',
   },
   {
     icon: 'file',
-    title: 'SEO-Optimized Content Strategy',
+    title: 'Articles That Help You Get Found',
     description:
-      'Our team creates keyword-targeted articles and content based on what patients are actually searching for in your specialty.',
+      'Publish articles on PromptHealth with a link back to your website, focused on what patients in your specialty are searching for.',
   },
   {
     icon: 'chart-bar',
@@ -159,7 +140,8 @@ const features = [
 ];
 
 const stats = [
-  { value: '1M+', label: 'Social Followers' },
+  /* Hedieh, 2026-10-04 (offer v2, 13.2): replaces "1M+ Social Followers". */
+  { value: '400+', label: 'Videos Produced' },
   /* Hedieh's figures (2026-09-27), the same as the homepage's; change both
    * together. 600+ counts practitioner and clinic accounts (631 then), which is
    * why it no longer says verified: 442 of them were approved and listed. */
@@ -192,7 +174,7 @@ const testimonials = [
 const faqs: IFAQItem[] = [
   {
     q: 'How does PromptHealth help my practice get found online?',
-    a: 'PromptHealth combines SEO-optimized content, expert video production, and AI search optimization to ensure your practice appears when patients search on Google, ChatGPT, and other AI tools. We create keyword-targeted content based on what patients in your specialty are actually searching for.',
+    a: 'Your PromptHealth profile and the articles you publish give patients more ways to find you on Google, ChatGPT and other AI tools. Each article links back to your website. For more visibility, <a href="/pro">PromptHealth Pro</a> helps your team create videos and posts every week, and <a href="/for-dentists">PromptHealth Growth</a> films and produces them for you.',
     opened: false,
   },
   /* A copy, not the shared object: faq-item writes `opened` onto what it is
@@ -204,7 +186,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: 'Do I need to create content myself?',
-    a: 'No, we handle everything. Our team conducts a professional video interview via Zoom, edits the content, and publishes it across our platforms including YouTube, TikTok, and Instagram. We also create written articles optimized for search.',
+    a: 'With PromptHealth Basic and Pro, your team creates the content, and we give you the tools, training and ideas. With PromptHealth Growth, we film and produce it for you.',
     opened: false,
   },
   {

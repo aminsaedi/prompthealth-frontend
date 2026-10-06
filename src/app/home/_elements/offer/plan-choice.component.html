@@ -1,0 +1,66 @@
+<section class="plan-choice py-80p py-md-100p" [ngClass]="sectionClass">
+  <div class="container">
+    <h2 class="h3 h2-md text-center mb-15p">{{ section.heading }}</h2>
+    <p class="subtitle1 text-label text-center mx-auto mb-50p plan-choice__narrow">{{ section.subheading }}</p>
+
+    <!-- Part 1: Memberships -->
+    <div class="text-center mb-30p">
+      <h3 class="h4 h3-md mb-10p">{{ section.memberships.heading }}</h3>
+      <p class="text-label mb-0">{{ section.memberships.line }}</p>
+    </div>
+    <ul class="row justify-content-center list-unstyled mb-0">
+      <li *ngFor="let card of cards" class="col-12 col-lg-6 col-xl-5 mb-30p mb-lg-0p">
+        <div class="plan-card bg-white rounded-12p h-100 d-flex flex-column" [ngClass]="'plan-card--' + card.key">
+          <p class="plan-eyebrow mb-10p">{{ card.label }}</p>
+          <h4 class="h4 h3-md mb-10p">{{ card.name }}</h4>
+          <p class="plan-card__price text-primary-dark mb-15p">{{ card.price }}</p>
+          <p class="text-label mb-20p">{{ card.description }}</p>
+          <ul class="list-unstyled mb-0 flex-grow-1">
+            <li *ngFor="let bullet of card.bullets" class="plan-bullet">
+              <i class="plan-bullet__check" iconPh="check" aria-hidden="true"></i>
+              <span *ngIf="bullet.lead" class="plan-bullet__lead">{{ bullet.lead }}</span>
+              {{ bullet.text }}
+            </li>
+          </ul>
+          <p *ngIf="card.note" class="plan-card__note text-label mt-20p mb-0">{{ card.note }}</p>
+          <a [routerLink]="card.link" class="btn mt-30p w-100" [ngClass]="card.key === 'pro' ? 'btn-primary' : 'btn-primary-dark'">{{ card.button }}</a>
+        </div>
+      </li>
+    </ul>
+
+    <!-- Part 2: Done-for-you plan, after at least 64px and a rule, so the two
+    parts never read as one row of three options. -->
+    <hr class="plan-choice__divider" aria-hidden="true">
+    <div class="text-center mb-30p">
+      <h3 class="h4 h3-md mb-10p">{{ section.doneForYou.heading }}</h3>
+      <p class="text-label mb-0">{{ section.doneForYou.line }}</p>
+    </div>
+    <div class="growth-panel rounded-12p text-white">
+      <div class="row">
+        <div class="col-12 col-lg-5 mb-30p mb-lg-0p">
+          <p class="plan-eyebrow growth-panel__eyebrow mb-10p">{{ growth.label }}</p>
+          <h4 class="h4 text-white mb-10p">{{ growth.name }}</h4>
+          <p class="h3 text-white mb-15p growth-panel__heading">{{ growth.heading }}</p>
+          <p class="growth-panel__soft mb-0">{{ growth.description }}</p>
+        </div>
+        <div class="col-12 col-lg-7">
+          <ul class="list-unstyled mb-0">
+            <li *ngFor="let bullet of growth.bullets" class="plan-bullet plan-bullet--on-dark">
+              <i class="plan-bullet__check" iconPh="check" aria-hidden="true"></i>
+              <span *ngIf="bullet.lead" class="plan-bullet__lead">{{ bullet.lead }}</span>
+              {{ bullet.text }}
+            </li>
+          </ul>
+          <p class="growth-panel__note growth-panel__soft mt-20p mb-0">{{ growth.availability }}</p>
+        </div>
+      </div>
+      <div class="growth-panel__actions text-center">
+        <a [routerLink]="growth.link" class="btn growth-panel__main">{{ growth.button }}</a>
+        <p class="growth-panel__soft growth-panel__line mt-15p mb-20p">{{ growth.lineUnderButton }}</p>
+        <button type="button" class="btn btn-outline-white growth-panel__apply" (click)="apply.open()">{{ growth.applyButton }}</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<growth-apply #apply [source]="source"></growth-apply>
