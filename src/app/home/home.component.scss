@@ -91,8 +91,7 @@
   }
 
   [class*="slideshow-animate"] {
-    /* 80s for six slides; the same speed for eight. */
-    animation-duration: 107s;
+    animation-duration: 80s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
   }
