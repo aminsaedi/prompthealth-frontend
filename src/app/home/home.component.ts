@@ -85,6 +85,11 @@ export class HomeComponent implements OnInit , OnDestroy {
   public isPlanMenuShown = false;
   public isSlideshowReady = false;
 
+  /* 7 and 8 are Hedieh's (2026-10-07): a clinician, and her own portrait,
+   * taken from the About page's larger copy of the photo she sent. Versioned,
+   * because /assets is served immutable. Adding a slide speeds the strip up
+   * (it moves half its length per cycle), so the duration in the stylesheet
+   * grows with the count. */
   public slideshow = [
     "slideshow-1.webp",
     "slideshow-2.webp",
@@ -92,9 +97,13 @@ export class HomeComponent implements OnInit , OnDestroy {
     "slideshow-4.webp",
     "slideshow-5.webp",
     "slideshow-6.webp",
+    "slideshow-7.v1.webp",
+    "slideshow-8.v1.webp",
   ];
 
   public slideshowReverse = [
+    "slideshow-8.v1.webp",
+    "slideshow-7.v1.webp",
     "slideshow-6.webp",
     "slideshow-5.webp",
     "slideshow-4.webp",
