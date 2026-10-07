@@ -23,6 +23,7 @@ import { AudioData } from '../modal-voice-recorder/modal-voice-recorder.componen
 import { SocialService } from '../social.service';
 import { CheckboxSelectionItem } from 'src/app/shared/form-item-checkbox-group/form-item-checkbox-group.component';
 import { takeUntil } from 'rxjs/operators';
+import { locationsNested } from 'src/app/_helpers/location-data';
 
 @Component({
   selector: 'app-editor',
@@ -80,6 +81,19 @@ export class EditorComponent implements OnInit , OnDestroy {
 
   public audioPreview: AudioData = null;
   public imagesPreview: (string|ArrayBuffer)[] = [];
+
+  /* The directory's cities, so an article's location is one the directory
+   * can link to. The value stored is the bare city name. */
+  public locationProvinces = locationsNested;
+  private locationLabels: string[] = locationsNested.reduce((all: string[], p) => all.concat((p.subitems || []).map(c => c.label)), []);
+
+  /* A stored location that is not a directory city ("Delta, BC") gets an
+   * option of its own, or the select would show it as empty and the next
+   * save would erase it without anyone choosing to. */
+  get locationNotInDirectory(): string {
+    const value = this.f.location?.value;
+    return value && this.locationLabels.indexOf(value) < 0 ? value : null;
+  }
 
   public itemsRolesRestrictedTo: CheckboxSelectionItem[] = [
     {id: 'client', label: 'Client', value: 'U'},
@@ -181,7 +195,9 @@ export class EditorComponent implements OnInit , OnDestroy {
       let image: {file: File | Blob, filename: string};
 
       try { 
-        image = await this._sharedService.shrinkImageByFixedWidth(files[0], 800);
+        /* 1200 wide, the size a share card asks for; 800 came out soft on
+         * the article page and on every large screen. */
+        image = await this._sharedService.shrinkImageByFixedWidth(files[0], 1200, false);
         this.f.image.setValue(image);
 
         const reader = new FileReader();
@@ -518,7 +534,7 @@ export class EditorComponent implements OnInit , OnDestroy {
       images.forEach(image => {
         const b64 = image.match(regExImageBase64)[1];
         const blob = this._sharedService.b64ToBlob(b64);
-        promiseAll.push(this._sharedService.shrinkImageByFixedWidth(blob, 800));
+        promiseAll.push(this._sharedService.shrinkImageByFixedWidth(blob, 800, false));
       });
 
       Promise.all(promiseAll).then((results: {file: Blob|File, filename: string}[]) => {

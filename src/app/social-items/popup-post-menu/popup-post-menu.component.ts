@@ -33,8 +33,11 @@ export class PopupPostMenuComponent implements OnInit , OnDestroy {
     return this.eligibleToDelete && this.post.isArticle && this.user.isSA;
   }
 
+  /* An administrator edits other people's articles and events too, which is
+   * how a published piece gets corrected. The editor keeps the original
+   * author on save. */
   get eligibleToEdit() {
-    return this.eligibleToDelete && (this.post.isArticle || this.post.isEvent);
+    return (this.eligibleToDelete || !!this.user.isSA) && (this.post.isArticle || this.post.isEvent);
   }
 
   get eligibleToDelete() {

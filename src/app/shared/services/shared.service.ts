@@ -238,12 +238,18 @@ export class SharedService {
     });
   }
 
-  async shrinkImageByFixedWidth(file: File | Blob, width: number = 1500): Promise<{ file: Blob, filename: string }> {
+  /* upscale: false keeps a narrower picture at its own size. Stretching a
+   * small picture to the width only adds blur and bytes, which is what every
+   * article cover under 800 pixels got. */
+  async shrinkImageByFixedWidth(file: File | Blob, width: number = 1500, upscale: boolean = true): Promise<{ file: Blob, filename: string }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = (e: Event) => {
         const t = e.target;
         const canvas = document.createElement('canvas');
+        if (!upscale && img.width > 0 && img.width < width) {
+          width = img.width;
+        }
         canvas.width = width;
         canvas.height = img.height * width / img.width;
         const ctx = canvas.getContext('2d');
