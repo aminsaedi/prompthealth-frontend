@@ -89,6 +89,13 @@ export class CategoryService {
         }
         this._categoryLoaded = true;
         this.emitCategoryService();
+      } else {
+        /* Settled either way, as the error branch does. Only a 200 used to
+         * resolve getCategoryAsync, so any other answer left every caller
+         * waiting for good. categoryList stays unset, which callers read as
+         * "unknown" rather than "empty". */
+        this._categoryLoaded = true;
+        this.emitCategoryService();
       }
     }, (error) => {
       console.error(error);

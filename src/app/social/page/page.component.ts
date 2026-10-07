@@ -7,6 +7,9 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { UniversalService, canonicalPathOf } from 'src/app/shared/services/universal.service';
 import { formatDateToString } from 'src/app/_helpers/date-formatter';
 import { slugify } from 'src/app/_helpers/slugify';
+import { directoryCityOf } from 'src/app/_helpers/location-data';
+import { isIndexableCityCategory } from 'src/app/_helpers/indexable-combos';
+import { CategoryService } from 'src/app/shared/services/category.service';
 import { SocialService } from '../social.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { JourneyService } from 'src/app/shared/services/journey.service';
@@ -40,6 +43,7 @@ export class PageComponent implements OnInit , OnDestroy {
     private _uService: UniversalService,
     private _jsonLdService: JsonLdService,
     private _journey: JourneyService,
+    private _catService: CategoryService,
   ) { }
 
   ngOnDestroy() {
@@ -139,33 +143,53 @@ export class PageComponent implements OnInit , OnDestroy {
     ];
   }
 
-  buildDirectoryLinks() {
+  /* Links into the directory, only to pages that exist as a filtered listing.
+   * An unknown city or category slug is served as the whole unfiltered
+   * directory, so a link built from free text pointed crawlers at hundreds of
+   * copies of /practitioners: 38 live articles store "City, BC", and the one
+   * blog category in use, "knowledge", is not a directory category at all. */
+  async buildDirectoryLinks() {
+    const post = this.post;
     this.relatedDirectoryLinks = [];
-    const cat = this.post.categoryId as any;
-    const catSlug = cat?.slug;
-    const catTitle = cat?.title;
-    const location = this.post.location;
+    const city = directoryCityOf(post.location);
+    const category = await this.directoryCategoryOf(post.categoryId);
+    if (this.post !== post) { return; }
 
-    if (catSlug) {
-      this.relatedDirectoryLinks.push({
-        url: `/practitioners/category/${catSlug}`,
-        label: `Browse ${catTitle} Practitioners`
+    const links: {url: string, label: string}[] = [];
+    if (category) {
+      links.push({
+        url: `/practitioners/category/${category.slug}`,
+        label: `Browse ${category.title} Practitioners`
       });
     }
-
-    if (location) {
-      this.relatedDirectoryLinks.push({
-        url: `/practitioners/area/${slugify(location)}`,
-        label: `Find Practitioners in ${location}`
+    if (city) {
+      links.push({
+        url: `/practitioners/area/${city.id}`,
+        label: `Find Practitioners in ${city.label}`
       });
     }
-
-    if (catSlug && location) {
-      this.relatedDirectoryLinks.push({
-        url: `/practitioners/area/${slugify(location)}/category/${catSlug}`,
-        label: `Find ${catTitle} Practitioners in ${location}`
+    /* Only an intersection the directory lets search engines index; the rest
+     * answer noindex, and a link to them from every article is wasted. */
+    if (category && city && isIndexableCityCategory(city.id, category.slug)) {
+      links.push({
+        url: `/practitioners/area/${city.id}/category/${category.slug}`,
+        label: `Find ${category.title} Practitioners in ${city.label}`
       });
     }
+    this.relatedDirectoryLinks = links;
+  }
+
+  /* The blog's category, when the directory has a category of the same slug.
+   * The two are different lists: blog categories are their own collection,
+   * directory categories are the questionnaire's goals, matched by
+   * slugify(item_text) exactly as the directory page resolves its route.
+   * Asks for the list only when there is a slug to look up. */
+  private async directoryCategoryOf(cat: any): Promise<{slug: string, title: string} | null> {
+    const slug = cat && typeof cat == 'object' ? cat.slug : null;
+    if (!slug) { return null; }
+    await this._catService.getCategoryAsync();
+    const match = this._catService.categoryListFlatten.find(c => c && slugify(c.item_text) === slug);
+    return match ? { slug, title: match.item_text } : null;
   }
 
   setMeta(){
@@ -178,8 +202,14 @@ export class PageComponent implements OnInit , OnDestroy {
       title = this.post.title;
     }
 
-    const seoTitle = (this.post.isArticle && this.post.metaTitle) ? this.post.metaTitle : title;
-    const seoDescription = (this.post.isArticle && this.post.metaDescription) ? this.post.metaDescription : this.post.summary;
+    /* An author's meta title is written as the whole search result title, up
+     * to 70 characters and usually with its own byline, so it goes out as is.
+     * The fallback is the post's own title with the site's suffix. */
+    const metaTitle = this.post.isArticle ? (this.post.metaTitle || '').trim() : '';
+    const metaDescription = this.post.isArticle ? (this.post.metaDescription || '').trim() : '';
+    const seoTitle = metaTitle || (title + ' | PromptHealth Community');
+    const seoDescription = metaDescription || this.post.summary;
+    const city = this.post.isArticle ? directoryCityOf(this.post.location) : null;
 
     /* Cleaned here as well as in setMeta, because the Article @id and the
      * breadcrumb below are built from it directly. */
@@ -191,7 +221,7 @@ export class PageComponent implements OnInit , OnDestroy {
      * site's own card rather than the wordmark the feed shows in its place. */
     const shareImage = this.post.shareImage;
     this._uService.setMeta(canonicalPath, {
-      title: seoTitle + ' | PromptHealth Community',
+      title: seoTitle,
       description: seoDescription,
       pageType: 'article',
       ...(shareImage ? { image: shareImage, imageAlt: title } : {}),
@@ -219,7 +249,18 @@ export class PageComponent implements OnInit , OnDestroy {
         ...(this.post.authorSlug ? { 'url': 'https://www.prompthealth.ca/practitioners/' + this.post.authorSlug } : {})
       },
       'image': shareImage || 'https://www.prompthealth.ca/assets/img/prompthealth.png',
-      ...(this.post.isArticle && this.post.location ? { 'contentLocation': { '@type': 'Place', 'name': this.post.location } } : {}),
+      /* Only a city the directory knows, named the same way everywhere,
+       * rather than whatever the author typed. */
+      ...(city ? { 'contentLocation': {
+        '@type': 'Place',
+        'name': city.province ? `${city.label}, ${city.province}` : city.label,
+        'address': {
+          '@type': 'PostalAddress',
+          'addressLocality': city.label,
+          ...(city.province ? { 'addressRegion': city.province } : {}),
+          'addressCountry': 'CA',
+        },
+      } } : {}),
       'publisher': {
         '@type': 'Organization',
         'name': 'PromptHealth',

@@ -190,7 +190,7 @@
               <div *ngIf="size == 'large'" class="d-none d-md-block mt-1"><div class="color-dummy" style="height: 1em;"></div></div>
             </div>
             
-            <p *ngIf="data" class="body1 mb-0" [innerHTML]="data.summary"></p>
+            <p *ngIf="data" class="body1 mb-0">{{ data.summary }}</p>
           </div>  
         </div>
       </div>

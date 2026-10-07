@@ -3,7 +3,7 @@ import { Params } from "@angular/router";
 import { priceRange } from "../shared/form-item-pricing/form-item-pricing.component";
 import { SearchKeywords } from "../shared/search-bar/search-bar.component";
 import { GeoLocationType } from "../shared/services/user-location.service";
-import { locations } from "../_helpers/location-data";
+import { directoryCityOf, locations } from "../_helpers/location-data";
 import { findAbbrByFullnameOf, findFullnameByAbbrOf } from "../_helpers/questionnaire-answer-map";
 import { Professional } from "./professional";
 import { IGetPractitionersResult } from "./response-data";
@@ -133,7 +133,10 @@ export class ExpertFinderController {
     this._dist = Number(data.dist) || 100;
 
     if ((!this._lat || !this._lng) && data.city) {
-      const city = locations[data.city];
+      /* Through the same lookup as the page's meta, so white-rock (and
+       * White Rock) find white_rock rather than no coordinates at all. */
+      const known = directoryCityOf(data.city);
+      const city = known ? locations[known.id] : null;
       if (city) {
         this._lat = city.lat;
         this._lng = city.lng;

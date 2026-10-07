@@ -268,17 +268,23 @@
 
           <ng-container *ngIf="isArticle">
             <div class="mt-15p">
-              <label class="subtitle2 text-label">Location <span class="text-placeholder body2">(optional — e.g. "Toronto, ON")</span></label>
-              <input type="text" class="form-control" placeholder="City or region..." [formControl]="f.location" />
+              <label class="subtitle2 text-label" for="editor-location">Location <span class="text-placeholder body2">(optional, the city the article is about)</span></label>
+              <select id="editor-location" class="form-control" [formControl]="f.location">
+                <option value="">No city</option>
+                <option *ngIf="locationNotInDirectory" [value]="locationNotInDirectory">{{ locationNotInDirectory }} (not a directory city)</option>
+                <optgroup *ngFor="let province of locationProvinces" [label]="province.label">
+                  <option *ngFor="let city of province.subitems" [value]="city.label">{{ city.label }}</option>
+                </optgroup>
+              </select>
             </div>
 
             <div class="mt-30p">
-              <label class="subtitle2 text-label">SEO — Meta title <span class="text-placeholder body2">(optional, defaults to article title)</span></label>
+              <label class="subtitle2 text-label">SEO meta title <span class="text-placeholder body2">(optional, defaults to article title)</span></label>
               <input type="text" class="form-control" placeholder="Custom page title for search engines..." [formControl]="f.metaTitle" maxlength="70" />
             </div>
 
             <div class="mt-15p">
-              <label class="subtitle2 text-label">SEO — Meta description <span class="text-placeholder body2">(optional, 50–160 chars)</span></label>
+              <label class="subtitle2 text-label">SEO meta description <span class="text-placeholder body2">(optional, 50 to 160 characters)</span></label>
               <textarea class="form-control" rows="3" placeholder="Summary shown in search results..." [formControl]="f.metaDescription" maxlength="160"></textarea>
             </div>
           </ng-container>
