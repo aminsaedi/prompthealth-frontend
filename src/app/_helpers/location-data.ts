@@ -1,4 +1,5 @@
 import { IFormItemSearchData } from "../models/form-item-search-data";
+import { slugify } from "./slugify";
 
 export const locationsNested: IFormItemSearchData[] = [
   {id: 'bc', label: 'British Columbia', selectable: false, subitems: [
@@ -16,7 +17,7 @@ export const locationsNested: IFormItemSearchData[] = [
   ]},
   {id: 'on', label: 'Ontario', selectable: false, subitems: [
     {id: 'hamilton', label: 'Hamilton'},
-    {id: 'kitchener', label: 'Ketchener'},
+    {id: 'kitchener', label: 'Kitchener'},
     {id: 'mississauga', label: 'Mississauga'},
     {id: 'north-york', label: 'North York'},
     {id: 'ottawa', label: 'Ottawa'},
@@ -109,3 +110,41 @@ export type CityId =
 
 'calgary' |
 'edmonton';
+
+
+export interface DirectoryCity {
+  /** The id the directory routes on: /practitioners/area/<id>. */
+  id: string;
+  /** The bare city name, as the editor stores it on an article. */
+  label: string;
+  /** Two-letter province code, upper case. */
+  province: string;
+}
+
+/* The directory city a piece of free text names, or null when it names none.
+ *
+ * Articles store location as typed, and live ones read "Richmond, BC",
+ * "Richmond,  BC" and "Richmond, Dentist", so only the part before the first
+ * comma is the city. Ids are not uniform either: most use hyphens, but
+ * white_rock has an underscore, while "White Rock" slugifies to white-rock,
+ * which no route knew. Both spellings are tried, so white_rock, white-rock
+ * and "White Rock, BC" all find white_rock.
+ *
+ * The lookup is an own-property check because a bare index would find
+ * "constructor" on every object. */
+export function directoryCityOf(text: string): DirectoryCity | null {
+  if (!text) { return null; }
+  /* Underscores to spaces first: slugify deletes an underscore rather than
+   * turning it into a hyphen, so white_rock itself would become whiterock. */
+  const slug = slugify(String(text).split(',')[0].replace(/_/g, ' '));
+  if (!slug) { return null; }
+  const id = [slug, slug.replace(/-/g, '_')].find(k => Object.prototype.hasOwnProperty.call(locations, k));
+  if (!id) { return null; }
+  for (const province of locationsNested) {
+    const city = (province.subitems || []).find(c => c.id == id);
+    if (city) {
+      return { id, label: city.label, province: String(province.id).toUpperCase() };
+    }
+  }
+  return { id, label: getLabelByCityId(id as CityId), province: '' };
+}

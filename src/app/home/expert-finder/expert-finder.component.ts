@@ -22,7 +22,7 @@ import { getDistanceFromLatLng } from 'src/app/_helpers/latlng-to-distance';
 import { smoothWindowScrollTo } from 'src/app/_helpers/smooth-scroll';
 import { titleCaseOf } from 'src/app/_helpers/titlecase';
 import { slugify } from 'src/app/_helpers/slugify';
-import { locationsNested } from 'src/app/_helpers/location-data';
+import { directoryCityOf, locationsNested } from 'src/app/_helpers/location-data';
 import { isIndexableCityCategory, isIndexableCityType } from 'src/app/_helpers/indexable-combos';
 import { SPECIALTY_SCHEMA_MAP, TYPE_PRIORITY, lookupSpecialtySchema } from 'src/app/_helpers/specialty-schema-map';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumb/breadcrumb.component';
@@ -290,15 +290,20 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       typeOfProvider = answer ? answer.item_text.toLowerCase() : null;
     }
 
-    let city = param.city ? titleCaseOf(param.city) : null;
+    /* The directory's own id and name for the city in the address. An
+     * unknown one (victoria-bc) has no coordinates, so the page lists the
+     * whole directory; it keeps its address but is kept out of the index. */
+    const knownCity = param.city ? directoryCityOf(param.city) : null;
+    const cityId = knownCity ? knownCity.id : param.city;
+    let city = knownCity ? knownCity.label : param.city ? titleCaseOf(param.city) : null;
 
-    this.currentCity = param.city || null;
+    this.currentCity = cityId || null;
     if (param.city) {
       const allCities: { id: string, label: string }[] = [];
       for (const province of locationsNested) {
         if (province.subitems) {
           for (const c of province.subitems) {
-            if (c.id !== param.city) {
+            if (c.id !== cityId) {
               allCities.push({ id: c.id, label: c.label });
             }
           }
@@ -326,26 +331,39 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
     // canonical when both city and specialty are set, so opening up the
     // allowlist doesn't accidentally index two URLs per page.
     let canonicalPath = '/practitioners';
-    if (param.city && param.typeOfProviderSlug) {
-      canonicalPath = `/practitioners/area/${param.city}/type/${param.typeOfProviderSlug}`;
-    } else if (param.city && param.categorySlug) {
-      canonicalPath = `/practitioners/area/${param.city}/category/${param.categorySlug}`;
+    if (cityId && param.typeOfProviderSlug) {
+      canonicalPath = `/practitioners/area/${cityId}/type/${param.typeOfProviderSlug}`;
+    } else if (cityId && param.categorySlug) {
+      canonicalPath = `/practitioners/area/${cityId}/category/${param.categorySlug}`;
     } else if (param.categorySlug) {
       canonicalPath += `/category/${param.categorySlug}`;
     } else if (param.typeOfProviderSlug) {
       canonicalPath += `/type/${param.typeOfProviderSlug}`;
-    } else if (param.city) {
-      canonicalPath += `/area/${param.city}`;
+    } else if (cityId) {
+      canonicalPath += `/area/${cityId}`;
     }
+
+    /* A slug the directory cannot resolve filters nothing, so the page is the
+     * full unfiltered listing under a made-up name. Only decided once the list
+     * it is checked against has loaded: if the list failed to load, nothing
+     * can be said either way and the page keeps its default. */
+    const categoryList = this._catService.categoryList;
+    const unknownCategory = !!param.categorySlug && !!categoryList && categoryList.length > 0
+      && !this._catService.titleOfBySlug(param.categorySlug);
+    const typeAnswers = this.questionnaires?.typeOfProvider?.answers;
+    const unknownType = !!param.typeOfProviderSlug && !!typeAnswers && typeAnswers.length > 0
+      && !typeAnswers.find(item => slugify(item.item_text) === param.typeOfProviderSlug);
 
     // SEO-064: noindex city × category / city × type intersection pages
     // that are not explicitly allowlisted. Prevents the ~2,600 programmatic
     // combos from tripping Google's doorway-pattern heuristic. Single-dimension
     // pages (area-only, category-only, type-only) stay indexable.
     let robots: string | undefined;
-    if (param.city && param.categorySlug && !isIndexableCityCategory(param.city, param.categorySlug)) {
+    if ((param.city && !knownCity) || unknownCategory || unknownType) {
       robots = 'noindex, follow';
-    } else if (param.city && param.typeOfProviderSlug && !isIndexableCityType(param.city, param.typeOfProviderSlug)) {
+    } else if (cityId && param.categorySlug && !isIndexableCityCategory(cityId, param.categorySlug)) {
+      robots = 'noindex, follow';
+    } else if (cityId && param.typeOfProviderSlug && !isIndexableCityType(cityId, param.typeOfProviderSlug)) {
       robots = 'noindex, follow';
     }
 
@@ -645,7 +663,9 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
       specialtyLabel = answer ? answer.item_text : null;
     }
 
-    const cityLabel = param.city ? titleCaseOf(param.city) : null;
+    const knownCity = param.city ? directoryCityOf(param.city) : null;
+    const cityId = knownCity ? knownCity.id : param.city;
+    const cityLabel = knownCity ? knownCity.label : param.city ? titleCaseOf(param.city) : null;
 
     const breadcrumbItems: object[] = [
       { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.prompthealth.ca' },
@@ -662,14 +682,14 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
         '@type': 'ListItem',
         'position': position++,
         'name': cityLabel,
-        'item': `https://www.prompthealth.ca/practitioners/area/${param.city}`,
+        'item': `https://www.prompthealth.ca/practitioners/area/${cityId}`,
       });
       if (specialtyLabel) {
         breadcrumbItems.push({
           '@type': 'ListItem',
           'position': position,
           'name': specialtyLabel,
-          'item': `https://www.prompthealth.ca/practitioners/area/${param.city}/type/${param.typeOfProviderSlug}`,
+          'item': `https://www.prompthealth.ca/practitioners/area/${cityId}/type/${param.typeOfProviderSlug}`,
         });
       }
     } else if (cityLabel && param.categorySlug) {
@@ -677,14 +697,14 @@ export class ExpertFinderComponent implements OnInit , OnDestroy {
         '@type': 'ListItem',
         'position': position++,
         'name': cityLabel,
-        'item': `https://www.prompthealth.ca/practitioners/area/${param.city}`,
+        'item': `https://www.prompthealth.ca/practitioners/area/${cityId}`,
       });
       if (specialtyLabel) {
         breadcrumbItems.push({
           '@type': 'ListItem',
           'position': position,
           'name': specialtyLabel,
-          'item': `https://www.prompthealth.ca/practitioners/area/${param.city}/category/${param.categorySlug}`,
+          'item': `https://www.prompthealth.ca/practitioners/area/${cityId}/category/${param.categorySlug}`,
         });
       }
     } else {
