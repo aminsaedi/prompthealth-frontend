@@ -34,9 +34,11 @@
       <div *ngIf="relatedPosts.length > 0" class="related-posts">
         <h2 class="related-posts__title">Related Posts</h2>
         <div class="related-posts__list">
+          <!-- The slug address, because /community/content/<id> only answers a
+               301 to it. A note has no article page and keeps the id form. -->
           <a
             *ngFor="let rp of relatedPosts"
-            [routerLink]="['/community', 'content', rp._id]"
+            [routerLink]="rp.slug && rp.contentType != 'NOTE' ? ['/community', 'article', rp.slug] : ['/community', 'content', rp._id]"
             class="related-posts__item"
           >
             <span class="related-posts__item-title">{{ rp.title || ('A ' + rp.contentType.toLowerCase() + ' by ' + (rp.author ? ((rp.author.firstName || '') + ' ' + (rp.author.lastName || '')).trim() : 'Unknown')) }}</span>

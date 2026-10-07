@@ -207,7 +207,18 @@ export class SocialPostBase implements ISocialPost {
 
   get description() { return this.data.description || ''; }
   get descriptionSanitized() { return this._description; }
-  get summary() { return this._summary.substr(0, 256); }
+  get summary() { return summaryCutOf(this._summary, 256); }
+
+  /* The page reads these for its title, description, directory links and
+   * JSON-LD. The interface declared them but nothing here returned them, so
+   * from 2026-04 every article page read undefined and the SEO fields an
+   * author filled in never reached the head. categoryId is an object only on
+   * blog/get-by-slug, which populates it; elsewhere it is an id or absent. */
+  get slug(): string { return this.data.slug || null; }
+  get location(): string { return this.data.location || null; }
+  get metaTitle(): string { return this.data.metaTitle || null; }
+  get metaDescription(): string { return this.data.metaDescription || null; }
+  get categoryId(): any { return this.data.categoryId || null; }
 
   get tags() { return this.data.tags; }
 
@@ -255,9 +266,12 @@ export class SocialPostBase implements ISocialPost {
     }
   }
 
+  /* Plain text, because it is the fallback meta description and the search
+   * preview. Without the g flag only the first run of whitespace collapsed,
+   * and entities stayed encoded, so "&amp;" and "&nbsp;" reached the head. */
   setSummary(desc: string) {
     desc = desc || '';
-    this._summary = desc.replace(/<\/?[^>]+(>|$)/g, ' ').replace(/\s{2,}/, " ").trim();
+    this._summary = decodeEntitiesOf(desc.replace(/<\/?[^>]+(>|$)/g, ' ')).replace(/\s+/g, ' ').trim();
   }
 
   setSanitizedDescription(d: SafeHtml) {
@@ -367,8 +381,39 @@ export class SocialPostBase implements ISocialPost {
       this.data.isNews = data.isNews || false;
       this.data.isAcademy = data.isAcademy || false;
       this.data.isFreeAcademy = data.isFreeAcademy || false;
+      this.data.location = data.location || null;
+      this.data.metaTitle = data.metaTitle || null;
+      this.data.metaDescription = data.metaDescription || null;
+      /* The server mints a slug on the first save that has a title. */
+      if (data.slug) { this.data.slug = data.slug; }
     }
   }
+}
+
+const NAMED_ENTITIES: {[k: string]: string} = {
+  amp: '&', nbsp: ' ', lt: '<', gt: '>', quot: '"', apos: "'",
+};
+
+/* The handful of entities the editor writes, and numeric ones. Decoded in
+ * one pass, so "&amp;lt;" becomes "&lt;" and not "<". */
+function decodeEntitiesOf(s: string): string {
+  return s.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (match: string, body: string) => {
+    if (body.charAt(0) == '#') {
+      const code = body.charAt(1).toLowerCase() == 'x' ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10);
+      return (code > 0 && code <= 0x10ffff) ? String.fromCodePoint(code) : match;
+    }
+    const name = body.toLowerCase();
+    return Object.prototype.hasOwnProperty.call(NAMED_ENTITIES, name) ? NAMED_ENTITIES[name] : match;
+  });
+}
+
+/* At most max characters, ending on a whole word when there is one to end
+ * on: a description cut mid-word reads as a mistake in a search result. */
+function summaryCutOf(s: string, max: number): string {
+  if (s.length <= max) { return s; }
+  const cut = s.substr(0, max + 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > max / 2 ? cut.substr(0, lastSpace) : s.substr(0, max)).trim();
 }
 
 export interface ISocialComment {
