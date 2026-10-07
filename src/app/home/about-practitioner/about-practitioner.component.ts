@@ -22,7 +22,7 @@ import { GROWTH_PANEL, OFFER_CATALOG_ITEMS } from '../_elements/offer/offer-copy
  * meta and the WebPage JSON-LD share it; the page's H2 is in its template. */
 const PLANS_PAGE = {
   title: 'Plans for Practitioners | PromptHealth',
-  description: 'Create a free PromptHealth profile, or grow your practice with PromptHealth Growth: video production and targeted advertising, now available for dental practices.',
+  description: 'Create a free PromptHealth profile, get weekly video and post ideas with PromptHealth Pro, or apply for PromptHealth Growth, our done-for-you video plan.',
 };
 
 @Component({
@@ -192,59 +192,55 @@ export class AboutPractitionerComponent implements OnInit , OnDestroy {
   }
 }
 
+/* Offer v2 (2026-10): what each membership gives, in Hedieh's own words from
+ * her copy. These described the old free video interview, which no plan
+ * includes any more. */
 const features = [
   {
     icon: "user-check-outline",
-    title: "Be Featured as a Trusted Health Expert.",
+    title: "Get Found Online",
     content:
-      "We highlight certified health professionals through expert interviews shared across our channels with over 1 million followers on YouTube, TikTok, and Instagram.",
+      "A provider profile on a trusted health platform: a place for patients to find you on Google and AI search.",
+  },
+  {
+    icon: "file",
+    title: "Share Your Expertise",
+    content:
+      "Publish articles in the PromptHealth community. Each article links back to your clinic's website.",
   },
   {
     icon: "video-library",
-    title: "Get Discovered",
+    title: "Video That Builds Trust",
     content:
-      "Increase your visibility with a professionally produced feature video shared on our wellness platform. Expand your reach and grow your brand within a trusted health network.",
-  },
-  {
-    icon: "user-check-outline",
-    title: "Share Your Expertise.",
-    content:
-      "Position yourself as a go-to expert by sharing your insights through engaging video content. Build credibility and connect with an audience seeking trusted health guidance.",
+      "Learn to make your own videos with PromptHealth Pro, or let us film and produce them for you with PromptHealth Growth.",
   },
 ];
 
 const faqs: IFAQItem[] = [
   {
-    q: "What are the benefits of joining PromptHealth?",
-    a: `As a certified provider, you'll receive:
+    q: "What do I get with PromptHealth Basic?",
+    a: `It's free:
       <ul>
-        <li>Exposure to <strong>1M+ health-conscious followers</strong> across TikTok, Instagram &amp; YouTube</li>
-        <li>A <strong>professionally produced video interview</strong>, edited and posted for maximum impact</li>
-        <li>Increased credibility as a featured expert in a <strong>vetted wellness network</strong></li>
-        <li>Connection to a global audience of wellness seekers</li>
+        <li>A provider profile on a trusted health platform, where patients can find you online</li>
+        <li>Articles in the PromptHealth community, each linking back to your clinic's website</li>
+        <li>Free training videos for your team on social media and online presence</li>
       </ul>
     `,
     opened: false,
   },
   {
-    q: "Do I have to film or edit anything myself?",
-    a: `Nope! We handle everything. You'll be interviewed over Zoom, and our team will professionally edit and publish the content across our platforms.`,
+    q: "What is PromptHealth Pro?",
+    a: `Our paid membership: your team gets a new video idea and post idea every week, with filming instructions and examples, plus trend alerts, a monthly "what's working now" update and a live session every three months. $149/month per clinic or $1,490/year, for your whole team. Cancel anytime. <a href="/pro">See PromptHealth Pro</a>.`,
     opened: false,
   },
   {
-    q: "What kind of content will be posted?",
-    a: `
-<ul>
-  <li>Short-form clips (30 to 60 sec) from your interview will be shared on TikTok and Instagram</li>
-  <li>A long-form version will be posted on our YouTube channel</li>
-  <li>Posts are shared as a collab (tagging your account for exposure)</li>
-</ul>
-    `,
+    q: "Do I have to film anything myself?",
+    a: `With PromptHealth Basic and Pro, your team creates the content, and we give you the tools, training and ideas. With PromptHealth Growth, we film and produce it for you.`,
     opened: false,
   },
   {
-    q: "Can I do more than one feature?",
-    a: `Yes! Additional video features are available for an extra fee. Contact us for a custom package that fits your goals.`,
+    q: "What is PromptHealth Growth?",
+    a: `Our done-for-you plan, by application only: we film at your practice every three months, coach your team on camera, and post 4 edited videos a month for you. It's currently available for dental practices. <a href="/for-dentists">See how it works</a>.`,
     opened: false,
   },
   {

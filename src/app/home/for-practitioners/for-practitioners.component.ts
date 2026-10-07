@@ -26,7 +26,7 @@ export class ForPractitionersComponent implements OnInit, OnDestroy {
     this._uService.setMeta(this._router.url, {
       title: 'List Your Practice & Get Discovered by Patients | PromptHealth',
       description:
-        'Join PromptHealth to get discovered by patients on Google and AI search. List your wellness practice, build your online presence, and attract new patients through expert content and video.',
+        'Get discovered by patients on Google and AI search. List your practice for free, publish articles that link back to your website, and add weekly video ideas with PromptHealth Pro.',
       robots: 'index, follow',
     });
 
@@ -191,7 +191,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: 'How is this different from other provider directories?',
-    a: 'Most directories are passive listings. PromptHealth actively drives patient traffic to your profile through <strong>SEO content, video distribution, and AI search optimization</strong>. We don\'t just list you: we make sure patients find you.',
+    a: 'Most directories are passive listings. On PromptHealth you also publish articles that link back to your website and help patients find you on Google and AI search. With PromptHealth Pro or Growth, you add video that builds trust before patients book.',
     opened: false,
   },
   {
