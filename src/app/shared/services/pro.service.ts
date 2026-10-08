@@ -17,19 +17,40 @@ export interface IProMembership {
   cancelAtPeriodEnd?: boolean;
   teamEmails: string[];
   teamLimit: number;
+  weeksUnlocked?: number;
+  nextUnlockAt?: string;
 }
 
+/* A week of the evergreen sequence, or a broadcast (trend alert, monthly
+ * update, live recording). */
 export interface IProLibraryItem {
   slug?: string;
+  weekNumber?: number;
   title: string;
-  kind: string;
+  kind?: string;
   summary?: string;
+  videoTitle?: string;
+  postTitle?: string;
   videoId?: string;
-  publishedAt: string;
+  publishedAt?: string;
+}
+
+export interface IProLibrary {
+  isMember: boolean;
+  weeksUnlocked?: number;
+  nextUnlockAt?: string;
+  weeksAvailable: number;
+  weeks: IProLibraryItem[];
+  updates: IProLibraryItem[];
+  liveSession?: { at: string; url: string } | null;
 }
 
 export interface IProDrop extends IProLibraryItem {
   body: string;
+  videoNote?: string;
+  postText?: string;
+  postTemplateUrl?: string;
+  postNote?: string;
   status?: string;
   version?: number;
 }
@@ -61,7 +82,7 @@ export const PRO_KIND_LABELS: { [kind: string]: string } = {
 @Injectable({ providedIn: 'root' })
 export class ProService {
   private readonly http: HttpClient;
-  private config$: Observable<{ paymentsEnabled: boolean }> = null;
+  private config$: Observable<{ paymentsEnabled: boolean; nextLiveSessionAt?: string }> = null;
 
   constructor(httpBackend: HttpBackend, private _uService: UniversalService) {
     this.http = new HttpClient(httpBackend);
@@ -89,10 +110,13 @@ export class ProService {
   /* Closed unless the API says open: a failure must show "Coming soon", never
    * a button that cannot take a payment. Cached for the page's life; a reload
    * reads it again. */
-  config(): Observable<{ paymentsEnabled: boolean }> {
+  config(): Observable<{ paymentsEnabled: boolean; nextLiveSessionAt?: string }> {
     if (!this.config$) {
       this.config$ = this.http.get<any>(API_URL + 'pro/config').pipe(
-        map(res => ({ paymentsEnabled: !!(res && res.data && res.data.paymentsEnabled) })),
+        map(res => ({
+          paymentsEnabled: !!(res && res.data && res.data.paymentsEnabled),
+          nextLiveSessionAt: (res && res.data && res.data.nextLiveSessionAt) || null,
+        })),
         catchError(() => of({ paymentsEnabled: false })),
         shareReplay(1),
       );
@@ -120,7 +144,7 @@ export class ProService {
     return this.unwrap(this.http.put(API_URL + 'pro/team', { emails }, { headers: this.headers() }));
   }
 
-  library(): Observable<{ isMember: boolean; items: IProLibraryItem[] }> {
+  library(): Observable<IProLibrary> {
     return this.unwrap(this.http.get(API_URL + 'pro/library', { headers: this.headers() }));
   }
 

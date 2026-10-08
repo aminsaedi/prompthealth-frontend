@@ -37,6 +37,10 @@ export class ProDropComponent implements OnInit, OnDestroy {
   public body = '';
   public state: 'loading' | 'ready' | 'locked' | 'missing' | 'failed' = 'loading';
   public readonly kinds = PRO_KIND_LABELS;
+  public lockedMessage = '';
+
+  /* A week of the evergreen sequence rather than a broadcast. */
+  get isWeek(): boolean { return !!this.drop && (this.drop.kind || 'weekly') === 'weekly'; }
 
   constructor(
     private _route: ActivatedRoute,
@@ -90,6 +94,7 @@ export class ProDropComponent implements OnInit, OnDestroy {
       }
     }, (error: IProError) => {
       this.state = error.status === 403 ? 'locked' : error.status === 404 ? 'missing' : 'failed';
+      this.lockedMessage = error.code === 'PRO-WEEK-LOCKED' ? error.message : '';
     });
   }
 }

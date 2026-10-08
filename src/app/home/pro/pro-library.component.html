@@ -3,7 +3,7 @@
     <p class="pro-eyebrow mb-15p">PromptHealth Pro</p>
     <h1 class="h3 h2-md text-primary-dark mb-15p">Members' Library</h1>
     <p class="subtitle1 text-label mx-auto mb-0" style="max-width: 640px">
-      Every weekly video idea and post idea, trend alert, monthly update and live session recording, in one place.
+      One video. One post. Done. A new week unlocks every 7 days.
     </p>
   </div>
 </section>
@@ -14,44 +14,79 @@
     <button type="button" class="btn btn-outline" (click)="retry()">Try Again</button>
   </div>
 
-  <div *ngIf="!loadFailed && !items" class="row" aria-busy="true">
+  <div *ngIf="!loadFailed && !library" class="row" aria-busy="true">
     <div *ngFor="let i of [0, 1, 2]" class="col-12 col-md-6 col-lg-4 mb-30p">
       <div class="library-dummy rounded-12p"></div>
     </div>
   </div>
 
-  <ng-container *ngIf="!loadFailed && items">
-    <!-- Not a member: the locked list and the way in. -->
-    <div *ngIf="!isMember" class="library-invite bg-white rounded-12p text-center mx-auto p-30p p-md-40p mb-40p">
-      <h2 class="h4 text-primary-dark mb-10p">For PromptHealth Pro members</h2>
-      <p class="text-label mb-25p">Join to open every idea in the library, and get a new one at the start of each week.</p>
-      <a routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary">Upgrade to Pro</a>
-      <p *ngIf="!isSignedIn" class="small text-label mt-20p mb-0">Already a member? <a routerLink="/auth/login" [queryParams]="{ next: '/pro/library' }">Log in</a></p>
-    </div>
-
-    <p *ngIf="items.length === 0" class="subtitle1 text-label text-center">The first ideas arrive at the start of next week.</p>
-
-    <ul *ngIf="items.length > 0" class="row list-unstyled mb-0">
-      <li *ngFor="let item of items" class="col-12 col-md-6 col-lg-4 mb-30p">
-        <a *ngIf="isMember; else locked" [routerLink]="['/pro/library', item.slug]" class="library-card library-card--open d-block bg-white rounded-12p h-100">
-          <img *ngIf="item.videoId" class="library-card__thumb" [src]="'https://i.ytimg.com/vi/' + item.videoId + '/hqdefault.jpg'" alt="" loading="lazy" width="480" height="360">
-          <div class="p-20p">
-            <p class="library-card__meta mb-5p">{{ kinds[item.kind] || kinds.other }} · {{ item.publishedAt | date:'MMM d, y' }}</p>
-            <h2 class="h5 text-primary-dark mb-10p">{{ item.title }}</h2>
-            <p *ngIf="item.summary" class="text-label mb-0">{{ item.summary }}</p>
-          </div>
-        </a>
-        <ng-template #locked>
+  <ng-container *ngIf="!loadFailed && library">
+    <!-- Not a member: the locked list of weeks and the way in. -->
+    <ng-container *ngIf="!isMember">
+      <div class="library-invite bg-white rounded-12p text-center mx-auto p-30p p-md-40p mb-40p">
+        <h2 class="h4 text-primary-dark mb-10p">For PromptHealth Pro members</h2>
+        <p class="text-label mb-25p">Members start at Week 1 the day they join, and a new week unlocks every 7 days.</p>
+        <a routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary">Upgrade to Pro</a>
+        <p *ngIf="!isSignedIn" class="small text-label mt-20p mb-0">Already a member? <a routerLink="/auth/login" [queryParams]="{ next: '/pro/library' }">Log in</a></p>
+      </div>
+      <ul *ngIf="library.weeks.length > 0" class="row list-unstyled mb-0">
+        <li *ngFor="let week of library.weeks" class="col-12 col-md-6 col-lg-4 mb-30p">
           <div class="library-card library-card--locked bg-white rounded-12p h-100 p-20p">
             <p class="library-card__meta mb-5p">
               <svg class="library-lock" width="12" height="14" viewBox="0 0 12 14" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 0a3.5 3.5 0 0 0-3.5 3.5V6H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-.5V3.5A3.5 3.5 0 0 0 6 0zm2 6H4V3.5a2 2 0 1 1 4 0V6z"/></svg>
               <span class="sr-only-pro">Members only:</span>
-              {{ kinds[item.kind] || kinds.other }} · {{ item.publishedAt | date:'MMM d, y' }}
+              Week {{ week.weekNumber }}
             </p>
-            <h2 class="h5 text-body mb-0">{{ item.title }}</h2>
+            <h2 class="h5 text-body mb-0">{{ week.title }}</h2>
           </div>
-        </ng-template>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </ng-container>
+
+    <ng-container *ngIf="isMember">
+      <!-- The next live training, with its link: members only. -->
+      <div *ngIf="library.liveSession" class="library-live rounded-12p p-20p p-md-30p mb-40p">
+        <p class="pro-eyebrow mb-5p">Next live training with Hedieh</p>
+        <p class="h5 text-primary-dark mb-15p">{{ liveSessionLabel }}</p>
+        <a *ngIf="library.liveSession.url" [href]="library.liveSession.url" target="_blank" rel="noopener" class="btn btn-primary">Join on Zoom</a>
+        <p class="small text-label mt-15p mb-0">Can't make it? Every session is recorded and added under Live &amp; Updates.</p>
+      </div>
+
+      <h2 class="h4 text-primary-dark mb-5p">Your weeks</h2>
+      <p class="text-label mb-25p">
+        <ng-container *ngIf="library.weeksUnlocked > 0">You have unlocked {{ library.weeksUnlocked }} {{ library.weeksUnlocked === 1 ? 'week' : 'weeks' }}.</ng-container>
+        <ng-container *ngIf="library.nextUnlockAt"> Your next week unlocks {{ library.nextUnlockAt | date:'MMMM d' }}.</ng-container>
+      </p>
+      <p *ngIf="library.weeks.length === 0" class="subtitle1 text-label mb-40p">Your first week is on its way, by email and here.</p>
+      <ol *ngIf="library.weeks.length > 0" class="row list-unstyled mb-30p">
+        <li *ngFor="let week of library.weeks" class="col-12 col-md-6 col-lg-4 mb-30p">
+          <a [routerLink]="['/pro/library', week.slug]" class="library-card library-card--open d-block bg-white rounded-12p h-100">
+            <img *ngIf="week.videoId" class="library-card__thumb" [src]="'https://i.ytimg.com/vi/' + week.videoId + '/hqdefault.jpg'" alt="" loading="lazy" width="480" height="360">
+            <div class="p-20p">
+              <p class="library-card__meta mb-5p">Week {{ week.weekNumber }}</p>
+              <h3 class="h5 text-primary-dark mb-10p">{{ week.title }}</h3>
+              <p *ngIf="week.videoTitle" class="text-label mb-5p"><strong>Video:</strong> {{ week.videoTitle }}</p>
+              <p *ngIf="week.postTitle" class="text-label mb-0"><strong>Post:</strong> {{ week.postTitle }}</p>
+            </div>
+          </a>
+        </li>
+      </ol>
+
+      <h2 class="h4 text-primary-dark mb-5p">Live &amp; Updates</h2>
+      <p class="text-label mb-25p">Trend alerts, the monthly "what's working now" update and live training recordings.</p>
+      <p *ngIf="library.updates.length === 0" class="text-label">Nothing here yet.</p>
+      <ul *ngIf="library.updates.length > 0" class="row list-unstyled mb-0">
+        <li *ngFor="let item of library.updates" class="col-12 col-md-6 col-lg-4 mb-30p">
+          <a [routerLink]="['/pro/library', item.slug]" class="library-card library-card--open d-block bg-white rounded-12p h-100">
+            <img *ngIf="item.videoId" class="library-card__thumb" [src]="'https://i.ytimg.com/vi/' + item.videoId + '/hqdefault.jpg'" alt="" loading="lazy" width="480" height="360">
+            <div class="p-20p">
+              <p class="library-card__meta mb-5p">{{ kinds[item.kind] || kinds.other }} · {{ item.publishedAt | date:'MMM d, y' }}</p>
+              <h3 class="h5 text-primary-dark mb-10p">{{ item.title }}</h3>
+              <p *ngIf="item.summary" class="text-label mb-0">{{ item.summary }}</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </ng-container>
   </ng-container>
 </section>
