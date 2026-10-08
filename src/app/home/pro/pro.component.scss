@@ -1,11 +1,28 @@
 @import '../../../assets/scss/variables';
 
-/* The For Dentists page's hero, without a video. */
+/* Her brief of 2026-10-07: two columns on a desktop, the words and then the
+ * phone; on anything narrower the phone follows the button. */
 .pro-hero {
   padding: 40px 0 50px;
 
   @media (min-width: $breakpointMd) {
-    padding: 90px 0 100px;
+    padding: 80px 0 90px;
+  }
+}
+
+.pro-hero__layout {
+  @media (min-width: $breakpointLg) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.pro-hero__copy {
+  @media (min-width: $breakpointLg) {
+    flex: 1 1 auto;
+    max-width: 620px;
+    margin-right: 60px;
   }
 }
 
@@ -14,16 +31,134 @@
   text-wrap: balance;
 }
 
+.pro-hero__bold {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 700;
+}
+
+.pro-hero__small {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.pro-hero__video {
+  width: 240px;
+  margin: 40px auto 0;
+
+  @media (min-width: $breakpointLg) {
+    flex: 0 0 auto;
+    width: 270px;
+    margin: 0;
+  }
+}
+
+/* A phone drawn in CSS around the player: a dark bezel and rounded screen.
+ * The player keeps its own 9:16 box, so the frame is only padding. */
+.pro-phone {
+  padding: 10px;
+  border-radius: 36px;
+  background: $colorGsBlack;
+  box-shadow: 0 16px 40px rgba($colorGsBlack, 0.2);
+
+  ::ng-deep .yt-facade {
+    border-radius: 26px;
+  }
+}
+
+.pro-hero__caption {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  color: $colorPrimaryDark;
+}
+
 /* Balanced, so no line ends on one word ("it."). */
 .pro-narrow {
   max-width: 720px;
   text-wrap: balance;
 }
 
-/* Two by two: four across left each card a column of three words. */
-.pro-rhythm {
-  max-width: 980px;
+/* Three cards, the weekly one wider and outlined: it is what a member gets
+ * most of. Stacked on a phone, in the same order. */
+.pro-cards {
+  max-width: 1080px;
   margin: 0 auto;
+
+  @media (min-width: $breakpointLg) {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    column-gap: 24px;
+    align-items: stretch;
+  }
+}
+
+.pro-card {
+  padding: 30px;
+  margin-bottom: 20px;
+  border: 2px solid transparent;
+
+  @media (min-width: $breakpointLg) {
+    margin-bottom: 0;
+  }
+
+  &--highlighted {
+    border-color: $colorPrimary;
+    box-shadow: 0 10px 30px rgba($colorPrimaryDark, 0.12);
+
+    .pro-card__heading {
+      font-size: 26px;
+      line-height: 32px;
+    }
+
+    .pro-item {
+      font-size: 17px;
+      line-height: 26px;
+    }
+  }
+}
+
+.pro-card__heading {
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+}
+
+.pro-card__next {
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 700;
+  color: $colorPrimaryDark;
+}
+
+.pro-quote {
+  max-width: 760px;
+  margin-top: 50px;
+
+  @media (min-width: $breakpointMd) {
+    margin-top: 70px;
+  }
+}
+
+.pro-quote__text {
+  font-size: 20px;
+  line-height: 30px;
+  font-style: italic;
+  color: $colorGsBody;
+  text-wrap: balance;
+
+  @media (min-width: $breakpointMd) {
+    font-size: 22px;
+    line-height: 33px;
+  }
+}
+
+.pro-quote__by {
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 700;
 }
 
 .pro-eyebrow {
@@ -33,6 +168,10 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: $colorPrimary;
+
+  &--on-dark {
+    color: $colorSecondary;
+  }
 }
 
 .pro-dim {

@@ -1,37 +1,54 @@
-<!-- Hero -->
+<!-- Hero: words on the left and her sample week in a phone frame on the
+right; on a phone the frame follows the button. -->
 <section class="pro-hero bg-lightyellow position-relative overflow-hidden">
   <div class="pro-dim pro-dim--1" aria-hidden="true"></div>
   <div class="pro-dim pro-dim--2" aria-hidden="true"></div>
-  <div class="container position-relative text-center">
-    <p class="pro-eyebrow mb-15p">PromptHealth Pro</p>
-    <h1 class="h3 h2-md text-primary-dark mx-auto mb-15p mb-md-20p pro-hero__heading">{{ page.hero.heading }}</h1>
-    <p class="subtitle1 text-label mx-auto mb-30p pro-narrow">{{ page.hero.text }}</p>
-    <button type="button" class="btn btn-primary pro-join" [disabled]="joinDisabled" (click)="onJoin()">{{ joinLabel }}</button>
+  <div class="container position-relative pro-hero__layout">
+    <div class="pro-hero__copy">
+      <p class="pro-eyebrow mb-15p">{{ page.hero.eyebrow }}</p>
+      <h1 class="h3 h2-md text-primary-dark mb-15p mb-md-20p pro-hero__heading">{{ page.hero.heading }}</h1>
+      <p class="subtitle1 text-label mb-15p pro-narrow">{{ page.hero.text }}</p>
+      <p class="pro-hero__bold text-primary-dark mb-25p">{{ page.hero.bold }}</p>
+      <button type="button" class="btn btn-primary pro-join" [disabled]="joinDisabled" (click)="onJoin()">{{ joinLabel }}</button>
+      <p class="pro-hero__small text-label mt-15p mb-0">{{ page.hero.small }}</p>
+    </div>
+    <figure class="pro-hero__video mb-0">
+      <div class="pro-phone">
+        <youtube-facade [videoId]="page.hero.video.id" [title]="page.hero.video.title" ratio="9:16"></youtube-facade>
+      </div>
+      <figcaption class="pro-hero__caption">{{ page.hero.video.label }}</figcaption>
+    </figure>
   </div>
 </section>
 
-<!-- What arrives, and when: her four blocks, in her order. -->
+<!-- What Your Team Gets: three cards, the weekly one larger. -->
 <section class="bg-lightgreen py-50p py-md-80p">
   <div class="container">
-    <ol class="row list-unstyled mb-0 pro-rhythm">
-      <li *ngFor="let block of page.rhythm" class="col-12 col-md-6 mb-30p">
-        <div class="bg-white rounded-12p p-30p h-100">
-          <h2 class="h4 text-primary-dark mb-15p">{{ block.heading }}</h2>
-          <ul class="list-unstyled mb-0">
-            <li *ngFor="let item of block.items" class="pro-item">
-              <i class="pro-item__check text-primary" iconPh="check" aria-hidden="true"></i>
-              {{ item }}
-            </li>
-          </ul>
-        </div>
+    <h2 class="h3 h2-md text-center mb-30p mb-md-50p">{{ page.cardsHeading }}</h2>
+    <ol class="list-unstyled mb-0 pro-cards">
+      <li *ngFor="let card of page.cards; let last = last" class="pro-card bg-white rounded-12p" [class.pro-card--highlighted]="card.highlighted">
+        <h3 class="text-primary-dark mb-15p pro-card__heading">{{ card.heading }}</h3>
+        <ul class="list-unstyled mb-0">
+          <li *ngFor="let item of card.items" class="pro-item">
+            <i class="pro-item__check text-primary" iconPh="check" aria-hidden="true"></i>
+            {{ item }}
+          </li>
+        </ul>
+        <p *ngIf="last && nextSession" class="pro-card__next mt-15p mb-0">{{ page.nextSessionPrefix }} {{ nextSession }}</p>
       </li>
     </ol>
+
+    <figure class="pro-quote text-center mx-auto mb-0">
+      <blockquote class="pro-quote__text mb-15p">"{{ testimonial.quote }}"</blockquote>
+      <figcaption class="pro-quote__by text-label">{{ testimonial.attribution }}</figcaption>
+    </figure>
   </div>
 </section>
 
 <!-- Price -->
 <section class="bg-primary-dark text-white py-60p py-md-100p">
   <div class="container text-center">
+    <p class="pro-eyebrow pro-eyebrow--on-dark mb-15p">{{ page.price.label }}</p>
     <h2 class="h3 h2-md text-white mb-20p">{{ page.price.heading }}</h2>
     <p class="subtitle1 pro-on-dark mx-auto mb-30p mb-md-40p pro-narrow">{{ page.price.text }}</p>
     <button type="button" class="btn pro-join pro-join--on-dark" [disabled]="joinDisabled" (click)="onJoin()">{{ joinLabel }}</button>

@@ -9,7 +9,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { LoginStatusType, ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IProError, ProInterval, ProService } from 'src/app/shared/services/pro.service';
 import { GrowthApplyComponent } from '../_elements/offer/growth-apply.component';
-import { PLAN_CHOICE, PRO_FAQ, PRO_PAGE } from './pro-copy';
+import { PLAN_CHOICE, PRO_FAQ, PRO_PAGE, PRO_TESTIMONIAL_ATTRIBUTION, PRO_TESTIMONIAL_QUOTE } from './pro-copy';
 
 export const PRO_PLAN_MODAL_ID = 'pro-plan';
 
@@ -18,7 +18,7 @@ type Reader = 'checking' | 'guest' | 'basic' | 'pro' | 'other';
 
 /*
  * /pro, PromptHealth Pro (Hedieh's section 5), in the For Dentists page's
- * style, and not in the main menu yet.
+ * style. The header links it only on /for-dentists.
  *
  * Both join buttons open the plan choice (12.1). Continue to Payment sends a
  * signed-in practitioner or clinic straight to Stripe Checkout; anyone else
@@ -42,6 +42,9 @@ export class ProComponent implements OnInit, OnDestroy {
   public readonly faqs = PRO_FAQ.map(item => ({ ...item }));
   public readonly planModalId = PRO_PLAN_MODAL_ID;
   public readonly planBodyStyle = { 'max-width': '520px', width: 'calc(100vw - 30px)' };
+  public readonly testimonial = { quote: PRO_TESTIMONIAL_QUOTE, attribution: PRO_TESTIMONIAL_ATTRIBUTION };
+  /* "January 27, 2027", or empty while the API names no session. */
+  public nextSession = '';
 
   /* Closed until the API says open, and on the server render. */
   public paymentsEnabled = false;
@@ -72,7 +75,12 @@ export class ProComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setMeta();
     this.setJsonLd();
-    this._pro.config().pipe(takeUntil(this.destroy$)).subscribe(c => this.paymentsEnabled = c.paymentsEnabled);
+    this._pro.config().pipe(takeUntil(this.destroy$)).subscribe(c => {
+      this.paymentsEnabled = c.paymentsEnabled;
+      /* Read loosely: the field is new in the API, and ProService's own type
+       * gains it in a separate change. */
+      this.nextSession = formatSessionDate((c as any).nextLiveSessionAt);
+    });
 
     if (this._uService.isServer) {
       this.reader = 'guest';
@@ -195,6 +203,9 @@ export class ProComponent implements OnInit, OnDestroy {
         serviceType: 'Video and social media content ideas for dental clinics',
         provider: { '@type': 'Organization', name: 'PromptHealth', url: 'https://www.prompthealth.ca' },
         areaServed: { '@type': 'Country', name: 'Canada' },
+        /* Monthly only: the yearly plan is offered at checkout, not on the
+         * page (her brief of 2026-10-07), and the markup says what the page
+         * says. */
         offers: [
           {
             '@type': 'Offer',
@@ -203,14 +214,6 @@ export class ProComponent implements OnInit, OnDestroy {
             priceCurrency: 'CAD',
             url,
             priceSpecification: { '@type': 'UnitPriceSpecification', price: '149.00', priceCurrency: 'CAD', unitText: 'MONTH', valueAddedTaxIncluded: false },
-          },
-          {
-            '@type': 'Offer',
-            name: 'Yearly',
-            price: '1490.00',
-            priceCurrency: 'CAD',
-            url,
-            priceSpecification: { '@type': 'UnitPriceSpecification', price: '1490.00', priceCurrency: 'CAD', unitText: 'YEAR', valueAddedTaxIncluded: false },
           },
         ],
       },
@@ -224,5 +227,21 @@ export class ProComponent implements OnInit, OnDestroy {
         })),
       },
     ]);
+  }
+}
+
+/* The session is at a time in Vancouver, so its date is Vancouver's: a
+ * reader in Halifax at midnight should not see the day after. Anything that
+ * is not a date gives no line rather than "Invalid Date". */
+function formatSessionDate(value: any): string {
+  if (typeof value !== 'string' || !value) { return ''; }
+  const date = new Date(value);
+  if (isNaN(date.getTime())) { return ''; }
+  try {
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Vancouver', month: 'long', day: 'numeric', year: 'numeric',
+    }).format(date);
+  } catch (e) {
+    return '';
   }
 }
