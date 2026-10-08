@@ -18,9 +18,17 @@ export interface IGrowthLanding {
   seo: IGrowthSeo;
   ctaLabel: string;
   hero: {
+    /** Small capitals above the heading. */
+    eyebrow?: string;
     heading: string;
     text: string;
     video: IGrowthVideo;
+  };
+  /** Right after the hero: who is behind the offer, with her photo. */
+  meet?: {
+    heading: string;
+    text: string;
+    photo: { src: string; alt: string; width: number; height: number };
   };
   whyUs: {
     heading: string;
@@ -29,9 +37,19 @@ export interface IGrowthLanding {
   work: {
     heading: string;
     text: string;
-    videos: { id: string; title: string }[];
+    /** `title` names the player for screen readers; `caption` is the short
+     *  topic line shown under the thumbnail. */
+    videos: { id: string; title: string; caption: string }[];
     moreLabel: string;
     moreUrl: string;
+  };
+  /** Done for you or do it yourself, side by side, between Why Us and the
+   *  work. The first card's button opens the booking form; the second links
+   *  out. */
+  choice?: {
+    heading: string;
+    label?: string;
+    cards: IGrowthChoiceCard[];
   };
   /** Under the How It Works heading, above Step 1. */
   stepsIntro?: string;
@@ -89,6 +107,15 @@ export interface IGrowthVideo {
   captionsBurnedIn: boolean;
 }
 
+export interface IGrowthChoiceCard {
+  name: string;
+  line: string;
+  price: string;
+  button: string;
+  /** Absent: the button opens the booking form. */
+  link?: string;
+}
+
 export interface IGrowthStep {
   title: string;
   intro: string;
@@ -120,8 +147,11 @@ export type IGrowthBookingText = { [field in GrowthBookingField]: string };
  * which part of the page does the persuading. 'direct' is a link or a reload
  * that lands on the open form without a button. The backend accepts exactly
  * these. Since 2026-09-27 the page has only the hero's and the final button
- * (Hedieh); 'steps' and 'sticky' stay because stored requests and old
- * addresses carry them. */
+ * (Hedieh); 'sticky' stays because stored requests and old addresses carry
+ * it. 'steps' is reused, from 2026-10-07, by the Growth card in "Two Ways to
+ * Work With Us": the button it used to name was removed on 2026-09-27, so
+ * nothing else sends it, and a new name would need the backend's list
+ * changed first. */
 export type GrowthCtaPosition = 'hero' | 'steps' | 'final' | 'sticky' | 'direct';
 
 const CTA_POSITIONS: GrowthCtaPosition[] = ['hero', 'steps', 'final', 'sticky', 'direct'];

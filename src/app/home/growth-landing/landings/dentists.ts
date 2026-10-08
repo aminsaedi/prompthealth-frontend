@@ -13,6 +13,13 @@ import { GROWTH_LANDING_PATHS } from './paths';
  * the site shows prices again, except Growth's own. The booking form's text
  * is ours.
  *
+ * Her brief of 2026-10-07 adds the hero's eyebrow, Meet Hedieh, the six short
+ * Step 1 points, a caption under each video, the two questions at the top of
+ * the FAQ and "Two Ways to Work With Us" (plan-specs/source/
+ * brief-2026-10-07/brief.txt, section 1). The captions are ours, shortened
+ * from the videos' own titles; she asked for the topic, and a clinic's name
+ * only where it has agreed to be named, so none are named.
+ *
  * The hero video is her own vertical cut, filmed on a production day, with the
  * words already in the picture. booking.calendlyUrl is her 30-minute Discovery
  * Call; emptied, the form thanks the visitor and she follows up by email.
@@ -33,6 +40,7 @@ export const DENTISTS_LANDING: IGrowthLanding = {
   },
   ctaLabel: 'Book a 30-Minute Consultation',
   hero: {
+    eyebrow: 'For Dental Practices',
     heading: 'Let Patients Get to Know You Before They Ever Book',
     text: 'We film, coach and produce videos that show people near your practice who you are and why to trust you. Then we put your best video in front of them every month.',
     video: {
@@ -43,6 +51,18 @@ export const DENTISTS_LANDING: IGrowthLanding = {
       width: 576,
       height: 1024,
       captionsBurnedIn: true,
+    },
+  },
+  meet: {
+    heading: 'Meet Hedieh Safiyari',
+    text: "Before building PromptHealth, Hedieh trained as a health practitioner and educator. She has since built an audience of 1.7 million and directed more than 400 videos inside dental practices. PromptHealth Growth is built on what she's learned about content that earns patients' trust.",
+    /* The About page's portrait, the sharpest copy there is (588px), cut
+     * inside its rounded corners. */
+    photo: {
+      src: '/assets/img/for-dentists/hedieh-safiyari.v1.webp',
+      alt: 'Hedieh Safiyari, founder of PromptHealth',
+      width: 544,
+      height: 544,
     },
   },
   whyUs: {
@@ -69,22 +89,45 @@ export const DENTISTS_LANDING: IGrowthLanding = {
       {
         id: '177N3ZJs19k',
         title: "Most people think tooth like this can't be saved...",
+        caption: "Saving a tooth most people think can't be saved",
       },
       {
         id: 'VDjztR1EzWU',
         title: 'Top 5 cosmetic dental issues',
+        caption: 'Top 5 cosmetic dental issues',
       },
       {
         id: 'O2CQvxnX0P0',
         title: 'What happens when I delay a dental visit?',
+        caption: 'What happens when you delay a dental visit',
       },
       {
         id: '_FFxjJ4Gn98',
         title: 'How Severely Worn Teeth Can Be Rebuilt | One of the Most Complex Dental Cases',
+        caption: 'Rebuilding severely worn teeth',
       },
     ],
     moreLabel: 'See More Dental Videos',
     moreUrl: 'https://www.youtube.com/@prompthealth2058',
+  },
+  choice: {
+    heading: 'Two Ways to Work With Us',
+    label: 'For Dental Clinics',
+    cards: [
+      {
+        name: 'PromptHealth Growth',
+        line: 'We film, produce and run your videos',
+        price: 'By application',
+        button: 'Book a 30-Minute Consultation',
+      },
+      {
+        name: 'PromptHealth Pro',
+        line: 'Your team creates, with weekly guidance from Hedieh',
+        price: '$149/month per clinic',
+        button: 'Join Pro →',
+        link: '/pro',
+      },
+    ],
   },
   stepsIntro: 'PromptHealth Growth is by application only.',
   steps: [
@@ -92,26 +135,12 @@ export const DENTISTS_LANDING: IGrowthLanding = {
       title: 'Step 1: Implementation',
       intro: 'Everything starts with strategy and your first production day.',
       items: [
-        {
-          text: 'Strategy session with you and your team',
-        },
-        {
-          text: 'Your brand story: what makes your practice different',
-        },
-        {
-          text: 'Your first production day: video, photography and drone footage',
-        },
-        {
-          lead: "Your team's social playbook:",
-          text: 'on-camera coaching so your team is confident on video, plus simple guidance and templates for what to post between shoots',
-        },
-        {
-          lead: 'Your online presence checklist:',
-          text: 'practical guidance on your Google Business Profile, reviews, and where your content should live',
-        },
-        {
-          text: 'Meta ad account and tracking setup',
-        },
+        { text: 'Strategy session with you and your team' },
+        { text: 'Your brand story' },
+        { text: 'First production day: video, photos and drone' },
+        { text: 'On-camera coaching and a social playbook for your team' },
+        { text: 'Online presence checklist (Google Business Profile, reviews)' },
+        { text: 'Meta ad account and tracking setup' },
       ],
       note: 'Filming is in person for clinics in Greater Vancouver. Outside Greater Vancouver? We offer a remote option using an AI video clone of you.',
     },
@@ -154,6 +183,16 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     link: '/pro',
   },
   faq: [
+    {
+      q: "What's the difference between Growth and Pro?",
+      a: 'Growth is done for you: we plan, film, edit and post your videos and run your ads. Pro is for teams who want to make their own content, with a new video idea and post idea from Hedieh every week, for $149/month per clinic.',
+      opened: false,
+    },
+    {
+      q: 'How much does PromptHealth Growth cost?',
+      a: "It depends on your practice and goals. We'll go through pricing on your 30-minute consultation.",
+      opened: false,
+    },
     {
       q: 'How much should we spend on advertising?',
       a: "Ad spend is paid directly to Meta and is separate from our fees. We recommend $500 to $1,000 a month so the results are meaningful, and we'll suggest the right budget for your area on the call.",

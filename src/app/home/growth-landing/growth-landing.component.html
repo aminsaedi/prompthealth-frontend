@@ -9,12 +9,27 @@
     <div class="growth-dim growth-dim--2" aria-hidden="true"></div>
     <div class="container position-relative growth-hero__layout">
       <div class="growth-hero__copy">
+        <p *ngIf="config.hero.eyebrow" class="growth-eyebrow mb-10p mb-md-15p">{{ config.hero.eyebrow }}</p>
         <h1 class="h3 h2-md text-primary-dark mb-15p mb-md-20p growth-hero__heading">{{ config.hero.heading }}</h1>
         <p class="subtitle1 text-label mb-20p mb-md-30p">{{ config.hero.text }}</p>
         <button #heroCta type="button" class="btn btn-primary" (click)="openBooking('hero')">{{ config.ctaLabel }}</button>
       </div>
       <div class="growth-hero__video">
         <hero-video [video]="config.hero.video" [landingKey]="config.key"></hero-video>
+      </div>
+    </div>
+  </section>
+
+  <!-- Meet Hedieh: who is behind the offer, straight after the promise. -->
+  <section *ngIf="config.meet" class="py-50p py-md-70p">
+    <div class="container">
+      <div class="growth-meet mx-auto">
+        <img class="growth-meet__photo" [src]="config.meet.photo.src" [alt]="config.meet.photo.alt"
+          [attr.width]="config.meet.photo.width" [attr.height]="config.meet.photo.height" loading="lazy">
+        <div class="growth-meet__copy">
+          <h2 class="h4 h3-md text-primary-dark mb-10p mb-md-15p">{{ config.meet.heading }}</h2>
+          <p class="subtitle1 text-label mb-0">{{ config.meet.text }}</p>
+        </div>
       </div>
     </div>
   </section>
@@ -34,6 +49,26 @@
     </div>
   </section>
 
+  <!-- Two ways to work with us: done for you or do it yourself, one click
+  from either. -->
+  <section *ngIf="config.choice" class="bg-lightgreen py-50p py-md-80p">
+    <div class="container">
+      <p *ngIf="config.choice.label" class="growth-eyebrow text-center mb-10p">{{ config.choice.label }}</p>
+      <h2 class="h3 h2-md text-center mb-30p mb-md-50p">{{ config.choice.heading }}</h2>
+      <ul class="row justify-content-center list-unstyled mb-0">
+        <li *ngFor="let card of config.choice.cards; let first = first" class="col-12 col-md-6 col-xl-5 mb-20p mb-md-0p">
+          <div class="growth-choice bg-white rounded-12p h-100" [class.growth-choice--first]="first">
+            <h3 class="h4 text-primary-dark mb-10p">{{ card.name }}</h3>
+            <p class="subtitle1 mb-15p">{{ card.line }}</p>
+            <p class="growth-choice__price mb-25p">{{ card.price }}</p>
+            <a *ngIf="card.link" [routerLink]="card.link" class="btn btn-outline growth-choice__button">{{ card.button }}</a>
+            <button *ngIf="!card.link" #choiceCta type="button" class="btn btn-primary growth-choice__button" (click)="openBooking('steps')">{{ card.button }}</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
   <!-- See our work -->
   <section class="py-50p py-md-80p">
     <div class="container">
@@ -41,7 +76,10 @@
       <p class="subtitle1 text-label text-center mx-auto mb-30p mb-md-50p growth-narrow">{{ config.work.text }}</p>
       <ul class="row list-unstyled mb-0">
         <li *ngFor="let video of config.work.videos" class="col-6 col-lg-3 mb-30p">
-          <youtube-facade [videoId]="video.id" [title]="video.title" ratio="9:16"></youtube-facade>
+          <figure class="mb-0">
+            <youtube-facade [videoId]="video.id" [title]="video.title" ratio="9:16"></youtube-facade>
+            <figcaption class="growth-work__caption">{{ video.caption }}</figcaption>
+          </figure>
         </li>
       </ul>
       <div class="text-center">

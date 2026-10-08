@@ -78,6 +78,12 @@
               <span>For Dentists</span>
             </a>
           </li>
+          <!-- On a growth landing, the other offer instead (her brief of
+               2026-10-07): a dentist reaches /pro from anywhere on the page,
+               on a phone too, where the rest of this list is hidden. -->
+          <li *ngIf="onGrowthLanding" class="ml-10p ml-lg-15p">
+            <a routerLink="/pro" class="btn btn-outline small text-nowrap">PromptHealth Pro</a>
+          </li>
           <li class="d-lg-none">
             <button class="btn btn-icon small pr-0 ml-10p" (click)="showMenuSm()">
               <i iconPh="menu" class="large"></i>
