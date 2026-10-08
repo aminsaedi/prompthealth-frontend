@@ -26,6 +26,12 @@ export class AuthComponent implements OnInit , OnDestroy {
   public nextPage: string;
   public nextPageKeyword: string;
 
+  /* /pro's Continue to Payment sends a visitor here first, with checkout as
+   * the page to come back to. */
+  get isProCheckout(): boolean {
+    return !!this.nextPage && this.nextPage.indexOf('/pro/checkout') === 0;
+  }
+
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
