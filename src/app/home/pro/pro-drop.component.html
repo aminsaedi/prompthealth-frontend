@@ -1,5 +1,5 @@
 <div *ngIf="mode === 'preview' && drop" class="drop-preview-bar" role="note">
-  Preview of version {{ drop.version }} ({{ drop.status }}). Only people with this link can see it. Members see it like this once it is published.
+  Preview of version {{ drop.version }} ({{ drop.status }}{{ isWeek && !drop.weekNumber ? ', gets the next week number when approved' : '' }}). Only people with this link can see it. Members see it like this once it is published.
 </div>
 
 <section class="container py-40p py-md-60p">
@@ -12,9 +12,18 @@
     </div>
 
     <div *ngIf="state === 'locked'" class="text-center py-40p">
-      <h1 class="h4 text-primary-dark mb-15p">For PromptHealth Pro members</h1>
-      <p class="text-label mb-25p">This idea is in the members' library.</p>
-      <a routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary">Upgrade to Pro</a>
+      <!-- A member asking for a week they have not reached yet is already Pro:
+           they need the date, not an offer to upgrade. -->
+      <ng-container *ngIf="lockedMessage; else notMember">
+        <h1 class="h4 text-primary-dark mb-15p">Not unlocked yet</h1>
+        <p class="text-label mb-25p">{{ lockedMessage }}</p>
+        <a routerLink="/pro/library" class="btn btn-primary">Back to your library</a>
+      </ng-container>
+      <ng-template #notMember>
+        <h1 class="h4 text-primary-dark mb-15p">For PromptHealth Pro members</h1>
+        <p class="text-label mb-25p">This idea is in the members' library.</p>
+        <a routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary">Upgrade to Pro</a>
+      </ng-template>
     </div>
 
     <div *ngIf="state === 'missing'" class="text-center py-40p">
@@ -29,14 +38,40 @@
 
     <article *ngIf="state === 'ready' && drop">
       <p class="drop-meta mb-10p">
-        {{ kinds[drop.kind] || kinds.other }}<ng-container *ngIf="drop.publishedAt"> · {{ drop.publishedAt | date:'MMMM d, y' }}</ng-container>
+        <ng-container *ngIf="isWeek; else kindLabel">Week {{ drop.weekNumber || 'preview' }}</ng-container>
+        <ng-template #kindLabel>{{ kinds[drop.kind] || kinds.other }}<ng-container *ngIf="drop.publishedAt"> · {{ drop.publishedAt | date:'MMMM d, y' }}</ng-container></ng-template>
       </p>
       <h1 class="h3 h2-md text-primary-dark mb-20p">{{ drop.title }}</h1>
       <p *ngIf="drop.summary" class="subtitle1 text-label mb-30p">{{ drop.summary }}</p>
-      <div *ngIf="drop.videoId" class="drop-video mb-30p">
-        <youtube-facade [videoId]="drop.videoId" [title]="drop.title" ratio="16:9"></youtube-facade>
-      </div>
-      <div class="drop-body" [innerHTML]="body"></div>
+
+      <!-- A week: "One video. One post. Done." -->
+      <ng-container *ngIf="isWeek">
+        <section class="drop-part mb-30p">
+          <p class="drop-part__label mb-5p">This week's video</p>
+          <h2 class="h4 text-primary-dark mb-10p">{{ drop.videoTitle }}</h2>
+          <p *ngIf="drop.videoNote" class="mb-15p">{{ drop.videoNote }}</p>
+          <div *ngIf="drop.videoId" class="drop-video drop-video--short">
+            <youtube-facade [videoId]="drop.videoId" [title]="drop.videoTitle || drop.title" ratio="9:16"></youtube-facade>
+          </div>
+        </section>
+        <section class="drop-part mb-30p">
+          <p class="drop-part__label mb-5p">This week's post</p>
+          <h2 class="h4 text-primary-dark mb-10p">{{ drop.postTitle }}</h2>
+          <p *ngIf="drop.postText" class="mb-15p">{{ drop.postText }}</p>
+          <a *ngIf="drop.postTemplateUrl" [href]="drop.postTemplateUrl" target="_blank" rel="noopener" class="btn btn-primary mb-15p">Use the Canva template</a>
+          <p *ngIf="drop.postNote" class="mb-0">{{ drop.postNote }}</p>
+        </section>
+        <div *ngIf="drop.body" class="drop-body mb-30p" [innerHTML]="body"></div>
+        <p class="drop-done mb-0">One video. One post. Done.</p>
+      </ng-container>
+
+      <!-- A broadcast: a trend alert, the monthly update, a live recording. -->
+      <ng-container *ngIf="!isWeek">
+        <div *ngIf="drop.videoId" class="drop-video mb-30p">
+          <youtube-facade [videoId]="drop.videoId" [title]="drop.title" ratio="16:9"></youtube-facade>
+        </div>
+        <div class="drop-body" [innerHTML]="body"></div>
+      </ng-container>
     </article>
   </div>
 </section>

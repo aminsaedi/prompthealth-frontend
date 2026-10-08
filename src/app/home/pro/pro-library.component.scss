@@ -64,3 +64,9 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
 }
+
+/* The next live training: the one thing in the library with a date. */
+.library-live {
+  background: $colorPrimaryLight;
+  border: 1px solid rgba($colorPrimary, 0.25);
+}
