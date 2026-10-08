@@ -334,3 +334,81 @@ $stepGap: 30px;
     margin: 0 0 0 24px;
   }
 }
+
+// ---------------------------------------------- her brief of 2026-10-07
+
+/* Small capitals over a heading, as /pro and the plan section have them. */
+.growth-eyebrow {
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $colorPrimary;
+}
+
+/* Meet Hedieh: a round portrait beside a short paragraph, stacked and
+ * centred on a phone. */
+.growth-meet {
+  max-width: 860px;
+  text-align: center;
+
+  @media (min-width: $breakpointMd) {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+}
+
+.growth-meet__photo {
+  display: block;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  @media (min-width: $breakpointMd) {
+    flex: 0 0 180px;
+    width: 180px;
+    height: 180px;
+    margin: 0 40px 0 0;
+  }
+}
+
+/* Two ways to work with us. The same card twice; the first, the one the page
+ * is about, carries the accent along its top. */
+.growth-choice {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border-top: 4px solid $colorGsLine;
+  box-shadow: 0 6px 20px rgba($colorGsBlack, 0.06);
+
+  &--first {
+    border-top-color: $colorPrimary;
+  }
+}
+
+.growth-choice__price {
+  margin-top: auto;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  color: $colorPrimaryDark;
+}
+
+.growth-choice__button {
+  align-self: flex-start;
+  max-width: 100%;
+  white-space: normal;
+}
+
+.growth-work__caption {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 600;
+  color: $colorGsBody;
+  text-align: center;
+}

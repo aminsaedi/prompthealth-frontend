@@ -19,6 +19,22 @@
   color: $colorPrimary;
 }
 
+/* "For Dental Clinics" on the Pro card, the first thing on it (her brief of
+ * 2026-10-07): the small note at the bottom was being missed. A filled pill,
+ * so it reads as a label and not as one more line of text. */
+.plan-badge {
+  align-self: flex-start;
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: $colorPrimaryDark;
+  color: $colorGsWhite;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 /* The two membership cards are the same size and style; only the accent
  * along the top differs (her section 2). */
 .plan-card {
@@ -119,27 +135,32 @@
   line-height: 20px;
 }
 
+.growth-panel__photo {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+}
+
 .growth-panel__actions {
-  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 /* The main button style on the dark panel: white with the panel's blue, as
  * the For Dentists page's last button is, because btn-primary measured under
- * 3:1 against this blue. Full width on a phone, where the label wraps. */
-/* The theme's button classes carry the padding, and these two use neither,
- * so they set their own to match the cards' buttons. */
-.growth-panel__main,
-.growth-panel__apply {
-  padding: 12px 28px;
-  font-size: 16px;
-  line-height: 22px;
-  border-radius: 8px;
-}
-
+ * 3:1 against this blue. The theme's button classes carry the padding, and
+ * this one uses none, so it sets its own to match the cards' buttons. */
 .growth-panel__main {
   display: inline-block;
   max-width: 100%;
   white-space: normal;
+  padding: 12px 28px;
+  margin-right: 20px;
+  font-size: 16px;
+  line-height: 22px;
+  border-radius: 8px;
   background: $colorGsWhite;
   color: $colorPrimaryDark !important;
   border-color: $colorGsWhite;
@@ -151,11 +172,31 @@
   }
 }
 
-.growth-panel__line {
-  font-size: 14px;
-  line-height: 20px;
+.growth-panel__link {
+  display: inline-block;
+  padding: 12px 0;
+  font-size: 15px;
+  line-height: 22px;
+  color: $colorGsWhite !important;
+  text-decoration: underline;
 }
 
-.growth-panel__apply {
-  min-width: 160px;
+.growth-panel__waitlist {
+  margin-top: 40px;
+  padding-top: 25px;
+  border-top: 1px solid rgba($colorGsWhite, 0.2);
+}
+
+/* A link in look, a button in kind: it opens the form rather than going
+ * anywhere. */
+.growth-panel__text-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: $colorGsWhite;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
 }

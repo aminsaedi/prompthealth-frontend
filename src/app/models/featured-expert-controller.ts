@@ -7,7 +7,7 @@ export class FeaturedExpertController {
   private ready: boolean = false;
 
   /** True once the list has loaded and holds nobody, so the page can drop the empty carousel
-   *  rather than show two blank rows under "Featured Wellness Providers". */
+   *  rather than show two blank rows under "Featured Providers". */
   get isEmpty(): boolean { return this.ready && (!this.data || this.data.length === 0); }
 
   public addData(data: Professional[]) {

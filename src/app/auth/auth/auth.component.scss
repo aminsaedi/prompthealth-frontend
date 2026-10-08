@@ -30,3 +30,19 @@ section {
   left: 0;
   bottom: 100%;
 }
+
+/* The step a Pro joiner is on, above the form. */
+.pro-context {
+  max-width: 420px;
+  padding: 14px 18px;
+  border-left: 4px solid $colorPrimary;
+  border-radius: 8px;
+  background: $colorPrimaryLight;
+  color: $colorPrimaryDark;
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.pro-context__title {
+  font-weight: 700;
+}

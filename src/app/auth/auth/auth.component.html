@@ -8,6 +8,17 @@
         <ng-container *ngIf="authType == 'signin'">Sign in</ng-container>
         <ng-container *ngIf="authType == 'signup'">Getting Started</ng-container>
       </h3>
+      <!-- On the way to Pro checkout: without this the form said nothing of Pro
+      or payment, and joining read as "Continue to Payment does not reach
+      Stripe" (Hedieh's brief of 2026-10-07, section 2). -->
+      <div *ngIf="isProCheckout" class="pro-context mb-30p" role="note">
+        <p class="pro-context__title mb-5p">Join PromptHealth Pro: step 1 of 2.</p>
+        <p class="mb-0">
+          <ng-container *ngIf="authType == 'signup'">Create your account</ng-container>
+          <ng-container *ngIf="authType == 'signin'">Sign in</ng-container>,
+          then you go straight to secure payment with Stripe.
+        </p>
+      </div>
       <form-auth [authType]="authType" [userRole]="roleType" [nextPage]="nextPage"
         [nextPageKeyword]="nextPageKeyword"></form-auth>
     </div>

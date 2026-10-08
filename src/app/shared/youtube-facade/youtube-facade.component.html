@@ -7,11 +7,13 @@
   [attr.aria-label]="'Play video: ' + title"
   (click)="play()"
   >
+    <!-- Described, not alt="": site audits list an empty alt as missing, and
+    a screen reader announces the button's own label in either case. -->
     <img
     *ngIf="thumbnail"
     class="yt-facade__thumb"
     [src]="thumbnail"
-    alt=""
+    [alt]="title ? 'Video thumbnail: ' + title : 'Video thumbnail'"
     loading="lazy"
     [attr.width]="isPortrait ? 360 : 640"
     [attr.height]="isPortrait ? 640 : 360"

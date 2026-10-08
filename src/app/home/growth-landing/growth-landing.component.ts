@@ -62,6 +62,8 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
 
   @ViewChild('finalCta') private finalCta: ElementRef;
 
+  @ViewChild('choiceCta') private choiceCta: ElementRef;
+
   @ViewChild('dialog') private dialog: ElementRef;
   private isTrappingFocus = false;
 
@@ -295,6 +297,7 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
     switch (position) {
       case 'hero': ref = this.heroCta; break;
       case 'final': ref = this.finalCta; break;
+      case 'steps': ref = this.choiceCta; break;
     }
     return ref ? ref.nativeElement : null;
   }
@@ -315,8 +318,7 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
     });
   }
 
-  /* No offers and no price anywhere: nothing on this site states what
-   * PromptHealth charges. */
+  /* No offers: Growth's price is never shown, on the page or here. */
   private setJsonLd(): void {
     const c = this.config;
     const pageUrl = BASE_URL + c.path;

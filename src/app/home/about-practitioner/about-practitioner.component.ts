@@ -230,7 +230,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: "What is PromptHealth Pro?",
-    a: `Our paid membership: your team gets a new video idea and post idea every week, with filming instructions and examples, plus trend alerts, a monthly "what's working now" update and a live session every three months. $149/month per clinic or $1,490/year, for your whole team. Cancel anytime. <a href="/pro">See PromptHealth Pro</a>.`,
+    a: `Our paid membership: your team gets a new video idea and post idea every week, with filming instructions and examples, plus trend alerts, a monthly "what's working now" update and a live session every three months. $149/month per clinic, for your whole team. Currently for dental clinics. Cancel anytime. <a href="/pro">See PromptHealth Pro</a>.`,
     opened: false,
   },
   {
