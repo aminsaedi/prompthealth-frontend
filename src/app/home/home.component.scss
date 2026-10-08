@@ -305,3 +305,116 @@
     flex: 1 1 300px;
   }
 }
+
+// ------------------------------------- her brief of 2026-10-07
+
+/* The hero's way to the directory: a text link under the button, for the
+ * patient who landed on a page now addressed to professionals. */
+.home-hero__find {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: $colorPrimaryDark;
+  text-decoration: underline;
+}
+
+/* "For Dental Clinics" over the dental section: a filled pill, so it reads as
+ * a label and not as one more line. Written out, as the plan section's is,
+ * rather than borrowed from Bootstrap's badge, which arrives from a CDN after
+ * first paint. */
+.home-label {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: $colorPrimaryDark;
+  color: $colorGsWhite;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* Done for you and do it yourself, side by side from tablet width, one above
+ * the other on a phone. Each is a whole link: the kind on top, the offer
+ * under it. */
+.home-offers {
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+
+  @media (min-width: $breakpointMd) {
+    flex-direction: row;
+  }
+}
+
+.home-offer {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  padding: 16px 20px;
+  margin-bottom: 15px;
+  border: 2px solid $colorPrimary;
+  border-radius: 12px;
+  background: $colorGsWhite;
+  text-align: center;
+  transition: background 150ms, border-color 150ms;
+
+  &:first-child {
+    background: $colorPrimary;
+    border-color: $colorPrimary;
+
+    .home-offer__kind {
+      color: rgba($colorGsWhite, 0.85);
+    }
+
+    .home-offer__name {
+      color: $colorGsWhite;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    border-color: $colorPrimaryDark;
+  }
+
+  &:first-child:hover,
+  &:first-child:focus {
+    background: $colorPrimaryDark;
+  }
+
+  @media (min-width: $breakpointMd) {
+    margin-bottom: 0;
+
+    & + & {
+      margin-left: 15px;
+    }
+  }
+}
+
+.home-offer__kind {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $colorGsLabel;
+}
+
+.home-offer__name {
+  margin-top: 4px;
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 700;
+  color: $colorPrimaryDark;
+}
+
+/* The directory search, under the dental section. The search bar and its
+ * box are the /practitioners page's own. */
+.home-directory {
+  scroll-margin-top: 20px;
+}
+
+.home-directory__search {
+  max-width: 820px;
+}

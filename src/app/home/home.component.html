@@ -99,26 +99,29 @@
     </div>
   </div>
 
+  <!-- Hero for professionals (Hedieh's brief of 2026-10-07): a dentist from
+  an ad should know within seconds that there is something for their practice.
+  Patients are one link away from the directory search below. -->
   <div class="container py-40p pt-md-90p">
     <div class="row">
       <div class="col-12 col-lg-8" style="z-index: 1">
-        <h6 class="h6 text-primary-dark mb-20p" style="font-weight: 400">
-          Your Wellness Navigator
-        </h6>
+        <p class="h6 text-primary-dark mb-20p" style="font-weight: 400">
+          For Healthcare Professionals
+        </p>
         <h1 class="h3 h2-md mb-30p text-primary-dark">
-          Find a Wellness Practitioner Near You
+          Get Seen. Build Trust. Grow Your Practice.
         </h1>
-        <h6 class="h6 text-primary-dark mb-40p" style="font-weight: 400">
-          Search by specialty, watch expert videos, and connect with trusted healthcare providers, all in one place.
-        </h6>
+        <p class="h6 text-primary-dark mb-40p" style="font-weight: 400">
+          PromptHealth helps healthcare professionals build their visibility through better content, with specialized content and growth solutions for dental practices.
+        </p>
 
-        <div class="d-flex flex-column flex-md-row mb-55p">
-          <a routerLink="/practitioners" class="btn btn-primary mr-md-15p mb-15p mb-md-0p">
-            Find a Provider
+        <div class="mb-55p">
+          <a routerLink="/for-dentists" class="btn btn-primary mb-20p">
+            For Dental Practices →
           </a>
-          <a routerLink="/for-practitioners" class="btn btn-outline">
-            For Practitioners
-          </a>
+          <p class="mb-0">
+            <a href="#find-a-practitioner" class="home-hero__find" (click)="scrollToDirectory($event)">Looking for a practitioner? Find one near you ↓</a>
+          </p>
         </div>
       </div>
       <div class="col">
@@ -126,7 +129,7 @@
           <div class="slideshow slideshow-animate mb-15p mb-lg-0p mr-lg-20p">
             <ng-container *ngFor="let ii of [0, 1]">
               <div *ngFor="let item of slideshow; let i = index" class="item overflow-hidden rounded-8p">
-                <img [src]="'assets/img/home/' + item" alt="PromptHealth wellness community" width="377" height="470" style="object-fit: cover; width: 100%; height: 100%"
+                <img [src]="'assets/img/home/' + item.src" [alt]="item.alt" width="377" height="470" style="object-fit: cover; width: 100%; height: 100%"
                   [attr.loading]="(ii === 0 && i === 0) ? null : 'lazy'" />
               </div>
             </ng-container>
@@ -134,7 +137,7 @@
           <div class="slideshow slideshow-animate-reverse mb-15p mb-lg-0p">
             <ng-container *ngFor="let jj of [0, 1]">
               <div *ngFor="let item of slideshowReverse; let i = index" class="item-reverse overflow-hidden rounded-8p">
-                <img [src]="'assets/img/home/' + item" alt="PromptHealth wellness community" width="377" height="470" style="object-fit: cover; width: 100%; height: 100%"
+                <img [src]="'assets/img/home/' + item.src" [alt]="item.alt" width="377" height="470" style="object-fit: cover; width: 100%; height: 100%"
                   [attr.loading]="(jj === 0 && i === 0) ? null : 'lazy'" />
               </div>
             </ng-container>
@@ -145,18 +148,45 @@
   </div>
 </section>
 
-<!-- growth band start: the homepage's one pointer to PromptHealth Growth. Hedieh asked
-     for a single band and no other change to the homepage. -->
+<!-- growth band start: the dental offers, second on the page. Labelled at the
+top so a physio or naturopath does not take it for theirs, with done for you
+and do it yourself side by side (her brief of 2026-10-07). -->
 <section class="bg-lightgreen py-50p py-md-70p">
   <div class="container text-center">
+    <p class="home-label mb-15p">For Dental Clinics</p>
     <h2 class="h3 h2-md mb-20p">Ready to Grow Your Practice?</h2>
     <p class="subtitle1 text-label mx-auto mb-30p" style="max-width: 640px">
       Professional videos of you and your team, filmed at your practice and promoted to people nearby. Or get a new video idea and post idea for your team every week. Now available for dental practices.
     </p>
-    <a routerLink="/for-dentists" class="btn btn-primary">Learn More</a>
+    <div class="home-offers mx-auto">
+      <a routerLink="/for-dentists" class="home-offer">
+        <span class="home-offer__kind">Done for you</span>
+        <span class="home-offer__name">PromptHealth Growth →</span>
+      </a>
+      <a routerLink="/pro" class="home-offer">
+        <span class="home-offer__kind">Do it yourself</span>
+        <span class="home-offer__name">PromptHealth Pro, $149/month →</span>
+      </a>
+    </div>
   </div>
 </section>
 <!-- growth band end -->
+
+<!-- directory search start: the patient's way in, which used to be the hero.
+The hero's "Find one near you" link scrolls here. -->
+<section id="find-a-practitioner" class="container my-50p my-md-100p home-directory">
+  <h2 class="h3 h2-md text-center mb-20p">Find a Practitioner Near You</h2>
+  <p class="subtitle1 text-label text-center mx-auto mb-30p" style="max-width: 640px">
+    Search by specialty, watch expert videos, and connect with trusted healthcare providers, all in one place.
+  </p>
+  <div class="home-directory__search mx-auto mb-20p bg-primary-light rounded-8p border border-background">
+    <search-bar></search-bar>
+  </div>
+  <div class="text-center">
+    <a routerLink="/practitioners" class="btn btn-outline">Browse All Providers</a>
+  </div>
+</section>
+<!-- directory search end -->
 
 <!-- how it works start -->
 <section class="container my-40p my-md-100p">
@@ -190,9 +220,9 @@
 <!-- platform statistics start -->
 <section class="bg-primary-light py-70p">
   <div class="container text-center">
-    <!-- The figures are Hedieh's (2026-09-27) and match /for-practitioners;
-    change both together. -->
-    <h2 class="h3 h2-md mb-40p">Canada's Growing Wellness Network</h2>
+    <!-- The figures are Hedieh's (2026-09-27) and match /for-practitioners,
+    /about and this page's Organization JSON-LD; change them together. -->
+    <h2 class="h3 h2-md mb-40p">Canada's Growing Healthcare Network</h2>
     <div class="row justify-content-center">
       <div class="col-6 col-md-3 mb-30p mb-md-0p">
         <div class="h2 text-primary font-weight-bold mb-10p">600+</div>
@@ -284,7 +314,7 @@
 <section class="mt-100p bg-primary-light pt-70p pb-100p">
   <div class="container mb-25p">
     <h2 class="h3 h2-md text-center mb-30p">
-      Featured Wellness Providers
+      Featured Providers
     </h2>
     <div class="row justify-content-center mb-30p">
       <div class="col-12 col-lg-8 text-center">
@@ -311,7 +341,11 @@
     </div>
   </div>
 
-  <div *ngIf="!!featuredExpertController && !featuredExpertController.isEmpty" class="expert-finder-scroll-horizontal" #expertFinderScrollHorizontal>
+  <!-- Browser only. The server never asks for the providers, so all it could
+  render was twenty loading cards, and crawlers and anything else reading the
+  served page saw twenty "PromptHealth, Take control of your health"
+  placeholders where the providers should be (her brief of 2026-10-07). -->
+  <div *ngIf="isBrowser && !!featuredExpertController && !featuredExpertController.isEmpty" class="expert-finder-scroll-horizontal" #expertFinderScrollHorizontal>
     <div class="intersection-observer" intersectionObserver rootMargin="10000px 0px -500px 0px"
       (changeStatus)="onEnterExpertFinder($event)"></div>
     <ul *ngFor="
@@ -406,10 +440,11 @@
   </div>
 </section>
 
-<!-- testimonial start-->
-<div class="intersection-observer" intersectionObserver rootMargin="-70% 0px 10000px 0px"
-  (changeStatus)="onIntersectTestimonial($event)"></div>
-<section class="bg-lightgreen py-100p position-relative overflow-hidden">
+<!-- testimonial start: rendered with the page. They used to arrive only when
+the section scrolled into view, and leave again when it scrolled out, so the
+served page, a crawler and a full-page screenshot all saw the heading over an
+empty space. -->
+<section *ngIf="testimonials.length" class="bg-lightgreen py-100p position-relative overflow-hidden">
   <!-- <div class="circle-for-testimonial circle-secondary" parallax intensity="0.3"></div> -->
   <div class="container">
     <div class="row">
@@ -424,8 +459,7 @@
         <a class="btn btn-primary" routerLink="/testimonial">Read More Testimonials</a>
       </div>
 
-      <div class="col-12 col-xl-8 d-flex px-10p px-lg-0p flex-nowrap overflow-auto overflow-lg-visible"
-        [@slideVerticalStagger]="testimonials.length" [@.disabled]="disabledAnimationTestimonials">
+      <div class="col-12 col-xl-8 d-flex px-10p px-lg-0p flex-nowrap overflow-auto overflow-lg-visible">
         <div *ngFor="let testimonial of testimonials" class="mr-15p card-testimonial-container">
           <card-testimonial [data]="testimonial"></card-testimonial>
         </div>

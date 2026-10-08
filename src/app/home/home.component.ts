@@ -27,10 +27,9 @@ import { CityId, getLabelByCityId } from "../_helpers/location-data";
 import { Blog } from "../models/blog";
 import { FeaturedExpertController } from "../models/featured-expert-controller";
 import { smoothHorizontalScrolling } from "../_helpers/smooth-scroll";
-import { environment } from "src/environments/environment";
 import { slugify } from "../_helpers/slugify";
 import { SocialPostSearchQuery } from "../models/social-post-search-query";
-import { IGetSocialContentsByAuthorResult } from "../models/response-data";
+import { IGetSocialContentsResult } from "../models/response-data";
 import { SocialArticle } from "../models/social-article";
 import { ProfileManagementService } from "../shared/services/profile-management.service";
 import { ModalService } from "../shared/services/modal.service";
@@ -69,6 +68,9 @@ export class HomeComponent implements OnInit , OnDestroy {
   get isLoggedIn(): boolean {
     return !!this.user;
   }
+  get isBrowser(): boolean {
+    return this._uService.isBrowser;
+  }
 
   constructor(
     private _router: Router,
@@ -85,23 +87,22 @@ export class HomeComponent implements OnInit , OnDestroy {
   public isPlanMenuShown = false;
   public isSlideshowReady = false;
 
-  public slideshow = [
-    "slideshow-1.webp",
-    "slideshow-2.webp",
-    "slideshow-3.webp",
-    "slideshow-4.webp",
-    "slideshow-5.webp",
-    "slideshow-6.webp",
+  /* Three of Hedieh's dental clinic photos (2026-10-07) between three of the
+   * wellness ones, so the site does not read as dental only. The yoga,
+   * meditation and workout slides made way: they were the furthest from a
+   * page that now opens "For Healthcare Professionals". The new slides are
+   * twice the slot's 377x470, versioned because /assets is cached for a
+   * year. */
+  public slideshow: { src: string; alt: string }[] = [
+    { src: "slideshow-dental-1.v1.webp", alt: "Dentist in a treatment room beside the dental chair" },
+    { src: "slideshow-4.webp", alt: "Acupuncture treatment" },
+    { src: "slideshow-dental-2.v1.webp", alt: "Dentist examining a patient" },
+    { src: "slideshow-5.webp", alt: "Massage therapist treating a client" },
+    { src: "slideshow-dental-3.v1.webp", alt: "Dentist working with a dental microscope" },
+    { src: "slideshow-6.webp", alt: "Practitioner talking with a client" },
   ];
 
-  public slideshowReverse = [
-    "slideshow-6.webp",
-    "slideshow-5.webp",
-    "slideshow-4.webp",
-    "slideshow-3.webp",
-    "slideshow-2.webp",
-    "slideshow-1.webp",
-  ];
+  public slideshowReverse = this.slideshow.slice().reverse();
 
   private timerResize: any = null;
   private previousScreenWidth: number = 0;
@@ -172,7 +173,7 @@ export class HomeComponent implements OnInit , OnDestroy {
     this._headerStatusService.hideHeader();
 
     this._uService.setMeta(this._router.url, {
-      title: "Find a Wellness Practitioner Near You | PromptHealth",
+      title: "Find a Practitioner Near You | PromptHealth",
       description: "Search trusted healthcare providers by specialty, watch expert videos, and connect with wellness professionals. Browse practitioners in your area on PromptHealth.",
     });
 
@@ -188,7 +189,7 @@ export class HomeComponent implements OnInit , OnDestroy {
           "name": "PromptHealth",
           "url": "https://www.prompthealth.ca",
           "logo": { "@type": "ImageObject", "url": "https://www.prompthealth.ca/assets/img/prompthealth.png", "width": 800, "height": 350 },
-          "description": "PromptHealth is Canada's leading integrative health platform connecting patients with 600+ wellness practitioners across 20 cities in 4 provinces (BC, ON, AB, MB). Search by specialty, location, and delivery method to discover naturopaths, physiotherapists, dentists, psychologists, and 50+ other practitioner types, read expert health content, and book appointments online.",
+          "description": "PromptHealth is Canada's leading integrative health platform connecting patients with 600+ healthcare and wellness practitioners across 20 cities in 4 provinces (BC, ON, AB, MB). Search by specialty, location, and delivery method to discover naturopaths, physiotherapists, dentists, psychologists, and 50+ other practitioner types, read expert health content, and book appointments online.",
           "foundingDate": "2020",
           "areaServed": { "@type": "Country", "name": "Canada" },
           "contactPoint": {
@@ -211,7 +212,7 @@ export class HomeComponent implements OnInit , OnDestroy {
           "@id": "https://www.prompthealth.ca/#website",
           "name": "PromptHealth",
           "url": "https://www.prompthealth.ca",
-          "description": "Find a wellness practitioner near you. Search by specialty, location, or topic.",
+          "description": "Find a practitioner near you. Search by specialty, location, or topic.",
           "publisher": { "@id": "https://www.prompthealth.ca/#organization" },
           "potentialAction": {
             "@type": "SearchAction",
@@ -225,7 +226,7 @@ export class HomeComponent implements OnInit , OnDestroy {
         {
           "@type": "WebPage",
           "@id": "https://www.prompthealth.ca/#webpage",
-          "name": "Find a Wellness Practitioner Near You",
+          "name": "Find a Practitioner Near You",
           "description": "Search trusted healthcare providers by specialty, watch expert videos, and connect with wellness professionals.",
           "url": "https://www.prompthealth.ca",
           "isPartOf": { "@id": "https://www.prompthealth.ca/#website" },
@@ -240,7 +241,10 @@ export class HomeComponent implements OnInit , OnDestroy {
     });
 
     this._catService.getCategoryAsync().then((cats) => {
-      this.categories = cats;
+      /* Unset when the request failed, and the controller cannot take that:
+       * the section stays empty instead of throwing. */
+      if (!Array.isArray(cats)) { return; }
+      this.categories = oralCareFirst(cats);
       this.categoryController = new CategoryViewerController(this.categories);
     });
 
@@ -300,6 +304,16 @@ export class HomeComponent implements OnInit , OnDestroy {
 
   onClickUserIcon() {
     this._modalService.show("user-menu", this.user);
+  }
+
+  /* The hero's "Find one near you". Scrolled here rather than left to the
+   * #fragment, which the router would treat as a navigation and which would
+   * stay in the address. The href is for a reader without script. */
+  scrollToDirectory(event: Event) {
+    const el = this._uService.isBrowser ? document.getElementById("find-a-practitioner") : null;
+    if (!el) { return; }
+    event.preventDefault();
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   // initSlideshow() {
@@ -395,20 +409,7 @@ export class HomeComponent implements OnInit , OnDestroy {
   /** EXPERT FINDER END */
 
   /** TESTIMONIAL */
-  public testimonials = [];
-  public disabledAnimationTestimonials = false;
-
-  onIntersectTestimonial(enter: boolean) {
-    if (enter) {
-      this.testimonials = testimonials;
-      setTimeout(() => {
-        this.disabledAnimationTestimonials = true;
-      });
-    } else {
-      this.disabledAnimationTestimonials = false;
-      this.testimonials = [];
-    }
-  }
+  public testimonials = testimonials;
   /** TESTIMONIAL END */
 
   /** COMMUNITY */
@@ -422,19 +423,23 @@ export class HomeComponent implements OnInit , OnDestroy {
   /** BLOGS */
   public blogs: Blog[];
   async getBlog() {
+    /* The three newest approved articles by anyone. This used to ask for the
+     * official account's own, and it stopped writing them in April 2026 while
+     * articles kept being published on practitioners' behalf, so the section
+     * stood still at April (her brief of 2026-10-07). note/filter is the
+     * community feed's query: approved only, academy items excluded, newest
+     * first. */
     const query = new SocialPostSearchQuery({
       count: 3,
       contentType: "ARTICLE",
     });
     this._sharedService
-      .getNoAuth(
-        "note/get-by-author/" + environment.config.idSA + query.toQueryParams()
-      )
+      .getNoAuth("note/filter" + query.toQueryParams())
       .pipe(takeUntil(this.destroy$)).subscribe(
-        (res: IGetSocialContentsByAuthorResult) => {
-          if (res.statusCode === 200) {
+        (res: IGetSocialContentsResult) => {
+          if (res.statusCode === 200 && res.data && Array.isArray(res.data.data)) {
             const blogs = [];
-            res.data.forEach((d) => {
+            res.data.data.slice(0, 3).forEach((d) => {
               blogs.push(new SocialArticle(d));
             });
             this.blogs = blogs;
@@ -525,3 +530,11 @@ const testimonials = [
     // rating: 5,
   },
 ];
+
+/* Oral Care leads the categories (her brief of 2026-10-07); the rest keep the
+ * order the API gives. A copy, because the list is the category service's own
+ * and other pages show it as it comes. */
+function oralCareFirst(cats: Category[]): Category[] {
+  const i = cats.findIndex((c) => /^oral care$/i.test((c.item_text || "").trim()));
+  return i <= 0 ? cats.slice() : [cats[i], ...cats.slice(0, i), ...cats.slice(i + 1)];
+}
