@@ -10,16 +10,23 @@
  * Prices are shown again by her decision, for Pro only. The Growth price is
  * never shown, and Growth's own text never mentions Pro (her checklist).
  *
+ * Her brief of 2026-10-07: Pro is priced as "$149/month per clinic" and
+ * nothing else, wherever it is priced. The yearly plan is offered only at
+ * checkout, in the plan choice on /pro (pro-copy.ts), so the yearly figure
+ * lives there and nowhere on this side of it. Pro and Growth both carry
+ * "For Dental Clinics" where they are offered, so a physio or naturopath does
+ * not sign up by mistake.
+ *
  * Kept out of growth-landing/ and pro/: the sitemap dates those pages by the
  * last change under their directories, and this is not only their text.
  */
 
 export const PRO_PRICE = {
   monthly: '$149/month per clinic',
-  yearly: '$1,490/year',
-  /* As her card and the /pro page write it. */
-  line: '$149/month per clinic or $1,490/year (two months free)',
 };
+
+/* The label on every Pro and Growth offer (her brief, 2026-10-07). */
+export const FOR_DENTAL_CLINICS = 'For Dental Clinics';
 
 export const PLAN_SECTION = {
   heading: 'Choose How You Want to Grow',
@@ -36,6 +43,9 @@ export const PLAN_SECTION = {
 
 export interface IMembershipCard {
   key: 'basic' | 'pro';
+  /* A badge above everything else on the card, for an offer that is not for
+   * every practitioner. */
+  badge?: string;
   label: string;
   name: string;
   price: string;
@@ -63,9 +73,10 @@ export const BASIC_CARD: IMembershipCard = {
 
 export const PRO_CARD: IMembershipCard = {
   key: 'pro',
+  badge: FOR_DENTAL_CLINICS,
   label: 'PAID MEMBERSHIP',
   name: 'PromptHealth Pro',
-  price: PRO_PRICE.line,
+  price: PRO_PRICE.monthly,
   description: "Your team's weekly video playbook, with expert guidance. Your team never has to guess what to post again.",
   bullets: [
     { lead: 'Know exactly what to post every week:', text: 'one video idea and one post idea at the start of each week.' },
@@ -81,25 +92,37 @@ export const PRO_CARD: IMembershipCard = {
   link: '/pro',
 };
 
+/* The dark panel, as her brief of 2026-10-07 rewrites it: the
+ * behind-the-scenes photo from /for-dentists and the Apply button in the left
+ * column, five points on the right. The old main button ("Currently available
+ * for dentists. See how it works") is gone, because the eyebrow now says who
+ * Growth is for and the button she asked for is Apply. The path to
+ * /for-dentists it carried stays, as a quieter link under Apply. */
 export const GROWTH_PANEL = {
-  label: 'DONE-FOR-YOU PLAN · BY APPLICATION ONLY',
+  label: 'DONE-FOR-YOU · BY APPLICATION · FOR DENTAL CLINICS',
   name: 'PromptHealth Growth',
-  heading: 'We Film and Produce for You and Your Team',
-  description: 'For practices that want it done for them, with an expert guiding them at every step.',
+  heading: 'Patients Who Feel Like They Already Know You',
+  description: 'We film, edit and run your content, with Hedieh guiding you and your team at every step.',
+  /* The top of the /for-dentists hero video's poster, Hedieh directing a
+   * shoot at a practice, cut above the figures laid over the frame. */
+  photo: {
+    src: '/assets/img/offer/growth-behind-the-scenes.v1.webp',
+    alt: 'Hedieh Safiyari directing a video shoot at a practice',
+    width: 576,
+    height: 548,
+  },
   bullets: [
-    { lead: 'Nothing for you to organize:', text: 'we handle the strategy, the scripts and the filming at your practice every three months.' },
-    { lead: 'Look and sound confident on camera:', text: 'personal coaching for you and your team at every shoot.' },
-    { lead: 'Fresh videos every month, posted for you:', text: '4 professionally edited videos, published to your Instagram and Google Business Profile.' },
-    { lead: 'Extra reach on PromptHealth:', text: "your videos are shared as collaboration posts with PromptHealth's Instagram, followed by 21,000+ people interested in health." },
-    { lead: 'Reach people near your practice:', text: 'each month, your best video runs as a Meta ad to people nearby, with tracking set up from day one.' },
-    { lead: 'See what your videos are doing:', text: 'a monthly report on reach, views, messages and calls.' },
-    { lead: '', text: 'No contract.' },
+    { lead: 'Nothing to organize:', text: 'we plan, script and film at your practice every three months.' },
+    { lead: 'Confident on camera:', text: 'personal coaching for you and your team at every shoot.' },
+    { lead: '4 videos a month,', text: 'posted for you on Instagram and your Google Business Profile.' },
+    { lead: 'Extra reach:', text: "shared with PromptHealth's 21,000+ Instagram followers." },
+    { lead: 'New patients nearby:', text: 'your best video runs as a local Meta ad, with a monthly report on reach, views, messages and calls.' },
   ],
-  availability: 'In-person filming for clinics in Greater Vancouver. Outside Greater Vancouver, we offer a remote option using an AI video clone.',
-  button: 'Currently available for dentists. See how it works',
+  availability: 'No contract. In-person filming in Greater Vancouver; remote option with an AI video clone elsewhere.',
+  applyButton: 'Apply for Growth →',
+  howItWorks: 'See how it works',
   link: '/for-dentists',
-  lineUnderButton: "Other health practitioners: we're now taking applications.",
-  applyButton: 'Apply',
+  waitlist: 'Not a dentist? Join the waitlist →',
 };
 
 /* Her section 4. The answer is HTML: faq-item renders it as such, and each

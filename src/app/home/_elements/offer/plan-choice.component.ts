@@ -22,4 +22,5 @@ export class PlanChoiceComponent {
   public readonly section = PLAN_SECTION;
   public readonly cards = [BASIC_CARD, PRO_CARD];
   public readonly growth = GROWTH_PANEL;
+  public readonly photo = GROWTH_PANEL.photo;
 }
