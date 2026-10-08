@@ -77,9 +77,7 @@ export class ProComponent implements OnInit, OnDestroy {
     this.setJsonLd();
     this._pro.config().pipe(takeUntil(this.destroy$)).subscribe(c => {
       this.paymentsEnabled = c.paymentsEnabled;
-      /* Read loosely: the field is new in the API, and ProService's own type
-       * gains it in a separate change. */
-      this.nextSession = formatSessionDate((c as any).nextLiveSessionAt);
+      this.nextSession = formatSessionDate(c.nextLiveSessionAt);
     });
 
     if (this._uService.isServer) {
