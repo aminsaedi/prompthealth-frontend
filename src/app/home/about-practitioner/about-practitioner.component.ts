@@ -230,7 +230,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: "What is PromptHealth Pro?",
-    a: `Our paid membership: your team gets a new video idea and post idea every week, with filming instructions and examples, plus trend alerts, a monthly "what's working now" update and a live session every three months. $149/month per clinic, for your whole team. Currently for dental clinics. Cancel anytime. <a href="/pro">See PromptHealth Pro</a>.`,
+    a: `Our paid membership: your team gets a new video idea and post idea every week, with filming instructions and examples, plus trend alerts, a monthly "what's working now" update and a live session every three months. $149/month per clinic, for your whole team. Currently for dental clinics, and other healthcare practitioners can apply. Cancel anytime. <a href="/pro">See PromptHealth Pro</a>.`,
     opened: false,
   },
   {
@@ -240,12 +240,12 @@ const faqs: IFAQItem[] = [
   },
   {
     q: "What is PromptHealth Growth?",
-    a: `Our done-for-you plan, by application only: we film at your practice every three months, coach your team on camera, and post 4 edited videos a month for you. It's currently available for dental practices. <a href="/for-dentists">See how it works</a>.`,
+    a: `Our done-for-you plan, by application only: we film at your practice every three months, coach your team on camera, and post 4 edited videos a month for you. It's currently available for dental practices, and other healthcare practitioners can apply. <a href="/for-dentists">See how it works</a>.`,
     opened: false,
   },
   {
     q: "How do I get started?",
-    a: "Click <strong>Create Free Profile</strong>, complete the brief onboarding, and start building your visibility on PromptHealth.",
+    a: "Click <strong>Create Your Free Profile</strong>, complete the brief onboarding, and start building your visibility on PromptHealth.",
     opened: false,
   },
 ];

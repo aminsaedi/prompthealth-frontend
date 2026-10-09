@@ -144,15 +144,16 @@ export class ProComponent implements OnInit, OnDestroy {
     });
   }
 
-  /* "Apply" in the FAQ opens the application here rather than following its
-   * address, which exists only for a reader without script. */
+  /* "Apply for Pro" in the FAQ opens the application here, in Pro mode,
+   * rather than following its address, which exists only for a reader
+   * without script. */
   onFaqClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
     const link = target && target.closest ? target.closest('a[href*="modal=growth-apply"]') : null;
     if (link && this.apply) {
       event.preventDefault();
       event.stopPropagation();
-      this.apply.open();
+      this.apply.open('pro');
     }
   }
 

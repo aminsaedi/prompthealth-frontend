@@ -3,7 +3,7 @@
     <button type="button" class="btn btn-icon small growth-apply__close" aria-label="Close" (click)="close()">
       <i iconPh="cross" aria-hidden="true"></i>
     </button>
-    <h2 #heading id="growth-apply-heading" class="h4 mb-10p pr-40p growth-apply__heading" tabindex="-1">{{ copy.heading }}</h2>
+    <h2 #heading id="growth-apply-heading" class="h4 mb-10p pr-40p growth-apply__heading" tabindex="-1">{{ headingText }}</h2>
 
     <form *ngIf="step === 'form'" [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <p class="text-label mb-20p">{{ copy.intro }}</p>
@@ -69,5 +69,15 @@
     </div>
 
     <p *ngIf="step === 'other'" class="subtitle1 mb-0" role="status">{{ copy.thanksOther }}</p>
+
+    <!-- Pro: a dentist is offered the plan choice on /pro, replacing this
+    entry, so closing the plan choice comes back to the page and not to this
+    thank-you. -->
+    <div *ngIf="step === 'pro-dentist'" role="status">
+      <p class="subtitle1 mb-20p">{{ copy.thanksProDentist }}</p>
+      <a [routerLink]="proJoin.link" [queryParams]="proJoin.queryParams" [replaceUrl]="true" class="btn btn-primary growth-apply__submit">{{ copy.joinProButton }}</a>
+    </div>
+
+    <p *ngIf="step === 'pro-other'" class="subtitle1 mb-0" role="status">{{ copy.thanksProOther }}</p>
   </div>
 </modal>

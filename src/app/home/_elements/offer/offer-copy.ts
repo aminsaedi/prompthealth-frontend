@@ -17,6 +17,16 @@
  * "For Dental Clinics" where they are offered, so a physio or naturopath does
  * not sign up by mistake.
  *
+ * Her brief of 2026-10-08 (plan-specs/source/brief-2026-10-08/brief.txt,
+ * section 5) sets one positioning for all three, wherever they appear:
+ * Basic, the free profile, is for dentists and every eligible practitioner,
+ * and its button is "Create Your Free Profile". Pro and Growth serve dental
+ * clinics now, and other practitioners can apply for either. Pro's buttons
+ * are "Join PromptHealth Pro" and "Apply for Pro"; Growth's are "Book a
+ * 30-Minute Consultation" and "Apply for Growth". Her own sentences for each
+ * page are kept as she wrote them, so /for-practitioners and /plans say the
+ * same thing in slightly different words.
+ *
  * Kept out of growth-landing/ and pro/: the sitemap dates those pages by the
  * last change under their directories, and this is not only their text.
  */
@@ -27,6 +37,35 @@ export const PRO_PRICE = {
 
 /* The label on every Pro and Growth offer (her brief, 2026-10-07). */
 export const FOR_DENTAL_CLINICS = 'For Dental Clinics';
+
+/* "Join PromptHealth Pro" everywhere: the plan choice on /pro, which is where
+ * /pro's own join buttons, the dashboard banner and the membership tab go.
+ * Continue to Payment there sends a guest through the free profile form
+ * first, so this is also the upgrade path from a free profile. */
+export const PRO_JOIN = {
+  button: 'Join PromptHealth Pro',
+  link: '/pro',
+  queryParams: { modal: 'pro-plan' },
+};
+
+/* The free profile, the main action for every practitioner (her brief of
+ * 2026-10-08). The address is the existing provider registration. */
+export const FREE_PROFILE = {
+  button: 'Create Your Free Profile',
+  link: '/auth/registration/sp',
+};
+
+/* Her brief of 2026-10-08, section 3 and section 4, word for word. */
+export const PRO_AVAILABILITY = "PromptHealth Pro is currently available for dental clinics. We're accepting applications from other healthcare practitioners interested in Pro.";
+export const APPLY_FOR_PRO = 'Apply for Pro';
+export const NOT_A_DENTIST_APPLY_FOR_PRO = 'Not a dentist? Apply for Pro.';
+export const BOOK_CONSULTATION = {
+  button: 'Book a 30-Minute Consultation',
+  /* The For Dentists page's own booking form, opened by its address. 'direct'
+   * is the position the backend records for a form reached by a link. */
+  link: '/for-dentists',
+  queryParams: { modal: 'book-consultation', cta: 'direct' },
+};
 
 export const PLAN_SECTION = {
   heading: 'Choose How You Want to Grow',
@@ -52,8 +91,11 @@ export interface IMembershipCard {
   description: string;
   bullets: { lead: string; text: string }[];
   note?: string;
+  /* Basic links to registration; Pro has two actions, Join and Apply. */
   button: string;
   link: string;
+  queryParams?: { [key: string]: string };
+  applyButton?: string;
 }
 
 export const BASIC_CARD: IMembershipCard = {
@@ -67,8 +109,8 @@ export const BASIC_CARD: IMembershipCard = {
     { lead: 'Publish articles in the PromptHealth community:', text: "each article links back to your clinic's website, which can help your practice show up on Google and AI search." },
     { lead: 'Free training videos for your team:', text: 'the basics of social media and online presence.' },
   ],
-  button: 'Create Free Profile',
-  link: '/auth/registration/sp',
+  button: FREE_PROFILE.button,
+  link: FREE_PROFILE.link,
 };
 
 export const PRO_CARD: IMembershipCard = {
@@ -87,17 +129,21 @@ export const PRO_CARD: IMembershipCard = {
     { lead: "Build your whole team's confidence:", text: 'everyone on your team is included, so anyone can step in front of the camera.' },
     { lead: '', text: 'Everything in PromptHealth Basic.' },
   ],
-  note: 'Currently for dental clinics.',
-  button: 'See PromptHealth Pro',
-  link: '/pro',
+  note: PRO_AVAILABILITY,
+  button: PRO_JOIN.button,
+  link: PRO_JOIN.link,
+  queryParams: PRO_JOIN.queryParams,
+  applyButton: APPLY_FOR_PRO,
 };
 
-/* The dark panel, as her brief of 2026-10-07 rewrites it: the
- * behind-the-scenes photo from /for-dentists and the Apply button in the left
- * column, five points on the right. The old main button ("Currently available
- * for dentists. See how it works") is gone, because the eyebrow now says who
- * Growth is for and the button she asked for is Apply. The path to
- * /for-dentists it carried stays, as a quieter link under Apply. */
+/* The dark panel. Her brief of 2026-10-07 gave it this copy and the
+ * behind-the-scenes photo from /for-dentists; her brief of 2026-10-08
+ * (section 4) makes it two balanced columns: the details on the left, and on
+ * the right a summary card with her heading, text and availability line and
+ * two buttons only, Book a 30-Minute Consultation for dentists and Apply for
+ * Growth for everyone else. The photo is hers, not stock, and moves into the
+ * card. The old "Not a dentist? Join the waitlist" line is gone: Apply for
+ * Growth is the same form, and the card now says who can apply. */
 export const GROWTH_PANEL = {
   label: 'DONE-FOR-YOU · BY APPLICATION · FOR DENTAL CLINICS',
   name: 'PromptHealth Growth',
@@ -119,17 +165,27 @@ export const GROWTH_PANEL = {
     { lead: 'New patients nearby:', text: 'your best video runs as a local Meta ad, with a monthly report on reach, views, messages and calls.' },
   ],
   availability: 'No contract. In-person filming in Greater Vancouver; remote option with an AI video clone elsewhere.',
-  applyButton: 'Apply for Growth →',
   howItWorks: 'See how it works',
   link: '/for-dentists',
-  waitlist: 'Not a dentist? Join the waitlist →',
+  card: {
+    heading: 'Your Content, Handled.',
+    text: 'Personalized strategy, filming, coaching, and content support for dental clinics and healthcare practitioners who want to grow their visibility without managing everything themselves.',
+    /* Her line for /plans (section 4) and her sentence for /for-practitioners
+     * (section 3). */
+    availability: {
+      plans: 'Currently serving dental clinics. Applications open to other healthcare practitioners.',
+      forPractitioners: "PromptHealth Growth currently serves dental clinics. We're also accepting applications from other healthcare practitioners.",
+    },
+    bookButton: BOOK_CONSULTATION.button,
+    applyButton: 'Apply for Growth',
+  },
 };
 
 /* Her section 4. The answer is HTML: faq-item renders it as such, and each
  * page's FAQPage JSON-LD strips the tags. */
 export const PAID_PLAN_FAQ = {
   q: 'Is there a paid plan for practitioners?',
-  aHtml: 'Yes. <a href="/pro">PromptHealth Pro</a> is our paid membership: your team gets a new video idea and post idea every week, for $149/month per clinic. <a href="/for-dentists">PromptHealth Growth</a> is our done-for-you plan, by application only, where we film and produce videos for you. Both are currently available for dental practices.',
+  aHtml: 'Yes. <a href="/pro">PromptHealth Pro</a> is our paid membership: your team gets a new video idea and post idea every week, for $149/month per clinic. <a href="/for-dentists">PromptHealth Growth</a> is our done-for-you plan, by application only, where we film and produce videos for you. Both are currently available for dental practices. Other healthcare practitioners can apply for either one.',
 };
 
 /* For the plans' structured data. Pro carries its price; Growth never does. */
