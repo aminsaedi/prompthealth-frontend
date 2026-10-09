@@ -43,13 +43,19 @@ export interface IGrowthLanding {
     moreLabel: string;
     moreUrl: string;
   };
-  /** Done for you or do it yourself, side by side, between Why Us and the
-   *  work. The first card's button opens the booking form; the second links
-   *  out. */
+  /** Done for you or do it yourself, side by side, straight after the hero
+   *  (her brief of 2026-10-08). A card without a link opens the booking form;
+   *  one with a link goes there. Under the cards, the free profile as the
+   *  way to start. */
   choice?: {
     heading: string;
     label?: string;
     cards: IGrowthChoiceCard[];
+    freeProfile?: {
+      text: string;
+      button: string;
+      link: string;
+    };
   };
   /** Under the How It Works heading, above Step 1. */
   stepsIntro?: string;
@@ -114,6 +120,10 @@ export interface IGrowthChoiceCard {
   button: string;
   /** Absent: the button opens the booking form. */
   link?: string;
+  queryParams?: { [key: string]: string };
+  /** A small line under the button that opens the application form for Pro,
+   *  for a practitioner who is not a dentist. */
+  applyPro?: string;
 }
 
 export interface IGrowthStep {
@@ -148,7 +158,8 @@ export type IGrowthBookingText = { [field in GrowthBookingField]: string };
  * that lands on the open form without a button. The backend accepts exactly
  * these. Since 2026-09-27 the page has only the hero's and the final button
  * (Hedieh); 'sticky' stays because stored requests and old addresses carry
- * it. 'steps' is reused, from 2026-10-07, by the Growth card in "Two Ways to
+ * it, and so does 'hero', whose button her brief of 2026-10-08 removed: the
+ * booking button belongs with Growth only. 'steps' is reused, from 2026-10-07, by the Growth card in "Two Ways to
  * Work With Us": the button it used to name was removed on 2026-09-27, so
  * nothing else sends it, and a new name would need the backend's list
  * changed first. */

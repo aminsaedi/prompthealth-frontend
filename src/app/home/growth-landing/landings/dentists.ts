@@ -1,5 +1,6 @@
 import { IGrowthLanding } from '../growth-landing.model';
 import { GROWTH_LANDING_PATHS } from './paths';
+import { FREE_PROFILE, NOT_A_DENTIST_APPLY_FOR_PRO, PRO_JOIN } from '../../_elements/offer/offer-copy';
 
 /*
  * /for-dentists, the first growth landing.
@@ -16,9 +17,15 @@ import { GROWTH_LANDING_PATHS } from './paths';
  * Her brief of 2026-10-07 adds the hero's eyebrow, Meet Hedieh, the six short
  * Step 1 points, a caption under each video, the two questions at the top of
  * the FAQ and "Two Ways to Work With Us" (plan-specs/source/
- * brief-2026-10-07/brief.txt, section 1). The captions are ours, shortened
- * from the videos' own titles; she asked for the topic, and a clinic's name
- * only where it has agreed to be named, so none are named.
+ * brief-2026-10-07/brief.txt, section 1). Her brief of 2026-10-08 (section 1)
+ * moves "Two Ways to Work With Us" up to follow the hero, takes the booking
+ * button out of the hero so it appears only with Growth, has Pro's card say
+ * "Join PromptHealth Pro" with "Not a dentist? Apply for Pro." under it, and
+ * offers the free profile under both, as the way to start before Pro.
+ *
+ * The captions are ours, shortened from the videos' own titles; she asked for
+ * the topic, and a clinic's name only where it has agreed to be named, so none
+ * are named.
  *
  * The hero video is her own vertical cut, filmed on a production day, with the
  * words already in the picture. booking.calendlyUrl is her 30-minute Discovery
@@ -124,10 +131,19 @@ export const DENTISTS_LANDING: IGrowthLanding = {
         name: 'PromptHealth Pro',
         line: 'Your team creates, with weekly guidance from Hedieh',
         price: '$149/month per clinic',
-        button: 'Join Pro →',
-        link: '/pro',
+        button: PRO_JOIN.button,
+        link: PRO_JOIN.link,
+        queryParams: PRO_JOIN.queryParams,
+        applyPro: NOT_A_DENTIST_APPLY_FOR_PRO,
       },
     ],
+    /* Her brief of 2026-10-08: the path is a free profile first, then Pro
+     * when a practice wants more. The sentence is ours, from her words. */
+    freeProfile: {
+      text: 'Not ready yet? Start with a free PromptHealth profile, then upgrade to Pro when you want more.',
+      button: FREE_PROFILE.button,
+      link: FREE_PROFILE.link,
+    },
   },
   stepsIntro: 'PromptHealth Growth is by application only.',
   steps: [
