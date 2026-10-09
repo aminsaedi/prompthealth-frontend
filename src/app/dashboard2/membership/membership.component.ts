@@ -4,6 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IProError, IProMembership, ProService } from 'src/app/shared/services/pro.service';
 import { UPGRADE_BANNER } from 'src/app/home/pro/pro-copy';
+import { NOT_A_DENTIST_APPLY_FOR_PRO, PRO_AVAILABILITY, PRO_JOIN } from 'src/app/home/_elements/offer/offer-copy';
 
 /*
  * Account settings, membership (Hedieh's 12.4): PromptHealth Basic with the
@@ -35,6 +36,12 @@ export class MembershipComponent implements OnInit, OnDestroy {
   public isSavingTeam = false;
 
   public readonly upgradeLabel = UPGRADE_BANNER.button;
+  public readonly upgradeText = UPGRADE_BANNER.text;
+  public readonly proJoin = PRO_JOIN;
+  public readonly proAvailability = PRO_AVAILABILITY;
+  public readonly applyForPro = NOT_A_DENTIST_APPLY_FOR_PRO;
+  /* The application on /pro, opened for Pro. */
+  public readonly applyForProQuery = { modal: 'growth-apply', interest: 'pro' };
 
   constructor(private _pro: ProService, private _profileService: ProfileManagementService) {}
 
