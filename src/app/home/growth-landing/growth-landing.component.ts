@@ -13,13 +13,9 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
 import { GrowthCtaPosition, IGrowthLanding, isGrowthCtaPosition } from './growth-landing.model';
 import { growthLandingFor } from './landings';
-import { BookingStep } from './booking-form/booking-form.component';
 
 const BASE_URL = environment.config.FRONTEND_BASE;
 const BOOKING_MODAL_ID = 'book-consultation';
-/* One object, not a new one per change detection pass: the modal's input
- * would otherwise change on every check. */
-const WIDE_MODAL_BODY = { maxWidth: '720px' };
 /* How long a close by history may take before the address is fixed directly. */
 const CLOSE_FALLBACK_MS = 1000;
 /* What Tab can reach. Filtered further by tabIndex, disabled and rendering
@@ -30,11 +26,13 @@ const FOCUSABLE = 'a[href], area[href], button, input, select, textarea, iframe,
  * A growth landing: the page a paid ad sends a practitioner to, rendered from a
  * config in ./landings. /for-dentists is the first.
  *
- * Every Book a Consultation button opens the same form, in a modal addressed by
- * the query (?modal=book-consultation&cta=<button>), so back and forward, a
+ * Every Book a Strategy Call button opens the same form, in a modal addressed
+ * by the query (?modal=book-consultation&cta=<button>), so back and forward, a
  * reload or a shared link all reopen it, and the request records which button
- * was pressed. Since her brief of 2026-10-08 they are the Growth card's and the
- * final one; /plans and /for-practitioners link to the form by its address.
+ * was pressed. Since her brief of 2026-10-09 they are the hero's, the Growth
+ * card's and the final one; /plans and /for-practitioners link to the form by
+ * its address. The modal's id is still book-consultation, from when it was a
+ * consultation booking, so that old links and ads still open it.
  */
 @Component({
   selector: 'app-growth-landing',
@@ -51,11 +49,12 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
   public readonly bookingModalId = BOOKING_MODAL_ID;
   public isBookingShown = false;
   public ctaPosition: GrowthCtaPosition = 'direct';
-  public bookingStep: BookingStep = 'form';
   /* Between location.back() and the address it leads to, so a double click on
    * the close button cannot go back twice and off the page. */
   private isClosing = false;
   private closeFallback: any = null;
+
+  @ViewChild('heroCta') private heroCta: ElementRef;
 
   @ViewChild('finalCta') private finalCta: ElementRef;
 
@@ -80,11 +79,6 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
   get heroPortrait(): boolean {
     const video = this.config && this.config.hero.video;
     return !!video && video.height > video.width;
-  }
-
-  /* The modal body is 500px wide with 50px padding; Calendly needs more. */
-  get bookingBodyStyle(): { [key: string]: string } {
-    return (this.bookingStep === 'schedule' || this.bookingStep === 'scheduled') ? WIDE_MODAL_BODY : null;
   }
 
   @HostListener('document:keydown.escape') onEscape(): void {
@@ -145,13 +139,14 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
     const state: any = this._location.getState();
     if (state && state.navigationId > 1) {
       this.isClosing = true;
-      /* Past any entries the Calendly frame added (ModalService). */
+      /* Back to the entry before the modal (ModalService). */
       this._modalService.leaveModalEntry();
       /* A history step that ends somewhere other than expected leaves the
        * address, and so the modal, unchanged. isClosing then blocked every
-       * later press, which is how the button came to do nothing after a time
-       * was picked in Calendly. If the modal is still open once the step has
-       * had time to land, the address is fixed directly. */
+       * later press, which is how the button once came to do nothing (when
+       * the form held a Calendly frame, whose navigations joined the
+       * history). If the modal is still open once the step has had time to
+       * land, the address is fixed directly. */
       clearTimeout(this.closeFallback);
       this.closeFallback = setTimeout(() => {
         if (this.isBookingShown && this.isClosing) {
@@ -171,10 +166,6 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
-  }
-
-  onBookingStep(step: BookingStep): void {
-    this.bookingStep = step;
   }
 
   /*
@@ -229,8 +220,8 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
   }
 
   /* What Tab can reach inside the dialog now: the close button first, then the
-   * form or the thank-you, and the Calendly frame on its step. The honeypot is
-   * out of the tab order, and a disabled Send is skipped. */
+   * form or the thank-you. The honeypot is out of the tab order, and a
+   * disabled submit button is skipped. */
   private dialogFocusables(): HTMLElement[] {
     const root: HTMLElement = this.dialog ? this.dialog.nativeElement : null;
     if (!root) { return []; }
@@ -239,11 +230,9 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
   }
 
   /*
-   * A fallback for what the keydown handler cannot see. Tab pressed inside the
-   * Calendly frame is handled by Calendly's document, not this one, and on
-   * the thank-you step Tab from the heading has nowhere in the dialog to go.
-   * Either way focus lands on the page behind, and is brought back to the
-   * start of the dialog.
+   * A fallback for what the keydown handler cannot see: on the thank-you step
+   * Tab from the heading has nowhere in the dialog to go, and focus would land
+   * on the page behind. It is brought back to the start of the dialog.
    */
   private trapFocus(on: boolean): void {
     if (!this._uService.isBrowser || on === this.isTrappingFocus) { return; }
@@ -292,6 +281,7 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
   private ctaElement(position: GrowthCtaPosition): HTMLElement {
     let ref: ElementRef = null;
     switch (position) {
+      case 'hero': ref = this.heroCta; break;
       case 'final': ref = this.finalCta; break;
       case 'steps': ref = this.choiceCta; break;
     }

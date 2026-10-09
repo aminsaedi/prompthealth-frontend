@@ -15,10 +15,40 @@
   font-size: 16px;
 }
 
-.booking-form__textarea {
-  height: auto;
-  min-height: 110px;
-  resize: vertical;
+.booking-form__description {
+  font-size: 15px;
+  line-height: 22px;
+}
+
+/* First and last name side by side from tablet width, one above the other on
+ * a phone. */
+.booking-form__fields {
+  @media (min-width: $breakpointMd) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+.booking-form__field {
+  @media (min-width: $breakpointMd) {
+    flex: 0 0 100%;
+    min-width: 0;
+
+    &--half {
+      flex-basis: calc(50% - 8px);
+    }
+  }
+}
+
+.booking-form__optional {
+  font-weight: 400;
+  color: $colorGsLabel;
+}
+
+.booking-form__privacy {
+  font-size: 13px;
+  line-height: 19px;
 }
 
 .booking-form__field-error,
@@ -46,19 +76,4 @@
   width: 1px;
   height: 1px;
   overflow: hidden;
-}
-
-/* Calendly draws into this at whatever height it is given, and scrolls
- * inside the modal body when the screen is shorter. */
-.booking-form__calendly {
-  min-width: 280px;
-  height: 700px;
-
-  @media (max-width: $breakpointMd - 1) {
-    height: 600px;
-  }
-
-  @media (max-height: 700px) {
-    height: 520px;
-  }
 }

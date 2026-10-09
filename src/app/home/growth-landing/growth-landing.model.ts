@@ -43,16 +43,19 @@ export interface IGrowthLanding {
     moreLabel: string;
     moreUrl: string;
   };
-  /** Done for you or do it yourself, side by side, straight after the hero
-   *  (her brief of 2026-10-08). A card without a link opens the booking form;
-   *  one with a link goes there. Under the cards, the free profile as the
-   *  way to start. */
+  /** Do it yourself or done for you, side by side, straight after the hero
+   *  (her briefs of 2026-10-08 and 2026-10-09). A card without a link opens the
+   *  strategy call form; one with a link goes there. Under the cards, the free
+   *  profile as the way to start: the sentence is split around the words that
+   *  link to it, and the button follows. */
   choice?: {
     heading: string;
     label?: string;
     cards: IGrowthChoiceCard[];
     freeProfile?: {
-      text: string;
+      before: string;
+      linkText: string;
+      after: string;
       button: string;
       link: string;
     };
@@ -62,6 +65,8 @@ export interface IGrowthLanding {
   steps: IGrowthStep[];
   /** The contract line, under the steps. */
   stepsFootnote: string;
+  /** A smaller line after the contract line. */
+  stepsFootnoteSmall?: string;
   /** Section headings. Her first copy gave these sections none, and they were
    *  for screen readers only; offer v2 (2026-10) names both, so they show. */
   headings: {
@@ -115,8 +120,11 @@ export interface IGrowthVideo {
 
 export interface IGrowthChoiceCard {
   name: string;
-  line: string;
-  price: string;
+  /** The badge above the name. */
+  label: string;
+  description: string;
+  /** Shown for Pro, whose price is public; Growth's never is. */
+  price?: string;
   button: string;
   /** Absent: the button opens the booking form. */
   link?: string;
@@ -130,39 +138,45 @@ export interface IGrowthStep {
   title: string;
   intro: string;
   items: { lead?: string; text: string }[];
+  /** Equal tiles under the points, side by side from tablet width, in the
+   *  order given: the production options in Step 1. */
+  options?: { heading: string; area: string; text: string }[];
+  /** A small line under the tiles. */
+  optionsNote?: string;
   note?: string;
 }
 
+/* The strategy call form (her brief of 2026-10-09, update 4), which replaced
+ * the consultation booking: no calendar, no automatic booking. The request
+ * is saved and emailed to info@, and she follows up. */
 export interface IGrowthBooking {
-  /** Empty until the 30-minute event exists. Empty means the form thanks the
-   *  visitor and ends there; set means a scheduling step follows the form. */
-  calendlyUrl: string;
   formHeading: string;
+  description: string;
   labels: IGrowthBookingText;
+  /** Shown beside a label for a field that may be left empty. */
+  optionalLabel: string;
   validation: IGrowthBookingText;
-  submitWithCalendly: string;
-  submitWithoutCalendly: string;
-  thanksWithCalendly: string;
-  thanksWithoutCalendly: string;
-  /** Once a time is booked, above Calendly's own confirmation. */
-  thanksScheduled: string;
+  submit: string;
+  /** Under the submit button; `link` is the words linked to `path`. */
+  privacy: { before: string; link: string; after: string; path: string };
+  /** Replaces the form once the request is saved. */
+  thanks: string;
   errorGeneric: string;
 }
 
-export type GrowthBookingField = 'name' | 'practiceName' | 'email' | 'phone' | 'city' | 'patientSource';
+export type GrowthBookingField = 'firstName' | 'lastName' | 'practiceName' | 'email' | 'phone' | 'preferredTime';
 
 export type IGrowthBookingText = { [field in GrowthBookingField]: string };
 
-/* Which button opened the booking form. Stored with the request, so she can see
- * which part of the page does the persuading. 'direct' is a link or a reload
- * that lands on the open form without a button. The backend accepts exactly
- * these. Since 2026-09-27 the page has only the hero's and the final button
- * (Hedieh); 'sticky' stays because stored requests and old addresses carry
- * it, and so does 'hero', whose button her brief of 2026-10-08 removed: the
- * booking button belongs with Growth only. 'steps' is reused, from 2026-10-07, by the Growth card in "Two Ways to
- * Work With Us": the button it used to name was removed on 2026-09-27, so
- * nothing else sends it, and a new name would need the backend's list
- * changed first. */
+/* Which button opened the form. Stored with the request, so she can see which
+ * part of the page does the persuading. 'direct' is a link or a reload that
+ * lands on the open form without a button, which is how /plans and
+ * /for-practitioners reach it. The backend accepts exactly these. The hero's
+ * button, removed on 2026-10-08, is back since her brief of 2026-10-09, so
+ * 'hero', 'steps' (the Growth card in "Two Ways to Work With Us", a name kept
+ * from a button removed on 2026-09-27 so the backend's list did not have to
+ * change) and 'final' are the three on the page. 'sticky' stays because
+ * stored requests and old addresses carry it. */
 export type GrowthCtaPosition = 'hero' | 'steps' | 'final' | 'sticky' | 'direct';
 
 const CTA_POSITIONS: GrowthCtaPosition[] = ['hero', 'steps', 'final', 'sticky', 'direct'];

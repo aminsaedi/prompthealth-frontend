@@ -1,20 +1,15 @@
 <div class="booking-form">
-  <h2 #heading id="booking-form-heading" class="h4 mb-20p pr-40p booking-form__heading" tabindex="-1">{{ booking.formHeading }}</h2>
+  <h2 #heading id="booking-form-heading" class="h4 mb-10p pr-40p booking-form__heading" tabindex="-1">{{ booking.formHeading }}</h2>
 
   <form *ngIf="step === 'form'" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <div *ngFor="let field of fields" class="mb-15p">
-      <label class="subtitle2 text-body mb-5p d-block" [attr.for]="'booking-' + field.name">{{ booking.labels[field.name] }}</label>
-      <textarea
-      *ngIf="field.type === 'textarea'; else singleLine"
-      class="form-control booking-form__textarea"
-      [id]="'booking-' + field.name"
-      [formControlName]="field.name"
-      [attr.maxlength]="field.max"
-      [attr.aria-invalid]="showError(field.name) ? 'true' : null"
-      [attr.aria-describedby]="showError(field.name) ? 'booking-' + field.name + '-error' : null"
-      rows="4"
-      ></textarea>
-      <ng-template #singleLine>
+    <p class="text-label mb-20p booking-form__description">{{ booking.description }}</p>
+
+    <div class="booking-form__fields">
+      <div *ngFor="let field of fields" class="booking-form__field mb-15p" [class.booking-form__field--half]="field.half">
+        <label class="subtitle2 text-body mb-5p d-block" [attr.for]="'booking-' + field.name">
+          {{ booking.labels[field.name] }}
+          <span *ngIf="field.optional" class="booking-form__optional">{{ booking.optionalLabel }}</span>
+        </label>
         <input
         class="form-control"
         [type]="field.type"
@@ -24,15 +19,16 @@
         [attr.maxlength]="field.max"
         [attr.inputmode]="field.type === 'email' ? 'email' : (field.type === 'tel' ? 'tel' : null)"
         [attr.autocapitalize]="field.type === 'email' ? 'off' : null"
+        [attr.aria-required]="field.optional ? null : 'true'"
         [attr.aria-invalid]="showError(field.name) ? 'true' : null"
         [attr.aria-describedby]="showError(field.name) ? 'booking-' + field.name + '-error' : null"
         >
-      </ng-template>
-      <p
-      *ngIf="showError(field.name)"
-      class="booking-form__field-error mt-5p mb-0"
-      [id]="'booking-' + field.name + '-error'"
-      >{{ booking.validation[field.name] }}</p>
+        <p
+        *ngIf="showError(field.name)"
+        class="booking-form__field-error mt-5p mb-0"
+        [id]="'booking-' + field.name + '-error'"
+        >{{ booking.validation[field.name] }}</p>
+      </div>
     </div>
 
     <!-- Off-screen, not type="hidden", which a bot knows to skip. Out of the tab
@@ -42,16 +38,11 @@
       <input type="text" id="booking-hp-extra" name="hp_extra" formControlName="hp_extra" autocomplete="off" tabindex="-1">
     </div>
 
-    <button type="submit" class="btn btn-primary booking-form__submit mt-10p" [disabled]="isSending">
-      {{ hasCalendly ? booking.submitWithCalendly : booking.submitWithoutCalendly }}
-    </button>
+    <button type="submit" class="btn btn-primary booking-form__submit mt-10p" [disabled]="isSending">{{ booking.submit }}</button>
     <p *ngIf="errorMessage" class="booking-form__alert mt-15p mb-0" role="alert">{{ errorMessage }}</p>
+    <!-- A new tab, so reading the policy does not cost what was typed. -->
+    <p class="booking-form__privacy text-label mt-15p mb-0">{{ booking.privacy.before }}<a [routerLink]="booking.privacy.path" target="_blank" rel="noopener">{{ booking.privacy.link }}</a>{{ booking.privacy.after }}</p>
   </form>
 
-  <div *ngIf="step === 'schedule' || step === 'scheduled'">
-    <p class="subtitle1 mb-20p" role="status">{{ step === 'schedule' ? booking.thanksWithCalendly : booking.thanksScheduled }}</p>
-    <div #calendly class="booking-form__calendly"></div>
-  </div>
-
-  <p *ngIf="step === 'thanks'" class="subtitle1 mb-0" role="status">{{ booking.thanksWithoutCalendly }}</p>
+  <p *ngIf="step === 'thanks'" class="subtitle1 mb-0" role="status">{{ booking.thanks }}</p>
 </div>
