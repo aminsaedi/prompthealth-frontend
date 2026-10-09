@@ -132,7 +132,7 @@ export const PRO_CARD: IMembershipCard = {
     { lead: 'See how to make it:', text: 'filming instructions and a sample video for every video idea, and an example for every post idea, so your team can follow along.' },
     { lead: 'Use what already works:', text: 'the best-performing hooks and formats from 400+ dental videos, updated every month.' },
     { lead: 'Stay current without the research:', text: 'trend alerts whenever a new trend is worth jumping on.' },
-    { lead: 'Get expert feedback:', text: 'a live session every three months with founder Hedieh Safiyari, a creator with 1.7 million followers.' },
+    { lead: 'Get expert feedback:', text: 'a quarterly live session with founder Hedieh Safiyari, a creator with 1.7 million followers.' },
     { lead: "Build your whole team's confidence:", text: 'everyone on your team is included, so anyone can step in front of the camera.' },
     { lead: '', text: 'Everything in PromptHealth Basic.' },
   ],
