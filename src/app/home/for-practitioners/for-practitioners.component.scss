@@ -57,3 +57,21 @@
   bottom: -50px;
   left: -80px;
 }
+
+/* "PromptHealth Basic is free for dentists and all healthcare practitioners"
+ * above the hero's buttons (Hedieh's brief of 2026-10-08): the free profile
+ * is the first thing a practitioner is offered. */
+.fp-free {
+  display: flex;
+  align-items: flex-start;
+  font-size: 17px;
+  line-height: 25px;
+  color: $colorPrimaryDark;
+}
+
+.fp-free__check {
+  flex: 0 0 auto;
+  margin: 3px 8px 0 0;
+  font-size: 20px;
+  color: $colorPrimary;
+}

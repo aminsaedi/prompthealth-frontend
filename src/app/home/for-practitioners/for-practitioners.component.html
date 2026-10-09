@@ -11,16 +11,22 @@
         <h1 class="h3 h2-md mb-30p text-primary-dark">
           Get Discovered by Patients, on Google &amp; AI Search
         </h1>
-        <p class="subtitle1 text-label mb-40p">
+        <p class="subtitle1 text-label mb-25p">
           Patients are searching Google, asking ChatGPT, and browsing AI-powered tools for healthcare recommendations.
           PromptHealth helps your practice show up where it matters most.
         </p>
+        <!-- The free profile first, as the main action for every practitioner
+        (Hedieh's brief of 2026-10-08, section 3). -->
+        <p class="fp-free mb-30p">
+          <i iconPh="check" class="fp-free__check" aria-hidden="true"></i>
+          <span><strong>{{ basic.name }} is free</strong> for dentists and all healthcare practitioners.</span>
+        </p>
         <div class="d-flex flex-column flex-md-row">
-          <a routerLink="/plans" class="btn btn-primary mr-md-15p mb-15p mb-md-0p">
-            View Plans
+          <a [routerLink]="freeProfile.link" class="btn btn-primary mr-md-15p mb-15p mb-md-0p">
+            {{ freeProfile.button }}
           </a>
-          <a routerLink="/auth/registration/sp" class="btn btn-outline">
-            Create Free Profile
+          <a routerLink="/plans" class="btn btn-outline">
+            View Plans
           </a>
         </div>
       </div>
@@ -138,11 +144,11 @@
     <h2 class="h3 h2-md mb-20p">Ready to Get Discovered by More Patients?</h2>
     <p class="mb-40p opacity-70pc">Join hundreds of healthcare providers who trust PromptHealth to grow their online presence.</p>
     <div class="d-flex flex-column flex-md-row justify-content-center">
-      <a routerLink="/plans" class="btn btn-primary mr-md-15p mb-15p mb-md-0p">
-        View Plans
+      <a [routerLink]="freeProfile.link" class="btn btn-primary mr-md-15p mb-15p mb-md-0p">
+        {{ freeProfile.button }}
       </a>
-      <a routerLink="/auth/registration/sp" class="btn btn-outline-light">
-        Create Free Profile
+      <a routerLink="/plans" class="btn btn-outline-light">
+        View Plans
       </a>
     </div>
   </div>
