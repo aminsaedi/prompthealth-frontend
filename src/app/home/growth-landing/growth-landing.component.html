@@ -1,9 +1,9 @@
 <ng-container *ngIf="config">
 
-  <!-- Hero. Heading and text fit the first screen of a 375x667 phone under
-  the sticky header; the video follows. A portrait video stands beside the
-  words from tablet width. No button since her brief of 2026-10-08: booking
-  belongs with Growth, in the next section. -->
+  <!-- Hero. Heading, text and button fit the first screen of a 375x667 phone
+  under the sticky header; the video follows. A portrait video stands beside
+  the words from tablet width. The button, taken out on 2026-10-08, is back
+  since her brief of 2026-10-09 as Book a Strategy Call. -->
   <section class="growth-hero bg-lightyellow position-relative overflow-hidden" [class.growth-hero--portrait]="heroPortrait">
     <div class="growth-dim growth-dim--1" aria-hidden="true"></div>
     <div class="growth-dim growth-dim--2" aria-hidden="true"></div>
@@ -11,7 +11,8 @@
       <div class="growth-hero__copy">
         <p *ngIf="config.hero.eyebrow" class="growth-eyebrow mb-10p mb-md-15p">{{ config.hero.eyebrow }}</p>
         <h1 class="h3 h2-md text-primary-dark mb-15p mb-md-20p growth-hero__heading">{{ config.hero.heading }}</h1>
-        <p class="subtitle1 text-label mb-0">{{ config.hero.text }}</p>
+        <p class="subtitle1 text-label mb-20p mb-md-30p">{{ config.hero.text }}</p>
+        <button #heroCta type="button" class="btn btn-primary" (click)="openBooking('hero')">{{ config.ctaLabel }}</button>
       </div>
       <div class="growth-hero__video">
         <hero-video [video]="config.hero.video" [landingKey]="config.key"></hero-video>
@@ -19,28 +20,32 @@
     </div>
   </section>
 
-  <!-- Two ways to work with us, straight after the hero (her brief of
-  2026-10-08): done for you or do it yourself, one click from either, and the
+  <!-- Two ways to work with us, straight after the hero: do it yourself or
+  done for you, Pro first and above Growth on a phone (her brief of
+  2026-10-09), each card the same size with its badge above the name, and the
   free profile under both as the way to start. -->
   <section *ngIf="config.choice" class="bg-lightgreen py-50p py-md-80p">
     <div class="container">
       <p *ngIf="config.choice.label" class="growth-eyebrow text-center mb-10p">{{ config.choice.label }}</p>
       <h2 class="h3 h2-md text-center mb-30p mb-md-50p">{{ config.choice.heading }}</h2>
       <ul class="row justify-content-center list-unstyled mb-0">
-        <li *ngFor="let card of config.choice.cards; let first = first" class="col-12 col-md-6 col-xl-5 mb-20p mb-md-0p">
-          <div class="growth-choice bg-white rounded-12p h-100" [class.growth-choice--first]="first">
+        <li *ngFor="let card of config.choice.cards" class="col-12 col-md-6 col-xl-5 mb-20p mb-md-0p">
+          <div class="growth-choice bg-white rounded-12p h-100" [class.growth-choice--growth]="!card.link">
+            <p class="growth-choice__badge mb-15p">{{ card.label }}</p>
             <h3 class="h4 text-primary-dark mb-10p">{{ card.name }}</h3>
-            <p class="subtitle1 mb-15p">{{ card.line }}</p>
-            <p class="growth-choice__price mb-25p">{{ card.price }}</p>
-            <a *ngIf="card.link" [routerLink]="card.link" [queryParams]="card.queryParams" class="btn btn-outline growth-choice__button">{{ card.button }}</a>
-            <button *ngIf="!card.link" #choiceCta type="button" class="btn btn-primary growth-choice__button" (click)="openBooking('steps')">{{ card.button }}</button>
-            <button *ngIf="card.applyPro" type="button" class="growth-choice__apply" (click)="apply.open('pro')">{{ card.applyPro }}</button>
+            <p class="subtitle1 text-label mb-20p">{{ card.description }}</p>
+            <div class="growth-choice__foot">
+              <p *ngIf="card.price" class="growth-choice__price mb-20p">{{ card.price }}</p>
+              <a *ngIf="card.link" [routerLink]="card.link" [queryParams]="card.queryParams" class="btn btn-primary growth-choice__button">{{ card.button }}</a>
+              <button *ngIf="!card.link" #choiceCta type="button" class="btn btn-primary growth-choice__button" (click)="openBooking('steps')">{{ card.button }}</button>
+              <button *ngIf="card.applyPro" type="button" class="growth-choice__apply" (click)="apply.open('pro')">{{ card.applyPro }}</button>
+            </div>
           </div>
         </li>
       </ul>
-      <div *ngIf="config.choice.freeProfile" class="growth-free mx-auto">
-        <p class="growth-free__text mb-0">{{ config.choice.freeProfile.text }}</p>
-        <a [routerLink]="config.choice.freeProfile.link" class="btn btn-outline growth-free__button">{{ config.choice.freeProfile.button }}</a>
+      <div *ngIf="config.choice.freeProfile as free" class="growth-free mx-auto">
+        <p class="growth-free__text mb-0">{{ free.before }}<a [routerLink]="free.link" class="growth-free__link">{{ free.linkText }}</a>{{ free.after }}</p>
+        <a [routerLink]="free.link" class="btn btn-outline growth-free__button">{{ free.button }}</a>
       </div>
     </div>
   </section>
@@ -113,12 +118,26 @@
                 {{ item.text }}
               </li>
             </ul>
+            <!-- The production options under Step 1: two equal tiles, side by
+            side from tablet width, in the order given and neither marked
+            as recommended. -->
+            <ng-container *ngIf="step.options">
+              <ul class="growth-options list-unstyled mt-25p mb-0">
+                <li *ngFor="let option of step.options" class="growth-option">
+                  <h4 class="growth-option__heading text-primary-dark mb-5p">{{ option.heading }}</h4>
+                  <p class="growth-option__area mb-10p">{{ option.area }}</p>
+                  <p class="growth-option__text mb-0">{{ option.text }}</p>
+                </li>
+              </ul>
+              <p *ngIf="step.optionsNote" class="small font-italic text-label growth-note mt-15p mb-0">{{ step.optionsNote }}</p>
+            </ng-container>
             <p *ngIf="step.note" class="small font-italic text-label growth-note mt-20p mb-0">{{ step.note }}</p>
           </div>
         </li>
       </ol>
       <div class="text-center mt-30p mt-md-50p">
         <p class="small font-italic text-label growth-note mb-0">{{ config.stepsFootnote }}</p>
+        <p *ngIf="config.stepsFootnoteSmall" class="small text-label growth-note growth-note--small mt-5p mb-0">{{ config.stepsFootnoteSmall }}</p>
       </div>
     </div>
   </section>
@@ -157,7 +176,7 @@
     </div>
   </section>
 
-  <modal [id]="bookingModalId" [bodyStyle]="bookingBodyStyle">
+  <modal [id]="bookingModalId">
     <div
     #dialog
     class="growth-booking"
@@ -173,7 +192,6 @@
       [landing]="config"
       [ctaPosition]="ctaPosition"
       [open]="isBookingShown"
-      (stepChange)="onBookingStep($event)"
       ></booking-form>
     </div>
   </modal>

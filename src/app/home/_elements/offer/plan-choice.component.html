@@ -68,8 +68,7 @@
             <h4 class="growth-summary__heading text-primary-dark mb-15p">{{ growth.card.heading }}</h4>
             <p class="growth-summary__text mb-20p">{{ growth.card.text }}</p>
             <p class="growth-summary__availability mb-25p">{{ growthAvailability }}</p>
-            <a [routerLink]="book.link" [queryParams]="book.queryParams" class="btn btn-primary growth-summary__button mb-10p">{{ growth.card.bookButton }}</a>
-            <button type="button" class="btn btn-outline growth-summary__button" (click)="apply.open('growth')">{{ growth.card.applyButton }}</button>
+            <a [routerLink]="book.link" [queryParams]="book.queryParams" class="btn btn-primary growth-summary__button">{{ growth.card.bookButton }}</a>
           </div>
         </div>
       </div>

@@ -19,10 +19,11 @@ import { GROWTH_PANEL, OFFER_CATALOG_ITEMS } from '../_elements/offer/offer-copy
 
 /* Proposed wording, on Hedieh's sign-off list (plan section 6), taken from
  * plan-specs/growth/dentists-landing-copy.json (otherPages) by a script. The
- * meta and the WebPage JSON-LD share it; the page's H2 is in its template. */
+ * meta and the WebPage JSON-LD share it; the page's H2 is in its template.
+ * The description's Growth clause is from her brief of 2026-10-09 (3C). */
 const PLANS_PAGE = {
   title: 'Plans for Practitioners | PromptHealth',
-  description: 'Create a free PromptHealth profile, get weekly video and post ideas with PromptHealth Pro, or apply for PromptHealth Growth, our done-for-you video plan.',
+  description: 'Create a free PromptHealth profile, get weekly video and post ideas with PromptHealth Pro, or book a strategy call for PromptHealth Growth, our done-for-you video plan.',
 };
 
 @Component({
@@ -212,7 +213,7 @@ const features = [
     icon: "video-library",
     title: "Video That Builds Trust",
     content:
-      "Learn to make your own videos with PromptHealth Pro, or let us film and produce them for you with PromptHealth Growth.",
+      "Learn to make your own videos with PromptHealth Pro, or let us produce them for you with PromptHealth Growth.",
   },
 ];
 
@@ -230,17 +231,17 @@ const faqs: IFAQItem[] = [
   },
   {
     q: "What is PromptHealth Pro?",
-    a: `Our paid membership: your team gets a new video idea and post idea every week, with filming instructions and examples, plus trend alerts, a monthly "what's working now" update and a live session every three months. $149/month per clinic, for your whole team. Currently for dental clinics, and other healthcare practitioners can apply. Cancel anytime. <a href="/pro">See PromptHealth Pro</a>.`,
+    a: `Our paid membership: your team gets a new video idea and post idea every week, with filming instructions and examples, plus trend alerts, a monthly "what's working now" update and a quarterly live session. $149/month per clinic, for your whole team. Currently for dental clinics, and other healthcare practitioners can apply. Cancel anytime. <a href="/pro">See PromptHealth Pro</a>.`,
     opened: false,
   },
   {
     q: "Do I have to film anything myself?",
-    a: `With PromptHealth Basic and Pro, your team creates the content, and we give you the tools, training and ideas. With PromptHealth Growth, we film and produce it for you.`,
+    a: `With PromptHealth Basic and Pro, your team creates the content, and we give you the tools, training and ideas. With PromptHealth Growth, we produce it for you, using AI-assisted video production or professional on-site filming in Greater Vancouver.`,
     opened: false,
   },
   {
     q: "What is PromptHealth Growth?",
-    a: `Our done-for-you plan, by application only: we film at your practice every three months, coach your team on camera, and post 4 edited videos a month for you. It's currently available for dental practices, and other healthcare practitioners can apply. <a href="/for-dentists">See how it works</a>.`,
+    a: `Our done-for-you plan: we develop your content strategy, produce 4 personalized videos a month, publish them for you and promote your best video with Meta advertising. It's currently available for dental practices, and other healthcare practitioners can apply. <a href="/for-dentists">See how it works</a>.`,
     opened: false,
   },
   {

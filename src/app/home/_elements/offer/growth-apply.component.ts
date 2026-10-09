@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { HttpBackend, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +6,6 @@ import { environment } from 'src/environments/environment';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { AnalyticsService } from 'src/app/shared/services/analytics.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
-import { DENTISTS_LANDING } from '../../growth-landing/landings/dentists';
 import { PRO_JOIN } from './offer-copy';
 
 const API_URL = environment.config.API_URL;
@@ -46,8 +45,9 @@ export const GROWTH_APPLY_COPY = {
     practitionerTypeOther: 'Please specify',
   },
   submit: 'Send Application',
-  thanksDentist: 'Thanks! Next, book your 30-minute consultation.',
-  bookButton: 'Book a 30-Minute Consultation',
+  /* Her strategy call form's thank-you (brief of 2026-10-09): there is no
+   * booking to send a dentist on to any more, and she follows up herself. */
+  thanksDentist: "Thank you for reaching out! We've received your request and will be in touch soon.",
   thanksOther: "Thanks for applying. PromptHealth Growth is currently available for dental practices. We'll contact you as soon as it opens for your profession.",
   /* A dentist who applied for Pro does not need to apply: Pro is open to
    * dental clinics, and the plan choice is one click away. */
@@ -89,20 +89,22 @@ function emailAddress(control: AbstractControl): ValidationErrors | null {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(control.value || '').trim()) ? null : { email: true };
 }
 
-/* Seconds the dentists' message stays up before the booking page opens. */
-const BOOKING_REDIRECT_MS = 2500;
-
 /*
  * The PromptHealth Growth and Pro application (her section 3 of offer v2,
  * and her brief of 2026-10-08), in a modal opened by Apply on the plan
  * section, on /for-dentists and in the /pro FAQ.
  *
- * Every application is saved and emailed to info@ by the server. For Growth,
- * a dentist is then sent on to the consultation booking the For Dentists page
- * uses; anyone else is told Growth is for dental practices for now, and the
- * server adds them to the Growth waitlist. For Pro, a dentist is offered the
- * plan choice, since Pro is already open to dental clinics, and anyone else is
- * told they are on the list.
+ * Every application is saved and emailed to info@ by the server. For Pro, a
+ * dentist is offered the plan choice, since Pro is already open to dental
+ * clinics, and anyone else is told they are on the list.
+ *
+ * Since her brief of 2026-10-09 nothing on the site opens it for Growth: every
+ * Growth button is Book a Strategy Call, the form on /for-dentists. An older
+ * link (?modal=growth-apply with no interest) still opens it for Growth, and
+ * the application is still saved. A dentist is thanked, as the strategy call
+ * form thanks, rather than sent on to the Calendly booking that no longer
+ * exists; anyone else is told Growth is for dental practices for now, and the
+ * server adds them to the Growth waitlist.
  *
  * Like the booking form, it is created with the page, on the server render
  * too, and does no browser work until it is used.
@@ -112,7 +114,7 @@ const BOOKING_REDIRECT_MS = 2500;
   templateUrl: './growth-apply.component.html',
   styleUrls: ['./growth-apply.component.scss'],
 })
-export class GrowthApplyComponent implements OnDestroy {
+export class GrowthApplyComponent {
   /* Which page the form was opened on, stored with the application. */
   @Input() source: 'for-practitioners' | 'for-dentists' | 'plans' | 'pro' | 'home' | 'other' = 'other';
 
@@ -148,9 +150,7 @@ export class GrowthApplyComponent implements OnDestroy {
   public submitted = false;
   public isSending = false;
   public errorMessage = '';
-  public bookingUrl = '';
 
-  private redirectTimer: any = null;
   private readonly http: HttpClient;
 
   constructor(
@@ -168,10 +168,6 @@ export class GrowthApplyComponent implements OnDestroy {
 
   get headingText(): string { return this.copy.heading[this.interest]; }
 
-  ngOnDestroy(): void {
-    clearTimeout(this.redirectTimer);
-  }
-
   /* Always names the interest, or clears it for Growth, so an earlier
    * opening's ?interest=pro left in the address cannot carry over. */
   open(interest: ApplyInterest = 'growth'): void {
@@ -183,7 +179,6 @@ export class GrowthApplyComponent implements OnDestroy {
   }
 
   close(): void {
-    clearTimeout(this.redirectTimer);
     this._modalService.hide();
   }
 
@@ -198,10 +193,7 @@ export class GrowthApplyComponent implements OnDestroy {
         this.errorMessage = '';
       }
     }
-    if (state !== 'open' || !this._uService.isBrowser) {
-      clearTimeout(this.redirectTimer);
-      return;
-    }
+    if (state !== 'open' || !this._uService.isBrowser) { return; }
     setTimeout(() => {
       const el: HTMLElement = this.heading && this.heading.nativeElement;
       if (el && typeof el.focus === 'function') {
@@ -261,10 +253,6 @@ export class GrowthApplyComponent implements OnDestroy {
         this.step = res.data.isDentist ? 'pro-dentist' : 'pro-other';
       } else if (res.data.isDentist) {
         this.step = 'dentist';
-        this.bookingUrl = this.calendlyUrl(body.name, body.email);
-        /* Her checklist: the applicant lands on the consultation booking. The
-         * message is read first; the button is there for anyone quicker. */
-        this.redirectTimer = setTimeout(() => this.goToBooking(), BOOKING_REDIRECT_MS);
       } else {
         this.step = 'other';
       }
@@ -273,21 +261,5 @@ export class GrowthApplyComponent implements OnDestroy {
       const message = error && error.error && typeof error.error.message === 'string' ? error.error.message : '';
       this.errorMessage = error && error.status === 400 && message ? message : this.copy.error;
     });
-  }
-
-  goToBooking(): void {
-    clearTimeout(this.redirectTimer);
-    if (this.bookingUrl && this._uService.isBrowser) {
-      window.location.href = this.bookingUrl;
-    }
-  }
-
-  /* The For Dentists page's Calendly event, with the name and email filled
-   * in. Calendly reads both from the query of its own page. */
-  private calendlyUrl(name: string, email: string): string {
-    const base = DENTISTS_LANDING.booking.calendlyUrl;
-    if (!base) { return ''; }
-    const query = 'name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
-    return base + (base.indexOf('?') >= 0 ? '&' : '?') + query;
   }
 }

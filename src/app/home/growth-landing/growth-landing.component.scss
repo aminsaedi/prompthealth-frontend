@@ -376,22 +376,46 @@ $stepGap: 30px;
   }
 }
 
-/* Two ways to work with us. The same card twice; the first, the one the page
- * is about, carries the accent along its top. */
+/* Two ways to work with us. The same card twice, the same size, with the
+ * accent along the top of both since her brief of 2026-10-09 asks for two
+ * equal cards. The column's h-100 makes the pair as tall as the taller one,
+ * and the foot keeps both buttons on one line across. */
 .growth-choice {
   display: flex;
   flex-direction: column;
   padding: 30px;
-  border-top: 4px solid $colorGsLine;
+  border-top: 4px solid $colorPrimary;
   box-shadow: 0 6px 20px rgba($colorGsBlack, 0.06);
+}
 
-  &--first {
-    border-top-color: $colorPrimary;
+/* The badge above each card's name, in the "For Dental Clinics" pill used on
+ * the homepage and the plan section: brand blue for Pro, brand yellow with the
+ * dark blue for Growth, so the two read apart at a glance. */
+.growth-choice__badge {
+  align-self: flex-start;
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: $colorPrimaryDark;
+  color: $colorGsWhite;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+
+  .growth-choice--growth & {
+    background: $colorYellow;
+    color: $colorPrimaryDark;
   }
 }
 
-.growth-choice__price {
+.growth-choice__foot {
+  display: flex;
+  flex-direction: column;
   margin-top: auto;
+}
+
+.growth-choice__price {
   font-size: 20px;
   line-height: 28px;
   font-weight: 700;
@@ -460,6 +484,11 @@ $stepGap: 30px;
   color: $colorGsBody;
 }
 
+.growth-free__link {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .growth-free__button {
   margin-top: 14px;
   white-space: nowrap;
@@ -467,4 +496,63 @@ $stepGap: 30px;
   @media (min-width: $breakpointMd) {
     margin: 0 0 0 24px;
   }
+}
+
+// ---------------------------------------------- her brief of 2026-10-09
+
+/* The two production options under Step 1: equal tiles, side by side from
+ * tablet width, stacked on a phone, the first never marked as preferred. */
+.growth-options {
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: $breakpointMd) {
+    flex-direction: row;
+  }
+}
+
+.growth-option {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 18px 18px 20px;
+  border: 1px solid $colorGsLine;
+  border-radius: 12px;
+  background: $colorLightGreen;
+
+  & + & {
+    margin-top: 12px;
+
+    @media (min-width: $breakpointMd) {
+      margin: 0 0 0 12px;
+    }
+  }
+}
+
+.growth-option__heading {
+  font-size: 17px;
+  line-height: 23px;
+  font-weight: 700;
+}
+
+.growth-option__area {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $colorPrimary;
+}
+
+.growth-option__text {
+  font-size: 15px;
+  line-height: 22px;
+  color: $colorGsBody;
+}
+
+/* The geography line after the contract line: smaller and upright, a
+ * qualification rather than a second footnote. */
+p.growth-note--small {
+  font-size: 12px;
+  line-height: 18px;
+  font-style: normal;
 }

@@ -63,10 +63,7 @@
       <p *ngIf="errorMessage" class="growth-apply__alert mt-15p mb-0" role="alert">{{ errorMessage }}</p>
     </form>
 
-    <div *ngIf="step === 'dentist'" role="status">
-      <p class="subtitle1 mb-20p">{{ copy.thanksDentist }}</p>
-      <a *ngIf="bookingUrl" [href]="bookingUrl" class="btn btn-primary growth-apply__submit" (click)="goToBooking(); $event.preventDefault()">{{ copy.bookButton }}</a>
-    </div>
+    <p *ngIf="step === 'dentist'" class="subtitle1 mb-0" role="status">{{ copy.thanksDentist }}</p>
 
     <p *ngIf="step === 'other'" class="subtitle1 mb-0" role="status">{{ copy.thanksOther }}</p>
 

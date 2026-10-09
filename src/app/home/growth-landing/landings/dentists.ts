@@ -1,6 +1,6 @@
 import { IGrowthLanding } from '../growth-landing.model';
 import { GROWTH_LANDING_PATHS } from './paths';
-import { FREE_PROFILE, NOT_A_DENTIST_APPLY_FOR_PRO, PRO_JOIN } from '../../_elements/offer/offer-copy';
+import { FREE_PROFILE, NOT_A_DENTIST_APPLY_FOR_PRO, PRO_JOIN, PRO_PRICE } from '../../_elements/offer/offer-copy';
 
 /*
  * /for-dentists, the first growth landing.
@@ -23,20 +23,29 @@ import { FREE_PROFILE, NOT_A_DENTIST_APPLY_FOR_PRO, PRO_JOIN } from '../../_elem
  * "Join PromptHealth Pro" with "Not a dentist? Apply for Pro." under it, and
  * offers the free profile under both, as the way to start before Pro.
  *
+ * Her brief of 2026-10-09 (plan-specs/source/brief-2026-10-09/brief.txt)
+ * repositions Growth: personalized video, made with AI-assisted production
+ * anywhere or filmed at the practice in Greater Vancouver, rather than a
+ * filming day every quarter. It rewrites the hero text, the title and
+ * description, How It Works, the closing line and the FAQ, puts Pro first in
+ * "Two Ways to Work With Us" with a badge on each card, brings the hero's
+ * button back, and makes every Growth button "Book a Strategy Call", which
+ * opens an inquiry form in place of the Calendly booking. Her copy is word for
+ * word, with the house edits: a middle dot for the dash in each card's badge.
+ *
  * The captions are ours, shortened from the videos' own titles; she asked for
  * the topic, and a clinic's name only where it has agreed to be named, so none
  * are named.
  *
- * The hero video is her own vertical cut, filmed on a production day, with the
- * words already in the picture. booking.calendlyUrl is her 30-minute Discovery
- * Call; emptied, the form thanks the visitor and she follows up by email.
+ * The hero video is her own vertical cut, with the words already in the
+ * picture.
  */
 export const DENTISTS_LANDING: IGrowthLanding = {
   key: 'dentists',
   path: GROWTH_LANDING_PATHS.dentists,
   seo: {
-    title: 'PromptHealth Growth for Dentists | Video Filming, Coaching & Local Ads',
-    description: 'Professional videos of you and your team, filmed every three months and promoted to people near your practice. By application. Book a 30-minute consultation.',
+    title: 'PromptHealth Growth for Dentists | Personalized Video & Local Ads',
+    description: 'Personalized videos for dental practices, made with AI-assisted production or professional filming in Greater Vancouver, and promoted to people near you. Book a strategy call.',
     /* The share card is landscape, as every network crops to; the vertical
      * poster alone would be cut to a strip. */
     image: '/assets/img/share/for-dentists-share.v1.jpg',
@@ -45,11 +54,11 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     imageType: 'image/jpeg',
     imageAlt: 'Hedieh Safiyari on set at a practice, with 1.7M followers and 400+ dental videos',
   },
-  ctaLabel: 'Book a 30-Minute Consultation',
+  ctaLabel: 'Book a Strategy Call',
   hero: {
     eyebrow: 'For Dental Practices',
     heading: 'Let Patients Get to Know You Before They Ever Book',
-    text: 'We film, coach and produce videos that show people near your practice who you are and why to trust you. Then we put your best video in front of them every month.',
+    text: 'We create personalized videos that show people near your practice who you are and why to trust you. Then we put your best video in front of them every month.',
     video: {
       src: 'https://prompt-images.s3.us-east-2.amazonaws.com/landing/for-dentists/hero-vertical-v2.mp4',
       poster: '/assets/video/for-dentists-hero-vertical-poster.v1.jpg',
@@ -120,75 +129,84 @@ export const DENTISTS_LANDING: IGrowthLanding = {
   choice: {
     heading: 'Two Ways to Work With Us',
     label: 'For Dental Clinics',
+    /* Her brief of 2026-10-09: Pro first, the same size as Growth, and above
+     * it on a phone. */
     cards: [
       {
-        name: 'PromptHealth Growth',
-        line: 'We film, produce and run your videos',
-        price: 'By application',
-        button: 'Book a 30-Minute Consultation',
-      },
-      {
         name: 'PromptHealth Pro',
-        line: 'Your team creates, with weekly guidance from Hedieh',
-        price: '$149/month per clinic',
+        label: 'DIY · We Guide You',
+        description: 'Weekly content ideas, ready-to-use templates, practical training, and ongoing guidance to help your team create and manage its own social media content.',
+        price: PRO_PRICE.monthly,
         button: PRO_JOIN.button,
         link: PRO_JOIN.link,
         queryParams: PRO_JOIN.queryParams,
         applyPro: NOT_A_DENTIST_APPLY_FOR_PRO,
       },
+      {
+        name: 'PromptHealth Growth',
+        label: 'Done For You · We Handle It',
+        description: 'From strategy and personalized video production to publishing and Meta advertising, we handle your content and marketing so you can focus on your patients.',
+        button: 'Book a Strategy Call',
+      },
     ],
     /* Her brief of 2026-10-08: the path is a free profile first, then Pro
-     * when a practice wants more. The sentence is ours, from her words. */
+     * when a practice wants more. Her brief of 2026-10-09 approves the
+     * sentence and links "free PromptHealth profile" to the registration. */
     freeProfile: {
-      text: 'Not ready yet? Start with a free PromptHealth profile, then upgrade to Pro when you want more.',
+      before: 'Not ready yet? Start with a ',
+      linkText: 'free PromptHealth profile',
+      after: ', then upgrade to Pro when you want more.',
       button: FREE_PROFILE.button,
       link: FREE_PROFILE.link,
     },
   },
-  stepsIntro: 'PromptHealth Growth is by application only.',
+  stepsIntro: 'We create personalized videos that help patients get to know your practice, understand your expertise, and build trust before they book. From content strategy to video production and targeted advertising, we handle it all.',
   steps: [
     {
       title: 'Step 1: Implementation',
-      intro: 'Everything starts with strategy and your first production day.',
+      intro: 'Everything starts with understanding your practice, your story, and the patients you want to reach.',
       items: [
         { text: 'Strategy session with you and your team' },
-        { text: 'Your brand story' },
-        { text: 'First production day: video, photos and drone' },
-        { text: 'On-camera coaching and a social playbook for your team' },
+        { text: 'Your brand story and what makes your practice different' },
+        { text: 'Personalized video content strategy' },
+        { text: 'Your choice of AI-assisted video production or professional on-site filming' },
+        { text: 'Content planning, creative direction and team guidance' },
         { text: 'Online presence checklist (Google Business Profile, reviews)' },
         { text: 'Meta ad account and tracking setup' },
       ],
-      note: 'Filming is in person for clinics in Greater Vancouver. Outside Greater Vancouver? We offer a remote option using an AI video clone of you.',
+      /* AI-assisted first, and neither marked as recommended (her brief). */
+      options: [
+        {
+          heading: 'AI-Assisted Video Production',
+          area: 'Available Worldwide',
+          text: 'Personalized videos created using AI technology, featuring your approved digital likeness or a virtual presenter. No ongoing filming required.',
+        },
+        {
+          heading: 'Professional On-Site Filming',
+          area: 'Greater Vancouver',
+          text: 'Professional filming at your practice, featuring you, your team and your environment, with creative direction and on-camera coaching.',
+        },
+      ],
+      optionsNote: 'Professional on-site filming is available as a premium production option.',
     },
     {
       title: 'Step 2: Growth, every month',
       intro: 'Then we keep your practice visible, month after month.',
       items: [
-        {
-          text: '4 professionally edited videos every month',
-        },
-        {
-          text: 'Filming at your practice every 3 months',
-        },
-        {
-          text: 'Scripts and on-camera coaching for every shoot',
-        },
-        {
-          text: 'Your videos posted for you on your Instagram and Google Business Profile',
-        },
-        {
-          text: "Your videos shared as collaboration posts with PromptHealth's Instagram, followed by 21,000+ people interested in health",
-        },
-        {
-          text: 'Your best video each month run as a Meta ad to people near your practice, with tracking set up',
-        },
-        {
-          text: 'A monthly report: reach, views, messages and calls, and cost per message',
-        },
+        { text: '4 personalized, professionally produced videos every month' },
+        { text: 'Custom scripts based on your expertise, services and patient questions' },
+        { text: 'Consistent video creation without the need for monthly filming' },
+        { text: 'Your videos posted for you on Instagram and Google Business Profile' },
+        { text: "Your videos shared as collaboration posts with PromptHealth's Instagram, followed by 21,000+ people interested in health" },
+        { text: 'Your strongest video each month promoted through targeted Meta advertising to people near your practice' },
+        { text: 'Monthly performance report: reach, views, messages, calls and cost per message' },
       ],
     },
   ],
-  stepsFootnote: 'No contract. Billed in 3-month cycles, each built around one production day. Cancel anytime before your next cycle.',
+  stepsFootnote: 'No long-term contract. Billed in 3-month cycles. Cancel anytime before your next cycle. Advertising spend and optional on-site production are separate.',
+  /* So the page does not imply that Meta ads are managed everywhere AI-assisted
+   * production is offered (her brief, proposed and approved). */
+  stepsFootnoteSmall: 'Advertising management outside Canada is confirmed during your strategy call.',
   headings: {
     howItWorks: 'How It Works',
     faq: 'Frequently Asked Questions',
@@ -198,15 +216,17 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     button: 'See PromptHealth Pro',
     link: '/pro',
   },
+  /* Her brief of 2026-10-09, update 5: nine questions in this order. Three,
+   * six and eight are kept as they were. */
   faq: [
     {
       q: "What's the difference between Growth and Pro?",
-      a: 'Growth is done for you: we plan, film, edit and post your videos and run your ads. Pro is for teams who want to make their own content, with a new video idea and post idea from Hedieh every week, for $149/month per clinic.',
+      a: 'Growth is done for you. We develop your content strategy, create your videos, publish them and manage your Meta advertising. Pro gives your team weekly guidance and ideas to create its own content.',
       opened: false,
     },
     {
       q: 'How much does PromptHealth Growth cost?',
-      a: "It depends on your practice and goals. We'll go through pricing on your 30-minute consultation.",
+      a: "Pricing depends on your practice, content needs and preferred production approach. We'll recommend the right solution during your strategy call.",
       opened: false,
     },
     {
@@ -221,12 +241,17 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     },
     {
       q: 'Are we locked into a contract?',
-      a: 'No. PromptHealth Growth is billed in 3-month cycles, and each cycle is built around one production day at your practice. You can cancel anytime before your next cycle starts. We recommend at least two cycles, so your videos and ads have time to work.',
+      a: 'No long-term contract. Growth is billed in 3-month cycles, and you can cancel before your next cycle begins. We recommend allowing at least two cycles to evaluate content and advertising performance.',
       opened: false,
     },
     {
-      q: 'How much filming do we have to do?',
-      a: 'For clinics in Greater Vancouver, one production day at your practice every three months. We plan everything in advance and coach your team on camera, so nobody has to be a performer. Outside Greater Vancouver, we offer a remote option using an AI video clone of you.',
+      q: 'Do we need to be on camera?',
+      a: 'Not necessarily. We offer AI-assisted video production, available worldwide, so you can create personalized content without ongoing filming. For practices that prefer traditional video, we also offer professional on-site filming in Greater Vancouver.',
+      opened: false,
+    },
+    {
+      q: 'Will AI videos look and sound like us?',
+      a: 'If you choose a personalized AI presenter, we can create videos using your approved digital likeness and voice. Alternatively, your practice can use a fictional virtual presenter. You review and approve all content before publication, and AI-generated presenters are clearly identified.',
       opened: false,
     },
     {
@@ -236,38 +261,44 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     },
     {
       q: 'Do we approve the videos?',
-      a: "Yes. Your practice reviews and approves every video and ad before it's published. We keep content educational and accurate, without discounts, guarantees or patient testimonials in ads.",
+      a: 'Yes. Your practice reviews and approves every video and advertisement before publication. We ensure the content reflects your practice and follows applicable healthcare advertising standards. We keep content educational and accurate, without discounts, guarantees or patient testimonials in ads.',
       opened: false,
     },
   ],
   final: {
     heading: 'Great Healthcare Professionals Deserve to Be Seen, Heard and Trusted.',
-    text: "In 30 minutes, we'll look at how patients find you today and whether PromptHealth Growth is the right fit.",
+    text: "Tell us about your practice, and we'll look at how patients find you today and whether PromptHealth Growth is the right fit.",
   },
+  /* Her brief of 2026-10-09, update 4. The heading, description, button,
+   * thank-you and privacy line are hers; the field messages are ours. */
   booking: {
-    calendlyUrl: 'https://calendly.com/hediehsafiyari/generalmeeting',
-    formHeading: 'Book a 30-Minute Consultation',
+    formHeading: "Let's Talk About Your Practice",
+    description: "Tell us a little about your practice and how we can reach you. We'll be in touch to discuss your goals and how PromptHealth can help.",
     labels: {
-      name: 'Name',
-      practiceName: 'Practice name',
-      email: 'Email',
-      phone: 'Phone',
-      city: 'City',
-      patientSource: 'How do patients find you today?',
+      firstName: 'First Name',
+      lastName: 'Last Name',
+      practiceName: 'Practice Name',
+      email: 'Email Address',
+      phone: 'Phone Number',
+      preferredTime: 'Preferred Time to Reach You',
     },
+    optionalLabel: '(optional)',
     validation: {
-      name: 'Please enter your name.',
+      firstName: 'Please enter your first name.',
+      lastName: 'Please enter your last name.',
       practiceName: 'Please enter your practice name.',
       email: 'Please enter a valid email address.',
-      phone: 'Please enter your phone number.',
-      city: 'Please enter your city.',
-      patientSource: 'Please tell us how patients find you today.',
+      phone: 'Please enter a valid phone number.',
+      preferredTime: '',
     },
-    submitWithCalendly: 'Continue',
-    submitWithoutCalendly: 'Send',
-    thanksWithCalendly: 'Thank you. Choose a time for your consultation below.',
-    thanksWithoutCalendly: "Thank you. We'll be in touch shortly to book your consultation.",
-    thanksScheduled: 'Thank you. Your consultation is booked.',
+    submit: 'Request a Strategy Call',
+    privacy: {
+      before: "We'll only use your details to respond to your inquiry. See our ",
+      link: 'Privacy Policy',
+      after: '.',
+      path: '/policy',
+    },
+    thanks: "Thank you for reaching out! We've received your request and will be in touch soon.",
     errorGeneric: 'Your request could not be sent. Please try again, or email info@prompthealth.ca.',
   },
 };

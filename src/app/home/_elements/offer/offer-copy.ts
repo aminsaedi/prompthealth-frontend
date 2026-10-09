@@ -27,6 +27,12 @@
  * page are kept as she wrote them, so /for-practitioners and /plans say the
  * same thing in slightly different words.
  *
+ * Her brief of 2026-10-09 (plan-specs/source/brief-2026-10-09/brief.txt,
+ * section 3C) repositions Growth as personalized video, AI-assisted anywhere
+ * or filmed on site in Greater Vancouver, drops "by application" for it, and
+ * makes its one button "Book a Strategy Call", which opens the inquiry form on
+ * /for-dentists. Apply for Growth is gone; Pro's Apply stays.
+ *
  * Kept out of growth-landing/ and pro/: the sitemap dates those pages by the
  * last change under their directories, and this is not only their text.
  */
@@ -59,24 +65,25 @@ export const FREE_PROFILE = {
 export const PRO_AVAILABILITY = "PromptHealth Pro is currently available for dental clinics. We're accepting applications from other healthcare practitioners interested in Pro.";
 export const APPLY_FOR_PRO = 'Apply for Pro';
 export const NOT_A_DENTIST_APPLY_FOR_PRO = 'Not a dentist? Apply for Pro.';
-export const BOOK_CONSULTATION = {
-  button: 'Book a 30-Minute Consultation',
-  /* The For Dentists page's own booking form, opened by its address. 'direct'
-   * is the position the backend records for a form reached by a link. */
+export const BOOK_STRATEGY_CALL = {
+  button: 'Book a Strategy Call',
+  /* The For Dentists page's own strategy call form, opened by its address.
+   * 'direct' is the position the backend records for a form reached by a
+   * link. The modal id is the old one, so old links still open it. */
   link: '/for-dentists',
   queryParams: { modal: 'book-consultation', cta: 'direct' },
 };
 
 export const PLAN_SECTION = {
   heading: 'Choose How You Want to Grow',
-  subheading: 'Join a membership and do it yourself, or apply for our done-for-you plan.',
+  subheading: 'Join a membership and do it yourself, or let us do it for you.',
   memberships: {
     heading: 'Memberships',
     line: 'Do it yourself, with our tools and guidance. Cancel anytime.',
   },
   doneForYou: {
     heading: 'Done-for-You Plan',
-    line: 'We do it for you and your team. By application only.',
+    line: 'We do it for you and your team.',
   },
 };
 
@@ -125,7 +132,7 @@ export const PRO_CARD: IMembershipCard = {
     { lead: 'See how to make it:', text: 'filming instructions and a sample video for every video idea, and an example for every post idea, so your team can follow along.' },
     { lead: 'Use what already works:', text: 'the best-performing hooks and formats from 400+ dental videos, updated every month.' },
     { lead: 'Stay current without the research:', text: 'trend alerts whenever a new trend is worth jumping on.' },
-    { lead: 'Get expert feedback:', text: 'a live session every three months with founder Hedieh Safiyari, a creator with 1.7 million followers.' },
+    { lead: 'Get expert feedback:', text: 'a quarterly live session with founder Hedieh Safiyari, a creator with 1.7 million followers.' },
     { lead: "Build your whole team's confidence:", text: 'everyone on your team is included, so anyone can step in front of the camera.' },
     { lead: '', text: 'Everything in PromptHealth Basic.' },
   ],
@@ -139,16 +146,15 @@ export const PRO_CARD: IMembershipCard = {
 /* The dark panel. Her brief of 2026-10-07 gave it this copy and the
  * behind-the-scenes photo from /for-dentists; her brief of 2026-10-08
  * (section 4) makes it two balanced columns: the details on the left, and on
- * the right a summary card with her heading, text and availability line and
- * two buttons only, Book a 30-Minute Consultation for dentists and Apply for
- * Growth for everyone else. The photo is hers, not stock, and moves into the
- * card. The old "Not a dentist? Join the waitlist" line is gone: Apply for
- * Growth is the same form, and the card now says who can apply. */
+ * the right a summary card with her heading, text and availability line. The
+ * photo is hers, not stock. Her brief of 2026-10-09 (section 3C) rewrites the
+ * subline, the first two points, the footnote and the card's text, and leaves
+ * the card one button, Book a Strategy Call. */
 export const GROWTH_PANEL = {
-  label: 'DONE-FOR-YOU · BY APPLICATION · FOR DENTAL CLINICS',
+  label: 'DONE-FOR-YOU · FOR DENTAL CLINICS',
   name: 'PromptHealth Growth',
   heading: 'Patients Who Feel Like They Already Know You',
-  description: 'We film, edit and run your content, with Hedieh guiding you and your team at every step.',
+  description: 'We create, publish and promote your videos, with Hedieh guiding you and your team at every step.',
   /* The top of the /for-dentists hero video's poster, Hedieh directing a
    * shoot at a practice, cut above the figures laid over the frame. */
   photo: {
@@ -158,26 +164,25 @@ export const GROWTH_PANEL = {
     height: 548,
   },
   bullets: [
-    { lead: 'Nothing to organize:', text: 'we plan, script and film at your practice every three months.' },
-    { lead: 'Confident on camera:', text: 'personal coaching for you and your team at every shoot.' },
-    { lead: '4 videos a month,', text: 'posted for you on Instagram and your Google Business Profile.' },
+    { lead: 'Nothing to organize:', text: 'we plan, script and produce your videos for you.' },
+    { lead: 'Your choice of production:', text: 'AI-assisted video, available worldwide, or professional on-site filming in Greater Vancouver.' },
+    { lead: '4 personalized videos a month,', text: 'posted for you on Instagram and your Google Business Profile.' },
     { lead: 'Extra reach:', text: "shared with PromptHealth's 21,000+ Instagram followers." },
     { lead: 'New patients nearby:', text: 'your best video runs as a local Meta ad, with a monthly report on reach, views, messages and calls.' },
   ],
-  availability: 'No contract. In-person filming in Greater Vancouver; remote option with an AI video clone elsewhere.',
+  availability: 'No long-term contract. Billed in 3-month cycles. Advertising spend and optional on-site production are separate.',
   howItWorks: 'See how it works',
   link: '/for-dentists',
   card: {
     heading: 'Your Content, Handled.',
-    text: 'Personalized strategy, filming, coaching, and content support for dental clinics and healthcare practitioners who want to grow their visibility without managing everything themselves.',
+    text: 'Personalized strategy, video production and content support for dental clinics and healthcare practitioners who want to grow their visibility without managing everything themselves.',
     /* Her line for /plans (section 4) and her sentence for /for-practitioners
      * (section 3). */
     availability: {
       plans: 'Currently serving dental clinics. Applications open to other healthcare practitioners.',
       forPractitioners: "PromptHealth Growth currently serves dental clinics. We're also accepting applications from other healthcare practitioners.",
     },
-    bookButton: BOOK_CONSULTATION.button,
-    applyButton: 'Apply for Growth',
+    bookButton: BOOK_STRATEGY_CALL.button,
   },
 };
 
@@ -185,7 +190,7 @@ export const GROWTH_PANEL = {
  * page's FAQPage JSON-LD strips the tags. */
 export const PAID_PLAN_FAQ = {
   q: 'Is there a paid plan for practitioners?',
-  aHtml: 'Yes. <a href="/pro">PromptHealth Pro</a> is our paid membership: your team gets a new video idea and post idea every week, for $149/month per clinic. <a href="/for-dentists">PromptHealth Growth</a> is our done-for-you plan, by application only, where we film and produce videos for you. Both are currently available for dental practices. Other healthcare practitioners can apply for either one.',
+  aHtml: 'Yes. <a href="/pro">PromptHealth Pro</a> is our paid membership: your team gets a new video idea and post idea every week, for $149/month per clinic. <a href="/for-dentists">PromptHealth Growth</a> is our done-for-you plan, where we produce videos for you. Both are currently available for dental practices. Other healthcare practitioners can apply for either one.',
 };
 
 /* For the plans' structured data. Pro carries its price; Growth never does. */
