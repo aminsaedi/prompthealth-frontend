@@ -3,6 +3,7 @@
 id="user-menu"
 [bodyStyle]="{padding: 0, maxWidth: '450px'}"
 #modalUserMenu
+(onStateChanged)="onStateChanged($event)"
 >
 <ng-container *ngIf="user">
   <div class="image-container-33pc bg-background cursor-pointer">
@@ -90,8 +91,25 @@ id="user-menu"
         <i iconPh="rocket" style="line-height: 1.1"></i>
         <span class="ml-5p">Plan: {{user.plan.name}}</span>
       </div> -->
+      <!-- A practitioner or clinic on the free profile: the way up to Pro,
+      which lives in its own collection, so the old paid-plan flag cannot tell
+      (Hedieh's brief of 2026-10-08). Shown once the membership is known, so
+      it never tells a member they are on Basic. -->
       <div
-      *ngIf="!user.isPaid"
+      *ngIf="user.isProvider && isPro === false"
+      class="bg-primary-light rounded-8p p-10p"
+      style="border: 1px solid #87D4FF"
+      >
+        <div class="text-primary-dark d-flex">
+          <i iconPh="star"></i>
+          <div class="body-small ml-5p">
+            Your membership is PromptHealth Basic (free).<br>
+            <a class="text-primary-dark cursor-pointer" (click)="onClickUserMenuItem(['/dashboard', 'membership'])"><u>Upgrade to PromptHealth Pro</u></a>
+          </div>
+        </div>
+      </div>
+      <div
+      *ngIf="user.isP && !user.isPaid"
       class="bg-yellow-light border border-yellow rounded-8p p-10p"
       >
         <div class="text-yellow-dark d-flex">

@@ -37,6 +37,7 @@ import { getListedMenu } from "../_helpers/get-listed-menu";
 import { JsonLdService } from "../shared/services/json-ld.service";
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { FREE_PROFILE } from './_elements/offer/offer-copy';
 
 /** for event bright */
 // declare function registerEvent(eventId, action): void;
@@ -55,6 +56,8 @@ import { takeUntil } from 'rxjs/operators';
 export class HomeComponent implements OnInit , OnDestroy {
   private destroy$ = new Subject<void>();
   slugify = slugify;
+  /* "Create Your Free Profile", the existing provider registration. */
+  public readonly freeProfile = FREE_PROFILE;
 
   get sizeL() {
     return window && window.innerWidth >= 992;

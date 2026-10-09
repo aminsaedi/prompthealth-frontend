@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
-import { OFFER_CATALOG_ITEMS, PAID_PLAN_FAQ } from '../_elements/offer/offer-copy';
+import { BASIC_CARD, FREE_PROFILE, OFFER_CATALOG_ITEMS, PAID_PLAN_FAQ } from '../_elements/offer/offer-copy';
 
 @Component({
   selector: 'app-for-practitioners',
@@ -15,6 +15,8 @@ export class ForPractitionersComponent implements OnInit, OnDestroy {
   public stats = stats;
   public testimonials = testimonials;
   public faqs = faqs;
+  public readonly freeProfile = FREE_PROFILE;
+  public readonly basic = BASIC_CARD;
 
   constructor(
     private _router: Router,

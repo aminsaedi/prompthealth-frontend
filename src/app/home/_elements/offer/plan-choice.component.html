@@ -24,7 +24,12 @@
             </li>
           </ul>
           <p *ngIf="card.note" class="plan-card__note text-label mt-20p mb-0">{{ card.note }}</p>
-          <a [routerLink]="card.link" class="btn mt-30p w-100" [ngClass]="card.key === 'pro' ? 'btn-primary' : 'btn-primary-dark'">{{ card.button }}</a>
+          <!-- Basic: one button. Pro: Join for dental clinics, which opens the
+          plan choice on /pro, and Apply for everyone else (her section 5). -->
+          <div class="plan-card__actions mt-30p">
+            <a [routerLink]="card.link" [queryParams]="card.queryParams" class="btn plan-card__button" [ngClass]="card.key === 'pro' ? 'btn-primary' : 'btn-primary-dark'">{{ card.button }}</a>
+            <button *ngIf="card.applyButton" type="button" class="btn btn-outline plan-card__button" (click)="apply.open('pro')">{{ card.applyButton }}</button>
+          </div>
         </div>
       </li>
     </ul>
@@ -37,22 +42,14 @@
       <p class="text-label mb-0">{{ section.doneForYou.line }}</p>
     </div>
     <div class="growth-panel rounded-12p text-white">
-      <div class="row">
-        <!-- Her brief of 2026-10-07: the photo and Apply under the words on the
-        left, so the column is not half empty beside the list. -->
-        <div class="col-12 col-lg-5 mb-30p mb-lg-0p">
+      <!-- Her brief of 2026-10-08, section 4: the details on the left and a
+      summary card on the right, stacked on a phone, the card second. -->
+      <div class="growth-panel__layout">
+        <div class="growth-panel__details">
           <p class="plan-eyebrow growth-panel__eyebrow mb-10p">{{ growth.label }}</p>
           <h4 class="h4 text-white mb-10p">{{ growth.name }}</h4>
           <p class="h3 text-white mb-15p growth-panel__heading">{{ growth.heading }}</p>
-          <p class="growth-panel__soft mb-25p">{{ growth.description }}</p>
-          <img class="growth-panel__photo rounded-8p mb-25p" [src]="photo.src" [alt]="photo.alt"
-            [attr.width]="photo.width" [attr.height]="photo.height" loading="lazy">
-          <div class="growth-panel__actions">
-            <button type="button" class="btn growth-panel__main" (click)="apply.open()">{{ growth.applyButton }}</button>
-            <a [routerLink]="growth.link" class="growth-panel__link">{{ growth.howItWorks }}</a>
-          </div>
-        </div>
-        <div class="col-12 col-lg-7">
+          <p class="growth-panel__soft growth-panel__description mb-30p">{{ growth.description }}</p>
           <ul class="list-unstyled mb-0">
             <li *ngFor="let bullet of growth.bullets" class="plan-bullet plan-bullet--on-dark">
               <i class="plan-bullet__check" iconPh="check" aria-hidden="true"></i>
@@ -60,13 +57,22 @@
               {{ bullet.text }}
             </li>
           </ul>
-          <p class="growth-panel__note growth-panel__soft mt-20p mb-0">{{ growth.availability }}</p>
+          <p class="growth-panel__note growth-panel__soft mt-25p mb-10p">{{ growth.availability }}</p>
+          <a [routerLink]="growth.link" class="growth-panel__link">{{ growth.howItWorks }}</a>
+        </div>
+
+        <div class="growth-summary rounded-12p">
+          <img class="growth-summary__photo" [src]="photo.src" [alt]="photo.alt"
+            [attr.width]="photo.width" [attr.height]="photo.height" loading="lazy">
+          <div class="growth-summary__body">
+            <h4 class="growth-summary__heading text-primary-dark mb-15p">{{ growth.card.heading }}</h4>
+            <p class="growth-summary__text mb-20p">{{ growth.card.text }}</p>
+            <p class="growth-summary__availability mb-25p">{{ growthAvailability }}</p>
+            <a [routerLink]="book.link" [queryParams]="book.queryParams" class="btn btn-primary growth-summary__button mb-10p">{{ growth.card.bookButton }}</a>
+            <button type="button" class="btn btn-outline growth-summary__button" (click)="apply.open('growth')">{{ growth.card.applyButton }}</button>
+          </div>
         </div>
       </div>
-      <!-- The same form: it sends anyone who is not a dentist to the waitlist. -->
-      <p class="growth-panel__waitlist text-center mb-0">
-        <button type="button" class="growth-panel__text-button" (click)="apply.open()">{{ growth.waitlist }}</button>
-      </p>
     </div>
   </div>
 </section>

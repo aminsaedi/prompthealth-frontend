@@ -7,9 +7,17 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { AnalyticsService } from 'src/app/shared/services/analytics.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { DENTISTS_LANDING } from '../../growth-landing/landings/dentists';
+import { PRO_JOIN } from './offer-copy';
 
 const API_URL = environment.config.API_URL;
 export const GROWTH_APPLY_MODAL_ID = 'growth-apply';
+
+/* Which offer the application is for. The form is the same; the address
+ * carries the choice next to ?modal (?interest=pro), as the booking form's
+ * address carries its button, so a reload or a shared link reopens it as it
+ * was. Absent means Growth, which is what every older link meant. */
+export type ApplyInterest = 'growth' | 'pro';
+const INTEREST_PARAM = 'interest';
 
 /* Her section 3, in her order. The backend accepts exactly these. */
 export const PRACTITIONER_TYPES = [
@@ -22,7 +30,10 @@ export const PRACTITIONER_TYPES = [
 ];
 
 export const GROWTH_APPLY_COPY = {
-  heading: 'Apply for PromptHealth Growth',
+  heading: {
+    growth: 'Apply for PromptHealth Growth',
+    pro: 'Apply for PromptHealth Pro',
+  },
   intro: 'Tell us about your practice. We review every application personally.',
   labels: {
     name: 'Your name',
@@ -38,6 +49,11 @@ export const GROWTH_APPLY_COPY = {
   thanksDentist: 'Thanks! Next, book your 30-minute consultation.',
   bookButton: 'Book a 30-Minute Consultation',
   thanksOther: "Thanks for applying. PromptHealth Growth is currently available for dental practices. We'll contact you as soon as it opens for your profession.",
+  /* A dentist who applied for Pro does not need to apply: Pro is open to
+   * dental clinics, and the plan choice is one click away. */
+  thanksProDentist: 'Thanks! PromptHealth Pro is open to dental clinics now, so you can join today.',
+  joinProButton: PRO_JOIN.button,
+  thanksProOther: "Thanks for applying. PromptHealth Pro is for dental clinics for now, and you're on the list. We'll be in touch when it opens to your profession.",
   error: 'Your application could not be sent. Please try again, or email info@prompthealth.ca.',
 };
 
@@ -77,13 +93,16 @@ function emailAddress(control: AbstractControl): ValidationErrors | null {
 const BOOKING_REDIRECT_MS = 2500;
 
 /*
- * The PromptHealth Growth application (her section 3), in a modal opened by
- * Apply on the plan section and in the /pro FAQ.
+ * The PromptHealth Growth and Pro application (her section 3 of offer v2,
+ * and her brief of 2026-10-08), in a modal opened by Apply on the plan
+ * section, on /for-dentists and in the /pro FAQ.
  *
- * Every application is saved and emailed to info@ by the server. A dentist is
- * then sent on to the consultation booking the For Dentists page uses; anyone
- * else is told Growth is for dental practices for now, and the server adds
- * them to the Growth waitlist.
+ * Every application is saved and emailed to info@ by the server. For Growth,
+ * a dentist is then sent on to the consultation booking the For Dentists page
+ * uses; anyone else is told Growth is for dental practices for now, and the
+ * server adds them to the Growth waitlist. For Pro, a dentist is offered the
+ * plan choice, since Pro is already open to dental clinics, and anyone else is
+ * told they are on the list.
  *
  * Like the booking form, it is created with the page, on the server render
  * too, and does no browser work until it is used.
@@ -95,7 +114,7 @@ const BOOKING_REDIRECT_MS = 2500;
 })
 export class GrowthApplyComponent implements OnDestroy {
   /* Which page the form was opened on, stored with the application. */
-  @Input() source: 'for-practitioners' | 'plans' | 'pro' | 'other' = 'other';
+  @Input() source: 'for-practitioners' | 'for-dentists' | 'plans' | 'pro' | 'home' | 'other' = 'other';
 
   @ViewChild('heading') private heading: ElementRef;
 
@@ -118,7 +137,14 @@ export class GrowthApplyComponent implements OnDestroy {
     hp_extra: new FormControl(''),
   });
 
-  public step: 'form' | 'dentist' | 'other' = 'form';
+  public interest: ApplyInterest = 'growth';
+  public readonly proJoin = PRO_JOIN;
+  /* What the last successful application was for, so reopening the form for
+   * the other offer starts at the form again rather than at a thank-you
+   * meant for the first. */
+  private sentInterest: ApplyInterest = null;
+
+  public step: 'form' | 'dentist' | 'other' | 'pro-dentist' | 'pro-other' = 'form';
   public submitted = false;
   public isSending = false;
   public errorMessage = '';
@@ -140,14 +166,18 @@ export class GrowthApplyComponent implements OnDestroy {
 
   get isOther(): boolean { return this.form.value.practitionerType === 'Other'; }
 
+  get headingText(): string { return this.copy.heading[this.interest]; }
+
   ngOnDestroy(): void {
     clearTimeout(this.redirectTimer);
   }
 
-  open(): void {
+  /* Always names the interest, or clears it for Growth, so an earlier
+   * opening's ?interest=pro left in the address cannot carry over. */
+  open(interest: ApplyInterest = 'growth'): void {
     this._router.navigate([], {
       relativeTo: this._route,
-      queryParams: { modal: GROWTH_APPLY_MODAL_ID },
+      queryParams: { modal: GROWTH_APPLY_MODAL_ID, [INTEREST_PARAM]: interest === 'pro' ? 'pro' : null },
       queryParamsHandling: 'merge',
     });
   }
@@ -158,6 +188,16 @@ export class GrowthApplyComponent implements OnDestroy {
   }
 
   onModalState(state: string): void {
+    /* Read on the server render too, so a link to the Pro form is served
+     * with the Pro heading. */
+    if (state === 'open') {
+      this.interest = this._route.snapshot.queryParamMap.get(INTEREST_PARAM) === 'pro' ? 'pro' : 'growth';
+      if (this.step !== 'form' && this.sentInterest !== this.interest) {
+        this.step = 'form';
+        this.submitted = false;
+        this.errorMessage = '';
+      }
+    }
     if (state !== 'open' || !this._uService.isBrowser) {
       clearTimeout(this.redirectTimer);
       return;
@@ -197,6 +237,7 @@ export class GrowthApplyComponent implements OnDestroy {
       city: text(v.city),
       practitionerType: v.practitionerType,
       source: this.source,
+      interest: this.interest,
       hp_extra: text(v.hp_extra).slice(0, 200),
     };
     if (text(v.website)) { body.website = text(v.website); }
@@ -209,10 +250,16 @@ export class GrowthApplyComponent implements OnDestroy {
         this.errorMessage = this.copy.error;
         return;
       }
+      /* The server's answer names the offer it saved; an older server that
+       * does not is answering for the one sent. */
+      const interest: ApplyInterest = res.data.interest === 'pro' || res.data.interest === 'growth' ? res.data.interest : this.interest;
+      this.sentInterest = interest;
       if (!body.hp_extra) {
-        this._analytics.event('generate_lead', { form: 'growth-apply' });
+        this._analytics.event('generate_lead', { form: interest === 'pro' ? 'pro-apply' : 'growth-apply' });
       }
-      if (res.data.isDentist) {
+      if (interest === 'pro') {
+        this.step = res.data.isDentist ? 'pro-dentist' : 'pro-other';
+      } else if (res.data.isDentist) {
         this.step = 'dentist';
         this.bookingUrl = this.calendlyUrl(body.name, body.email);
         /* Her checklist: the applicant lands on the consultation booking. The

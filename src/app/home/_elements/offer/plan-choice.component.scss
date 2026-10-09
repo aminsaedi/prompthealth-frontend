@@ -107,6 +107,22 @@
   }
 }
 
+/* Pro's two actions one above the other, full width like Basic's single
+ * button, so the cards' buttons line up across the row. */
+.plan-card__actions {
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-card__button {
+  width: 100%;
+  white-space: normal;
+
+  & + & {
+    margin-top: 10px;
+  }
+}
+
 /* The site's dark brand colour with white text: a panel, not a card. */
 .growth-panel {
   padding: 30px 20px;
@@ -114,6 +130,21 @@
 
   @media (min-width: $breakpointMd) {
     padding: 50px;
+  }
+}
+
+/* Her brief of 2026-10-08: two balanced columns from desktop width, the
+ * details a little wider than the card, both starting at the top. Stacked
+ * below that, details first. */
+.growth-panel__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 40px;
+
+  @media (min-width: $breakpointLg) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: 50px;
+    align-items: start;
   }
 }
 
@@ -129,74 +160,77 @@
   color: rgba($colorGsWhite, 0.85);
 }
 
+.growth-panel__description {
+  font-size: 17px;
+  line-height: 26px;
+}
+
 /* Her "smaller text" for the availability note. */
 .growth-panel__note {
   font-size: 14px;
   line-height: 20px;
 }
 
-.growth-panel__photo {
-  display: block;
-  width: 100%;
-  max-width: 420px;
-  height: auto;
-}
-
-.growth-panel__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-/* The main button style on the dark panel: white with the panel's blue, as
- * the For Dentists page's last button is, because btn-primary measured under
- * 3:1 against this blue. The theme's button classes carry the padding, and
- * this one uses none, so it sets its own to match the cards' buttons. */
-.growth-panel__main {
-  display: inline-block;
-  max-width: 100%;
-  white-space: normal;
-  padding: 12px 28px;
-  margin-right: 20px;
-  font-size: 16px;
-  line-height: 22px;
-  border-radius: 8px;
-  background: $colorGsWhite;
-  color: $colorPrimaryDark !important;
-  border-color: $colorGsWhite;
-  font-weight: 700;
-
-  &:hover,
-  &:focus {
-    background: rgba($colorGsWhite, 0.9);
-  }
-}
-
 .growth-panel__link {
   display: inline-block;
-  padding: 12px 0;
   font-size: 15px;
   line-height: 22px;
   color: $colorGsWhite !important;
   text-decoration: underline;
 }
 
-.growth-panel__waitlist {
-  margin-top: 40px;
-  padding-top: 25px;
-  border-top: 1px solid rgba($colorGsWhite, 0.2);
+/* The summary card: white on the dark panel, her photo across the top, then
+ * her heading, text, availability line and the two buttons. */
+.growth-summary {
+  overflow: hidden;
+  background: $colorGsWhite;
+  color: $colorGsBody;
+  box-shadow: 0 12px 32px rgba($colorGsBlack, 0.25);
 }
 
-/* A link in look, a button in kind: it opens the form rather than going
- * anywhere. */
-.growth-panel__text-button {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: $colorGsWhite;
-  font-size: 16px;
-  line-height: 24px;
+.growth-summary__photo {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  object-position: center 30%;
+
+  @media (min-width: $breakpointLg) {
+    height: 240px;
+  }
+}
+
+.growth-summary__body {
+  padding: 25px 20px 30px;
+
+  @media (min-width: $breakpointMd) {
+    padding: 30px;
+  }
+}
+
+.growth-summary__heading {
+  font-size: 26px;
+  line-height: 32px;
   font-weight: 700;
-  text-decoration: underline;
-  cursor: pointer;
+}
+
+.growth-summary__text {
+  font-size: 16px;
+  line-height: 25px;
+}
+
+/* Who it is for, set apart from the text above it by a rule. */
+.growth-summary__availability {
+  padding-top: 15px;
+  border-top: 1px solid $colorGsLine;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 600;
+  color: $colorPrimaryDark;
+}
+
+.growth-summary__button {
+  display: block;
+  width: 100%;
+  white-space: normal;
 }

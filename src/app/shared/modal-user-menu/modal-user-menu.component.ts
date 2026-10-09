@@ -1,15 +1,19 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { ModalService } from '../services/modal.service';
 import { SharedService } from '../services/shared.service';
+import { ProService } from '../services/pro.service';
+import { UniversalService } from '../services/universal.service';
 
 @Component({
   selector: 'modal-user-menu',
   templateUrl: './modal-user-menu.component.html',
   styleUrls: ['./modal-user-menu.component.scss']
 })
-export class ModalUserMenuComponent implements OnInit {
+export class ModalUserMenuComponent implements OnInit, OnDestroy {
 
   @Input() staySamePageWhenLogout: boolean = true;
 
@@ -23,6 +27,11 @@ export class ModalUserMenuComponent implements OnInit {
   get eligibleToUpgradePlan() { return !!(this.user && (this.user.isProvider || this.user.isP) && !this.user.isPaid); }
 
   public isUploading = false;
+  /* Whether a practitioner or clinic is a Pro member; null until asked, which
+   * happens when the menu opens. */
+  public isPro: boolean = null;
+  private isOpen = false;
+  private destroy$ = new Subject<void>();
 
   private coverImageTemp: string;
   private profileImageTemp: string;
@@ -35,10 +44,33 @@ export class ModalUserMenuComponent implements OnInit {
     private _modalService: ModalService,
     private _sharedService: SharedService,
     private _toastr: ToastrService,
+    private _pro: ProService,
+    private _uService: UniversalService,
   ) { }
 
-  ngOnInit(): void {
+  /* Asked each time the menu opens, so an upgrade made since shows, and
+   * again once the sign-in check ends if the menu opened before it did (a
+   * reload with ?modal=user-menu). A failure shows nothing rather than a
+   * wrong answer. */
+  onStateChanged(state: string) {
+    this.isOpen = state === 'open';
+    if (this.isOpen) { this.checkPro(); }
+  }
 
+  ngOnInit(): void {
+    this._profileService.loginStatusChanged().pipe(takeUntil(this.destroy$)).subscribe(status => {
+      if (status === 'loggedIn' && this.isOpen) { this.checkPro(); }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private checkPro() {
+    if (!this._uService.isBrowser || !this.user || !this.user.isProvider) { return; }
+    this._pro.me().pipe(takeUntil(this.destroy$)).subscribe(me => this.isPro = !!(me && me.isPro), () => this.isPro = null);
   }
 
   

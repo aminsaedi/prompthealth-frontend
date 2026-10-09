@@ -412,3 +412,59 @@ $stepGap: 30px;
   color: $colorGsBody;
   text-align: center;
 }
+
+// ---------------------------------------------- her brief of 2026-10-08
+
+/* "Not a dentist? Apply for Pro." under the Pro card's button: small, a link
+ * in look, a button in kind, because it opens the form here. */
+.growth-choice__apply {
+  align-self: flex-start;
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+  color: $colorPrimary;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* The free profile under the two cards: quieter than either, one sentence
+ * and one button, centred, in a row from tablet width. */
+.growth-free {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 860px;
+  margin-top: 30px;
+  padding: 22px 20px;
+  text-align: center;
+  border: 1px solid $colorGsLine;
+  border-radius: 12px;
+  background: rgba($colorGsWhite, 0.6);
+
+  @media (min-width: $breakpointMd) {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 40px;
+    padding: 22px 30px;
+    text-align: left;
+  }
+}
+
+.growth-free__text {
+  font-size: 16px;
+  line-height: 24px;
+  color: $colorGsBody;
+}
+
+.growth-free__button {
+  margin-top: 14px;
+  white-space: nowrap;
+
+  @media (min-width: $breakpointMd) {
+    margin: 0 0 0 24px;
+  }
+}

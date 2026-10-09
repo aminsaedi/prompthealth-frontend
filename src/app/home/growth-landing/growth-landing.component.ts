@@ -33,7 +33,8 @@ const FOCUSABLE = 'a[href], area[href], button, input, select, textarea, iframe,
  * Every Book a Consultation button opens the same form, in a modal addressed by
  * the query (?modal=book-consultation&cta=<button>), so back and forward, a
  * reload or a shared link all reopen it, and the request records which button
- * was pressed.
+ * was pressed. Since her brief of 2026-10-08 they are the Growth card's and the
+ * final one; /plans and /for-practitioners link to the form by its address.
  */
 @Component({
   selector: 'app-growth-landing',
@@ -55,10 +56,6 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
    * the close button cannot go back twice and off the page. */
   private isClosing = false;
   private closeFallback: any = null;
-
-  /* Whether the reader is between the hero's button and the final one. */
-
-  @ViewChild('heroCta') private heroCta: ElementRef;
 
   @ViewChild('finalCta') private finalCta: ElementRef;
 
@@ -295,7 +292,6 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
   private ctaElement(position: GrowthCtaPosition): HTMLElement {
     let ref: ElementRef = null;
     switch (position) {
-      case 'hero': ref = this.heroCta; break;
       case 'final': ref = this.finalCta; break;
       case 'steps': ref = this.choiceCta; break;
     }

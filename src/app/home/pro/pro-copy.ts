@@ -78,9 +78,11 @@ export const PRO_PAGE = {
 export const PRO_TESTIMONIAL_QUOTE = "Our team felt really empowered by Hedieh's live training sessions. They looked forward to every one, and they started posting videos and posts on their own afterward.";
 export const PRO_TESTIMONIAL_ATTRIBUTION = 'Regional Manager, multi-location dental group';
 
-/* "Apply" opens the Growth application on this page: the FAQ catches a click
- * on its link by the address (ProComponent.onFaqClick). Not a data- attribute,
- * which Angular's sanitizer strips from the answer's HTML. */
+/* "Apply" opens the application on this page, for Pro (her brief of
+ * 2026-10-08: other practitioners apply for Pro, and a dentist who does is
+ * offered the plan choice): the FAQ catches a click on its link by the
+ * address (ProComponent.onFaqClick). Not a data- attribute, which Angular's
+ * sanitizer strips from the answer's HTML. */
 export const PRO_FAQ: IFAQItem[] = [
   {
     q: 'What happens after I join?',
@@ -94,7 +96,7 @@ export const PRO_FAQ: IFAQItem[] = [
   },
   {
     q: 'Who is PromptHealth Pro for?',
-    a: "It's currently for dental clinics whose team wants to make its own videos. If you'd rather we film and produce for you, see <a href=\"/for-dentists\">PromptHealth Growth</a>. Another type of healthcare professional? <a href=\"/pro?modal=growth-apply\">Apply</a> and let us know you're interested.",
+    a: "It's currently for dental clinics whose team wants to make its own videos. If you'd rather we film and produce for you, see <a href=\"/for-dentists\">PromptHealth Growth</a>. Another type of healthcare professional? <a href=\"/pro?modal=growth-apply&interest=pro\">Apply for Pro</a> and let us know you're interested.",
     opened: false,
   },
   {

@@ -418,3 +418,20 @@
 .home-directory__search {
   max-width: 820px;
 }
+
+/* "Are You a Dentist or Healthcare Practitioner?" under the dental offers
+ * (Hedieh's brief of 2026-10-08): its own white card, so the "For Dental
+ * Clinics" label above does not read as covering it. */
+.home-practitioner {
+  max-width: 760px;
+  margin-top: 40px;
+  padding: 30px 20px;
+  border-radius: 12px;
+  background: $colorGsWhite;
+  box-shadow: 0 6px 20px rgba($colorGsBlack, 0.06);
+
+  @media (min-width: $breakpointMd) {
+    margin-top: 50px;
+    padding: 40px;
+  }
+}
