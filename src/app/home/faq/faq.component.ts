@@ -127,12 +127,12 @@ const faqCategories: IFAQCategory[] = [
     items: [
       {
         q: 'Can I create videos without filming every time?',
-        a: 'Yes. PromptHealth offers AI Clone Video options, allowing healthcare professionals to create educational videos efficiently without repeated filming. AI Clone videos use your voice and likeness to generate professional educational content based on common patient questions and treatment topics.',
+        a: 'Yes. PromptHealth offers AI-assisted video production, allowing healthcare professionals to create educational videos efficiently without repeated filming. AI-assisted videos can use your approved digital likeness and voice to create professional educational content based on common patient questions and treatment topics.',
         opened: false,
       },
       {
-        q: 'Do AI Clone videos replace traditional filming?',
-        a: 'No. AI Clone videos are designed to complement traditional filming, not replace it. Many professionals use a hybrid approach that includes professional video shoots, AI-generated educational videos, short-form educational content, and article-based education.',
+        q: 'Do AI-assisted videos replace traditional filming?',
+        a: 'No. AI-assisted videos are designed to complement traditional filming, not replace it. Many professionals use a hybrid approach that includes professional video shoots, AI-generated educational videos, short-form educational content, and article-based education.',
         opened: false,
       },
       {

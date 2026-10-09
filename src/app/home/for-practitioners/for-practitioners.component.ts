@@ -113,7 +113,7 @@ const features = [
     icon: 'video-library',
     title: 'Video That Builds Trust',
     description:
-      'Learn to make your own videos with PromptHealth Pro, or let us film and produce them for you with PromptHealth Growth. Growth videos are also shared with PromptHealth\'s 21,000+ Instagram followers.',
+      'Learn to make your own videos with PromptHealth Pro, or let us produce them for you with PromptHealth Growth. Growth videos are also shared with PromptHealth\'s 21,000+ Instagram followers.',
   },
   {
     icon: 'file',
@@ -176,7 +176,7 @@ const testimonials = [
 const faqs: IFAQItem[] = [
   {
     q: 'How does PromptHealth help my practice get found online?',
-    a: 'Your PromptHealth profile and the articles you publish give patients more ways to find you on Google, ChatGPT and other AI tools. Each article links back to your website. For more visibility, <a href="/pro">PromptHealth Pro</a> helps your team create videos and posts every week, and <a href="/for-dentists">PromptHealth Growth</a> films and produces them for you.',
+    a: 'Your PromptHealth profile and the articles you publish give patients more ways to find you on Google, ChatGPT and other AI tools. Each article links back to your website. For more visibility, <a href="/pro">PromptHealth Pro</a> helps your team create videos and posts every week, and <a href="/for-dentists">PromptHealth Growth</a> produces them for you.',
     opened: false,
   },
   /* A copy, not the shared object: faq-item writes `opened` onto what it is
@@ -188,7 +188,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: 'Do I need to create content myself?',
-    a: 'With PromptHealth Basic and Pro, your team creates the content, and we give you the tools, training and ideas. With PromptHealth Growth, we film and produce it for you.',
+    a: 'With PromptHealth Basic and Pro, your team creates the content, and we give you the tools, training and ideas. With PromptHealth Growth, we produce it for you, using AI-assisted video production or professional on-site filming in Greater Vancouver.',
     opened: false,
   },
   {
