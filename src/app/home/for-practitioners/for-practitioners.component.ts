@@ -176,7 +176,7 @@ const testimonials = [
 const faqs: IFAQItem[] = [
   {
     q: 'How does PromptHealth help my practice get found online?',
-    a: 'Your PromptHealth profile and the articles you publish give patients more ways to find you on Google, ChatGPT and other AI tools. Each article links back to your website. For more visibility, <a href="/pro">PromptHealth Pro</a> helps your team create videos and posts every week, and <a href="/for-dentists">PromptHealth Growth</a> produces them for you.',
+    a: 'Your PromptHealth profile and the articles you publish give patients more ways to find you on Google, ChatGPT and other AI tools. Each article links back to your website. For more visibility, <a href="/pro">PromptHealth Pro</a> helps your team create videos and posts every week, and <a href="/for-dentists/growth">PromptHealth Growth</a> produces them for you.',
     opened: false,
   },
   /* A copy, not the shared object: faq-item writes `opened` onto what it is

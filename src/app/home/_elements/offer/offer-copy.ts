@@ -31,7 +31,9 @@
  * section 3C) repositions Growth as personalized video, AI-assisted anywhere
  * or filmed on site in Greater Vancouver, drops "by application" for it, and
  * makes its one button "Book a Strategy Call", which opens the inquiry form on
- * /for-dentists. Apply for Growth is gone; Pro's Apply stays.
+ * /for-dentists. Apply for Growth is gone; Pro's Apply stays. Her brief of
+ * 2026-10-11 gives Growth a page of its own, /for-dentists/growth, with the
+ * form in it, so every Growth link here goes there, and every Pro link to /pro.
  *
  * Kept out of growth-landing/ and pro/: the sitemap dates those pages by the
  * last change under their directories, and this is not only their text.
@@ -44,14 +46,15 @@ export const PRO_PRICE = {
 /* The label on every Pro and Growth offer (her brief, 2026-10-07). */
 export const FOR_DENTAL_CLINICS = 'For Dental Clinics';
 
-/* "Join PromptHealth Pro" everywhere: the plan choice on /pro, which is where
- * /pro's own join buttons, the dashboard banner and the membership tab go.
- * Continue to Payment there sends a guest through the free profile form
- * first, so this is also the upgrade path from a free profile. */
+/* "Join PromptHealth Pro" everywhere. Since her brief of 2026-10-11 every one
+ * of them leads to /pro itself, never to its plan choice (?modal=pro-plan):
+ * a reader sees what Pro includes before anything can start a payment, and
+ * only /pro's own buttons open the plan choice. Continue to Payment there
+ * sends a guest through the free profile form first, so this is also the
+ * upgrade path from a free profile. */
 export const PRO_JOIN = {
   button: 'Join PromptHealth Pro',
   link: '/pro',
-  queryParams: { modal: 'pro-plan' },
 };
 
 /* The free profile, the main action for every practitioner (her brief of
@@ -67,11 +70,10 @@ export const APPLY_FOR_PRO = 'Apply for Pro';
 export const NOT_A_DENTIST_APPLY_FOR_PRO = 'Not a dentist? Apply for Pro.';
 export const BOOK_STRATEGY_CALL = {
   button: 'Book a Strategy Call',
-  /* The For Dentists page's own strategy call form, opened by its address.
-   * 'direct' is the position the backend records for a form reached by a
-   * link. The modal id is the old one, so old links still open it. */
-  link: '/for-dentists',
-  queryParams: { modal: 'book-consultation', cta: 'direct' },
+  /* The strategy call form, on Growth's own page since her brief of
+   * 2026-10-11, where it is written into the page under #apply. */
+  link: '/for-dentists/growth',
+  fragment: 'apply',
 };
 
 export const PLAN_SECTION = {
@@ -101,7 +103,6 @@ export interface IMembershipCard {
   /* Basic links to registration; Pro has two actions, Join and Apply. */
   button: string;
   link: string;
-  queryParams?: { [key: string]: string };
   applyButton?: string;
 }
 
@@ -139,7 +140,6 @@ export const PRO_CARD: IMembershipCard = {
   note: PRO_AVAILABILITY,
   button: PRO_JOIN.button,
   link: PRO_JOIN.link,
-  queryParams: PRO_JOIN.queryParams,
   applyButton: APPLY_FOR_PRO,
 };
 
@@ -172,7 +172,8 @@ export const GROWTH_PANEL = {
   ],
   availability: 'No long-term contract. Billed in 3-month cycles. Advertising spend and optional on-site production are separate.',
   howItWorks: 'See how it works',
-  link: '/for-dentists',
+  /* How It Works is on Growth's page since her brief of 2026-10-11. */
+  link: '/for-dentists/growth',
   card: {
     heading: 'Your Content, Handled.',
     text: 'Personalized strategy, video production and content support for dental clinics and healthcare practitioners who want to grow their visibility without managing everything themselves.',
@@ -190,7 +191,7 @@ export const GROWTH_PANEL = {
  * page's FAQPage JSON-LD strips the tags. */
 export const PAID_PLAN_FAQ = {
   q: 'Is there a paid plan for practitioners?',
-  aHtml: 'Yes. <a href="/pro">PromptHealth Pro</a> is our paid membership: your team gets a new video idea and post idea every week, for $149/month per clinic. <a href="/for-dentists">PromptHealth Growth</a> is our done-for-you plan, where we produce videos for you. Both are currently available for dental practices. Other healthcare practitioners can apply for either one.',
+  aHtml: 'Yes. <a href="/pro">PromptHealth Pro</a> is our paid membership: your team gets a new video idea and post idea every week, for $149/month per clinic. <a href="/for-dentists/growth">PromptHealth Growth</a> is our done-for-you plan, where we produce videos for you. Both are currently available for dental practices. Other healthcare practitioners can apply for either one.',
 };
 
 /* For the plans' structured data. Pro carries its price; Growth never does. */
@@ -229,7 +230,7 @@ export const OFFER_CATALOG_ITEMS = [
       '@type': 'Service',
       name: GROWTH_PANEL.name,
       description: GROWTH_PANEL.description,
-      url: 'https://www.prompthealth.ca/for-dentists',
+      url: 'https://www.prompthealth.ca/for-dentists/growth',
     },
   },
 ];

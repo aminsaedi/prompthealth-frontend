@@ -12,8 +12,9 @@ import { BASIC_CARD, BOOK_STRATEGY_CALL, GROWTH_PANEL, PLAN_SECTION, PRO_CARD } 
  * everyone else, and Growth is two balanced columns, its details beside a
  * summary card. Both pages get the same section, so the three offers are
  * positioned the same way on each (her section 5). Since her brief of
- * 2026-10-09 the card has one button, Book a Strategy Call, which opens the
- * inquiry form on /for-dentists; Apply for Growth is gone.
+ * 2026-10-09 the card has one button, Book a Strategy Call; Apply for Growth
+ * is gone. Since her brief of 2026-10-11 it goes to the form on Growth's own
+ * page (/for-dentists/growth#apply), and Pro's Join to /pro itself.
  */
 @Component({
   selector: 'plan-choice',

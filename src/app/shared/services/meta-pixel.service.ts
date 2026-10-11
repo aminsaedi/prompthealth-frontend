@@ -11,14 +11,19 @@ const FBEVENTS_SRC = 'https://connect.facebook.net/en_US/fbevents.js';
 const SENDS = ['track', 'trackCustom', 'trackSingle', 'trackSingleCustom'];
 
 /*
- * Hedieh's Meta Pixel, on growth landings and their booking flow only.
+ * Hedieh's Meta Pixel, on the pages her Meta ads point at and nowhere else:
+ * the growth landings (/for-dentists and /for-dentists/growth), /pro, and
+ * /pro/welcome, where Stripe returns a new member (her brief of 2026-10-11).
+ * "Landing" below means any of these. Lead is sent by the strategy call form
+ * once the server has saved it, and Purchase by the welcome page once the API
+ * confirms an active membership.
  *
  * Dormant until environment.META_PIXEL_ID is set: with an empty id nothing is
  * defined, loaded or queued. It is also silent on the server, and for a reader
  * whose browser sends Global Privacy Control or Do Not Track, the same signal
  * JourneyService honours. GA4 and HubSpot are unaffected either way.
  *
- * "Only on growth landings" has to be enforced after the reader leaves one,
+ * "Only on those pages" has to be enforced after the reader leaves one,
  * because fbevents.js stays in the tab for the rest of the visit. Each landing
  * calls pageView as it starts and leave as it goes, and in between the Pixel is
  * held shut: see leave.
@@ -35,7 +40,7 @@ export class MetaPixelService {
   /* Whether the script tag has been added. It cannot be taken back once it
    * has, only kept from being added. */
   private injected = false;
-  /* Whether a growth landing is on screen now. */
+  /* Whether one of the Pixel's pages is on screen now. */
   private onLanding = false;
   /* Whether a consent revoke has been sent to the script, or queued for it. */
   private revoked = false;
@@ -107,7 +112,7 @@ export class MetaPixelService {
   }
 
   /*
-   * Called by each growth landing as it initializes, which is also what loads
+   * Called by each of the Pixel's pages as it initializes, which is also what loads
    * the Pixel: it runs nowhere else on the site. It reopens the Pixel if an
    * earlier landing in this tab closed it.
    */
@@ -120,7 +125,7 @@ export class MetaPixelService {
   }
 
   /*
-   * Called by each growth landing as it is destroyed. From here until the next
+   * Called by each of the Pixel's pages as it is destroyed. From here until the next
    * landing starts, nothing reaches Meta, for two reasons.
    *
    * fbevents.js reads the page's address when it sends, not when an event was

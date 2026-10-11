@@ -47,8 +47,9 @@ function filled(control: AbstractControl): ValidationErrors | null {
 /*
  * Any country's number, written any of the usual ways: an optional +, digits
  * with spaces, dots, dashes, slashes or brackets between them, and an optional
- * extension. AI-assisted production is offered worldwide (her brief), so
- * nothing here assumes a North American number. Seven to fifteen digits
+ * extension. A practice anywhere can ask for a call (her brief of
+ * 2026-10-11 invites those outside Greater Vancouver), so nothing here
+ * assumes a North American number. Seven to fifteen digits
  * before the extension, which is what E.164 allows at most, counting the
  * country code.
  */
@@ -72,14 +73,14 @@ function emailAddress(control: AbstractControl): ValidationErrors | null {
  * it to consultationrequests first and then emails info@, so a failed email
  * never loses a lead, and she follows up herself.
  *
- * It is projected into a <modal> whose content sits inside *ngIf, and projected
- * components are created with the page regardless, on the server render too.
- * So nothing here touches the browser until the visitor acts: the constructor
- * does no browser work and the ids are made at the first submit.
+ * Since her brief of 2026-10-11 it is written into Growth's own page
+ * (/for-dentists/growth#apply) rather than a modal on /for-dentists. It is
+ * rendered on the server too, so nothing here touches the browser until the
+ * visitor acts: the constructor does no browser work and the ids are made at
+ * the first submit.
  *
- * The instance lives as long as the page, so closing and reopening the modal
- * keeps what was typed and which step it reached, and a second submit after a
- * failure reuses the same eventId, which the server treats as the same request.
+ * The instance lives as long as the page, so a second submit after a failure
+ * reuses the same eventId, which the server treats as the same request.
  */
 @Component({
   selector: 'booking-form',
@@ -92,6 +93,10 @@ export class BookingFormComponent implements OnChanges {
   @Input() ctaPosition: GrowthCtaPosition = 'direct';
   /* Whether the modal around this form is open. */
   @Input() open = false;
+  /* Written into the page rather than a modal (the Growth page, since her
+   * brief of 2026-10-11): no close button beside the heading to leave room
+   * for. */
+  @Input() inline = false;
 
   @ViewChild('heading') private heading: ElementRef;
 

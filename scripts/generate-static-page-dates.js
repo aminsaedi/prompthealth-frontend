@@ -55,6 +55,7 @@ const STATIC_PAGES = [
   { route: '/plans',                     changefreq: 'monthly', paths: ['src/app/home/about-practitioner', OFFER] },
   { route: '/for-practitioners',         changefreq: 'monthly', paths: ['src/app/home/for-practitioners', OFFER] },
   { route: '/for-dentists',              changefreq: 'monthly', paths: ['src/app/home/growth-landing'] },
+  { route: '/for-dentists/growth',       changefreq: 'monthly', paths: ['src/app/home/growth-landing'] },
   { route: '/pro',                       changefreq: 'monthly', paths: ['src/app/home/pro/pro.component.html', 'src/app/home/pro/pro.component.ts', 'src/app/home/pro/pro-copy.ts', OFFER_COPY] },
   { route: '/companies',                 changefreq: 'monthly', paths: ['src/app/home/listing-company'] },
   { route: '/ambassador-program',        changefreq: 'monthly', paths: ['src/app/home/landing-ambassador'] },

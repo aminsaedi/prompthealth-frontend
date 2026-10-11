@@ -141,6 +141,13 @@ export class GrowthApplyComponent {
 
   public interest: ApplyInterest = 'growth';
   public readonly proJoin = PRO_JOIN;
+
+  /* Where the dentist's Join PromptHealth Pro goes. On /pro, the plan choice,
+   * as /pro's own buttons open it; anywhere else /pro itself, so nothing
+   * outside /pro starts a payment (her brief of 2026-10-11). */
+  get proJoinQuery(): { [key: string]: string } | null {
+    return this.source === 'pro' ? { modal: 'pro-plan' } : null;
+  }
   /* What the last successful application was for, so reopening the form for
    * the other offer starts at the form again rather than at a thank-you
    * meant for the first. */

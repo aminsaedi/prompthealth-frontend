@@ -12,7 +12,8 @@ import { FOR_DENTAL_CLINICS } from 'src/app/home/_elements/offer/offer-copy';
  * membership is still being looked up, so it never flashes at a member. While
  * payments are closed it shows nothing to buy: it says Pro is coming soon.
  * It is shown to every provider, so it says who Pro is for (her brief of
- * 2026-10-07): a physio should not upgrade by mistake.
+ * 2026-10-07): a physio should not upgrade by mistake. Its button goes to
+ * /pro itself, never straight to the plan choice (her brief of 2026-10-11).
  */
 @Component({
   selector: 'pro-banner',
@@ -22,7 +23,7 @@ import { FOR_DENTAL_CLINICS } from 'src/app/home/_elements/offer/offer-copy';
         <p class="pro-banner__label mb-5p">{{ label }}</p>
         <p class="pro-banner__text mb-0">{{ copy.text }}</p>
       </div>
-      <a *ngIf="paymentsEnabled" routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary pro-banner__button">{{ copy.button }}</a>
+      <a *ngIf="paymentsEnabled" routerLink="/pro" class="btn btn-primary pro-banner__button">{{ copy.button }}</a>
       <a *ngIf="!paymentsEnabled" routerLink="/pro" class="btn btn-outline pro-banner__button">Coming soon</a>
     </div>
   `,

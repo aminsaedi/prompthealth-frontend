@@ -9,6 +9,9 @@
  */
 export const GROWTH_LANDING_PATHS = {
   dentists: '/for-dentists',
+  /* PromptHealth Growth's own page (her brief of 2026-10-11), which its Meta
+   * ads point at, apart from the overview above. */
+  'dentists-growth': '/for-dentists/growth',
 };
 
 const PATHS: string[] = Object.keys(GROWTH_LANDING_PATHS).map(key => GROWTH_LANDING_PATHS[key]);

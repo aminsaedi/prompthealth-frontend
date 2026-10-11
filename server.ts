@@ -166,6 +166,24 @@ export function app() {
    * the contact page, at the old address; a 301 tells a crawler the page
    * moved, and costs no render. */
   server.get(['/plans/product', '/plans/product/'], (req, res) => { res.redirect(301, withQueryOf(req.originalUrl, '/contact-us')); });
+  /* The strategy call form was a modal on /for-dentists, opened by its address
+   * (?modal=book-consultation&cta=<button>), until Hedieh's brief of
+   * 2026-10-11 moved it into Growth's own page. Ads that ran before then carry
+   * that address, so it is sent to the form, with the rest of its query (a
+   * campaign's utm_*) kept as written and the two modal parameters dropped. A
+   * 301 here rather than the app's own redirect: a crawler is told where the
+   * form went, and nothing is rendered. Without the modal, /for-dentists is
+   * the overview and renders as usual. Express routing is not strict, so
+   * '/for-dentists/' is covered and '/for-dentists/growth' is not. */
+  server.get('/for-dentists', (req, res, next) => {
+    if (req.query.modal !== 'book-consultation') { return next(); }
+    const query = req.originalUrl.slice(req.originalUrl.indexOf('?') + 1);
+    const kept = query.split('&').filter(pair => {
+      const name = pair.split('=')[0];
+      return pair !== '' && name !== 'modal' && name !== 'cta';
+    });
+    res.redirect(301, '/for-dentists/growth' + (kept.length > 0 ? '?' + kept.join('&') : '') + '#apply');
+  });
 
   /** client side rendering */
   server.use('/auth',                  (req, res) => { res.sendFile(join(distFolder, 'index.html')); })

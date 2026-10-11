@@ -26,7 +26,9 @@
       <div class="library-invite bg-white rounded-12p text-center mx-auto p-30p p-md-40p mb-40p">
         <h2 class="h4 text-primary-dark mb-10p">For PromptHealth Pro members</h2>
         <p class="text-label mb-25p">Members start at Week 1 the day they join, and a new week unlocks every 7 days.</p>
-        <a routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary">Upgrade to Pro</a>
+        <!-- To /pro, which shows what Pro includes before any payment (her brief
+        of 2026-10-11). -->
+        <a routerLink="/pro" class="btn btn-primary">Upgrade to Pro</a>
         <p *ngIf="!isSignedIn" class="small text-label mt-20p mb-0">Already a member? <a routerLink="/auth/login" [queryParams]="{ next: '/pro/library' }">Log in</a></p>
       </div>
       <ul *ngIf="library.weeks.length > 0" class="row list-unstyled mb-0">
