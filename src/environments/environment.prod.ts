@@ -18,9 +18,11 @@ export const environment = {
     APPLE_CLIENT_ID: 'com.prompthealth',
     GOOGLE_CLIENT_ID: '911768983583-hrth6fagg8em1oc6v6mkcv21bsoac0ar.apps.googleusercontent.com',
     FACEBOOK_APP_ID: '2053494228293760',
-    /* Hedieh's Meta Pixel. Empty until she sends the id: the Pixel code ships
-     * dormant, and an empty id means no script loads and no event is queued. */
-    META_PIXEL_ID: '',
+    /* Hedieh's Meta Pixel, from her own Meta Business account (her email of
+     * 2026-10-10). Here only: environment.ts runs against the live API too,
+     * and a development build must never report to it. Empty would put the
+     * Pixel back to dormant, with no script loaded and no event queued. */
+    META_PIXEL_ID: '1152883915125254',
 
     idSA: '5edb61483cd45aa28f6413c0',
 

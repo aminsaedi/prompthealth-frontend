@@ -10,31 +10,45 @@ import { IFAQItem } from '../_elements/faq-item/faq-item.component';
  * first.
  */
 export interface IGrowthLanding {
-  /** Registry key. Also the `landing` sent with a booking, and the suffix of
-   *  every analytics label ('growth-' + key, key + '-hero'). */
+  /** Registry key. Also the `landing` sent with a strategy call request, and
+   *  the suffix of every analytics label ('growth-' + key, key + '-hero'). */
   key: string;
   /** The page's address, which is also its canonical. */
   path: string;
   seo: IGrowthSeo;
-  ctaLabel: string;
+  /** The sections the page shows, top to bottom. A section named here must
+   *  have its config below; one not named is not rendered, whatever is set.
+   *  Her brief of 2026-10-11 split /for-dentists into an overview and a
+   *  Growth page of its own, in different orders from the same pieces. */
+  sections: GrowthSection[];
   hero: {
     /** Small capitals above the heading. */
     eyebrow?: string;
     heading: string;
     text: string;
-    video: IGrowthVideo;
+    /** Scrolls to a section of this page, never away from it. */
+    button: IGrowthScrollButton;
+    /** Absent: words only, which is lighter on a phone. */
+    video?: IGrowthVideo;
   };
-  /** Right after the hero: who is behind the offer, with her photo. */
+  /** Who is behind the offer, with her photo. Without a heading it is the
+   *  photo and one line. */
   meet?: {
-    heading: string;
+    heading?: string;
     text: string;
     photo: { src: string; alt: string; width: number; height: number };
+    /*
+     * A dentist's words about working with her, for the Growth page, when she
+     * sends one (her brief of 2026-10-11, section 3). Leave it out until then:
+     * nothing is rendered without it, and a quote is never written for her.
+     */
+    quote?: { text: string; attribution: string };
   };
-  whyUs: {
+  whyUs?: {
     heading: string;
     points: { title: string; text: string }[];
   };
-  work: {
+  work?: {
     heading: string;
     text: string;
     /** `title` names the player for screen readers; `caption` is the short
@@ -43,9 +57,8 @@ export interface IGrowthLanding {
     moreLabel: string;
     moreUrl: string;
   };
-  /** Do it yourself or done for you, side by side, straight after the hero
-   *  (her briefs of 2026-10-08 and 2026-10-09). A card without a link opens the
-   *  strategy call form; one with a link goes there. Under the cards, the free
+  /** Do it yourself or done for you, side by side (her briefs of 2026-10-08,
+   *  -09 and -11). Each card links to its own page. Under the cards, the free
    *  profile as the way to start: the sentence is split around the words that
    *  link to it, and the button follows. */
   choice?: {
@@ -60,18 +73,21 @@ export interface IGrowthLanding {
       link: string;
     };
   };
+  /** A plain list of what the service includes, in her words. */
+  included?: {
+    heading: string;
+    items: string[];
+  };
   /** Under the How It Works heading, above Step 1. */
   stepsIntro?: string;
-  steps: IGrowthStep[];
+  steps?: IGrowthStep[];
   /** The contract line, under the steps. */
-  stepsFootnote: string;
+  stepsFootnote?: string;
   /** A smaller line after the contract line. */
   stepsFootnoteSmall?: string;
-  /** Section headings. Her first copy gave these sections none, and they were
-   *  for screen readers only; offer v2 (2026-10) names both, so they show. */
   headings: {
-    howItWorks: string;
-    faq: string;
+    howItWorks?: string;
+    faq?: string;
   };
   /** A slim strip above the FAQ pointing to another page: secondary, never
    *  a pricing card. */
@@ -80,12 +96,29 @@ export interface IGrowthLanding {
     button: string;
     link: string;
   };
-  faq: IFAQItem[];
-  final: {
+  faq?: IFAQItem[];
+  final?: {
     heading: string;
     text: string;
+    button: IGrowthScrollButton;
   };
-  booking: IGrowthBooking;
+  /** One line above the inline form. */
+  applyNote?: string;
+  /** The strategy call form, written into the page under #apply. */
+  booking?: IGrowthBooking;
+  /** Where an old link to the strategy call modal (?modal=book-consultation)
+   *  goes, on a page that no longer has the form: that page's #apply. */
+  bookingMovedTo?: string;
+}
+
+export type GrowthSection =
+  'hero' | 'choice' | 'meet' | 'whyUs' | 'work' | 'included' | 'steps' | 'linkBand' | 'faq' | 'final' | 'apply';
+
+/** A button that moves the reader down the same page. `target` is the id of
+ *  the section it scrolls to. */
+export interface IGrowthScrollButton {
+  label: string;
+  target: string;
 }
 
 export interface IGrowthSeo {
@@ -122,13 +155,15 @@ export interface IGrowthChoiceCard {
   name: string;
   /** The badge above the name. */
   label: string;
+  /** Pro's badge is dark blue, Growth's yellow, so the two read apart. */
+  tone: 'pro' | 'growth';
   description: string;
   /** Shown for Pro, whose price is public; Growth's never is. */
   price?: string;
   button: string;
-  /** Absent: the button opens the booking form. */
-  link?: string;
-  queryParams?: { [key: string]: string };
+  /** Each offer's own page (her brief of 2026-10-11): nothing on this page
+   *  starts a payment or opens a form for either. */
+  link: string;
   /** A small line under the button that opens the application form for Pro,
    *  for a practitioner who is not a dentist. */
   applyPro?: string;
@@ -138,11 +173,6 @@ export interface IGrowthStep {
   title: string;
   intro: string;
   items: { lead?: string; text: string }[];
-  /** Equal tiles under the points, side by side from tablet width, in the
-   *  order given: the production options in Step 1. */
-  options?: { heading: string; area: string; text: string }[];
-  /** A small line under the tiles. */
-  optionsNote?: string;
   note?: string;
 }
 
@@ -169,18 +199,10 @@ export type GrowthBookingField = 'firstName' | 'lastName' | 'practiceName' | 'em
 export type IGrowthBookingText = { [field in GrowthBookingField]: string };
 
 /* Which button opened the form. Stored with the request, so she can see which
- * part of the page does the persuading. 'direct' is a link or a reload that
- * lands on the open form without a button, which is how /plans and
- * /for-practitioners reach it. The backend accepts exactly these. The hero's
- * button, removed on 2026-10-08, is back since her brief of 2026-10-09, so
- * 'hero', 'steps' (the Growth card in "Two Ways to Work With Us", a name kept
- * from a button removed on 2026-09-27 so the backend's list did not have to
- * change) and 'final' are the three on the page. 'sticky' stays because
- * stored requests and old addresses carry it. */
-export type GrowthCtaPosition = 'hero' | 'steps' | 'final' | 'sticky' | 'direct';
-
-const CTA_POSITIONS: GrowthCtaPosition[] = ['hero', 'steps', 'final', 'sticky', 'direct'];
-
-export function isGrowthCtaPosition(value: any): value is GrowthCtaPosition {
-  return CTA_POSITIONS.indexOf(value) >= 0;
-}
+ * part of the page does the persuading. The backend accepts exactly these.
+ * 'page' is the form written into the Growth page (her brief of 2026-10-11),
+ * which no button opens, and the only one any page sends now. The others name
+ * the buttons that opened it as a modal on /for-dentists until then ('steps'
+ * was the Growth card's, 'direct' a link straight to the open modal), and stay
+ * because stored requests carry them. */
+export type GrowthCtaPosition = 'hero' | 'steps' | 'final' | 'sticky' | 'direct' | 'page';

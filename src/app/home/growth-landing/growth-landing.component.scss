@@ -283,19 +283,6 @@ $stepGap: 30px;
   }
 }
 
-// --------------------------------------------------------------- modal
-
-.growth-booking {
-  position: relative;
-}
-
-.growth-booking__close {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  z-index: 1;
-}
-
 // ------------------------------------------------------------ link band
 
 /* Slim and secondary (her section 8): a line of text and an outline button
@@ -500,59 +487,103 @@ $stepGap: 30px;
 
 // ---------------------------------------------- her brief of 2026-10-09
 
-/* The two production options under Step 1: equal tiles, side by side from
- * tablet width, stacked on a phone, the first never marked as preferred. */
-.growth-options {
-  display: flex;
-  flex-direction: column;
-
-  @media (min-width: $breakpointMd) {
-    flex-direction: row;
-  }
-}
-
-.growth-option {
-  flex: 1 1 0;
-  min-width: 0;
-  padding: 18px 18px 20px;
-  border: 1px solid $colorGsLine;
-  border-radius: 12px;
-  background: $colorLightGreen;
-
-  & + & {
-    margin-top: 12px;
-
-    @media (min-width: $breakpointMd) {
-      margin: 0 0 0 12px;
-    }
-  }
-}
-
-.growth-option__heading {
-  font-size: 17px;
-  line-height: 23px;
-  font-weight: 700;
-}
-
-.growth-option__area {
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: $colorPrimary;
-}
-
-.growth-option__text {
-  font-size: 15px;
-  line-height: 22px;
-  color: $colorGsBody;
-}
-
 /* The geography line after the contract line: smaller and upright, a
  * qualification rather than a second footnote. */
 p.growth-note--small {
   font-size: 12px;
   line-height: 18px;
   font-style: normal;
+}
+
+// ---------------------------------------------- her brief of 2026-10-11
+
+/* A section a button scrolls to (#options, #apply): clear of the sticky
+ * header when it arrives, and focusable without showing a ring around the
+ * whole section, so a keyboard reader carries on from there. */
+.growth-target {
+  scroll-margin-top: 70px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+/* What's included: her five items as a single column of white rows, two
+ * across from tablet width. */
+.growth-included {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 12px;
+  max-width: 860px;
+
+  @media (min-width: $breakpointMd) {
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 16px;
+  }
+}
+
+.growth-included__item {
+  position: relative;
+  padding: 16px 18px 16px 46px;
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  color: $colorPrimaryDark;
+  box-shadow: 0 4px 14px rgba($colorGsBlack, 0.05);
+
+  .growth-step__check {
+    left: 18px;
+    top: 19px;
+  }
+}
+
+/* Her photo with one line, on Growth's page: the line larger than the
+ * overview's paragraph, since it stands alone. */
+.growth-meet--line {
+  max-width: 640px;
+
+  @media (min-width: $breakpointMd) {
+    justify-content: center;
+  }
+}
+
+p.growth-meet__line {
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 600;
+
+  @media (min-width: $breakpointMd) {
+    font-size: 24px;
+    line-height: 34px;
+  }
+}
+
+.growth-quote__text {
+  font-size: 17px;
+  line-height: 26px;
+  font-style: italic;
+}
+
+.growth-quote__by {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.growth-apply-note {
+  max-width: 640px;
+  font-size: 18px;
+  line-height: 27px;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+/* The form as a card, as wide as the modal it used to sit in. */
+.growth-form {
+  max-width: 600px;
+  padding: 24px 20px;
+  box-shadow: 0 6px 20px rgba($colorGsBlack, 0.06);
+
+  @media (min-width: $breakpointMd) {
+    padding: 36px 40px;
+  }
 }

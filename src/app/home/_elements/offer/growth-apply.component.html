@@ -67,12 +67,12 @@
 
     <p *ngIf="step === 'other'" class="subtitle1 mb-0" role="status">{{ copy.thanksOther }}</p>
 
-    <!-- Pro: a dentist is offered the plan choice on /pro, replacing this
-    entry, so closing the plan choice comes back to the page and not to this
-    thank-you. -->
+    <!-- Pro: a dentist is offered Pro, replacing this entry, so Back comes to
+    the page and not to this thank-you: on /pro the plan choice opens, and
+    anywhere else /pro itself (proJoinQuery). -->
     <div *ngIf="step === 'pro-dentist'" role="status">
       <p class="subtitle1 mb-20p">{{ copy.thanksProDentist }}</p>
-      <a [routerLink]="proJoin.link" [queryParams]="proJoin.queryParams" [replaceUrl]="true" class="btn btn-primary growth-apply__submit">{{ copy.joinProButton }}</a>
+      <a [routerLink]="proJoin.link" [queryParams]="proJoinQuery" [replaceUrl]="true" class="btn btn-primary growth-apply__submit">{{ copy.joinProButton }}</a>
     </div>
 
     <p *ngIf="step === 'pro-other'" class="subtitle1 mb-0" role="status">{{ copy.thanksProOther }}</p>

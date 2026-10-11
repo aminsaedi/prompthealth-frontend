@@ -1,5 +1,6 @@
 import { IGrowthLanding } from '../growth-landing.model';
 import { DENTISTS_LANDING } from './dentists';
+import { DENTISTS_GROWTH_LANDING } from './dentists-growth';
 
 /*
  * Every growth landing, by the key its route names in `data.landing`.
@@ -12,6 +13,7 @@ import { DENTISTS_LANDING } from './dentists';
  */
 const GROWTH_LANDINGS: { [key: string]: IGrowthLanding } = {
   [DENTISTS_LANDING.key]: DENTISTS_LANDING,
+  [DENTISTS_GROWTH_LANDING.key]: DENTISTS_GROWTH_LANDING,
 };
 
 export function growthLandingFor(key: string): IGrowthLanding | null {

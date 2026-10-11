@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
+import { MetaPixelService } from 'src/app/shared/services/meta-pixel.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { LoginStatusType, ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IProError, ProInterval, ProService } from 'src/app/shared/services/pro.service';
@@ -26,6 +27,11 @@ type Reader = 'checking' | 'guest' | 'basic' | 'pro' | 'other';
  * /pro/checkout, which goes on to Stripe. While payments are closed (an MCP
  * switch, no deploy) every join button reads "Coming soon" and collects
  * nothing. A failure to ask counts as closed.
+ *
+ * Since her brief of 2026-10-11 this page is the only way in to a payment:
+ * every Join or Upgrade link elsewhere comes here without ?modal=pro-plan, so
+ * a reader sees what is included before choosing a plan. Pro's Meta ad points
+ * here, and the Pixel runs on it (MetaPixelService).
  */
 @Component({
   selector: 'app-pro',
@@ -61,6 +67,7 @@ export class ProComponent implements OnInit, OnDestroy {
     private _modalService: ModalService,
     private _profileService: ProfileManagementService,
     private _pro: ProService,
+    private _pixel: MetaPixelService,
   ) {}
 
   /* A member is sent to the library whether or not payments are open. */
@@ -75,6 +82,9 @@ export class ProComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setMeta();
     this.setJsonLd();
+    /* Once per arrival: opening the plan choice changes only the query, which
+     * neither recreates this page nor reaches Meta. */
+    this._pixel.pageView();
     this._pro.config().pipe(takeUntil(this.destroy$)).subscribe(c => {
       this.paymentsEnabled = c.paymentsEnabled;
       this.nextSession = formatSessionDate(c.nextLiveSessionAt);
@@ -94,6 +104,8 @@ export class ProComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this._jsonLd.removeJsonLd();
+    /* The Pixel runs on this page only; the next page must not report to it. */
+    this._pixel.leave();
   }
 
   onJoin(): void {

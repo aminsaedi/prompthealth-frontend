@@ -241,7 +241,7 @@ const faqs: IFAQItem[] = [
   },
   {
     q: "What is PromptHealth Growth?",
-    a: `Our done-for-you plan: we develop your content strategy, produce 4 personalized videos a month, publish them for you and promote your best video with Meta advertising. It's currently available for dental practices, and other healthcare practitioners can apply. <a href="/for-dentists">See how it works</a>.`,
+    a: `Our done-for-you plan: we develop your content strategy, produce 4 personalized videos a month, publish them for you and promote your best video with Meta advertising. It's currently available for dental practices, and other healthcare practitioners can apply. <a href="/for-dentists/growth">See how it works</a>.`,
     opened: false,
   },
   {

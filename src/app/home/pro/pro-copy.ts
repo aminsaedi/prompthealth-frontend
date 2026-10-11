@@ -96,7 +96,7 @@ export const PRO_FAQ: IFAQItem[] = [
   },
   {
     q: 'Who is PromptHealth Pro for?',
-    a: "It's currently for dental clinics whose team wants to make its own videos. If you'd rather we film and produce for you, see <a href=\"/for-dentists\">PromptHealth Growth</a>. Another type of healthcare professional? <a href=\"/pro?modal=growth-apply&interest=pro\">Apply for Pro</a> and let us know you're interested.",
+    a: "It's currently for dental clinics whose team wants to make its own videos. If you'd rather we film and produce for you, see <a href=\"/for-dentists/growth\">PromptHealth Growth</a>. Another type of healthcare professional? <a href=\"/pro?modal=growth-apply&interest=pro\">Apply for Pro</a> and let us know you're interested.",
     opened: false,
   },
   {

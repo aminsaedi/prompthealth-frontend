@@ -1,38 +1,35 @@
-import {
-  Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild,
-} from '@angular/core';
-import { Location } from '@angular/common';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
 import { MetaPixelService } from 'src/app/shared/services/meta-pixel.service';
-import { ModalService } from 'src/app/shared/services/modal.service';
 import { IFAQItem } from '../_elements/faq-item/faq-item.component';
-import { GrowthCtaPosition, IGrowthLanding, isGrowthCtaPosition } from './growth-landing.model';
+import { GrowthApplyComponent } from '../_elements/offer/growth-apply.component';
+import { IGrowthLanding } from './growth-landing.model';
 import { growthLandingFor } from './landings';
 
 const BASE_URL = environment.config.FRONTEND_BASE;
-const BOOKING_MODAL_ID = 'book-consultation';
-/* How long a close by history may take before the address is fixed directly. */
-const CLOSE_FALLBACK_MS = 1000;
-/* What Tab can reach. Filtered further by tabIndex, disabled and rendering
- * (see dialogFocusables). */
-const FOCUSABLE = 'a[href], area[href], button, input, select, textarea, iframe, [tabindex]';
+/* The strategy call modal's id, from when it was a consultation booking. Ads
+ * and old links still carry it. */
+const OLD_BOOKING_MODAL_ID = 'book-consultation';
+/* The inline form's section. */
+const APPLY_ID = 'apply';
 
 /*
  * A growth landing: the page a paid ad sends a practitioner to, rendered from a
- * config in ./landings. /for-dentists is the first.
+ * config in ./landings, which names its sections in order. /for-dentists is the
+ * overview of PromptHealth Pro and Growth, and /for-dentists/growth is Growth's
+ * own page, with the strategy call form written into it under #apply (her brief
+ * of 2026-10-11).
  *
- * Every Book a Strategy Call button opens the same form, in a modal addressed
- * by the query (?modal=book-consultation&cta=<button>), so back and forward, a
- * reload or a shared link all reopen it, and the request records which button
- * was pressed. Since her brief of 2026-10-09 they are the hero's, the Growth
- * card's and the final one; /plans and /for-practitioners link to the form by
- * its address. The modal's id is still book-consultation, from when it was a
- * consultation booking, so that old links and ads still open it.
+ * Until then the form was a modal on /for-dentists, opened by the address
+ * (?modal=book-consultation&cta=<button>). Ads and the plan section linked to
+ * it that way, so that address still leads to the form: server.ts answers it
+ * with a 301 to /for-dentists/growth#apply, and the same thing happens here
+ * for a reader who reaches it inside the app, where no request is made.
  */
 @Component({
   selector: 'app-growth-landing',
@@ -46,34 +43,16 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
    * the config is a module constant shared by every visit to the page. */
   public faqs: IFAQItem[] = [];
 
-  public readonly bookingModalId = BOOKING_MODAL_ID;
-  public isBookingShown = false;
-  public ctaPosition: GrowthCtaPosition = 'direct';
-  /* Between location.back() and the address it leads to, so a double click on
-   * the close button cannot go back twice and off the page. */
-  private isClosing = false;
-  private closeFallback: any = null;
-
-  @ViewChild('heroCta') private heroCta: ElementRef;
-
-  @ViewChild('finalCta') private finalCta: ElementRef;
-
-  @ViewChild('choiceCta') private choiceCta: ElementRef;
-
-  @ViewChild('dialog') private dialog: ElementRef;
-  private isTrappingFocus = false;
+  @ViewChild('apply') private apply: GrowthApplyComponent;
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _location: Location,
-    private _zone: NgZone,
     private _uService: UniversalService,
     private _jsonLd: JsonLdService,
     private _pixel: MetaPixelService,
-    private _modalService: ModalService,
   ) {}
 
   get heroPortrait(): boolean {
@@ -81,19 +60,26 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
     return !!video && video.height > video.width;
   }
 
-  @HostListener('document:keydown.escape') onEscape(): void {
-    if (this.isBookingShown) { this.closeBooking(); }
-  }
-
   ngOnInit(): void {
     this.config = growthLandingFor(this._route.snapshot.data.landing);
     if (!this.config) { return; }
-    this.faqs = this.config.faq.map(f => ({ ...f }));
+    this.faqs = (this.config.faq || []).map(f => ({ ...f }));
 
     this.setMeta();
     this.setJsonLd();
 
-    this._route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => this.onQueryChanged(params));
+    /* The first answer is synchronous, so a page that is only passing an old
+     * address on knows it before reporting a view of itself. */
+    let leaving = false;
+    this._route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      leaving = this.onQueryChanged(params);
+    });
+    if (leaving) { return; }
+    /* Arriving at #apply, from /plans or an old link: the layout scrolls a new
+     * page to the top at the end of the navigation, so this goes after it. */
+    this._route.fragment.pipe(takeUntil(this.destroy$)).subscribe(fragment => {
+      if (fragment) { this.scrollToSection(fragment, false); }
+    });
 
     /* Each arrival on the landing, including a return in the same tab: the
      * Pixel ignores the router's own history changes (see MetaPixelService). */
@@ -101,191 +87,87 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearTimeout(this.closeFallback);
     this.destroy$.next();
     this.destroy$.complete();
-    this.trapFocus(false);
     this._jsonLd.removeJsonLd();
     /* The Pixel runs on this page only; the next page must not report to it. */
     this._pixel.leave();
   }
 
-  /* Merged into the query as it stands, so a campaign's utm_* stay in the
-   * address while the form is open. Not ModalService.show: its query handling
-   * double-encoded every campaign until recently, and this page's traffic is
-   * the traffic whose query matters, so it does not depend on that code. */
-  openBooking(position: GrowthCtaPosition): void {
-    this._router.navigate([], {
-      relativeTo: this._route,
-      queryParams: { modal: BOOKING_MODAL_ID, cta: position },
-      queryParamsHandling: 'merge',
-    });
+  /*
+   * A button that moves down the page. It is a link to the section, so it
+   * works before the script has loaded and without it; once the app runs it
+   * scrolls smoothly instead, without adding a history entry.
+   */
+  onScrollButton(event: Event, target: string): void {
+    if (this.scrollToSection(target, true)) { event.preventDefault(); }
+  }
+
+  /* "Not a dentist? Apply for Pro." on the Pro card. */
+  openApplyPro(): void {
+    if (this.apply) { this.apply.open('pro'); }
   }
 
   /*
-   * Closes the way the modal's backdrop does (ModalService), so the close
-   * button, Escape and the backdrop all leave the same history. Opening pushed
-   * an entry, and going back removes it. Replacing it instead left two entries
-   * with the landing's address, and the next Back press went from one to the
-   * other and seemed to do nothing: an extra press to leave the page, for
-   * readers who mostly arrive in an in-app browser.
-   *
-   * A form reached by a link or a reload has no entry of this page's behind
-   * it (the router's first navigation is id 1), and back() would leave the
-   * site, so that one is replaced.
+   * Brings a section to the top of the screen, under the sticky header (each
+   * target has a scroll-margin for it), and moves focus there without a second
+   * scroll, so a keyboard reader carries on from the section and not from the
+   * button. False on the server, or when the page has no such section.
    */
-  closeBooking(): void {
-    if (!this.isBookingShown || this.isClosing) { return; }
-    const state: any = this._location.getState();
-    if (state && state.navigationId > 1) {
-      this.isClosing = true;
-      /* Back to the entry before the modal (ModalService). */
-      this._modalService.leaveModalEntry();
-      /* A history step that ends somewhere other than expected leaves the
-       * address, and so the modal, unchanged. isClosing then blocked every
-       * later press, which is how the button once came to do nothing (when
-       * the form held a Calendly frame, whose navigations joined the
-       * history). If the modal is still open once the step has had time to
-       * land, the address is fixed directly. */
-      clearTimeout(this.closeFallback);
-      this.closeFallback = setTimeout(() => {
-        if (this.isBookingShown && this.isClosing) {
-          this.isClosing = false;
-          this.replaceWithoutBooking();
-        }
-      }, CLOSE_FALLBACK_MS);
-      return;
-    }
-    this.replaceWithoutBooking();
-  }
-
-  private replaceWithoutBooking(): void {
-    this._router.navigate([], {
-      relativeTo: this._route,
-      queryParams: { modal: null, cta: null },
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
+  private scrollToSection(id: string, smooth: boolean): boolean {
+    if (!this._uService.isBrowser) { return false; }
+    const go = (): boolean => {
+      const el = document.getElementById(id);
+      if (!el) { return false; }
+      try {
+        el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+      } catch (e) {
+        el.scrollIntoView();
+      }
+      try { el.focus({ preventScroll: true }); } catch (e) { /* focus is a courtesy */ }
+      return true;
+    };
+    if (smooth) { return go(); }
+    /* On arrival the sections are not rendered yet, and the layout's scroll
+     * to the top comes at the end of the navigation; both are done by the
+     * next task. */
+    setTimeout(go);
+    return true;
   }
 
   /*
-   * Tab and Shift+Tab go round the dialog rather than out of it: past Send,
-   * focus used to walk on through the footer links behind the backdrop, where
-   * nobody can see it. The close button is always the first stop.
+   * An old address of the strategy call modal. On a page that has the form,
+   * the address is tidied and the form brought into view; on a page that no
+   * longer has it, the reader is sent to the page that does, with the rest
+   * of the query (a campaign's utm_*) kept. Replaced in both cases, so Back
+   * does not return to an address that only redirects again. True when the
+   * reader is being sent away, so this page reports no view of its own.
    */
-  onDialogKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Tab') { return; }
-    const items = this.dialogFocusables();
-    if (items.length === 0) { return; }
-    const first = items[0];
-    const last = items[items.length - 1];
-    const active = document.activeElement;
-    if (event.shiftKey && active === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  }
-
-  private onQueryChanged(params: ParamMap): void {
-    const wasShown = this.isBookingShown;
-    const openedFrom = this.ctaPosition;
-    this.isClosing = false;
-    clearTimeout(this.closeFallback);
-    this.isBookingShown = params.get('modal') === BOOKING_MODAL_ID;
-    const cta = params.get('cta');
-    this.ctaPosition = isGrowthCtaPosition(cta) ? cta : 'direct';
-
-    if (this.isBookingShown && !wasShown) {
-      this.trapFocus(true);
-    } else if (!this.isBookingShown && wasShown) {
-      this.trapFocus(false);
-      this.returnFocus(openedFrom);
-    }
-
-    /* The modal's backdrop closes it through ModalService, which removes
-     * modal and modal-data and knows nothing of cta. Left behind, a stale cta
-     * would credit the next opening, by the address, to a button nobody
-     * pressed. */
-    if (!this.isBookingShown && params.has('cta') && this._uService.isBrowser) {
+  private onQueryChanged(params: ParamMap): boolean {
+    if (params.get('modal') !== OLD_BOOKING_MODAL_ID) { return false; }
+    const rest: Params = {};
+    params.keys.forEach(key => {
+      if (key !== 'modal' && key !== 'cta') { rest[key] = params.get(key); }
+    });
+    if (this.config.booking) {
       this._router.navigate([], {
         relativeTo: this._route,
-        queryParams: { cta: null },
-        queryParamsHandling: 'merge',
+        queryParams: rest,
+        fragment: APPLY_ID,
         replaceUrl: true,
       });
+      this.scrollToSection(APPLY_ID, false);
+      return false;
     }
-  }
-
-  /* What Tab can reach inside the dialog now: the close button first, then the
-   * form or the thank-you. The honeypot is out of the tab order, and a
-   * disabled submit button is skipped. */
-  private dialogFocusables(): HTMLElement[] {
-    const root: HTMLElement = this.dialog ? this.dialog.nativeElement : null;
-    if (!root) { return []; }
-    const all: HTMLElement[] = Array.prototype.slice.call(root.querySelectorAll(FOCUSABLE));
-    return all.filter(el => el.tabIndex >= 0 && !(el as any).disabled && el.getClientRects().length > 0);
-  }
-
-  /*
-   * A fallback for what the keydown handler cannot see: on the thank-you step
-   * Tab from the heading has nowhere in the dialog to go, and focus would land
-   * on the page behind. It is brought back to the start of the dialog.
-   */
-  private trapFocus(on: boolean): void {
-    if (!this._uService.isBrowser || on === this.isTrappingFocus) { return; }
-    this.isTrappingFocus = on;
-    if (on) {
-      this._zone.runOutsideAngular(() => document.addEventListener('focusin', this.onFocusIn, true));
-    } else {
-      document.removeEventListener('focusin', this.onFocusIn, true);
+    if (this.config.bookingMovedTo) {
+      this._router.navigate([this.config.bookingMovedTo], {
+        queryParams: rest,
+        fragment: APPLY_ID,
+        replaceUrl: true,
+      });
+      return true;
     }
-  }
-
-  private onFocusIn = (event: FocusEvent) => {
-    const root: HTMLElement = this.dialog ? this.dialog.nativeElement : null;
-    const target = event.target as Node;
-    /* Not yet in the page: the modal renders after the query changes. */
-    if (!root || !document.body.contains(root) || !target || root.contains(target)) { return; }
-    const items = this.dialogFocusables();
-    if (items.length > 0) { items[0].focus(); }
-  }
-
-  /*
-   * Back to the button that opened the form, however it closed: close
-   * button, Escape, backdrop or Back. Without this, focus fell to the body,
-   * and a keyboard reader who opened the form from the final button started
-   * again from the logo at the top of the page.
-   *
-   * The position comes from the address, so it works for a form reopened by
-   * Forward as well. A form reached by a link names no button, nor does an
-   * old address naming a button the page no longer has, and focus is left
-   * alone. Scrolling is suppressed, so a reader on a touch screen, who never
-   * sees focus, is not moved.
-   */
-  private returnFocus(position: GrowthCtaPosition): void {
-    if (!this._uService.isBrowser || position === 'direct') { return; }
-    setTimeout(() => {
-      const target = this.ctaElement(position);
-      if (!target || typeof target.focus !== 'function') { return; }
-      try {
-        target.focus({ preventScroll: true });
-      } catch (e) {
-        target.focus();
-      }
-    });
-  }
-
-  private ctaElement(position: GrowthCtaPosition): HTMLElement {
-    let ref: ElementRef = null;
-    switch (position) {
-      case 'hero': ref = this.heroCta; break;
-      case 'final': ref = this.finalCta; break;
-      case 'steps': ref = this.choiceCta; break;
-    }
-    return ref ? ref.nativeElement : null;
+    return false;
   }
 
   private setMeta(): void {
@@ -304,12 +186,16 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
     });
   }
 
-  /* No offers: Growth's price is never shown, on the page or here. */
+  /*
+   * No offers: Growth's price is never shown, on the page or here. The
+   * Service is described on Growth's own page, the one with the form; the
+   * overview describes itself and its questions.
+   */
   private setJsonLd(): void {
     const c = this.config;
     const pageUrl = BASE_URL + c.path;
     const organization = { '@type': 'Organization', name: 'PromptHealth', url: BASE_URL };
-    this._jsonLd.setJsonLd([
+    const items: any[] = [
       {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
@@ -325,7 +211,9 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
         isPartOf: { '@type': 'WebSite', name: 'PromptHealth', url: BASE_URL },
         publisher: organization,
       },
-      {
+    ];
+    if (c.booking) {
+      items.push({
         '@context': 'https://schema.org',
         '@type': 'Service',
         name: 'PromptHealth Growth',
@@ -333,8 +221,10 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
         url: pageUrl,
         provider: organization,
         areaServed: { '@type': 'Country', name: 'Canada' },
-      },
-      {
+      });
+    }
+    if (c.faq && c.faq.length > 0 && c.sections.indexOf('faq') >= 0) {
+      items.push({
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
         mainEntity: c.faq.map(item => ({
@@ -342,7 +232,8 @@ export class GrowthLandingComponent implements OnInit, OnDestroy {
           name: item.q,
           acceptedAnswer: { '@type': 'Answer', text: item.a.replace(/<[^>]*>/g, '') },
         })),
-      },
-    ]);
+      });
+    }
+    this._jsonLd.setJsonLd(items);
   }
 }

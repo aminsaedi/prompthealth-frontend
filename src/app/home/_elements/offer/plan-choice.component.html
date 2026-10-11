@@ -27,7 +27,7 @@
           <!-- Basic: one button. Pro: Join for dental clinics, which opens the
           plan choice on /pro, and Apply for everyone else (her section 5). -->
           <div class="plan-card__actions mt-30p">
-            <a [routerLink]="card.link" [queryParams]="card.queryParams" class="btn plan-card__button" [ngClass]="card.key === 'pro' ? 'btn-primary' : 'btn-primary-dark'">{{ card.button }}</a>
+            <a [routerLink]="card.link" class="btn plan-card__button" [ngClass]="card.key === 'pro' ? 'btn-primary' : 'btn-primary-dark'">{{ card.button }}</a>
             <button *ngIf="card.applyButton" type="button" class="btn btn-outline plan-card__button" (click)="apply.open('pro')">{{ card.applyButton }}</button>
           </div>
         </div>
@@ -68,7 +68,7 @@
             <h4 class="growth-summary__heading text-primary-dark mb-15p">{{ growth.card.heading }}</h4>
             <p class="growth-summary__text mb-20p">{{ growth.card.text }}</p>
             <p class="growth-summary__availability mb-25p">{{ growthAvailability }}</p>
-            <a [routerLink]="book.link" [queryParams]="book.queryParams" class="btn btn-primary growth-summary__button">{{ growth.card.bookButton }}</a>
+            <a [routerLink]="book.link" [fragment]="book.fragment" class="btn btn-primary growth-summary__button">{{ growth.card.bookButton }}</a>
           </div>
         </div>
       </div>

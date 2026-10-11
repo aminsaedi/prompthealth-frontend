@@ -1,5 +1,5 @@
 <div class="booking-form">
-  <h2 #heading id="booking-form-heading" class="h4 mb-10p pr-40p booking-form__heading" tabindex="-1">{{ booking.formHeading }}</h2>
+  <h2 #heading id="booking-form-heading" class="h4 mb-10p booking-form__heading" [class.pr-40p]="!inline" tabindex="-1">{{ booking.formHeading }}</h2>
 
   <form *ngIf="step === 'form'" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <p class="text-label mb-20p booking-form__description">{{ booking.description }}</p>

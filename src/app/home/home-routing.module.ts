@@ -51,6 +51,10 @@ const routes: Routes = [
    * growth-landing/landings). growthLanding marks the route for the site
    * header, which should not offer the page a reader is already on. */
   { path: 'for-dentists', component: GrowthLandingComponent, data: { landing: 'dentists', growthLanding: true } },
+  /* Growth's own page (her brief of 2026-10-11). Not marked growthLanding:
+   * the header's For Dentists button leads from here to the overview, which
+   * is not the page the reader is on. */
+  { path: 'for-dentists/growth', component: GrowthLandingComponent, data: { landing: 'dentists-growth' } },
   /* PromptHealth Pro (offer v2, 2026-10). Not in the main menu yet (Hedieh).
    * /pro is public and indexed; everything under it is noindex. */
   { path: 'pro', component: ProComponent },

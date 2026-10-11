@@ -22,7 +22,9 @@
       <ng-template #notMember>
         <h1 class="h4 text-primary-dark mb-15p">For PromptHealth Pro members</h1>
         <p class="text-label mb-25p">This idea is in the members' library.</p>
-        <a routerLink="/pro" [queryParams]="{ modal: 'pro-plan' }" class="btn btn-primary">Upgrade to Pro</a>
+        <!-- To /pro, which shows what Pro includes before any payment (her brief
+        of 2026-10-11). -->
+        <a routerLink="/pro" class="btn btn-primary">Upgrade to Pro</a>
       </ng-template>
     </div>
 

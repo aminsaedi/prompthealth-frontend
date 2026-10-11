@@ -1,6 +1,6 @@
 import { IGrowthLanding } from '../growth-landing.model';
 import { GROWTH_LANDING_PATHS } from './paths';
-import { FREE_PROFILE, NOT_A_DENTIST_APPLY_FOR_PRO, PRO_JOIN, PRO_PRICE } from '../../_elements/offer/offer-copy';
+import { FREE_PROFILE, NOT_A_DENTIST_APPLY_FOR_PRO, PRO_PRICE } from '../../_elements/offer/offer-copy';
 
 /*
  * /for-dentists, the first growth landing.
@@ -39,7 +39,22 @@ import { FREE_PROFILE, NOT_A_DENTIST_APPLY_FOR_PRO, PRO_JOIN, PRO_PRICE } from '
  *
  * The hero video is her own vertical cut, with the words already in the
  * picture.
+ *
+ * Her brief of 2026-10-11 (plan-specs/source/brief-2026-10-11/brief.txt,
+ * section 1) makes this page the overview, because Pro and Growth each get an
+ * ad of their own pointing at a page of their own: /pro, and Growth's at
+ * /for-dentists/growth (dentists-growth.ts). The hero keeps its video. Its
+ * button and the closing one become "Find the right option for your clinic",
+ * which scrolls to the two cards. Each card's button is "Learn more", to its
+ * own page: nothing here starts a payment or opens the strategy call form. The
+ * clinic videos, the channel link and How It Works moved to the Growth page,
+ * and the form with them; an old link to it here is sent there (bookingMovedTo,
+ * and a 301 in server.ts).
  */
+/* The hero's and the closing button (her brief of 2026-10-11): down to the
+ * two cards, whose section is #options. */
+const FIND_THE_RIGHT_OPTION = { label: 'Find the right option for your clinic', target: 'options' };
+
 export const DENTISTS_LANDING: IGrowthLanding = {
   key: 'dentists',
   path: GROWTH_LANDING_PATHS.dentists,
@@ -54,11 +69,12 @@ export const DENTISTS_LANDING: IGrowthLanding = {
     imageType: 'image/jpeg',
     imageAlt: 'Hedieh Safiyari on set at a practice, with 1.7M followers and 400+ dental videos',
   },
-  ctaLabel: 'Book a Strategy Call',
+  sections: ['hero', 'choice', 'meet', 'whyUs', 'linkBand', 'faq', 'final'],
   hero: {
     eyebrow: 'For Dental Practices',
     heading: 'Let Patients Get to Know You Before They Ever Book',
     text: 'We create personalized videos that show people near your practice who you are and why to trust you. Then we put your best video in front of them every month.',
+    button: FIND_THE_RIGHT_OPTION,
     video: {
       src: 'https://prompt-images.s3.us-east-2.amazonaws.com/landing/for-dentists/hero-vertical-v2.mp4',
       poster: '/assets/video/for-dentists-hero-vertical-poster.v1.jpg',
@@ -98,34 +114,6 @@ export const DENTISTS_LANDING: IGrowthLanding = {
       },
     ],
   },
-  work: {
-    heading: 'See What We Create',
-    text: 'Real practitioners. Real stories. Creative designed to get attention and build trust.',
-    videos: [
-      {
-        id: '177N3ZJs19k',
-        title: "Most people think tooth like this can't be saved...",
-        caption: "Saving a tooth most people think can't be saved",
-      },
-      {
-        id: 'VDjztR1EzWU',
-        title: 'Top 5 cosmetic dental issues',
-        caption: 'Top 5 cosmetic dental issues',
-      },
-      {
-        id: 'O2CQvxnX0P0',
-        title: 'What happens when I delay a dental visit?',
-        caption: 'What happens when you delay a dental visit',
-      },
-      {
-        id: '_FFxjJ4Gn98',
-        title: 'How Severely Worn Teeth Can Be Rebuilt | One of the Most Complex Dental Cases',
-        caption: 'Rebuilding severely worn teeth',
-      },
-    ],
-    moreLabel: 'See More Dental Videos',
-    moreUrl: 'https://www.youtube.com/@prompthealth2058',
-  },
   choice: {
     heading: 'Two Ways to Work With Us',
     label: 'For Dental Clinics',
@@ -136,17 +124,19 @@ export const DENTISTS_LANDING: IGrowthLanding = {
         name: 'PromptHealth Pro',
         label: 'DIY · We Guide You',
         description: 'Weekly content ideas, ready-to-use templates, practical training, and ongoing guidance to help your team create and manage its own social media content.',
+        tone: 'pro',
         price: PRO_PRICE.monthly,
-        button: PRO_JOIN.button,
-        link: PRO_JOIN.link,
-        queryParams: PRO_JOIN.queryParams,
+        button: 'Learn more',
+        link: '/pro',
         applyPro: NOT_A_DENTIST_APPLY_FOR_PRO,
       },
       {
         name: 'PromptHealth Growth',
         label: 'Done For You · We Handle It',
+        tone: 'growth',
         description: 'From strategy and personalized video production to publishing and Meta advertising, we handle your content and marketing so you can focus on your patients.',
-        button: 'Book a Strategy Call',
+        button: 'Learn more',
+        link: GROWTH_LANDING_PATHS['dentists-growth'],
       },
     ],
     /* Her brief of 2026-10-08: the path is a free profile first, then Pro
@@ -160,55 +150,7 @@ export const DENTISTS_LANDING: IGrowthLanding = {
       link: FREE_PROFILE.link,
     },
   },
-  stepsIntro: 'We create personalized videos that help patients get to know your practice, understand your expertise, and build trust before they book. From content strategy to video production and targeted advertising, we handle it all.',
-  steps: [
-    {
-      title: 'Step 1: Implementation',
-      intro: 'Everything starts with understanding your practice, your story, and the patients you want to reach.',
-      items: [
-        { text: 'Strategy session with you and your team' },
-        { text: 'Your brand story and what makes your practice different' },
-        { text: 'Personalized video content strategy' },
-        { text: 'Your choice of AI-assisted video production or professional on-site filming' },
-        { text: 'Content planning, creative direction and team guidance' },
-        { text: 'Online presence checklist (Google Business Profile, reviews)' },
-        { text: 'Meta ad account and tracking setup' },
-      ],
-      /* AI-assisted first, and neither marked as recommended (her brief). */
-      options: [
-        {
-          heading: 'AI-Assisted Video Production',
-          area: 'Available Worldwide',
-          text: 'Personalized videos created using AI technology, featuring your approved digital likeness or a virtual presenter. No ongoing filming required.',
-        },
-        {
-          heading: 'Professional On-Site Filming',
-          area: 'Greater Vancouver',
-          text: 'Professional filming at your practice, featuring you, your team and your environment, with creative direction and on-camera coaching.',
-        },
-      ],
-      optionsNote: 'Professional on-site filming is available as a premium production option.',
-    },
-    {
-      title: 'Step 2: Growth, every month',
-      intro: 'Then we keep your practice visible, month after month.',
-      items: [
-        { text: '4 personalized, professionally produced videos every month' },
-        { text: 'Custom scripts based on your expertise, services and patient questions' },
-        { text: 'Consistent video creation without the need for monthly filming' },
-        { text: 'Your videos posted for you on Instagram and Google Business Profile' },
-        { text: "Your videos shared as collaboration posts with PromptHealth's Instagram, followed by 21,000+ people interested in health" },
-        { text: 'Your strongest video each month promoted through targeted Meta advertising to people near your practice' },
-        { text: 'Monthly performance report: reach, views, messages, calls and cost per message' },
-      ],
-    },
-  ],
-  stepsFootnote: 'No long-term contract. Billed in 3-month cycles. Cancel anytime before your next cycle. Advertising spend and optional on-site production are separate.',
-  /* So the page does not imply that Meta ads are managed everywhere AI-assisted
-   * production is offered (her brief, proposed and approved). */
-  stepsFootnoteSmall: 'Advertising management outside Canada is confirmed during your strategy call.',
   headings: {
-    howItWorks: 'How It Works',
     faq: 'Frequently Asked Questions',
   },
   linkBand: {
@@ -268,37 +210,7 @@ export const DENTISTS_LANDING: IGrowthLanding = {
   final: {
     heading: 'Great Healthcare Professionals Deserve to Be Seen, Heard and Trusted.',
     text: "Tell us about your practice, and we'll look at how patients find you today and whether PromptHealth Growth is the right fit.",
+    button: FIND_THE_RIGHT_OPTION,
   },
-  /* Her brief of 2026-10-09, update 4. The heading, description, button,
-   * thank-you and privacy line are hers; the field messages are ours. */
-  booking: {
-    formHeading: "Let's Talk About Your Practice",
-    description: "Tell us a little about your practice and how we can reach you. We'll be in touch to discuss your goals and how PromptHealth can help.",
-    labels: {
-      firstName: 'First Name',
-      lastName: 'Last Name',
-      practiceName: 'Practice Name',
-      email: 'Email Address',
-      phone: 'Phone Number',
-      preferredTime: 'Preferred Time to Reach You',
-    },
-    optionalLabel: '(optional)',
-    validation: {
-      firstName: 'Please enter your first name.',
-      lastName: 'Please enter your last name.',
-      practiceName: 'Please enter your practice name.',
-      email: 'Please enter a valid email address.',
-      phone: 'Please enter a valid phone number.',
-      preferredTime: '',
-    },
-    submit: 'Request a Strategy Call',
-    privacy: {
-      before: "We'll only use your details to respond to your inquiry. See our ",
-      link: 'Privacy Policy',
-      after: '.',
-      path: '/policy',
-    },
-    thanks: "Thank you for reaching out! We've received your request and will be in touch soon.",
-    errorGeneric: 'Your request could not be sent. Please try again, or email info@prompthealth.ca.',
-  },
+  bookingMovedTo: GROWTH_LANDING_PATHS['dentists-growth'],
 };

@@ -12,7 +12,8 @@
 - [FAQ](https://www.prompthealth.ca/faq): How PromptHealth works for patients and practitioners
 - [Practitioner Plans](https://www.prompthealth.ca/plans): Plans for healthcare providers: PromptHealth Basic (free), PromptHealth Pro (paid membership) and PromptHealth Growth (done for you, by application)
 - [For Practitioners](https://www.prompthealth.ca/for-practitioners): How healthcare providers list their practice on PromptHealth
-- [Growth for Dentists](https://www.prompthealth.ca/for-dentists): PromptHealth Growth for dental practices: videos filmed and produced at the practice every three months and promoted to people nearby, by application
+- [For Dentists](https://www.prompthealth.ca/for-dentists): The two ways PromptHealth works with dental clinics, PromptHealth Pro (do it yourself, with weekly guidance) and PromptHealth Growth (done for you)
+- [PromptHealth Growth](https://www.prompthealth.ca/for-dentists/growth): Customized professional videos for dental clinics, scripted and coached by Hedieh Safiyari and filmed in a quarterly production shoot, with the best-performing video run as a managed Meta ad
 - [PromptHealth Pro](https://www.prompthealth.ca/pro): A paid membership for dental clinics: a new video idea and post idea for the team every week, a members' library, trend alerts and quarterly live sessions
 - [Partner Program](https://www.prompthealth.ca/about/partner): Corporate wellness partnerships
 
