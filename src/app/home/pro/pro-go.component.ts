@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { ProfileManagementService } from 'src/app/shared/services/profile-management.service';
 import { IProError, ProInterval, ProService } from 'src/app/shared/services/pro.service';
+import { MetaPixelService } from 'src/app/shared/services/meta-pixel.service';
 import { signedIn } from './pro-member';
 
 /*
@@ -44,6 +45,7 @@ export class ProGoComponent implements OnInit, OnDestroy {
     private _uService: UniversalService,
     private _profileService: ProfileManagementService,
     private _pro: ProService,
+    private _pixel: MetaPixelService,
   ) {}
 
   ngOnInit(): void {
@@ -68,11 +70,25 @@ export class ProGoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this._pixel.leave();
   }
 
   private checkout(): void {
     const interval: ProInterval = this._route.snapshot.queryParamMap.get('interval') === 'year' ? 'year' : 'month';
-    this._pro.checkout(interval).subscribe(res => this.go(res && res.url), (error: IProError) => this.refused(error));
+    /* A new member arrives here from the registration form on the way to
+     * Stripe, so this is where their InitiateCheckout is sent. No PageView:
+     * the step is measured by the event alone. */
+    this._pixel.enter();
+    this._pro.checkout(interval).subscribe(async res => {
+      const url = res && res.url;
+      if (url) {
+        this._pixel.track('InitiateCheckout',
+          { value: ProService.planValue(interval), currency: 'CAD' },
+          ProService.checkoutSessionId(url) || undefined);
+        await this._pixel.settle();
+      }
+      this.go(url);
+    }, (error: IProError) => this.refused(error));
   }
 
   private portal(): void {
