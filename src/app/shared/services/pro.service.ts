@@ -128,6 +128,19 @@ export class ProService {
     return this.unwrap(this.http.get(API_URL + 'pro/me', { headers: this.headers() }));
   }
 
+  /* The Checkout session id inside the address checkout() returns, which
+   * the Pixel uses as the InitiateCheckout event id. Empty if Stripe ever
+   * changes the shape of its URLs. */
+  static checkoutSessionId(url: string): string {
+    const match = /\/(cs_(?:live|test)_[A-Za-z0-9]+)/.exec(String(url || ''));
+    return match ? match[1] : '';
+  }
+
+  /* What Meta is told a checkout is worth, before tax: the plan's price. */
+  static planValue(interval: ProInterval): number {
+    return interval === 'year' ? 1490 : 149;
+  }
+
   checkout(interval: ProInterval): Observable<{ url: string }> {
     return this.unwrap(this.http.post(API_URL + 'pro/checkout', { interval }, { headers: this.headers() }));
   }

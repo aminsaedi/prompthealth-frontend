@@ -17,6 +17,7 @@ import { IAuthResult } from 'src/app/models/response-data';
 import { Auth2Service } from '../auth2.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MetaPixelService } from 'src/app/shared/services/meta-pixel.service';
 
 @Component({
   selector: 'form-auth',
@@ -61,6 +62,7 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
     private _toastr: ToastrService,
     private _uService: UniversalService,
     private _authService: Auth2Service,
+    private _pixel: MetaPixelService,
   ) {
     this.formRole = new FormControl();
   }
@@ -200,6 +202,16 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
 
     this.isSubmitted = false;
     let toastrMessage = null;
+    /* A profile created on the way to Pro checkout is Hedieh's
+     * CompleteRegistration (2026-10-14). Only a new account, and only on that
+     * path: a sign-in, or a free profile made for its own sake, is not one.
+     * The Pixel stays open into /pro/checkout, which sends InitiateCheckout
+     * and closes it; the event is given its moment before the page moves. */
+    if (this.authType !== 'signin' && this.nextPage && this.nextPage.indexOf('/pro/checkout') === 0) {
+      this._pixel.enter();
+      this._pixel.track('CompleteRegistration', { currency: 'CAD', value: 0 });
+      await this._pixel.settle();
+    }
     this._sharedService.requestPermission(userinfo);
     // this._ms.receiveMessage();
     if (!this.staySamePage) {

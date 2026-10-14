@@ -169,6 +169,47 @@ export class MetaPixelService {
     }
   }
 
+  /*
+   * Opens the Pixel on a step of the Pro sign-up that is not a landing (the
+   * registration form, /pro/checkout), without a PageView: Hedieh measures
+   * those steps by their events (CompleteRegistration, InitiateCheckout), and
+   * a PageView there would only count the form as a page of the ad. The step
+   * calls leave as it goes, like a landing.
+   */
+  enter(): void {
+    if (!this.enabled) { return; }
+    this.onLanding = true;
+    this.load();
+    this.resume();
+  }
+
+  /*
+   * Resolves once fbevents.js is running and has had a moment to send, or
+   * after maxMs whatever happens. For an event fired just before the page
+   * hands the reader to Stripe: the request is an image fetch, and a
+   * navigation that follows at once can cancel it, so the redirect waits for
+   * this first. Resolves at once when the Pixel is off, so it never holds a
+   * checkout up for a reader it does not track.
+   */
+  settle(maxMs = 1500): Promise<void> {
+    if (!this.enabled || !this.onLanding) { return Promise.resolve(); }
+    return new Promise(resolve => {
+      const started = Date.now();
+      const check = () => {
+        let live = false;
+        try { live = isLive((window as any).fbq); } catch (e) { live = false; }
+        if (live) {
+          setTimeout(resolve, 400);
+        } else if (Date.now() - started >= maxMs) {
+          resolve();
+        } else {
+          setTimeout(check, 100);
+        }
+      };
+      check();
+    });
+  }
+
   /* eventId is Meta's deduplication key (eid). It travels to Meta, so it is
    * public, and must never double as a secret. */
   track(name: string, params: { [key: string]: any } = {}, eventId?: string): void {

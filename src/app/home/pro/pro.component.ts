@@ -139,8 +139,14 @@ export class ProComponent implements OnInit, OnDestroy {
     }
     this.isSending = true;
     this.errorMessage = '';
-    this._pro.checkout(this.interval).subscribe(res => {
+    this._pro.checkout(this.interval).subscribe(async res => {
       if (res && res.url) {
+        /* Hedieh's ads optimise on it (2026-10-14): sent only once Stripe has
+         * a checkout ready, and given its moment before the page is left. */
+        this._pixel.track('InitiateCheckout',
+          { value: ProService.planValue(this.interval), currency: 'CAD' },
+          ProService.checkoutSessionId(res.url) || undefined);
+        await this._pixel.settle();
         window.location.href = res.url;
       } else {
         this.isSending = false;
