@@ -5,6 +5,8 @@ import { IResponseData } from "src/app/models/response-data";
 import { SharedService } from "src/app/shared/services/shared.service";
 import { UniversalService } from "src/app/shared/services/universal.service";
 import { LoginStatusType, ProfileManagementService } from "src/app/shared/services/profile-management.service";
+import { JsonLdService } from "src/app/shared/services/json-ld.service";
+import { ACADEMY_EXPLAINER, videoObjectLd } from "src/app/shared/explainer-videos";
 
 /*
  * The PromptHealth Academy: short video guides, free to anyone with a
@@ -43,11 +45,13 @@ export class OnlineAcademyComponent implements OnInit, OnDestroy {
 
   /* Back here after signing in. */
   public readonly loginQuery = { next: "/online-academy" };
+  public readonly explainer = ACADEMY_EXPLAINER;
 
   constructor(
     private _sharedService: SharedService,
     private _uService: UniversalService,
     private _profileService: ProfileManagementService,
+    private _jsonLd: JsonLdService,
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +60,7 @@ export class OnlineAcademyComponent implements OnInit, OnDestroy {
       description: "Short video guides from PromptHealth on social media, content, Google Business Profile and SEO, free for practitioners with a PromptHealth profile.",
       robots: "index, follow",
     });
+    this._jsonLd.setJsonLd([videoObjectLd(ACADEMY_EXPLAINER)]);
 
     if (this._uService.isServer) {
       this.view = "guest";
@@ -68,6 +73,7 @@ export class OnlineAcademyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this._jsonLd.removeJsonLd();
     this.destroy$.next();
     this.destroy$.complete();
   }

@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { JsonLdService } from 'src/app/shared/services/json-ld.service';
+import { PRO_EXPLAINER, videoObjectLd } from 'src/app/shared/explainer-videos';
 import { MetaPixelService } from 'src/app/shared/services/meta-pixel.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { LoginStatusType, ProfileManagementService } from 'src/app/shared/services/profile-management.service';
@@ -208,9 +209,12 @@ export class ProComponent implements OnInit, OnDestroy {
     });
   }
 
+  public readonly explainer = PRO_EXPLAINER;
+
   private setJsonLd(): void {
     const url = 'https://www.prompthealth.ca/pro';
     this._jsonLd.setJsonLd([
+      videoObjectLd(PRO_EXPLAINER),
       {
         '@context': 'https://schema.org',
         '@type': 'Service',
