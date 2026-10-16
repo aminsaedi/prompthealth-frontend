@@ -19,6 +19,13 @@ illustrations on the right. Not lazy: it is the first thing on the page. -->
 
 <section class="container pt-30p pt-md-50p pb-100p" [ngSwitch]="view">
 
+  <!-- Her explainer (2026-10-15): under the headline, above Create Your Free
+       Profile. Members, who already have the profile, go straight to the
+       guides. The server renders it, so crawlers see it with its markup. -->
+  <div *ngIf="view !== 'member'" class="academy-explainer mx-auto mb-30p mb-md-50p">
+    <youtube-facade [videoId]="explainer.id" [title]="explainer.title" ratio="16:9"></youtube-facade>
+  </div>
+
   <!-- While the browser finds out who is signed in. -->
   <div *ngSwitchCase="'checking'" class="row" aria-busy="true">
     <div *ngFor="let i of [0, 1, 2]" class="col-12 col-md-6 col-lg-4 mb-30p">

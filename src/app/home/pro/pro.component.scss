@@ -313,3 +313,9 @@
   color: $colorErrorDark;
   background: $colorErrorLight;
 }
+
+/* Her explainer under the headline: the copy column's width on a laptop,
+ * the whole width on a phone. */
+.pro-hero__explainer {
+  max-width: 560px;
+}
