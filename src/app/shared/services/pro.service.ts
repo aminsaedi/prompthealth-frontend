@@ -12,6 +12,12 @@ export type ProInterval = 'month' | 'year';
 export interface IProMembership {
   status: 'none' | 'incomplete' | 'active' | 'past_due' | 'canceled';
   isPro: boolean;
+  /* A Stripe subscription to manage; false for a Growth client on
+   * complimentary Pro. */
+  hasSubscription?: boolean;
+  /* PromptHealth Growth clients get Pro free while they are clients. */
+  growthMember?: boolean;
+  growthMemberSince?: string;
   interval?: '' | ProInterval;
   currentPeriodEnd?: string;
   cancelAtPeriodEnd?: boolean;

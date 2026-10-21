@@ -57,9 +57,16 @@ export class ProGoComponent implements OnInit, OnDestroy {
     });
     if (this._uService.isServer) { return; }
     signedIn(this._profileService).pipe(takeUntil(this.destroy$)).subscribe(isIn => {
-      const next = this._router.url;
+      /* login=1 marks a link for someone who already has an account: the
+       * "Keep your Pro access" email to a former Growth client. Signed out,
+       * they sign in rather than meet the new-account form, and come back
+       * without the flag. */
+      const tree = this._router.parseUrl(this._router.url);
+      const existingAccount = tree.queryParams.login === '1';
+      delete tree.queryParams.login;
+      const next = this._router.serializeUrl(tree);
       if (!isIn) {
-        const path = this.mode === 'manage' ? '/auth/login' : '/auth/registration/sp';
+        const path = this.mode === 'manage' || existingAccount ? '/auth/login' : '/auth/registration/sp';
         this._router.navigate([path], { queryParams: { next }, replaceUrl: true });
         return;
       }
