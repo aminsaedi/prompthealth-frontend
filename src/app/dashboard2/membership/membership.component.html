@@ -10,14 +10,22 @@
   <ng-container *ngIf="membership">
     <!-- PromptHealth Pro -->
     <div *ngIf="membership.isPro; else basic" class="membership-card membership-card--pro rounded-8p p-20p">
-      <p class="subtitle1 mb-5p">Your membership: <strong>PromptHealth Pro ({{ planName }})</strong></p>
-      <p *ngIf="!membership.cancelAtPeriodEnd && membership.currentPeriodEnd" class="text-label mb-0">Next payment: {{ membership.currentPeriodEnd | date:'MMMM d, y' }}</p>
-      <p *ngIf="membership.cancelAtPeriodEnd && membership.currentPeriodEnd" class="text-label mb-0">Ends on {{ membership.currentPeriodEnd | date:'MMMM d, y' }}. Until then your team keeps every Pro benefit.</p>
+      <!-- A Growth client has Pro free, with no subscription behind it (her
+           brief of 2026-10-20): no plan, no payment date, no billing portal. -->
+      <ng-container *ngIf="membership.hasSubscription === false; else paid">
+        <p class="subtitle1 mb-5p">Your membership: <strong>PromptHealth Pro</strong></p>
+        <p class="text-label mb-0">Included with your PromptHealth Growth membership, at no extra cost.</p>
+      </ng-container>
+      <ng-template #paid>
+        <p class="subtitle1 mb-5p">Your membership: <strong>PromptHealth Pro ({{ planName }})</strong></p>
+        <p *ngIf="!membership.cancelAtPeriodEnd && membership.currentPeriodEnd" class="text-label mb-0">Next payment: {{ membership.currentPeriodEnd | date:'MMMM d, y' }}</p>
+        <p *ngIf="membership.cancelAtPeriodEnd && membership.currentPeriodEnd" class="text-label mb-0">Ends on {{ membership.currentPeriodEnd | date:'MMMM d, y' }}. Until then your team keeps every Pro benefit.</p>
+      </ng-template>
       <p *ngIf="membership.status === 'past_due'" class="membership-alert mt-15p mb-0" role="alert">
         Your latest payment didn't go through. Update your card in Manage Membership to keep PromptHealth Pro.
       </p>
       <div class="d-flex flex-column flex-sm-row mt-20p">
-        <button type="button" class="btn btn-primary mb-10p mb-sm-0p mr-sm-10p" [disabled]="isOpeningPortal" (click)="manage()">Manage Membership</button>
+        <button *ngIf="membership.hasSubscription !== false" type="button" class="btn btn-primary mb-10p mb-sm-0p mr-sm-10p" [disabled]="isOpeningPortal" (click)="manage()">Manage Membership</button>
         <a routerLink="/pro/library" class="btn btn-outline">Members' Library</a>
       </div>
       <p *ngIf="portalError" class="membership-alert mt-15p mb-0" role="alert">{{ portalError }}</p>
