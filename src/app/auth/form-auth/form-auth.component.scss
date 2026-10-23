@@ -1,0 +1,55 @@
+@import '../../../assets/scss/variables';
+
+/* Practitioner or clinic: two buttons that read as one choice. */
+fieldset {
+  border: 0;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  min-width: 0;
+}
+
+legend {
+  font-size: inherit;
+  width: auto;
+}
+
+.role-choice {
+  display: flex;
+  border: 1px solid $colorGsLine;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.role-choice__option {
+  flex: 1 1 50%;
+  padding: 10px 12px;
+  border: 0;
+  background: #fff;
+  color: $colorGsBody;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+
+  & + & {
+    border-left: 1px solid $colorGsLine;
+  }
+
+  &.is-active {
+    background: $colorPrimaryLight;
+    color: $colorPrimaryDark;
+    box-shadow: inset 0 0 0 2px $colorPrimary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $colorPrimaryDark;
+    outline-offset: -4px;
+  }
+}
+
+/* 16px, so iOS does not zoom the page when the field takes focus. */
+.type-select {
+  font-size: 16px;
+  height: auto;
+  min-height: 44px;
+}

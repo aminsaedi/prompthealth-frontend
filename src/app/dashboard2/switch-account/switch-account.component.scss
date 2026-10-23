@@ -1,0 +1,60 @@
+@import '../../../assets/scss/variables';
+
+.switch-account__text {
+  font-size: 15px;
+  line-height: 22px;
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+legend {
+  font-size: inherit;
+  width: auto;
+}
+
+.switch-account__choices {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -5px;
+}
+
+.switch-account__choice {
+  flex: 1 1 200px;
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  padding: 14px 16px;
+  border: 2px solid $colorGsLine;
+  border-radius: 8px;
+  background: #fff;
+  color: $colorGsBody;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  text-align: left;
+
+  &.is-active {
+    border-color: $colorPrimary;
+    background: $colorPrimaryLight;
+    color: $colorPrimaryDark;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $colorPrimaryDark;
+    outline-offset: 2px;
+  }
+}
+
+.switch-account__alert {
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  color: $colorErrorDark;
+  background: $colorErrorLight;
+}

@@ -8,6 +8,7 @@ import { UniversalService } from 'src/app/shared/services/universal.service';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { SWITCH_ACCOUNT } from 'src/app/shared/free-membership-copy';
 
 @Component({
   selector: 'app-profile',
@@ -21,6 +22,7 @@ export class ProfileComponent implements OnInit , OnDestroy {
   get user() { return this._profileService.profile; }
 
   public isUploading = false; 
+  public readonly switchCopy = SWITCH_ACCOUNT;
 
   constructor(
     private _profileService: ProfileManagementService,

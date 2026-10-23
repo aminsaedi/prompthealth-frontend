@@ -22,9 +22,20 @@ export class AuthComponent implements OnInit , OnDestroy {
 
   public authType: AuthType;
   public roleType: RoleType;
+  /* /auth/registration with no role: the two-button choice comes first. */
+  public chooseRole = false;
 
   public nextPage: string;
   public nextPageKeyword: string;
+
+  public readonly choice = ACCOUNT_CHOICE;
+  /* The page to come back to, carried through the choice. */
+  get nextQuery() {
+    const query: { [key: string]: string } = {};
+    if (this.nextPage) { query.next = this.nextPage; }
+    if (this.nextPageKeyword) { query.nextKeyword = this.nextPageKeyword; }
+    return Object.keys(query).length ? query : null;
+  }
 
   /* /pro's Continue to Payment sends a visitor here first, with checkout as
    * the page to come back to. */
@@ -39,8 +50,9 @@ export class AuthComponent implements OnInit , OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this._route.data.subscribe((data: { authType: AuthType }) => {
+    this._route.data.subscribe((data: { authType: AuthType, chooseRole?: boolean }) => {
       this.authType = data.authType;
+      this.chooseRole = !!data.chooseRole;
     });
 
     this._route.params.subscribe((param: Params) => {
@@ -68,6 +80,10 @@ export class AuthComponent implements OnInit , OnDestroy {
   setMeta() {
     const label = ROLE_LABELS[this.roleType] || ROLE_LABELS.U;
     const signin = this.authType === "signin";
+    if (!signin && this.chooseRole) {
+      this._uService.setMeta(this._router.url, ACCOUNT_CHOICE.meta);
+      return;
+    }
     this._uService.setMeta(this._router.url, signin ? {
       title: "Sign In | PromptHealth",
       description: "Sign in to your PromptHealth account.",
@@ -82,6 +98,26 @@ export class AuthComponent implements OnInit , OnDestroy {
     this.destroy$.complete();
   }
 }
+
+/* The account choice (Hedieh's brief of 2026-10-22, step 6): two clear
+ * buttons, in her words. */
+const ACCOUNT_CHOICE = {
+  meta: {
+    title: "Create an Account | PromptHealth",
+    description: "Create a free PromptHealth account, whether you are looking for care or you are a health professional or clinic.",
+  },
+  intro: "Which account would you like?",
+  care: {
+    button: "I'm looking for care",
+    text: "Find trusted health and wellness providers in Canada and follow the topics you care about.",
+    link: "/auth/registration/u",
+  },
+  professional: {
+    button: "I'm a health professional or clinic",
+    text: "Create a free profile so patients can find your practice in the directory.",
+    link: "/auth/registration/sp",
+  },
+};
 
 const ROLE_LABELS: { [role: string]: { name: string, description: string } } = {
   U: {

@@ -5,6 +5,7 @@ import { ProfileManagementService } from 'src/app/shared/services/profile-manage
 import { IProError, IProMembership, ProService } from 'src/app/shared/services/pro.service';
 import { UPGRADE_BANNER } from 'src/app/home/pro/pro-copy';
 import { NOT_A_DENTIST_APPLY_FOR_PRO, PRO_AVAILABILITY, PRO_JOIN } from 'src/app/home/_elements/offer/offer-copy';
+import { PRO_WAITLIST } from 'src/app/shared/free-membership-copy';
 
 /*
  * Account settings, membership (Hedieh's 12.4): PromptHealth Basic with the
@@ -42,6 +43,15 @@ export class MembershipComponent implements OnInit, OnDestroy {
   public readonly applyForPro = NOT_A_DENTIST_APPLY_FOR_PRO;
   /* The application on /pro, opened for Pro. */
   public readonly applyForProQuery = { modal: 'growth-apply', interest: 'pro' };
+  public readonly waitlist = PRO_WAITLIST;
+
+  /* Her brief of 2026-10-22: a dentist is offered Pro, anyone else the Pro
+   * waitlist. Null when the API does not say, which keeps the card as it was:
+   * Upgrade, and Apply for anyone who is not a dentist. */
+  get isDentist(): boolean | null {
+    const value = this.membership && this.membership.isDentist;
+    return value === true || value === false ? value : null;
+  }
 
   constructor(private _pro: ProService, private _profileService: ProfileManagementService) {}
 

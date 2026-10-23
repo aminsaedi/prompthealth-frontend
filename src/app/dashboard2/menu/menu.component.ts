@@ -34,7 +34,7 @@ export class MenuComponent implements OnInit {
   initMenu(){
     switch(this.user.role) {
       case 'U' :
-        this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, /*menuNotification, */ menuPassword ];
+        this.menus = [ menuGeneral, menuFollow, menuBook, menuBookmark, /*menuNotification, */ menuPassword, menuSwitchAccount ];
         break;
       case 'SP':
         this.menus = [ menuGeneral, menuMembership, menuAcademy, menuBookInterview,menuRquestAdditionalVideo, menuServices, menuPerformance, menuBookProvider, menuBadge, menuSocial, menuLinks, menuFollow, menuBookmark, /*menuNotification,*/ menuPassword, menuPayment, menuAffiliate ];
@@ -71,6 +71,14 @@ const menuMembership: MenuItem = {
   id: 'membership',
   title: 'Membership',
   icon: 'star',
+};
+
+/* Patients only: a practitioner or clinic who signed up as a patient
+ * (Hedieh's brief of 2026-10-22, step 6). */
+const menuSwitchAccount: MenuItem = {
+  id: 'switch-account',
+  title: 'Switch to a practitioner account',
+  icon: 'verified',
 };
 
 const menuGeneral: MenuItem = {

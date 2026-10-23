@@ -37,14 +37,19 @@
         <!-- The way up from the free profile (Hedieh's brief of 2026-10-08):
         what Pro is, who it is for, and Apply for anyone who is not a dentist,
         which opens the application in Pro mode on /pro. -->
-        <ng-container *ngIf="isProvider">
+        <ng-container *ngIf="isProvider && isDentist !== false">
           <p class="membership-upgrade mt-15p mb-5p">{{ upgradeText }}</p>
-          <p class="text-label membership-small mb-0">{{ proAvailability }}</p>
+          <p *ngIf="isDentist === null" class="text-label membership-small mb-0">{{ proAvailability }}</p>
           <div class="d-flex flex-column flex-sm-row align-items-sm-center mt-20p">
             <a *ngIf="paymentsEnabled" [routerLink]="proJoin.link" class="btn btn-primary mb-10p mb-sm-0p mr-sm-20p">{{ upgradeLabel }}</a>
-            <a [routerLink]="proJoin.link" [queryParams]="applyForProQuery" class="membership-apply">{{ applyForPro }}</a>
+            <a *ngIf="isDentist === null" [routerLink]="proJoin.link" [queryParams]="applyForProQuery" class="membership-apply">{{ applyForPro }}</a>
           </div>
           <p *ngIf="!paymentsEnabled" class="text-label mt-15p mb-0">PromptHealth Pro is coming soon. <a routerLink="/pro">See what it includes</a>.</p>
+        </ng-container>
+        <!-- Not a dentist: the Pro waitlist (her brief of 2026-10-22, step 3). -->
+        <ng-container *ngIf="isProvider && isDentist === false">
+          <p class="membership-upgrade mt-15p mb-15p">{{ waitlist.pitch }}</p>
+          <pro-waitlist-button></pro-waitlist-button>
         </ng-container>
       </div>
     </ng-template>

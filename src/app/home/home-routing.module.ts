@@ -36,6 +36,7 @@ import { ProWelcomeComponent } from "./pro/pro-welcome.component";
 import { ProLibraryComponent } from "./pro/pro-library.component";
 import { ProDropComponent } from "./pro/pro-drop.component";
 import { ProGoComponent } from "./pro/pro-go.component";
+import { ProWaitlistComponent } from "./pro/pro-waitlist.component";
 
 const routes: Routes = [
   {
@@ -64,6 +65,9 @@ const routes: Routes = [
   { path: 'pro/preview/:token', component: ProDropComponent, data: { mode: 'preview' } },
   { path: 'pro/checkout', component: ProGoComponent, data: { mode: 'checkout' } },
   { path: 'pro/manage', component: ProGoComponent, data: { mode: 'manage' } },
+  /* The welcome email's Join the Pro waitlist (Hedieh's brief of 2026-10-22).
+   * noindex, and not in the sitemap. */
+  { path: 'pro/waitlist', component: ProWaitlistComponent },
   {
     path: "faq",
     component: FAQComponent

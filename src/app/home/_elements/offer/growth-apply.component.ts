@@ -47,8 +47,9 @@ export const GROWTH_APPLY_COPY = {
   submit: 'Send Application',
   /* Her strategy call form's thank-you (brief of 2026-10-09): there is no
    * booking to send a dentist on to any more, and she follows up herself. */
-  thanksDentist: "Thank you for reaching out! We've received your request and will be in touch soon.",
-  thanksOther: "Thanks for applying. PromptHealth Growth is currently available for dental practices. We'll contact you as soon as it opens for your profession.",
+  /* Since her brief of 2026-10-22 (step 5) Growth is open to every
+   * practice, so this is everyone's thank-you for Growth. */
+  thanksGrowth: "Thank you for reaching out! We've received your request and will be in touch soon.",
   /* A dentist who applied for Pro does not need to apply: Pro is open to
    * dental clinics, and the plan choice is one click away. */
   thanksProDentist: 'Thanks! PromptHealth Pro is open to dental clinics now, so you can join today.',
@@ -101,10 +102,12 @@ function emailAddress(control: AbstractControl): ValidationErrors | null {
  * Since her brief of 2026-10-09 nothing on the site opens it for Growth: every
  * Growth button is Book a Strategy Call, the form on /for-dentists. An older
  * link (?modal=growth-apply with no interest) still opens it for Growth, and
- * the application is still saved. A dentist is thanked, as the strategy call
- * form thanks, rather than sent on to the Calendly booking that no longer
- * exists; anyone else is told Growth is for dental practices for now, and the
- * server adds them to the Growth waitlist.
+ * the application is still saved. The applicant is thanked, as the strategy
+ * call form thanks, rather than sent on to the Calendly booking that no longer
+ * exists. Until her brief of 2026-10-22 (step 5) anyone but a dentist was told
+ * Growth was for dental practices for now; Growth is open to every practice
+ * since, so a physio gets the same thank-you a dentist does. Pro is still for
+ * dental clinics first, so a Pro application keeps its two answers.
  *
  * Like the booking form, it is created with the page, on the server render
  * too, and does no browser work until it is used.
@@ -153,7 +156,7 @@ export class GrowthApplyComponent {
    * meant for the first. */
   private sentInterest: ApplyInterest = null;
 
-  public step: 'form' | 'dentist' | 'other' | 'pro-dentist' | 'pro-other' = 'form';
+  public step: 'form' | 'growth' | 'pro-dentist' | 'pro-other' = 'form';
   public submitted = false;
   public isSending = false;
   public errorMessage = '';
@@ -258,10 +261,8 @@ export class GrowthApplyComponent {
       }
       if (interest === 'pro') {
         this.step = res.data.isDentist ? 'pro-dentist' : 'pro-other';
-      } else if (res.data.isDentist) {
-        this.step = 'dentist';
       } else {
-        this.step = 'other';
+        this.step = 'growth';
       }
     }, (error: HttpErrorResponse) => {
       this.isSending = false;

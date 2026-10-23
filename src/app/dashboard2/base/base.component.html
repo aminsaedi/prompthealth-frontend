@@ -10,7 +10,13 @@ style="min-height: 100vh;"
   <div class="container pt-30p pb-100p">
     <div class="row justify-content-center">
       <div class="col-12 col-xl-10">
-        <pro-banner></pro-banner>
+        <ng-container *ngIf="isLanding; else banner">
+          <free-membership></free-membership>
+          <profile-nudge></profile-nudge>
+        </ng-container>
+        <ng-template #banner>
+          <pro-banner></pro-banner>
+        </ng-template>
       </div>
     </div>
     <div class="row justify-content-center">

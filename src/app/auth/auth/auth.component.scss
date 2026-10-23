@@ -46,3 +46,62 @@ section {
 .pro-context__title {
   font-weight: 700;
 }
+
+/* The account choice: two large buttons, one per kind of account. */
+.account-choice {
+  max-width: 420px;
+}
+
+.account-choice__option {
+  display: flex;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border: 2px solid $colorGsLine;
+  border-radius: 12px;
+  background: #fff;
+  color: $colorGsBody;
+  text-decoration: none;
+  transition: border-color 0.15s, background-color 0.15s;
+
+  &:hover,
+  &:focus {
+    border-color: $colorPrimary;
+    background: $colorPrimaryLight;
+    color: $colorGsBody;
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $colorPrimaryDark;
+    outline-offset: 2px;
+  }
+}
+
+.account-choice__icon {
+  flex: 0 0 auto;
+  margin-right: 14px;
+  font-size: 24px;
+  line-height: 28px;
+  color: $colorPrimaryDark;
+}
+
+.account-choice__body {
+  display: block;
+  min-width: 0;
+}
+
+.account-choice__title {
+  display: block;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 700;
+  color: $colorPrimaryDark;
+}
+
+.account-choice__text {
+  display: block;
+  margin-top: 2px;
+  font-size: 15px;
+  line-height: 22px;
+  color: $colorGsLabel;
+}

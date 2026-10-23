@@ -19,6 +19,11 @@ export class BaseComponent implements OnInit , OnDestroy {
   get userName() { return this.user ? this.user.nickname : ''; }
   get user() { return this._profileService.profile; }
   get isRoot() { return this._route.children.length == 0; }
+  /* The first page a provider sees: the menu on a phone, the profile on a
+   * wider screen. "Your free membership" and the profile checklist go
+   * there, and the Pro banner everywhere else, so a dentist is not offered
+   * Pro twice at once. */
+  get isLanding() { return this.isRoot || this._router.url.split(/[?#]/)[0] === '/dashboard/profile'; }
   get sizeS() { return window?.innerWidth < 768; }
 
   private subscriptionLoginStatus: Subscription;

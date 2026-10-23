@@ -49,6 +49,13 @@
 
 </div>  
 
+<!-- A practitioner or clinic who signed up as a patient (Hedieh's brief of
+2026-10-22, step 6). -->
+<div *ngIf="user.isU" class="bg-white mt-20p py-30p px-15p px-lg-30p rounded-8p">
+  <p class="mb-15p">{{ switchCopy.cardText }}</p>
+  <a routerLink="/dashboard/switch-account" class="btn btn-outline">{{ switchCopy.button }}</a>
+</div>
+
 <div 
 *ngIf="isUploading"
 class="modal-view"

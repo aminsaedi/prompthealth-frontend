@@ -1,0 +1,52 @@
+@import '../../../assets/scss/variables';
+
+/* The Pro banner's colours, which this panel stands in for on the
+ * dashboard's first page. */
+.free-membership {
+  padding: 16px 20px 20px;
+  background: $colorPrimaryLight;
+  border: 1px solid #87D4FF;
+}
+
+.free-membership__label {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $colorPrimary;
+}
+
+.free-membership__heading {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  color: $colorPrimaryDark;
+}
+
+.free-membership__text,
+.free-membership__pitch {
+  font-size: 15px;
+  line-height: 22px;
+  color: $colorGsBody;
+}
+
+.free-membership__links {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -5px;
+
+  li {
+    margin: 5px;
+  }
+
+  .btn {
+    background: #fff;
+    white-space: normal;
+    text-align: left;
+  }
+}
+
+.free-membership__pro {
+  border-top: 1px solid #87D4FF;
+}

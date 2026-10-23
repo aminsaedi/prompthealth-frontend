@@ -19,6 +19,9 @@
     [max]="maxName"
     [submitted]="isSubmitted"
     ></form-item-input>  
+    <p *ngIf="looksLikeBusiness" class="switch-prompt mt-10p mb-0" role="status">
+      {{ switchCopy.prompt }} <a routerLink="/dashboard/switch-account">{{ switchCopy.promptLink }}</a>
+    </p>
   </div>
 
   <div class="mb-40p row">

@@ -13,10 +13,42 @@
 
 <section>
   <form [formGroup]="form" (ngSubmit)="signinEmail()">
-    <div *ngIf="authType == 'signup'" class="mb-3">
+    <div *ngIf="authType == 'signup' && !isProviderSignup" class="mb-3">
       <label class="subtitle2">You are...</label>
       <form-item-input name="type" type="text" [disabled]="true" [controller]="formRole"></form-item-input>
+      <!-- A practitioner on the patient form is the mistake Hedieh's brief of
+      2026-10-22 (step 6) is about: patient accounts are not listed. -->
+      <p *ngIf="userRole == 'U'" class="body2 text-label mt-1 mb-0">
+        A practitioner or clinic? <a routerLink="/auth/registration/sp" [queryParams]="nextQuery">Create a professional account</a> instead.
+      </p>
+    </div>
 
+    <!-- Practitioner or clinic, chosen here rather than by which link brought
+    the visitor: both used to read "Wellness Provider", and clinics signed up
+    as practitioners. -->
+    <fieldset *ngIf="isProviderSignup" class="mb-3">
+      <legend class="subtitle2 mb-2">You are signing up as</legend>
+      <div class="role-choice" role="radiogroup">
+        <button type="button" class="role-choice__option" role="radio"
+          [attr.aria-checked]="userRole == 'SP'" [class.is-active]="userRole == 'SP'"
+          (click)="chooseProviderRole('SP')">A practitioner</button>
+        <button type="button" class="role-choice__option" role="radio"
+          [attr.aria-checked]="userRole == 'C'" [class.is-active]="userRole == 'C'"
+          (click)="chooseProviderRole('C')">A clinic</button>
+      </div>
+    </fieldset>
+
+    <div *ngIf="isProviderSignup && typeOptions.length" class="mb-3">
+      <label class="subtitle2" for="typeOfProvider">
+        {{ userRole == 'C' ? 'Type of practice' : 'Practitioner type' }} <span class="text-danger">*</span>
+      </label>
+      <select id="typeOfProvider" class="form-control type-select" formControlName="typeOfProvider"
+        [class.is-invalid]="isSubmitted && f.typeOfProvider.invalid"
+        [attr.aria-invalid]="isSubmitted && f.typeOfProvider.invalid ? 'true' : null">
+        <option value="" disabled>Choose one</option>
+        <option *ngFor="let option of typeOptions" [value]="option.id">{{ option.label }}</option>
+      </select>
+      <form-item-errors [controller]="f.typeOfProvider" [label]="userRole == 'C' ? 'Type of practice' : 'Practitioner type'" [submitted]="isSubmitted"></form-item-errors>
     </div>
     <div class="mb-3">
       <label class="subtitle2">Email Address <span class="text-danger">*</span></label>

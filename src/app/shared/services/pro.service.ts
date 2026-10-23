@@ -25,6 +25,12 @@ export interface IProMembership {
   teamLimit: number;
   weeksUnlocked?: number;
   nextUnlockAt?: string;
+  /* Whether the account's practitioner type (its "Are you a" service option)
+   * includes Dentist (Hedieh's brief of 2026-10-22). Pro is open to dental
+   * practices; everyone else is offered the Pro waitlist. Absent from an
+   * older API, which every caller treats as "not known" rather than as
+   * "not a dentist". */
+  isDentist?: boolean;
 }
 
 /* A week of the evergreen sequence, or a broadcast (trend alert, monthly
@@ -132,6 +138,24 @@ export class ProService {
 
   me(): Observable<IProMembership> {
     return this.unwrap(this.http.get(API_URL + 'pro/me', { headers: this.headers() }));
+  }
+
+  /* The Pro waitlist, for practitioners who are not dentists (her brief of
+   * 2026-10-22). Signed in, the session says who; from the welcome email's
+   * link, the user id and its token do, and no sign-in is needed. Either
+   * way the server adds the existing Mailchimp tag "Pro waitlist". Kept for
+   * the page's life once it succeeds, so every waitlist button on the
+   * dashboard says so after any one of them is used. */
+  public waitlistJoined = false;
+
+  joinWaitlist(link?: { u: string; t: string }): Observable<{ joined: boolean }> {
+    const body = link ? { u: link.u, t: link.t } : {};
+    return this.unwrap<{ joined: boolean }>(this.http.post(API_URL + 'pro/waitlist', body, { headers: link ? new HttpHeaders() : this.headers() })).pipe(
+      map(data => {
+        if (data && data.joined) { this.waitlistJoined = true; }
+        return data;
+      }),
+    );
   }
 
   /* The Checkout session id inside the address checkout() returns, which

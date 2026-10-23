@@ -49,6 +49,7 @@ import { ProWelcomeComponent } from './pro/pro-welcome.component';
 import { ProLibraryComponent } from './pro/pro-library.component';
 import { ProDropComponent } from './pro/pro-drop.component';
 import { ProGoComponent } from './pro/pro-go.component';
+import { ProWaitlistComponent } from './pro/pro-waitlist.component';
 
 
 @NgModule({
@@ -95,6 +96,7 @@ import { ProGoComponent } from './pro/pro-go.component';
     ProLibraryComponent,
     ProDropComponent,
     ProGoComponent,
+    ProWaitlistComponent,
   ],
   imports: [
     FormsModule,
