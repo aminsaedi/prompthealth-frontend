@@ -19,8 +19,29 @@
           then you go straight to secure payment with Stripe.
         </p>
       </div>
-      <form-auth [authType]="authType" [userRole]="roleType" [nextPage]="nextPage"
-        [nextPageKeyword]="nextPageKeyword"></form-auth>
+      <div *ngIf="authType == 'signup' && chooseRole; else authForm" class="account-choice">
+        <p class="subtitle1 text-label mb-20p">{{ choice.intro }}</p>
+        <a [routerLink]="choice.care.link" [queryParams]="nextQuery" class="account-choice__option mb-15p">
+          <i iconPh="users" class="account-choice__icon" aria-hidden="true"></i>
+          <span class="account-choice__body">
+            <span class="account-choice__title">{{ choice.care.button }}</span>
+            <span class="account-choice__text">{{ choice.care.text }}</span>
+          </span>
+        </a>
+        <a [routerLink]="choice.professional.link" [queryParams]="nextQuery" class="account-choice__option">
+          <i iconPh="verified" class="account-choice__icon" aria-hidden="true"></i>
+          <span class="account-choice__body">
+            <span class="account-choice__title">{{ choice.professional.button }}</span>
+            <span class="account-choice__text">{{ choice.professional.text }}</span>
+          </span>
+        </a>
+        <hr class="mt-30p">
+        <a routerLink="/auth/login" [queryParams]="nextQuery" class="btn btn-text small w-100">Have an account? Login</a>
+      </div>
+      <ng-template #authForm>
+        <form-auth [authType]="authType" [userRole]="roleType" [nextPage]="nextPage"
+          [nextPageKeyword]="nextPageKeyword"></form-auth>
+      </ng-template>
     </div>
   </section>
 
@@ -54,7 +75,7 @@
       </div>
     </div>
 
-    <div *ngIf="authType=='signup'" class="my-30p" style="width: 90%; max-width: 600px; margin:auto;">
+    <div *ngIf="authType=='signup' && !chooseRole" class="my-30p" style="width: 90%; max-width: 600px; margin:auto;">
       <div class="d-lg-flex align-items-stretch justify-content-center">
         <a *ngIf="roleType != 'U'" routerLink="/auth/registration/u" class="text-body" style="flex-basis: 55%">
           <div class="h-100 p-15p bg-white rounded-12p shadow my-15p my-lg-0p mx-lg-15p">

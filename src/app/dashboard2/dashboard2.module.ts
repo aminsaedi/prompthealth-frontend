@@ -41,6 +41,10 @@ import { PaymentHistoryComponent } from './payment-history/payment-history.compo
 import { PaymentCreditComponent } from './payment-credit/payment-credit.component';
 import { RequestVideoComponent } from './request-video/request-video.component';
 import { ButtonsModule } from '../buttons/buttons.module';
+import { FreeMembershipComponent } from './free-membership/free-membership.component';
+import { ProfileNudgeComponent } from './free-membership/profile-nudge.component';
+import { ProWaitlistButtonComponent } from './free-membership/pro-waitlist-button.component';
+import { SwitchAccountComponent } from './switch-account/switch-account.component';
 
 
 const routes: Routes = [
@@ -77,6 +81,9 @@ const routes: Routes = [
 
       /* PromptHealth Pro or Basic, and the Pro team (offer v2, 2026-10). */
       { path: 'membership', component: MembershipComponent, },
+      /* A patient account to a practitioner or clinic one (Hedieh's brief of
+       * 2026-10-22, step 6). */
+      { path: 'switch-account', component: SwitchAccountComponent, },
       { path: 'payment', component: PaymentComponent, children: [
         { path: 'subscription', component: PaymentSubscriptionComponent, },
         { path: 'history', component: PaymentHistoryComponent, },
@@ -115,6 +122,10 @@ const routes: Routes = [
     MenuComponent,
     MembershipComponent,
     ProBannerComponent,
+    FreeMembershipComponent,
+    ProfileNudgeComponent,
+    ProWaitlistButtonComponent,
+    SwitchAccountComponent,
     BaseComponent,
     ProfileComponent,
     BookingsComponent,

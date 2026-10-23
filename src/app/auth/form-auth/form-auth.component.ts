@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges , OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SocialAuthService } from 'angularx-social-login';
 import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
@@ -18,6 +18,7 @@ import { Auth2Service } from '../auth2.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MetaPixelService } from 'src/app/shared/services/meta-pixel.service';
+import { QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 
 @Component({
   selector: 'form-auth',
@@ -42,9 +43,21 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
    * a /pro address "Create Account" opens the provider form, not the patient
    * one. */
   get nextQuery() { return this.nextPage ? { next: this.nextPage } : null; }
+  /* Without a /pro address, the choice of account comes first (Hedieh's
+   * brief of 2026-10-22, step 6): Create Account used to open the patient
+   * form, which is how practitioners ended up with patient accounts. */
   get registrationLink() {
-    return this.nextPage && this.nextPage.indexOf('/pro') === 0 ? '/auth/registration/sp' : '/auth/registration/U';
+    return this.nextPage && this.nextPage.indexOf('/pro') === 0 ? '/auth/registration/sp' : '/auth/registration';
   }
+
+  get isProviderSignup(): boolean {
+    return this.authType === 'signup' && (this.userRole === 'SP' || this.userRole === 'C');
+  }
+
+  /* The practitioner type options, the "Are you a" service questionnaire the
+   * profile's Services tab shows. Empty until loaded, and if they cannot be
+   * loaded the field is left out rather than blocking sign-up. */
+  public typeOptions: { id: string; label: string }[] = [];
 
   public form: FormGroup;
   public formRole: FormControl;
@@ -63,8 +76,16 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
     private _uService: UniversalService,
     private _authService: Auth2Service,
     private _pixel: MetaPixelService,
+    private _qService: QuestionnaireService,
   ) {
     this.formRole = new FormControl();
+  }
+
+  /* Required for a practitioner or clinic, once there is something to pick
+   * (her brief of 2026-10-22, step 4): the welcome email is chosen by it. */
+  private typeRequired = (control: AbstractControl): ValidationErrors | null => {
+    if (!this.isProviderSignup || this.typeOptions.length === 0) { return null; }
+    return control.value ? null : { required: true };
   }
 
   ngOnChanges(e: SimpleChanges) {
@@ -77,6 +98,9 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
         case 'P': roleLabel = 'Wellness Company'; break;
       }
       this.formRole.setValue(roleLabel);
+      if (this.form && this.form.controls.typeOfProvider) {
+        this.form.controls.typeOfProvider.updateValueAndValidity();
+      }
     }
   }
 
@@ -90,8 +114,39 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
       password: new FormControl('', validators.password),
       confirm_password: new FormControl('', []),
       hear_from: new FormControl('', []),
+      typeOfProvider: new FormControl('', [this.typeRequired]),
       t_c: new FormControl('', [Validators.requiredTrue]),
     }, { validator: MustMatch('password', 'confirm_password') });
+
+    if (this.authType === 'signup' && this._uService.isBrowser) {
+      this.loadTypeOptions();
+    }
+  }
+
+  private loadTypeOptions(): void {
+    this._qService.getSitemap().then(map => {
+      const q = map && map.typeOfProvider;
+      const seen: { [label: string]: boolean } = {};
+      const options: { id: string; label: string }[] = [];
+      ((q && q.answers) || []).forEach(a => {
+        const label = String(a.item_text || '').trim();
+        /* The list holds "Speech therapist" twice. */
+        if (!label || a.active === false || seen[label.toLowerCase()]) { return; }
+        seen[label.toLowerCase()] = true;
+        options.push({ id: a._id, label });
+      });
+      options.sort((x, y) => x.label.localeCompare(y.label));
+      this.typeOptions = options;
+      this.form.controls.typeOfProvider.updateValueAndValidity();
+    }, () => {});
+  }
+
+  /* Practitioner or clinic, on the provider form. The address carries it, as
+   * it always has (/auth/registration/sp or /c), so the page's own copy and a
+   * reload agree; the query (the Pro next page) comes along. */
+  chooseProviderRole(role: 'SP' | 'C'): void {
+    if (role === this.userRole) { return; }
+    this._router.navigate(['/auth/registration', role.toLowerCase()], { queryParamsHandling: 'preserve', replaceUrl: true });
   }
 
   signinWith(type: string) {
@@ -159,6 +214,9 @@ export class FormAuthComponent implements OnInit, OnChanges , OnDestroy {
       data.hear_from = this.f.hear_from.value;
       data.t_c = true;
       data.roles = this.userRole || 'U';
+      if (this.isProviderSignup && this.f.typeOfProvider.value) {
+        data.typeOfProvider = this.f.typeOfProvider.value;
+      }
     }
 
     this._sharedService.loader('show');

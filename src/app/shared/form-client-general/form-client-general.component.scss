@@ -10,3 +10,19 @@ label{
   font-size: 1em;
   margin-top: 12px;
 }
+
+/* The question to a patient whose name reads like a practice. */
+.switch-prompt {
+  padding: 10px 15px;
+  border-left: 4px solid #4264D0;
+  border-radius: 8px;
+  background: #E0F2FC;
+  color: #12339E;
+  font-size: 15px;
+  line-height: 22px;
+
+  a {
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}

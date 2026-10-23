@@ -1,5 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
-  <div class="text-center mb-40p">
+  <!-- The ids below are where the dashboard's Complete your profile links land. -->
+  <div class="text-center mb-40p" id="profile-photo">
     <form-item-profile-image
     [controller]="f.profileImage"
     (onStartUploading)="onStartUploadingProfileImage()"
@@ -101,7 +102,7 @@
   </div>
 
 
-  <div class="mb-40p">
+  <div class="mb-40p" id="profile-location">
     <label class="subtitle2" for="address">Location</label>
     <form-item-address
     name="address"
@@ -129,7 +130,7 @@
   </div>
 
   <div class="mb-40p row">
-    <div class="col-12 col-lg-6 mb-40p mb-lg-0p">
+    <div class="col-12 col-lg-6 mb-40p mb-lg-0p" id="profile-website">
       <label for="website" class="subtitle2">Website (optional)</label>
       <form-item-input 
       label="Website"
@@ -156,7 +157,7 @@
     </div>
   </div>
 
-  <div class="mb-40p">
+  <div class="mb-40p" id="profile-bio">
     <label class="subtitle2" for="productDescription">Bio</label>
     <form-item-textarea 
     name="productDescription"

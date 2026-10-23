@@ -1,0 +1,21 @@
+<section *ngIf="show" class="free-membership rounded-8p mb-20p" aria-labelledby="free-membership-heading">
+  <p class="free-membership__label mb-5p">{{ copy.label }}</p>
+  <h2 id="free-membership-heading" class="free-membership__heading mb-5p">{{ copy.heading }}</h2>
+  <p class="free-membership__text mb-15p">{{ copy.text }}</p>
+
+  <ul class="free-membership__links list-unstyled mb-0">
+    <li><a [routerLink]="profileLink" class="btn btn-outline small">{{ copy.viewProfile }}</a></li>
+    <li><a [routerLink]="copy.writeArticle.link" class="btn btn-outline small">{{ copy.writeArticle.button }}</a></li>
+    <li><a [routerLink]="copy.academy.link" class="btn btn-outline small">{{ copy.academy.button }}</a></li>
+    <li><a [routerLink]="copy.growth.link" [fragment]="copy.growth.fragment" class="btn btn-outline small">{{ copy.growth.button }}</a></li>
+  </ul>
+
+  <div class="free-membership__pro mt-15p pt-15p">
+    <!-- A dentist, or an API that does not say: Pro itself. -->
+    <a *ngIf="isDentist !== false" [routerLink]="copy.upgrade.link" class="btn btn-primary small">{{ copy.upgrade.button }}</a>
+    <ng-container *ngIf="isDentist === false">
+      <p class="free-membership__pitch mb-10p">{{ waitlist.pitch }}</p>
+      <pro-waitlist-button buttonClass="btn btn-primary small"></pro-waitlist-button>
+    </ng-container>
+  </div>
+</section>

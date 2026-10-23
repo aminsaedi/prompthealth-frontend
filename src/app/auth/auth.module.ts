@@ -64,7 +64,10 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
 
   { path: 'registration/:type', component: AuthComponent, canActivate: [AuthGuard], data: {authType: 'signup'}, },
-  { path: 'registration', redirectTo: 'registration/u' },
+  /* No role in the address: the visitor chooses one first (Hedieh's brief of
+   * 2026-10-22, step 6). This used to open the patient form, and
+   * practitioners who signed up there were never listed. */
+  { path: 'registration', component: AuthComponent, canActivate: [AuthGuard], data: {authType: 'signup', chooseRole: true}, },
   
   { path: 'login', component: AuthComponent, canActivate: [AuthGuard], data: {authType: 'signin'}},
 ];

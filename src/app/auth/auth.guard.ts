@@ -53,7 +53,7 @@ export class AuthGuard implements CanActivate {
       case 'C':
         return true;
       default:
-        return this._router.parseUrl('/auth/registration/u');
+        return this._router.parseUrl('/auth/registration');
     }
   }
 }

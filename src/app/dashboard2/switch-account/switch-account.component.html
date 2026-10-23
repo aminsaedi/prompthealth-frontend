@@ -1,0 +1,27 @@
+<div class="bg-white py-40p px-15p px-lg-30p rounded-8p">
+  <h1 class="h5 mb-15p">{{ copy.heading }}</h1>
+  <p class="switch-account__text mb-10p">{{ copy.intro }}</p>
+  <p class="switch-account__text mb-10p">{{ copy.keep }}</p>
+  <p class="switch-account__text mb-30p">{{ copy.next }}</p>
+
+  <fieldset class="mb-30p" [disabled]="isSending">
+    <legend class="subtitle1 mb-10p">{{ copy.question }}</legend>
+    <div class="switch-account__choices" role="radiogroup">
+      <button type="button" class="switch-account__choice" role="radio"
+        [attr.aria-checked]="role === 'SP'" [class.is-active]="role === 'SP'" (click)="choose('SP')">
+        <i iconPh="user-square" aria-hidden="true" class="mr-10p"></i>{{ copy.practitioner }}
+      </button>
+      <button type="button" class="switch-account__choice" role="radio"
+        [attr.aria-checked]="role === 'C'" [class.is-active]="role === 'C'" (click)="choose('C')">
+        <i iconPh="users" aria-hidden="true" class="mr-10p"></i>{{ copy.clinic }}
+      </button>
+    </div>
+  </fieldset>
+
+  <div class="d-flex flex-column flex-sm-row align-items-sm-center">
+    <button type="button" class="btn btn-primary mb-10p mb-sm-0p mr-sm-15p" [disabled]="!role || isSending" (click)="confirm()">{{ copy.confirm }}</button>
+    <button type="button" class="btn btn-text-grey" [disabled]="isSending" (click)="cancel()">{{ copy.cancel }}</button>
+  </div>
+  <p *ngIf="isSending" class="text-label mt-15p mb-0" role="status">{{ copy.working }}</p>
+  <p *ngIf="errorMessage" class="switch-account__alert mt-15p mb-0" role="alert">{{ errorMessage }}</p>
+</div>

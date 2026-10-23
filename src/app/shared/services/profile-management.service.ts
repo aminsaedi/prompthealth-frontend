@@ -126,6 +126,24 @@ export class ProfileManagementService {
       }
     });
   }
+  /* Reads the profile from the server again, after something there changed
+   * it (a patient account switched to a practitioner one). Unlike
+   * getProfileDetail it never signs anyone out: if the read fails, the
+   * profile already held stays. */
+  reload(): Promise<IUserDetail> {
+    return new Promise(resolve => {
+      const token = this._uService.isBrowser ? this._uService.localStorage.getItem('token') : null;
+      if (!token) { resolve(this._user); return; }
+      const headers = new HttpHeaders().set('Authorization', token).set('Content-Type', 'application/json');
+      this.http.get(environment.config.API_URL + 'user/get-profile/', { headers }).subscribe((res: IGetProfileResult) => {
+        if (res && res.statusCode == 200 && res.data) {
+          this.setData(res.data);
+        }
+        resolve(this._user);
+      }, () => resolve(this._user));
+    });
+  }
+
   fetchRecommendationsByMe() {
     const path = environment.config.API_URL + 'referral/get-simple-by';
     const headers = new HttpHeaders()

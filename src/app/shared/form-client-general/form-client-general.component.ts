@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { IUserDetail } from 'src/app/models/user-detail';
 import { minmax, validators } from 'src/app/_helpers/form-settings';
 import { FormItemCheckboxGroupComponent } from '../form-item-checkbox-group/form-item-checkbox-group.component';
+import { looksLikeBusiness } from '../services/account-type.service';
+import { SWITCH_ACCOUNT } from '../free-membership-copy';
 
 @Component({
   selector: 'form-client-general',
@@ -25,6 +27,14 @@ export class FormClientGeneralComponent implements OnInit {
 
   public maxName = minmax.nameMax;
   public isUploadingProfileImage = false;
+
+  /* A patient whose name reads like a practice is asked whether they meant
+   * to sign up as one (Hedieh's brief of 2026-10-22, step 6). Never blocks
+   * a save: "Health" is a surname too. */
+  public readonly switchCopy = SWITCH_ACCOUNT;
+  get looksLikeBusiness(): boolean {
+    return !!this.form && looksLikeBusiness(this.form.value.firstName, this.form.value.lastName);
+  }
 
   @ViewChildren(FormItemCheckboxGroupComponent) formItemCheckboxGroupComponents: QueryList<FormItemCheckboxGroupComponent>;
 
