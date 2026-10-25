@@ -18,8 +18,16 @@
     </div>
   </fieldset>
 
+  <div *ngIf="role && typeOptions.length" class="mb-30p">
+    <label for="switch-type" class="subtitle1 mb-10p d-block">{{ role === 'C' ? copy.typeClinic : copy.typePractitioner }}</label>
+    <select id="switch-type" class="form-control switch-account__select" [(ngModel)]="typeOfProvider" [disabled]="isSending">
+      <option value="">{{ copy.typeChoose }}</option>
+      <option *ngFor="let option of typeOptions" [value]="option.id">{{ option.label }}</option>
+    </select>
+  </div>
+
   <div class="d-flex flex-column flex-sm-row align-items-sm-center">
-    <button type="button" class="btn btn-primary mb-10p mb-sm-0p mr-sm-15p" [disabled]="!role || isSending" (click)="confirm()">{{ copy.confirm }}</button>
+    <button type="button" class="btn btn-primary mb-10p mb-sm-0p mr-sm-15p" [disabled]="!role || needsType || isSending" (click)="confirm()">{{ copy.confirm }}</button>
     <button type="button" class="btn btn-text-grey" [disabled]="isSending" (click)="cancel()">{{ copy.cancel }}</button>
   </div>
   <p *ngIf="isSending" class="text-label mt-15p mb-0" role="status">{{ copy.working }}</p>
