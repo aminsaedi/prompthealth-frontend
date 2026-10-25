@@ -32,10 +32,12 @@ export class AccountTypeService {
     this.http = new HttpClient(httpBackend);
   }
 
-  switchToProvider(role: 'SP' | 'C'): Observable<{ roles: string }> {
+  switchToProvider(role: 'SP' | 'C', typeOfProvider?: string): Observable<{ roles: string }> {
     const token = this._uService.isBrowser ? this._uService.localStorage.getItem('token') : null;
     const headers = token ? new HttpHeaders({ Authorization: token }) : new HttpHeaders();
-    return this.http.post<any>(API_URL + 'user/switch-to-provider', { role }, { headers }).pipe(
+    const body: any = { role };
+    if (typeOfProvider) { body.typeOfProvider = typeOfProvider; }
+    return this.http.post<any>(API_URL + 'user/switch-to-provider', body, { headers }).pipe(
       map(res => {
         if (!res || res.statusCode !== 200) {
           throw { message: res && typeof res.message === 'string' ? res.message : '' };

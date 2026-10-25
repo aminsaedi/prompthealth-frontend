@@ -7,6 +7,7 @@ import { AccountTypeService } from 'src/app/shared/services/account-type.service
 import { BehaviorService } from 'src/app/shared/services/behavior.service';
 import { UniversalService } from 'src/app/shared/services/universal.service';
 import { SWITCH_ACCOUNT } from 'src/app/shared/free-membership-copy';
+import { QuestionnaireService } from 'src/app/shared/services/questionnaire.service';
 
 /*
  * Switch to a practitioner account (Hedieh's brief of 2026-10-22, step 6),
@@ -27,6 +28,12 @@ export class SwitchAccountComponent implements OnInit, OnDestroy {
 
   public readonly copy = SWITCH_ACCOUNT;
   public role: 'SP' | 'C' = null;
+  /* The practitioner type, as at sign-up: it decides which welcome email the
+   * account gets once approved (a dental clinic that switched without one was
+   * sent the non-dental version). Asked only when the list loaded, so a
+   * failed load never blocks the switch. */
+  public typeOptions: { id: string; label: string }[] = [];
+  public typeOfProvider = '';
   public isSending = false;
   public errorMessage = '';
 
@@ -36,6 +43,7 @@ export class SwitchAccountComponent implements OnInit, OnDestroy {
     private _bs: BehaviorService,
     private _uService: UniversalService,
     private _router: Router,
+    private _qService: QuestionnaireService,
   ) {}
 
   get user() { return this._profileService.profile; }
@@ -47,7 +55,27 @@ export class SwitchAccountComponent implements OnInit, OnDestroy {
     /* For patient accounts only; anyone else has nothing to switch. */
     if (this.user && !this.user.isU) {
       this._router.navigate(['/dashboard/profile'], { replaceUrl: true });
+      return;
     }
+    if (this._uService.isBrowser) { this.loadTypeOptions(); }
+  }
+
+  get needsType(): boolean { return this.typeOptions.length > 0 && !this.typeOfProvider; }
+
+  private loadTypeOptions(): void {
+    this._qService.getSitemap().then(map => {
+      const q = map && map.typeOfProvider;
+      const seen: { [label: string]: boolean } = {};
+      const options: { id: string; label: string }[] = [];
+      ((q && q.answers) || []).forEach(a => {
+        const label = String(a.item_text || '').trim();
+        if (!label || a.active === false || seen[label.toLowerCase()]) { return; }
+        seen[label.toLowerCase()] = true;
+        options.push({ id: a._id, label });
+      });
+      options.sort((x, y) => x.label.localeCompare(y.label));
+      this.typeOptions = options;
+    }, () => {});
   }
 
   ngOnDestroy(): void {
@@ -65,10 +93,10 @@ export class SwitchAccountComponent implements OnInit, OnDestroy {
   }
 
   confirm(): void {
-    if (!this.role || this.isSending) { return; }
+    if (!this.role || this.needsType || this.isSending) { return; }
     this.isSending = true;
     this.errorMessage = '';
-    this._accountType.switchToProvider(this.role).pipe(takeUntil(this.destroy$)).subscribe(async res => {
+    this._accountType.switchToProvider(this.role, this.typeOfProvider).pipe(takeUntil(this.destroy$)).subscribe(async res => {
       const roles = res.roles || this.role;
       this.storeRole(roles);
       this._profileService.update({ roles } as any);
