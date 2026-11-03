@@ -89,7 +89,12 @@ export function downloadImage(url: string, fileName: string): Promise<void> {
     fallback();
     return Promise.resolve();
   }
-  return fetch(url, { mode: 'cors' })
+  /* The page's <img> already holds this picture, fetched without an Origin,
+   * and S3 sends no Vary on that answer, so the browser would hand its cached
+   * copy (no CORS header) to this request and it would fail. A distinct
+   * address, never cached, gets a fresh answer with the header. */
+  const fresh = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'download=1';
+  return fetch(fresh, { mode: 'cors', cache: 'no-store' })
     .then(res => {
       if (!res.ok) { throw new Error(String(res.status)); }
       return res.blob();
