@@ -131,6 +131,10 @@ export class StudioBrandComponent implements OnInit, OnDestroy {
         this.showRunning();
         return;
       }
+      /* The newest read failed (a page that never answered, or a failure on
+       * our side): say so on arrival, not only to someone who watched it. */
+      const last = this.me && this.me.brand && this.me.brand.lastJob;
+      this.jobFailed = !!last && last.status === 'failed';
       this.setBrand(brand);
     }, () => this.view = 'failed');
   }
