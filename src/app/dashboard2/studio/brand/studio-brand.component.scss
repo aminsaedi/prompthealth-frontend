@@ -1,0 +1,273 @@
+@import '../studio';
+
+.brand-site {
+  background: $colorGsBackground;
+}
+
+.brand-save {
+  min-height: 16px;
+}
+
+.brand-concerns {
+  background: $colorLightYellow;
+  color: $colorGsBody;
+}
+
+/* Logo tiles: a checkerboard behind each, so a transparent logo reads as
+ * transparent and a white box reads as a white box. */
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.logo-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 8px;
+  margin: 0;
+  text-align: left;
+  background: $colorGsWhite;
+  border: 1px solid $colorGsLine;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover { border-color: $colorPrimary; }
+  &:focus-within, &:focus { outline: 2px solid $colorSecondary; outline-offset: 1px; }
+
+  &--on {
+    border: 2px solid $colorPrimary;
+    padding: 7px;
+  }
+
+  &--upload {
+    border-style: dashed;
+    .logo-tile__img { background: $colorGsBackground; color: $colorPrimary; font-size: 28px; }
+  }
+
+  &.disabled { opacity: 0.6; cursor: progress; }
+}
+
+.logo-tile__img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, #eef0f4 25%, transparent 25%),
+    linear-gradient(-45deg, #eef0f4 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #eef0f4 75%),
+    linear-gradient(-45deg, transparent 75%, #eef0f4 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+}
+
+.logo-tile__label {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: $colorGsBody;
+}
+
+.logo-tile__meta {
+  font-size: 12px;
+  line-height: 16px;
+  color: $colorGsLabel;
+}
+
+.logo-tile__check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  color: $colorGsWhite;
+  background: $colorPrimary;
+}
+
+/* Colours */
+.colour-row {
+  padding: 12px 0;
+  border-top: 1px solid $colorGsLine;
+
+  &:first-of-type { border-top: 0; padding-top: 0; }
+}
+
+.colour-swatch {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.colour-hex {
+  font-size: 13px;
+  color: $colorGsBody;
+}
+
+.colour-picker {
+  padding: 12px;
+  border-radius: 8px;
+  background: $colorGsBackground;
+}
+
+.colour-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.colour-option {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+
+  &--on { box-shadow: 0 0 0 2px $colorGsWhite, 0 0 0 4px $colorPrimary; }
+}
+
+.colour-native {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  padding: 2px;
+  border: 1px solid $colorGsLine;
+  border-radius: 8px;
+  background: $colorGsWhite;
+}
+
+.colour-input {
+  max-width: 130px;
+  font-family: monospace;
+}
+
+/* Photos: two across in the 640px column, and two across on a phone too,
+ * where each card is still wide enough for its buttons. */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.photo-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid $colorGsLine;
+  border-radius: 8px;
+  overflow: hidden;
+
+  &--off .photo-card__img img { opacity: 0.4; filter: grayscale(1); }
+}
+
+.photo-card__img {
+  height: 0;
+  padding-bottom: 75%;
+  position: relative;
+  background: $colorGsBackground;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.photo-card__body {
+  padding: 10px;
+}
+
+.photo-choice {
+  display: flex;
+  border: 1px solid $colorGsLine;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.photo-choice__btn {
+  flex: 1 1 50%;
+  padding: 6px 2px;
+  font-size: 13px;
+  white-space: nowrap;
+  line-height: 18px;
+  font-weight: 600;
+  color: $colorGsBody;
+  background: $colorGsWhite;
+  border: 0;
+  cursor: pointer;
+
+  & + & { border-left: 1px solid $colorGsLine; }
+
+  &--on { color: $colorGsWhite; background: $colorSuccessDark; }
+  &--no { color: $colorGsWhite; background: $colorGsLabel; }
+}
+
+/* Facts */
+.fact-group {
+  border-top: 1px solid $colorGsLine;
+
+  &:last-of-type { border-bottom: 1px solid $colorGsLine; }
+
+  summary {
+    padding: 12px 0;
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker { display: none; }
+
+    &::before {
+      content: '+';
+      display: inline-block;
+      width: 18px;
+      font-weight: 700;
+      color: $colorPrimary;
+    }
+  }
+
+  &[open] summary::before { content: '\2212'; }
+
+  summary > .subtitle2 { flex: 1 1 auto; }
+}
+
+.fact {
+  padding: 10px 0 10px 18px;
+  border-top: 1px dashed $colorGsLine;
+
+  &--off p, &--off .fact__quote { opacity: 0.5; text-decoration: line-through; }
+}
+
+.fact__quote {
+  margin: 0;
+  padding-left: 10px;
+  border-left: 3px solid $colorGsLine;
+  color: $colorGsLabel;
+  font-style: italic;
+}
+
+.notice + .notice {
+  margin-top: 15px;
+}

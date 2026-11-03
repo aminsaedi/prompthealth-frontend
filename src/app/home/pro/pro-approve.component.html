@@ -1,0 +1,90 @@
+<section class="approve-page">
+  <div class="approve">
+    <p class="approve__brand">PromptHealth Pro</p>
+
+    <div *ngIf="state === 'loading'" aria-busy="true">
+      <div class="approve-dummy approve-dummy--line mb-10p"></div>
+      <div class="approve-dummy approve-dummy--image"></div>
+    </div>
+
+    <!-- The draft -->
+    <ng-container *ngIf="preview && (state === 'ready' || state === 'approved' || state === 'rejected' || state === 'already' || state === 'limit')">
+      <p class="approve__practice">For {{ preview.practiceName }}</p>
+      <h1 *ngIf="preview.title" class="approve__title">{{ preview.title }}</h1>
+
+      <!-- What happened -->
+      <div *ngIf="state === 'approved'" class="approve-result approve-result--ok" role="status">
+        <p class="approve-result__heading">Approved</p>
+        <p class="mb-0">Thank you. It is in your Studio library, ready to download and share whenever you like. Nothing is posted for you.</p>
+      </div>
+      <div *ngIf="state === 'rejected'" class="approve-result" role="status">
+        <p class="approve-result__heading">Rejected</p>
+        <p class="mb-0">No problem. Sign in to tell us what to change, and we will make a new draft.</p>
+      </div>
+      <div *ngIf="state === 'already'" class="approve-result" role="status">
+        <p class="approve-result__heading">Already decided</p>
+        <p class="mb-0">
+          <ng-container *ngIf="alreadyStatus === 'approved'">This post was already approved. You will find it in your Studio library.</ng-container>
+          <ng-container *ngIf="alreadyStatus === 'rejected'">This post was already rejected.</ng-container>
+          <ng-container *ngIf="!alreadyStatus">Someone on your team already decided on this post.</ng-container>
+        </p>
+      </div>
+      <div *ngIf="state === 'limit'" class="approve-result approve-result--warn" role="alert">
+        <p class="approve-result__heading">Your month is full</p>
+        <p class="mb-0">{{ errorMessage || 'You have approved every post your plan includes this month. Your allowance starts again with your next cycle.' }}</p>
+      </div>
+
+      <div class="approve__image">
+        <img [src]="preview.imageUrl" [alt]="'The image for ' + (preview.title || 'this post')">
+      </div>
+
+      <div class="approve__caption">
+        <p class="approve__label">Caption</p>
+        <p class="approve__text" [class.approve__text--short]="longCaption && !showFullCaption">{{ preview.caption }}</p>
+        <button *ngIf="longCaption && !showFullCaption" type="button" class="approve__more" (click)="showFullCaption = true">Show the whole caption</button>
+        <p *ngIf="hashtags" class="approve__tags">{{ hashtags }}</p>
+      </div>
+
+      <!-- Decide -->
+      <div *ngIf="state === 'ready'" class="approve__bar">
+        <ng-container *ngIf="!confirmingReject; else confirm">
+          <button type="button" class="btn btn-primary approve__btn" [disabled]="isDeciding" (click)="approve()">{{ isDeciding ? 'Approving...' : 'Approve' }}</button>
+          <button type="button" class="btn btn-outline-grey approve__btn" [disabled]="isDeciding" (click)="reject()">Reject</button>
+        </ng-container>
+        <ng-template #confirm>
+          <p class="approve__confirm">Reject this draft? You can ask for a new one after you sign in.</p>
+          <button type="button" class="btn btn-error approve__btn" [disabled]="isDeciding" (click)="reject()">Yes, reject it</button>
+          <button type="button" class="btn btn-outline-grey approve__btn" [disabled]="isDeciding" (click)="confirmingReject = false">Keep it</button>
+        </ng-template>
+      </div>
+
+      <p *ngIf="state === 'ready' && errorMessage" class="approve__error" role="alert">{{ errorMessage }}</p>
+
+      <p class="approve__note">
+        <ng-container *ngIf="state === 'ready'">Approving adds it to your Studio library. Nothing is posted for you: you download it and share it yourself. </ng-container>
+        Want to change the words?
+        <a routerLink="/auth/login" [queryParams]="signInQuery">Sign in to edit</a>
+      </p>
+    </ng-container>
+
+    <!-- Being redrawn after an edit -->
+    <div *ngIf="state === 'busy'" class="approve-state" role="status">
+      <h1 class="approve-state__heading">This post is being updated</h1>
+      <p>Someone just changed its text, so the image is being made again. Please try again in a minute.</p>
+      <button type="button" class="btn btn-outline" (click)="load()">Try again</button>
+    </div>
+
+    <!-- Expired or not a link we sent -->
+    <div *ngIf="state === 'expired'" class="approve-state" role="alert">
+      <h1 class="approve-state__heading">This link has expired</h1>
+      <p>Approval links work for 14 days, or the link is not complete. You can still approve this post from your Studio.</p>
+      <a routerLink="/auth/login" [queryParams]="{ next: '/dashboard/studio/month' }" class="btn btn-primary">Sign in to your Studio</a>
+    </div>
+
+    <div *ngIf="state === 'failed'" class="approve-state" role="alert">
+      <h1 class="approve-state__heading">Something went wrong</h1>
+      <p>This page could not be loaded. Please check your connection and try again.</p>
+      <button type="button" class="btn btn-outline" (click)="load()">Try again</button>
+    </div>
+  </div>
+</section>

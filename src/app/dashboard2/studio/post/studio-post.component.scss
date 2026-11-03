@@ -1,0 +1,112 @@
+@import '../studio';
+
+.post-back {
+  color: $colorGsLabel;
+  font-weight: 600;
+}
+
+.post-category {
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $colorGsLabel;
+}
+
+.post-title {
+  overflow-wrap: anywhere;
+}
+
+/* The image at its own shape, never wider than the column. */
+.post-image {
+  overflow: hidden;
+  background: $colorGsBackground;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.post-image__busy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: 20px;
+  text-align: center;
+  color: $colorPrimaryDark;
+
+  .studio-progress { width: 200px; }
+}
+
+.post-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .btn { padding-top: 12px; padding-bottom: 12px; }
+}
+
+.post-confirm {
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: $colorGsBackground;
+}
+
+.post-caption {
+  white-space: pre-line;
+  color: $colorGsBody;
+  overflow-wrap: anywhere;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  li {
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    line-height: 20px;
+    color: $colorPrimaryDark;
+    background: $colorPrimaryLight;
+  }
+}
+
+.post-note {
+  background: $colorLightYellow;
+}
+
+.post-facts {
+  padding-left: 20px;
+
+  li + li { margin-top: 6px; }
+}
+
+.post-check + .post-check {
+  margin-top: 10px;
+}
+
+.post-check__mark {
+  flex: 0 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  border-radius: 50%;
+  font-size: 12px;
+  color: $colorSuccessDark;
+  background: $colorSuccessLight;
+
+  &--fixed {
+    color: $colorYellowDark;
+    background: $colorYellowLight;
+  }
+}

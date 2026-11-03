@@ -1,0 +1,321 @@
+<div *ngIf="view === 'loading'" class="studio-card" aria-busy="true">
+  <div class="studio-dummy rounded-8p"></div>
+</div>
+
+<div *ngIf="view === 'failed'" class="studio-card text-center" role="alert">
+  <p class="subtitle1 mb-15p">Your Brand DNA could not be loaded.</p>
+  <button type="button" class="btn btn-outline small" (click)="load()">Try again</button>
+</div>
+
+<!-- Before the first reading: start it. -->
+<div *ngIf="view === 'start'" class="studio-card">
+  <h5 class="mb-10p">Let's read your website</h5>
+  <p class="body2 text-body mb-20p">
+    We read your website to learn your logo, colours, fonts, photos and the facts about your practice. You check everything before any post is made from it.
+  </p>
+
+  <p *ngIf="jobFailed" class="studio-alert mb-20p" role="alert">
+    We could not finish reading your website. You can try again, or try a different address.
+  </p>
+
+  <div class="brand-site rounded-8p p-15p mb-15p" *ngIf="profileWebsite && !useOverride">
+    <p class="caption text-label mb-5p">The website on your profile</p>
+    <p class="subtitle1 text-break mb-0">{{ profileWebsite }}</p>
+  </div>
+
+  <div class="custom-control custom-checkbox mb-15p" *ngIf="profileWebsite">
+    <input type="checkbox" class="custom-control-input" id="brand-use-override" [(ngModel)]="useOverride" name="useOverride">
+    <label class="custom-control-label body2" for="brand-use-override">Use a different address</label>
+  </div>
+
+  <div *ngIf="useOverride || !profileWebsite" class="mb-15p">
+    <label for="brand-override" class="subtitle2 text-label">Website address</label>
+    <input id="brand-override" name="websiteOverride" type="url" class="form-control" placeholder="yourpractice.ca"
+      autocomplete="url" autocapitalize="off" maxlength="300" [(ngModel)]="websiteOverride" (keyup.enter)="startExtraction()">
+  </div>
+
+  <p *ngIf="startError" class="studio-alert mb-15p" role="alert">{{ startError }}</p>
+
+  <button type="button" class="btn btn-primary" [disabled]="isStarting" (click)="startExtraction()">
+    {{ isStarting ? 'Starting...' : 'Read my website' }}
+  </button>
+  <p class="caption text-label mt-15p mb-0">It takes a few minutes. You can leave this page and come back.</p>
+</div>
+
+<!-- A reading is running. -->
+<div *ngIf="view === 'running'" class="studio-card text-center" role="status" aria-live="polite">
+  <div class="studio-progress mb-20p" aria-hidden="true"><span></span></div>
+  <h5 class="mb-10p">Reading your website</h5>
+  <p class="body2 text-body mb-5p">We are finding your logo, colours, fonts, photos and facts.</p>
+  <p class="body2 text-label mb-0">This takes a few minutes. You can leave this page; we will keep going, and it will be ready when you come back.</p>
+</div>
+
+<!-- Review -->
+<ng-container *ngIf="view === 'review' && dna">
+  <div class="studio-card brand-head">
+    <div class="d-flex flex-wrap align-items-start justify-content-between">
+      <div class="mr-15p mb-10p">
+        <h5 class="mb-5p">Your Brand DNA</h5>
+        <p class="caption text-label mb-0">
+          Version {{ dna.version }}
+          <span *ngIf="dna.website"> from {{ sourceLabel(dna.website) }}</span>
+          <span *ngIf="dna.extractedAt">, read {{ dna.extractedAt | date:'MMMM d, y' }}</span>
+        </p>
+      </div>
+      <span class="studio-badge" [ngClass]="isApprovedVersion ? 'studio-badge--ok' : 'studio-badge--wait'">
+        {{ isApprovedVersion ? 'Approved' : 'Waiting for your approval' }}
+      </span>
+    </div>
+
+    <p *ngIf="approvedJustNow" class="studio-success mt-10p mb-0" role="status">
+      Approved. Your posts will use this from now on.
+      <button type="button" class="btn btn-link p-0 align-baseline" (click)="goToMonth()">See this month</button>
+    </p>
+    <p *ngIf="jobFailed" class="studio-alert mt-10p mb-0" role="alert">
+      The new reading did not finish, so you are still looking at the version you had.
+    </p>
+    <p *ngIf="isApprovedVersion && !approvedJustNow" class="body2 text-label mt-10p mb-0">
+      Changing anything here makes a new version for you to approve. Your posts keep using this one until then.
+    </p>
+    <p *ngIf="!isApprovedVersion" class="body2 text-body mt-10p mb-0">
+      Check each part below. Your changes save as you go. When it looks right, approve it at the bottom of the page.
+    </p>
+
+    <div class="brand-save caption mt-10p" aria-live="polite">
+      <span *ngIf="saving > 0" class="text-label">Saving...</span>
+      <span *ngIf="saving === 0 && saved" class="text-success-dark">Saved</span>
+      <span *ngIf="saveError" class="text-error-dark" role="alert">{{ saveError }}</span>
+    </div>
+
+    <div *ngIf="dna.concerns?.length" class="brand-concerns rounded-8p p-15p mt-15p">
+      <p class="subtitle2 mb-5p">Worth a look</p>
+      <ul class="body2 mb-0 pl-20p">
+        <li *ngFor="let c of dna.concerns">{{ c }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Logo -->
+  <section class="studio-card" aria-labelledby="brand-logo-title">
+    <h6 id="brand-logo-title" class="mb-5p">Logo</h6>
+    <p class="body2 text-label mb-15p">Pick the logo your posts should carry.</p>
+
+    <div class="logo-grid">
+      <button *ngFor="let c of dna.logoCandidates; trackBy: trackById" type="button" class="logo-tile"
+        [class.logo-tile--on]="chosenLogoId === c.id" [attr.aria-pressed]="chosenLogoId === c.id" (click)="chooseLogo(c)">
+        <span class="logo-tile__img">
+          <img [src]="asset(c.s3Key)" [alt]="'Logo from ' + logoSource(c)" loading="lazy">
+        </span>
+        <span class="logo-tile__label">{{ logoSource(c) }}</span>
+        <span class="logo-tile__meta" *ngIf="c.width && c.height">
+          {{ c.width }} x {{ c.height }}<ng-container *ngIf="c.isIcon">, small icon</ng-container>
+        </span>
+        <span *ngIf="chosenLogoId === c.id" class="logo-tile__check" aria-hidden="true"><i iconPh="check"></i></span>
+      </button>
+
+      <label class="logo-tile logo-tile--upload" [class.disabled]="isUploading">
+        <input type="file" class="sr-only" accept="image/png,image/jpeg,image/svg+xml,image/webp" #logoInput
+          [disabled]="isUploading" (change)="onLogoFile(logoInput)">
+        <span class="logo-tile__img"><i iconPh="file-upload" aria-hidden="true"></i></span>
+        <span class="logo-tile__label">{{ isUploading ? 'Uploading...' : 'Upload a logo' }}</span>
+        <span class="logo-tile__meta">PNG, JPEG, SVG or WebP, up to 5 MB</span>
+      </label>
+    </div>
+    <p *ngIf="uploadError" class="studio-alert mt-10p mb-0" role="alert">{{ uploadError }}</p>
+
+    <div class="custom-control custom-checkbox mt-15p">
+      <input type="checkbox" class="custom-control-input" id="brand-no-logo" [ngModel]="noLogo && !chosenLogoId"
+        (ngModelChange)="chooseNoLogo($event)" name="noLogo">
+      <label class="custom-control-label body2" for="brand-no-logo">Use no logo. Posts will show your practice name instead.</label>
+    </div>
+  </section>
+
+  <!-- Colours -->
+  <section class="studio-card" aria-labelledby="brand-colours-title">
+    <h6 id="brand-colours-title" class="mb-5p">Colours</h6>
+    <p class="body2 text-label mb-15p">Five colours, each with a job. We measured these on your website and logo.</p>
+
+    <div *ngFor="let r of roles" class="colour-row">
+      <div class="d-flex align-items-start">
+        <span class="colour-swatch" [style.background]="colourOf(r.role) || '#ffffff'" aria-hidden="true"></span>
+        <div class="flex-grow-1 min-w-0">
+          <div class="d-flex flex-wrap align-items-center">
+            <span class="subtitle2 mr-10p">{{ r.label }}</span>
+            <code class="colour-hex mr-10p">{{ colourOf(r.role) || 'Not set' }}</code>
+            <span *ngIf="isSetByMember(r.role)" class="studio-badge studio-badge--you">Set by you</span>
+            <span *ngIf="!isSetByMember(r.role) && confidenceText(evidenceFor(colourOf(r.role)))" class="caption text-label">
+              {{ confidenceText(evidenceFor(colourOf(r.role))) }}
+            </span>
+          </div>
+          <p class="caption text-label mb-0">{{ r.help }}</p>
+          <p *ngIf="evidenceFor(colourOf(r.role)) as e" class="caption text-body mb-0">{{ evidenceText(e) }}</p>
+        </div>
+        <button type="button" class="btn btn-text small px-0 ml-10p" [attr.aria-expanded]="openRole === r.role"
+          (click)="toggleRole(r.role)">{{ openRole === r.role ? 'Close' : 'Change' }}</button>
+      </div>
+
+      <div *ngIf="openRole === r.role" class="colour-picker mt-10p">
+        <p class="caption text-label mb-5p">Colours we measured</p>
+        <div class="colour-options mb-10p">
+          <button *ngFor="let e of dna.colourEvidence" type="button" class="colour-option"
+            [class.colour-option--on]="colourOf(r.role) === e.hex.toUpperCase()" [style.background]="e.hex"
+            [attr.aria-label]="'Use ' + e.hex" [title]="e.hex + (e.note ? ': ' + e.note : '')"
+            (click)="setColour(r.role, e.hex)"></button>
+        </div>
+        <label class="caption text-label mb-5p" [attr.for]="'hex-' + r.role">Or your own colour</label>
+        <div class="d-flex align-items-center">
+          <input type="color" class="colour-native mr-10p" [ngModel]="customHex || '#ffffff'" (ngModelChange)="customHex = $event"
+            [name]="'native-' + r.role" aria-label="Pick a colour">
+          <input [id]="'hex-' + r.role" type="text" class="form-control colour-input mr-10p" [(ngModel)]="customHex" [name]="'hex-' + r.role"
+            placeholder="#18427A" maxlength="7" autocomplete="off" autocapitalize="off" (keyup.enter)="setColour(r.role, customHex)">
+          <button type="button" class="btn btn-primary small" (click)="setColour(r.role, customHex)">Use</button>
+        </div>
+        <p *ngIf="customHexError" class="caption text-error-dark mt-5p mb-0" role="alert">{{ customHexError }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fonts -->
+  <section class="studio-card" aria-labelledby="brand-fonts-title">
+    <h6 id="brand-fonts-title" class="mb-5p">Fonts</h6>
+    <p class="body2 text-label mb-15p">
+      Fonts we can use in your posts with an open licence.
+      <ng-container *ngIf="dna.fonts.substituteFor">Your website uses {{ dna.fonts.substituteFor }}, which we cannot use, so this is the closest match.</ng-container>
+    </p>
+    <div class="row">
+      <div class="col-12 col-sm-6 mb-15p">
+        <label for="brand-font-heading" class="subtitle2 text-label">Headlines</label>
+        <select id="brand-font-heading" class="form-control" name="fontHeading" [ngModel]="dna.fonts.heading || ''" (ngModelChange)="setFont('heading', $event)">
+          <option value="" disabled>Choose a font</option>
+          <option *ngFor="let f of fontOptions" [value]="f">{{ f }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-sm-6 mb-15p">
+        <label for="brand-font-body" class="subtitle2 text-label">Text</label>
+        <select id="brand-font-body" class="form-control" name="fontBody" [ngModel]="dna.fonts.body || ''" (ngModelChange)="setFont('body', $event)">
+          <option value="" disabled>Choose a font</option>
+          <option *ngFor="let f of fontOptions" [value]="f">{{ f }}</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photos -->
+  <section *ngIf="dna.photos.length" class="studio-card" aria-labelledby="brand-photos-title">
+    <h6 id="brand-photos-title" class="mb-5p">Photos</h6>
+    <p class="body2 text-label mb-5p">Choose which photos may appear in your posts. Only use a photo you have the right to share.</p>
+    <p class="caption text-label mb-15p" *ngIf="photosToDecide || photosMissingRights">
+      <ng-container *ngIf="photosToDecide">{{ photosToDecide }} still to decide. </ng-container>
+      <ng-container *ngIf="photosMissingRights">{{ photosMissingRights }} need the rights box ticked before we use them.</ng-container>
+    </p>
+
+    <div class="photo-grid">
+      <div *ngFor="let p of dna.photos; trackBy: trackById" class="photo-card" [class.photo-card--off]="p.approved === false">
+        <div class="photo-card__img">
+          <img [src]="asset(p.s3Key)" [alt]="p.alt || photoKind(p)" loading="lazy" [style.object-position]="p.focus || 'center'">
+        </div>
+        <div class="photo-card__body">
+          <p class="caption text-label mb-5p">
+            {{ photoKind(p) }}<ng-container *ngIf="p.showsPractice">, shows your practice</ng-container>
+          </p>
+          <p *ngIf="p.suitable === false" class="caption text-body mb-5p">Not a good fit behind text.</p>
+          <p *ngIf="p.stockHint" class="caption text-body mb-5p">{{ p.stockHint === true ? 'Looks like a stock photo.' : p.stockHint }}</p>
+
+          <div class="photo-choice mb-5p" role="group" [attr.aria-label]="'Use this photo?'">
+            <button type="button" class="photo-choice__btn" [class.photo-choice__btn--on]="p.approved === true"
+              [attr.aria-pressed]="p.approved === true" (click)="setPhoto(p, true)">Use</button>
+            <button type="button" class="photo-choice__btn" [class.photo-choice__btn--no]="p.approved === false"
+              [attr.aria-pressed]="p.approved === false" (click)="setPhoto(p, false)">Do not use</button>
+          </div>
+
+          <div *ngIf="p.approved === true" class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" [id]="'rights-' + p.id" [name]="'rights-' + p.id"
+              [ngModel]="!!p.rightsConfirmed" (ngModelChange)="setRights(p, $event)">
+            <label class="custom-control-label caption" [for]="'rights-' + p.id">I have the right to use this photo</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Facts -->
+  <section *ngIf="dna.facts.length" class="studio-card" aria-labelledby="brand-facts-title">
+    <h6 id="brand-facts-title" class="mb-5p">Facts</h6>
+    <p class="body2 text-label mb-15p">
+      What your posts may say, each found on your website. Turn off anything that is out of date or that you would rather not mention.
+    </p>
+
+    <details *ngFor="let g of factGroups" class="fact-group">
+      <summary class="d-flex align-items-center justify-content-between">
+        <span class="subtitle2">{{ g.label }}</span>
+        <span class="caption text-label ml-10p text-nowrap">{{ g.included }} of {{ g.facts.length }} included</span>
+      </summary>
+      <ul class="list-unstyled mb-0">
+        <li *ngFor="let f of g.facts; trackBy: trackById" class="fact" [class.fact--off]="f.excluded">
+          <div class="d-flex align-items-start">
+            <div class="flex-grow-1 min-w-0 mr-10p">
+              <p class="body2 text-body mb-5p">{{ f.statement }}</p>
+              <blockquote *ngIf="f.quote" class="fact__quote caption mb-5p">"{{ f.quote }}"</blockquote>
+              <a *ngIf="f.sourceUrl" class="caption text-break" [href]="f.sourceUrl" target="_blank" rel="noopener nofollow">{{ sourceLabel(f.sourceUrl) }}</a>
+            </div>
+            <div class="custom-control custom-switch flex-shrink-0">
+              <input type="checkbox" class="custom-control-input" [id]="'fact-' + f.id" [name]="'fact-' + f.id"
+                [ngModel]="!f.excluded" (ngModelChange)="setFact(f, $event)">
+              <label class="custom-control-label caption" [for]="'fact-' + f.id">Include</label>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- Notices -->
+  <section *ngIf="dna.notices.length" class="studio-card" aria-labelledby="brand-notices-title">
+    <h6 id="brand-notices-title" class="mb-5p">Current notices</h6>
+    <p class="body2 text-label mb-15p">Things your website says right now, like holiday hours. We keep posts in line with them.</p>
+    <ul class="list-unstyled mb-0">
+      <li *ngFor="let n of dna.notices" class="notice">
+        <blockquote class="fact__quote body2 mb-5p">"{{ n.quote }}"</blockquote>
+        <p *ngIf="n.meaning" class="caption text-body mb-5p">{{ n.meaning }}</p>
+        <a *ngIf="n.sourceUrl" class="caption text-break" [href]="n.sourceUrl" target="_blank" rel="noopener nofollow">{{ sourceLabel(n.sourceUrl) }}</a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Positioning -->
+  <section class="studio-card" aria-labelledby="brand-positioning-title">
+    <h6 id="brand-positioning-title" class="mb-5p">About your practice <span class="caption text-label">(optional)</span></h6>
+    <p class="body2 text-label mb-15p">Six short questions. Your answers help every post sound like you.</p>
+    <form (ngSubmit)="saveAnswers()">
+      <div *ngFor="let q of questions" class="mb-15p">
+        <label [for]="'pos-' + q.key" class="subtitle2 text-body mb-5p">{{ q.label }}</label>
+        <textarea [id]="'pos-' + q.key" class="form-control" rows="2" maxlength="500" [name]="'pos-' + q.key"
+          [placeholder]="q.hint" [(ngModel)]="answers[q.key]" (ngModelChange)="answersDirty = true"></textarea>
+        <p *ngIf="q.suggested && suggestionFor(q.suggested) && !answers[q.key]" class="caption text-label mt-5p mb-0">
+          Our suggestion: {{ suggestionFor(q.suggested) }}
+          <button type="button" class="btn btn-link caption p-0 align-baseline" (click)="useSuggestion(q)">Use this</button>
+        </p>
+      </div>
+      <button type="submit" class="btn btn-outline small" [disabled]="!answersDirty">Save answers</button>
+    </form>
+  </section>
+
+  <!-- Approve -->
+  <section class="studio-card brand-approve">
+    <ng-container *ngIf="!isApprovedVersion; else approvedBlock">
+      <h6 class="mb-5p">Ready?</h6>
+      <p class="body2 text-label mb-15p">Approving tells us to build your posts from this. You can change it again at any time.</p>
+      <p *ngIf="approveBlocker" class="caption text-label mb-10p">{{ approveBlocker }}</p>
+      <p *ngIf="approveError" class="studio-alert mb-10p" role="alert">{{ approveError }}</p>
+      <button type="button" class="btn btn-primary" [disabled]="!canApprove || isApproving || saving > 0" (click)="approve()">
+        {{ isApproving ? 'Approving...' : 'Approve my Brand DNA' }}
+      </button>
+    </ng-container>
+    <ng-template #approvedBlock>
+      <p class="body2 text-body mb-10p">Approved{{ dna.approvedAt ? ' on ' + (dna.approvedAt | date:'MMMM d, y') : '' }}.</p>
+    </ng-template>
+    <p class="caption text-label mt-15p mb-0">
+      Changed your website? <button type="button" class="btn btn-link caption p-0 align-baseline" (click)="readAgain()">Read it again</button>
+    </p>
+  </section>
+</ng-container>

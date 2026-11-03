@@ -84,6 +84,9 @@ const routes: Routes = [
       /* A patient account to a practitioner or clinic one (Hedieh's brief of
        * 2026-10-22, step 6). */
       { path: 'switch-account', component: SwitchAccountComponent, },
+      /* PromptHealth Pro 2.0, the Studio (stage D, 2026-11). Behind the Pro 2.0
+       * flag: the menu shows it only when GET /pro2/me says so. */
+      { path: 'studio', loadChildren: () => import('./studio/studio.module').then(m => m.StudioModule), },
       { path: 'payment', component: PaymentComponent, children: [
         { path: 'subscription', component: PaymentSubscriptionComponent, },
         { path: 'history', component: PaymentHistoryComponent, },

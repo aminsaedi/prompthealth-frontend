@@ -1,0 +1,102 @@
+@import '../../../assets/scss/variables';
+
+/* Shared by the Studio's tabs. The dashboard's content column is about
+ * 640px wide whatever the viewport, so nothing here sizes from the
+ * viewport's breakpoints except the outer padding. */
+
+.studio-card {
+  background: $colorGsWhite;
+  border-radius: 8px;
+  padding: 24px 15px;
+  margin-bottom: 15px;
+
+  @media (min-width: $breakpointLg) {
+    padding: 30px;
+  }
+}
+
+.studio-dummy {
+  height: 200px;
+  background: rgba(160, 163, 189, 0.2);
+}
+
+.min-w-0 {
+  min-width: 0;
+}
+
+.studio-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: $colorGsBody;
+  background: $colorGsBackground;
+
+  &--ok { color: $colorSuccessDark; background: $colorSuccessLight; }
+  &--wait { color: $colorYellowDark; background: $colorYellowLight; }
+  &--busy { color: $colorPrimaryDark; background: $colorPrimaryLight; }
+  &--no { color: $colorErrorDark; background: $colorErrorLight; }
+  &--you { color: $colorPrimaryDark; background: $colorPrimaryLight; margin-right: 10px; }
+}
+
+.studio-alert,
+.studio-success {
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.studio-alert {
+  color: $colorErrorDark;
+  background: $colorErrorLight;
+}
+
+.studio-success {
+  color: $colorSuccessDark;
+  background: $colorSuccessLight;
+}
+
+/* An honest bar: it moves, it does not pretend to know how far along. */
+.studio-progress {
+  position: relative;
+  height: 6px;
+  max-width: 280px;
+  margin: 0 auto;
+  border-radius: 6px;
+  overflow: hidden;
+  background: $colorPrimaryLight;
+
+  span {
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 40%;
+    height: 100%;
+    border-radius: 6px;
+    background: $colorPrimary;
+    animation: studio-progress 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes studio-progress {
+  0% { left: -40%; }
+  100% { left: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-progress span { animation: none; left: 30%; }
+}
+
+/* 16px, so iOS does not zoom the page when a field takes focus. */
+.form-control {
+  font-size: 16px;
+}
+
+.btn-link {
+  color: $colorPrimary;
+  font-weight: 600;
+}

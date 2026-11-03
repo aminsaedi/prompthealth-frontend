@@ -1,0 +1,47 @@
+<div class="bg-white py-25p py-md-40p px-15p px-lg-30p rounded-8p mb-20p mb-md-30p">
+  <div class="text-primary text-center">
+    <i iconPh="brush" class="studio-icon" aria-hidden="true"></i>
+    <h4 class="text-center mb-10p">Studio</h4>
+    <p class="studio-lede mb-0">
+      Posts for your practice, made from your own website. Nothing is ever posted for you: you approve each one, then download it and share it yourself.
+    </p>
+  </div>
+</div>
+
+<div *ngIf="state === 'loading'" class="studio-dummy rounded-8p" aria-busy="true"></div>
+
+<div *ngIf="state === 'unavailable'" class="bg-white py-40p px-15p px-lg-30p rounded-8p text-center">
+  <p class="subtitle1 mb-10p">The Studio is not open on your account yet.</p>
+  <p class="text-label mb-0">It comes with PromptHealth Pro. <a routerLink="/dashboard/membership">See your membership</a>.</p>
+</div>
+
+<div *ngIf="state === 'failed'" class="bg-white py-40p px-15p px-lg-30p rounded-8p text-center" role="alert">
+  <p class="subtitle1 mb-15p">The Studio could not be loaded.</p>
+  <button type="button" class="btn btn-outline small" (click)="load()">Try again</button>
+</div>
+
+<ng-container *ngIf="state === 'ready'">
+  <nav class="studio-tabs d-flex justify-content-center border-bottom border-line mb-15p" aria-label="Studio">
+    <a
+    class="text-body subtitle1 btn btn-text px-0 small"
+    routerLink="/dashboard/studio/brand"
+    #rlaBrand="routerLinkActive"
+    routerLinkActive
+    [ngClass]="rlaBrand.isActive ? 'active' : ''"
+    >Brand DNA</a>
+    <a
+    class="text-body subtitle1 btn btn-text px-0 small ml-30p"
+    routerLink="/dashboard/studio/month"
+    [ngClass]="monthActive ? 'active' : ''"
+    >This month</a>
+    <a
+    class="text-body subtitle1 btn btn-text px-0 small ml-30p"
+    routerLink="/dashboard/studio/library"
+    #rlaLibrary="routerLinkActive"
+    routerLinkActive
+    [ngClass]="rlaLibrary.isActive ? 'active' : ''"
+    >Library</a>
+  </nav>
+
+  <router-outlet></router-outlet>
+</ng-container>

@@ -1,0 +1,180 @@
+<div *ngIf="view === 'loading'" class="studio-card" aria-busy="true">
+  <div class="studio-dummy rounded-8p"></div>
+</div>
+
+<div *ngIf="view === 'failed'" class="studio-card text-center" role="alert">
+  <p class="subtitle1 mb-15p">This month could not be loaded.</p>
+  <button type="button" class="btn btn-outline small" (click)="load()">Try again</button>
+</div>
+
+<div *ngIf="view === 'needs-brand'" class="studio-card text-center">
+  <h5 class="mb-10p">First, your Brand DNA</h5>
+  <p class="body2 text-body mb-20p">Your posts are built from your approved Brand DNA. Check and approve it, and we will plan your month.</p>
+  <a routerLink="/dashboard/studio/brand" class="btn btn-primary">Go to Brand DNA</a>
+</div>
+
+<div *ngIf="view === 'no-plan'" class="studio-card text-center">
+  <h5 class="mb-10p">Plan your month</h5>
+  <p class="body2 text-body mb-20p">We will suggest eight topics, two a week, from the facts in your Brand DNA. You can change any of them.</p>
+  <p *ngIf="planError" class="studio-alert mb-15p" role="alert">{{ planError }}</p>
+  <button type="button" class="btn btn-primary" [disabled]="isPlanning" (click)="makePlan()">{{ isPlanning ? 'Starting...' : 'Plan my month' }}</button>
+</div>
+
+<div *ngIf="view === 'planning'" class="studio-card text-center" role="status" aria-live="polite">
+  <div class="studio-progress mb-20p" aria-hidden="true"><span></span></div>
+  <h5 class="mb-10p">Planning your month</h5>
+  <p class="body2 text-label mb-0">This takes a minute or two. You can leave this page and come back.</p>
+</div>
+
+<ng-container *ngIf="view === 'ready' && plan">
+  <!-- The cycle and the allowance -->
+  <div class="studio-card">
+    <div class="d-flex flex-wrap align-items-baseline justify-content-between mb-15p">
+      <h5 class="mb-5p mr-15p">This month</h5>
+      <span class="body2 text-label" *ngIf="cycle">{{ cycle.start | date:'MMMM d' }} to {{ cycle.end | date:'MMMM d, y' }}</span>
+    </div>
+    <div class="usage-grid" *ngIf="usage">
+      <div>
+        <p class="subtitle2 mb-5p">Approved {{ usage.approved }} of {{ usage.allowance }}</p>
+        <div class="usage-bar" role="progressbar" [attr.aria-valuenow]="usage.approved" aria-valuemin="0" [attr.aria-valuemax]="usage.allowance" aria-label="Posts approved">
+          <span [style.width.%]="percent(usage.approved, usage.allowance)"></span>
+        </div>
+      </div>
+      <div>
+        <p class="subtitle2 mb-5p">Drafts made {{ usage.generations }} of {{ usage.generationLimit }}</p>
+        <div class="usage-bar usage-bar--soft" role="progressbar" [attr.aria-valuenow]="usage.generations" aria-valuemin="0" [attr.aria-valuemax]="usage.generationLimit" aria-label="Drafts made">
+          <span [style.width.%]="percent(usage.generations, usage.generationLimit)"></span>
+        </div>
+      </div>
+    </div>
+    <p class="caption text-label mt-15p mb-0">
+      We prepare each week's two drafts at the start of the week and email you when they are ready. Nothing is posted for you: approve a draft, then download it and share it.
+    </p>
+  </div>
+
+  <!-- Four weeks -->
+  <section *ngFor="let w of weeks" class="studio-card" [attr.aria-labelledby]="'week-' + w.n">
+    <div class="d-flex flex-wrap align-items-baseline justify-content-between mb-10p">
+      <h6 [id]="'week-' + w.n" class="mb-0 mr-10p">Week {{ w.n }}</h6>
+      <span *ngIf="w.start" class="caption text-label">{{ w.start | date:'MMM d' }} to {{ w.end | date:'MMM d' }}</span>
+    </div>
+
+    <p *ngIf="!w.topics.length" class="body2 text-label mb-0">No topics this week. Move one here, or add your own.</p>
+
+    <div class="topic-grid">
+      <article *ngFor="let t of w.topics; trackBy: trackByTopic" class="topic">
+        <div class="d-flex align-items-start justify-content-between mb-5p">
+          <span class="topic__category mr-10p">{{ categoryLabel(t) }}</span>
+          <span class="studio-badge" [ngClass]="statusClass(t)">{{ statusLabel(t) }}</span>
+        </div>
+
+        <div class="d-flex align-items-start">
+          <a *ngIf="thumb(t) && canOpen(t)" class="topic__thumb mr-10p" [routerLink]="['/dashboard/studio/post', postId(t)]" [attr.aria-label]="'Open ' + t.title">
+            <img [src]="thumb(t)" alt="" loading="lazy">
+          </a>
+          <div class="min-w-0">
+            <p class="subtitle1 topic__title mb-5p">{{ t.title }}</p>
+            <p *ngIf="t.angle" class="caption text-label topic__angle mb-0">{{ t.angle }}</p>
+          </div>
+        </div>
+
+        <p *ngIf="t.status === 'queued'" class="caption text-primary-dark mt-10p mb-0" role="status">
+          <span class="topic__spinner" aria-hidden="true"></span> Making your draft. This takes a minute or two.
+        </p>
+
+        <div class="topic__actions">
+          <a *ngIf="canOpen(t)" class="btn btn-primary small" [routerLink]="['/dashboard/studio/post', postId(t)]">
+            {{ t.status === 'ready' ? 'Review' : 'Open' }}
+          </a>
+          <button *ngIf="canPrepare(t)" type="button" class="btn btn-primary small" [disabled]="busyTopic === t.id" (click)="prepare(t)">
+            {{ t.status === 'failed' ? 'Try again' : 'Prepare' }}
+          </button>
+          <button *ngIf="canRegenerate(t)" type="button" class="btn btn-outline small" [attr.aria-expanded]="panelTopic === t.id && panel === 'regenerate'"
+            (click)="openPanel(t, 'regenerate')">Regenerate</button>
+          <button *ngIf="canEdit(t)" type="button" class="btn btn-text small px-5p" [attr.aria-expanded]="panelTopic === t.id && panel === 'edit'"
+            (click)="openPanel(t, 'edit')">Edit topic</button>
+          <button *ngIf="canMove(t)" type="button" class="btn btn-text small px-5p" [attr.aria-expanded]="panelTopic === t.id && panel === 'move'"
+            (click)="openPanel(t, 'move')">Move week</button>
+        </div>
+
+        <!-- Regenerate, with an optional note -->
+        <form *ngIf="panelTopic === t.id && panel === 'regenerate'" class="topic__panel" (ngSubmit)="prepare(t, note)">
+          <ng-container *ngIf="regenerationsLeft(t) > 0; else noneLeft">
+            <label [for]="'note-' + t.id" class="subtitle2 mb-5p">What should be different? <span class="text-label">(optional)</span></label>
+            <textarea [id]="'note-' + t.id" name="note" class="form-control mb-5p" rows="3" maxlength="500"
+              placeholder="For example: shorter, and mention evening appointments." [(ngModel)]="note"></textarea>
+            <p class="caption text-label mb-10p">{{ regenerationsLeft(t) }} of {{ regenerationsPerTopic }} new drafts left for this topic.</p>
+            <div class="d-flex">
+              <button type="submit" class="btn btn-primary small mr-10p text-nowrap" [disabled]="busyTopic === t.id">Make a new draft</button>
+              <button type="button" class="btn btn-text-grey small" (click)="closePanel()">Cancel</button>
+            </div>
+          </ng-container>
+          <ng-template #noneLeft>
+            <p class="caption text-body mb-0">You have used every new draft for this topic. Edit the topic, or add one of your own.</p>
+          </ng-template>
+        </form>
+
+        <!-- Edit topic -->
+        <form *ngIf="panelTopic === t.id && panel === 'edit'" class="topic__panel" (ngSubmit)="saveTopic(t)">
+          <label [for]="'title-' + t.id" class="subtitle2 mb-5p">Topic</label>
+          <input [id]="'title-' + t.id" name="title" class="form-control mb-10p" maxlength="140" [(ngModel)]="editTitle">
+          <label [for]="'angle-' + t.id" class="subtitle2 mb-5p">What it should say <span class="text-label">(optional)</span></label>
+          <textarea [id]="'angle-' + t.id" name="angle" class="form-control mb-10p" rows="3" maxlength="500" [(ngModel)]="editAngle"></textarea>
+          <div class="d-flex">
+            <button type="submit" class="btn btn-primary small mr-10p" [disabled]="busyTopic === t.id">Save</button>
+            <button type="button" class="btn btn-text-grey small" (click)="closePanel()">Cancel</button>
+          </div>
+        </form>
+
+        <!-- Move week -->
+        <form *ngIf="panelTopic === t.id && panel === 'move'" class="topic__panel" (ngSubmit)="saveWeek(t)">
+          <label [for]="'week-' + t.id" class="subtitle2 mb-5p">Move to</label>
+          <div class="d-flex align-items-center">
+            <select [id]="'week-' + t.id" name="week" class="form-control mr-10p topic__week" [(ngModel)]="moveWeek">
+              <option *ngFor="let n of weekNumbers" [ngValue]="n">Week {{ n }}</option>
+            </select>
+            <button type="submit" class="btn btn-primary small mr-5p" [disabled]="busyTopic === t.id">Move</button>
+            <button type="button" class="btn btn-text-grey small" (click)="closePanel()">Cancel</button>
+          </div>
+        </form>
+
+        <p *ngIf="topicError[t.id]" class="studio-alert mt-10p mb-0" role="alert">{{ topicError[t.id] }}</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Add your own topic -->
+  <div class="studio-card">
+    <button *ngIf="!addOpen" type="button" class="btn btn-outline small" (click)="addOpen = true">
+      <i iconPh="plus" class="mr-5p" aria-hidden="true"></i>Add your own topic
+    </button>
+    <form *ngIf="addOpen" (ngSubmit)="addTopic()">
+      <h6 class="mb-10p">Add your own topic</h6>
+      <label for="add-title" class="subtitle2 mb-5p">Topic</label>
+      <input id="add-title" name="addTitle" class="form-control mb-10p" maxlength="140" placeholder="For example: What to expect at your first visit" [(ngModel)]="addTitle">
+      <label for="add-angle" class="subtitle2 mb-5p">What it should say <span class="text-label">(optional)</span></label>
+      <textarea id="add-angle" name="addAngle" class="form-control mb-10p" rows="3" maxlength="500" [(ngModel)]="addAngle"></textarea>
+      <label for="add-week" class="subtitle2 mb-5p">Week</label>
+      <select id="add-week" name="addWeek" class="form-control mb-15p topic__week" [(ngModel)]="addWeek">
+        <option *ngFor="let n of weekNumbers" [ngValue]="n">Week {{ n }}</option>
+      </select>
+      <p *ngIf="addError" class="studio-alert mb-10p" role="alert">{{ addError }}</p>
+      <div class="d-flex">
+        <button type="submit" class="btn btn-primary small mr-10p" [disabled]="isAdding">{{ isAdding ? 'Adding...' : 'Add topic' }}</button>
+        <button type="button" class="btn btn-text-grey small" (click)="addOpen = false; addError = ''">Cancel</button>
+      </div>
+      <p class="caption text-label mt-10p mb-0">We only use facts from your approved Brand DNA, so the post says only what your website says.</p>
+    </form>
+  </div>
+
+  <!-- What the plan left out, and why -->
+  <details *ngIf="plan.skipped?.length" class="studio-card skipped">
+    <summary class="subtitle2">Topics we left out this month ({{ plan.skipped.length }})</summary>
+    <ul class="list-unstyled mt-10p mb-0">
+      <li *ngFor="let s of plan.skipped" class="mb-10p">
+        <p class="subtitle2 mb-0">{{ skippedLabel(s.category) }}</p>
+        <p class="caption text-label mb-0">{{ s.reason }}</p>
+      </li>
+    </ul>
+  </details>
+</ng-container>
