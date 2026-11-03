@@ -155,6 +155,8 @@ export class StudioBrandComponent implements OnInit, OnDestroy {
 
   private setDna(dna: IPro2Dna): void {
     this.dna = dna;
+    /* "Use no logo" is remembered by the backend; show it ticked again. */
+    if (dna.noLogo && !(dna.logo && dna.logo.candidateId)) { this.noLogo = true; }
     this.dna.logoCandidates = dna.logoCandidates || [];
     this.dna.colours = dna.colours || {};
     this.dna.colourEvidence = dna.colourEvidence || [];

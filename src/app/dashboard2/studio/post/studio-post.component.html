@@ -115,7 +115,10 @@
   <!-- A note from the Studio -->
   <section *ngIf="post.draftNote || review" class="studio-card post-note">
     <h6 class="mb-10p">A note about this draft</h6>
-    <p *ngIf="post.draftNote" class="body2 mb-0">{{ post.draftNote }}</p>
+    <p *ngIf="post.draftNote" class="body2 mb-0">
+      This post shows contact details we found only on your PromptHealth profile, not on your website,
+      so the picture is marked "Draft". Please check them. When you approve, the post you download has no mark.
+    </p>
     <p *ngIf="review" class="body2 mb-0" [class.mt-10p]="post.draftNote">{{ review }}</p>
   </section>
 

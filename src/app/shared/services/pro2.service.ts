@@ -72,6 +72,8 @@ export interface IPro2Me {
   onboarding: Pro2Onboarding;
   /* The website on the profile, if the backend includes it. */
   website?: string;
+  /* A plan job still running before any plan exists. */
+  planPendingJob?: IPro2Job | null;
 }
 
 export interface IPro2LogoCandidate {
@@ -157,6 +159,8 @@ export interface IPro2Dna {
   voice?: { tone?: string[]; audience?: string };
   concerns?: string[];
   approvedAt?: string;
+  noLogo?: boolean;
+  fontOptions?: string[];
 }
 
 export interface IPro2Brand {
@@ -290,6 +294,68 @@ export function pro2JobRunning(job: IPro2Job | boolean | null | undefined): bool
   return !job.status || job.status === 'queued' || job.status === 'claimed';
 }
 
+/*
+ * The backend wraps most answers ({ post }, { plan, pendingJob }, { brand })
+ * and names ids `id`. The screens were built against the bare shapes above,
+ * so the answers are unwrapped here, in one place, and given `_id` as well.
+ */
+function withId<T>(item: T): T {
+  const row = item as any;
+  if (row && row.id && !row._id) { row._id = row.id; }
+  return item;
+}
+
+function asPost(post: any): IPro2Post {
+  if (!post) { return null; }
+  withId(post);
+  if (!post.jpgUrl && post.imageUrl) { post.jpgUrl = post.imageUrl; }
+  return post as IPro2Post;
+}
+
+function asPlan(plan: any): IPro2Plan {
+  if (!plan) { return null; }
+  withId(plan);
+  plan.topics = (plan.topics || []).map((topic: any) => Object.assign(topic, { post: asPost(topic.post) }));
+  return plan as IPro2Plan;
+}
+
+function asMe(me: any): IPro2Me {
+  if (!me) { return me; }
+  me.website = me.website || (me.profile && me.profile.website) || '';
+  if (me.plan) {
+    withId(me.plan);
+    me.plan.pendingJob = me.plan.pendingJob || me.planPendingJob || null;
+  }
+  return me as IPro2Me;
+}
+
+function asBrand(brand: any): IPro2Brand {
+  if (!brand) { return brand; }
+  [brand.proposed, brand.approved].forEach(withId);
+  const current = brand.proposed || brand.approved;
+  if (!brand.fontOptions && current && current.fontOptions) { brand.fontOptions = current.fontOptions; }
+  return brand as IPro2Brand;
+}
+
+/* A library row as a post: approved, with its approval record. */
+function asLibraryPost(row: any): IPro2Post {
+  asPost(row);
+  row.status = row.status || 'approved';
+  row.approval = row.approval || { at: row.approvedAt, byEmail: row.approvedBy, via: row.approvedVia };
+  return row as IPro2Post;
+}
+
+/* The approval page links to the post once signed in; the token begins with
+ * the post's id. */
+function asApproval(token: string, view: any): IPro2Approval {
+  if (!view) { return view; }
+  view.postId = view.postId || String(token || '').split('.')[0];
+  view.title = view.title || view.topicTitle || view.headline || '';
+  return view as IPro2Approval;
+}
+
+const field = (key: string) => map((res: any) => (res && res[key] !== undefined ? res[key] : res));
+
 @Injectable({ providedIn: 'root' })
 export class Pro2Service {
   private readonly http: HttpClient;
@@ -326,29 +392,29 @@ export class Pro2Service {
   }
 
   /* Overview */
-  me(): Observable<IPro2Me> { return this.get('pro2/me'); }
+  me(): Observable<IPro2Me> { return this.get('pro2/me').pipe(map(asMe)); }
 
   /* Brand DNA */
   extractBrand(websiteOverride?: string): Observable<any> {
     return this.send('POST', 'pro2/brand/extract', websiteOverride ? { websiteOverride } : {});
   }
-  brand(): Observable<IPro2Brand> { return this.get('pro2/brand'); }
+  brand(): Observable<IPro2Brand> { return this.get('pro2/brand').pipe(map(asBrand)); }
   patchBrand(version: number, patch: IPro2BrandPatch): Observable<IPro2Dna> {
-    return this.send('PATCH', 'pro2/brand/' + version, patch);
+    return this.send('PATCH', 'pro2/brand/' + version, patch).pipe(field('brand'), map(withId));
   }
   /* noLogo is the member's explicit "no logo" when none is chosen. */
   approveBrand(version: number, noLogo: boolean): Observable<IPro2Dna> {
-    return this.send('POST', 'pro2/brand/' + version + '/approve', noLogo ? { noLogo: true } : {});
+    return this.send('POST', 'pro2/brand/' + version + '/approve', noLogo ? { noLogo: true } : {}).pipe(field('brand'), map(withId));
   }
   uploadLogo(file: File): Observable<any> {
     const form = new FormData();
     form.append('file', file, file.name);
-    return this.unwrap(this.http.post(API_URL + 'pro2/brand/logo', form, { headers: this.headers() }));
+    return this.unwrap(this.http.post(API_URL + 'pro2/brand/logo', form, { headers: this.headers() })).pipe(field('brand'), map(withId));
   }
 
   /* Plan */
   createPlan(): Observable<any> { return this.send('POST', 'pro2/plan'); }
-  plan(): Observable<IPro2Plan> { return this.get('pro2/plan'); }
+  plan(): Observable<IPro2Plan> { return this.get('pro2/plan').pipe(field('plan'), map(asPlan)); }
   patchTopic(topicId: string, patch: { title?: string; angle?: string; week?: number }): Observable<any> {
     return this.send('PATCH', 'pro2/plan/topics/' + encodeURIComponent(topicId), patch);
   }
@@ -360,19 +426,25 @@ export class Pro2Service {
   preparePost(topicId: string, note?: string): Observable<any> {
     return this.send('POST', 'pro2/posts', note ? { topicId, note } : { topicId });
   }
-  post(id: string): Observable<IPro2Post> { return this.get('pro2/posts/' + encodeURIComponent(id)); }
+  post(id: string): Observable<IPro2Post> { return this.get('pro2/posts/' + encodeURIComponent(id)).pipe(field('post'), map(asPost)); }
   patchPost(id: string, patch: { content?: IPro2PostContent; caption?: string }): Observable<IPro2Post> {
-    return this.send('PATCH', 'pro2/posts/' + encodeURIComponent(id), patch);
+    return this.send('PATCH', 'pro2/posts/' + encodeURIComponent(id), patch).pipe(field('post'), map(asPost));
   }
-  approvePost(id: string): Observable<IPro2Post> { return this.send('POST', 'pro2/posts/' + encodeURIComponent(id) + '/approve'); }
-  rejectPost(id: string): Observable<IPro2Post> { return this.send('POST', 'pro2/posts/' + encodeURIComponent(id) + '/reject'); }
-  library(): Observable<IPro2Post[] | { posts: IPro2Post[] }> { return this.get('pro2/library'); }
+  approvePost(id: string): Observable<IPro2Post> {
+    return this.send('POST', 'pro2/posts/' + encodeURIComponent(id) + '/approve').pipe(field('post'), map(asPost));
+  }
+  rejectPost(id: string): Observable<IPro2Post> {
+    return this.send('POST', 'pro2/posts/' + encodeURIComponent(id) + '/reject').pipe(field('post'), map(asPost));
+  }
+  library(): Observable<IPro2Post[] | { posts: IPro2Post[] }> {
+    return this.get('pro2/library').pipe(map((res: any) => ({ posts: ((res && res.posts) || []).map(asLibraryPost) })));
+  }
 
   /* One-tap approval from the email: public, never carries a session. */
   approval(token: string): Observable<IPro2Approval> {
-    return this.unwrap(this.http.get(API_URL + 'pro2/approval/' + encodeURIComponent(token)));
+    return this.unwrap(this.http.get(API_URL + 'pro2/approval/' + encodeURIComponent(token))).pipe(map(view => asApproval(token, view)));
   }
   decide(token: string, action: 'approve' | 'reject'): Observable<IPro2Approval | { status: Pro2PostStatus }> {
-    return this.unwrap(this.http.post(API_URL + 'pro2/approval/' + encodeURIComponent(token), { action }));
+    return this.unwrap(this.http.post(API_URL + 'pro2/approval/' + encodeURIComponent(token), { action })).pipe(map(view => asApproval(token, view)));
   }
 }

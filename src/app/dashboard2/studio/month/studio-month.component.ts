@@ -103,7 +103,7 @@ export class StudioMonthComponent implements OnInit, OnDestroy {
   }
 
   private showNoPlan(me: IPro2Me): void {
-    if (pro2JobRunning(me.plan && me.plan.pendingJob) || this.isPlanning) {
+    if (pro2JobRunning((me.plan && me.plan.pendingJob) || me.planPendingJob) || this.isPlanning) {
       this.view = 'planning';
       this.pollForPlan();
     } else {
