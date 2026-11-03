@@ -1,0 +1,55 @@
+@import '../studio';
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.library-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid $colorGsLine;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* At the image's own shape (square or portrait), so nothing is cropped. */
+.library-item__img {
+  display: block;
+  background: $colorGsBackground;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.library-item__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 12px;
+}
+
+.library-item__title {
+  overflow-wrap: anywhere;
+}
+
+.library-item__caption {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.library-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+
+  .btn.small { padding-top: 6px; padding-bottom: 6px; font-size: 14px; }
+}

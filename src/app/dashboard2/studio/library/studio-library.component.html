@@ -1,0 +1,39 @@
+<div *ngIf="view === 'loading'" class="studio-card" aria-busy="true">
+  <div class="studio-dummy rounded-8p"></div>
+</div>
+
+<div *ngIf="view === 'failed'" class="studio-card text-center" role="alert">
+  <p class="subtitle1 mb-15p">Your library could not be loaded.</p>
+  <button type="button" class="btn btn-outline small" (click)="load()">Try again</button>
+</div>
+
+<ng-container *ngIf="view === 'ready'">
+  <div *ngIf="!posts.length" class="studio-card text-center">
+    <h5 class="mb-10p">Nothing here yet</h5>
+    <p class="body2 text-body mb-20p">Every post you approve lands here, ready to download and share.</p>
+    <a routerLink="/dashboard/studio/month" class="btn btn-primary">Go to this month</a>
+  </div>
+
+  <div *ngIf="posts.length" class="studio-card">
+    <h5 class="mb-5p">Library</h5>
+    <p class="body2 text-label mb-15p">Your approved posts. Download the image, and the caption is copied for you to paste.</p>
+
+    <div class="library-grid">
+      <article *ngFor="let p of posts; trackBy: trackById" class="library-item">
+        <a class="library-item__img" [routerLink]="['/dashboard/studio/post', id(p)]" [attr.aria-label]="'Open ' + title(p)">
+          <img [src]="image(p)" alt="" loading="lazy">
+        </a>
+        <div class="library-item__body">
+          <p class="subtitle2 library-item__title mb-5p">{{ title(p) }}</p>
+          <p *ngIf="date(p)" class="caption text-label mb-5p">Approved {{ date(p) | date:'MMMM d, y' }}</p>
+          <p class="caption text-body library-item__caption mb-10p">{{ p.caption }}</p>
+          <div class="library-item__actions">
+            <button type="button" class="btn btn-primary small" [disabled]="downloadingId === id(p)" (click)="download(p)">Download</button>
+            <button type="button" class="btn btn-outline small" (click)="copy(p)">Copy caption</button>
+          </div>
+          <p *ngIf="copiedId === id(p)" class="caption text-success-dark mt-5p mb-0" role="status">Caption copied.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</ng-container>

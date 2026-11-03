@@ -37,6 +37,7 @@ import { ProLibraryComponent } from "./pro/pro-library.component";
 import { ProDropComponent } from "./pro/pro-drop.component";
 import { ProGoComponent } from "./pro/pro-go.component";
 import { ProWaitlistComponent } from "./pro/pro-waitlist.component";
+import { ProApproveComponent } from "./pro/pro-approve.component";
 
 const routes: Routes = [
   {
@@ -68,6 +69,9 @@ const routes: Routes = [
   /* The welcome email's Join the Pro waitlist (Hedieh's brief of 2026-10-22).
    * noindex, and not in the sitemap. */
   { path: 'pro/waitlist', component: ProWaitlistComponent },
+  /* PromptHealth Pro 2.0: the one-tap approval link in the Studio's weekly
+   * email. Public, the token is the proof; noindex. */
+  { path: 'pro/approve/:token', component: ProApproveComponent },
   {
     path: "faq",
     component: FAQComponent

@@ -1,0 +1,165 @@
+<a routerLink="/dashboard/studio/month" class="post-back caption d-inline-block mb-10p">
+  <i iconPh="chevron-left" aria-hidden="true"></i> This month
+</a>
+
+<div *ngIf="view === 'loading'" class="studio-card" aria-busy="true">
+  <div class="studio-dummy rounded-8p"></div>
+</div>
+
+<div *ngIf="view === 'missing'" class="studio-card text-center">
+  <p class="subtitle1 mb-15p">This post could not be found.</p>
+  <a routerLink="/dashboard/studio/month" class="btn btn-outline small">Back to this month</a>
+</div>
+
+<div *ngIf="view === 'failed'" class="studio-card text-center" role="alert">
+  <p class="subtitle1 mb-15p">This post could not be loaded.</p>
+  <a routerLink="/dashboard/studio/month" class="btn btn-outline small">Back to this month</a>
+</div>
+
+<ng-container *ngIf="view === 'ready' && post">
+  <div class="studio-card">
+    <div class="d-flex align-items-start justify-content-between mb-5p">
+      <span class="post-category mr-10p">{{ category }}</span>
+      <span class="studio-badge" [ngClass]="{
+        'studio-badge--ok': post.status === 'approved',
+        'studio-badge--wait': post.status === 'awaiting_approval',
+        'studio-badge--busy': post.status === 'generating',
+        'studio-badge--no': post.status === 'rejected' || post.status === 'failed'
+      }">{{ statusLabels[post.status] || post.status }}</span>
+    </div>
+    <h5 class="mb-15p post-title">{{ title }}</h5>
+
+    <!-- The image -->
+    <div class="post-image rounded-8p mb-15p">
+      <img *ngIf="image && !isGenerating" [src]="image" [alt]="'The image for ' + title">
+      <div *ngIf="isGenerating" class="post-image__busy" role="status" aria-live="polite">
+        <div class="studio-progress mb-15p" aria-hidden="true"><span></span></div>
+        <p class="body2 mb-0">Making your image. This takes a minute.</p>
+      </div>
+      <div *ngIf="!image && !isGenerating" class="post-image__busy">
+        <p class="body2 text-label mb-0">No image yet.</p>
+      </div>
+    </div>
+
+    <!-- What happened -->
+    <p *ngIf="decided === 'approved'" class="studio-success mb-15p" role="status">
+      Approved. Download the image and share it whenever you like. It is also in your library.
+    </p>
+    <p *ngIf="decided === 'rejected'" class="studio-alert mb-15p" role="status">
+      Rejected. You can make a new draft below.
+    </p>
+    <p *ngIf="isApproved && post.approval?.at && !decided" class="caption text-label mb-15p">
+      Approved {{ post.approval.at | date:'MMMM d, y' }}<ng-container *ngIf="post.approval.via === 'email' && post.approval.byEmail"> by {{ post.approval.byEmail }} from the email</ng-container>.
+    </p>
+
+    <!-- Decide -->
+    <div *ngIf="isDraft && !editing" class="post-actions mb-10p">
+      <button type="button" class="btn btn-primary" [disabled]="isDeciding" (click)="approve()">Approve</button>
+      <button *ngIf="!confirmingReject" type="button" class="btn btn-outline-grey" [disabled]="isDeciding" (click)="reject()">Reject</button>
+      <button type="button" class="btn btn-text" (click)="startEdit()">Edit text</button>
+    </div>
+    <div *ngIf="isDraft && confirmingReject" class="post-confirm mb-10p" role="alertdialog" aria-label="Reject this draft?">
+      <p class="body2 mb-10p">Reject this draft? You can ask for a new one afterwards.</p>
+      <button type="button" class="btn btn-error small mr-10p" [disabled]="isDeciding" (click)="reject()">Yes, reject it</button>
+      <button type="button" class="btn btn-text-grey small" (click)="confirmingReject = false">Keep it</button>
+    </div>
+    <p *ngIf="decideError" class="studio-alert mb-10p" role="alert">{{ decideError }}</p>
+
+    <!-- Download, once approved -->
+    <div *ngIf="isApproved" class="post-actions mb-10p">
+      <button type="button" class="btn btn-primary" [disabled]="downloading" (click)="download('jpg')">
+        <i iconPh="file-download" class="mr-5p" aria-hidden="true"></i>Download image
+      </button>
+      <button type="button" class="btn btn-outline" (click)="copyCaption()">Copy caption</button>
+      <button type="button" class="btn btn-text small" [disabled]="downloading" (click)="download('png')">PNG</button>
+    </div>
+    <p *ngIf="copied" class="caption text-success-dark mb-10p" role="status">Caption copied. Paste it when you share the image.</p>
+    <p *ngIf="isDraft" class="caption text-label mb-0">Approve it to download the image and caption.</p>
+  </div>
+
+  <!-- Edit text -->
+  <form *ngIf="editing" class="studio-card" (ngSubmit)="saveEdit()">
+    <h6 class="mb-5p">Edit the text</h6>
+    <p class="caption text-label mb-15p">Changing the words on the image makes a new image. Changing only the caption does not.</p>
+    <div *ngFor="let f of textFields" class="mb-10p">
+      <label [for]="'edit-' + f.key" class="subtitle2 mb-5p d-block">{{ f.label }}</label>
+      <textarea *ngIf="f.multiline" [id]="'edit-' + f.key" class="form-control" rows="3" [attr.maxlength]="f.max"
+        [name]="'edit-' + f.key" [(ngModel)]="draft[f.key]"></textarea>
+      <input *ngIf="!f.multiline" [id]="'edit-' + f.key" class="form-control" [attr.maxlength]="f.max"
+        [name]="'edit-' + f.key" [(ngModel)]="draft[f.key]">
+    </div>
+    <div *ngIf="hasPoints" class="mb-10p">
+      <label for="edit-points" class="subtitle2 mb-5p d-block">Points <span class="text-label">(one per line)</span></label>
+      <textarea id="edit-points" class="form-control" rows="4" name="edit-points" [(ngModel)]="draftPoints"></textarea>
+    </div>
+    <div class="mb-15p">
+      <label for="edit-caption" class="subtitle2 mb-5p d-block">Caption</label>
+      <textarea id="edit-caption" class="form-control" rows="8" maxlength="2200" name="edit-caption" [(ngModel)]="draftCaption"></textarea>
+    </div>
+    <p *ngIf="editError" class="studio-alert mb-10p" role="alert">{{ editError }}</p>
+    <div class="d-flex">
+      <button type="submit" class="btn btn-primary small mr-10p" [disabled]="isSaving">{{ isSaving ? 'Saving...' : 'Save changes' }}</button>
+      <button type="button" class="btn btn-text-grey small" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </form>
+
+  <!-- Caption -->
+  <section *ngIf="!editing" class="studio-card">
+    <h6 class="mb-10p">Caption</h6>
+    <p class="post-caption body2 mb-10p">{{ post.caption }}</p>
+    <ul *ngIf="post.hashtags?.length" class="post-tags list-unstyled mb-0">
+      <li *ngFor="let tag of post.hashtags">{{ tag }}</li>
+    </ul>
+  </section>
+
+  <!-- A note from the Studio -->
+  <section *ngIf="post.draftNote || review" class="studio-card post-note">
+    <h6 class="mb-10p">A note about this draft</h6>
+    <p *ngIf="post.draftNote" class="body2 mb-0">{{ post.draftNote }}</p>
+    <p *ngIf="review" class="body2 mb-0" [class.mt-10p]="post.draftNote">{{ review }}</p>
+  </section>
+
+  <!-- Facts used -->
+  <section *ngIf="usedFacts.length" class="studio-card">
+    <h6 class="mb-5p">Facts used</h6>
+    <p class="caption text-label mb-10p">Everything this post says comes from these facts in your Brand DNA.</p>
+    <ul class="post-facts mb-0">
+      <li *ngFor="let f of usedFacts" class="body2">{{ f.statement || f.id }}</li>
+    </ul>
+  </section>
+
+  <!-- Checks -->
+  <section *ngIf="post.checks?.length" class="studio-card">
+    <h6 class="mb-5p">Checks</h6>
+    <p class="caption text-label mb-10p">What we checked before showing you this draft.</p>
+    <ul class="list-unstyled mb-0">
+      <li *ngFor="let c of post.checks" class="post-check d-flex align-items-start">
+        <span class="post-check__mark" [class.post-check__mark--fixed]="c.ok === false" aria-hidden="true">
+          <i [iconPh]="c.ok === false ? 'alert-triangle' : 'check'"></i>
+        </span>
+        <div class="min-w-0">
+          <p class="subtitle2 mb-0">{{ checkLabel(c.kind) }}<span class="text-label caption">{{ c.ok === false ? ', fixed for you' : ', passed' }}</span></p>
+          <p *ngIf="c.detail" class="caption text-body mb-0 text-break">{{ c.detail }}</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- A new draft -->
+  <section *ngIf="post.topicId && (post.status === 'awaiting_approval' || post.status === 'rejected' || post.status === 'failed') && !editing" class="studio-card">
+    <h6 class="mb-5p">Want a different draft?</h6>
+    <ng-container *ngIf="!topic || regenerationsLeft > 0; else noneLeft">
+      <label for="post-note" class="caption text-label mb-5p d-block">Tell us what to change (optional)</label>
+      <textarea id="post-note" name="note" class="form-control mb-10p" rows="3" maxlength="500"
+        placeholder="For example: a warmer tone, and mention our free parking." [(ngModel)]="note"></textarea>
+      <p *ngIf="topic" class="caption text-label mb-10p">{{ regenerationsLeft }} new {{ regenerationsLeft === 1 ? 'draft' : 'drafts' }} left for this topic.</p>
+      <p *ngIf="regenerateError" class="studio-alert mb-10p" role="alert">{{ regenerateError }}</p>
+      <button type="button" class="btn btn-outline small" [disabled]="isRegenerating" (click)="regenerate()">
+        {{ isRegenerating ? 'Starting...' : 'Regenerate' }}
+      </button>
+    </ng-container>
+    <ng-template #noneLeft>
+      <p class="caption text-body mb-0">You have used every new draft for this topic this month. You can edit the topic on This month, or add one of your own.</p>
+    </ng-template>
+  </section>
+</ng-container>

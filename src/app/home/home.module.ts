@@ -48,6 +48,7 @@ import { ProComponent } from './pro/pro.component';
 import { ProWelcomeComponent } from './pro/pro-welcome.component';
 import { ProLibraryComponent } from './pro/pro-library.component';
 import { ProDropComponent } from './pro/pro-drop.component';
+import { ProApproveComponent } from './pro/pro-approve.component';
 import { ProGoComponent } from './pro/pro-go.component';
 import { ProWaitlistComponent } from './pro/pro-waitlist.component';
 
@@ -95,6 +96,7 @@ import { ProWaitlistComponent } from './pro/pro-waitlist.component';
     ProWelcomeComponent,
     ProLibraryComponent,
     ProDropComponent,
+    ProApproveComponent,
     ProGoComponent,
     ProWaitlistComponent,
   ],

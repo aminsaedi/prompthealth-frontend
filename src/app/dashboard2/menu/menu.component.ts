@@ -3,6 +3,7 @@ import { ProfileManagementService } from 'src/app/shared/services/profile-manage
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment';
+import { Pro2Service } from 'src/app/shared/services/pro2.service';
 
 @Component({
   selector: 'menu-dashboard',
@@ -25,6 +26,7 @@ export class MenuComponent implements OnInit {
   constructor(
     private _profileService: ProfileManagementService,
     private _sharedService: SharedService,
+    private _pro2: Pro2Service,
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +51,20 @@ export class MenuComponent implements OnInit {
         this.menus = [ menuGeneral, menuAcademy, menuLinks, menuFollow, menuBook, menuBookmark, menuPassword];
         break;
     }
+    this.addStudio();
+  }
+
+  /* PromptHealth Pro 2.0's Studio, only for accounts the API lets in (the
+   * flag, its allowlist, administrators). Anyone else gets 403
+   * PRO2-NOT-AVAILABLE, and the menu stays as it was without a word. */
+  private addStudio() {
+    const role = this.user && this.user.role;
+    if (role !== 'SP' && role !== 'C' && role !== 'SA') { return; }
+    this._pro2.me().subscribe(me => {
+      if (!me || !me.enabled || !this.menus || this.menus.indexOf(menuStudio) >= 0) { return; }
+      const after = this.menus.indexOf(menuMembership) >= 0 ? menuMembership : menuGeneral;
+      this.menus.splice(this.menus.indexOf(after) + 1, 0, menuStudio);
+    }, () => {});
   }
 
   onClickLogout() {
@@ -71,6 +87,13 @@ const menuMembership: MenuItem = {
   id: 'membership',
   title: 'Membership',
   icon: 'star',
+};
+
+/* PromptHealth Pro 2.0 (stage D): added by addStudio when the API allows it. */
+const menuStudio: MenuItem = {
+  id: 'studio',
+  title: 'Studio',
+  icon: 'brush',
 };
 
 /* Patients only: a practitioner or clinic who signed up as a patient
